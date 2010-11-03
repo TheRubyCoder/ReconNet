@@ -31,23 +31,30 @@ public interface IMorphism
 	Map<Arc, Arc> edges();
 	
 	/**
-	 * Applies this morphism to a transition
-	 * @param transition the transition to apply this morphism to
-	 * @return the transition after applying this morphism
+	 * Applies this morphism to a transition.
+	 * @param transition the transition to apply this morphism to.
+	 * @return the transition after applying this morphism.
 	 */
 	Transition morph(Transition transition);
 
 	/**
-	 * Applies this morphism to a place
-	 * @param place the transition to apply this morphism to
-	 * @return the place after applying this morphism 
+	 * Applies this morphism to a place.
+	 * @param place the transition to apply this morphism to.
+	 * @return the place after applying this morphism .
 	 */
 	Place morph(Place place);
 
 	/**
-	 * Applies this morphism to a place
-	 * @param place the transition to apply this morphism to
-	 * @return the arc after applying this morphism 
+	 * Applies this morphism to a place.
+	 * @param place the transition to apply this morphism to.
+	 * @return the arc after applying this morphism.
 	 */
 	Arc morph(Arc arc);
+	
+
+	/**
+	 * Returns true if this morphism is valid.
+	 * @return true if this morphism is valid.
+	 */
+	boolean IsValid();
 }

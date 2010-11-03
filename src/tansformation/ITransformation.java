@@ -25,10 +25,10 @@ public interface ITransformation
 	 * This net will be changed when transform() is called.
 	 * @return the IRule of this transformation.
 	 */
-	IPetrinet G();
+	IPetrinet N();
 	
 	/**
-	 * This will transform the IPetrinet returned by D()
+	 * This will transform the IPetrinet returned by N()
 	 * using the IRule returned by Rule() and
 	 * the IMorphism returned by morphism().
 	 */
