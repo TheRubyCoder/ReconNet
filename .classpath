@@ -9,7 +9,7 @@
 	<classpathentry kind="lib" path="lib/jung2-2_0_1/jung-3d-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/jung2-2_0_1/jung-3d-demos-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/jung2-2_0_1/jung-algorithms-2.0.1.jar"/>
-	<classpathentry kind="lib" path="lib/jung2-2_0_1/jung-api-2.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/jung2-2_0_1/jung-api-2.0.1.jar" sourcepath="lib/jung2-2_0_1-sources/jung-api-2.0.1-sources.jar"/>
 	<classpathentry kind="lib" path="lib/jung2-2_0_1/jung-graph-impl-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/jung2-2_0_1/jung-io-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/jung2-2_0_1/jung-jai-2.0.1.jar"/>
