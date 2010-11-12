@@ -1,4 +1,4 @@
-package petrinetze;
+package haw.wp.rcpn;
 /**
  * Dieses Interfcase bietet Metoden, um ein Petrinetz
  * zu generieren. Das verhindert die direkte Instnazbildung 
@@ -10,15 +10,11 @@ package petrinetze;
 public interface IPetrinetMgr {
 	
 	/**
-	 * Generiert ein S-T Petrinetz
-	 * @return {@link IPetrinet}
+	 * Leere Session, um Petrinetze zu generieren.
+	 * Dieses Session-Objekt kann mehrere PN beinhalten.
+	 * 
+	 * @return  {@link ISession}
 	 */
-	public IPetrinet createPetrinet();
-	
-	/**
-	 * Generiert ein Labeld S-T Petrinetz
-	 * @return {@link IPetrinet}
-	 */
-	public IPetrinet createLabeldPetrinet();
+	public ISession createSession();
  
 }

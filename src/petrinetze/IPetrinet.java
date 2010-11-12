@@ -1,4 +1,7 @@
-package petrinetze;
+package haw.wp.rcpn;
+
+import java.util.List;
+
 /**
  * IPetrinet definiert eine Schnittstelle um Petrinetzstrukturen
  * (Stellen, Transitionen, Kanten und Markierungen) zu editieren.
@@ -18,7 +21,7 @@ public interface IPetrinet {
 	 * @param marks
 	 * 			Die Anzahl der maximal möglichen Token.
 	 */
-	public void createPlace(String name);
+	public IPlace createPlace(String name);
 	
 	/**
 	 * Entfernt die angegebene Stelle.
@@ -28,31 +31,11 @@ public interface IPetrinet {
 	public void deletePlaceById(int id);
 	
 	/**
-	 * Ändert den Namen der Stelle.
-	 * @param id
-	 * 			Die ID der Stelle.
-	 * @param newName
-	 * 			Der neue Name der Stelle.
-	 */
-	public void changePlaceName(int id, String newName);
-	
-	/**
-	 * Ändert die Anzahl der maximal möglichen Token.
-	 * @param id
-	 * 			Die ID der Stelle.
-	 * @param marks
-	 * 			Die neue Anzahl der maximal möglichen Token. 
-	 */
-	public void changePlaceMarks(int id, int marks);
-	
-	
-	
-	/**
 	 * Fuegt eine Transition hinzu.
 	 * @param name
 	 * 			Der Name der Transition
 	 */
-	public void createTransition(String name);
+	public ITransition createTransition(String name);
 	
 	/**
 	 * Entfernt die angegebene Transition.
@@ -62,32 +45,11 @@ public interface IPetrinet {
 	public void deleteTransitionByID(String id);
 	
 	/**
-	 * Ändert den Namen der Transition.
-	 * @param id
-	 * 			Die ID der Transition.
-	 * @param newName
-	 * 			Der neue Name der Transition.
-	 */
-	public void changeTransitionName(String id, String newName);
-	
-	/**
-	 * rnw  ---> TODO
-	 */
-	public void rnw();
-	
-	/**
-	 * tlb  ---> TODO
-	 */
-	public void tlb();
-	
-	
-	
-	/**
 	 * Fuegt eine Kante hinzu.
 	 * @param marks
 	 * 			Die Kantengewichtung.
 	 */
-	public void createArc(int marks);
+	public IArc createArc();
 	
 	/**
 	 * Entfernt die angegebene Kante.
@@ -97,42 +59,40 @@ public interface IPetrinet {
 	public void deleteArcByID(int id);
 	
 	/**
-	 * Ändert die Kantengewichtung der Kante.
-	 * @param id
-	 * 			Die ID der Kante.
-	 * @param marks
-	 * 			Die neue Kantengewichtung. 
-	 */
-	public void changeArcMarks(int id, int marks);
-	
-	/**
-	 * Ändert den Startknoten der Kante.
-	 * @param id
-	 * 			Die ID der Kante.
-	 */
-	public void changeArcStart(int id);
-	
-	/**
-	 * Ändert den Endknoten der Kante.
-	 * @param id
-	 * 			Die ID der Kante.
-	 */
-	public void changeArcEnd(int id);
-	
-	
-	
-	/**
 	 * Gibt alle aktivierten Transitionen zurück. 
 	 */
-	public void getActivatedTransitions();
+	public List<ITransition> getActivatedTransitions();
 	
 	/**
 	 * Schaltet die angegebene Transition.
 	 * @param id
 	 * 			Die ID der Transition.
 	 */
-	public void fire(int id);
+	public List<INode> fire(int id);
 	
+	/**
+	 * Schaltet nicht-deterministisch.
+	 * @return alle Nodes (sowohl Stellen als auch Transitionen), 
+	 * die sich geaendert haben.
+	 */
+	public List<INode> fire();
 	
+	/**
+	 * Liefert das Pre-Objekt zu dem Netz zurueck
+	 * @return {@link IPre}
+	 */
+	public IPre getPre();
+	
+	/**
+	 * Liefert das Pre-Objekt zu dem Netz zurueck
+	 * @return {@link IPost}
+	 */
+	public IPost getPost();
+	
+	/**
+	 * liefert die ID zurueck
+	 * @return
+	 */
+	public int getId();
 	
 }
