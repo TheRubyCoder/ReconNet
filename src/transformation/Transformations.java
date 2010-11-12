@@ -1,4 +1,4 @@
-package tansformation;
+package transformation;
 
 import petrinetze.IPetrinet;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
