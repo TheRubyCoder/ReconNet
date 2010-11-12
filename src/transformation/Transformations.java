@@ -1,8 +1,12 @@
 package transformation;
 
 import petrinetze.IPetrinet;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+/**
+ * 
+ * @author Philipp Kühn
+ *
+ */
 public final class Transformations 
 {
 	private Transformations()
@@ -19,7 +23,7 @@ public final class Transformations
 	 */
 	public static void join(IPetrinet left, IPetrinet right, ITransformation transformation)
 	{
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -32,7 +36,7 @@ public final class Transformations
 	 */
 	public static void join(IPetrinet left, IPetrinet right, IMorphism morphism, IRule rule)
 	{
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -44,7 +48,7 @@ public final class Transformations
 	 */
 	public static void join(IPetrinet left, IPetrinet right, IRule rule)
 	{
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 	
 	/**
@@ -54,7 +58,7 @@ public final class Transformations
 	 */
 	public void transform(IPetrinet net, IRule rule)
 	{
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 }
