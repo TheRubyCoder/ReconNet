@@ -1,9 +1,9 @@
 package engine;
 
-import petrinetze.Arc;
-import petrinetze.Node;
-import petrinetze.Place;
-import petrinetze.Transition;
+import petrinetze.IArc;
+import petrinetze.INode;
+import petrinetze.IPlace;
+import petrinetze.ITransition;
 
 import java.awt.geom.Point2D;
 import java.util.Set;
@@ -21,7 +21,7 @@ public interface GraphEditor {
      *
      * @return neu erzeugte Stelle
      */
-    Place createPlace(Point2D.Float location);
+    IPlace createPlace(Point2D.Float location);
 
     /**
      * Erzeugen einer Transition an angegebener Position.
@@ -30,7 +30,7 @@ public interface GraphEditor {
      *
      * @return neu erzeugte Transition
      */
-    Transition createTransition(Point2D.Float location);
+    ITransition createTransition(Point2D.Float location);
 
     /**
      * Erzeugen einer Kante zwischen Stelle und Transition.
@@ -43,7 +43,7 @@ public interface GraphEditor {
      *
      * @return Kante zwischen Stelle und Transition
      */
-    Arc createIncomingArc(Place from, Transition to);
+    IArc createIncomingArc(IPlace from, ITransition to);
 
     /**
      * Erzeugen einer Kante zwischen Transition und Stelle.
@@ -56,12 +56,12 @@ public interface GraphEditor {
      *
      * @return Kante zwischen Transition und Stelle 
      */
-    Arc createOutgoingArc(Transition from, Place to);
+    IArc createOutgoingArc(ITransition from, IPlace to);
 
     /**
      * Entfernen der übergegebenen Knoten.
      *
      * @param nodes die zu entfernenden Knoten
      */
-    void remove(Set<Node> nodes);
+    void remove(Set<INode> nodes);
 }

@@ -2,9 +2,9 @@ package transformation;
 
 import java.util.Map;
 
-import petrinetze.Arc;
-import petrinetze.Place;
-import petrinetze.Transition;
+import petrinetze.IArc;
+import petrinetze.IPlace;
+import petrinetze.ITransition;
 /**
  * An interface for morphisms on IPetrinet.
  * @author Philipp Kühn
@@ -16,40 +16,40 @@ public interface IMorphism
 	 * Returns the morphisms of all transition.
 	 * @return the morphisms of all transition.
 	 */
-	Map<Transition, Transition> transitions();
+	Map<ITransition, ITransition> transitions();
 	
 	/**
 	 * Returns the morphisms of all places.
 	 * @return the morphisms of all places.
 	 */
-	Map<Place, Place> places();
+	Map<IPlace, IPlace> places();
 	
 	/**
 	 * Returns the morphism of all edges.
 	 * @return the morphism of all edges.
 	 */
-	Map<Arc, Arc> edges();
+	Map<IArc, IArc> edges();
 	
 	/**
 	 * Applies this morphism to a transition.
 	 * @param transition the transition to apply this morphism to.
 	 * @return the transition after applying this morphism.
 	 */
-	Transition morph(Transition transition);
+	ITransition morph(ITransition transition);
 
 	/**
 	 * Applies this morphism to a place.
 	 * @param place the transition to apply this morphism to.
 	 * @return the place after applying this morphism .
 	 */
-	Place morph(Place place);
+	IPlace morph(IPlace place);
 
 	/**
 	 * Applies this morphism to a place.
 	 * @param place the transition to apply this morphism to.
 	 * @return the arc after applying this morphism.
 	 */
-	Arc morph(Arc arc);
+	IArc morph(IArc arc);
 	
 
 	/**

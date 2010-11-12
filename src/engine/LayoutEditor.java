@@ -1,6 +1,6 @@
 package engine;
 
-import petrinetze.Node;
+import petrinetze.INode;
 
 import java.awt.geom.Point2D;
 
@@ -14,14 +14,14 @@ public interface LayoutEditor {
      * Sperren der Position eines Knoten.
      * @param node
      */
-    void lock(Node node);
+    void lock(INode node);
 
     /**
      * Aufhebung der Positionssperre für einen Knoten.
      *
      * @param node
      */
-    void unlockNode(Node node);
+    void unlockNode(INode node);
 
     /**
      * Abfragen des Sperrzustandes eines Knoten
@@ -29,7 +29,7 @@ public interface LayoutEditor {
      * @param node
      * @return
      */
-    boolean isLocked(Node node);
+    boolean isLocked(INode node);
 
     /**
      * Position der grafischen Repräsentation des Knoten.
@@ -38,7 +38,7 @@ public interface LayoutEditor {
      *
      * @return
      */
-    Point2D getPosition(Node node);
+    Point2D getPosition(INode node);
 
     /**
      * Setzen der Position der grafischen Repräsentation des Knoten.
@@ -46,7 +46,7 @@ public interface LayoutEditor {
      * @param node
      * @param location
      */
-    void setPosition(Node node, Point2D location);
+    void setPosition(INode node, Point2D location);
 
     /**
      * Alle gesperrten Knoten entsperren.
