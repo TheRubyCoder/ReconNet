@@ -1,14 +1,14 @@
-package haw.wp.rcpn.impl;
-
-import haw.wp.rcpn.IArc;
-import haw.wp.rcpn.INode;
-import haw.wp.rcpn.IPetrinet;
-import haw.wp.rcpn.IPlace;
-import haw.wp.rcpn.IPost;
-import haw.wp.rcpn.IPre;
-import haw.wp.rcpn.ITransition;
+package petrinetze.impl;
 
 import java.util.List;
+
+import petrinetze.IArc;
+import petrinetze.INode;
+import petrinetze.IPetrinet;
+import petrinetze.IPlace;
+import petrinetze.IPost;
+import petrinetze.IPre;
+import petrinetze.ITransition;
 
 public class Petrinet implements IPetrinet {
 

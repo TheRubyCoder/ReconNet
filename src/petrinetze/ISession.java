@@ -1,4 +1,4 @@
-package haw.wp.rcpn;
+package petrinetze;
 /**
  * Diese Klasse fungiert als Laufzeitumgebung fuer die Netze.
  * Hier kann ein,oder mehrere Netze erzeugt und verwaltet werden.

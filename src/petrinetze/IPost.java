@@ -1,4 +1,4 @@
-package haw.wp.rcpn;
+package petrinetze;
 /**
  * Das Objekt bildet das Post-State eines Petrinetzes.
  * Und Liefert entsprechende Methoden.

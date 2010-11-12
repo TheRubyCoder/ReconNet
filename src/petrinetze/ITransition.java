@@ -1,4 +1,4 @@
-package haw.wp.rcpn;
+package petrinetze;
 
 import java.util.Hashtable;
 /**

@@ -1,4 +1,4 @@
-package haw.wp.rcpn;
+package petrinetze;
 /**
  * Bildet die Kante eines Petrinetzes und bietet die entsprechenden
  * Methoden an.

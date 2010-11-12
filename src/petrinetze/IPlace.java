@@ -1,4 +1,4 @@
-package haw.wp.rcpn;
+package petrinetze;
 /**
  * Bildet die Stelle eines Petrinetzes und bietet die
  * entsprechenden Methooden dafuer an.

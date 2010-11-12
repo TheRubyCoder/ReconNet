@@ -1,7 +1,7 @@
-package haw.wp.rcpn.impl;
+package petrinetze.impl;
 
-import haw.wp.rcpn.IPetrinet;
-import haw.wp.rcpn.ISession;
+import petrinetze.IPetrinet;
+import petrinetze.ISession;
 
 public class Session implements ISession {
 

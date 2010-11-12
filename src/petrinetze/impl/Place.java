@@ -1,6 +1,6 @@
-package haw.wp.rcpn.impl;
+package petrinetze.impl;
 
-import haw.wp.rcpn.IPlace;
+import petrinetze.IPlace;
 
 /**
 * Diese Klasse stellt eine Stelle in Petrinetze dar und

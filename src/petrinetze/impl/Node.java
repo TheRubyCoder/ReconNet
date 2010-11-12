@@ -1,6 +1,6 @@
-package haw.wp.rcpn.impl;
+package petrinetze.impl;
 
-import haw.wp.rcpn.INode;
+import petrinetze.INode;
 
 /**
  * Ist die Oberklasse fuer Stellen und Transition in Petrinetze, 

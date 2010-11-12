@@ -1,10 +1,10 @@
-package haw.wp.rcpn.test;
+package petrinetze.test;
 
-import haw.wp.rcpn.IArc;
-import haw.wp.rcpn.IPetrinet;
-import haw.wp.rcpn.IPlace;
-import haw.wp.rcpn.ITransition;
-import haw.wp.rcpn.impl.Session;
+import petrinetze.IArc;
+import petrinetze.IPetrinet;
+import petrinetze.IPlace;
+import petrinetze.ITransition;
+import petrinetze.impl.Session;
 
 public class TestPetriNet {
 

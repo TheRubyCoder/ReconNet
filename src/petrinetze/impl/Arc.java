@@ -1,8 +1,8 @@
-package haw.wp.rcpn.impl;
+package petrinetze.impl;
 
 
-import haw.wp.rcpn.INode;
-import haw.wp.rcpn.IArc;
+import petrinetze.IArc;
+import petrinetze.INode;
 
 /**
 * Diese Klasse stellt eine Kante in Petrinetze dar und

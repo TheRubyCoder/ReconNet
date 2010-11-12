@@ -1,4 +1,4 @@
-package haw.wp.rcpn;
+package petrinetze;
 /**
  * Dieses Interfcase bietet Metoden, um ein Petrinetz
  * zu generieren. Das verhindert die direkte Instnazbildung 

@@ -1,4 +1,4 @@
-package haw.wp.rcpn;
+package petrinetze;
 /**
  * Ist die Oberklasse fuer Place und Transitionen
  * und bietet die gemeinsamen Methoden an.

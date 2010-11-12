@@ -1,4 +1,4 @@
-package haw.wp.rcpn.impl;
+package petrinetze.impl;
 
 /**
 * Diese Klasse stellt eine Transition in Petrinetze dar und
@@ -7,10 +7,9 @@ package haw.wp.rcpn.impl;
 * @author Reiter, Safai
 * @version 1.0
 */
-import haw.wp.rcpn.ITransition;
-
 import java.util.Hashtable;
-import java.util.Vector;
+
+import petrinetze.ITransition;
 
 
 public class Transition implements ITransition {

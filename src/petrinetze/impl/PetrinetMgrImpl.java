@@ -1,7 +1,7 @@
-package haw.wp.rcpn.impl;
+package petrinetze.impl;
 
-import haw.wp.rcpn.IPetrinetMgr;
-import haw.wp.rcpn.ISession;
+import petrinetze.IPetrinetMgr;
+import petrinetze.ISession;
 
 public class PetrinetMgrImpl implements IPetrinetMgr {
 
