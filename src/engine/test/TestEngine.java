@@ -137,6 +137,14 @@ public class TestEngine extends TestCase{
 	@Ignore 
 	@Test
 	public void TestSimulation(){
+		long x = 1000000000;
+		sim.start(x);
+		assertTrue(sim.isRunning());
+		sim.stop();
+		assertTrue(!sim.isRunning());
+		x = 0;
+		sim.start(x);
+		assertTrue(!sim.isRunning());		
 		
 	}
 	
