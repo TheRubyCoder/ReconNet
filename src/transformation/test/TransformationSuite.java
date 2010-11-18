@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package transformation;
+package transformation.test;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -17,7 +17,7 @@ import org.junit.runners.Suite;
  * @author Niklas
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({transformation.IMorphismTest.class,transformation.IRuleTest.class,transformation.ITransformationTest.class,transformation.TransformationsTest.class})
+@Suite.SuiteClasses({transformation.test.IMorphismTest.class,transformation.test.IRuleTest.class,transformation.test.ITransformationTest.class,transformation.test.TransformationsTest.class})
 public class TransformationSuite {
 
     @BeforeClass
