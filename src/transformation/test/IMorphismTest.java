@@ -53,7 +53,7 @@ public class IMorphismTest {
         Map result = instance.transitions();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
     }
 
     /**
@@ -67,7 +67,7 @@ public class IMorphismTest {
         Map result = instance.places();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
     }
 
     /**
@@ -81,7 +81,7 @@ public class IMorphismTest {
         Map result = instance.edges();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
     }
 
     /**
@@ -96,7 +96,7 @@ public class IMorphismTest {
         ITransition result = instance.morph(transition);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
     }
 
     /**
@@ -111,7 +111,7 @@ public class IMorphismTest {
         IPlace result = instance.morph(place);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
     }
 
     /**
@@ -126,7 +126,7 @@ public class IMorphismTest {
         IArc result = instance.morph(arc);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
     }
 
     /**
@@ -140,7 +140,8 @@ public class IMorphismTest {
         boolean result = instance.IsValid();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        fail("asdf");
+
     }
 
     public class IMorphismImpl implements IMorphism {

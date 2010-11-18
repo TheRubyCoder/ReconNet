@@ -5,6 +5,7 @@
 
 package transformation.test;
 
+import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -21,7 +22,7 @@ import transformation.Transformations;
  *
  * @author Niklas
  */
-public class TransformationsTest {
+public class TransformationsTest extends TestCase{
 
     public TransformationsTest() {
     }
@@ -53,7 +54,7 @@ public class TransformationsTest {
         ITransformation transformation = null;
         Transformations.join(left, right, transformation);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
     }
 
     /**
@@ -68,7 +69,7 @@ public class TransformationsTest {
         IRule rule = null;
         Transformations.join(left, right, morphism, rule);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
     }
 
     /**
@@ -82,7 +83,7 @@ public class TransformationsTest {
         IRule rule = null;
         Transformations.join(left, right, rule);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
     }
 
     /**
@@ -96,7 +97,7 @@ public class TransformationsTest {
         Transformations instance = null;
         instance.transform(net, rule);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+
     }
 
 }
