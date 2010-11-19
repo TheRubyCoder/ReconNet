@@ -1,7 +1,7 @@
 package petrinetze.impl;
 
+import petrinetze.IPetrinet;
 import petrinetze.IPetrinetMgr;
-import petrinetze.ISession;
 
 public class PetrinetMgrImpl implements IPetrinetMgr {
 
@@ -11,7 +11,7 @@ public class PetrinetMgrImpl implements IPetrinetMgr {
 	}
 
 	@Override
-	public ISession createSession() {
+	public IPetrinet createPetrinet() {
 		return new Session();
 	}
 
