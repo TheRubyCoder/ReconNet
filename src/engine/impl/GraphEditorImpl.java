@@ -16,7 +16,7 @@ import java.util.Set;
  * Time: 16:16:12
  * To change this template use File | Settings | File Templates.
  */
-public class GraphEditorImpl implements GraphEditor {
+class GraphEditorImpl implements GraphEditor {
 
     private final EngineContext context;
 

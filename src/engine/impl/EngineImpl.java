@@ -18,17 +18,18 @@ import transformation.Transformations;
  * Time: 16:31:11
  * To change this template use File | Settings | File Templates.
  */
-public class EngineImpl implements Engine {
+class EngineImpl implements Engine {
 
     private final EngineContext context;
 
     private final GraphEditorImpl graphEditor;
 
-    private final SimulationImpl simulation = new SimulationImpl();
+    private final SimulationImpl simulation;
 
     public EngineImpl(EngineContext context) {
         this.context = context;
         this.graphEditor = new GraphEditorImpl(context);
+        this.simulation = new SimulationImpl(context);
     }
 
     @Override

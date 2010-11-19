@@ -3,7 +3,8 @@ package engine;
 /**
  * Listener-Interface zur Benachrichtigung bei Schalten des Petrinetzes.
  *
- * @todo Diese Schnittstelle sollte evtl. von der Petrinetzkomponente bedient werden.
+ * @todo Diese Schnittstelle sollte evtl. in Teilen von der Petrinetzkomponente bedient werden,
+ *       da diese das Tokenspiel implementiert.
  */
 public interface StepListener {
     

@@ -41,4 +41,11 @@ public interface Simulation {
      */
     void addStepListener(StepListener listener);
 
+    /**
+     * Entfernen eines Listeners.
+     *
+     * @param listener der zu entfernende {@link StepListener}.
+     */
+    void removeStepListener(StepListener listener);
+
 }
