@@ -14,4 +14,18 @@ public interface StepListener {
      * @todo Soll das Petrinetz hier mitgegeben werden?
      */
     void stepped(Simulation s);
+
+    /**
+     * Callback-Methode bei Start der Simulation.
+     *
+     * @param s die gestartete Simulation
+     */
+    void started(Simulation s);
+
+    /**
+     * Callback-Methode bei Stoppen der Simulation.
+     *
+     * @param s die gestoppte Simulation
+     */
+    void stopped(Simulation s);
 }
