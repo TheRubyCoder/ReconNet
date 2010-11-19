@@ -1,5 +1,6 @@
 package engine.impl;
 
+import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.algorithms.layout.KKLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.DirectedGraph;
@@ -21,7 +22,7 @@ class EngineContext {
 
     private DirectedGraph<INode,IArc> graph = new DirectedSparseGraph<INode,IArc>();
 
-    private Layout<INode, IArc> layout = new KKLayout<INode,IArc>(graph);
+    private AbstractLayout<INode, IArc> layout = new KKLayout<INode,IArc>(graph);
 
     public EngineContext(IPetrinet petrinet) {
         this.petrinet = petrinet;
@@ -35,7 +36,7 @@ class EngineContext {
         return graph;
     }
 
-    public Layout<INode, IArc> getLayout() {
+    public AbstractLayout<INode, IArc> getLayout() {
         return layout;
     }
 }
