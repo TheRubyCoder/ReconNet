@@ -122,10 +122,10 @@ public interface IPetrinet {
 	 * 
 	 * @param l
 	 */
-	void addPetrinetListener(PetrinetListener l);
+	void addPetrinetListener(IPetrinetListener l);
 	/**
 	 * 
 	 * @param l
 	 */
-	void removePetrinetListener(PetrinetListener l);
+	void removePetrinetListener(IPetrinetListener l);
 }

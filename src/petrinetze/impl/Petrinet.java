@@ -10,15 +10,15 @@ import petrinetze.IArc;
 import petrinetze.IGraphElement;
 import petrinetze.INode;
 import petrinetze.IPetrinet;
+import petrinetze.IPetrinetListener;
 import petrinetze.IPlace;
 import petrinetze.IPost;
 import petrinetze.IPre;
 import petrinetze.ITransition;
-import petrinetze.PetrinetListener;
 
 public class Petrinet implements IPetrinet {
 	
-	private final Set<PetrinetListener> listeners = new HashSet<PetrinetListener>();
+	private final Set<IPetrinetListener> listeners = new HashSet<IPetrinetListener>();
 	
 	
 	@Override
@@ -85,13 +85,13 @@ public class Petrinet implements IPetrinet {
 	}
 
 	private void fireChanged(INode element) {
-		final List<PetrinetListener> listeners;
+		final List<IPetrinetListener> listeners;
 		
 		synchronized (this.listeners){
-			listeners = new ArrayList<PetrinetListener>(this.listeners);
+			listeners = new ArrayList<IPetrinetListener>(this.listeners);
 		}
 		
-		for (PetrinetListener l : listeners)  {
+		for (IPetrinetListener l : listeners)  {
 			l.changed(this, element, ActionType.changed);
 		}
 	}
@@ -120,15 +120,15 @@ public class Petrinet implements IPetrinet {
 		return null;
 	}
 
-	@Override
-	public void addPetrinetListener(PetrinetListener l) {
+	public void addPetrinetListener(IPetrinetListener l) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
-	public void removePetrinetListener(PetrinetListener l) {
+	public void removePetrinetListener(IPetrinetListener l) {
 		// TODO Auto-generated method stub
 		
 	}
+
+
 }
