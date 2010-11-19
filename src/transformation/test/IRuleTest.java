@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package transformation.test;
+package transformation;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -12,7 +12,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import petrinetze.IPetrinet;
-import transformation.IRule;
 
 /**
  *
@@ -50,7 +49,7 @@ public class IRuleTest {
         IPetrinet result = instance.L();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -64,7 +63,7 @@ public class IRuleTest {
         IPetrinet result = instance.K();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -78,7 +77,7 @@ public class IRuleTest {
         IPetrinet result = instance.R();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-
+        fail("The test case is a prototype.");
     }
 
     public class IRuleImpl implements IRule {

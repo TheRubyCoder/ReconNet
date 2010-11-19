@@ -3,9 +3,8 @@
  * and open the template in the editor.
  */
 
-package transformation.test;
+package transformation;
 
-import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -13,16 +12,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import petrinetze.IPetrinet;
-import transformation.IMorphism;
-import transformation.IRule;
-import transformation.ITransformation;
-import transformation.Transformations;
 
 /**
  *
  * @author Niklas
  */
-public class TransformationsTest extends TestCase{
+public class TransformationsTest {
 
     public TransformationsTest() {
     }
@@ -54,7 +49,7 @@ public class TransformationsTest extends TestCase{
         ITransformation transformation = null;
         Transformations.join(left, right, transformation);
         // TODO review the generated test code and remove the default call to fail.
-
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -69,7 +64,7 @@ public class TransformationsTest extends TestCase{
         IRule rule = null;
         Transformations.join(left, right, morphism, rule);
         // TODO review the generated test code and remove the default call to fail.
-
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -83,7 +78,7 @@ public class TransformationsTest extends TestCase{
         IRule rule = null;
         Transformations.join(left, right, rule);
         // TODO review the generated test code and remove the default call to fail.
-
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -97,7 +92,7 @@ public class TransformationsTest extends TestCase{
         Transformations instance = null;
         instance.transform(net, rule);
         // TODO review the generated test code and remove the default call to fail.
-
+        fail("The test case is a prototype.");
     }
 
 }

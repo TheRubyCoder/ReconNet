@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package transformation.test;
+package transformation;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -12,9 +12,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import petrinetze.IPetrinet;
-import transformation.IMorphism;
-import transformation.IRule;
-import transformation.ITransformation;
 
 /**
  *
@@ -52,7 +49,7 @@ public class ITransformationTest {
         IRule result = instance.rule();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -66,7 +63,7 @@ public class ITransformationTest {
         IMorphism result = instance.morphism();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -80,7 +77,7 @@ public class ITransformationTest {
         IPetrinet result = instance.N();
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-
+        fail("The test case is a prototype.");
     }
 
     /**
@@ -92,7 +89,7 @@ public class ITransformationTest {
         ITransformation instance = new ITransformationImpl();
         instance.transform();
         // TODO review the generated test code and remove the default call to fail.
-         
+        fail("The test case is a prototype.");
     }
 
     public class ITransformationImpl implements ITransformation {
