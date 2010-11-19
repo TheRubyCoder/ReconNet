@@ -14,12 +14,13 @@ import petrinetze.IPlace;
 import petrinetze.IPost;
 import petrinetze.IPre;
 import petrinetze.ITransition;
-import petrinetze.IPetrinetListener;
+import petrinetze.PetrinetListener;
 
 public class Petrinet implements IPetrinet {
 	
-	private final Set<IPetrinetListener> listeners = new HashSet<IPetrinetListener>();
- 
+	private final Set<PetrinetListener> listeners = new HashSet<PetrinetListener>();
+	
+	
 	@Override
 	public IPlace createPlace(String name) {
 		return new Place();
@@ -32,12 +33,13 @@ public class Petrinet implements IPetrinet {
 
 	@Override
 	public ITransition createTransition(String name) {
-		return null;
+		return new Transition();
 
 	}
 
 	@Override
 	public void deleteTransitionByID(int id) {
+		
 	}
 
 	@Override
@@ -83,13 +85,13 @@ public class Petrinet implements IPetrinet {
 	}
 
 	private void fireChanged(INode element) {
-		final List<IPetrinetListener> listeners;
+		final List<PetrinetListener> listeners;
 		
 		synchronized (this.listeners){
-			listeners = new ArrayList<IPetrinetListener>(this.listeners);
+			listeners = new ArrayList<PetrinetListener>(this.listeners);
 		}
 		
-		for (IPetrinetListener l : listeners)  {
+		for (PetrinetListener l : listeners)  {
 			l.changed(this, element, ActionType.changed);
 		}
 	}
@@ -119,13 +121,13 @@ public class Petrinet implements IPetrinet {
 	}
 
 	@Override
-	public void addPetrinetListener(IPetrinetListener l) {
+	public void addPetrinetListener(PetrinetListener l) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void removePetrinetListener(IPetrinetListener l) {
+	public void removePetrinetListener(PetrinetListener l) {
 		// TODO Auto-generated method stub
 		
 	}

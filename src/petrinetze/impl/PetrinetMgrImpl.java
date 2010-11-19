@@ -12,7 +12,8 @@ public class PetrinetMgrImpl implements IPetrinetMgr {
 
 	@Override
 	public IPetrinet createPetrinet() {
-		return new Session();
+		
+		return new Petrinet();
 	}
 
 }
