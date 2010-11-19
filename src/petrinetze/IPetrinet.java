@@ -1,6 +1,6 @@
 package petrinetze;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * IPetrinet definiert eine Schnittstelle um Petrinetzstrukturen
@@ -18,6 +18,7 @@ public interface IPetrinet {
 	 * Fuegt eine Stelle hinzu.
 	 * @param name
 	 * 			Der Name der Stelle.
+	 * @param marks
 	 * 			Die Anzahl der maximal möglichen Token.
 	 */
 	public IPlace createPlace(String name);
@@ -45,6 +46,7 @@ public interface IPetrinet {
 	
 	/**
 	 * Fuegt eine Kante hinzu.
+	 * @param marks
 	 * 			Die Kantengewichtung.
 	 */
 	public IArc createArc();
@@ -59,21 +61,21 @@ public interface IPetrinet {
 	/**
 	 * Gibt alle aktivierten Transitionen zurück. 
 	 */
-	public List<ITransition> getActivatedTransitions();
+	public Set<ITransition> getActivatedTransitions();
 	
 	/**
 	 * Schaltet die angegebene Transition.
 	 * @param id
 	 * 			Die ID der Transition.
 	 */
-	public List<INode> fire(int id);
+	public Set<INode> fire(int id);
 	
 	/**
 	 * Schaltet nicht-deterministisch.
 	 * @return alle Nodes (sowohl Stellen als auch Transitionen), 
 	 * die sich geaendert haben.
 	 */
-	public List<INode> fire();
+	public Set<INode> fire();
 	
 	/**
 	 * Liefert das Pre-Objekt zu dem Netz zurueck
@@ -88,9 +90,42 @@ public interface IPetrinet {
 	public IPost getPost();
 	
 	/**
-	 * liefert die ID zurueck
-	 * @return
+	 * Liefert die ID zurueck
+	 * @return 
 	 */
 	public int getId();
 	
+	/**
+	 * Liefert alle Stellen des Petrinetzes zurueck
+	 * @return {@link IPlace}
+	 */
+	public Set<IPlace> getAllPlaces();
+	
+	/**
+	 * Liefert alle Transitionen des Petrinetzes zurueck
+	 * @return {@link ITransition}
+	 */
+	public Set<ITransition> getAllTransitions();
+	
+	/**
+	 * Liefert alle Kanten des Petrinetzes zuueck
+	 * @return
+	 */
+	public Set<IArc> getAllArcs();
+	
+	/**
+	 * Liefert alle graphische Elemente des Petrinetzes
+	 * @return
+	 */
+	public Set<IGraphElement> getAllGraphicElement();
+	/**
+	 * 
+	 * @param l
+	 */
+	void addPetrinetListener(PetrinetListener l);
+	/**
+	 * 
+	 * @param l
+	 */
+	void removePetrinetListener(PetrinetListener l);
 }
