@@ -1,5 +1,7 @@
 package engine;
 
+import petrinetze.ITransition;
+
 /**
  * Steuerungsklasse für das Tokenspiel.
  * 
@@ -10,6 +12,15 @@ public interface Simulation {
      * Durchführen eines Simulationsschrittes.
      */
     void step();
+
+    /**
+     * Durchführen eines Simulationsschrittes mit gegebener Transition.
+     *
+     * @todo Exception im Fehlerfall?
+     *
+     * @see petrinetze.IPetrinet#fire(int) 
+     */
+    void step(ITransition transition);
 
     /**
      * Starten der kontinuierlichen Simulation.

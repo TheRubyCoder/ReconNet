@@ -2,6 +2,7 @@ package engine.impl;
 
 import engine.Simulation;
 import engine.StepListener;
+import petrinetze.ITransition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,13 @@ class SimulationImpl implements Simulation {
 
     @Override
     public void step() {
-        throw new UnsupportedOperationException("Not implemented");
+        context.getPetrinet().fire();
+        fireStepped();
+    }
+
+    public void step(ITransition transition) {
+        context.getPetrinet().fire(transition.getId());
+        fireStepped();
     }
 
     @Override
