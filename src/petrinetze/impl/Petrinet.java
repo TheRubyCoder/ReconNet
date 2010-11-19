@@ -29,7 +29,7 @@ public class Petrinet implements IPetrinet {
 	}
 
 	@Override
-	public void deleteTransitionByID(String id) {
+	public void deleteTransitionByID(int id) {
 	}
 
 	@Override

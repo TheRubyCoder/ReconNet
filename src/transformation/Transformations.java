@@ -4,7 +4,7 @@ import petrinetze.IPetrinet;
 
 /**
  * 
- * @author Philipp Kühn
+ * @author Philipp Kï¿½hn
  *
  */
 public final class Transformations 
@@ -56,7 +56,7 @@ public final class Transformations
 	 * @param net the petrinet.
 	 * @param rule the rule to use.
 	 */
-	public void transform(IPetrinet net, IRule rule)
+	public static void transform(IPetrinet net, IRule rule)
 	{
 		throw new UnsupportedOperationException();
 	}
