@@ -15,6 +15,6 @@ public interface IPetrinetMgr {
 	 * 
 	 * @return  {@link ISession}
 	 */
-	public ISession createSession();
+	public IPetrinet createPetrinet();
  
 }
