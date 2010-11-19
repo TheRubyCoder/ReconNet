@@ -13,7 +13,7 @@ import java.awt.geom.Point2D;
  * Time: 17:38:37
  * To change this template use File | Settings | File Templates.
  */
-public class LayoutEditorImpl implements LayoutEditor {
+class LayoutEditorImpl implements LayoutEditor {
 
     private final EngineContext context;
 

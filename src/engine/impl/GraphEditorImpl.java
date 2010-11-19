@@ -56,7 +56,7 @@ class GraphEditorImpl implements GraphEditor {
 
     public void remove(Set<INode> nodes) {
         for (INode node : nodes) {
-            // TODO besser nur aus Petrinet lÃ¶schen und dann bei Listener-Callback aus Graph entfernen?
+            // TODO besser nur aus Petrinet löschen und dann bei Listener-Callback aus Graph entfernen?
             if (node instanceof IArc) {
                 context.getGraph().removeEdge((IArc)node);
                 context.getPetrinet().deleteArcByID(node.getId());
