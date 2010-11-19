@@ -3,6 +3,7 @@ package transformation;
 import java.util.Map;
 
 import petrinetze.IArc;
+import petrinetze.IPetrinet;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
 
@@ -46,6 +47,18 @@ public class Morphism implements IMorphism {
 
 	@Override
 	public Map<ITransition, ITransition> transitions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IPetrinet From() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public IPetrinet To() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -3,8 +3,10 @@ package transformation;
 import java.util.Map;
 
 import petrinetze.IArc;
+import petrinetze.IPetrinet;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
+import sun.nio.ch.SocketOpts.IP;
 /**
  * An interface for morphisms on IPetrinet.
  * @author Philipp Kühn
@@ -57,4 +59,16 @@ public interface IMorphism
 	 * @return true if this morphism is valid.
 	 */
 	boolean IsValid();
+	
+	/**
+	 * Returns the Petrinet from which this morphism starts.
+	 * @return the Petrinet from which this morphism starts.
+	 */
+	IPetrinet From();
+	
+	/**
+	 * Returns the Petrinet into which this morphism maps to.
+	 * @return the Petrinet into which this morphism maps to.
+	 */
+	IPetrinet To();
 }
