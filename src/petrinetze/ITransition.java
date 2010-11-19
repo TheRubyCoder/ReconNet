@@ -36,12 +36,17 @@ public interface ITransition extends INode {
 	/**
 	 * Fuehrt ein renew von Lable bei Id durch.
 	 */
-	public void rnwAsId();
+	public void rnw();
 	
 	/**
 	 * Fuehrt ein renew von Lable mit der Zaehlvariable durch
 	 */
-	public void rnwAsCount();
+	public void setRnw();
+	
+	/**
+	 * Fuehrt ein renew von Lable mit der Zaehlvariable durch
+	 */
+	public void getRnw();
 	
 	/**
 	 * Userdefined renew Funktion. 
