@@ -26,10 +26,13 @@ class EngineImpl implements Engine {
 
     private final SimulationImpl simulation;
 
+    private final LayoutEditorImpl layoutEditor;
+
     public EngineImpl(EngineContext context) {
         this.context = context;
         this.graphEditor = new GraphEditorImpl(context);
         this.simulation = new SimulationImpl(context);
+        this.layoutEditor = new LayoutEditorImpl(context);
     }
 
     @Override
@@ -49,7 +52,7 @@ class EngineImpl implements Engine {
 
     @Override
     public LayoutEditor getLayoutEditor() {
-        throw new UnsupportedOperationException("Not implemented");
+        return layoutEditor;
     }
 
     @Override

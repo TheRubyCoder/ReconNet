@@ -39,7 +39,7 @@ public class LayoutEditorImpl implements LayoutEditor {
     @Override
     public Point2D getPosition(INode node) {
         // TODO tut es das, was ich denke?
-        new Point2D.Double(context.getLayout().getX(node), context.getLayout().getY(node));
+        return new Point2D.Double(context.getLayout().getX(node), context.getLayout().getY(node));
     }
 
     @Override

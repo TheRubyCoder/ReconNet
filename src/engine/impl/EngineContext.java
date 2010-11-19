@@ -26,6 +26,9 @@ class EngineContext {
 
     public EngineContext(IPetrinet petrinet) {
         this.petrinet = petrinet;
+
+        // TODO hier Graph aufbauen!
+        // Dafür muss allerdings das Petrinetz zuerst die Elemente bereitstellen...
     }
 
     public IPetrinet getPetrinet() {
