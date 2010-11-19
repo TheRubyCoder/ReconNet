@@ -9,7 +9,7 @@
  * Created on 11.11.2010, 15:55:26
  */
 
-package javaapplication2;
+package gui;
 
 /**
  *
