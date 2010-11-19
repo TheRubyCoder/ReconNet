@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package transformation;
+package transformation.test;
 
 import java.util.Map;
 import org.junit.After;
@@ -15,6 +15,7 @@ import static org.junit.Assert.*;
 import petrinetze.IArc;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
+import transformation.IMorphism;
 
 /**
  *

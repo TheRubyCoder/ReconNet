@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package transformation;
+package transformation.test;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -12,6 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import petrinetze.IPetrinet;
+import transformation.IRule;
 
 /**
  *
