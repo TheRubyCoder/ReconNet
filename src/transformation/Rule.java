@@ -371,7 +371,7 @@ public class Rule implements IRule
 					k.deleteArcByID(edge.getId());
 				}
 			}
-		}		
+		}	
 	}
 
 	private <K, V> K getKeyFromValue(Map<K, V> map, V value)
