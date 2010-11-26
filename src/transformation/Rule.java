@@ -74,6 +74,9 @@ public class Rule implements IRule
 		private final Map<INode, INode> rKSameNodes;
 		private final Map<IArc, IArc> lkSameEdges;
 		private final Map<IArc, IArc> rKSameEdges;
+		private boolean rChanging = false;
+		private boolean kChanging = false;
+		private boolean lChanging = false;
 		
 		Listener(Net net, IPetrinet l, IPetrinet k, IPetrinet r)
 		{
@@ -99,15 +102,30 @@ public class Rule implements IRule
 		{
 			if(net == Net.l)
 			{
-				lNodeChanged(element, actionType);
+				if(!kChanging && !rChanging)
+				{
+					lChanging = true;
+					lNodeChanged(element, actionType);
+					lChanging = false;
+				}
 			}
 			else if(net == Net.k)
 			{
-				kNodeChanged(element, actionType);
+				if(!lChanging && !rChanging)
+				{
+					kChanging = true;
+					kNodeChanged(element, actionType);
+					kChanging = false;
+				}
 			}
 			else if(net == Net.r)
 			{
-				rNodeChanged(element, actionType);
+				if(!lChanging && !kChanging)
+				{
+					rChanging = true;
+					rNodeChanged(element, actionType);
+					rChanging = false;
+				}
 			}
 		}
 
@@ -116,15 +134,30 @@ public class Rule implements IRule
 		{
 			if(net == Net.l)
 			{
-				lEdgeChanged(element, actionType);
+				if(!kChanging && !rChanging)
+				{
+					lChanging = true;
+					lEdgeChanged(element, actionType);
+					lChanging = false;
+				}
 			}
 			else if(net == Net.k)
 			{
-				kEdgeChanged(element, actionType);
+				if(!lChanging && !rChanging)
+				{
+					kChanging = true;
+					kEdgeChanged(element, actionType);
+					kChanging = false;
+				}
 			}
 			else if(net == Net.r)
 			{
-				rEdgeChanged(element, actionType);
+				if(!lChanging && !kChanging)
+				{
+					rChanging = true;
+					rEdgeChanged(element, actionType);
+					rChanging = false;
+				}
 			}
 		}
 		
@@ -147,13 +180,15 @@ public class Rule implements IRule
 			{
 				if(element instanceof IPlace && !r.getAllPlaces().contains(element) && lKSameNodes.containsKey(element))
 				{
-					k.deletePlaceById(lKSameNodes.get(element).getId());
+					INode node = lKSameNodes.get(element);
 					lKSameNodes.remove(element);
+					k.deletePlaceById(node.getId());
 				}
 				else if(element instanceof ITransition && !r.getAllTransitions().contains(element) && lKSameNodes.containsKey(element))
 				{
-					k.deleteTransitionByID(lKSameNodes.get(element).getId());
+					INode node = lKSameNodes.get(element);
 					lKSameNodes.remove(element);
+					k.deleteTransitionByID(node.getId());
 				}
 			}
 		}
@@ -194,20 +229,31 @@ public class Rule implements IRule
 				{
 					if(lKSameNodes.containsValue(element))
 					{
-						l.deletePlaceById(getKeyFromValue(lKSameNodes, element).getId());
+						INode node = getKeyFromValue(lKSameNodes, element);
 						lKSameNodes.remove(element);
+						l.deletePlaceById(node.getId());
 					}
 					if(rKSameNodes.containsValue(element))
 					{
-						r.deletePlaceById(getKeyFromValue(rKSameNodes, element).getId());
+						INode node = getKeyFromValue(rKSameNodes, element);
 						rKSameNodes.remove(element);
+						r.deletePlaceById(node.getId());
 					}
 				}
-				//TODO hier weitermachen
 				else if(element instanceof ITransition && !r.getAllTransitions().contains(element) && lKSameNodes.containsKey(element))
 				{
-					k.deleteTransitionByID(lKSameNodes.get(element).getId());
-					lKSameNodes.remove(element);
+					if(lKSameNodes.containsValue(element))
+					{
+						INode node = getKeyFromValue(lKSameNodes, element);
+						lKSameNodes.remove(element);
+						l.deletePlaceById(node.getId());
+					}
+					if(rKSameNodes.containsValue(element))
+					{
+						INode node = getKeyFromValue(rKSameNodes, element);
+						rKSameNodes.remove(element);
+						r.deletePlaceById(node.getId());
+					}
 				}
 			}
 		}
@@ -216,11 +262,31 @@ public class Rule implements IRule
 		{
 			if(actionType == ActionType.added)
 			{
-				
+				if(element instanceof IPlace && !rKSameNodes.containsKey(element))
+				{
+					INode node = k.createPlace(element.getName());
+					rKSameNodes.put(element, node);
+				}
+				else if(element instanceof ITransition && !rKSameNodes.containsKey(element))
+				{
+					INode node = k.createTransition(element.getName());
+					rKSameNodes.put(element, node);
+				}
 			}
 			else if(actionType == ActionType.deleted)
 			{
-				
+				if(element instanceof IPlace && !r.getAllPlaces().contains(element) && rKSameNodes.containsKey(element))
+				{
+					INode node = rKSameNodes.get(element);
+					rKSameNodes.remove(element);
+					k.deletePlaceById(node.getId());
+				}
+				else if(element instanceof ITransition && !r.getAllTransitions().contains(element) && rKSameNodes.containsKey(element))
+				{
+					INode node = rKSameNodes.get(element);
+					rKSameNodes.remove(element);
+					k.deleteTransitionByID(node.getId());
+				}
 			}
 		}
 		
@@ -228,22 +294,57 @@ public class Rule implements IRule
 		{
 			if(actionType == ActionType.added)
 			{
-				
+				if(!lkSameEdges.containsKey(element))
+				{
+					IArc edge = k.createArc();
+					edge.setStart(lKSameNodes.get(element.getStart()));
+					edge.setEnd(lKSameNodes.get(element.getEnd()));
+					lkSameEdges.put(element, edge);
+				}
 			}
 			else if(actionType == ActionType.deleted)
 			{
-				
+				if(lkSameEdges.containsKey(element))
+				{
+					IArc edge = lkSameEdges.get(element);
+					lkSameEdges.remove(element);
+					k.deleteArcByID(edge.getId());
+				}
 			}
 		}
 		private void kEdgeChanged(IArc element, ActionType actionType)
 		{
 			if(actionType == ActionType.added)
 			{
-				
+				if(!lkSameEdges.containsValue(element))
+				{
+					IArc edge = l.createArc();
+					lkSameEdges.put(edge, element);
+					edge.setStart(getKeyFromValue(lKSameNodes, element.getStart()));
+					edge.setEnd(getKeyFromValue(lKSameNodes, element.getEnd()));
+				}
+				if(!rKSameEdges.containsValue(element))
+				{
+					IArc edge = r.createArc();
+					rKSameEdges.put(edge, element);
+					edge.setStart(getKeyFromValue(rKSameNodes, element.getStart()));
+					edge.setEnd(getKeyFromValue(rKSameNodes, element.getEnd()));
+				}
 			}
 			else if(actionType == ActionType.deleted)
 			{
-				
+				if(lkSameEdges.containsValue(element))
+				{
+					IArc edge = getKeyFromValue(lkSameEdges, element);
+					lkSameEdges.remove(element);
+					l.deleteArcByID(edge.getId());
+				}
+				if(rKSameEdges.containsValue(element))
+				{
+					IArc edge = getKeyFromValue(rKSameEdges, element);
+					rKSameEdges.remove(element);
+					r.deleteArcByID(edge.getId());
+				}
 			}
 		}
 		
@@ -251,11 +352,22 @@ public class Rule implements IRule
 		{
 			if(actionType == ActionType.added)
 			{
-				
+				if(!rKSameEdges.containsKey(element))
+				{
+					IArc edge = k.createArc();
+					edge.setStart(rKSameNodes.get(element.getStart()));
+					edge.setEnd(rKSameNodes.get(element.getEnd()));
+					rKSameEdges.put(element, edge);
+				}
 			}
 			else if(actionType == ActionType.deleted)
 			{
-				
+				if(rKSameEdges.containsKey(element))
+				{
+					IArc edge = rKSameEdges.get(element);
+					rKSameEdges.remove(element);
+					k.deleteArcByID(edge.getId());
+				}
 			}
 		}
 		
