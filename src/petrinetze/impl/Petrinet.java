@@ -37,7 +37,7 @@ public class Petrinet implements IPetrinet {
 	
 	
 	public Petrinet() {
-		new Petrinet(UUID.getnID());
+		this(UUID.getnID());
 	}
 
 
