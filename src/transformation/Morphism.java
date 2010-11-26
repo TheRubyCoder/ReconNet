@@ -9,6 +9,10 @@ import petrinetze.ITransition;
 
 public class Morphism implements IMorphism {
 
+	public Morphism(IPetrinet n, IPetrinet l) {
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
 	public boolean IsValid() {
 		// TODO Auto-generated method stub

@@ -1,18 +1,35 @@
 package transformation;
 
 import petrinetze.IPetrinet;
+import petrinetze.IPlace;
+import petrinetze.ITransition;
+import petrinetze.impl.*;
+
+
+import java.util.Iterator;
+import java.util.Set;
 
 public class Transformation implements ITransformation {
 	
 	private final IPetrinet N;
 	private final IMorphism morphism;
-	private final IRule rule;
+	private final IRule rule; 
 	
 	/**
 	 * Constructor for the class Transformation
+	 * @param Petrinet N, Morphism morph, Rule R
 	 */	
 	public Transformation(IPetrinet n,IMorphism morph,IRule r){
 		N = n; morphism = morph; rule = r;
+		
+	}
+	/**
+	 * Constructor for the class Transformation
+	 * @param Petrinet N,Rule R
+	 */	
+	public Transformation(IPetrinet n,IRule r){
+		N = n; rule = r;
+		morphism = new Morphism(N,r.L());
 		
 	}		
 	/**
@@ -49,7 +66,23 @@ public class Transformation implements ITransformation {
 	 */
 	@Override
 	public void transform() {
-		// TODO Auto-generated method stub, Put code in ! 
+		IPetrinet K = rule.K();
+		IPetrinet L = rule.L();	
+		//Places of K - Places of L
+		for ( Iterator<IPlace>i = L.getAllPlaces().iterator(); i.hasNext(); )
+		{
+			K.deletePlaceById(rule.fromLtoK(i.next()).getId());		  
+		}
+		//Transition of K - Transition of L
+		for ( Iterator<ITransition>i = L.getAllTransitions().iterator(); i.hasNext(); )
+		{
+		 K.deleteTransitionByID(rule.fromLtoK(i.next()).getId());		 
+		}
+
+		
+		
+		// TODO Check if L is in N
+		// ADD K-L to the transformationPut code in ! 
 
 	}
 
