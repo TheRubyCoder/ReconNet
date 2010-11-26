@@ -45,7 +45,7 @@ public class PetrinetzTest {
 	public void createTransition()
 	{
 		transition = p.createTransition("transition");
-		assertEquals(transition, "transition");
+		assertEquals(transition.getName(), "transition");
 		assertTrue(p.getAllTransitions().contains(transition));
 		assertTrue(p.getAllGraphElement().getAllNodes().contains(transition));
 	}
