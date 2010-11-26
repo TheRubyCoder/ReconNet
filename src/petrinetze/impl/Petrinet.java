@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import petrinetze.IActionType;
+import petrinetze.ActionType;
 import petrinetze.IArc;
 import petrinetze.IGraphElement;
 import petrinetze.INode;
@@ -36,6 +36,12 @@ public class Petrinet implements IPetrinet {
 
 	
 	
+	public Petrinet() {
+		new Petrinet(UUID.getnID());
+	}
+
+
+
 	@Override
 	public IPlace createPlace(String name) {
 		final Place p = new Place(UUID.getpID());
@@ -142,7 +148,7 @@ public class Petrinet implements IPetrinet {
 		}
 		
 		for (IPetrinetListener l : listeners)  {
-			l.changed(this, element, IActionType.changed);
+			l.changed(this, element, ActionType.changed);
 		}
 	}
 
