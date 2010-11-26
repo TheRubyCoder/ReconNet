@@ -298,7 +298,7 @@ public class Rule implements IRule
 			{
 				if(!lkSameEdges.containsKey(element))
 				{
-					IArc edge = k.createArc();
+					IArc edge = k.createArc(element.getName());
 					edge.setStart(lKSameNodes.get(element.getStart()));
 					edge.setEnd(lKSameNodes.get(element.getEnd()));
 					lkSameEdges.put(element, edge);
@@ -320,14 +320,14 @@ public class Rule implements IRule
 			{
 				if(!lkSameEdges.containsValue(element))
 				{
-					IArc edge = l.createArc();
+					IArc edge = l.createArc(element.getName());
 					lkSameEdges.put(edge, element);
 					edge.setStart(getKeyFromValue(lKSameNodes, element.getStart()));
 					edge.setEnd(getKeyFromValue(lKSameNodes, element.getEnd()));
 				}
 				if(!rKSameEdges.containsValue(element))
 				{
-					IArc edge = r.createArc();
+					IArc edge = r.createArc(element.getName());
 					rKSameEdges.put(edge, element);
 					edge.setStart(getKeyFromValue(rKSameNodes, element.getStart()));
 					edge.setEnd(getKeyFromValue(rKSameNodes, element.getEnd()));
@@ -356,7 +356,7 @@ public class Rule implements IRule
 			{
 				if(!rKSameEdges.containsKey(element))
 				{
-					IArc edge = k.createArc();
+					IArc edge = k.createArc(element.getName());
 					edge.setStart(rKSameNodes.get(element.getStart()));
 					edge.setEnd(rKSameNodes.get(element.getEnd()));
 					rKSameEdges.put(element, edge);
