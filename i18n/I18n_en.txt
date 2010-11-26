@@ -1,0 +1,6 @@
+apply = Apply
+cancel = Cancel
+name = Name
+token = Token
+properties = Properties
+transition = transition

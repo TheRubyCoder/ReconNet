@@ -1,0 +1,6 @@
+apply = Übernehmen
+cancel = Abbrechen
+name = Name
+token = Token
+properties = Eigenschaften
+transition = Transition
