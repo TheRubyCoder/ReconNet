@@ -3,7 +3,7 @@ package petrinetze.test;
 
 import static org.junit.Assert.*;
 
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import petrinetze.IArc;
@@ -15,13 +15,13 @@ import petrinetze.impl.RenewCount;
 
 public class PetrinetzTest {
 
-	IPetrinet p;
-	IPetrinet p2;
-	IPlace place1;
-	IPlace place2;
-	ITransition transition;
-	@Before
-	public void setUp() throws Exception 
+	static IPetrinet p;
+	static IPetrinet p2;
+	static IPlace place1;
+	static IPlace place2;
+	static ITransition transition;
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception 
 	{
 		p = new Petrinet();
 		p2 = new Petrinet();

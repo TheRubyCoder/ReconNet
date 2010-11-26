@@ -92,6 +92,7 @@ public class Petrinet implements IPetrinet {
 	public IArc createArc(String name) {
 		final IArc arc = new Arc(UUID.getaID());
 		arc.setName(name);
+		arcs.add(arc);
 		fireChanged(arc);
 		return arc;
 	}
