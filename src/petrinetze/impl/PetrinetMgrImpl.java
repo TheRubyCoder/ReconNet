@@ -5,6 +5,10 @@ import petrinetze.IPetrinetMgr;
 
 public class PetrinetMgrImpl implements IPetrinetMgr {
 
+	
+	
+	
+	
 	public PetrinetMgrImpl() {
 
 		
@@ -13,7 +17,9 @@ public class PetrinetMgrImpl implements IPetrinetMgr {
 	@Override
 	public IPetrinet createPetrinet() {
 		
-		return new Petrinet();
+		return new Petrinet(UUID.getnID());
 	}
+
+	
 
 }

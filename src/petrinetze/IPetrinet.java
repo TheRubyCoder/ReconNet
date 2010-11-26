@@ -117,7 +117,7 @@ public interface IPetrinet {
 	 * Liefert alle graphische Elemente des Petrinetzes
 	 * @return
 	 */
-	public Set<IGraphElement> getAllGraphicElement();
+	public IGraphElement getAllGraphElement();
 	/**
 	 * 
 	 * @param l

@@ -14,9 +14,6 @@ import petrinetze.INode;
 
 public class Arc implements IArc{
 
-	//TODO Die Invariante prüfern
-	//Zu einem Arc gehoert genau 1 T und 1 P
-	
 	/**
 	 *  Die maximal mögliche Kantengewichtung.
 	 */
@@ -31,8 +28,14 @@ public class Arc implements IArc{
 	 * 	Der Endknoten der Kante.
 	 */
 	private INode end;
+
+	private int id;
 	
 	
+	public Arc(int id) {
+		this.id = id;
+	}
+
 	/* (non-Javadoc)
 	 * @see haw.wp.rcpn.impl.IArc#getName()
 	 */
@@ -47,8 +50,7 @@ public class Arc implements IArc{
 	 */
 	@Override
 	public int getId() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.id;
 	}
 
 	/* (non-Javadoc)
@@ -60,11 +62,6 @@ public class Arc implements IArc{
 
 	}
 
-//	@Override
-//	public void setId(int id) {
-//		// TODO Auto-generated method stub
-//
-//	}
 
 	/* (non-Javadoc)
 	 * @see haw.wp.rcpn.impl.IArc#getMark()

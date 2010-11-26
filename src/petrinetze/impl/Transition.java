@@ -15,14 +15,19 @@ import petrinetze.ITransition;
 public class Transition implements ITransition {
 
 	private Hashtable<String, String> labels;
+	private int id;
+	private String name;
 	
 	
+	public Transition(int id) {
+		this.id = id;
+	}
+
 	/* (non-Javadoc)
 	 * @see haw.wp.rcpn.ITransition#getName()
 	 */
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -31,8 +36,7 @@ public class Transition implements ITransition {
 	 */
 	@Override
 	public int getId() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.id;
 	}
 
 	/* (non-Javadoc)
@@ -40,40 +44,70 @@ public class Transition implements ITransition {
 	 */
 	@Override
 	public void setName(String name) {
-		// TODO Auto-generated method stub
-		
+		this.name = name;
 	}
 
 
 	
 	@Override
 	public Hashtable<String, String> getTlb() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void setTlb(Hashtable<String, String> labels) {
-		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
-	public void rnwAsId() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void rnwAsCount() {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void rnwAsUserDefined() {
-		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void rnw() {
+		
+	}
+
+	@Override
+	public void setRnw() {
+		
+	}
+
+	@Override
+	public void getRnw() {
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Transition other = (Transition) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
+	
+	
 
 }

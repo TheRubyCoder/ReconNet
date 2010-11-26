@@ -29,7 +29,7 @@ public interface IPlace extends INode {
 	public abstract int getMark();
 
 	/**
-	 * @param mark
+	 * @param mark 
 	 * 			Die Anzahl der maximal möglichen Token.
 	 */
 	public abstract void setMark(int mark);
