@@ -24,11 +24,11 @@ public class TestPetriNet {
 		IPlace place2 = net.createPlace("Zweite Stelle");
 		place2.setMark(1);
 		//Verbinde die Stelle mit Transition
-		IArc arc = net.createArc();
+		IArc arc = net.createArc("Erste Kante");
 		arc.setStart(place);
 		arc.setEnd(transition);
 		arc.setMark(2);
-		IArc arc2 = net.createArc();
+		IArc arc2 = net.createArc("Zweite Kante");
 		arc2.setStart(transition);
 		arc2.setEnd(place2);
 		arc2.setMark(1);

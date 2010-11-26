@@ -49,7 +49,7 @@ public interface IPetrinet {
 	 * @param marks
 	 * 			Die Kantengewichtung.
 	 */
-	public IArc createArc();
+	public IArc createArc(String name);
 	
 	/**
 	 * Entfernt die angegebene Kante.

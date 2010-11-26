@@ -7,8 +7,6 @@ package petrinetze.impl;
 * @author Reiter, Safai
 * @version 1.0
 */
-import java.util.Hashtable;
-
 import petrinetze.IRenew;
 import petrinetze.ITransition;
 
