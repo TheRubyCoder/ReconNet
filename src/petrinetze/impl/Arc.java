@@ -17,7 +17,8 @@ public class Arc implements IArc{
 	/**
 	 *  Die maximal mögliche Kantengewichtung.
 	 */
-	private int mark;
+	private int mark = 1;
+	private String name;
 	
 	/**
 	 *  Der Startknoten der Kante.
@@ -42,7 +43,7 @@ public class Arc implements IArc{
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
-		return null;
+		return this.name;
 	}
 
 	/* (non-Javadoc)
@@ -58,8 +59,7 @@ public class Arc implements IArc{
 	 */
 	@Override
 	public void setName(String name) {
-		// TODO Auto-generated method stub
-
+		this.name = name;
 	}
 
 
@@ -111,4 +111,14 @@ public class Arc implements IArc{
 		this.end = end;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Arc [mark=" + mark + ", name=" + name + ", start=" + start
+				+ ", end=" + end + ", id=" + id + "]";
+	}
+
+	
 }

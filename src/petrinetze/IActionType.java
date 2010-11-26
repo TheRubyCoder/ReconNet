@@ -1,6 +1,6 @@
 package petrinetze;
 
-public enum ActionType {
+public enum IActionType {
 	added,
 	changed,
 	deleted

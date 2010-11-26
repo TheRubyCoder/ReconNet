@@ -1,16 +1,25 @@
-package petrinetze;
+package petrinetze.impl;
 
-public class RenewId implements IRenew {
+import petrinetze.IRenew;
+
+public class RenewCount implements IRenew {
 	private String tlb;
-	
 	@Override
 	public String renew(String tlb) {
-		return tlb;
+		
+		int c = Integer.parseInt(tlb);
+		c++;
+		return String.valueOf(c);
 	}
 
 	@Override
 	public boolean isTlbValid(String tlb) {
-		return true;
+		try {
+			Integer.parseInt(tlb);
+			return true;
+		} catch (NumberFormatException exc) {
+			return false;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -35,7 +44,7 @@ public class RenewId implements IRenew {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		RenewId other = (RenewId) obj;
+		RenewCount other = (RenewCount) obj;
 		if (tlb == null) {
 			if (other.tlb != null)
 				return false;
@@ -44,4 +53,5 @@ public class RenewId implements IRenew {
 		return true;
 	}
 	
+
 }

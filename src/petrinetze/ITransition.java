@@ -23,16 +23,8 @@ public interface ITransition extends INode {
 	/**
 	 * @return Den Namen der Transition.
 	 */
-	public Hashtable<String, String> getTlb();
+	public String getTlb();
 
-	/**
-	 * Die Assoziation fuer die renew Funktion wird 
-	 * in Form einer Tabelle mitgegeben.
-	 * 
-	 * @param labels den Namen der Transition.
-	 */
-	public void setTlb(Hashtable<String, String> labels);
-	
 	/**
 	 * Fuehrt ein renew von Lable bei Id durch.
 	 */
@@ -41,12 +33,12 @@ public interface ITransition extends INode {
 	/**
 	 * Fuehrt ein renew von Lable mit der Zaehlvariable durch
 	 */
-	public void setRnw();
+	public void setRnw(IRenew rnw);
 	
 	/**
 	 * Fuehrt ein renew von Lable mit der Zaehlvariable durch
 	 */
-	public void getRnw();
+	public IRenew getRnw();
 	
 	/**
 	 * Userdefined renew Funktion. 

@@ -1,7 +1,9 @@
-package petrinetze;
+package petrinetze.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import petrinetze.IRenew;
 
 public class RenewMap implements IRenew {
 	private final HashMap<String,String> rnw;

@@ -9,14 +9,15 @@ package petrinetze.impl;
 */
 import java.util.Hashtable;
 
+import petrinetze.IRenew;
 import petrinetze.ITransition;
 
 
 public class Transition implements ITransition {
 
-	private Hashtable<String, String> labels;
 	private int id;
 	private String name;
+	private IRenew rnw;
 	
 	
 	public Transition(int id) {
@@ -28,7 +29,7 @@ public class Transition implements ITransition {
 	 */
 	@Override
 	public String getName() {
-		return null;
+		return this.name;
 	}
 
 	/* (non-Javadoc)
@@ -50,13 +51,8 @@ public class Transition implements ITransition {
 
 	
 	@Override
-	public Hashtable<String, String> getTlb() {
+	public String getTlb() {
 		return null;
-	}
-
-	@Override
-	public void setTlb(Hashtable<String, String> labels) {
-		
 	}
 
 
@@ -71,13 +67,13 @@ public class Transition implements ITransition {
 	}
 
 	@Override
-	public void setRnw() {
+	public void setRnw(IRenew rnw) {
 		
 	}
 
 	@Override
-	public void getRnw() {
-		
+	public IRenew getRnw() {
+		return rnw;
 	}
 
 	/* (non-Javadoc)
@@ -106,6 +102,15 @@ public class Transition implements ITransition {
 		if (id != other.id)
 			return false;
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Transition [labels=" + labels + ", id=" + id + ", name=" + name
+				+ "]";
 	}
 	
 	

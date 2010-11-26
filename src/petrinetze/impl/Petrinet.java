@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import petrinetze.ActionType;
+import petrinetze.IActionType;
 import petrinetze.IArc;
 import petrinetze.IGraphElement;
 import petrinetze.INode;
@@ -39,6 +39,7 @@ public class Petrinet implements IPetrinet {
 	@Override
 	public IPlace createPlace(String name) {
 		final Place p = new Place(UUID.getpID());
+		p.setName(name);
 		places.add(p);
 		return p;
 	}
@@ -60,6 +61,7 @@ public class Petrinet implements IPetrinet {
 	@Override
 	public ITransition createTransition(String name) {
 		final Transition t = new Transition(UUID.getpID());
+		t.setName(name);
 		transitions.add(t);
 		return t;
 
@@ -81,8 +83,9 @@ public class Petrinet implements IPetrinet {
 	}
 
 	@Override
-	public IArc createArc() {
+	public IArc createArc(String name) {
 		final IArc arc = new Arc(UUID.getaID());
+		arc.setName(name);
 		fireChanged(arc);
 		return arc;
 	}
@@ -139,7 +142,7 @@ public class Petrinet implements IPetrinet {
 		}
 		
 		for (IPetrinetListener l : listeners)  {
-			l.changed(this, element, ActionType.changed);
+			l.changed(this, element, IActionType.changed);
 		}
 	}
 
@@ -188,4 +191,16 @@ public class Petrinet implements IPetrinet {
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Petrinet [id=" + id + ", places=" + places + ", transitions="
+				+ transitions + ", arcs=" + arcs + "]";
+	}
+
+
+	
 }
