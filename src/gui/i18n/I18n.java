@@ -21,6 +21,7 @@ import java.util.Map;
 public class I18n {
 
     private static I18n resource = null;
+    private static String path = "./";
 
 
     /**
@@ -30,7 +31,15 @@ public class I18n {
      * @return nichts
      */
     public static void setLocation(String language){
-        resource = new I18n(language);
+        resource = new I18n(language,path);
+    }
+
+    public static String getPath(){
+        return path;
+    }
+
+    public static void setPath(String newPath){
+        path = newPath;
     }
 
     /**
@@ -40,24 +49,25 @@ public class I18n {
      */
     public static String get(String str){
         if(resource == null){
-            resource = new I18n();
+            resource = new I18n(path);
         }
         return resource.getTranslation(str);
     }
 
-    private String path;
+    private String apath;
     private String language;
     private Map<String,String> translation;
 
 
-    private I18n(){
-        path = "./";
+    private I18n(String path){
+        this.apath = path;
         language = "en";
         loadFile();
     }
 
-    private I18n(String language){
-        path = "./";
+
+    private I18n(String language,String path){
+        apath = path;
         this.language = language;
         loadFile();
     }
@@ -67,7 +77,7 @@ public class I18n {
     }
 
     private String bulidPath(){
-        return "I18n_" + language + ".txt";
+        return apath + "/I18n_" + language + ".txt";
     }
 
     private void loadFile(){
@@ -75,7 +85,7 @@ public class I18n {
         Map<String,String> map = new HashMap<String,String>();
         String zeile;
         try {
-            reader = new BufferedReader(new FileReader(path + "/" + bulidPath()));
+            reader = new BufferedReader(new FileReader(bulidPath()));
             while ((zeile = reader.readLine()) != null) {
                 String[]values = zeile.split(" = ");
                 map.put(values[0], values[1]);
