@@ -22,11 +22,21 @@ public class Rule implements IRule
 	private final Listener kListener;
 	private final Listener lListener;
 	private final Listener rListener;
+	private final Map<INode, INode> lKSameNodes;
+	private final Map<INode, INode> rKSameNodes;
+	private final Map<IArc, IArc> lkSameEdges;
+	private final Map<IArc, IArc> rKSameEdges;
+	
 	public Rule()
 	{
 		k = new Petrinet();
 		l = new Petrinet();
 		r = new Petrinet();
+		
+		lKSameNodes = new HashMap<INode, INode>();
+		rKSameNodes = new HashMap<INode, INode>();
+		lkSameEdges = new HashMap<IArc, IArc>();
+		rKSameEdges = new HashMap<IArc, IArc>();
 		
 		kListener = new Listener(Net.k, l, k, r);
 		lListener = new Listener(Net.l, l, k, r);
@@ -70,10 +80,6 @@ public class Rule implements IRule
 		private final IPetrinet k;
 		private final IPetrinet l;
 		private final IPetrinet r;
-		private final Map<INode, INode> lKSameNodes;
-		private final Map<INode, INode> rKSameNodes;
-		private final Map<IArc, IArc> lkSameEdges;
-		private final Map<IArc, IArc> rKSameEdges;
 		private boolean rChanging = false;
 		private boolean kChanging = false;
 		private boolean lChanging = false;
@@ -91,10 +97,6 @@ public class Rule implements IRule
 			else if(net == Net.r)
 				r.addPetrinetListener(this);
 			
-			lKSameNodes = new HashMap<INode, INode>();
-			rKSameNodes = new HashMap<INode, INode>();
-			lkSameEdges = new HashMap<IArc, IArc>();
-			rKSameEdges = new HashMap<IArc, IArc>();
 		}
 
 		@Override
@@ -369,16 +371,63 @@ public class Rule implements IRule
 					k.deleteArcByID(edge.getId());
 				}
 			}
-		}
-		
-		private <K, V> K getKeyFromValue(Map<K, V> map, V value)
-		{
-			for(Entry<K, V> e : map.entrySet())
-				if(e.getValue().equals(value))
-					return e.getKey();
-			return null;
-		}
-		
+		}		
+	}
+
+	private <K, V> K getKeyFromValue(Map<K, V> map, V value)
+	{
+		for(Entry<K, V> e : map.entrySet())
+			if(e.getValue().equals(value))
+				return e.getKey();
+		return null;
+	}
+
+	@Override
+	public INode fromKtoL(INode node) {
+		return getKeyFromValue(lKSameNodes, node);
+	}
+
+	@Override
+	public IArc fromKtoL(IArc edge) {
+		return getKeyFromValue(lkSameEdges, edge);
+	}
+
+	@Override
+	public INode fromKtoR(INode node) {
+		return getKeyFromValue(rKSameNodes, node);
+	}
+
+	@Override
+	public IArc fromKtoR(IArc edge) {
+		return getKeyFromValue(rKSameEdges, edge);
+	}
+
+	@Override
+	public INode fromLtoK(INode node) {
+		if(lKSameNodes.containsKey(node))
+			return lKSameNodes.get(node);
+		return null;
+	}
+
+	@Override
+	public IArc fromLtoK(IArc edge) {
+		if(lkSameEdges.containsKey(edge))
+			return lkSameEdges.get(edge);
+		return null;
+	}
+
+	@Override
+	public INode fromRtoK(INode node) {
+		if(rKSameNodes.containsKey(node))
+			return rKSameNodes.get(node);
+		return null;
+	}
+
+	@Override
+	public IArc fromRtoK(IArc edge) {
+		if(rKSameEdges.containsKey(edge))
+			return rKSameEdges.get(edge);
+		return null;
 	}
 
 
