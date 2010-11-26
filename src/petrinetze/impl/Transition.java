@@ -109,7 +109,7 @@ public class Transition implements ITransition {
 	 */
 	@Override
 	public String toString() {
-		return "Transition [labels=" + labels + ", id=" + id + ", name=" + name
+		return "Transition [" + ", id=" + id + ", name=" + name
 				+ "]";
 	}
 	
