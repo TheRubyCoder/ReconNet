@@ -14,6 +14,7 @@ import petrinetze.IPetrinetListener;
 import petrinetze.IPlace;
 import petrinetze.IPost;
 import petrinetze.IPre;
+import petrinetze.IRenew;
 import petrinetze.ITransition;
 
 public class Petrinet implements IPetrinet {
@@ -26,18 +27,22 @@ public class Petrinet implements IPetrinet {
 	private IGraphElement graphElements;
 	
 	
-	public Petrinet(int id) {
-		this.id = id;
-		places = new HashSet<IPlace>();
-		transitions = new HashSet<ITransition>();
-		arcs = new HashSet<IArc>();
-		graphElements = new GraphElement();
-	}
+//	public Petrinet(int id) {
+//		this.id = id;
+//		places = new HashSet<IPlace>();
+//		transitions = new HashSet<ITransition>();
+//		arcs = new HashSet<IArc>();
+//		graphElements = new GraphElement();
+//	}
 
 	
 	
 	public Petrinet() {
-		this(UUID.getnID());
+		id = UUID.getnID();
+		places = new HashSet<IPlace>();
+		transitions = new HashSet<ITransition>();
+		arcs = new HashSet<IArc>();
+		graphElements = new GraphElement();
 	}
 
 
@@ -65,8 +70,8 @@ public class Petrinet implements IPetrinet {
 	}
 
 	@Override
-	public ITransition createTransition(String name) {
-		final Transition t = new Transition(UUID.getpID());
+	public ITransition createTransition(String name, IRenew rnw) {
+		Transition t = new Transition(UUID.getpID(), rnw);
 		t.setName(name);
 		transitions.add(t);
 		return t;
@@ -204,8 +209,8 @@ public class Petrinet implements IPetrinet {
 	 */
 	@Override
 	public String toString() {
-		return "Petrinet [id=" + id + ", places=" + places + ", transitions="
-				+ transitions + ", arcs=" + arcs + "]";
+		return "Petrinet [id=" + id + "\n\t places=" + places + "\n\t transitions="
+				+ transitions + "\n\t arcs=" + arcs + "]";
 	}
 
 
