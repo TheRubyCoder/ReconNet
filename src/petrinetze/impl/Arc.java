@@ -76,7 +76,9 @@ public class Arc implements IArc{
 	 */
 	@Override
 	public void setMark(int mark) {
-		this.mark = mark;
+		if (mark > 0) {
+			this.mark = mark;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -99,15 +101,34 @@ public class Arc implements IArc{
 	 * @see haw.wp.rcpn.impl.IArc#setStart(haw.wp.rcpn.INode)
 	 */
 	@Override
-	public void setStart(INode start) {
+	public void setStart(INode start) throws Exception {
+		if (!isValidPrecondition(start)) {
+			throw new Exception("Start und Ende muessen unterschiedliche Knotenarten haben");
+		}
+		
 		this.start = start;
+	}
+
+	private boolean isValidPrecondition(INode start) {
+		
+		if (start instanceof Place && end instanceof Place) {
+			return false;
+		}
+		if (start instanceof Transition && end instanceof Transition) {
+			return false;
+		}
+		return true;
 	}
 
 	/* (non-Javadoc)
 	 * @see haw.wp.rcpn.impl.IArc#setEnd(haw.wp.rcpn.INode)
 	 */
 	@Override
-	public void setEnd(INode end) {
+	public void setEnd(INode end) throws Exception{
+		if (!isValidPrecondition(end)) {
+			throw new Exception("Start und Ende muessen unterschiedliche Knotenarten haben");
+		}
+		
 		this.end = end;
 	}
 

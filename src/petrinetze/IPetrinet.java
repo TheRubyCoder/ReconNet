@@ -35,7 +35,7 @@ public interface IPetrinet {
 	 * @param name
 	 * 			Der Name der Transition
 	 */
-	public ITransition createTransition(String name);
+	public ITransition createTransition(String name, IRenew rnw);
 	
 	/**
 	 * Entfernt die angegebene Transition.

@@ -7,7 +7,8 @@ public class RenewId implements IRenew {
 	
 	@Override
 	public String renew(String tlb) {
-		return tlb;
+		this.tlb = tlb;
+		return this.tlb;
 	}
 
 	@Override
@@ -15,6 +16,13 @@ public class RenewId implements IRenew {
 		return true;
 	}
 
+	/**
+	 * @return Den Namen der Transition.
+	 */
+	public String getTlb() {
+		return tlb;
+	}
+	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */

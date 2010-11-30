@@ -18,8 +18,9 @@ public class Transition implements ITransition {
 	private IRenew rnw;
 	
 	
-	public Transition(int id) {
+	public Transition(int id, IRenew rnw) {
 		this.id = id;
+		this.rnw = rnw;
 	}
 
 	/* (non-Javadoc)
@@ -50,28 +51,28 @@ public class Transition implements ITransition {
 	
 	@Override
 	public String getTlb() {
-		return null;
+		return this.rnw.getTlb() ;
 	}
 
 
-	@Override
-	public void rnwAsUserDefined() {
-		
-	}
+//	@Override
+//	public void rnwAsUserDefined() {
+//		
+//	}
 
 	@Override
-	public void rnw() {
-		
+	public String rnw(String tlb) {
+		return rnw.renew(tlb);
 	}
 
 	@Override
 	public void setRnw(IRenew rnw) {
-		
+		this.rnw = rnw;
 	}
 
 	@Override
 	public IRenew getRnw() {
-		return rnw;
+		return this.rnw;
 	}
 
 	/* (non-Javadoc)

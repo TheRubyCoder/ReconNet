@@ -24,13 +24,12 @@ public interface IPlace extends INode {
 	public abstract void setName(String name);
 
 	/**
-	 * @return Die Anzahl der maximal möglichen Token.
+	 * @return Die Anzahl der Token.
 	 */
 	public abstract int getMark();
 
 	/**
-	 * @param mark 
-	 * 			Die Anzahl der maximal möglichen Token.
+	 * @param mark Die Anzahl der Token.
 	 */
 	public abstract void setMark(int mark);
 

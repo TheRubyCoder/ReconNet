@@ -5,6 +5,7 @@ import petrinetze.IPetrinet;
 import petrinetze.IPetrinetMgr;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
+import petrinetze.impl.Petrinet;
 import petrinetze.impl.PetrinetMgrImpl;
 
 public class TestPetriNet {
@@ -13,9 +14,9 @@ public class TestPetriNet {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		//Generiere das 1. Netz
-		IPetrinetMgr mgr = new PetrinetMgrImpl();
-		IPetrinet net = mgr.createPetrinet();
+//		//Generiere das 1. Netz
+//		IPetrinetMgr mgr = new PetrinetMgrImpl();
+		IPetrinet net = new Petrinet();
 		//Baue die 1. Stelle
 		IPlace place = net.createPlace("Erste Stelle");
 		place.setMark(2);

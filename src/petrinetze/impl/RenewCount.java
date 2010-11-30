@@ -9,7 +9,8 @@ public class RenewCount implements IRenew {
 		
 		int c = Integer.parseInt(tlb);
 		c++;
-		return String.valueOf(c);
+		this.tlb = String.valueOf(c);
+		return this.tlb;
 	}
 
 	@Override
@@ -20,6 +21,13 @@ public class RenewCount implements IRenew {
 		} catch (NumberFormatException exc) {
 			return false;
 		}
+	}
+	
+	/**
+	 * @return Den Namen der Transition.
+	 */
+	public String getTlb() {
+		return this.tlb;
 	}
 
 	/* (non-Javadoc)

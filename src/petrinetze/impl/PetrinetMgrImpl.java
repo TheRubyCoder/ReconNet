@@ -16,9 +16,9 @@ public class PetrinetMgrImpl implements IPetrinetMgr {
 
 	@Override
 	public IPetrinet createPetrinet() {
-		
-		return new Petrinet(UUID.getnID());
-	}
+		return new Petrinet();
+	}		
+
 
 	
 

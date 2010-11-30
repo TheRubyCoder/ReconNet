@@ -39,12 +39,12 @@ public interface IArc extends INode {
 	 * @param start
 	 * 			Den Startknoten der Kante.
 	 */
-	public void setStart(INode start);
+	public void setStart(INode start) throws Exception;
 
 	/**
 	 * @param end
 	 * 			Den Endknoten der Kante.
 	 */
-	public void setEnd(INode end);
+	public void setEnd(INode end) throws Exception;
 
 }

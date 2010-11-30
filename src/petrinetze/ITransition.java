@@ -28,7 +28,7 @@ public interface ITransition extends INode {
 	/**
 	 * Fuehrt ein renew von Lable bei Id durch.
 	 */
-	public void rnw();
+	public String rnw(String tlb);
 	
 	/**
 	 * Fuehrt ein renew von Lable mit der Zaehlvariable durch
@@ -40,14 +40,14 @@ public interface ITransition extends INode {
 	 */
 	public IRenew getRnw();
 	
-	/**
-	 * Userdefined renew Funktion. 
-	 * Beim Schalten werden die Bedingungen uerberprueft 
-	 * und entsprechend ein renew durchgefuehrt. 
-	 * @pre Voraussetzung fuer die Ausfuehrung dieser Methode ist
-	 * eine ausgefuehlte Lable-Tabelle
-	 */
-	public void rnwAsUserDefined();
+//	/**
+//	 * Userdefined renew Funktion. 
+//	 * Beim Schalten werden die Bedingungen uerberprueft 
+//	 * und entsprechend ein renew durchgefuehrt. 
+//	 * @pre Voraussetzung fuer die Ausfuehrung dieser Methode ist
+//	 * eine ausgefuehlte Lable-Tabelle
+//	 */
+//	public void rnwAsUserDefined();
 	
 
 }

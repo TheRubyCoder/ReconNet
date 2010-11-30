@@ -7,14 +7,23 @@ import petrinetze.IRenew;
 
 public class RenewMap implements IRenew {
 	private final HashMap<String,String> rnw;
+	private String tlb;
 	
 	public RenewMap(final Map<String, String> rnw) {
 		this.rnw = new HashMap<String, String>(rnw);
 	}
 	
+	/**
+	 * @return Den Namen der Transition.
+	 */
+	public String getTlb() {
+		return tlb;
+	}
+	
 	@Override
 	public String renew(String tlb) {
-		return rnw.get(tlb);
+		this.tlb = rnw.get(tlb);
+		return this.tlb;
 	}
 
 	@Override
