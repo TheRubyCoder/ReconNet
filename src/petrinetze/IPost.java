@@ -8,7 +8,7 @@ package petrinetze;
  */
 public interface IPost {
 	/**
-	 * Liefert das Pre von dem entsprechenden Petrinetz
+	 * Liefert das Post von dem entsprechenden Petrinetz
 	 * Die Identifier der Stellen und Transition werden 
 	 * jeweils als nulltes Element des Arrays abgebildet
 	 * Bsp.
