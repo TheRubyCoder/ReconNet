@@ -21,7 +21,7 @@ import java.util.Map;
 public class I18n {
 
     private static I18n resource = null;
-    private static String path = "./";
+    private static String path = "C:/Users/Niklas/Documents/My Dropbox/HAW-Share/WPPetrinetze/trunk/i18n";
 
 
     /**
