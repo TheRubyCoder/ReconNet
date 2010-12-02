@@ -133,6 +133,9 @@ public class Petrinet implements IPetrinet {
 
 	@Override
 	public IPre getPre() {
+		
+		IPre pre = new Pre();
+		
 		return null;
 	}
 

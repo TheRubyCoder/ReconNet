@@ -105,8 +105,16 @@ public class Arc implements IArc{
 		if (!isValidPrecondition(start)) {
 			throw new Exception("Start und Ende muessen unterschiedliche Knotenarten haben");
 		}
-		
 		this.start = start;
+		//Jede StartKante registriert sich bei dem entsprechenden
+		//INode als Startkante, damit die Berechnung von Pre und
+		//Post von statten gehen kann.
+		if (start instanceof Place) {
+			((Place) this.start).setStartArcs(this.id);
+		} else {
+			((Transition) this.start).setStartArcs(this.id);
+		}
+		
 	}
 
 	private boolean isValidPrecondition(INode start) {
@@ -128,7 +136,15 @@ public class Arc implements IArc{
 		if (!isValidPrecondition(end)) {
 			throw new Exception("Start und Ende muessen unterschiedliche Knotenarten haben");
 		}
-		
+		this.end = end;
+		//Jede EndKante registriert sich bei dem entsprechenden
+		//INode als Endkante, damit die Berechnung von Pre und
+		//Post von statten gehen kann.
+		if (end instanceof Place) {
+			((Place) this.end).setEndArcs(this.id);
+		} else {
+			((Transition) this.end).setEndArcs(this.id);
+		}
 		this.end = end;
 	}
 

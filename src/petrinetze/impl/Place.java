@@ -1,5 +1,8 @@
 package petrinetze.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import petrinetze.IPlace;
 
 /**
@@ -17,12 +20,29 @@ public class Place implements IPlace {
 	 */
 	private int mark;
 	private int id;
+	/**
+	 * Liste aller Kanten, die von dieser Stelle
+	 * abgehen.
+	 */
+	private List startArcs;
+	/**
+	 * Liste aller Kanten, die in diese Stelle
+	 * eingehen.
+	 */
+	private List endArcs;
 	
-	
+	public void setStartArcs (int arcId) {
+		this.startArcs.add(arcId);
+	}
+	public void setEndArcs (int arcId) {
+		this.endArcs.add(arcId);
+	}
 
 	public Place(int id) {
 		super();
 		this.id = id;
+		this.endArcs = new ArrayList();
+		this.startArcs = new ArrayList();
 	}
 
 	/* (non-Javadoc)

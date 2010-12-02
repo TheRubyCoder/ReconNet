@@ -7,6 +7,9 @@ package petrinetze.impl;
 * @author Reiter, Safai
 * @version 1.0
 */
+import java.util.ArrayList;
+import java.util.List;
+
 import petrinetze.IRenew;
 import petrinetze.ITransition;
 
@@ -16,11 +19,29 @@ public class Transition implements ITransition {
 	private int id;
 	private String name;
 	private IRenew rnw;
+	/**
+	 * Liste aller Kanten, die von dieser Transition
+	 * abgehen.
+	 */
+	private List startArcs;
+	/**
+	 * Liste aller Kanten, die in diese Transition
+	 * eingehen.
+	 */
+	private List endArcs;
 	
+	public void setStartArcs (int arcId) {
+		this.startArcs.add(arcId);
+	}
+	public void setEndArcs (int arcId) {
+		this.endArcs.add(arcId);
+	}
 	
 	public Transition(int id, IRenew rnw) {
 		this.id = id;
 		this.rnw = rnw;
+		this.endArcs = new ArrayList();
+		this.startArcs = new ArrayList();
 	}
 
 	/* (non-Javadoc)
