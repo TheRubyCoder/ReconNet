@@ -3,11 +3,19 @@ package petrinetze.impl;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import petrinetze.ActionType;
 import petrinetze.IArc;
+import petrinetze.INode;
 import petrinetze.IPetrinet;
+import petrinetze.IPetrinetListener;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
 import petrinetze.impl.Petrinet;
@@ -25,10 +33,13 @@ public class PetrinetzTest {
 	static IPlace place1;
 	static IPlace place2;
 	static ITransition transition;
+	static SimpleListener listener;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception 
 	{
 		p = new Petrinet();
+		listener = new SimpleListener();
+		p.addPetrinetListener(listener);
 		p2 = new Petrinet();
 	}
 	
@@ -39,11 +50,13 @@ public class PetrinetzTest {
 		assertEquals(place1.getName(), "place1");
 		assertTrue(p.getAllPlaces().contains(place1));
 		assertTrue(p.getAllGraphElement().getAllNodes().contains(place1));
+		assertTrue(listener.AddedNodes.contains(place1));
 
 		place2 = p.createPlace("place2");
 		assertEquals(place2.getName(), "place2");
 		assertTrue(p.getAllPlaces().contains(place2));
 		assertTrue(p.getAllGraphElement().getAllNodes().contains(place2));
+		assertTrue(listener.AddedNodes.contains(place2));
 	}
 	
 	@Test
@@ -54,6 +67,7 @@ public class PetrinetzTest {
 		assertTrue(p.getAllTransitions().contains(transition));
 		assertTrue(p.getAllGraphElement().getAllNodes().contains(transition));
 		assertEquals(new RenewCount(), transition.getRnw());
+		assertTrue(listener.AddedNodes.contains(transition));
 	}
 	
 	@Test
@@ -70,6 +84,7 @@ public class PetrinetzTest {
 		assertEquals(place1, edge1.getStart());
 		assertEquals(transition, edge1.getEnd());
 		assertEquals(1, edge1.getMark());
+		assertTrue(listener.AddedEdges.contains(edge1));
 
 		IArc edge2 = p.createArc("edge2");
 		assertEquals("edge2", edge2.getName());
@@ -82,6 +97,7 @@ public class PetrinetzTest {
 		assertEquals(transition, edge2.getStart());
 		assertEquals(place2, edge2.getEnd());
 		assertEquals(1, edge2.getMark());
+		assertTrue(listener.AddedEdges.contains(edge2));
 	}
 	
 	@Test
@@ -127,3 +143,5 @@ public class PetrinetzTest {
 	}
 
 }
+
+
