@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import petrinetze.IPlace;
+import petrinetze.ITransition;
 
 /**
 * Diese Klasse stellt eine Stelle in Petrinetze dar und
@@ -120,6 +121,16 @@ public class Place implements IPlace {
 	@Override
 	public String toString() {
 		return "Place [name=" + name + ", mark=" + mark + ", id=" + id + "]";
+	}
+	@Override
+	public List<ITransition> getIncomingTransitions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public List<ITransition> getOutgoingTransitions() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

@@ -1,8 +1,11 @@
 package petrinetze.impl;
 
 
+import petrinetze.ActionType;
 import petrinetze.IArc;
 import petrinetze.INode;
+import petrinetze.IPetrinet;
+import petrinetze.IPetrinetListener;
 
 /**
 * Diese Klasse stellt eine Kante in Petrinetze dar und
@@ -32,9 +35,11 @@ public class Arc implements IArc{
 
 	private int id;
 	
+	private final Petrinet petrinet;
 	
-	public Arc(int id) {
+	public Arc(int id, Petrinet petrinet) {
 		this.id = id;
+		this.petrinet = petrinet;
 	}
 
 	/* (non-Javadoc)
@@ -78,6 +83,7 @@ public class Arc implements IArc{
 	public void setMark(int mark) {
 		if (mark > 0) {
 			this.mark = mark;
+			petrinet.onEdgeChanged(this, ActionType.changed);
 		}
 	}
 
@@ -115,6 +121,7 @@ public class Arc implements IArc{
 		} else {
 			((Transition) this.start).setStartArcs(this.id);
 		}
+		petrinet.onEdgeChanged(this, ActionType.changed);
 		
 	}
 
@@ -148,6 +155,7 @@ public class Arc implements IArc{
 			((Transition) this.end).setEndArcs(this.id);
 		}
 		this.end = end;
+		petrinet.onEdgeChanged(this, ActionType.changed);
 	}
 
 	/* (non-Javadoc)

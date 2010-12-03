@@ -53,6 +53,7 @@ public class Petrinet implements IPetrinet {
 		final Place p = new Place(UUID.getpID());
 		p.setName(name);
 		places.add(p);
+		onNodeChanged(p, ActionType.added);
 		return p;
 	}
 
@@ -67,14 +68,16 @@ public class Petrinet implements IPetrinet {
 		}
 		if (toBeDelete != null) {
 			places.remove(toBeDelete);
+			onNodeChanged(toBeDelete, ActionType.deleted);
 		}
 	}
 
 	@Override
 	public ITransition createTransition(String name, IRenew rnw) {
-		Transition t = new Transition(UUID.getpID(), rnw);
+		Transition t = new Transition(UUID.getpID(), rnw, this);
 		t.setName(name);
 		transitions.add(t);
+		onNodeChanged(t, ActionType.added);
 		return t;
 
 	}
@@ -90,16 +93,18 @@ public class Petrinet implements IPetrinet {
 		}
 		if (toBeDelete != null) {
 			transitions.remove(toBeDelete);
+			onNodeChanged(toBeDelete, ActionType.deleted);
 		}
 		
 	}
 
 	@Override
 	public IArc createArc(String name) {
-		final IArc arc = new Arc(UUID.getaID());
+		final IArc arc = new Arc(UUID.getaID(), this);
 		arc.setName(name);
 		arcs.add(arc);
-		fireChanged(arc);
+		//fireChanged(arc);
+		onEdgeChanged(arc, ActionType.added);
 		return arc;
 	}
 
@@ -114,6 +119,7 @@ public class Petrinet implements IPetrinet {
 		}
 		if (toBeDelete != null) {
 			arcs.remove(toBeDelete);
+			onEdgeChanged(toBeDelete, ActionType.deleted);
 		}
 	}
 
@@ -136,8 +142,8 @@ public class Petrinet implements IPetrinet {
 	//wieviele Token die Transition t von p wegnimmt
 	@Override
 	public IPre getPre() {
-		Iterator<IPlace> iter = this.places.iterator();
 		
+		//IPre pre = new Pre();
 		//TODO: abaendern von Aufruf
 		IPre pre = new Pre(0,0);
 		
@@ -154,7 +160,7 @@ public class Petrinet implements IPetrinet {
 		return 0;
 	}
 
-	private void fireChanged(INode element) {
+	/*private void fireChanged(INode element) {
 		final List<IPetrinetListener> listeners;
 		
 		synchronized (this.listeners){
@@ -164,7 +170,7 @@ public class Petrinet implements IPetrinet {
 		for (IPetrinetListener l : listeners)  {
 			l.changed(this, element, ActionType.changed);
 		}
-	}
+	}*/
 
 	@Override
 	public Set<IPlace> getAllPlaces() {
@@ -184,7 +190,7 @@ public class Petrinet implements IPetrinet {
 	@Override
 	public IGraphElement getAllGraphElement() {
 		final Set<INode> nodes = new HashSet<INode>();
-		final Set<IArc> arcs = new HashSet<IArc>();
+		final Set<IArc> tarcs = new HashSet<IArc>();
 		for (INode node : places) {
 			nodes.add(node);
 		}
@@ -192,20 +198,49 @@ public class Petrinet implements IPetrinet {
 			nodes.add(node);
 		}
 		for (IArc arc : arcs) {
-			nodes.add(arc);
+			tarcs.add(arc);
 		}
 		((GraphElement) graphElements).setNodes(nodes);
-		((GraphElement) graphElements).setArcs(arcs);
+		((GraphElement) graphElements).setArcs(tarcs);
 		
 		return graphElements;
 	}
 
 	public void addPetrinetListener(IPetrinetListener l) {
+		listeners.add(l);
 		
 	}
 
 	public void removePetrinetListener(IPetrinetListener l) {
+		if(listeners.contains(l))
+			listeners.remove(l);
 		
+	}
+	
+	/**
+	 * Notify all listeners, that a node has changed.
+	 * This will also be called by all Nodes in this petrinet.
+	 * @param element the element which has changed
+	 * @param actionType the ActionType
+	 */
+	void onNodeChanged(INode element, ActionType actionType)
+	{
+		Set<IPetrinetListener> tempListeners = new HashSet<IPetrinetListener>(listeners);
+		for(IPetrinetListener listener : tempListeners)
+			listener.changed(this, element, actionType);
+	}
+
+	/**
+	 * Notify all listeners, that a node has changed.
+	 * This will also be called by Edges in this petrinet.
+	 * @param element the element which has changed
+	 * @param actionType the ActionType
+	 */
+	void onEdgeChanged(IArc element, ActionType actionType)
+	{
+		Set<IPetrinetListener> tempListeners = new HashSet<IPetrinetListener>(listeners);
+		for(IPetrinetListener listener : tempListeners)
+			listener.changed(this, element, actionType);
 	}
 
 

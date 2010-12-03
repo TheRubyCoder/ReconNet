@@ -10,6 +10,8 @@ package petrinetze.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import petrinetze.ActionType;
+import petrinetze.IPlace;
 import petrinetze.IRenew;
 import petrinetze.ITransition;
 
@@ -32,16 +34,21 @@ public class Transition implements ITransition {
 	
 	public void setStartArcs (int arcId) {
 		this.startArcs.add(arcId);
+		petrinet.onNodeChanged(this, ActionType.changed);
 	}
 	public void setEndArcs (int arcId) {
 		this.endArcs.add(arcId);
+		petrinet.onNodeChanged(this, ActionType.changed);
 	}
 	
-	public Transition(int id, IRenew rnw) {
+	private final Petrinet petrinet;
+	
+	public Transition(int id, IRenew rnw, Petrinet petrinet) {
 		this.id = id;
 		this.rnw = rnw;
 		this.endArcs = new ArrayList();
 		this.startArcs = new ArrayList();
+		this.petrinet = petrinet;
 	}
 
 	/* (non-Javadoc)
@@ -89,6 +96,7 @@ public class Transition implements ITransition {
 	@Override
 	public void setRnw(IRenew rnw) {
 		this.rnw = rnw;
+		petrinet.onNodeChanged(this, ActionType.changed);
 	}
 
 	@Override
@@ -133,12 +141,12 @@ public class Transition implements ITransition {
 				+ "]";
 	}
 	@Override
-	public List<ITransition> getOutgoingPlaces() {
+	public List<IPlace> getOutgoingPlaces() {
 		
 		return null;
 	}
 	@Override
-	public List<ITransition> getIncomingPlaces() {
+	public List<IPlace> getIncomingPlaces() {
 		return null;
 	}
 	
