@@ -13,6 +13,11 @@ import petrinetze.ITransition;
 import petrinetze.impl.Petrinet;
 import petrinetze.impl.RenewCount;
 
+/**
+ * 
+ * @author Philipp Kühn
+ *
+ */
 public class PetrinetzTest {
 
 	static IPetrinet p;

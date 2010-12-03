@@ -12,7 +12,12 @@ import petrinetze.IPetrinetListener;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
 import petrinetze.impl.Petrinet;
-import petrinetze.impl.RenewCount;
+
+/**
+ * 
+ * @author Philipp Kühn
+ *
+ */
 
 public class Rule implements IRule
 {
