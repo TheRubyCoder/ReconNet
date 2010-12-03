@@ -18,7 +18,7 @@ import java.util.Set;
 
 public class PetrinetTest {
 
-    private static class TestListener implements PetrinetListener {
+    private static class TestListener implements IPetrinetListener {
 
         private boolean changed = false;
 
