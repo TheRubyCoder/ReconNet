@@ -34,7 +34,7 @@ public class MainGUI extends javax.swing.JFrame {
 
     private boolean initLanguage(String lang) {
         lang = lang.length() == 0 ? "de" : lang;
-        I18n.setLocation(lang);
+        I18n.setLanguage(lang);
         toggleButtonPlace.setText(I18n.get("place"));
         toggleButtonTransition.setText(I18n.get("transition"));
         toggleButtonEdge.setText(I18n.get("edge"));
