@@ -5,8 +5,6 @@
 
 package gui.i18n;
 
-import java.io.File;
-
 /**
  *
  * @author steffen
@@ -15,16 +13,16 @@ public class I18nTest {
 
     public static void main(String[] args){
         System.out.println("Tests für I18n");
+        I18n.setPath("./I18n");
+        System.out.println("Sprachen:" + I18n.getLanguages());
+        System.out.println("Standard:");
+        System.out.println("Apply:" + I18n.get("apply"));
         System.out.println("Deutsch:");
-        I18n.setLocation("de");
-        System.out.println("greetings = " + I18n.get("greetings"));
-        System.out.println("inquiry = " + I18n.get("inquiry"));
-        System.out.println("farewell = " +I18n.get("farewell"));
+        I18n.setLanguage("de");
+        System.out.println("Apply:" + I18n.get("apply"));
         System.out.println("Englisch:");
-        I18n.setLocation("en");
-        System.out.println("greetings = " + I18n.get("greetings"));
-        System.out.println("inquiry = " + I18n.get("inquiry"));
-        System.out.println("farewell = " +I18n.get("farewell"));
+        I18n.setLanguage("en");
+        System.out.println("Apply:" + I18n.get("apply"));
 
     }
 
