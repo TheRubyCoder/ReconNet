@@ -27,12 +27,11 @@ public class MainGUI extends javax.swing.JFrame {
         initLanguage();
     }
 
-    private boolean initLanguage() {
+    private void initLanguage() {
         initLanguage("de");
-        return true;
     }
 
-    private boolean initLanguage(String lang) {
+    private void initLanguage(String lang) {
         lang = lang.length() == 0 ? "de" : lang;
         I18n.setLanguage(lang);
         toggleButtonPlace.setText(I18n.get("place"));
@@ -55,7 +54,6 @@ public class MainGUI extends javax.swing.JFrame {
         languageMenu.setText(I18n.get("language"));
         deutschMenuItem.setText(I18n.get("german"));
         EnglishMenuItem.setText(I18n.get("english"));
-        return true;
     }
 
     /** This method is called from within the constructor to
