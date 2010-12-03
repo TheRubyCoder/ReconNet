@@ -6,9 +6,12 @@
 package gui.i18n;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,25 +24,38 @@ import java.util.Map;
 public class I18n {
 
     private static I18n resource = null;
-    private static String path = "C:/Users/Niklas/Documents/My Dropbox/HAW-Share/WPPetrinetze/trunk/i18n";
-
-
     /**
      * Diese Methode setzt die Sprache und das Land.
      * @param Sprache
      * @param Land
      * @return nichts
      */
-    public static void setLocation(String language){
-        resource = new I18n(language,path);
+    public static void setLanguage(String language){
+        resource.setCurrentLanguage(language);
     }
 
+    public static List<String> getLanguages(){
+        return resource.getAllLanguages();
+    }
+
+    /**
+     * Diese Methode gibt den aktuellen Pfad der L18ndateien zurück.
+     * @return Pfad
+     */
     public static String getPath(){
-        return path;
+        if(resource != null){
+            return resource.getPath();
+        }else{
+            return "";
+        }
     }
 
+    /**
+     * Diese Methode setzt Pfad der L18ndateien.
+     * @param neuer Pfad
+     */
     public static void setPath(String newPath){
-        path = newPath;
+        resource = new I18n(newPath);
     }
 
     /**
@@ -49,35 +65,52 @@ public class I18n {
      */
     public static String get(String str){
         if(resource == null){
-            resource = new I18n(path);
+            throw new RuntimeException("No Path set.");
         }
         return resource.getTranslation(str);
     }
 
-    private String apath;
-    private String language;
+    private String path;
+    private List<String> languages;
+    private String currentLanguage;
     private Map<String,String> translation;
 
 
     private I18n(String path){
-        this.apath = path;
-        language = "en";
+        this.path = path;
+        languages = new ArrayList<String>();
+        currentLanguage = "en";
+        loadLanguages();
         loadFile();
     }
 
-
-    private I18n(String language,String path){
-        apath = path;
-        this.language = language;
-        loadFile();
+    private List<String> getAllLanguages(){
+        return languages;
     }
+
 
     private String getLanguage(){
-        return language;
+        return currentLanguage;
+    }
+
+    private void setCurrentLanguage(String str){
+        currentLanguage = str;
+        loadFile();
     }
 
     private String bulidPath(){
-        return apath + "/I18n_" + language + ".txt";
+        return path + "/I18n_" + currentLanguage + ".txt";
+    }
+
+    private void loadLanguages(){
+        File folder = new File(path);
+        File[] listOfFiles = folder.listFiles();
+        for(int i = 0; i < listOfFiles.length ; i++){
+            String raw = listOfFiles[i].getName();
+            String language = raw.substring(5,7);
+            System.out.println(language);
+            languages.add(language);
+        }
     }
 
     private void loadFile(){
