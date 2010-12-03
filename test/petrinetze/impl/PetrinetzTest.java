@@ -1,4 +1,4 @@
-package petrinetze.test;
+package petrinetze.impl;
 
 
 import static org.junit.Assert.*;
