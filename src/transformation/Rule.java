@@ -12,6 +12,7 @@ import petrinetze.IPetrinetListener;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
 import petrinetze.impl.Petrinet;
+import petrinetze.impl.RenewCount;
 
 public class Rule implements IRule
 {
@@ -174,7 +175,7 @@ public class Rule implements IRule
 				}
 				else if(element instanceof ITransition && !lKSameNodes.containsKey(element))
 				{
-					INode node = k.createTransition(element.getName());
+					INode node = k.createTransition(element.getName(), ((ITransition)element).getRnw());
 					lKSameNodes.put(element, node);
 				}
 			}
@@ -215,12 +216,12 @@ public class Rule implements IRule
 				{
 					if(!lKSameNodes.containsValue(element))
 					{
-						INode node = l.createTransition(element.getName());
+						INode node = l.createTransition(element.getName(), ((ITransition)element).getRnw());
 						lKSameNodes.put(node, element);
 					}
 					if(!rKSameNodes.containsValue(element))
 					{
-						INode node = r.createTransition(element.getName());
+						INode node = r.createTransition(element.getName(), ((ITransition)element).getRnw());
 						rKSameNodes.put(node, element);
 					}
 				}
@@ -271,7 +272,7 @@ public class Rule implements IRule
 				}
 				else if(element instanceof ITransition && !rKSameNodes.containsKey(element))
 				{
-					INode node = k.createTransition(element.getName());
+					INode node = k.createTransition(element.getName(), ((ITransition)element).getRnw());
 					rKSameNodes.put(element, node);
 				}
 			}
