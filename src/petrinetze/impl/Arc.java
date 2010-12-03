@@ -101,9 +101,10 @@ public class Arc implements IArc{
 	 * @see haw.wp.rcpn.impl.IArc#setStart(haw.wp.rcpn.INode)
 	 */
 	@Override
-	public void setStart(INode start) throws Exception {
+	public void setStart(INode start) throws IllegalArgumentException
+ {
 		if (!isValidPrecondition(start)) {
-			throw new Exception("Start und Ende muessen unterschiedliche Knotenarten haben");
+			throw new IllegalArgumentException("Start und Ende muessen unterschiedliche Knotenarten haben");
 		}
 		this.start = start;
 		//Jede StartKante registriert sich bei dem entsprechenden
@@ -132,9 +133,10 @@ public class Arc implements IArc{
 	 * @see haw.wp.rcpn.impl.IArc#setEnd(haw.wp.rcpn.INode)
 	 */
 	@Override
-	public void setEnd(INode end) throws Exception{
+	public void setEnd(INode end) throws IllegalArgumentException
+{
 		if (!isValidPrecondition(end)) {
-			throw new Exception("Start und Ende muessen unterschiedliche Knotenarten haben");
+			throw new IllegalArgumentException("Start und Ende muessen unterschiedliche Knotenarten haben");
 		}
 		this.end = end;
 		//Jede EndKante registriert sich bei dem entsprechenden

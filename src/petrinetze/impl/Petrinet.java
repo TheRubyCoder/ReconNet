@@ -130,7 +130,9 @@ public class Petrinet implements IPetrinet {
 	public Set<INode> fire() {
 		return null;
 	}
-
+	
+	//PRE in der t-ten Spalte gibt an,
+	//wieviele Token die Transition t von p wegnimmt
 	@Override
 	public IPre getPre() {
 		
