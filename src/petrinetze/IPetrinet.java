@@ -18,7 +18,6 @@ public interface IPetrinet {
 	 * Fuegt eine Stelle hinzu.
 	 * @param name
 	 * 			Der Name der Stelle.
-	 * @param marks
 	 * 			Die Anzahl der maximal möglichen Token.
 	 */
 	public IPlace createPlace(String name);
@@ -46,7 +45,6 @@ public interface IPetrinet {
 	
 	/**
 	 * Fuegt eine Kante hinzu.
-	 * @param marks
 	 * 			Die Kantengewichtung.
 	 */
 	public IArc createArc(String name);

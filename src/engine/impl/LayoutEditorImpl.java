@@ -1,10 +1,14 @@
 package engine.impl;
 
-import edu.uci.ics.jung.algorithms.layout.KKLayout;
-import engine.LayoutEditor;
-import petrinetze.INode;
-
 import java.awt.geom.Point2D;
+
+import petrinetze.IArc;
+import petrinetze.INode;
+import edu.uci.ics.jung.algorithms.layout.Layout;
+import edu.uci.ics.jung.visualization.VisualizationViewer;
+import edu.uci.ics.jung.visualization.layout.LayoutTransition;
+import edu.uci.ics.jung.visualization.util.Animator;
+import engine.LayoutEditor;
 
 /**
  * Created by IntelliJ IDEA.
@@ -54,8 +58,30 @@ class LayoutEditorImpl implements LayoutEditor {
     }
 
     @Override
-    public void apply() {
+    public void apply(VisualizationViewer<INode, IArc> vv) {
+
+
         // TODO tut es das, was ich denke?
-        context.getLayout().initialize();
+    	// denke nein!
+ //       context.getLayout().initialize();
+
+
+
+        context.getLayout().setInitializer(vv.getGraphLayout());
+        context.getLayout().setSize(vv.getSize());
+
+		LayoutTransition<INode, IArc> lt =
+			new LayoutTransition<INode, IArc>(vv, vv.getGraphLayout(), context.getLayout());
+		Animator animator = new Animator(lt);
+		animator.start();
+		vv.getRenderContext().getMultiLayerTransformer().setToIdentity();
+		vv.repaint();
+
     }
+
+    public void setLayout(engine.impl.Layout l) {
+    	context.setLayout(l.getInstance(context.getGraph()));
+    }
+
+
 }

@@ -1,13 +1,13 @@
 package engine.impl;
 
+import petrinetze.IArc;
+import petrinetze.INode;
+import petrinetze.IPetrinet;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.algorithms.layout.KKLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
-import petrinetze.IArc;
-import petrinetze.INode;
-import petrinetze.IPetrinet;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,6 +17,8 @@ import petrinetze.IPetrinet;
  * To change this template use File | Settings | File Templates.
  */
 class EngineContext {
+
+
 
     private IPetrinet petrinet;
 
@@ -29,9 +31,24 @@ class EngineContext {
 
         // TODO hier Graph aufbauen!
         // Dafür muss allerdings das Petrinetz zuerst die Elemente bereitstellen...
+        createGraph();
     }
 
-    public IPetrinet getPetrinet() {
+	private void createGraph() {
+    	for(INode node : petrinet.getAllPlaces())
+    		graph.addVertex(node);
+
+    	for(INode node : petrinet.getAllTransitions())
+    		graph.addVertex(node);
+
+    	for(IArc edge : petrinet.getAllArcs())
+    		graph.addEdge(edge, edge.getStart(), edge.getEnd());
+
+
+
+	}
+
+	public IPetrinet getPetrinet() {
         return petrinet;
     }
 
@@ -42,4 +59,10 @@ class EngineContext {
     public AbstractLayout<INode, IArc> getLayout() {
         return layout;
     }
+
+	public void setLayout(AbstractLayout<INode, IArc> layout) {
+		this.layout = layout;
+	}
+
+
 }

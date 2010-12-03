@@ -1,8 +1,11 @@
 package engine;
 
+import petrinetze.IArc;
 import petrinetze.INode;
 
 import java.awt.geom.Point2D;
+
+import edu.uci.ics.jung.visualization.VisualizationViewer;
 
 /**
  * Klasse zum Bearbeiten des Layouts.
@@ -56,5 +59,11 @@ public interface LayoutEditor {
     /**
      * Anwenden des LayoutEditor.
      */
-    void apply();
+    void apply(VisualizationViewer<INode, IArc> vv);
+
+    /**
+     * Es muﬂ im Anschluﬂ <code>#apply</code> aufgerufen werden damit das Layout angewendet wird.
+     * @param l
+     */
+    public void setLayout(engine.impl.Layout l);
 }

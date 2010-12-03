@@ -35,13 +35,24 @@ class GraphEditorImpl implements GraphEditor {
     }
 
     public ITransition createTransition(Point2D.Float location) {
-        return init(context.getPetrinet().createTransition("untitled"), location);
+    	//TODO IRenew durchreichen
+        return init(context.getPetrinet().createTransition("untitled", null), location);
     }
 
     private IArc createArcInternal(INode from, INode to) {
-        final IArc arc = context.getPetrinet().createArc();
-        arc.setStart(from);
-        arc.setEnd(to);
+        final IArc arc = context.getPetrinet().createArc(null);
+        try {
+			arc.setStart(from);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        try {
+			arc.setEnd(to);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         context.getGraph().addEdge(arc, from, to);
         return arc;
     }
