@@ -13,27 +13,11 @@ public class GraphElement implements IGraphElement {
 	
 	@Override
 	public Set<INode> getAllNodes() {
-		// TODO Auto-generated method stub
-		return null;
+		return nodes;
 	}
 
 	@Override
 	public Set<IArc> getAllArcs() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	/**
-	 * @return the nodes
-	 */
-	public Set<INode> getNodes() {
-		return nodes;
-	}
-
-	/**
-	 * @return the arcs
-	 */
-	public Set<IArc> getArcs() {
 		return arcs;
 	}
 

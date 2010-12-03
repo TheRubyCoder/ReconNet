@@ -6,8 +6,8 @@ public class Pre implements IPre {
 
 	private int [][] pre;
 	
-	public Pre () {
-		pre = new int[100][100];
+	public Pre (int m, int n) {
+		pre = new int[m][n];
 	}
 	
 	@Override
