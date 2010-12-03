@@ -53,6 +53,7 @@ public class PetrinetzTest {
 		assertEquals(transition.getName(), "transition");
 		assertTrue(p.getAllTransitions().contains(transition));
 		assertTrue(p.getAllGraphElement().getAllNodes().contains(transition));
+		assertEquals(new RenewCount(), transition.getRnw());
 	}
 	
 	@Test
@@ -120,7 +121,7 @@ public class PetrinetzTest {
 		for(int i = 0; i < times; i++)
 			p2.fire();
 		
-		int distance = Math.abs(Integer.parseInt(a.getRnw().getTlb()) - Integer.parseInt(b.getRnw().getTlb()));
+		int distance = Math.abs(Integer.parseInt(a.getTlb()) - Integer.parseInt(b.getTlb()));
 		assertTrue("Variation must not be greater than 10%", distance < times * 0.1);
 		
 	}
