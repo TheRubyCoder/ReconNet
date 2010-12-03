@@ -66,8 +66,9 @@ public class PetrinetzTest {
 		assertTrue(edge1.getStart() == null);
 		edge1.setStart(place1);
 		edge1.setEnd(transition);
-		assertEquals(edge1.getStart(), place1);
-		assertEquals(edge1.getEnd(), transition);
+		assertEquals(place1, edge1.getStart());
+		assertEquals(transition, edge1.getEnd());
+		assertEquals(1, edge1.getMark());
 
 		IArc edge2 = p.createArc("edge2");
 		assertEquals("edge2", edge2.getName());
@@ -77,8 +78,9 @@ public class PetrinetzTest {
 		assertTrue(edge2.getStart() == null);
 		edge2.setStart(transition);
 		edge2.setEnd(place2);
-		assertEquals(edge2.getStart(), transition);
-		assertEquals(edge2.getEnd(), place2);
+		assertEquals(transition, edge2.getStart());
+		assertEquals(place2, edge2.getEnd());
+		assertEquals(1, edge2.getMark());
 	}
 	
 	@Test
