@@ -1,6 +1,7 @@
 package petrinetze;
 
 import java.util.Hashtable;
+import java.util.List;
 /**
  * Dieses Interface bildet das Trasition-Objekt und bietet die
  * entsprechenden Methoden an.
@@ -39,15 +40,16 @@ public interface ITransition extends INode {
 	 * Fuehrt ein renew von Lable mit der Zaehlvariable durch
 	 */
 	public IRenew getRnw();
-	
-//	/**
-//	 * Userdefined renew Funktion. 
-//	 * Beim Schalten werden die Bedingungen uerberprueft 
-//	 * und entsprechend ein renew durchgefuehrt. 
-//	 * @pre Voraussetzung fuer die Ausfuehrung dieser Methode ist
-//	 * eine ausgefuehlte Lable-Tabelle
-//	 */
-//	public void rnwAsUserDefined();
+	/**
+	 * Liefert alle abgehende Stellen
+	 * @return
+	 */
+	public List<IPlace> getOutgoingPlaces ();
+	/**
+	 * Liefer alle eingehende Stellen 
+	 * @return
+	 */
+	public List<IPlace> getIncomingPlaces ();	
 	
 
 }

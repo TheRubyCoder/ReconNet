@@ -2,6 +2,7 @@ package petrinetze.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -135,8 +136,10 @@ public class Petrinet implements IPetrinet {
 	//wieviele Token die Transition t von p wegnimmt
 	@Override
 	public IPre getPre() {
+		Iterator<IPlace> iter = this.places.iterator();
 		
-		IPre pre = new Pre();
+		//TODO: abaendern von Aufruf
+		IPre pre = new Pre(0,0);
 		
 		return null;
 	}
@@ -198,12 +201,10 @@ public class Petrinet implements IPetrinet {
 	}
 
 	public void addPetrinetListener(IPetrinetListener l) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	public void removePetrinetListener(IPetrinetListener l) {
-		// TODO Auto-generated method stub
 		
 	}
 

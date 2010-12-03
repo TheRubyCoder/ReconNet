@@ -12,7 +12,6 @@ public class Pre implements IPre {
 	
 	@Override
 	public int[][] getPreAsArray() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

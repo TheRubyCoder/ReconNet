@@ -1,4 +1,7 @@
 package petrinetze;
+
+import java.util.List;
+
 /**
  * Bildet die Stelle eines Petrinetzes und bietet die
  * entsprechenden Methooden dafuer an.
@@ -32,5 +35,14 @@ public interface IPlace extends INode {
 	 * @param mark Die Anzahl der Token.
 	 */
 	public abstract void setMark(int mark);
-
+	/**
+	 * Liefer alle abgehende Transitionen 
+	 * @return
+	 */
+	public List<ITransition> getOutgoingTransitions();
+	/**
+	 * Liefert alle eingehende Transitionen
+	 * @return
+	 */
+	public List<ITransition> getIncomingTransitions();
 }

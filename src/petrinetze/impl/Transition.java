@@ -132,6 +132,15 @@ public class Transition implements ITransition {
 		return "Transition [" + ", id=" + id + ", name=" + name
 				+ "]";
 	}
+	@Override
+	public List<ITransition> getOutgoingPlaces() {
+		
+		return null;
+	}
+	@Override
+	public List<ITransition> getIncomingPlaces() {
+		return null;
+	}
 	
 	
 

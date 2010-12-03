@@ -1,5 +1,6 @@
 package petrinetze;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -126,4 +127,5 @@ public interface IPetrinet {
 	 * @param l
 	 */
 	void removePetrinetListener(IPetrinetListener l);
+	
 }
