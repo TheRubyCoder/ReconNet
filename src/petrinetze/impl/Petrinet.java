@@ -1,10 +1,14 @@
 package petrinetze.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import petrinetze.ActionType;
 import petrinetze.IArc;
@@ -129,13 +133,65 @@ public class Petrinet implements IPetrinet {
 	}
 
 	@Override
-	public Set<INode> fire(int id) {
-		return null;
+	public Set<INode> fire(int id) 
+	{
+		//Get the transition
+		ITransition transition = null;
+		for(ITransition t : transitions)
+		{
+			if(t.getId() == id)
+			{
+				transition = t;
+				break;
+			}
+		}
+		
+		//Get all pre and post places and check if they have enough tokens
+		Map<IPlace, Integer> inc = new HashMap<IPlace, Integer>();
+		Map<IPlace, Integer> out = new HashMap<IPlace, Integer>();
+		for(IArc arc : arcs)
+		{
+			if(arc.getEnd().equals(transition))
+			{
+				if(arc.getMark() > ((IPlace)arc.getStart()).getMark())
+					throw new IllegalArgumentException("The place " + arc.getStart() + " does not have enough tokens");
+				inc.put((IPlace)arc.getStart(), arc.getMark());
+			}
+			else if(arc.getStart().equals(transition))
+			{
+				out.put((IPlace)arc.getEnd(), arc.getMark());
+			}
+		}
+		
+		//set tokens
+		for(Entry<IPlace, Integer> e : inc.entrySet())
+			e.getKey().setMark(e.getKey().getMark() - e.getValue());
+		for(Entry<IPlace, Integer> e : out.entrySet())
+			e.getKey().setMark(e.getKey().getMark() + e.getValue());
+		
+		//all changed nodes
+		Set<INode> changedNodes = new HashSet<INode>(inc.keySet());
+		changedNodes.addAll(out.keySet());
+		
+		//fire event
+		for(INode node : changedNodes)
+			onNodeChanged(node, ActionType.changed);
+		
+		return changedNodes;
 	}
 
+	private Random random = new Random();
 	@Override
-	public Set<INode> fire() {
-		return null;
+	public Set<INode> fire() 
+	{
+		//We use an iterator here because we do not know, wich indexes are in the set
+		//and this way we will get a random one without knowing its id.
+		int id = random.nextInt(transitions.size());
+		Iterator<ITransition> iterator = transitions.iterator();
+		for(int i = 0; i < id; i++)
+			iterator.next();
+		
+		return fire(iterator.next().getId());
 	}
 	
 	//PRE in der t-ten Spalte gibt an,

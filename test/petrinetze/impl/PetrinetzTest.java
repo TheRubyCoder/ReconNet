@@ -128,7 +128,7 @@ public class PetrinetzTest {
 		ap.setStart(a);
 		ap.setEnd(P);
 		IArc bp = p2.createArc("bp");
-		bp.setStart(bp);
+		bp.setStart(b);
 		bp.setEnd(P);
 		a.setRnw(new RenewCount());
 		b.setRnw(new RenewCount());
