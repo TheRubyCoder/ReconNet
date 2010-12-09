@@ -16,6 +16,7 @@ import petrinetze.IArc;
 import petrinetze.IPetrinet;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
+import transformation.RuleTest;
 
 /**
  *
@@ -36,6 +37,8 @@ public class MorphismTest {
 
     @Before
     public void setUp() {
+
+
     }
 
     @After

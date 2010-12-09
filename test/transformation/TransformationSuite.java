@@ -17,7 +17,7 @@ import org.junit.runners.Suite;
  * @author Niklas
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({transformation.ITransformationTest.class,transformation.TransformationsTest.class,transformation.IRuleTest.class,transformation.IMorphismTest.class,transformation.MorphismTest.class,transformation.TransformationTest.class,transformation.RuleTest.class})
+@Suite.SuiteClasses({transformation.TransformationsTest.class,transformation.MorphismTest.class,transformation.TransformationTest.class,transformation.RuleTest.class})
 public class TransformationSuite {
 
     @BeforeClass

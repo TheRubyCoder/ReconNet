@@ -11,13 +11,20 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import petrinetze.IArc;
+import petrinetze.INode;
 import petrinetze.IPetrinet;
+import petrinetze.IPlace;
+import petrinetze.ITransition;
+import petrinetze.impl.RenewCount;
 
 /**
  *
  * @author Niklas
  */
 public class TransformationTest {
+
+    private Rule rule1;
 
     public TransformationTest() {
     }
@@ -32,10 +39,75 @@ public class TransformationTest {
 
     @Before
     public void setUp() {
+        rule1 = new Rule();
+        //L von r1
+        IPlace p1 = rule1.K().createPlace("Wecker ein");
+        rule1.fromKtoL(p1);
+        IPlace p2 = rule1.K().createPlace("Wecker ein");
+        p2.setMark(1);
+        rule1.fromKtoL(p2);
+        rule1.fromKtoR(p2);
+        IPlace p3 = rule1.K().createPlace("");
+        rule1.fromKtoL(p3);
+        rule1.fromKtoR(p3);
+        IPlace p4 = rule1.K().createPlace("");
+        rule1.fromKtoL(p4);
+        rule1.fromKtoR(p4);
+        IPlace p5 = rule1.K().createPlace("Wecker aus");
+        rule1.fromKtoL(p5);
+        rule1.fromKtoR(p5);
+        IPlace p6 = rule1.K().createPlace("Wecker aus");
+        rule1.fromKtoL(p6);
+        ITransition t1 = rule1.K().createTransition("", new RenewCount());
+        rule1.fromKtoL(t1);
+        IArc arc = rule1.K().createArc("");
+        arc.setStart(p1);
+        arc.setEnd(t1);
+        rule1.fromKtoL(arc);
+        arc = rule1.K().createArc("");
+        arc.setStart(t1);
+        arc.setEnd(p4);
+        rule1.fromKtoL(arc);
+        ITransition t2 = rule1.K().createTransition("", new RenewCount());
+        rule1.fromKtoL(t2);
+        arc = rule1.K().createArc("");
+        arc.setStart(p3);
+        arc.setEnd(t2);
+        rule1.fromKtoL(arc);
+        arc = rule1.K().createArc("");
+        arc.setStart(t2);
+        arc.setEnd(p6);
+        rule1.fromKtoL(arc);
+        ITransition t3 = rule1.K().createTransition("", new RenewCount());
+        rule1.fromKtoR(t3);
+        arc = rule1.K().createArc("");
+        arc.setStart(p2);
+        arc.setEnd(t3);
+        rule1.fromKtoR(arc);
+        arc = rule1.K().createArc("");
+        arc.setStart(t3);
+        arc.setEnd(p4);
+        rule1.fromKtoR(arc);
+        ITransition t4 = rule1.K().createTransition("", new RenewCount());
+        rule1.fromKtoR(t4);
+        arc = rule1.K().createArc("");
+        arc.setStart(p3);
+        arc.setEnd(t4);
+        rule1.fromKtoR(arc);
+        arc = rule1.K().createArc("");
+        arc.setStart(t4);
+        arc.setEnd(p5);
+        rule1.fromKtoR(arc);
+
     }
 
     @After
     public void tearDown() {
+    }
+
+    @Test
+    public void testRule(){
+        System.out.println("Test Rule");
     }
 
     /**
@@ -66,19 +138,6 @@ public class TransformationTest {
         fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of rule method, of class Transformation.
-     */
-    @Test
-    public void testRule() {
-        System.out.println("rule");
-        Transformation instance = null;
-        IRule expResult = null;
-        IRule result = instance.rule();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
 
     /**
      * Test of transform method, of class Transformation.
