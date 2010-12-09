@@ -117,9 +117,9 @@ public class Arc implements IArc{
 		//INode als Startkante, damit die Berechnung von Pre und
 		//Post von statten gehen kann.
 		if (start instanceof Place) {
-			((Place) this.start).setStartArcs(this.id);
+			((Place) this.start).setStartArcs(this);
 		} else {
-			((Transition) this.start).setStartArcs(this.id);
+			((Transition) this.start).setStartArcs(this);
 		}
 		petrinet.onEdgeChanged(this, ActionType.changed);
 		
@@ -150,9 +150,9 @@ public class Arc implements IArc{
 		//INode als Endkante, damit die Berechnung von Pre und
 		//Post von statten gehen kann.
 		if (end instanceof Place) {
-			((Place) this.end).setEndArcs(this.id);
+			((Place) this.end).setEndArcs(this);
 		} else {
-			((Transition) this.end).setEndArcs(this.id);
+			((Transition) this.end).setEndArcs(this);
 		}
 		this.end = end;
 		petrinet.onEdgeChanged(this, ActionType.changed);

@@ -21,6 +21,7 @@ import petrinetze.IPost;
 import petrinetze.IPre;
 import petrinetze.IRenew;
 import petrinetze.ITransition;
+import sun.nio.ch.SocketOpts.IP;
 
 public class Petrinet implements IPetrinet {
 	
@@ -32,15 +33,7 @@ public class Petrinet implements IPetrinet {
 	private IGraphElement graphElements;
 	
 	
-//	public Petrinet(int id) {
-//		this.id = id;
-//		places = new HashSet<IPlace>();
-//		transitions = new HashSet<ITransition>();
-//		arcs = new HashSet<IArc>();
-//		graphElements = new GraphElement();
-//	}
 
-	
 	
 	public Petrinet() {
 		id = UUID.getnID();
@@ -129,8 +122,33 @@ public class Petrinet implements IPetrinet {
 
 	@Override
 	public Set<ITransition> getActivatedTransitions() {
-		return null;
+		
+		//Eine Transition ist aktiviert bzw. schaltbereit, falls sich 
+		//in allen Eingangsstellen mindestens so viele Marken befinden, 
+		//wie die Transition Kosten verursacht und alle Ausgangsstellen 
+		//noch genug Kapazitaet haben, um die neuen Marken aufnehmen zu können.
+		//TODO
+		Set<ITransition> activitedTransitions = new HashSet();
+		for (ITransition t : transitions) {
+			if (isActivited(t)) {
+				activitedTransitions.add(t);
+			}
+		}
+		return activitedTransitions;
 	}
+
+	private boolean isActivited(ITransition t) {
+		List<IPlace> incoming = t.getIncomingPlaces();
+		List<IPlace> outgoing = t.getIncomingPlaces();
+		int in = 0;
+		for (IPlace place : incoming) {
+			in += place.getMark();
+		}
+		
+		return false;
+	}
+
+
 
 	@Override
 	public Set<INode> fire(int id) 

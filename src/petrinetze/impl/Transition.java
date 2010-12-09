@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import petrinetze.ActionType;
+import petrinetze.IArc;
 import petrinetze.IPlace;
 import petrinetze.IRenew;
 import petrinetze.ITransition;
@@ -25,19 +26,19 @@ public class Transition implements ITransition {
 	 * Liste aller Kanten, die von dieser Transition
 	 * abgehen.
 	 */
-	private List startArcs;
+	private List<IArc> startArcs;
 	/**
 	 * Liste aller Kanten, die in diese Transition
 	 * eingehen.
 	 */
-	private List endArcs;
+	private List<IArc> endArcs;
 	
-	public void setStartArcs (int arcId) {
-		this.startArcs.add(arcId);
+	public void setStartArcs (IArc arc) {
+		this.startArcs.add(arc);
 		petrinet.onNodeChanged(this, ActionType.changed);
 	}
-	public void setEndArcs (int arcId) {
-		this.endArcs.add(arcId);
+	public void setEndArcs (IArc arc) {
+		this.endArcs.add(arc);
 		petrinet.onNodeChanged(this, ActionType.changed);
 	}
 	
@@ -46,8 +47,8 @@ public class Transition implements ITransition {
 	public Transition(int id, IRenew rnw, Petrinet petrinet) {
 		this.id = id;
 		this.rnw = rnw;
-		this.endArcs = new ArrayList();
-		this.startArcs = new ArrayList();
+		this.endArcs = new ArrayList<IArc>();
+		this.startArcs = new ArrayList<IArc>();
 		this.petrinet = petrinet;
 	}
 
@@ -142,12 +143,19 @@ public class Transition implements ITransition {
 	}
 	@Override
 	public List<IPlace> getOutgoingPlaces() {
-		
-		return null;
+		List<IPlace> out = new ArrayList<IPlace>();
+		for (IArc arc : endArcs) {
+			out.add((IPlace) arc.getStart());
+		}
+		return out;
 	}
 	@Override
 	public List<IPlace> getIncomingPlaces() {
-		return null;
+		List<IPlace> in = new ArrayList<IPlace>();
+		for (IArc arc : startArcs) {
+			in.add((IPlace) arc.getEnd());
+		}
+		return in;
 	}
 	
 	

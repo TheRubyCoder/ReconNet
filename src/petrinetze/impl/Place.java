@@ -3,6 +3,9 @@ package petrinetze.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
+
+import petrinetze.IArc;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
 
@@ -25,25 +28,25 @@ public class Place implements IPlace {
 	 * Liste aller Kanten, die von dieser Stelle
 	 * abgehen.
 	 */
-	private List startArcs;
+	private List<IArc> startArcs;
 	/**
 	 * Liste aller Kanten, die in diese Stelle
 	 * eingehen.
 	 */
-	private List endArcs;
+	private List<IArc> endArcs;
 	
-	public void setStartArcs (int arcId) {
-		this.startArcs.add(arcId);
+	public void setStartArcs (IArc arc) {
+		this.startArcs.add(arc);
 	}
-	public void setEndArcs (int arcId) {
-		this.endArcs.add(arcId);
+	public void setEndArcs (IArc arc) {
+		this.endArcs.add(arc);
 	}
 
 	public Place(int id) {
 		super();
 		this.id = id;
-		this.endArcs = new ArrayList();
-		this.startArcs = new ArrayList();
+		this.endArcs = new ArrayList<IArc>();
+		this.startArcs = new ArrayList<IArc>();
 	}
 
 	/* (non-Javadoc)
@@ -122,15 +125,23 @@ public class Place implements IPlace {
 	public String toString() {
 		return "Place [name=" + name + ", mark=" + mark + ", id=" + id + "]";
 	}
+	
 	@Override
 	public List<ITransition> getIncomingTransitions() {
-		// TODO Auto-generated method stub
-		return null;
+		List<ITransition> in = new ArrayList<ITransition>();
+		for (IArc arc : endArcs) {
+			in.add((ITransition) arc.getStart());
+		}
+		return in;
 	}
+	
 	@Override
 	public List<ITransition> getOutgoingTransitions() {
-		// TODO Auto-generated method stub
-		return null;
+		List<ITransition> out = new ArrayList<ITransition>();
+		for (IArc arc : startArcs) {
+			out.add((ITransition) arc.getEnd());
+		}
+		return out;
 	}
 
 	
