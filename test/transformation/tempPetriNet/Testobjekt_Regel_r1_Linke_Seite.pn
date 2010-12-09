@@ -1,0 +1,34 @@
+numPlaces 6 #
+
+placeNames 
+Wecker Ein
+leer
+Wecker Ein
+Wecker Aus
+leer
+Wecker Aus #
+
+token
+0 0 1 0 0 0 #
+
+numTransitions 2 #
+
+transitionNames
+leer
+leer #
+
+pre
+1 0
+0 0
+0 0
+0 0
+0 1
+0 0 #
+
+post
+0 0
+1 0
+0 0
+0 0
+0 0
+0 1 #
