@@ -90,8 +90,8 @@ public class Transition implements ITransition {
 //	}
 
 	@Override
-	public String rnw(String tlb) {
-		return rnw.renew(tlb);
+	public String rnw() {
+		return rnw.renew();
 	}
 
 	@Override

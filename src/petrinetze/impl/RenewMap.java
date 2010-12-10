@@ -21,7 +21,7 @@ public class RenewMap implements IRenew {
 	}
 	
 	@Override
-	public String renew(String tlb) {
+	public String renew() {
 		this.tlb = rnw.get(tlb);
 		return this.tlb;
 	}

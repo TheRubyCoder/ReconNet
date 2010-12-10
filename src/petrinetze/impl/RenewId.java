@@ -6,9 +6,8 @@ public class RenewId implements IRenew {
 	private String tlb;
 	
 	@Override
-	public String renew(String tlb) {
-		this.tlb = tlb;
-		return this.tlb;
+	public String renew() {
+		return tlb;
 	}
 
 	@Override

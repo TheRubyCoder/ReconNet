@@ -5,7 +5,7 @@ import petrinetze.IRenew;
 public class RenewCount implements IRenew {
 	private int count = 0;
 	@Override
-	public String renew(String tlb) {
+	public String renew() {
 		
 		count++;
 		return "" + count;

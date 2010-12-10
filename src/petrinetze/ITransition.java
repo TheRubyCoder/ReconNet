@@ -29,7 +29,7 @@ public interface ITransition extends INode {
 	/**
 	 * Fuehrt ein renew von Lable bei Id durch.
 	 */
-	public String rnw(String tlb);
+	public String rnw();
 	
 	/**
 	 * Fuehrt ein renew von Lable mit der Zaehlvariable durch

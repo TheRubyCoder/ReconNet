@@ -191,6 +191,9 @@ public class Petrinet implements IPetrinet {
 		Set<INode> changedNodes = new HashSet<INode>(inc.keySet());
 		changedNodes.addAll(out.keySet());
 		
+		//Renew
+		transition.rnw();
+		
 		//fire event
 		for(INode node : changedNodes)
 			onNodeChanged(node, ActionType.changed);

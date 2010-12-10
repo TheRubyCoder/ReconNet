@@ -138,6 +138,8 @@ public class PetrinetzTest {
 			p2.fire();
 		
 		int distance = Math.abs(Integer.parseInt(a.getTlb()) - Integer.parseInt(b.getTlb()));
+		System.out.println(a.getTlb());
+		System.out.println(b.getTlb());
 		assertTrue("Variation must not be greater than 10%", distance < times * 0.1);
 		
 	}
