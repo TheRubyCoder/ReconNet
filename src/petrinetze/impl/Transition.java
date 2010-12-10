@@ -27,6 +27,8 @@ public class Transition implements ITransition {
 
     private String tlb;
 
+	private int pre;
+	private int post;
 	/**
 	 * Liste aller Kanten, die von dieser Transition
 	 * abgehen.
@@ -151,7 +153,9 @@ public class Transition implements ITransition {
 	public List<IPlace> getOutgoingPlaces() {
 		List<IPlace> out = new ArrayList<IPlace>();
 		for (IArc arc : endArcs) {
-			out.add((IPlace) arc.getStart());
+			IPlace p = (IPlace) arc.getStart();
+			this.pre += p.getMark();
+			out.add(p);
 		}
 		return out;
 	}
@@ -159,8 +163,22 @@ public class Transition implements ITransition {
 	public List<IPlace> getIncomingPlaces() {
 		List<IPlace> in = new ArrayList<IPlace>();
 		for (IArc arc : startArcs) {
-			in.add((IPlace) arc.getEnd());
+			IPlace p = (IPlace) arc.getEnd();
+			this.post += p.getMark();
+			in.add(p);
 		}
 		return in;
 	}
+	
+	/**
+	 * @precondition getOutGoingPlaces()
+	 */
+	@Override
+	public int getPre() {
+		getOutgoingPlaces();
+		return this.pre;
+	}
+	
+	
+	
 }
