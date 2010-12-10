@@ -87,7 +87,7 @@ public class PetrinetTest {
         l.assertChanged();
         l.assertLastChangeIs(t2, ActionType.added);
 
-        final IArc p1t1 = p.createArc();
+        final IArc p1t1 = p.createArc("p1t1");
         p1t1.setMark(1);
         p1t1.setStart(p1);
         p1t1.setEnd(t1);
@@ -95,7 +95,7 @@ public class PetrinetTest {
         l.assertChanged();
         l.assertLastChangeIs(p1t1, ActionType.added);
 
-        final IArc t1p2 = p.createArc();
+        final IArc t1p2 = p.createArc("t1p2");
         t1p2.setMark(1);
         t1p2.setStart(t1);
         t1p2.setEnd(p2);
@@ -103,7 +103,7 @@ public class PetrinetTest {
         l.assertChanged();
         l.assertLastChangeIs(t1p2, ActionType.added);
 
-        final IArc p2t2 = p.createArc();
+        final IArc p2t2 = p.createArc("p2t2");
         p2t2.setMark(1);
         p2t2.setStart(p2);
         p2t2.setEnd(t2);
@@ -111,7 +111,7 @@ public class PetrinetTest {
         l.assertChanged();
         l.assertLastChangeIs(p2t2, ActionType.added);
 
-        final IArc t2p1 = p.createArc();
+        final IArc t2p1 = p.createArc("t2p1");
         t2p1.setMark(1);
         t2p1.setStart(t2);
         t2p1.setEnd(p1);
@@ -138,7 +138,7 @@ public class PetrinetTest {
 
         p1.setMark(1);
 
-        // TODO Vor- und Nachbereich prüfen:
+        // TODO Vor- und Nachbereich prï¿½fen:
         // post(t1) = t2
         // pre(t2) = t1
 
@@ -147,7 +147,7 @@ public class PetrinetTest {
         assertEquals(0, p1.getMark());
         assertEquals(1, p2.getMark());
 
-        // TODO Vor- und Nachbereich prüfen
+        // TODO Vor- und Nachbereich prï¿½fen
         // post(t1) = t2
         // pre(t2) = t1
 
@@ -155,16 +155,16 @@ public class PetrinetTest {
         assertEquals(1, p1.getMark());
         assertEquals(0, p2.getMark());
 
-        // TODO Vor- und Nachbereich prüfen
+        // TODO Vor- und Nachbereich prï¿½fen
 
         p.fire(t1p2.getId());
 
         assertEquals(0, p1.getMark());
         assertEquals(1, p2.getMark());
 
-        // TODO Vor- und Nachbereich prüfen
+        // TODO Vor- und Nachbereich prï¿½fen
 
-        // TODO soll das Petrinetz hier eine Exception auslösen oder sollten die Kanten mitgelöscht werden?
+        // TODO soll das Petrinetz hier eine Exception auslï¿½sen oder sollten die Kanten mitgelï¿½scht werden?
         p.deletePlaceById(p2.getId());
         assertFalse(p.getAllPlaces().contains(p2));
         l.assertChanged();

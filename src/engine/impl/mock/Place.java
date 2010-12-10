@@ -1,5 +1,9 @@
 package engine.impl.mock;
 
+import petrinetze.ITransition;
+
+import java.util.List;
+
 public class Place extends Node implements petrinetze.IPlace {
 
 	@Override
@@ -13,5 +17,15 @@ public class Place extends Node implements petrinetze.IPlace {
 		// TODO Auto-generated method stub
 
 	}
+
+    @Override
+    public List<ITransition> getOutgoingTransitions() {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    @Override
+    public List<ITransition> getIncomingTransitions() {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
 
 }

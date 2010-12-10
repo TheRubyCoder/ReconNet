@@ -245,15 +245,15 @@ public class Morphism_2 /*implements IMorphism*/ {
 						// Wenn keine Moeglichkeit der Zuordnung vorhanden, eine Zeile zurueck gehen
 						transitionsB[currentRow] = null;						
 						currentRow--;
-						searchReady = true; // Die innere Schleife beenden und dann die aeuﬂere Schleife wiederholen
+						searchReady = true; // Die innere Schleife beenden und dann die aeu?ere Schleife wiederholen
 					} else {
 						// Eine Zuordnung festlegen und aus der Liste der moegl. Zuordnungen entfernen
 						final int currentTransB = possibleMappings.remove(0);
-						
-						// Die Matrizen f¸r diesen Iterationsschritt als Kopien aus den Vorgaenger-Matrizen erstellen
+
+						// Die Matrizen f?r diesen Iterationsschritt als Kopien aus den Vorgaenger-Matrizen erstellen
 						m_transitions[currentRow] = new BoolMatrix(prev_M_trans);
 						m_places[currentRow] = new BoolMatrix(prev_M_places);
-						
+
 						// Wenn eine Nullzeile entsteht: Zuordnung nicht Ok --> die Schleife wiederholen
 						if (m_transitions[currentRow].setTrue(currentRow, currentTransB) == false) {
 							continue;
@@ -263,13 +263,13 @@ public class Morphism_2 /*implements IMorphism*/ {
 						if (neighbourCheckTransition(currentRow, currentTransB, m_places[currentRow]) == false) {
 							continue;
 						}
-						
+
 						// Wenn eine Zuordnung gefunden, die keine Nullzeilen produziert, eine Zeile weiter gehen
 						currentRow++;
-						searchReady = true; // Aus der inneren Schleife ausbrechen und dann die aeuﬂere Schleife wiederholen
+						searchReady = true; // Aus der inneren Schleife ausbrechen und dann die aeu?ere Schleife wiederholen
 					}
 				} while (!searchReady);
-				
+
 			} else {
 				// ------------------- Die Place-Matrix bearbeiten ---------------------------------------------
 
@@ -279,22 +279,22 @@ public class Morphism_2 /*implements IMorphism*/ {
 					possibleMappings = prev_M_places.getVerticesB(currentRowPlaces);
 					Collections.shuffle(possibleMappings);
 				}
-				
+
 				boolean searchReady = false;
 				do {
 					if (possibleMappings.isEmpty()) {
 						// Wenn keine Moeglichkeit der Zuordnung vorhanden, eine Zeile zurueck gehen
-						placesB[currentRowPlaces] = null;						
+						placesB[currentRowPlaces] = null;
 						currentRow--;
-						searchReady = true; // Die innere Schleife beenden und dann die aeuﬂere Schleife wiederholen
+						searchReady = true; // Die innere Schleife beenden und dann die aeu?ere Schleife wiederholen
 					} else {
 						// Eine Zuordnung festlegen und aus der Liste der moegl. Zuordnungen entfernen
 						final int currentPlaceB = possibleMappings.remove(0);
-						
-						// Die Matrizen f¸r diesen Iterationsschritt als Kopien aus den Vorgaenger-Matrizen erstellen
+
+						// Die Matrizen f?r diesen Iterationsschritt als Kopien aus den Vorgaenger-Matrizen erstellen
 						m_transitions[currentRow] = new BoolMatrix(prev_M_trans);
 						m_places[currentRow] = new BoolMatrix(prev_M_places);
-						
+
 						// Wenn eine Nullzeile entsteht: Zuordnung nicht Ok --> die Schleife wiederholen
 						if (m_places[currentRow].setTrue(currentRowPlaces, currentPlaceB) == false) {
 							continue;
@@ -304,10 +304,10 @@ public class Morphism_2 /*implements IMorphism*/ {
 						if (neighbourCheckPlace(currentRowPlaces, currentPlaceB, m_transitions[currentRow]) == false) {
 							continue;
 						}
-						
+
 						// Wenn eine Zuordnung gefunden, die keine Nullzeilen produziert, eine Zeile weiter gehen
 						currentRow++;
-						searchReady = true; // Aus der inneren Schleife ausbrechen und dann die aeuﬂere Schleife wiederholen
+						searchReady = true; // Aus der inneren Schleife ausbrechen und dann die aeu?ere Schleife wiederholen
 					}
 				} while (!searchReady);
 			}

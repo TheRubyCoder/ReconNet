@@ -18,6 +18,8 @@ import petrinetze.ITransition;
 
 public class Petrinet implements IPetrinet {
 
+
+
 	Set<IArc> arcs = new HashSet<IArc>();
 	Set<ITransition> transitions = new HashSet<ITransition>();
 	Set<IPlace> places = new HashSet<IPlace>();
@@ -144,13 +146,17 @@ public class Petrinet implements IPetrinet {
 		return null;
 	}
 
-	@Override
-	public IArc createArc(String name) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public ITransition createTransition(String name) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 
-	@Override
+    @Override
+    public IArc createArc(String name, INode start, INode end) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
 	public IGraphElement getAllGraphElement() {
 		// TODO Auto-generated method stub
 		return null;

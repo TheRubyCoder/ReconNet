@@ -13,6 +13,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import petrinetze.IArc;
+import petrinetze.IPetrinet;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
 import transformation.IMorphism;
@@ -171,6 +172,16 @@ public class IMorphismTest {
 
         public boolean IsValid() {
             return false;
+        }
+
+        @Override
+        public IPetrinet From() {
+            throw new UnsupportedOperationException("Not implemented yet");
+        }
+
+        @Override
+        public IPetrinet To() {
+            throw new UnsupportedOperationException("Not implemented yet");
         }
     }
 

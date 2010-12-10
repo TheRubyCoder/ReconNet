@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * IPetrinet definiert eine Schnittstelle um Petrinetzstrukturen
  * (Stellen, Transitionen, Kanten und Markierungen) zu editieren.
- * Außerdem liefert sie Methoden um die semantischen Aspekte
+ * Auï¿½erdem liefert sie Methoden um die semantischen Aspekte
  * "Aktivierung" und "Schalten" bereitzustellen.
  * @version 1.0
  * @author Safai, Reiter
@@ -19,7 +19,7 @@ public interface IPetrinet {
 	 * Fuegt eine Stelle hinzu.
 	 * @param name
 	 * 			Der Name der Stelle.
-	 * 			Die Anzahl der maximal möglichen Token.
+	 * 			Die Anzahl der maximal mï¿½glichen Token.
 	 */
 	public IPlace createPlace(String name);
 	
@@ -31,19 +31,26 @@ public interface IPetrinet {
 	public void deletePlaceById(int id);
 	
 	/**
-	 * Fuegt eine Transition hinzu.
-	 * @param name
-	 * 			Der Name der Transition
-	 */
-	public ITransition createTransition(String name, IRenew rnw);
-	
-	/**
 	 * Entfernt die angegebene Transition.
 	 * @param id
-	 * 			Die ID der Transition. 
+	 * 			Die ID der Transition.
 	 */
 	public void deleteTransitionByID(int id);
-	
+
+    /**
+     * Fuegt eine Transition hinzu.
+     * @param name
+     * 			Der Name der Transition
+     */
+    public ITransition createTransition(String name, IRenew rnw);
+
+    /**
+     * Fuegt eine Transition hinzu mit IdentitÃ¤tsfunktion als rnw hinzu.
+     * @param name
+     * 			Der Name der Transition
+     */
+    public ITransition createTransition(String name);
+
 	/**
 	 * Fuegt eine Kante hinzu.
 	 * 			Die Kantengewichtung.
@@ -58,7 +65,7 @@ public interface IPetrinet {
 	public void deleteArcByID(int id);
 	
 	/**
-	 * Gibt alle aktivierten Transitionen zurück. 
+	 * Gibt alle aktivierten Transitionen zurï¿½ck. 
 	 */
 	public Set<ITransition> getActivatedTransitions();
 	

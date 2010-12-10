@@ -11,6 +11,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+
+import petrinetze.IArc;
+import petrinetze.INode;
 import petrinetze.IPetrinet;
 import transformation.IRule;
 
@@ -81,6 +84,7 @@ public class IRuleTest {
         fail("The test case is a prototype.");
     }
 
+    // TODO
     public class IRuleImpl implements IRule {
 
         public IPetrinet L() {
@@ -93,6 +97,46 @@ public class IRuleTest {
 
         public IPetrinet R() {
             return null;
+        }
+
+        @Override
+        public INode fromLtoK(INode node) {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @Override
+        public IArc fromLtoK(IArc edge) {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @Override
+        public INode fromRtoK(INode node) {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @Override
+        public IArc fromRtoK(IArc edge) {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @Override
+        public INode fromKtoL(INode node) {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @Override
+        public IArc fromKtoL(IArc edge) {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @Override
+        public INode fromKtoR(INode node) {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
+        }
+
+        @Override
+        public IArc fromKtoR(IArc edge) {
+            return null;  //To change body of implemented methods use File | Settings | File Templates.
         }
     }
 

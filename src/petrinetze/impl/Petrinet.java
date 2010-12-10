@@ -21,7 +21,6 @@ import petrinetze.IPost;
 import petrinetze.IPre;
 import petrinetze.IRenew;
 import petrinetze.ITransition;
-import sun.nio.ch.SocketOpts.IP;
 
 public class Petrinet implements IPetrinet {
 	
@@ -79,7 +78,12 @@ public class Petrinet implements IPetrinet {
 
 	}
 
-	@Override
+    @Override
+    public ITransition createTransition(String name) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    @Override
 	public void deleteTransitionByID(int id) {
 		ITransition toBeDelete = null;
 		for (ITransition t : transitions) {
@@ -126,7 +130,7 @@ public class Petrinet implements IPetrinet {
 		//Eine Transition ist aktiviert bzw. schaltbereit, falls sich 
 		//in allen Eingangsstellen mindestens so viele Marken befinden, 
 		//wie die Transition Kosten verursacht und alle Ausgangsstellen 
-		//noch genug Kapazitaet haben, um die neuen Marken aufnehmen zu können.
+		//noch genug Kapazitaet haben, um die neuen Marken aufnehmen zu kï¿½nnen.
 		//TODO
 		Set<ITransition> activitedTransitions = new HashSet();
 		for (ITransition t : transitions) {
