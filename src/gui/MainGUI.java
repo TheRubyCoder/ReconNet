@@ -12,8 +12,10 @@ package gui;
 
 import java.io.IOException;
 import javax.swing.UIManager;
-import gui.i18n.I18n;
 import java.io.File;
+import java.util.ResourceBundle;
+import java.util.Locale;
+
 
 /**
  *
@@ -24,36 +26,34 @@ public class MainGUI extends javax.swing.JFrame {
     /** Creates new form MainGUI */
     public MainGUI() {
         initComponents();
-        initLanguage();
+        initLanguage("de","DE");
     }
-
-    private void initLanguage() {
-        initLanguage("de");
-    }
-
-    private void initLanguage(String lang) {
-        lang = lang.length() == 0 ? "de" : lang;
-        I18n.setLanguage(lang);
-        toggleButtonPlace.setText(I18n.get("place"));
-        toggleButtonTransition.setText(I18n.get("transition"));
-        toggleButtonEdge.setText(I18n.get("edge"));
-        buttonStep.setText(I18n.get("step"));
-        buttonSteps.setText(I18n.get("steps"));
-        toggleButtonPlay.setText(I18n.get("play"));
-        status.setText(I18n.get("status"));
-        fileMenu.setText(I18n.get("file"));
-        openMenuItem.setText(I18n.get("open"));
-        saveMenuItem.setText(I18n.get("save"));
-        saveAsMenuItem.setText(I18n.get("saveas"));
-        exitMenuItem.setText(I18n.get("exit"));
-        editMenu.setText(I18n.get("edit"));
-        cutMenuItem.setText(I18n.get("cut"));
-        copyMenuItem.setText(I18n.get("copy"));
-        pasteMenuItem.setText(I18n.get("paste"));
-        deleteMenuItem.setText(I18n.get("delete"));
-        languageMenu.setText(I18n.get("language"));
-        deutschMenuItem.setText(I18n.get("german"));
-        EnglishMenuItem.setText(I18n.get("english"));
+    
+    private void initLanguage(String lang,String lang2) {
+        Locale currentLocale;
+        ResourceBundle bundle;
+        currentLocale = new Locale(lang, lang2);
+        bundle = ResourceBundle.getBundle("gui.resource.MessageBundle",currentLocale);
+        toggleButtonPlace.setText(bundle.getString("place")); // NOI18N
+        toggleButtonTransition.setText(bundle.getString("transition"));
+        toggleButtonEdge.setText(bundle.getString("edge"));
+        buttonStep.setText(bundle.getString("step"));
+        buttonSteps.setText(bundle.getString("steps"));
+        toggleButtonPlay.setText(bundle.getString("play"));
+        status.setText(bundle.getString("status"));
+        fileMenu.setText(bundle.getString("file"));
+        openMenuItem.setText(bundle.getString("open"));
+        saveMenuItem.setText(bundle.getString("save"));
+        saveAsMenuItem.setText(bundle.getString("saveas"));
+        exitMenuItem.setText(bundle.getString("exit"));
+        editMenu.setText(bundle.getString("edit"));
+        cutMenuItem.setText(bundle.getString("cut"));
+        copyMenuItem.setText(bundle.getString("copy"));
+        pasteMenuItem.setText(bundle.getString("paste"));
+        deleteMenuItem.setText(bundle.getString("delete"));
+        languageMenu.setText(bundle.getString("language"));
+        deutschMenuItem.setText(bundle.getString("german"));
+        EnglishMenuItem.setText(bundle.getString("english"));
     }
 
     /** This method is called from within the constructor to
@@ -143,7 +143,6 @@ public class MainGUI extends javax.swing.JFrame {
         jToolBar1.add(jSeparator4);
 
         petriTools.add(toggleButtonEdge);
-        toggleButtonEdge.setIcon(new javax.swing.ImageIcon("C:\\Users\\Niklas\\Downloads\\edge.png")); // NOI18N
         toggleButtonEdge.setFocusable(false);
         toggleButtonEdge.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         toggleButtonEdge.setMargin(new java.awt.Insets(4, 14, 4, 14));
@@ -175,6 +174,8 @@ public class MainGUI extends javax.swing.JFrame {
         toggleButtonPlay.setMargin(new java.awt.Insets(4, 14, 4, 14));
         toggleButtonPlay.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar2.add(toggleButtonPlay);
+
+        jDesktopPane1.setBackground(new java.awt.Color(204, 204, 204));
 
         jInternalFrame1.setVisible(true);
 
@@ -268,11 +269,11 @@ public class MainGUI extends javax.swing.JFrame {
                                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 597, Short.MAX_VALUE)))
+                            .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 694, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(status)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 594, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 691, Short.MAX_VALUE)
                         .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -285,8 +286,8 @@ public class MainGUI extends javax.swing.JFrame {
                             .addComponent(jToolBar2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jToolBar1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE))
+                        .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(status)
@@ -301,11 +302,11 @@ public class MainGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void deutschMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deutschMenuItemActionPerformed
-        initLanguage("de");
+        initLanguage("de","DE");
     }//GEN-LAST:event_deutschMenuItemActionPerformed
 
     private void EnglishMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnglishMenuItemActionPerformed
-        initLanguage("en");
+        initLanguage("en","US");
     }//GEN-LAST:event_EnglishMenuItemActionPerformed
 
     /**
@@ -313,7 +314,6 @@ public class MainGUI extends javax.swing.JFrame {
      */
     public static void main(String args[]) throws IOException {
         java.awt.EventQueue.invokeLater(new Runnable() {
-
             public void run() {
                 new MainGUI().setVisible(true);
             }
