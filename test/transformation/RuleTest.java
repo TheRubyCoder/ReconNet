@@ -52,17 +52,17 @@ public class RuleTest {
         IPlace p5 = rule1.K().createPlace("Wecker aus");
         IPlace p6 = rule1.L().createPlace("Wecker aus");
         ITransition t1 = rule1.L().createTransition("", new RenewCount());
-        IArc arc = rule1.L().createArc("", p1, t1);
-        arc = rule1.L().createArc("", t1, rule1.fromKtoL(p4));
+        rule1.L().createArc("", p1, t1);
+        rule1.L().createArc("", t1, rule1.fromKtoL(p4));
         ITransition t2 = rule1.L().createTransition("", new RenewCount());
-        arc = rule1.L().createArc("", rule1.fromKtoL(p3), t2);
-        arc = rule1.L().createArc("", t2, p6);
+        rule1.L().createArc("", rule1.fromKtoL(p3), t2);
+        rule1.L().createArc("", t2, p6);
         ITransition t3 = rule1.R().createTransition("", new RenewCount());
-        arc = rule1.R().createArc("", rule1.fromKtoR(p2), t3);
-        arc = rule1.R().createArc("", t3, rule1.fromKtoR(p4));
+        rule1.R().createArc("", rule1.fromKtoR(p2), t3);
+        rule1.R().createArc("", t3, rule1.fromKtoR(p4));
         ITransition t4 = rule1.R().createTransition("", new RenewCount());
-        arc = rule1.R().createArc("", rule1.fromKtoR(p3), t4);
-        arc = rule1.R().createArc("", t4, rule1.fromKtoR(p5));
+        rule1.R().createArc("", rule1.fromKtoR(p3), t4);
+        rule1.R().createArc("", t4, rule1.fromKtoR(p5));
   
     }
 

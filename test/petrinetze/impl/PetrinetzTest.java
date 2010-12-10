@@ -1,25 +1,16 @@
 package petrinetze.impl;
 
 
-import static org.junit.Assert.*;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import petrinetze.ActionType;
 import petrinetze.IArc;
-import petrinetze.INode;
 import petrinetze.IPetrinet;
-import petrinetze.IPetrinetListener;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
-import petrinetze.impl.Petrinet;
-import petrinetze.impl.RenewCount;
 
 /**
  * 
@@ -73,27 +64,19 @@ public class PetrinetzTest {
 	@Test
 	public void createArc()
 	{
-		IArc edge1 = p.createArc("edge1");
+		IArc edge1 = p.createArc("edge1", place1, transition);
 		assertEquals("edge1", edge1.getName());
 		assertTrue(p.getAllArcs().contains(edge1));
 		assertTrue(p.getAllGraphElement().getAllArcs().contains(edge1));
-		assertTrue(edge1.getEnd() == null);
-		assertTrue(edge1.getStart() == null);
-		edge1.setStart(place1);
-		edge1.setEnd(transition);
 		assertEquals(place1, edge1.getStart());
 		assertEquals(transition, edge1.getEnd());
 		assertEquals(1, edge1.getMark());
 		assertTrue(listener.AddedEdges.contains(edge1));
 
-		IArc edge2 = p.createArc("edge2");
+		IArc edge2 = p.createArc("edge2", transition, place2);
 		assertEquals("edge2", edge2.getName());
 		assertTrue(p.getAllArcs().contains(edge2));
 		assertTrue(p.getAllGraphElement().getAllArcs().contains(edge2));
-		assertTrue(edge2.getEnd() == null);
-		assertTrue(edge2.getStart() == null);
-		edge2.setStart(transition);
-		edge2.setEnd(place2);
 		assertEquals(transition, edge2.getStart());
 		assertEquals(place2, edge2.getEnd());
 		assertEquals(1, edge2.getMark());
@@ -118,18 +101,10 @@ public class PetrinetzTest {
 		P.setMark(1);
 		ITransition a = p2.createTransition("a", new RenewCount());
 		ITransition b = p2.createTransition("b", new RenewCount());
-		IArc pa = p2.createArc("pa");
-		pa.setStart(P);
-		pa.setEnd(a);
-		IArc pb = p2.createArc("pb");
-		pb.setStart(P);
-		pb.setEnd(b);
-		IArc ap = p2.createArc("ap");
-		ap.setStart(a);
-		ap.setEnd(P);
-		IArc bp = p2.createArc("bp");
-		bp.setStart(b);
-		bp.setEnd(P);
+		p2.createArc("pa", P, a);
+		p2.createArc("pb", P, b);
+		p2.createArc("ap", a, P);
+		p2.createArc("bp", b, P);
 		a.setRnw(new RenewCount());
 		b.setRnw(new RenewCount());
 		

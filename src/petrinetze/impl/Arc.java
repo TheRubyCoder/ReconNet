@@ -4,8 +4,6 @@ package petrinetze.impl;
 import petrinetze.ActionType;
 import petrinetze.IArc;
 import petrinetze.INode;
-import petrinetze.IPetrinet;
-import petrinetze.IPetrinetListener;
 
 /**
 * Diese Klasse stellt eine Kante in Petrinetze dar und
