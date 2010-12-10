@@ -48,7 +48,7 @@ public interface IPetrinet {
 	 * Fuegt eine Kante hinzu.
 	 * 			Die Kantengewichtung.
 	 */
-	public IArc createArc(String name);
+	public IArc createArc(String name, INode start, INode end);
 	
 	/**
 	 * Entfernt die angegebene Kante.

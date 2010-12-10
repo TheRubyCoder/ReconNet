@@ -96,8 +96,8 @@ public class Petrinet implements IPetrinet {
 	}
 
 	@Override
-	public IArc createArc(String name) {
-		final IArc arc = new Arc(UUID.getaID(), this);
+	public IArc createArc(String name, INode start, INode end) {
+		final IArc arc = new Arc(UUID.getaID(), this, start, end);
 		arc.setName(name);
 		arcs.add(arc);
 		//fireChanged(arc);
