@@ -24,6 +24,8 @@ import transformation.RuleTest;
  */
 public class MorphismTest {
 
+    public static IPetriNet petriNet;
+
     public MorphismTest() {
     }
 
