@@ -56,7 +56,9 @@ public interface ITransition extends INode {
 	 * Liefer alle eingehende Stellen 
 	 * @return
 	 */
-	public List<IPlace> getIncomingPlaces ();	
+	public List<IPlace> getIncomingPlaces ();
+	
+	public int getPre();
 	
 
 }

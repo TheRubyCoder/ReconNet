@@ -4,8 +4,8 @@ package petrinetze.impl;
 import petrinetze.ActionType;
 import petrinetze.IArc;
 import petrinetze.INode;
-import petrinetze.IPetrinet;
-import petrinetze.IPetrinetListener;
+import petrinetze.IPlace;
+import petrinetze.ITransition;
 
 /**
 * Diese Klasse stellt eine Kante in Petrinetze dar und
@@ -113,7 +113,7 @@ public class Arc implements IArc{
 	@Override
 	public void setStart(INode start) throws IllegalArgumentException
  {
-		if (!isValidPrecondition(start)) {
+		if (!isValidPrecondition(start, end)) {
 			throw new IllegalArgumentException("Start und Ende muessen unterschiedliche Knotenarten haben");
 		}
 		this.start = start;
@@ -129,15 +129,15 @@ public class Arc implements IArc{
 		
 	}
 
-	private boolean isValidPrecondition(INode start) {
+	private static boolean isValidPrecondition(INode start, INode end) {
 		
-		if (start instanceof Place && end instanceof Place) {
-			return false;
+		if (start instanceof IPlace) {
+			return (end instanceof ITransition);
 		}
-		if (start instanceof Transition && end instanceof Transition) {
-			return false;
+		if (start instanceof ITransition) {
+			return (end instanceof IPlace);
 		}
-		return true;
+		return false;
 	}
 
 	/* (non-Javadoc)
@@ -146,7 +146,7 @@ public class Arc implements IArc{
 	@Override
 	public void setEnd(INode end) throws IllegalArgumentException
 {
-		if (!isValidPrecondition(end)) {
+		if (!isValidPrecondition(start, end)) {
 			throw new IllegalArgumentException("Start und Ende muessen unterschiedliche Knotenarten haben");
 		}
 		this.end = end;
