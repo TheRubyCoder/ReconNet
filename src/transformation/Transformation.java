@@ -1,10 +1,7 @@
 package transformation;
 
-import petrinetze.IArc;
-import petrinetze.INode;
 import petrinetze.IPetrinet;
 import petrinetze.IPlace;
-import petrinetze.IRenew;
 import petrinetze.ITransition;
 import petrinetze.impl.*;
 
@@ -63,7 +60,7 @@ public class Transformation implements ITransformation {
 	public IRule rule() {
 		// TODO Auto-generated method stub
 		return rule;
-	}		
+	}
 	/**
 	 * Method for starting the transform. 
 	 */
@@ -72,34 +69,20 @@ public class Transformation implements ITransformation {
 		IPetrinet K = rule.K();
 		IPetrinet L = rule.L();	
 		//Places of K - Places of L
-		Set<INode> KNode = K.getAllGraphElement().getAllNodes();
-		Set<IArc> KArcs = K.getAllArcs();
-		//rule.fromKtoL();
-		for (INode i : KNode)
+		for ( Iterator<IPlace>i = L.getAllPlaces().iterator(); i.hasNext(); )
 		{
-			if(!(rule.fromKtoL(i).equals(null))){
-				if(i instanceof IPlace){   // Wenn I ein Place
-					IPlace place = N.createPlace(i.getName());
-					
-				}
-				else{
-					IRenew rnw = ((ITransition) i).getRnw();
-					N.createTransition(i.getName(),rnw);
-				}
-			}				  
+			K.deletePlaceById(rule.fromLtoK(i.next()).getId());		  
 		}
-		for (IArc a : KArcs){
-			if(!(rule.fromKtoL(a)).equals(null)){
-				if(a.getStart() instanceof IPlace){
-					N.createArc(a.getName(),morphism.morph((IPlace)a.getStart()),morphism.morph((ITransition)a.getEnd()));
-				}
-				else{
-					N.createArc(a.getName(),morphism.morph((ITransition)a.getStart()),morphism.morph((IPlace)a.getEnd()));
-				}
-				
-				
-			}
-		}		
+		//Transition of K - Transition of L
+		for ( Iterator<ITransition>i = L.getAllTransitions().iterator(); i.hasNext(); )
+		{
+		 K.deleteTransitionByID(rule.fromLtoK(i.next()).getId());		 
+		}
+
+		
+		
+		// TODO Check if L is in N
+		// ADD K-L to the transformationPut code in ! 
 
 	}
 

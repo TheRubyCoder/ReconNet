@@ -3,10 +3,9 @@ package petrinetze.impl;
 import petrinetze.IRenew;
 
 public class RenewId implements IRenew {
-	private String tlb;
-	
+
 	@Override
-	public String renew() {
+	public String renew(String tlb) {
 		return tlb;
 	}
 
@@ -15,22 +14,12 @@ public class RenewId implements IRenew {
 		return true;
 	}
 
-	/**
-	 * @return Den Namen der Transition.
-	 */
-	public String getTlb() {
-		return tlb;
-	}
-	
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((tlb == null) ? 0 : tlb.hashCode());
-		return result;
+		return getClass().hashCode();
 	}
 
 	/* (non-Javadoc)
@@ -38,19 +27,7 @@ public class RenewId implements IRenew {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		RenewId other = (RenewId) obj;
-		if (tlb == null) {
-			if (other.tlb != null)
-				return false;
-		} else if (!tlb.equals(other.tlb))
-			return false;
-		return true;
+		return this == obj || (obj != null && obj.getClass() == getClass());
 	}
 	
 }

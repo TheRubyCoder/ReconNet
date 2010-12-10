@@ -1,6 +1,7 @@
 package transformation;
 
 
+import transformation.tempPetriNet.Matrix;
 
 public interface PetriNet {
 

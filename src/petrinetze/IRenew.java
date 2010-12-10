@@ -1,7 +1,8 @@
 package petrinetze;
 
 public interface IRenew {
-	public String renew ();
+
+    public String renew (String tlb);
+
 	boolean isTlbValid(String tlb);
-	public String getTlb();
 }

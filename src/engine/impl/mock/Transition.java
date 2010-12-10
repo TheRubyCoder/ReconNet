@@ -14,7 +14,12 @@ public class Transition extends Node implements petrinetze.ITransition {
 		return null;
 	}
 
-	@Override
+    @Override
+    public void setTlb(String tlb) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
 	public String rnw() {
 		// TODO Auto-generated method stub
 		return null;

@@ -20,8 +20,13 @@ import petrinetze.ITransition;
 public class Transition implements ITransition {
 
 	private int id;
-	private String name;
-	private IRenew rnw;
+
+    private String name;
+
+    private IRenew rnw;
+
+    private String tlb;
+
 	/**
 	 * Liste aller Kanten, die von dieser Transition
 	 * abgehen.
@@ -76,22 +81,23 @@ public class Transition implements ITransition {
 		this.name = name;
 	}
 
-
-	
 	@Override
 	public String getTlb() {
-		return this.rnw.getTlb() ;
+		return tlb;
 	}
 
+    @Override
+    public void setTlb(String tlb) {
+        if (!rnw.isTlbValid(tlb)) {
+            throw new IllegalArgumentException("Invalid tlb: " + tlb + " for rnw " + rnw);
+        }
+        this.tlb = tlb;
+    }
 
-//	@Override
-//	public void rnwAsUserDefined() {
-//		
-//	}
-
-	@Override
+    @Override
 	public String rnw() {
-		return rnw.renew();
+		this.tlb = rnw.renew(this.tlb);
+        return tlb;
 	}
 
 	@Override
@@ -157,7 +163,4 @@ public class Transition implements ITransition {
 		}
 		return in;
 	}
-	
-	
-
 }

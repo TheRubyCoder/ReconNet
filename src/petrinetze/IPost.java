@@ -8,30 +8,19 @@ package petrinetze;
  */
 public interface IPost {
 	/**
-	 * Liefert das Post von dem entsprechenden Petrinetz.
-	 * Das heiﬂt, die Kantengewichte der jeweiligen Transitionen und 
-	 * Stellen.
+	 * Liefert das Post von dem entsprechenden Petrinetz
+	 * Die Identifier der Stellen und Transition werden 
+	 * jeweils als nulltes Element des Arrays abgebildet
+	 * Bsp.
 	 * 
-	 * 	0 1 3 6 
+	 * 	  1 3 6 
 	 *  1 1 3 2
 	 *  2 2 5 3	
 	 *  3 1 3 1
 	 *  
 	 * @return
-	 * Senkrecht: Stellen
-	 * Waagerecht: Transitionen 
+	 * Nullte Stelle senkrecht: Id von Stellen
+	 * Nullte Stelle waagerecht: Id von Transitionen 
 	 */
-	public int [][] getPreAsArray ();
-	
-	/**
-	 * Die Identifier der Transitionen, die in dem Pre Matrix vorhanden sind. 
-	 * @return Array mit den Ids.
-	 */
-	public int [] getTransitionIds();
-	
-	/**
-	 * Die Identifier der Places, die in dem Pre Matrix vorhanden sind. 
-	 * @return Array mit den Ids.
-	 */
-	public int [] getPlaceIds();
+	public int [][] getPostAsArray ();
 }

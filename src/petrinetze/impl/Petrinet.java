@@ -10,17 +10,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import petrinetze.ActionType;
-import petrinetze.IArc;
-import petrinetze.IGraphElement;
-import petrinetze.INode;
-import petrinetze.IPetrinet;
-import petrinetze.IPetrinetListener;
-import petrinetze.IPlace;
-import petrinetze.IPost;
-import petrinetze.IPre;
-import petrinetze.IRenew;
-import petrinetze.ITransition;
+import petrinetze.*;
 
 public class Petrinet implements IPetrinet {
 	
@@ -30,10 +20,7 @@ public class Petrinet implements IPetrinet {
 	private Set<ITransition> transitions;
 	private Set<IArc> arcs;
 	private IGraphElement graphElements;
-	
-	
 
-	
 	public Petrinet() {
 		id = UUID.getnID();
 		places = new HashSet<IPlace>();
@@ -75,12 +62,11 @@ public class Petrinet implements IPetrinet {
 		transitions.add(t);
 		onNodeChanged(t, ActionType.added);
 		return t;
-
 	}
 
     @Override
     public ITransition createTransition(String name) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        return createTransition(name, Renews.IDENTITY);
     }
 
     @Override
@@ -96,7 +82,6 @@ public class Petrinet implements IPetrinet {
 			transitions.remove(toBeDelete);
 			onNodeChanged(toBeDelete, ActionType.deleted);
 		}
-		
 	}
 
 	@Override
@@ -130,7 +115,7 @@ public class Petrinet implements IPetrinet {
 		//Eine Transition ist aktiviert bzw. schaltbereit, falls sich 
 		//in allen Eingangsstellen mindestens so viele Marken befinden, 
 		//wie die Transition Kosten verursacht und alle Ausgangsstellen 
-		//noch genug Kapazitaet haben, um die neuen Marken aufnehmen zu kï¿½nnen.
+		//noch genug Kapazitaet haben, um die neuen Marken aufnehmen zu können.
 		//TODO
 		Set<ITransition> activitedTransitions = new HashSet();
 		for (ITransition t : transitions) {

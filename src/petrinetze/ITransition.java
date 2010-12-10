@@ -26,6 +26,13 @@ public interface ITransition extends INode {
 	 */
 	public String getTlb();
 
+    /**
+     * Neues Label setzen,
+     *
+     * @throws {@link IllegalArgumentException} falls das Label nicht für die aktuelle Renewfunktion gültig ist.
+     */
+    public void setTlb(String tlb);
+
 	/**
 	 * Fuehrt ein renew von Lable bei Id durch.
 	 */

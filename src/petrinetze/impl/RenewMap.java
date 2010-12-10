@@ -6,24 +6,16 @@ import java.util.Map;
 import petrinetze.IRenew;
 
 public class RenewMap implements IRenew {
-	private final HashMap<String,String> rnw;
-	private String tlb;
-	
+
+    private final HashMap<String,String> rnw;
+
 	public RenewMap(final Map<String, String> rnw) {
 		this.rnw = new HashMap<String, String>(rnw);
 	}
 	
-	/**
-	 * @return Den Namen der Transition.
-	 */
-	public String getTlb() {
-		return tlb;
-	}
-	
 	@Override
-	public String renew() {
-		this.tlb = rnw.get(tlb);
-		return this.tlb;
+	public String renew(String tlb) {
+		return rnw.get(tlb);
 	}
 
 	@Override
@@ -36,10 +28,7 @@ public class RenewMap implements IRenew {
 	 */
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((rnw == null) ? 0 : rnw.hashCode());
-		return result;
+		return getClass().hashCode() ^ rnw.hashCode();
 	}
 
 	/* (non-Javadoc)
@@ -47,19 +36,10 @@ public class RenewMap implements IRenew {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		RenewMap other = (RenewMap) obj;
-		if (rnw == null) {
-			if (other.rnw != null)
-				return false;
-		} else if (!rnw.equals(other.rnw))
-			return false;
-		return true;
+		if (obj == null || obj.getClass() != getClass()) {
+            return false;
+        }
+
+        return this.rnw.equals(((RenewMap)obj).rnw);
 	}
-	
 }

@@ -40,7 +40,7 @@ class GraphEditorImpl implements GraphEditor {
     }
 
     private IArc createArcInternal(INode from, INode to) {
-        final IArc arc = context.getPetrinet().createArc(null);
+        final IArc arc = context.getPetrinet().createArc(null, from, to);
         try {
 			arc.setStart(from);
 		} catch (Exception e) {
