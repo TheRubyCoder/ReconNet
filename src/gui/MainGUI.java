@@ -1,36 +1,27 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * MainGUI.java
- *
- * Created on 19.11.2010, 09:32:30
- */
 package gui;
 
 import java.io.IOException;
 import javax.swing.UIManager;
 
-
-/**
- *
- * @author Niklas
+/*
+ * GUI zum anzeigen, bearbeiten und testen von Petrinetzen
  */
 public class MainGUI extends javax.swing.JFrame {
 
     /** Creates new form MainGUI */
     public MainGUI() {
         initComponents();
-        initLanguage("de","DE");
+        initLanguage("de", "DE");
+        initGraphEditor();
     }
-    
-    private void initLanguage(String lang,String lang2) {
+
+    private void initGraphEditor() {
+    }
+
+    private void initLanguage(String lang, String lang2) {
         I18n.setLocale(lang, lang2);
         toggleButtonPlace.setText(I18n.translate("place")); // NOI18N
         toggleButtonTransition.setText(I18n.translate("transition"));
-        toggleButtonEdge.setText(I18n.translate("edge"));
         buttonStep.setText(I18n.translate("step"));
         buttonSteps.setText(I18n.translate("steps"));
         toggleButtonPlay.setText(I18n.translate("play"));
@@ -61,14 +52,12 @@ public class MainGUI extends javax.swing.JFrame {
 
         petriTools = new javax.swing.ButtonGroup();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTree1 = new javax.swing.JTree();
-        jToolBar1 = new javax.swing.JToolBar();
+        petrinetTree = new javax.swing.JTree();
+        editToolBar = new javax.swing.JToolBar();
         toggleButtonPlace = new javax.swing.JToggleButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
         toggleButtonTransition = new javax.swing.JToggleButton();
-        jSeparator4 = new javax.swing.JToolBar.Separator();
-        toggleButtonEdge = new javax.swing.JToggleButton();
-        jToolBar2 = new javax.swing.JToolBar();
+        playToolBar = new javax.swing.JToolBar();
         buttonStep = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JToolBar.Separator();
         jSpinner1 = new javax.swing.JSpinner();
@@ -76,9 +65,9 @@ public class MainGUI extends javax.swing.JFrame {
         jSeparator2 = new javax.swing.JToolBar.Separator();
         toggleButtonPlay = new javax.swing.JToggleButton();
         jDesktopPane1 = new javax.swing.JDesktopPane();
-        jInternalFrame1 = new javax.swing.JInternalFrame();
+        internalEditorFrame = new javax.swing.JInternalFrame();
         status = new javax.swing.JLabel();
-        jProgressBar1 = new javax.swing.JProgressBar();
+        progressBar = new javax.swing.JProgressBar();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openMenuItem = new javax.swing.JMenuItem();
@@ -113,79 +102,75 @@ public class MainGUI extends javax.swing.JFrame {
         treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("R");
         treeNode2.add(treeNode3);
         treeNode1.add(treeNode2);
-        jTree1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
-        jScrollPane1.setViewportView(jTree1);
+        petrinetTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        jScrollPane1.setViewportView(petrinetTree);
 
-        jToolBar1.setRollover(true);
+        editToolBar.setRollover(true);
 
         petriTools.add(toggleButtonPlace);
-        toggleButtonPlace.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/place.png"))); // NOI18N
+        toggleButtonPlace.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/resource/place.png"))); // NOI18N
         toggleButtonPlace.setFocusable(false);
         toggleButtonPlace.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         toggleButtonPlace.setMargin(new java.awt.Insets(4, 14, 4, 14));
         toggleButtonPlace.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(toggleButtonPlace);
-        jToolBar1.add(jSeparator3);
+        editToolBar.add(toggleButtonPlace);
+        editToolBar.add(jSeparator3);
 
         petriTools.add(toggleButtonTransition);
-        toggleButtonTransition.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/transition.png"))); // NOI18N
+        toggleButtonTransition.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/resource/transition.png"))); // NOI18N
         toggleButtonTransition.setFocusable(false);
         toggleButtonTransition.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         toggleButtonTransition.setMargin(new java.awt.Insets(4, 14, 4, 14));
         toggleButtonTransition.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(toggleButtonTransition);
-        jToolBar1.add(jSeparator4);
+        editToolBar.add(toggleButtonTransition);
 
-        petriTools.add(toggleButtonEdge);
-        toggleButtonEdge.setFocusable(false);
-        toggleButtonEdge.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        toggleButtonEdge.setMargin(new java.awt.Insets(4, 14, 4, 14));
-        toggleButtonEdge.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(toggleButtonEdge);
+        playToolBar.setRollover(true);
+        playToolBar.setMaximumSize(new java.awt.Dimension(32925, 32769));
 
-        jToolBar2.setRollover(true);
-        jToolBar2.setMaximumSize(new java.awt.Dimension(32925, 32769));
-
-        buttonStep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/step.png"))); // NOI18N
+        buttonStep.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/resource/step.png"))); // NOI18N
         buttonStep.setFocusable(false);
         buttonStep.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         buttonStep.setMargin(new java.awt.Insets(4, 14, 4, 14));
         buttonStep.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar2.add(buttonStep);
-        jToolBar2.add(jSeparator1);
+        playToolBar.add(buttonStep);
+        playToolBar.add(jSeparator1);
 
         jSpinner1.setMaximumSize(new java.awt.Dimension(29, 20));
-        jToolBar2.add(jSpinner1);
+        playToolBar.add(jSpinner1);
 
-        buttonSteps.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/step.png"))); // NOI18N
+        buttonSteps.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/resource/step.png"))); // NOI18N
         buttonSteps.setMargin(new java.awt.Insets(4, 14, 4, 14));
-        jToolBar2.add(buttonSteps);
-        jToolBar2.add(jSeparator2);
+        playToolBar.add(buttonSteps);
+        playToolBar.add(jSeparator2);
 
-        toggleButtonPlay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/play.png"))); // NOI18N
+        toggleButtonPlay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/resource/play.png"))); // NOI18N
         toggleButtonPlay.setFocusable(false);
         toggleButtonPlay.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         toggleButtonPlay.setMargin(new java.awt.Insets(4, 14, 4, 14));
         toggleButtonPlay.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar2.add(toggleButtonPlay);
+        playToolBar.add(toggleButtonPlay);
 
         jDesktopPane1.setBackground(new java.awt.Color(204, 204, 204));
 
-        jInternalFrame1.setVisible(true);
+        internalEditorFrame.setClosable(true);
+        internalEditorFrame.setIconifiable(true);
+        internalEditorFrame.setMaximizable(true);
+        internalEditorFrame.setResizable(true);
+        internalEditorFrame.setVisible(true);
 
-        javax.swing.GroupLayout jInternalFrame1Layout = new javax.swing.GroupLayout(jInternalFrame1.getContentPane());
-        jInternalFrame1.getContentPane().setLayout(jInternalFrame1Layout);
-        jInternalFrame1Layout.setHorizontalGroup(
-            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout internalEditorFrameLayout = new javax.swing.GroupLayout(internalEditorFrame.getContentPane());
+        internalEditorFrame.getContentPane().setLayout(internalEditorFrameLayout);
+        internalEditorFrameLayout.setHorizontalGroup(
+            internalEditorFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 344, Short.MAX_VALUE)
         );
-        jInternalFrame1Layout.setVerticalGroup(
-            jInternalFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        internalEditorFrameLayout.setVerticalGroup(
+            internalEditorFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 221, Short.MAX_VALUE)
         );
 
-        jInternalFrame1.setBounds(50, 30, 360, 250);
-        jDesktopPane1.add(jInternalFrame1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        internalEditorFrame.setBounds(40, 20, 360, 250);
+        jDesktopPane1.add(internalEditorFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         status.setText("Status");
         status.setVerticalAlignment(javax.swing.SwingConstants.TOP);
@@ -260,15 +245,15 @@ public class MainGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(editToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jToolBar2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(playToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 694, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(status)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 691, Short.MAX_VALUE)
-                        .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -277,15 +262,15 @@ public class MainGUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jToolBar2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jToolBar1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(playToolBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(editToolBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(status)
-                    .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         pack();
@@ -296,11 +281,11 @@ public class MainGUI extends javax.swing.JFrame {
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void deutschMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deutschMenuItemActionPerformed
-        initLanguage("de","DE");
+        initLanguage("de", "DE");
     }//GEN-LAST:event_deutschMenuItemActionPerformed
 
     private void EnglishMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EnglishMenuItemActionPerformed
-        initLanguage("en","US");
+        initLanguage("en", "US");
     }//GEN-LAST:event_EnglishMenuItemActionPerformed
 
     /**
@@ -324,29 +309,27 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JMenuItem deleteMenuItem;
     private javax.swing.JMenuItem deutschMenuItem;
     private javax.swing.JMenu editMenu;
+    private javax.swing.JToolBar editToolBar;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JInternalFrame internalEditorFrame;
     private javax.swing.JDesktopPane jDesktopPane1;
-    private javax.swing.JInternalFrame jInternalFrame1;
-    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
-    private javax.swing.JToolBar.Separator jSeparator4;
     private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JToolBar jToolBar1;
-    private javax.swing.JToolBar jToolBar2;
-    private javax.swing.JTree jTree1;
     private javax.swing.JMenu languageMenu;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem pasteMenuItem;
     private javax.swing.ButtonGroup petriTools;
+    private javax.swing.JTree petrinetTree;
+    private javax.swing.JToolBar playToolBar;
+    private javax.swing.JProgressBar progressBar;
     private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JLabel status;
-    private javax.swing.JToggleButton toggleButtonEdge;
     private javax.swing.JToggleButton toggleButtonPlace;
     private javax.swing.JToggleButton toggleButtonPlay;
     private javax.swing.JToggleButton toggleButtonTransition;
