@@ -5,19 +5,22 @@
 
 package transformation;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.util.Map;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
 import petrinetze.IArc;
 import petrinetze.IPetrinet;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
 import petrinetze.impl.Petrinet;
-import transformation.RuleTest;
 
 /**
  *
@@ -53,68 +56,32 @@ public class MorphismTest {
         IPlace p9 = petrinet.createPlace("Badezimmer");
         IPlace p10 = petrinet.createPlace("Küche");
         ITransition t1 = petrinet.createTransition("", null);
-        IArc arc = petrinet.createArc("");
-        arc.setStart(p1);
-        arc.setEnd(t1);
-        arc = petrinet.createArc("");
-        arc.setStart(t1);
-        arc.setEnd(p2);
+        petrinet.createArc("", p1, t1);
+        petrinet.createArc("", t1, p2);
         ITransition t2 = petrinet.createTransition("snooze", null);
-        arc = petrinet.createArc("");
-        arc.setStart(p3);
-        arc.setEnd(t2);
-        arc = petrinet.createArc("");
-        arc.setStart(t2);
-        arc.setEnd(p2);
+        petrinet.createArc("", p3, t2);
+        petrinet.createArc("", t2, p2);
         ITransition t3 = petrinet.createTransition("klingelt", null);
-        arc = petrinet.createArc("");
-        arc.setStart(p2);
-        arc.setEnd(t3);
-        arc = petrinet.createArc("");
-        arc.setStart(t3);
-        arc.setEnd(p3);
+        petrinet.createArc("", p2, t3);
+        petrinet.createArc("", t3, p3);
         ITransition t4 = petrinet.createTransition("aus", null);
-        arc = petrinet.createArc("");
-        arc.setStart(p3);
-        arc.setEnd(t4);
-        arc = petrinet.createArc("");
-        arc.setStart(t4);
-        arc.setEnd(p4);
+        petrinet.createArc("", p3, t4);
+        petrinet.createArc("", t4, p4);
         ITransition t5 = petrinet.createTransition("Mit Wecker", null);
-        arc = petrinet.createArc("");
-        arc.setStart(p5);
-        arc.setEnd(t5);
-        arc = petrinet.createArc("");
-        arc.setStart(t5);
-        arc.setEnd(p6);
+        petrinet.createArc("", p5, t5);
+        petrinet.createArc("", t5, p6);
         ITransition t6 = petrinet.createTransition("Von Alleine", null);
-        arc = petrinet.createArc("");
-        arc.setStart(p5);
-        arc.setEnd(t6);
-        arc = petrinet.createArc("");
-        arc.setStart(t6);
-        arc.setEnd(p8);
+        petrinet.createArc("", p5, t6);
+        petrinet.createArc("", t6, p8);
         ITransition t7 = petrinet.createTransition("", null);
-        arc = petrinet.createArc("");
-        arc.setStart(p7);
-        arc.setEnd(t7);
-        arc = petrinet.createArc("");
-        arc.setStart(t7);
-        arc.setEnd(p8);
+        petrinet.createArc("", p7, t7);
+        petrinet.createArc("", t7, p8);
         ITransition t8 = petrinet.createTransition("", null);
-        arc = petrinet.createArc("");
-        arc.setStart(p8);
-        arc.setEnd(t8);
-        arc = petrinet.createArc("");
-        arc.setStart(t8);
-        arc.setEnd(p9);
+        petrinet.createArc("", p8, t8);
+        petrinet.createArc("", t8, p9);
         ITransition t9 = petrinet.createTransition("", null);
-        arc = petrinet.createArc("");
-        arc.setStart(p8);
-        arc.setEnd(t9);
-        arc = petrinet.createArc("");
-        arc.setStart(t9);
-        arc.setEnd(p10);
+        petrinet.createArc("", p8, t9);
+        petrinet.createArc("", t9, p10);
 
     }
 
