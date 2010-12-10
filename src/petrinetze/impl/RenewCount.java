@@ -3,31 +3,24 @@ package petrinetze.impl;
 import petrinetze.IRenew;
 
 public class RenewCount implements IRenew {
-	private String tlb;
+	private int count = 0;
 	@Override
 	public String renew(String tlb) {
 		
-		int c = Integer.parseInt(tlb);
-		c++;
-		this.tlb = String.valueOf(c);
-		return this.tlb;
+		count++;
+		return "" + count;
 	}
 
 	@Override
 	public boolean isTlbValid(String tlb) {
-		try {
-			Integer.parseInt(tlb);
-			return true;
-		} catch (NumberFormatException exc) {
-			return false;
-		}
+		return true;
 	}
 	
 	/**
 	 * @return Den Namen der Transition.
 	 */
 	public String getTlb() {
-		return this.tlb;
+		return "" + count;
 	}
 
 	/* (non-Javadoc)
@@ -37,7 +30,7 @@ public class RenewCount implements IRenew {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((tlb == null) ? 0 : tlb.hashCode());
+		result = prime * result + count;
 		return result;
 	}
 
@@ -53,12 +46,7 @@ public class RenewCount implements IRenew {
 		if (getClass() != obj.getClass())
 			return false;
 		RenewCount other = (RenewCount) obj;
-		if (tlb == null) {
-			if (other.tlb != null)
-				return false;
-		} else if (!tlb.equals(other.tlb))
-			return false;
-		return true;
+		return getTlb().equals(other.getTlb());
 	}
 	
 
