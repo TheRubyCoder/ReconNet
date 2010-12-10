@@ -39,6 +39,7 @@ public class TransformationTest {
 
     @Before
     public void setUp() {
+        /*
         rule1 = new Rule();
         //L von r1
         IPlace p1 = rule1.K().createPlace("Wecker ein");
@@ -98,7 +99,7 @@ public class TransformationTest {
         arc.setStart(t4);
         arc.setEnd(p5);
         rule1.fromKtoR(arc);
-
+        */
     }
 
     @After
