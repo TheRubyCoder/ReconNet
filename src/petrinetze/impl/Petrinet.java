@@ -1,16 +1,26 @@
 package petrinetze.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
-import java.util.Map.Entry;
 
-import petrinetze.*;
+import petrinetze.ActionType;
+import petrinetze.IArc;
+import petrinetze.IGraphElement;
+import petrinetze.INode;
+import petrinetze.IPetrinet;
+import petrinetze.IPetrinetListener;
+import petrinetze.IPlace;
+import petrinetze.IPost;
+import petrinetze.IPre;
+import petrinetze.IRenew;
+import petrinetze.ITransition;
+import petrinetze.Renews;
 
 public class Petrinet implements IPetrinet {
 	
@@ -43,6 +53,8 @@ public class Petrinet implements IPetrinet {
 	@Override
 	public void deletePlaceById(int id) {
 		IPlace toBeDelete = null;
+		//TODO: Es sollen auch die ankommenden und ausgehenden Kanten mitgelöscht werden.
+		//und jedes Mal ein Event abfeuern.
 		for (IPlace p : places) {
 			if (p.getId() == id) {
 				toBeDelete = p;
@@ -72,6 +84,8 @@ public class Petrinet implements IPetrinet {
     @Override
 	public void deleteTransitionByID(int id) {
 		ITransition toBeDelete = null;
+		//TODO: Es sollen auch die ankommenden und ausgehenden Kanten mitgelöscht werden.
+		//und jedes Mal ein Event abfeuern.
 		for (ITransition t : transitions) {
 			if (t.getId() == id) {
 				toBeDelete = t;
@@ -117,7 +131,7 @@ public class Petrinet implements IPetrinet {
 		//wie die Transition Kosten verursacht und alle Ausgangsstellen 
 		//noch genug Kapazitaet haben, um die neuen Marken aufnehmen zu können.
 		//TODO
-		Set<ITransition> activitedTransitions = new HashSet();
+		Set<ITransition> activitedTransitions = new HashSet<ITransition>();
 		for (ITransition t : transitions) {
 			if (isActivited(t)) {
 				activitedTransitions.add(t);
@@ -206,25 +220,36 @@ public class Petrinet implements IPetrinet {
 	
 	//PRE in der t-ten Spalte gibt an,
 	//wieviele Token die Transition t von p wegnimmt
-	@Override
-	public IPre getPre() {
-		
-		//IPre pre = new Pre();
-		//TODO: abaendern von Aufruf
-		IPre pre = new Pre(0,0);
-		
-		return null;
-	}
+//	@Override
+//	public IPre getPre() {
+//		
+//		//IPre pre = new Pre();
+//		//TODO: abaendern von Aufruf
+//		int pre = 0;
+//		int[] preId = new int[transitions.size()];
+//		int[] postId = new int[places.size()];
+//		int[][] preValues = new int[][];
+//		Iterator<ITransition> itr = transitions.iterator();
+//		for (int i=0; i< transitions.size();i++) {
+//			ITransition t = itr.next();
+//			pres[i] = t.getId();
+//		}
+//			pre += t.getPre();
+//		}
+//		IPre pre = new Pre(0,0);
+//		
+//		return null;
+//	}
+//
+//	@Override
+//	public IPost getPost() {
+//		return null;
+//	}
 
-	@Override
-	public IPost getPost() {
-		return null;
-	}
-
-	@Override
-	public int getId() {
-		return 0;
-	}
+//	@Override
+//	public int getId() {
+//		return 0;
+//	}
 
 	/*private void fireChanged(INode element) {
 		final List<IPetrinetListener> listeners;
@@ -318,6 +343,30 @@ public class Petrinet implements IPetrinet {
 	public String toString() {
 		return "Petrinet [id=" + id + "\n\t places=" + places + "\n\t transitions="
 				+ transitions + "\n\t arcs=" + arcs + "]";
+	}
+
+
+
+	@Override
+	public IPre getPre() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public IPost getPost() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+	@Override
+	public int getId() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 
