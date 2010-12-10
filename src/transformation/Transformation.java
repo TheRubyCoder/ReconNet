@@ -1,12 +1,11 @@
 package transformation;
 
+import petrinetze.IArc;
+import petrinetze.INode;
 import petrinetze.IPetrinet;
 import petrinetze.IPlace;
+import petrinetze.IRenew;
 import petrinetze.ITransition;
-import petrinetze.impl.*;
-
-
-import java.util.Iterator;
 import java.util.Set;
 
 public class Transformation implements ITransformation {
@@ -48,7 +47,6 @@ public class Transformation implements ITransformation {
 	 */
 	@Override
 	public IMorphism morphism() {
-		// TODO Auto-generated method stub
 		return morphism;
 	}
 	
@@ -58,31 +56,57 @@ public class Transformation implements ITransformation {
 	 */	
 	@Override
 	public IRule rule() {
-		// TODO Auto-generated method stub
 		return rule;
-	}
+	}		
 	/**
 	 * Method for starting the transform. 
 	 */
 	@Override
 	public void transform() {
 		IPetrinet K = rule.K();
-		IPetrinet L = rule.L();	
-		//Places of K - Places of L
-		for ( Iterator<IPlace>i = L.getAllPlaces().iterator(); i.hasNext(); )
+		Set<INode> KNode = K.getAllGraphElement().getAllNodes();
+		Set<IArc> KArc = K.getAllArcs();		
+		for (INode i : KNode)  // Add K - L Places
 		{
-			K.deletePlaceById(rule.fromLtoK(i.next()).getId());		  
+			if(!(rule.fromKtoL(i).equals(null))){
+				if(i instanceof IPlace){   
+					N.createPlace(i.getName());
+					
+				}
+				else{
+					IRenew rnw = ((ITransition) i).getRnw();
+					N.createTransition(i.getName(),rnw);
+				}
+			}				  
 		}
-		//Transition of K - Transition of L
-		for ( Iterator<ITransition>i = L.getAllTransitions().iterator(); i.hasNext(); )
+		for (IArc a : KArc){ //Add K - L Arcs
+			if(!(rule.fromKtoL(a)).equals(null)){
+				if(a.getStart() instanceof IPlace){
+					N.createArc(a.getName(),morphism.morph((IPlace)a.getStart()),morphism.morph((ITransition)a.getEnd()));
+				}
+				else{
+					N.createArc(a.getName(),morphism.morph((ITransition)a.getStart()),morphism.morph((IPlace)a.getEnd()));
+				}	
+			}
+		}
+		for (INode i : KNode) // Delete K - R Places
 		{
-		 K.deleteTransitionByID(rule.fromLtoK(i.next()).getId());		 
+			if(!(rule.fromKtoR(i).equals(null))){
+				if(i instanceof IPlace){
+					N.deletePlaceById(morphism.morph((IPlace)i).getId());
+				}
+				else {
+					N.deleteTransitionByID(morphism.morph((ITransition)i).getId());
+				}
+			}
 		}
-
+		for (IArc i : KArc){ // Delete K - R Arc´s
+			if(!(rule.fromKtoR(i).equals(null))){
+				N.deleteArcByID(morphism.morph(i).getId());
+			}
+			
+		}
 		
-		
-		// TODO Check if L is in N
-		// ADD K-L to the transformationPut code in ! 
 
 	}
 
