@@ -5,7 +5,7 @@
 
 package transformation;
 
-import engine.impl.mock.Place;
+
 import java.util.Set;
 import static org.junit.Assert.*;
 
@@ -52,33 +52,17 @@ public class RuleTest {
         IPlace p5 = rule1.K().createPlace("Wecker aus");
         IPlace p6 = rule1.L().createPlace("Wecker aus");
         ITransition t1 = rule1.L().createTransition("", new RenewCount());
-        IArc arc = rule1.L().createArc("");
-        arc.setStart(p1);
-        arc.setEnd(t1);
-        arc = rule1.L().createArc("");
-        arc.setStart(t1);
-        arc.setEnd(p4);
+        IArc arc = rule1.L().createArc("", p1, t1);
+        arc = rule1.L().createArc("", t1, rule1.fromKtoL(p4));
         ITransition t2 = rule1.L().createTransition("", new RenewCount());
-        arc = rule1.L().createArc("");
-        arc.setStart(p3);
-        arc.setEnd(t2);
-        arc = rule1.L().createArc("");
-        arc.setStart(t2);
-        arc.setEnd(p6);
+        arc = rule1.L().createArc("", rule1.fromKtoL(p3), t2);
+        arc = rule1.L().createArc("", t2, p6);
         ITransition t3 = rule1.R().createTransition("", new RenewCount());
-        arc = rule1.R().createArc("");
-        arc.setStart(p2);
-        arc.setEnd(t3);
-        arc = rule1.R().createArc("");
-        arc.setStart(t3);
-        arc.setEnd(p4);
+        arc = rule1.R().createArc("", rule1.fromKtoR(p2), t3);
+        arc = rule1.R().createArc("", t3, rule1.fromKtoR(p4));
         ITransition t4 = rule1.R().createTransition("", new RenewCount());
-        arc = rule1.R().createArc("");
-        arc.setStart(p3);
-        arc.setEnd(t4);
-        arc = rule1.R().createArc("");
-        arc.setStart(t4);
-        arc.setEnd(p5);
+        arc = rule1.R().createArc("", rule1.fromKtoR(p3), t4);
+        arc = rule1.R().createArc("", t4, rule1.fromKtoR(p5));
   
     }
 
@@ -145,10 +129,10 @@ public class RuleTest {
         Set<IPlace> l = rule1.L().getAllPlaces();
         Set<IPlace> r = rule1.R().getAllPlaces();
         for(IPlace place : r){
-            assertTrue(k.contains(place));
+            assertTrue(k.contains(rule1.fromRtoK(place)));
         }
         for(IPlace place : l){
-            assertTrue(k.contains(place));
+            assertTrue(k.contains(rule1.fromLtoK(place)));
         }
     }
 
@@ -159,10 +143,10 @@ public class RuleTest {
         Set<IArc> l = rule1.L().getAllArcs();
         Set<IArc> r = rule1.R().getAllArcs();
         for(IArc place : r){
-            assertTrue(k.contains(place));
+            assertTrue(k.contains(rule1.fromRtoK(place)));
         }
         for(IArc place : l){
-            assertTrue(k.contains(place));
+            assertTrue(k.contains(rule1.fromLtoK(place)));
         }
     }
 
@@ -173,10 +157,10 @@ public class RuleTest {
         Set<ITransition> l = rule1.L().getAllTransitions();
         Set<ITransition> r = rule1.R().getAllTransitions();
         for(ITransition place : r){
-            assertTrue(k.contains(place));
+            assertTrue(k.contains(rule1.fromRtoK(place)));
         }
         for(ITransition place : l){
-            assertTrue(k.contains(place));
+            assertTrue(k.contains(rule1.fromLtoK(place)));
         }
     }
 }
