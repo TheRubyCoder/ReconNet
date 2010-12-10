@@ -20,7 +20,7 @@ public class MainGUI extends javax.swing.JFrame {
 
     private void initLanguage(String lang, String lang2) {
         I18n.setLocale(lang, lang2);
-        toggleButtonPlace.setText(I18n.translate("place")); // NOI18N
+        toggleButtonPlace.setText(I18n.translate("place"));
         toggleButtonTransition.setText(I18n.translate("transition"));
         buttonStep.setText(I18n.translate("step"));
         buttonSteps.setText(I18n.translate("steps"));
