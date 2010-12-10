@@ -80,6 +80,7 @@ public class Transformation implements ITransformation {
 			if(!(rule.fromKtoL(i).equals(null))){
 				if(i instanceof IPlace){   // Wenn I ein Place
 					IPlace place = N.createPlace(i.getName());
+					
 				}
 				else{
 					IRenew rnw = ((ITransition) i).getRnw();
@@ -87,12 +88,18 @@ public class Transformation implements ITransformation {
 				}
 			}				  
 		}
-		
-			
-		
-		
-		// TODO Check if L is in N
-		// ADD K-L to the transformationPut code in ! 
+		for (IArc a : KArcs){
+			if(!(rule.fromKtoL(a)).equals(null)){
+				if(a.getStart() instanceof IPlace){
+					N.createArc(a.getName(),morphism.morph((IPlace)a.getStart()),morphism.morph((ITransition)a.getEnd()));
+				}
+				else{
+					N.createArc(a.getName(),morphism.morph((ITransition)a.getStart()),morphism.morph((IPlace)a.getEnd()));
+				}
+				
+				
+			}
+		}		
 
 	}
 
