@@ -12,9 +12,6 @@ package gui;
 
 import java.io.IOException;
 import javax.swing.UIManager;
-import java.io.File;
-import java.util.ResourceBundle;
-import java.util.Locale;
 
 
 /**
@@ -30,30 +27,27 @@ public class MainGUI extends javax.swing.JFrame {
     }
     
     private void initLanguage(String lang,String lang2) {
-        Locale currentLocale;
-        ResourceBundle bundle;
-        currentLocale = new Locale(lang, lang2);
-        bundle = ResourceBundle.getBundle("gui.resource.MessageBundle",currentLocale);
-        toggleButtonPlace.setText(bundle.getString("place")); // NOI18N
-        toggleButtonTransition.setText(bundle.getString("transition"));
-        toggleButtonEdge.setText(bundle.getString("edge"));
-        buttonStep.setText(bundle.getString("step"));
-        buttonSteps.setText(bundle.getString("steps"));
-        toggleButtonPlay.setText(bundle.getString("play"));
-        status.setText(bundle.getString("status"));
-        fileMenu.setText(bundle.getString("file"));
-        openMenuItem.setText(bundle.getString("open"));
-        saveMenuItem.setText(bundle.getString("save"));
-        saveAsMenuItem.setText(bundle.getString("saveas"));
-        exitMenuItem.setText(bundle.getString("exit"));
-        editMenu.setText(bundle.getString("edit"));
-        cutMenuItem.setText(bundle.getString("cut"));
-        copyMenuItem.setText(bundle.getString("copy"));
-        pasteMenuItem.setText(bundle.getString("paste"));
-        deleteMenuItem.setText(bundle.getString("delete"));
-        languageMenu.setText(bundle.getString("language"));
-        deutschMenuItem.setText(bundle.getString("german"));
-        EnglishMenuItem.setText(bundle.getString("english"));
+        I18n.setLocale(lang, lang2);
+        toggleButtonPlace.setText(I18n.translate("place")); // NOI18N
+        toggleButtonTransition.setText(I18n.translate("transition"));
+        toggleButtonEdge.setText(I18n.translate("edge"));
+        buttonStep.setText(I18n.translate("step"));
+        buttonSteps.setText(I18n.translate("steps"));
+        toggleButtonPlay.setText(I18n.translate("play"));
+        status.setText(I18n.translate("status"));
+        fileMenu.setText(I18n.translate("file"));
+        openMenuItem.setText(I18n.translate("open"));
+        saveMenuItem.setText(I18n.translate("save"));
+        saveAsMenuItem.setText(I18n.translate("saveas"));
+        exitMenuItem.setText(I18n.translate("exit"));
+        editMenu.setText(I18n.translate("edit"));
+        cutMenuItem.setText(I18n.translate("cut"));
+        copyMenuItem.setText(I18n.translate("copy"));
+        pasteMenuItem.setText(I18n.translate("paste"));
+        deleteMenuItem.setText(I18n.translate("delete"));
+        languageMenu.setText(I18n.translate("language"));
+        deutschMenuItem.setText(I18n.translate("german"));
+        EnglishMenuItem.setText(I18n.translate("english"));
     }
 
     /** This method is called from within the constructor to
@@ -313,17 +307,13 @@ public class MainGUI extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) throws IOException {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainGUI().setVisible(true);
-            }
-        });
         try {
             String cn = UIManager.getSystemLookAndFeelClassName();
             UIManager.setLookAndFeel(cn);
         } catch (Exception e) {
             System.out.println("Exception: " + e);
         }
+        new MainGUI().setVisible(true);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem EnglishMenuItem;
