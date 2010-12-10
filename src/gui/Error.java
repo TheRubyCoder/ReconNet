@@ -23,11 +23,11 @@ public class Error {
     }
 
     public static void create(Component parentComponent,Exception ex){
-        J
+        JOptionPane.showMessageDialog(parentComponent, ex.toString(), I18n.translate("error"), JOptionPane.ERROR_MESSAGE);
     }
 
     public static void create(Component parentComponent,String ex){
-
+        JOptionPane.showMessageDialog(parentComponent,ex,I18n.translate("error"),JOptionPane.ERROR_MESSAGE);
     }
 
     
