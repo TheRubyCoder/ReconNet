@@ -362,13 +362,28 @@ public class Petrinet implements IPetrinet {
 	}
 
 
+	
+	@Override
+	public IPlace getPlaceById(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
+
+
+	@Override
+	public ITransition getTransitionById(int id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	
 	@Override
 	public int getId() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
 
 	
 }
