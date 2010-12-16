@@ -21,7 +21,7 @@ public interface IPost {
 	 * Senkrecht: Stellen
 	 * Waagerecht: Transitionen 
 	 */
-	public int [][] getPreAsArray ();
+	public int [][] getPostAsArray ();
 	
 	/**
 	 * Die Identifier der Transitionen, die in dem Pre Matrix vorhanden sind. 
