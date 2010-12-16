@@ -5,7 +5,7 @@ import petrinetze.IPost;
 public class Post implements IPost {
 
 	@Override
-	public int[][] getPreAsArray() {
+	public int[][] getPostAsArray() {
 		// TODO Auto-generated method stub
 		return null;
 	}
