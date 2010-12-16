@@ -97,6 +97,20 @@ public interface IPetrinet {
 	public IPost getPost();
 	
 	/**
+	 * Liefert die Stelle mit der angegebenen Id,
+	 * @param id
+	 * @return Die Stelle mit der angegebenen Id
+	 */
+	public IPlace getPlaceById(int id);
+	
+	/**
+	 * Liefert die Transition mit der angegebenen Id,
+	 * @param id
+	 * @return Die Transition mit der angegebenen Id
+	 */
+	public ITransition getTransitionById(int id);
+	
+	/**
 	 * Liefert die ID zurueck
 	 * @return 
 	 */
