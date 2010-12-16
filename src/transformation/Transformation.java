@@ -28,7 +28,7 @@ public class Transformation implements ITransformation {
 	 */	
 	public Transformation(IPetrinet n,IRule r){
 		N = n; rule = r;
-		morphism = new Morphism(N,r.L());
+		morphism = MorphismFactory.createMorphism(N,r.L());
 		
 	}		
 	/**
