@@ -146,7 +146,7 @@ public class IMorphismTest {
 
     public class IMorphismImpl implements IMorphism {
 
-        public Map<ITransition, ITransition> transitions() {
+        public Map<ITransition, ITransition> temp_transitions() {
             return null;
         }
 
@@ -183,6 +183,12 @@ public class IMorphismTest {
         public IPetrinet To() {
             throw new UnsupportedOperationException("Not implemented yet");
         }
+
+		@Override
+		public Map<ITransition, ITransition> transitions() {
+			// TODO Auto-generated method stub
+			return null;
+		}
     }
 
 }
