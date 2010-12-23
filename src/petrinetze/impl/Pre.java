@@ -1,5 +1,7 @@
 package petrinetze.impl;
 
+import java.util.Arrays;
+
 import petrinetze.IPre;
 
 public class Pre implements IPre {
@@ -8,8 +10,12 @@ public class Pre implements IPre {
 	private int []tIds;
 	private int []pIds;
 	
-	public Pre (int m, int n) {
-		pre = new int[m][n];
+	public Pre (int[][] pre, int[] pId, int[] tId) {
+		this.pIds = pId;
+		this.tIds = tId;
+		this.pre = pre;
+		
+		
 	}
 	
 	@Override
@@ -24,7 +30,26 @@ public class Pre implements IPre {
 
 	@Override
 	public int[] getPlaceIds() {
-		return null;
+		return this.pIds;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		String output = "\n";
+		
+		for (int i = 0; i < pIds.length; i++) {
+			for (int z = 0; z < tIds.length; z++) {
+				output += " [" + pre[i][z] + "]";
+			}
+			output += "\n";
+		}
+		
+
+	return "Pre [pre=" + output + ", tIds="
+			+ Arrays.toString(tIds) + ", pIds=" + Arrays.toString(pIds)
+			+ "]";
+}
 }

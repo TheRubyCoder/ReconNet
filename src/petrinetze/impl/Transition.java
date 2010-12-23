@@ -8,6 +8,7 @@ package petrinetze.impl;
 * @version 1.0
 */
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
 
 import petrinetze.ActionType;
@@ -26,9 +27,13 @@ public class Transition implements ITransition {
     private IRenew rnw;
 
     private String tlb;
-
-	private int pre;
-	private int post;
+    /**
+     * Beinhaltet die Stellen und die Kantengewichte
+     * basierend auf einer Transition. Wichtig fuer das Pre-Araay
+     */
+	private Hashtable<Integer, Integer> pre;
+	
+	private Hashtable<Integer, Integer> post;
 	/**
 	 * Liste aller Kanten, die von dieser Transition
 	 * abgehen.
@@ -40,10 +45,12 @@ public class Transition implements ITransition {
 	 */
 	private List<IArc> endArcs;
 	
+	@Override
 	public void setStartArcs (IArc arc) {
 		this.startArcs.add(arc);
 		petrinet.onNodeChanged(this, ActionType.changed);
 	}
+	@Override
 	public void setEndArcs (IArc arc) {
 		this.endArcs.add(arc);
 		petrinet.onNodeChanged(this, ActionType.changed);
@@ -57,6 +64,8 @@ public class Transition implements ITransition {
 		this.endArcs = new ArrayList<IArc>();
 		this.startArcs = new ArrayList<IArc>();
 		this.petrinet = petrinet;
+		this.pre = new Hashtable<Integer, Integer>();
+		this.post = new Hashtable<Integer, Integer>();
 	}
 
 	/* (non-Javadoc)
@@ -152,9 +161,9 @@ public class Transition implements ITransition {
 	@Override
 	public List<IPlace> getOutgoingPlaces() {
 		List<IPlace> out = new ArrayList<IPlace>();
-		for (IArc arc : endArcs) {
-			IPlace p = (IPlace) arc.getStart();
-			this.pre += p.getMark();
+		for (IArc arc : startArcs) {
+			IPlace p = (IPlace) arc.getEnd();
+			post.put(new Integer(p.getId()), new Integer(arc.getMark()));
 			out.add(p);
 		}
 		return out;
@@ -162,23 +171,38 @@ public class Transition implements ITransition {
 	@Override
 	public List<IPlace> getIncomingPlaces() {
 		List<IPlace> in = new ArrayList<IPlace>();
-		for (IArc arc : startArcs) {
-			IPlace p = (IPlace) arc.getEnd();
-			this.post += p.getMark();
+		
+		for (IArc arc : endArcs) {
+			IPlace p = (IPlace) arc.getStart();
+			pre.put(new Integer(p.getId()), new Integer(arc.getMark()));
 			in.add(p);
 		}
 		return in;
 	}
 	
 	/**
-	 * @precondition getOutGoingPlaces()
+	 * @precondition getOutgoingPlaces()
 	 */
 	@Override
-	public int getPre() {
-		getOutgoingPlaces();
+	public Hashtable<Integer, Integer> getPre() {
+		//Vorbedingung fuer diese Methode ist, dass getOutgoingPlaces()
+		//einmal ausgefuehrt wird.
+		getIncomingPlaces();
+		
 		return this.pre;
 	}
 	
+	/**
+	 * @precondition getIncomingPlaces()
+	 */
+	@Override
+	public Hashtable<Integer, Integer> getPost() {
+		//Vorbedingung fuer diese Methode ist, dass getIncomingPlaces()
+		//einmal ausgefuehrt wird.
+		getOutgoingPlaces();
+		
+		return this.post;
+	}
 	
 	
 }
