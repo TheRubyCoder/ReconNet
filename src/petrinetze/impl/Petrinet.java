@@ -2,6 +2,7 @@ package petrinetze.impl;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +70,7 @@ public class Petrinet implements IPetrinet {
 
 	@Override
 	public ITransition createTransition(String name, IRenew rnw) {
-		Transition t = new Transition(UUID.getpID(), rnw, this);
+		Transition t = new Transition(UUID.gettID(), rnw, this);
 		t.setName(name);
 		transitions.add(t);
 		onNodeChanged(t, ActionType.added);
@@ -101,6 +102,15 @@ public class Petrinet implements IPetrinet {
 	@Override
 	public IArc createArc(String name, INode start, INode end) {
 		final IArc arc = new Arc(UUID.getaID(), this, start, end);
+		//Fuege Arc in die Startliste von Transition hinzu
+		if(start instanceof ITransition) {
+			((ITransition) start).setStartArcs(arc);
+		}
+		//Fuege Arc in die Endliste von Transition hinzu
+		if(end instanceof ITransition) {
+			((ITransition) end).setEndArcs(arc);
+		}
+		
 		arc.setName(name);
 		arcs.add(arc);
 		//fireChanged(arc);
@@ -172,10 +182,10 @@ public class Petrinet implements IPetrinet {
 		Map<IPlace, Integer> out = new HashMap<IPlace, Integer>();
 		for(IArc arc : arcs)
 		{
-			if(arc.getEnd().equals(transition))
-			{
-				if(arc.getMark() > ((IPlace)arc.getStart()).getMark())
+			if(arc.getEnd().equals(transition)) {
+				if(arc.getMark() > ((IPlace)arc.getStart()).getMark()) {
 					throw new IllegalArgumentException("The place " + arc.getStart() + " does not have enough tokens");
+				}
 				inc.put((IPlace)arc.getStart(), arc.getMark());
 			}
 			else if(arc.getStart().equals(transition))
@@ -220,48 +230,125 @@ public class Petrinet implements IPetrinet {
 	
 	//PRE in der t-ten Spalte gibt an,
 	//wieviele Token die Transition t von p wegnimmt
-//	@Override
-//	public IPre getPre() {
-//		
-//		//IPre pre = new Pre();
-//		//TODO: abaendern von Aufruf
-//		int pre = 0;
-//		int[] preId = new int[transitions.size()];
-//		int[] postId = new int[places.size()];
-//		int[][] preValues = new int[][];
-//		Iterator<ITransition> itr = transitions.iterator();
-//		for (int i=0; i< transitions.size();i++) {
-//			ITransition t = itr.next();
-//			pres[i] = t.getId();
-//		}
-//			pre += t.getPre();
-//		}
-//		IPre pre = new Pre(0,0);
-//		
-//		return null;
-//	}
-//
-//	@Override
-//	public IPost getPost() {
-//		return null;
-//	}
-
-//	@Override
-//	public int getId() {
-//		return 0;
-//	}
-
-	/*private void fireChanged(INode element) {
-		final List<IPetrinetListener> listeners;
+	@Override
+	public IPre getPre() {
+		//Initialisierung 
+		int[] pId = new int[places.size()];
 		
-		synchronized (this.listeners){
-			listeners = new ArrayList<IPetrinetListener>(this.listeners);
+		int i=0;
+		//Fuellen mit den entsprechenden Ids
+		for (IPlace place : places) {
+			pId[i]=place.getId();
+			i++;
+		}
+		//Initialisierung
+		int[] tId = new int[transitions.size()];
+		
+		int z=0;
+		//Fuellen mit den entsprechenden Ids
+		for (ITransition transition : transitions) {
+			tId[z]=transition.getId();
+			z++;
 		}
 		
-		for (IPetrinetListener l : listeners)  {
-			l.changed(this, element, ActionType.changed);
+		
+		//Initialisierung mit 0
+		int[][] preValues = init(places.size(),transitions.size());
+		//Zu jeder Transition holen wir die Stellen und
+		//merken uns das in der perValueMatrix (sagt Florian)
+		for (ITransition t : transitions) {
+			final Hashtable<Integer, Integer> ht = t.getPre();
+			int tmpTransitionId = getIdFromArray(t.getId(), tId);
+			for (Integer p : ht.keySet()) {
+				int tmpPlaceId = getIdFromArray(p.intValue(), pId);
+				
+				if (tmpPlaceId >= 0 && tmpTransitionId >= 0) {
+					preValues[tmpPlaceId][tmpTransitionId] = ht.get(p);
+				}
+			}
 		}
-	}*/
+		return new Pre(preValues, pId, tId);
+	}
+
+	private int getIdFromArray(int intValue, int[] pId) {
+		for (int i = 0; i <= pId.length; i++) {
+			if (pId[i] == intValue) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+
+
+	private int[][] init(int m, int n) {
+		int tmp [][] = new int[m][n];
+		for (int i = 0; i < m; i++) {
+			for (int z = 0; z < n; z++) {
+				tmp[i][z] = 0;
+			}
+		}
+		return tmp;
+	}
+
+
+
+	@Override
+	public IPost getPost() {
+		//Initialisierung 
+		int[] pId = new int[places.size()];
+		
+		int i=0;
+		//Fuellen mit den entsprechenden Ids
+		for (IPlace place : places) {
+			pId[i]=place.getId();
+			i++;
+		}
+		//Initialisierung
+		int[] tId = new int[transitions.size()];
+		
+		int z=0;
+		//Fuellen mit den entsprechenden Ids
+		for (ITransition transition : transitions) {
+			tId[z]=transition.getId();
+			z++;
+		}
+		
+		
+		//Initialisierung mit 0
+		int[][] postValues = init(places.size(),transitions.size());
+		//Zu jeder Transition holen wir die Stellen und
+		//merken uns das in der perValueMatrix (sagt Florian)
+		for (ITransition t : transitions) {
+			final Hashtable<Integer, Integer> ht = t.getPost();
+			int tmpTransitionId = getIdFromArray(t.getId(), tId);
+			for (Integer p : ht.keySet()) {
+				int tmpPlaceId = getIdFromArray(p.intValue(), pId);
+				
+				if (tmpPlaceId >= 0 && tmpTransitionId >= 0) {
+					postValues[tmpPlaceId][tmpTransitionId] = ht.get(p);
+				}
+			}
+		}
+		return new Post(postValues, pId, tId);
+	}
+
+	@Override
+	public int getId() {
+		return this.id;
+	}
+
+//	private void fireChanged(INode element) {
+//		final List<IPetrinetListener> listeners;
+//		
+//		synchronized (this.listeners){
+//			listeners = new ArrayList<IPetrinetListener>(this.listeners);
+//		}
+//		
+//		for (IPetrinetListener l : listeners)  {
+//			l.changed(this, element, ActionType.changed);
+//		}
+//	}
 
 	@Override
 	public Set<IPlace> getAllPlaces() {
@@ -343,46 +430,6 @@ public class Petrinet implements IPetrinet {
 	public String toString() {
 		return "Petrinet [id=" + id + "\n\t places=" + places + "\n\t transitions="
 				+ transitions + "\n\t arcs=" + arcs + "]";
-	}
-
-
-
-	@Override
-	public IPre getPre() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-
-	@Override
-	public IPost getPost() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	
-	@Override
-	public IPlace getPlaceById(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-
-	@Override
-	public ITransition getTransitionById(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-	
-	@Override
-	public int getId() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	
