@@ -58,7 +58,10 @@ public interface ITransition extends INode {
 	 */
 	public List<IPlace> getIncomingPlaces ();
 	
-	public int getPre();
+	public Hashtable<Integer, Integer> getPre();
+	public Hashtable<Integer, Integer> getPost();
+	public void setStartArcs (IArc arc);
+	public void setEndArcs (IArc arc);
 	
 
 }
