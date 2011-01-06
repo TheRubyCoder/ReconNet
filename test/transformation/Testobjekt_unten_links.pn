@@ -1,0 +1,53 @@
+numPlaces 10 #
+
+placeNames 
+Wecker_Ein
+Aufstehen
+leer
+Wecker_Ein
+Wecker_Aus
+leer
+Wecker_Aus
+Badezimmer
+Küche
+leer #
+
+token
+0 0 0 1 0 0 0 0 0 0 #
+
+numTransitions 9 #
+
+transitionNames
+leer
+Mit_Wecker
+Von_Allein
+Snooze
+Klingelt
+leer
+leer
+leer
+leer #
+
+pre
+1 0 0 0 0 0 0 0 0
+0 1 1 0 0 0 0 0 0
+0 0 0 0 1 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 1
+0 0 0 1 0 1 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 1 1 0 #
+
+post
+0 0 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+1 0 0 1 0 0 0 0 0
+0 1 0 0 0 0 0 0 0
+0 0 0 0 0 0 0 0 0
+0 0 0 0 1 0 0 0 0
+0 0 0 0 0 1 0 0 0
+0 0 0 0 0 0 1 0 0
+0 0 0 0 0 0 0 1 0
+0 0 1 0 0 0 0 0 1 #

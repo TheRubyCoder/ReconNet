@@ -19,7 +19,7 @@ public class Post implements IPost {
 	}
 	
 	@Override
-	public int[][] getPreAsArray() {
+	public int[][] getPostAsArray() {
 		return this.post;
 	}
 

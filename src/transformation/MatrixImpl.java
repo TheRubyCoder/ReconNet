@@ -1,6 +1,6 @@
 package transformation;
 
-public class MatrixImpl implements Matrix {
+class MatrixImpl implements Matrix {
 
 	private final int[][] m;
 	

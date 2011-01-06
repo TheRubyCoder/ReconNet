@@ -7,8 +7,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import petrinetze.IArc;
+import petrinetze.INode;
 import petrinetze.IPetrinet;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
@@ -159,12 +161,18 @@ public class MorphismFactory {
 
 	private boolean testPlaceEdges(Map<Integer, Integer> edgesNetA, Map<Integer, Integer> edgesNetB) {
 		for (Entry<Integer, Integer> e : edgesNetA.entrySet()) {
-			int numWeightA = e.getValue();
-			Integer temp = edgesNetB.get(e.getKey());
-			int numWeightB = (temp == null ? 0 : temp);
+			int numWeightA = e.getValue(); // key: Gewichtung einer Kante, value: Anzahl Kanten mit dieser Gewichtung
+			Integer numWeightB = edgesNetB.get(e.getKey());
+			if (numWeightB == null) {
+				return false;
+			}
 			if (numWeightA > numWeightB) {
 				return false;
 			}
+//			int numWeightB = (temp == null ? 0 : temp);
+//			if (numWeightA > numWeightB) {
+//				return false;
+//			}
 		}
 		return true;
 	}
@@ -172,15 +180,16 @@ public class MorphismFactory {
 
 	// Achtung: Aus der Map edgesNetB werden Elemente geloescht!
 	private boolean testTransitionEdges(Map<Integer, Integer> edgesNetA, Map<Integer, Integer> edgesNetB) {
-		for (Entry<Integer, Integer> e : edgesNetA.entrySet()) {
-			int numWeightA = e.getValue();
-			Integer temp = edgesNetB.remove(e.getKey());
-			int numWeightB = (temp == null ? 0 : temp);
-			if (numWeightA != numWeightB || !edgesNetB.isEmpty()) {
-				return false;
-			}
-		}
-		return true;
+		return edgesNetA.equals(edgesNetB);
+//		for (Entry<Integer, Integer> e : edgesNetA.entrySet()) {
+//			int numWeightA = e.getValue();
+//			Integer temp = edgesNetB.remove(e.getKey());
+//			int numWeightB = (temp == null ? 0 : temp);
+//			if (numWeightA != numWeightB || !edgesNetB.isEmpty()) {
+//				return false;
+//			}
+//		}
+//		return true;
 	}
 
 
@@ -265,7 +274,8 @@ public class MorphismFactory {
 
 				List<Integer> possibleMappings = transitionsB[currentRow]; // Die Liste aller moeglichen Zuordnungen in der aktuellen Zeile
 				if (possibleMappings == null) {
-					possibleMappings = prev_M_trans.getVerticesB(currentRow);
+					transitionsB[currentRow] = prev_M_trans.getVerticesB(currentRow);
+					possibleMappings = transitionsB[currentRow];
 					Collections.shuffle(possibleMappings);
 				}
 
@@ -273,7 +283,7 @@ public class MorphismFactory {
 				do {
 					if (possibleMappings.isEmpty()) {
 						// Wenn keine Moeglichkeit der Zuordnung vorhanden, eine Zeile zurueck gehen
-						transitionsB[currentRow] = null;						
+						transitionsB[currentRow] = null;
 						currentRow--;
 						searchReady = true; // Die innere Schleife beenden und dann die aeuﬂere Schleife wiederholen
 					} else {
@@ -450,14 +460,14 @@ public class MorphismFactory {
 	}
 
 
-	private Map<IPlace, IPlace> createPlacesMap(BoolMatrix m) {
+	private Map<IPlace, IPlace> createPlacesMap(BoolMatrix matrix) {
 		Map<IPlace, IPlace> result = new HashMap<IPlace, IPlace>();
 
-		for (int r = 0; r < m.getNumRows(); r++) {
-			assert m.getNumTrues(r) == 1;
+		for (int r = 0; r < matrix.getNumRows(); r++) {
+			assert matrix.getNumTrues(r) == 1;
 			final IPlace placeA = netA.getPlaceById(netA.getPre().getPlaceIds()[r]);
 			for (int c = 0; /*c < m[0].getNumCols()*/; c++) {
-				if (m.getValue(r, c)) {
+				if (matrix.getValue(r, c)) {
 					final IPlace placeB = netB.getPlaceById(netB.getPre().getPlaceIds()[c]);
 					result.put(placeA, placeB);
 					break;
@@ -486,6 +496,36 @@ public class MorphismFactory {
 
 		return Collections.unmodifiableMap(result);
 	}
+	
+	
+//	private Map<IArc, IArc> createEdgesMap() {
+//		Map<IArc, IArc> result = new HashMap<IArc, IArc>();
+//		
+//		Set<IArc> arcsA = netA.getAllArcs();
+//		Set<IArc> arcsB = netB.getAllArcs();
+//		
+//		for (IArc arcA : arcsA) {
+//			IPlace placeA;
+//			ITransition transA;
+//			INode tempStartA = arcA.getStart();
+//			if (tempStart instanceof IPlace) {
+//				placeA = (IPlace) tempStart;
+//				transA = (ITransition) arcA.getEnd();
+//				for (IArc arcB : arcsB) {
+//					IPlace placeB;
+//					ITransition transB;
+//					INode tempStartB = arcB.getStart();
+//					if (tempStartB instanceof IPlace)
+//				}
+//			} else {
+//				transA = (ITransition) tempStart;
+//				placeA = (IPlace) arcA.getEnd();
+//			}
+//			
+//		}
+//		
+//		return Collections.unmodifiableMap(result);
+//	}
 
 
 	/*private*/ static class BoolMatrix {
