@@ -18,10 +18,10 @@ public class Post implements IPost {
 		
 	}
 	
-	@Override
-	public int[][] getPostAsArray() {
-		return this.post;
-	}
+//	@Override
+//	public int[][] getPreAsArray() {
+//		return this.post;
+//	}
 
 	@Override
 	public int[] getTransitionIds() {
@@ -51,6 +51,11 @@ public class Post implements IPost {
 		return "Post [post=" + output + ", tIds="
 				+ Arrays.toString(tIds) + ", pIds=" + Arrays.toString(pIds)
 				+ "]";
+	}
+
+	@Override
+	public int[][] getPostAsArray() {
+		return this.post;
 	}
 
 }
