@@ -40,9 +40,27 @@ public interface IPlace extends INode {
 	 * @return
 	 */
 	public List<ITransition> getOutgoingTransitions();
+	
 	/**
 	 * Liefert alle eingehende Transitionen
 	 * @return
 	 */
 	public List<ITransition> getIncomingTransitions();
+
+	/**
+	 * Liefert alle ausgehende Kanten
+	 * @return
+	 */
+	public List<IArc> getStartArcs();
+	
+	/**
+	 * Liefert alle eingehende Kanten
+	 * @return
+	 */
+	public List<IArc> getEndArcs();
+	
+	public void setStartArcs (IArc arc);
+	public void setEndArcs (IArc arc);
+	
+	
 }

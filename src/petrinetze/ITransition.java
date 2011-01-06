@@ -62,6 +62,17 @@ public interface ITransition extends INode {
 	public Hashtable<Integer, Integer> getPost();
 	public void setStartArcs (IArc arc);
 	public void setEndArcs (IArc arc);
+	/**
+	 * Liefert alle ausgehende Kanten
+	 * @return
+	 */
+	public List<IArc> getStartArcs();
+	
+	/**
+	 * Liefert alle eingehende Kanten
+	 * @return
+	 */
+	public List<IArc> getEndArcs();
 	
 
 }
