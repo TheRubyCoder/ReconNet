@@ -8,11 +8,14 @@ package petrinetze.impl;
 * @version 1.0
 */
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Set;
 
 import petrinetze.ActionType;
 import petrinetze.IArc;
+import petrinetze.IPetrinetListener;
 import petrinetze.IPlace;
 import petrinetze.IRenew;
 import petrinetze.ITransition;
@@ -21,6 +24,8 @@ import petrinetze.ITransition;
 public class Transition implements ITransition {
 
 	private int id;
+	
+	private final Set<IPetrinetListener> listeners = new HashSet<IPetrinetListener>();
 
     private String name;
 
@@ -202,6 +207,26 @@ public class Transition implements ITransition {
 		getOutgoingPlaces();
 		
 		return this.post;
+	}
+	@Override
+	public List<IArc> getStartArcs() {
+		return startArcs;
+	}
+	@Override
+	public List<IArc> getEndArcs() {
+		return endArcs;
+	}
+	
+	
+	public void addPetrinetListener(IPetrinetListener l) {
+		listeners.add(l);
+		
+	}
+
+	public void removePetrinetListener(IPetrinetListener l) {
+		if(listeners.contains(l))
+			listeners.remove(l);
+		
 	}
 	
 	
