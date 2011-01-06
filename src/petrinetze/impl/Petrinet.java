@@ -63,6 +63,19 @@ public class Petrinet implements IPetrinet {
 			}
 		}
 		if (toBeDelete != null) {
+			List<IArc> start = toBeDelete.getStartArcs();
+			List<IArc> end = toBeDelete.getEndArcs();
+			//Alle ausgehenden Kanten loeschen und Event abfeuern.
+			for(IArc arc : start){
+				arcs.remove(arc);
+				onEdgeChanged(arc, ActionType.deleted);
+			}
+			//Alle eingehenden Kanten loeschen und Event abfeuern.
+			for(IArc arc : end){
+				arcs.remove(arc);
+				onEdgeChanged(arc, ActionType.deleted);
+			}
+			
 			places.remove(toBeDelete);
 			onNodeChanged(toBeDelete, ActionType.deleted);
 		}
@@ -94,6 +107,18 @@ public class Petrinet implements IPetrinet {
 			}
 		}
 		if (toBeDelete != null) {
+			List<IArc> start = toBeDelete.getStartArcs();
+			List<IArc> end = toBeDelete.getEndArcs();
+			//Alle ausgehenden Kanten loeschen und Event abfeuern.
+			for(IArc arc : start){
+				arcs.remove(arc);
+				onEdgeChanged(arc, ActionType.deleted);
+			}
+			//Alle eingehenden Kanten loeschen und Event abfeuern.
+			for(IArc arc : end){
+				arcs.remove(arc);
+				onEdgeChanged(arc, ActionType.deleted);
+			}
 			transitions.remove(toBeDelete);
 			onNodeChanged(toBeDelete, ActionType.deleted);
 		}
@@ -109,6 +134,15 @@ public class Petrinet implements IPetrinet {
 		//Fuege Arc in die Endliste von Transition hinzu
 		if(end instanceof ITransition) {
 			((ITransition) end).setEndArcs(arc);
+		}
+		
+		//Fuege Arc in die Startliste von Place hinzu
+		if(start instanceof IPlace) {
+			((IPlace) start).setStartArcs(arc);
+		}
+		//Fuege Arc in die Endliste von Place hinzu
+		if(end instanceof IPlace) {
+			((IPlace) end).setEndArcs(arc);
 		}
 		
 		arc.setName(name);
@@ -151,14 +185,15 @@ public class Petrinet implements IPetrinet {
 	}
 
 	private boolean isActivited(ITransition t) {
-		List<IPlace> incoming = t.getIncomingPlaces();
-		List<IPlace> outgoing = t.getIncomingPlaces();
-		int in = 0;
-		for (IPlace place : incoming) {
-			in += place.getMark();
+		List<IArc> incoming = t.getEndArcs();
+		for (IArc a : incoming) {
+			IPlace p = (IPlace) a.getStart();
+			
+			if (p.getMark() < a.getMark()) {
+				return false;
+			} 
 		}
-		
-		return false;
+		return true;
 	}
 
 
@@ -404,8 +439,9 @@ public class Petrinet implements IPetrinet {
 	void onNodeChanged(INode element, ActionType actionType)
 	{
 		Set<IPetrinetListener> tempListeners = new HashSet<IPetrinetListener>(listeners);
-		for(IPetrinetListener listener : tempListeners)
+		for(IPetrinetListener listener : tempListeners) {
 			listener.changed(this, element, actionType);
+		}
 	}
 
 	/**
@@ -417,8 +453,9 @@ public class Petrinet implements IPetrinet {
 	void onEdgeChanged(IArc element, ActionType actionType)
 	{
 		Set<IPetrinetListener> tempListeners = new HashSet<IPetrinetListener>(listeners);
-		for(IPetrinetListener listener : tempListeners)
+		for(IPetrinetListener listener : tempListeners) {
 			listener.changed(this, element, actionType);
+		}
 	}
 
 
@@ -430,6 +467,30 @@ public class Petrinet implements IPetrinet {
 	public String toString() {
 		return "Petrinet [id=" + id + "\n\t places=" + places + "\n\t transitions="
 				+ transitions + "\n\t arcs=" + arcs + "]";
+	}
+
+
+
+	@Override
+	public IPlace getPlaceById(int id) {
+		for (IPlace  p : places) {
+			if(p.getId() == id) {
+				return p;
+			}
+		}
+		return null;
+	}
+
+
+
+	@Override
+	public ITransition getTransitionById(int id) {
+		for (ITransition  t : transitions) {
+			if(t.getId() == id) {
+				return t;
+			}
+		}
+		return null;
 	}
 
 	
