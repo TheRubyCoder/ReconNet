@@ -1,7 +1,7 @@
 package transformation;
 
 
-public interface Matrix {
+interface Matrix {
 
 
 	public int getNumRows();
