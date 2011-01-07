@@ -275,9 +275,13 @@ public class Petrinet implements IPetrinet {
 		return fire(iterator.next().getId());
 	}
 	
-	//PRE in der t-ten Spalte gibt an,
-	//wieviele Token die Transition t von p wegnimmt
 	@Override
+	/**
+	 * Liefert das Pre-Objekt zu dem Netz zurueck
+	 * PRE in der t-ten Spalte gibt an,
+	 * wieviele Token die Transition t von p wegnimmt
+	 * @return {@link IPre}
+	 */
 	public IPre getPre() {
 		//Initialisierung 
 		int[] pId = new int[places.size()];
@@ -304,30 +308,45 @@ public class Petrinet implements IPetrinet {
 		//Zu jeder Transition holen wir die Stellen und
 		//merken uns das in der perValueMatrix (sagt Florian)
 		for (ITransition t : transitions) {
-			final Hashtable<Integer, Integer> ht = t.getPre();
+			//Das Pre von der entsprechenden Transition
+			//D.h., alle Stellen aus dem Vorbereich
+			//Das Ergebnis wird in Form eines Hashtables geliefert
+			//und zwar <Id, Mark> der Stelle
+			final Hashtable<Integer, Integer> prePlaces = t.getPre();
+			//Findet den Index der Transition in Pre-Matrix (Array)
 			int tmpTransitionId = getIdFromArray(t.getId(), tId);
-			for (Integer p : ht.keySet()) {
+			//
+			for (Integer p : prePlaces.keySet()) {
 				int tmpPlaceId = getIdFromArray(p.intValue(), pId);
 				
 				if (tmpPlaceId >= 0 && tmpTransitionId >= 0) {
-					preValues[tmpPlaceId][tmpTransitionId] = ht.get(p);
+					preValues[tmpPlaceId][tmpTransitionId] = prePlaces.get(p);
 				}
 			}
 		}
 		return new Pre(preValues, pId, tId);
 	}
-
-	private int getIdFromArray(int intValue, int[] pId) {
-		for (int i = 0; i <= pId.length; i++) {
-			if (pId[i] == intValue) {
+	/**
+	 * Findet die Position der Id in der Id-Liste
+	 * @param intValue = Id der Transition/Stelle
+	 * @param ids = Liste aller Ids Transition/Stelle
+	 * @return position der Transition/Stelle
+	 */
+	private int getIdFromArray(int intValue, int[] ids) {
+		for (int i = 0; i <= ids.length; i++) {
+			if (ids[i] == intValue) {
 				return i;
 			}
 		}
 		return -1;
 	}
 
-
-
+	/**
+	 * Initialisiert ein zweidimensionales Array mit Nullen
+	 * @param Groesse der 1. Dimension
+	 * @param Groesse der 2. Dimension
+	 * @return initialisiertes Array
+	 */
 	private int[][] init(int m, int n) {
 		int tmp [][] = new int[m][n];
 		for (int i = 0; i < m; i++) {
@@ -341,6 +360,10 @@ public class Petrinet implements IPetrinet {
 
 
 	@Override
+	/**
+	 * Liefert das Post-Objekt zu dem Netz zurueck
+	 * @return {@link IPost}
+	 */
 	public IPost getPost() {
 		//Initialisierung 
 		int[] pId = new int[places.size()];
@@ -367,13 +390,18 @@ public class Petrinet implements IPetrinet {
 		//Zu jeder Transition holen wir die Stellen und
 		//merken uns das in der perValueMatrix (sagt Florian)
 		for (ITransition t : transitions) {
-			final Hashtable<Integer, Integer> ht = t.getPost();
+			//Das Post von der entsprechenden Transition
+			//D.h., alle Stellen aus dem Nachbereich
+			//Das Ergebnis wird in Form eines Hashtables geliefert
+			//und zwar <Id, Mark> der Stelle
+			final Hashtable<Integer, Integer> postPlaces = t.getPost();
+			//Findet den Index der Transition in Post-Matrix (Array)
 			int tmpTransitionId = getIdFromArray(t.getId(), tId);
-			for (Integer p : ht.keySet()) {
+			for (Integer p : postPlaces.keySet()) {
 				int tmpPlaceId = getIdFromArray(p.intValue(), pId);
 				
 				if (tmpPlaceId >= 0 && tmpTransitionId >= 0) {
-					postValues[tmpPlaceId][tmpTransitionId] = ht.get(p);
+					postValues[tmpPlaceId][tmpTransitionId] = postPlaces.get(p);
 				}
 			}
 		}
@@ -492,6 +520,53 @@ public class Petrinet implements IPetrinet {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	/**
+	 * Fuegt einem bestehenden Petrinetz ein weiters hinzu
+	 * @param net
+	 */
+	public void addNet(IPetrinet net) {
+		if (null != net) {
+			final Set<IPlace> places = net.getAllPlaces();
+			final Set<ITransition> transitions = net.getAllTransitions();
+			final Set<IArc> arcs = net.getAllArcs();
+			
+			addPlaces(places);
+			addTransitions(transitions);
+			addArcs(arcs);
+			//Vervollstaendige die Liste der graphischen Elemente
+			getAllGraphElement();
+		}
+	}
+	/**
+	 * Die uebergebene Liste wird der besthenden hinzu gefuegt.
+	 * @param arcs2
+	 */
+	private void addArcs(Set<IArc> arcs2) {
+		for (IArc arc : arcs2) {
+			this.arcs.add(arc);
+		}
+	}
+	/**
+	 * Die uebergebene Liste wird der besthenden hinzu gefuegt.
+	 * @param transitions2
+	 */
+	private void addTransitions(Set<ITransition> transitions2) {
+		for (ITransition transition : transitions2) {
+			this.transitions.add(transition);
+		}
+		
+	}
+	/**
+	 * Die uebergebene Liste wird der besthenden hinzu gefuegt.
+	 * @param places2
+	 */
+	private void addPlaces(Set<IPlace> places2) {
+		for (IPlace place : places2) {
+			this.places.add(place);
+		}
 	}
 
 }
