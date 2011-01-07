@@ -13,6 +13,7 @@ import org.apache.commons.collections15.Transformer;
 
 import petrinetze.IArc;
 import petrinetze.INode;
+import petrinetze.IPlace;
 import petrinetze.ITransition;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import engine.Engine;
@@ -22,7 +23,7 @@ public class GraphPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	
-	private final EngineContext ec;	
+	private final EngineContext ec;
 	private final VisualizationViewer<INode, IArc> vv;
 	private final EditingModalGraphMouseEx<INode, IArc> graphMouse;
 
@@ -30,7 +31,7 @@ public class GraphPanel extends JPanel {
 	
 
 	public GraphPanel(Engine engine, EngineContext context) {
-		ec = context;		
+		ec = context;
 		vv = new VisualizationViewer<INode, IArc>(ec.getLayout());
 		
 		setLayout(new BorderLayout());
@@ -61,10 +62,7 @@ public class GraphPanel extends JPanel {
 
 				BufferedImage pi = new BufferedImage(s, s, BufferedImage.TYPE_4BYTE_ABGR);
 
-				Graphics2D g = null;
-
-
-				g = pi.createGraphics();
+				Graphics2D g = pi.createGraphics();
 				g.setColor(Color.BLUE);
 				g.fillOval(0, 0, s, s);
 				g.dispose();
@@ -79,13 +77,29 @@ public class GraphPanel extends JPanel {
 
 			}
 
+            // FIXME schöner machen
+            private Icon createPlaceIcon(IPlace place) {
+                int s = 20;
+                BufferedImage pi = new BufferedImage(s, s, BufferedImage.TYPE_4BYTE_ABGR);
+				Graphics2D g = pi.createGraphics();
+
+                g = pi.createGraphics();
+				g.setColor(Color.BLUE);
+				g.fillOval(0, 0, s, s);
+                g.setColor(Color.BLACK);
+                g.fillOval(s / 2 - 4, s / 2 - 4, 8, 8);
+				g.dispose();
+
+                return new ImageIcon(pi);
+            }
+
 			@Override
 			public Icon transform(INode node) {
 				if(node instanceof ITransition) {
 					return transIcon;
 				}
 
-				return placeIcon;
+				return createPlaceIcon((IPlace)node);
 			}
 		});
 		
