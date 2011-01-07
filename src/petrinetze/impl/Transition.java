@@ -21,8 +21,6 @@ public class Transition implements ITransition {
 
 	private int id;
 	
-	private final Set<IPetrinetListener> listeners = new HashSet<IPetrinetListener>();
-
     private String name;
 
     private IRenew rnw;
@@ -209,16 +207,6 @@ public class Transition implements ITransition {
 		return endArcs;
 	}
 
-	public void addPetrinetListener(IPetrinetListener l) {
-		listeners.add(l);
-		
-	}
-
-	public void removePetrinetListener(IPetrinetListener l) {
-		if(listeners.contains(l))
-			listeners.remove(l);
-		
-	}
 
     boolean removeStartArc(IArc arc) {
         return startArcs.remove(arc);

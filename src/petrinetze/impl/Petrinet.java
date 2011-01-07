@@ -113,16 +113,15 @@ public class Petrinet implements IPetrinet {
 			}
 		}
 		if (toBeDelete != null) {
-			List<IArc> start = toBeDelete.getStartArcs();
-			List<IArc> end = toBeDelete.getEndArcs();
+			final List<IArc> arcs = new LinkedList<IArc>();
+			arcs.addAll(toBeDelete.getStartArcs());
+			arcs.addAll(toBeDelete.getEndArcs());
+			
 			//Alle ausgehenden Kanten loeschen und Event abfeuern.
-			for(IArc arc : start){
+			for(IArc arc : arcs){
 				deleteArc(arc);
 			}
-			//Alle eingehenden Kanten loeschen und Event abfeuern.
-			for(IArc arc : end){
-				deleteArc(arc);
-			}
+			
 			transitions.remove(toBeDelete);
 			onNodeChanged(toBeDelete, ActionType.deleted);
 		}
