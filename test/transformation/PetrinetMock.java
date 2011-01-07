@@ -249,4 +249,10 @@ private static final Pattern pat = Pattern.compile("#");
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public void addNet(IPetrinet net) {
+		throw new UnsupportedOperationException();
+		
+	}
+
 }
