@@ -7,7 +7,14 @@ public class RenewCount implements IRenew {
 
     @Override
 	public String renew(String tlb) {
-        return String.valueOf(Integer.parseInt(tlb) + 1);
+    	try
+    	{
+    		return String.valueOf(Integer.parseInt(tlb) + 1);
+    	}
+    	catch (Exception e)
+    	{
+    		return "" + 1;
+    	}
 	}
 
 	@Override
