@@ -7,11 +7,7 @@ package petrinetze.impl;
 * @author Reiter, Safai
 * @version 1.0
 */
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import petrinetze.ActionType;
 import petrinetze.IArc;
@@ -32,13 +28,7 @@ public class Transition implements ITransition {
     private IRenew rnw;
 
     private String tlb;
-    /**
-     * Beinhaltet die Stellen und die Kantengewichte
-     * basierend auf einer Transition. Wichtig fuer das Pre-Araay
-     */
-	private Hashtable<Integer, Integer> pre;
-	
-	private Hashtable<Integer, Integer> post;
+
 	/**
 	 * Liste aller Kanten, die von dieser Transition
 	 * abgehen.
@@ -69,8 +59,6 @@ public class Transition implements ITransition {
 		this.endArcs = new ArrayList<IArc>();
 		this.startArcs = new ArrayList<IArc>();
 		this.petrinet = petrinet;
-		this.pre = new Hashtable<Integer, Integer>();
-		this.post = new Hashtable<Integer, Integer>();
 	}
 
 	/* (non-Javadoc)
@@ -165,23 +153,21 @@ public class Transition implements ITransition {
 	}
 	@Override
 	public List<IPlace> getOutgoingPlaces() {
-		List<IPlace> out = new ArrayList<IPlace>();
+		List<IPlace> out = new ArrayList<IPlace>(startArcs.size());
 		for (IArc arc : startArcs) {
 			IPlace p = (IPlace) arc.getEnd();
-			post.put(new Integer(p.getId()), new Integer(arc.getMark()));
 			out.add(p);
 		}
 		return out;
 	}
 	@Override
 	public List<IPlace> getIncomingPlaces() {
-		List<IPlace> in = new ArrayList<IPlace>();
-		
+		List<IPlace> in = new ArrayList<IPlace>(endArcs.size());
+
 		for (IArc arc : endArcs) {
-			IPlace p = (IPlace) arc.getStart();
-			pre.put(new Integer(p.getId()), new Integer(arc.getMark()));
-			in.add(p);
+			in.add((IPlace) arc.getStart());
 		}
+
 		return in;
 	}
 	
@@ -190,11 +176,14 @@ public class Transition implements ITransition {
 	 */
 	@Override
 	public Hashtable<Integer, Integer> getPre() {
-		//Vorbedingung fuer diese Methode ist, dass getOutgoingPlaces()
-		//einmal ausgefuehrt wird.
-		getIncomingPlaces();
-		
-		return this.pre;
+        final Hashtable<Integer,Integer> pre = new Hashtable<Integer,Integer>();
+
+		for (IArc arc : endArcs) {
+			IPlace p = (IPlace) arc.getStart();
+			pre.put(new Integer(p.getId()), new Integer(arc.getMark()));
+		}
+
+        return pre;
 	}
 	
 	/**
@@ -202,11 +191,14 @@ public class Transition implements ITransition {
 	 */
 	@Override
 	public Hashtable<Integer, Integer> getPost() {
-		//Vorbedingung fuer diese Methode ist, dass getIncomingPlaces()
-		//einmal ausgefuehrt wird.
-		getOutgoingPlaces();
-		
-		return this.post;
+        final Hashtable<Integer,Integer> post = new Hashtable<Integer,Integer>();
+
+		for (IArc arc : startArcs) {
+			IPlace p = (IPlace) arc.getEnd();
+			post.put(new Integer(p.getId()), new Integer(arc.getMark()));
+		}
+
+        return post;
 	}
 	@Override
 	public List<IArc> getStartArcs() {
@@ -216,8 +208,7 @@ public class Transition implements ITransition {
 	public List<IArc> getEndArcs() {
 		return endArcs;
 	}
-	
-	
+
 	public void addPetrinetListener(IPetrinetListener l) {
 		listeners.add(l);
 		
@@ -228,6 +219,12 @@ public class Transition implements ITransition {
 			listeners.remove(l);
 		
 	}
-	
-	
+
+    boolean removeStartArc(IArc arc) {
+        return startArcs.remove(arc);
+    }
+
+    boolean removeEndArc(IArc arc) {
+        return endArcs.remove(arc);
+    }
 }

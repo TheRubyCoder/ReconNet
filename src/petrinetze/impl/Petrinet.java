@@ -1,14 +1,9 @@
 package petrinetze.impl;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Random;
-import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import petrinetze.ActionType;
 import petrinetze.IArc;
@@ -24,6 +19,8 @@ import petrinetze.ITransition;
 import petrinetze.Renews;
 
 public class Petrinet implements IPetrinet {
+
+    private final Logger logger = Logger.getLogger(Petrinet.class.getCanonicalName());
 	
 	private int id;
 	private final Set<IPetrinetListener> listeners = new HashSet<IPetrinetListener>();
@@ -39,8 +36,6 @@ public class Petrinet implements IPetrinet {
 		arcs = new HashSet<IArc>();
 		graphElements = new GraphElement();
 	}
-
-
 
 	@Override
 	public IPlace createPlace(String name) {
@@ -67,19 +62,30 @@ public class Petrinet implements IPetrinet {
 			List<IArc> end = toBeDelete.getEndArcs();
 			//Alle ausgehenden Kanten loeschen und Event abfeuern.
 			for(IArc arc : start){
-				arcs.remove(arc);
-				onEdgeChanged(arc, ActionType.deleted);
+				deleteArc(arc);
 			}
 			//Alle eingehenden Kanten loeschen und Event abfeuern.
-			for(IArc arc : end){
-				arcs.remove(arc);
-				onEdgeChanged(arc, ActionType.deleted);
+			for(IArc arc : end) {
+				deleteArc(arc);
 			}
 			
 			places.remove(toBeDelete);
 			onNodeChanged(toBeDelete, ActionType.deleted);
 		}
 	}
+
+    private void deleteArc(IArc arc) {
+        // ein-/ausgehende Kanten der Transitionen löschen
+        if (arc.getStart() != null && arc.getStart() instanceof Transition) {
+            ((Transition)arc.getStart()).removeStartArc(arc);
+        }
+        else if (arc.getEnd() != null && arc.getEnd() instanceof Transition) {
+            ((Transition)arc.getEnd()).removeEndArc(arc);
+        }
+
+        arcs.remove(arc);
+        onEdgeChanged(arc, ActionType.deleted);
+    }
 
 	@Override
 	public ITransition createTransition(String name, IRenew rnw) {
@@ -111,13 +117,11 @@ public class Petrinet implements IPetrinet {
 			List<IArc> end = toBeDelete.getEndArcs();
 			//Alle ausgehenden Kanten loeschen und Event abfeuern.
 			for(IArc arc : start){
-				arcs.remove(arc);
-				onEdgeChanged(arc, ActionType.deleted);
+				deleteArc(arc);
 			}
 			//Alle eingehenden Kanten loeschen und Event abfeuern.
 			for(IArc arc : end){
-				arcs.remove(arc);
-				onEdgeChanged(arc, ActionType.deleted);
+				deleteArc(arc);
 			}
 			transitions.remove(toBeDelete);
 			onNodeChanged(toBeDelete, ActionType.deleted);
@@ -162,8 +166,7 @@ public class Petrinet implements IPetrinet {
 			}
 		}
 		if (toBeDelete != null) {
-			arcs.remove(toBeDelete);
-			onEdgeChanged(toBeDelete, ActionType.deleted);
+			deleteArc(toBeDelete);
 		}
 	}
 
@@ -173,7 +176,7 @@ public class Petrinet implements IPetrinet {
 		//Eine Transition ist aktiviert bzw. schaltbereit, falls sich 
 		//in allen Eingangsstellen mindestens so viele Marken befinden, 
 		//wie die Transition Kosten verursacht und alle Ausgangsstellen 
-		//noch genug Kapazitaet haben, um die neuen Marken aufnehmen zu können.
+		//noch genug Kapazitaet haben, um die neuen Marken aufnehmen zu k?nnen.
 		//TODO
 		Set<ITransition> activitedTransitions = new HashSet<ITransition>();
 		for (ITransition t : transitions) {
@@ -243,11 +246,21 @@ public class Petrinet implements IPetrinet {
 		transition.rnw();
 		
 		//fire event
-		for(INode node : changedNodes)
-			onNodeChanged(node, ActionType.changed);
-		
+		fireChanged(changedNodes, ActionType.changed);
+
 		return changedNodes;
 	}
+
+    private void fireChanged(Iterable<INode> nodes, ActionType action) {
+        for (INode node : nodes) {
+            try {
+                onNodeChanged(node, action);
+            }
+            catch (Exception ex) {
+                logger.log(Level.SEVERE, "Error on change notification", ex);
+            }
+        }
+    }
 
 	private Random random = new Random();
 	@Override
@@ -373,17 +386,6 @@ public class Petrinet implements IPetrinet {
 		return this.id;
 	}
 
-//	private void fireChanged(INode element) {
-//		final List<IPetrinetListener> listeners;
-//		
-//		synchronized (this.listeners){
-//			listeners = new ArrayList<IPetrinetListener>(this.listeners);
-//		}
-//		
-//		for (IPetrinetListener l : listeners)  {
-//			l.changed(this, element, ActionType.changed);
-//		}
-//	}
 
 	@Override
 	public Set<IPlace> getAllPlaces() {
@@ -493,5 +495,4 @@ public class Petrinet implements IPetrinet {
 		return null;
 	}
 
-	
 }
