@@ -16,19 +16,23 @@ public class Transformation implements ITransformation {
 	
 	/**
 	 * Constructor for the class Transformation
-	 * @param Petrinet N, Morphism morph, Rule R
+	 * @param net,the petrinet to transform
+	 * @param morph, the morphism to use
+	 * @param R, the rule that should apply
 	 */	
-	public Transformation(IPetrinet n,IMorphism morph,IRule r){
-		N = n; morphism = morph; rule = r;
+	public Transformation(IPetrinet net,IMorphism morph,IRule r){
+		N = net; morphism = morph; rule = r;
 		
 	}
 	/**
 	 * Constructor for the class Transformation
-	 * @param Petrinet N,Rule R
+	 * @param net, petrinet to transform
+	 * @param Rule, the rule to apply
 	 */	
-	public Transformation(IPetrinet n,IRule r){
-		N = n; rule = r;
-		morphism = MorphismFactory.createMorphism(N,r.L());
+	public Transformation(IPetrinet net,IRule Rule){
+		N = net; 
+		rule = Rule;
+		morphism = MorphismFactory.createMorphism(N,Rule.L());
 		
 	}		
 	/**
@@ -60,6 +64,7 @@ public class Transformation implements ITransformation {
 	}		
 	/**
 	 * Method for starting the transform. 
+	 * 
 	 */
 	@Override
 	public void transform() {
@@ -70,8 +75,7 @@ public class Transformation implements ITransformation {
 		{
 			if(!(rule.fromKtoL(i).equals(null))){
 				if(i instanceof IPlace){   
-					N.createPlace(i.getName());
-					
+					N.createPlace(i.getName());					
 				}
 				else{
 					IRenew rnw = ((ITransition) i).getRnw();
@@ -103,11 +107,8 @@ public class Transformation implements ITransformation {
 		for (IArc i : KArc){ // Delete K - R Arc´s
 			if(!(rule.fromKtoR(i).equals(null))){
 				N.deleteArcByID(morphism.morph(i).getId());
-			}
-			
+			}			
 		}
-		
-
 	}
 
 }
