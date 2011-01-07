@@ -3,6 +3,7 @@ package transformation;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -498,34 +499,51 @@ public class MorphismFactory {
 	}
 	
 	
-//	private Map<IArc, IArc> createEdgesMap() {
-//		Map<IArc, IArc> result = new HashMap<IArc, IArc>();
-//		
-//		Set<IArc> arcsA = netA.getAllArcs();
-//		Set<IArc> arcsB = netB.getAllArcs();
-//		
-//		for (IArc arcA : arcsA) {
-//			IPlace placeA;
-//			ITransition transA;
-//			INode tempStartA = arcA.getStart();
-//			if (tempStart instanceof IPlace) {
-//				placeA = (IPlace) tempStart;
-//				transA = (ITransition) arcA.getEnd();
-//				for (IArc arcB : arcsB) {
-//					IPlace placeB;
-//					ITransition transB;
-//					INode tempStartB = arcB.getStart();
-//					if (tempStartB instanceof IPlace)
-//				}
-//			} else {
-//				transA = (ITransition) tempStart;
-//				placeA = (IPlace) arcA.getEnd();
-//			}
-//			
-//		}
-//		
-//		return Collections.unmodifiableMap(result);
-//	}
+	private Map<IArc, IArc> createEdgesMap() {
+		Map<IArc, IArc> result = new HashMap<IArc, IArc>();
+		
+		Set<IArc> arcsA = netA.getAllArcs();
+		Set<IArc> arcsB = netB.getAllArcs();
+		
+		Set<IArc> arcsB_p_to_t = new HashSet<IArc>();
+		Set<IArc> arcsB_t_to_p = new HashSet<IArc>();
+		
+		for (IArc arcB : arcsB) {
+			if (arcB.getStart() instanceof IPlace) {
+				arcsB_p_to_t.add(arcB);
+			} else { // arcB.getStart() instanceof ITransition
+				arcsB_t_to_p.add(arcB);
+			}
+		}
+		
+		for (IArc arcA : arcsA) {
+			IPlace placeB;
+			ITransition transB;
+			INode tempStartA = arcA.getStart();
+
+			if (tempStartA instanceof IPlace) {
+				placeB = places.get(tempStartA);
+				transB = transitions.get(arcA.getEnd());
+				for (IArc arcB : arcsB_p_to_t) {
+					if (arcB.getStart() == placeB && arcB.getEnd() == transB) {
+						result.put(arcA, arcB);
+						break;
+					}
+				}
+			} else { // tempStartA instanceof ITransition
+				transB = transitions.get(tempStartA);
+				placeB = places.get(arcA.getEnd());
+				for (IArc arcB : arcsB_t_to_p) {
+					if (arcB.getStart() == transB && arcB.getEnd() == placeB) {
+						result.put(arcA, arcB);
+						break;
+					}
+				}
+			}
+		}
+		
+		return Collections.unmodifiableMap(result);
+	}
 
 
 	/*private*/ static class BoolMatrix {
