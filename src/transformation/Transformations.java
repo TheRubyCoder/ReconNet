@@ -23,7 +23,8 @@ public final class Transformations
 	 */
 	public static void join(IPetrinet left, IPetrinet right, ITransformation transformation)
 	{
-		throw new UnsupportedOperationException();
+		left.addNet(right);
+		transformation.transform();
 	}
 
 	/**
@@ -36,7 +37,8 @@ public final class Transformations
 	 */
 	public static void join(IPetrinet left, IPetrinet right, IMorphism morphism, IRule rule)
 	{
-		throw new UnsupportedOperationException();
+		left.addNet(right);
+		new Transformation(left, morphism, rule).transform();
 	}
 
 	/**
@@ -48,7 +50,8 @@ public final class Transformations
 	 */
 	public static void join(IPetrinet left, IPetrinet right, IRule rule)
 	{
-		throw new UnsupportedOperationException();
+		left.addNet(right);
+		new Transformation(left, rule).transform();
 	}
 	
 	/**
@@ -58,7 +61,7 @@ public final class Transformations
 	 */
 	public static void transform(IPetrinet net, IRule rule)
 	{
-		throw new UnsupportedOperationException();
+		new Transformation(net, rule).transform();
 	}
 
 }

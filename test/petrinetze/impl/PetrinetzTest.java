@@ -108,7 +108,7 @@ public class PetrinetzTest {
 		a.setRnw(new RenewCount());
 		b.setRnw(new RenewCount());
 		
-		int times = 1000000;
+		int times = 100000000;
 		for(int i = 0; i < times; i++)
 			p2.fire();
 		
