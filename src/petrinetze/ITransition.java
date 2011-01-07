@@ -29,7 +29,8 @@ public interface ITransition extends INode {
     /**
      * Neues Label setzen,
      *
-     * @throws {@link IllegalArgumentException} falls das Label nicht für die aktuelle Renewfunktion gültig ist.
+     * @throws {@link IllegalArgumentException} falls das Label 
+     * nicht für die aktuelle Renewfunktion gültig ist.
      */
     public void setTlb(String tlb);
 
@@ -57,10 +58,33 @@ public interface ITransition extends INode {
 	 * @return
 	 */
 	public List<IPlace> getIncomingPlaces ();
-	
+	/**
+	 * Das Pre von der entsprechenden Transition
+	 * D.h., alle Stellen aus dem Vorbereich
+	 * Das Ergebnis wird in Form eines Hashtables geliefert
+	 * und zwar <Id, Mark> der Stelle
+	 * @return alle Stellen <Id, Mark>
+	 */
 	public Hashtable<Integer, Integer> getPre();
+	/**
+	 * Das Post von der entsprechenden Transition
+	 * D.h., alle Stellen aus dem Nachbereich
+	 * Das Ergebnis wird in Form eines Hashtables geliefert
+	 * und zwar <Id, Mark> der Stelle
+	 * @return alle Stellen <Id, Mark>
+	 */
 	public Hashtable<Integer, Integer> getPost();
+	/**
+	 * Die uebegebene Kante wird in die Liste der ausgehenden Kanten 
+	 * mitaufgenommen.
+	 * @param aufzunehmende Kante
+	 */
 	public void setStartArcs (IArc arc);
+	/**
+	 * Die uebegebene Kante wird in die Liste der eingehenden Kanten 
+	 * mitaufgenommen.
+	 * @param aufzunehmende Kante
+	 */
 	public void setEndArcs (IArc arc);
 	/**
 	 * Liefert alle ausgehende Kanten

@@ -91,7 +91,7 @@ public interface IPetrinet {
 	public IPre getPre();
 	
 	/**
-	 * Liefert das Pre-Objekt zu dem Netz zurueck
+	 * Liefert das Post-Objekt zu dem Netz zurueck
 	 * @return {@link IPost}
 	 */
 	public IPost getPost();
@@ -149,5 +149,10 @@ public interface IPetrinet {
 	 * @param l
 	 */
 	void removePetrinetListener(IPetrinetListener l);
+	/**
+	 * Fuegt einem bestehenden Petrinetz ein weiters hinzu
+	 * @param net
+	 */
+	public void addNet(IPetrinet net);
 	
 }
