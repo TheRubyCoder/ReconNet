@@ -80,15 +80,16 @@ public class Rule implements IRule
 		r
 	}
 	
+	private boolean rChanging = false;
+	private boolean kChanging = false;
+	private boolean lChanging = false;
+	
 	private class Listener implements IPetrinetListener
 	{
 		private final Net net;
 		private final IPetrinet k;
 		private final IPetrinet l;
 		private final IPetrinet r;
-		private boolean rChanging = false;
-		private boolean kChanging = false;
-		private boolean lChanging = false;
 		
 		Listener(Net net, IPetrinet l, IPetrinet k, IPetrinet r)
 		{
