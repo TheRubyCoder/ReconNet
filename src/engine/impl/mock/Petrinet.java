@@ -49,8 +49,8 @@ public class Petrinet implements IPetrinet {
 
 	@Override
 	public IPlace createPlace(String name) {
-		// TODO Auto-generated method stub
-		return null;
+
+		return new Place();
 	}
 
 	@Override
@@ -142,18 +142,18 @@ public class Petrinet implements IPetrinet {
 
 	@Override
 	public ITransition createTransition(String name, IRenew rnw) {
-		// TODO Auto-generated method stub
-		return null;
+
+		return new Transition();
 	}
 
     @Override
     public ITransition createTransition(String name) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return null;
     }
 
     @Override
     public IArc createArc(String name, INode start, INode end) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return new Arc(start, end, 1);
     }
 
     @Override

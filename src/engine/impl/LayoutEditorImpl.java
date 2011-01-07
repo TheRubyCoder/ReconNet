@@ -4,9 +4,9 @@ import java.awt.geom.Point2D;
 
 import petrinetze.IArc;
 import petrinetze.INode;
-import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.layout.LayoutTransition;
+import edu.uci.ics.jung.visualization.picking.PickedState;
 import edu.uci.ics.jung.visualization.util.Animator;
 import engine.LayoutEditor;
 
@@ -54,17 +54,22 @@ class LayoutEditorImpl implements LayoutEditor {
     @Override
     public void unlockAll() {
         // TODO tut es das, was ich denke?
-        context.getLayout().lock(false);
+
     }
 
     @Override
     public void apply(VisualizationViewer<INode, IArc> vv) {
 
+        PickedState<INode> pvs = vv.getPickedVertexState();
 
-        // TODO tut es das, was ich denke?
-    	// denke nein!
- //       context.getLayout().initialize();
-
+        if(!pvs.getPicked().isEmpty()) {
+        	context.getLayout().lock(true);
+    		for(INode node : pvs.getPicked()) {
+    			context.getLayout().lock(node, false);
+    		}
+        } else {
+        	context.getLayout().lock(false);
+        }
 
 
         context.getLayout().setInitializer(vv.getGraphLayout());

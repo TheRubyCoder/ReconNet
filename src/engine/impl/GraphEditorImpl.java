@@ -1,13 +1,17 @@
 package engine.impl;
 
-import engine.GraphEditor;
+import java.awt.geom.Point2D;
+import java.util.Set;
+
+import javax.swing.JPanel;
+
 import petrinetze.IArc;
 import petrinetze.INode;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
-
-import java.awt.geom.Point2D;
-import java.util.Set;
+import edu.uci.ics.jung.graph.util.EdgeType;
+import engine.Engine;
+import engine.GraphEditor;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,55 +23,49 @@ import java.util.Set;
 class GraphEditorImpl implements GraphEditor {
 
     private final EngineContext context;
+    private CreateMode createMode = CreateMode.PLACE;
+    private GraphPanel graphPanel;
 
-    public GraphEditorImpl(EngineContext context) {
+	public GraphEditorImpl(EngineContext context, Engine engine) {
         this.context = context;
+
+        graphPanel = new GraphPanel(engine, context);
+
     }
 
-    private <T extends INode> T init(T node, Point2D location) {
+    private <T extends INode> T initNode(T node, Point2D location) {
         context.getGraph().addVertex(node);
         context.getLayout().setLocation(node, location);
         return node;
     }
 
-    public IPlace createPlace(Point2D.Float location) {
-        return init(context.getPetrinet().createPlace("untitled"), location);
+    public IPlace createPlace(Point2D location) {
+    	System.out.println(String.format("createPlace(%s)",location));
+        return initNode(context.getPetrinet().createPlace("untitled"), location);
     }
 
-    public ITransition createTransition(Point2D.Float location) {
+    public ITransition createTransition(Point2D location) {
+    	System.out.println(String.format("createTransition(%s)",location));
     	//TODO IRenew durchreichen
-        return init(context.getPetrinet().createTransition("untitled", null), location);
+        return initNode(context.getPetrinet().createTransition("untitled", null), location);
     }
 
-    private IArc createArcInternal(INode from, INode to) {
-        final IArc arc = context.getPetrinet().createArc(null, from, to);
-        try {
-			arc.setStart(from);
+    public IArc createArc(INode from, INode to) {
+    	try {
+    		System.out.println(String.format("createArc(%s, %s)",from, to));
+    		IArc arc = context.getPetrinet().createArc("", from, to);
+    		context.getGraph().addEdge(arc, from, to, EdgeType.DIRECTED);
+    		return arc;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        try {
-			arc.setEnd(to);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        context.getGraph().addEdge(arc, from, to);
-        return arc;
+		return null;
     }
 
-    public IArc createIncomingArc(IPlace from, ITransition to) {
-        return createArcInternal(from, to);
-    }
-
-    public IArc createOutgoingArc(ITransition from, IPlace to) {
-        return createArcInternal(from, to);
-    }
 
     public void remove(Set<INode> nodes) {
         for (INode node : nodes) {
-            // TODO besser nur aus Petrinet l�schen und dann bei Listener-Callback aus Graph entfernen?
+            // TODO besser nur aus Petrinet l�schen und dann bei Listener-Callback aus Graph entfernen?
             if (node instanceof IArc) {
                 context.getGraph().removeEdge((IArc)node);
                 context.getPetrinet().deleteArcByID(node.getId());
@@ -84,4 +82,27 @@ class GraphEditorImpl implements GraphEditor {
             }
         }
     }
+
+    /**
+     * @return den gewählten createMode;
+     */
+    public CreateMode getCreateMode() {
+		return createMode;
+	}
+
+    /**
+     * Setzt den gegebenen createMode.
+     * Hiervon ist abhängig ob beim Klicken in einen leeren Bereich des Graphenpannels
+     * im Editmode eine Transition oder ein Place erzeugt wird.
+     */
+	public void setCreateMode(CreateMode createMode) {
+		if(createMode == null) throw new IllegalArgumentException("createMode must not be null");
+		this.createMode = createMode;
+	}
+
+	@Override
+	public JPanel getGraphPanel() {
+		return graphPanel;
+	}
+
 }

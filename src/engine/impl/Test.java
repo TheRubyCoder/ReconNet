@@ -3,13 +3,11 @@ package engine.impl;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,30 +15,24 @@ import java.util.List;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.SoftBevelBorder;
 
-import org.apache.commons.collections15.Factory;
 import org.apache.commons.collections15.Transformer;
 
 import petrinetze.IArc;
 import petrinetze.INode;
 import petrinetze.ITransition;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
-import edu.uci.ics.jung.visualization.control.GraphMouseListener;
-import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import engine.Engine;
-import engine.impl.mock.Arc;
-import engine.impl.mock.Node;
+import engine.GraphEditor;
+import engine.impl.ctrl.EditingModalGraphMouseEx;
 import engine.impl.mock.Petrinet;
 
 public class Test {
-
-
-
 
 
 	public static void main(String[] args) throws Exception{
@@ -94,50 +86,28 @@ public class Test {
 			}
 		});
 
-        Factory<INode> vertexFactory = new VertexFactory();
-        Factory<IArc> edgeFactory = new EdgeFactory();
+    	vv.getRenderContext().setEdgeLabelTransformer(new Transformer<IArc, String>() {
 
-		final EditingModalGraphMouse<INode,IArc> graphMouse =
-        	new EditingModalGraphMouse<INode,IArc>(vv.getRenderContext(), vertexFactory, edgeFactory);
+			@Override
+			public String transform(IArc arg0) {
+				return ""+arg0.getMark();
+			}
+		});
 
-    	graphMouse.setMode(ModalGraphMouse.Mode.PICKING);
+		final EditingModalGraphMouseEx<INode, IArc> graphMouse =
+        	new EditingModalGraphMouseEx<INode, IArc>(engine, vv.getRenderContext());
+
         vv.setGraphMouse(graphMouse);
-        vv.addGraphMouseListener(new GraphMouseListener<INode>() {
 
-			@Override
-			public void graphReleased(INode v, MouseEvent me) {
-				System.out.println("graphReleased: "+v+" "+me);
 
-			}
-
-			@Override
-			public void graphPressed(INode v, MouseEvent me) {
-				System.out.println("graphPressed: "+v+" "+me);
-
-			}
-
-			@Override
-			public void graphClicked(INode v, MouseEvent me) {
-				System.out.println("graphClicked: "+v+" "+me);
-
-			}
-		});
-        vv.getPickedVertexState().addItemListener(new ItemListener() {
-
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				System.out.println("itemStateChanged: "+e);
-
-			}
-		});
 
         vv.addKeyListener(graphMouse.getModeKeyListener());
 
     	//-------------Buttons-------------------
 
-    	List<JButton> buttons = new ArrayList<JButton>();
+    	List<JComponent> controlElements = new ArrayList<JComponent>();
 
-    	buttons.add(cb("FRLayout", new ActionListener() {
+    	controlElements.add(cb("FRLayout", new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				engine.getLayoutEditor().setLayout(Layout.FRLayout);
 				engine.getLayoutEditor().apply(vv);
@@ -145,7 +115,7 @@ public class Test {
 			}
 		}));
 
-    	buttons.add(cb("KKLayout", new ActionListener() {
+    	controlElements.add(cb("KKLayout", new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				engine.getLayoutEditor().setLayout(Layout.KKLayout);
 				System.out.println("KKLayout");
@@ -153,17 +123,39 @@ public class Test {
 			}
 		}));
 
+    	controlElements.add(cb("DoLayout", new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				engine.getLayoutEditor().apply(vv);
+			}
+		}));
+
+    	controlElements.add(cb("Place", new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				engine.getGraphEditor().setCreateMode(GraphEditor.CreateMode.PLACE);
+			}
+		}));
+
+    	controlElements.add(cb("Transition", new ActionListener() {
+    		public void actionPerformed(ActionEvent e) {
+    			engine.getGraphEditor().setCreateMode(GraphEditor.CreateMode.TRANSITION);
+    		}
+    	}));
+
+    	controlElements.add(graphMouse.getModeComboBox());
+
+
+
     	JPanel buttonPanel = new JPanel();
-    	buttonPanel.setSize(100, buttons.size() * 26);
+    	buttonPanel.setSize(100, controlElements.size() * 26);
     	buttonPanel.setLayout(new GridLayout(0, 1));
-    	for(JButton b : buttons) {
+    	for(JComponent b : controlElements) {
     		buttonPanel.add(b);
     	}
 
 
     	//----------------------------------------
 
-    	JFrame frame = new JFrame("test");
+    	final JFrame frame = new JFrame("test");
     	frame.getContentPane().add(vv);
 
     	JPanel eastPanel = new JPanel();
@@ -176,7 +168,14 @@ public class Test {
     	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     	frame.pack();
-    	frame.setVisible(true);
+    	EventQueue.invokeLater(new Runnable() {
+
+			@Override
+			public void run() {
+				frame.setVisible(true);
+			}
+		});
+
 
 	}
 
@@ -186,24 +185,6 @@ public class Test {
 		return b;
 	}
 
-
-    static class VertexFactory implements Factory<INode> {
-
-    	int i=0;
-
-		public INode create() {
-			return new Node();
-		}
-    }
-
-    static class EdgeFactory implements Factory<IArc> {
-
-    	int i=0;
-
-		public IArc create() {
-			return new Arc();
-		}
-    }
 
 
 }

@@ -5,9 +5,9 @@ import petrinetze.INode;
 import petrinetze.IPetrinet;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.algorithms.layout.KKLayout;
-import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
+import engine.Engine;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,17 +26,21 @@ class EngineContext {
 
     private AbstractLayout<INode, IArc> layout = new KKLayout<INode,IArc>(graph);
 
+
+
     public EngineContext(IPetrinet petrinet) {
         this.petrinet = petrinet;
 
         // TODO hier Graph aufbauen!
-        // Dafür muss allerdings das Petrinetz zuerst die Elemente bereitstellen...
+        // DafÃ¼r muss allerdings das Petrinetz zuerst die Elemente bereitstellen...
         createGraph();
     }
 
 	private void createGraph() {
-    	for(INode node : petrinet.getAllPlaces())
+    	for(INode node : petrinet.getAllPlaces()) {
     		graph.addVertex(node);
+    		layout.lock(node, true);
+    	}
 
     	for(INode node : petrinet.getAllTransitions())
     		graph.addVertex(node);

@@ -6,6 +6,11 @@ import java.util.List;
 
 public class Place extends Node implements petrinetze.IPlace {
 
+	public Place() {
+
+	}
+
+
 	@Override
 	public int getMark() {
 		// TODO Auto-generated method stub

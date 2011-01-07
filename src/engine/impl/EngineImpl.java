@@ -30,7 +30,7 @@ class EngineImpl implements Engine {
 
     public EngineImpl(EngineContext context) {
         this.context = context;
-        this.graphEditor = new GraphEditorImpl(context);
+        this.graphEditor = new GraphEditorImpl(context, this);
         this.simulation = new SimulationImpl(context);
         this.layoutEditor = new LayoutEditorImpl(context);
     }

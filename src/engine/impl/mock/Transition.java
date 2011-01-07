@@ -1,6 +1,5 @@
 package engine.impl.mock;
 
-import java.util.Hashtable;
 import java.util.List;
 
 import petrinetze.IPlace;
@@ -46,6 +45,12 @@ public class Transition extends Node implements petrinetze.ITransition {
     public List<IPlace> getIncomingPlaces() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
+
+	@Override
+	public int getPre() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
 
 }
