@@ -86,8 +86,11 @@ public class GraphPanel extends JPanel {
                 g = pi.createGraphics();
 				g.setColor(Color.BLUE);
 				g.fillOval(0, 0, s, s);
-                g.setColor(Color.BLACK);
-                g.fillOval(s / 2 - 4, s / 2 - 4, 8, 8);
+
+                if (place.getMark() > 0) {
+                    g.setColor(Color.BLACK);
+                    g.fillOval(s / 2 - 4, s / 2 - 4, 8, 8);
+                }
 				g.dispose();
 
                 return new ImageIcon(pi);
