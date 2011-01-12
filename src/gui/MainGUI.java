@@ -1,22 +1,87 @@
 package gui;
 
+import engine.Engine;
+import engine.EngineFactory;
+import engine.GraphEditor.CreateMode;
+import engine.Simulation;
+import engine.StepListener;
 import java.io.IOException;
+import javax.swing.JScrollPane;
 import javax.swing.UIManager;
+import petrinetze.IPlace;
+import petrinetze.ITransition;
+import petrinetze.Renews;
+import petrinetze.impl.Petrinet;
 
 /*
  * GUI zum anzeigen, bearbeiten und testen von Petrinetzen
  */
-public class MainGUI extends javax.swing.JFrame {
+public class MainGUI extends javax.swing.JFrame implements StepListener {
+
+    private Engine engine;
 
     /** Creates new form MainGUI */
     public MainGUI() {
+        Petrinet petrinet = new Petrinet();
+        IPlace p1 = petrinet.createPlace("Wecker Ein");
+        p1.setMark(1);
+        IPlace p2 = petrinet.createPlace("Wecker");
+        p2.setMark(1);
+        IPlace p3 = petrinet.createPlace("");
+        p3.setMark(1);
+        IPlace p4 = petrinet.createPlace("Wecker Aus");
+        p4.setMark(1);
+        IPlace p5 = petrinet.createPlace("Aufstehen");
+        p5.setMark(1);
+        IPlace p6 = petrinet.createPlace("Wecker Ein");
+        p6.setMark(1);
+        IPlace p7 = petrinet.createPlace("Wecker Aus");
+        p7.setMark(1);
+        IPlace p8 = petrinet.createPlace("");
+        p8.setMark(1);
+        IPlace p9 = petrinet.createPlace("Badezimmer");
+        p9.setMark(1);
+        IPlace p10 = petrinet.createPlace("Küche");
+        ITransition t1 = petrinet.createTransition("", Renews.IDENTITY);
+        petrinet.createArc("", p1, t1);
+        petrinet.createArc("", t1, p2);
+        ITransition t2 = petrinet.createTransition("snooze", Renews.IDENTITY);
+        petrinet.createArc("", p3, t2);
+        petrinet.createArc("", t2, p2);
+        ITransition t3 = petrinet.createTransition("klingelt", Renews.IDENTITY);
+        petrinet.createArc("", p2, t3);
+        petrinet.createArc("", t3, p3);
+        ITransition t4 = petrinet.createTransition("aus", Renews.IDENTITY);
+        petrinet.createArc("", p3, t4);
+        petrinet.createArc("", t4, p4);
+        ITransition t5 = petrinet.createTransition("Mit Wecker", Renews.IDENTITY);
+        petrinet.createArc("", p5, t5);
+        petrinet.createArc("", t5, p6);
+        ITransition t6 = petrinet.createTransition("Von Alleine", Renews.IDENTITY);
+        petrinet.createArc("", p5, t6);
+        petrinet.createArc("", t6, p8);
+        ITransition t7 = petrinet.createTransition("", Renews.IDENTITY);
+        petrinet.createArc("", p7, t7);
+        petrinet.createArc("", t7, p8);
+        ITransition t8 = petrinet.createTransition("", Renews.IDENTITY);
+        petrinet.createArc("", p8, t8);
+        petrinet.createArc("", t8, p9);
+        ITransition t9 = petrinet.createTransition("", Renews.IDENTITY);
+        petrinet.createArc("", p8, t9);
+        petrinet.createArc("", t9, p10);
+        engine = EngineFactory.newFactory().createEngine(petrinet);
         initComponents();
         initLanguage("de", "DE");
-        initGraphEditor();
+        //initGraphEditor();
+        //engine.getGraphEditor().setCreateMode(GraphEditor.CreateMode.PLACE);
+    }
+    
+
+    private void createPetrinet(){
+        internalEditorFrame.setContentPane(new JScrollPane(engine.getGraphEditor().getGraphPanel()));
+        
     }
 
-    private void initGraphEditor() {
-    }
 
     private void initLanguage(String lang, String lang2) {
         I18n.setLocale(lang, lang2);
@@ -70,6 +135,7 @@ public class MainGUI extends javax.swing.JFrame {
         progressBar = new javax.swing.JProgressBar();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
+        newMenuItem = new javax.swing.JMenuItem();
         openMenuItem = new javax.swing.JMenuItem();
         saveMenuItem = new javax.swing.JMenuItem();
         saveAsMenuItem = new javax.swing.JMenuItem();
@@ -85,23 +151,7 @@ public class MainGUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Petrinetz");
-        javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Regel 1");
-        javax.swing.tree.DefaultMutableTreeNode treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("L");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("K");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("R");
-        treeNode2.add(treeNode3);
-        treeNode1.add(treeNode2);
-        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Regel 2");
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("L");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("K");
-        treeNode2.add(treeNode3);
-        treeNode3 = new javax.swing.tree.DefaultMutableTreeNode("R");
-        treeNode2.add(treeNode3);
-        treeNode1.add(treeNode2);
+        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
         petrinetTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         jScrollPane1.setViewportView(petrinetTree);
 
@@ -113,6 +163,11 @@ public class MainGUI extends javax.swing.JFrame {
         toggleButtonPlace.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         toggleButtonPlace.setMargin(new java.awt.Insets(4, 14, 4, 14));
         toggleButtonPlace.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toggleButtonPlace.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleButtonPlaceActionPerformed(evt);
+            }
+        });
         editToolBar.add(toggleButtonPlace);
         editToolBar.add(jSeparator3);
 
@@ -122,6 +177,11 @@ public class MainGUI extends javax.swing.JFrame {
         toggleButtonTransition.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         toggleButtonTransition.setMargin(new java.awt.Insets(4, 14, 4, 14));
         toggleButtonTransition.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toggleButtonTransition.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleButtonTransitionActionPerformed(evt);
+            }
+        });
         editToolBar.add(toggleButtonTransition);
 
         playToolBar.setRollover(true);
@@ -132,6 +192,11 @@ public class MainGUI extends javax.swing.JFrame {
         buttonStep.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         buttonStep.setMargin(new java.awt.Insets(4, 14, 4, 14));
         buttonStep.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        buttonStep.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonStepActionPerformed(evt);
+            }
+        });
         playToolBar.add(buttonStep);
         playToolBar.add(jSeparator1);
 
@@ -140,6 +205,11 @@ public class MainGUI extends javax.swing.JFrame {
 
         buttonSteps.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/resource/step.png"))); // NOI18N
         buttonSteps.setMargin(new java.awt.Insets(4, 14, 4, 14));
+        buttonSteps.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonStepsActionPerformed(evt);
+            }
+        });
         playToolBar.add(buttonSteps);
         playToolBar.add(jSeparator2);
 
@@ -148,6 +218,11 @@ public class MainGUI extends javax.swing.JFrame {
         toggleButtonPlay.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         toggleButtonPlay.setMargin(new java.awt.Insets(4, 14, 4, 14));
         toggleButtonPlay.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        toggleButtonPlay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                toggleButtonPlayActionPerformed(evt);
+            }
+        });
         playToolBar.add(toggleButtonPlay);
 
         jDesktopPane1.setBackground(new java.awt.Color(204, 204, 204));
@@ -162,11 +237,11 @@ public class MainGUI extends javax.swing.JFrame {
         internalEditorFrame.getContentPane().setLayout(internalEditorFrameLayout);
         internalEditorFrameLayout.setHorizontalGroup(
             internalEditorFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 344, Short.MAX_VALUE)
+            .addGap(0, 348, Short.MAX_VALUE)
         );
         internalEditorFrameLayout.setVerticalGroup(
             internalEditorFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 221, Short.MAX_VALUE)
+            .addGap(0, 223, Short.MAX_VALUE)
         );
 
         internalEditorFrame.setBounds(40, 20, 360, 250);
@@ -176,6 +251,14 @@ public class MainGUI extends javax.swing.JFrame {
         status.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
         fileMenu.setText("File");
+
+        newMenuItem.setText("New");
+        newMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newMenuItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(newMenuItem);
 
         openMenuItem.setText("Open");
         fileMenu.add(openMenuItem);
@@ -239,6 +322,7 @@ public class MainGUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -248,9 +332,8 @@ public class MainGUI extends javax.swing.JFrame {
                                 .addComponent(editToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(playToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 694, Short.MAX_VALUE)))
+                            .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(status)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 691, Short.MAX_VALUE)
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -266,7 +349,7 @@ public class MainGUI extends javax.swing.JFrame {
                             .addComponent(editToolBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 396, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(status)
@@ -288,6 +371,43 @@ public class MainGUI extends javax.swing.JFrame {
         initLanguage("en", "US");
     }//GEN-LAST:event_EnglishMenuItemActionPerformed
 
+    private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMenuItemActionPerformed
+       this.createPetrinet();
+    }//GEN-LAST:event_newMenuItemActionPerformed
+
+    private void toggleButtonPlaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleButtonPlaceActionPerformed
+        engine.getGraphEditor().setCreateMode(CreateMode.PLACE);
+    }//GEN-LAST:event_toggleButtonPlaceActionPerformed
+
+    private void toggleButtonTransitionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleButtonTransitionActionPerformed
+        engine.getGraphEditor().setCreateMode(CreateMode.TRANSITION);
+    }//GEN-LAST:event_toggleButtonTransitionActionPerformed
+
+    private void buttonStepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStepActionPerformed
+        try{
+            engine.getSimulation().step();
+            engine.getGraphEditor().getGraphPanel().repaint();
+        }catch(Exception ex){
+            Error.create(ex.getMessage());
+        }
+
+    }//GEN-LAST:event_buttonStepActionPerformed
+
+    private void buttonStepsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStepsActionPerformed
+        for(int i = 0 ; i< (Integer)jSpinner1.getValue();i++){
+            engine.getSimulation().step();
+        }
+
+    }//GEN-LAST:event_buttonStepsActionPerformed
+
+    private void toggleButtonPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleButtonPlayActionPerformed
+        if(toggleButtonPlay.isEnabled()){
+            engine.getSimulation().start(2);
+        }else{
+            engine.getSimulation().stop();
+        }
+    }//GEN-LAST:event_toggleButtonPlayActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -295,6 +415,7 @@ public class MainGUI extends javax.swing.JFrame {
         try {
             String cn = UIManager.getSystemLookAndFeelClassName();
             UIManager.setLookAndFeel(cn);
+            
         } catch (Exception e) {
             System.out.println("Exception: " + e);
         }
@@ -321,6 +442,7 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JMenu languageMenu;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenuItem newMenuItem;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem pasteMenuItem;
     private javax.swing.ButtonGroup petriTools;
@@ -334,4 +456,16 @@ public class MainGUI extends javax.swing.JFrame {
     private javax.swing.JToggleButton toggleButtonPlay;
     private javax.swing.JToggleButton toggleButtonTransition;
     // End of variables declaration//GEN-END:variables
+
+    public void stepped(Simulation s) {
+        engine.getGraphEditor().getGraphPanel().repaint();
+    }
+
+    public void started(Simulation s) {
+        
+    }
+
+    public void stopped(Simulation s) {
+        
+    }
 }
