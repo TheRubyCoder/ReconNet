@@ -31,6 +31,12 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         initLanguage("de", "DE");
         Project pro = new Project("Petrinetz1",this.getTestPetrinet());
         openProject(pro);
+        //test();
+    }
+
+    private void test(){
+        Project pro = getSelectedProject();
+        
     }
 
     private void openProject(Project pro){
@@ -361,11 +367,11 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     }//GEN-LAST:event_newMenuItemActionPerformed
 
     private void toggleButtonPlaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleButtonPlaceActionPerformed
-        //petrinetTree.getSelectionPath().getPath()[1];
+        projects.setCreateMode(CreateMode.PLACE);
     }//GEN-LAST:event_toggleButtonPlaceActionPerformed
 
     private void toggleButtonTransitionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleButtonTransitionActionPerformed
-        engine.getGraphEditor().setCreateMode(CreateMode.TRANSITION);
+        projects.setCreateMode(CreateMode.TRANSITION);
     }//GEN-LAST:event_toggleButtonTransitionActionPerformed
 
     private void buttonStepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStepActionPerformed
@@ -448,10 +454,12 @@ public IPetrinet getTestPetrinet(){
     }
 
     public void started(Simulation s) {
-        //block Buttons
+        toggleButtonTransition.setEnabled(false);
+        toggleButtonPlace.setEnabled(false);
     }
 
     public void stopped(Simulation s) {
-        //enable Buttons
+        toggleButtonTransition.setEnabled(true);
+        toggleButtonPlace.setEnabled(true);
     }
 }

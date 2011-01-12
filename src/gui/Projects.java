@@ -5,6 +5,7 @@
 
 package gui;
 
+import engine.GraphEditor.CreateMode;
 import gui.PetrinetTreeModel.PetrinetNode;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,12 @@ public class Projects {
             }
         }
         return null;
+    }
+
+    public void setCreateMode(CreateMode mode){
+        for(Project pro : projects){
+            pro.getEngine().getGraphEditor().setCreateMode(mode);
+        }
     }
 
     public Project getProject(String name){
