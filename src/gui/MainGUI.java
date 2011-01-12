@@ -1,85 +1,91 @@
 package gui;
 
-import engine.Engine;
-import engine.EngineFactory;
 import engine.GraphEditor.CreateMode;
 import engine.Simulation;
 import engine.StepListener;
-import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+import javax.swing.JInternalFrame;
 import javax.swing.JScrollPane;
-import javax.swing.UIManager;
+import petrinetze.IPetrinet;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
 import petrinetze.Renews;
 import petrinetze.impl.Petrinet;
+import transformation.IRule;
 
 /*
  * GUI zum anzeigen, bearbeiten und testen von Petrinetzen
  */
 public class MainGUI extends javax.swing.JFrame implements StepListener {
 
-    private Engine engine;
+    private Projects projects;
+    private Set<JInternalFrame> internalFrames;
 
     /** Creates new form MainGUI */
     public MainGUI() {
-        Petrinet petrinet = new Petrinet();
-        IPlace p1 = petrinet.createPlace("Wecker Ein");
-        p1.setMark(1);
-        IPlace p2 = petrinet.createPlace("Wecker");
-        p2.setMark(1);
-        IPlace p3 = petrinet.createPlace("");
-        p3.setMark(1);
-        IPlace p4 = petrinet.createPlace("Wecker Aus");
-        p4.setMark(1);
-        IPlace p5 = petrinet.createPlace("Aufstehen");
-        p5.setMark(1);
-        IPlace p6 = petrinet.createPlace("Wecker Ein");
-        p6.setMark(1);
-        IPlace p7 = petrinet.createPlace("Wecker Aus");
-        p7.setMark(1);
-        IPlace p8 = petrinet.createPlace("");
-        p8.setMark(1);
-        IPlace p9 = petrinet.createPlace("Badezimmer");
-        p9.setMark(1);
-        IPlace p10 = petrinet.createPlace("Küche");
-        ITransition t1 = petrinet.createTransition("", Renews.IDENTITY);
-        petrinet.createArc("", p1, t1);
-        petrinet.createArc("", t1, p2);
-        ITransition t2 = petrinet.createTransition("snooze", Renews.IDENTITY);
-        petrinet.createArc("", p3, t2);
-        petrinet.createArc("", t2, p2);
-        ITransition t3 = petrinet.createTransition("klingelt", Renews.IDENTITY);
-        petrinet.createArc("", p2, t3);
-        petrinet.createArc("", t3, p3);
-        ITransition t4 = petrinet.createTransition("aus", Renews.IDENTITY);
-        petrinet.createArc("", p3, t4);
-        petrinet.createArc("", t4, p4);
-        ITransition t5 = petrinet.createTransition("Mit Wecker", Renews.IDENTITY);
-        petrinet.createArc("", p5, t5);
-        petrinet.createArc("", t5, p6);
-        ITransition t6 = petrinet.createTransition("Von Alleine", Renews.IDENTITY);
-        petrinet.createArc("", p5, t6);
-        petrinet.createArc("", t6, p8);
-        ITransition t7 = petrinet.createTransition("", Renews.IDENTITY);
-        petrinet.createArc("", p7, t7);
-        petrinet.createArc("", t7, p8);
-        ITransition t8 = petrinet.createTransition("", Renews.IDENTITY);
-        petrinet.createArc("", p8, t8);
-        petrinet.createArc("", t8, p9);
-        ITransition t9 = petrinet.createTransition("", Renews.IDENTITY);
-        petrinet.createArc("", p8, t9);
-        petrinet.createArc("", t9, p10);
-        engine = EngineFactory.newFactory().createEngine(petrinet);
+        projects = new Projects();
+        internalFrames = new HashSet<JInternalFrame>();
         initComponents();
+        petrinetTree.setModel(projects.getPetrinetTreeModel());
         initLanguage("de", "DE");
-        //initGraphEditor();
-        //engine.getGraphEditor().setCreateMode(GraphEditor.CreateMode.PLACE);
+        Project pro = new Project("Petrinetz1",this.getTestPetrinet());
+        openProject(pro);
+    }
+
+    private void openProject(Project pro){
+       petrinetTree.setModel(projects.addProject(pro));
+       jDesktopPane1.add(pro.getPetrinetFrame());
+       pro.getPetrinetFrame().setBounds(40, 20, 360, 250);
+       pro.getPetrinetFrame().setVisible(true);
     }
     
 
-    private void createPetrinet(){
-        internalEditorFrame.setContentPane(new JScrollPane(engine.getGraphEditor().getGraphPanel()));
-        
+    private void createPetrinet(String name){
+        Project p = new Project(name);
+        openProject(p);
+    }
+
+    private void step(){
+        Project pro = projects.getProject(jDesktopPane1.getSelectedFrame());
+        try{
+            pro.getEngine().getSimulation().step();
+        }catch(Exception ex){
+            Error.create(ex.getMessage());
+        }
+    }
+
+    private void stepXtimes(){
+        for(int i = 0 ; i< (Integer)jSpinner1.getValue();i++){
+            step();
+        }
+    }
+
+    private void startSimulation(){
+        Project pro = projects.getProject(jDesktopPane1.getSelectedFrame());
+        try{
+            pro.getEngine().getSimulation().start(2);
+        }catch(Exception ex){
+            Error.create(ex.getMessage());
+        }
+    }
+
+    private void stopSimulation(){
+        Project pro = projects.getProject(jDesktopPane1.getSelectedFrame());
+        try{
+            pro.getEngine().getSimulation().stop();
+        }catch(Exception ex){
+            Error.create(ex.getMessage());
+        }
+    }
+
+    private Project getSelectedProject(){
+        return projects.getProject((String) petrinetTree.getSelectionPath().getPath()[1]);
+    }
+
+    private IRule getSelectedRule(){
+        //projects.getProject((String) petrinetTree.getSelectionPath().getPath()[1]);
+        return null;
     }
 
 
@@ -130,7 +136,6 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         jSeparator2 = new javax.swing.JToolBar.Separator();
         toggleButtonPlay = new javax.swing.JToggleButton();
         jDesktopPane1 = new javax.swing.JDesktopPane();
-        internalEditorFrame = new javax.swing.JInternalFrame();
         status = new javax.swing.JLabel();
         progressBar = new javax.swing.JProgressBar();
         menuBar = new javax.swing.JMenuBar();
@@ -226,26 +231,6 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         playToolBar.add(toggleButtonPlay);
 
         jDesktopPane1.setBackground(new java.awt.Color(204, 204, 204));
-
-        internalEditorFrame.setClosable(true);
-        internalEditorFrame.setIconifiable(true);
-        internalEditorFrame.setMaximizable(true);
-        internalEditorFrame.setResizable(true);
-        internalEditorFrame.setVisible(true);
-
-        javax.swing.GroupLayout internalEditorFrameLayout = new javax.swing.GroupLayout(internalEditorFrame.getContentPane());
-        internalEditorFrame.getContentPane().setLayout(internalEditorFrameLayout);
-        internalEditorFrameLayout.setHorizontalGroup(
-            internalEditorFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 348, Short.MAX_VALUE)
-        );
-        internalEditorFrameLayout.setVerticalGroup(
-            internalEditorFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 223, Short.MAX_VALUE)
-        );
-
-        internalEditorFrame.setBounds(40, 20, 360, 250);
-        jDesktopPane1.add(internalEditorFrame, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         status.setText("Status");
         status.setVerticalAlignment(javax.swing.SwingConstants.TOP);
@@ -372,11 +357,11 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     }//GEN-LAST:event_EnglishMenuItemActionPerformed
 
     private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMenuItemActionPerformed
-       this.createPetrinet();
+       this.createPetrinet("Test");
     }//GEN-LAST:event_newMenuItemActionPerformed
 
     private void toggleButtonPlaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleButtonPlaceActionPerformed
-        engine.getGraphEditor().setCreateMode(CreateMode.PLACE);
+        //petrinetTree.getSelectionPath().getPath()[1];
     }//GEN-LAST:event_toggleButtonPlaceActionPerformed
 
     private void toggleButtonTransitionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleButtonTransitionActionPerformed
@@ -384,43 +369,21 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     }//GEN-LAST:event_toggleButtonTransitionActionPerformed
 
     private void buttonStepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStepActionPerformed
-        try{
-            engine.getSimulation().step();
-            engine.getGraphEditor().getGraphPanel().repaint();
-        }catch(Exception ex){
-            Error.create(ex.getMessage());
-        }
-
+        step();
     }//GEN-LAST:event_buttonStepActionPerformed
 
     private void buttonStepsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStepsActionPerformed
-        for(int i = 0 ; i< (Integer)jSpinner1.getValue();i++){
-            engine.getSimulation().step();
-        }
-
+        stepXtimes();
     }//GEN-LAST:event_buttonStepsActionPerformed
 
     private void toggleButtonPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleButtonPlayActionPerformed
         if(toggleButtonPlay.isEnabled()){
-            engine.getSimulation().start(2);
+            startSimulation();
         }else{
-            engine.getSimulation().stop();
+            stopSimulation();
         }
     }//GEN-LAST:event_toggleButtonPlayActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) throws IOException {
-        try {
-            String cn = UIManager.getSystemLookAndFeelClassName();
-            UIManager.setLookAndFeel(cn);
-            
-        } catch (Exception e) {
-            System.out.println("Exception: " + e);
-        }
-        new MainGUI().setVisible(true);
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem EnglishMenuItem;
     private javax.swing.JButton buttonStep;
@@ -433,7 +396,6 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     private javax.swing.JToolBar editToolBar;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
-    private javax.swing.JInternalFrame internalEditorFrame;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar.Separator jSeparator1;
@@ -457,15 +419,39 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     private javax.swing.JToggleButton toggleButtonTransition;
     // End of variables declaration//GEN-END:variables
 
+
+    
+
+
+
+public IPetrinet getTestPetrinet(){
+    Petrinet petrinet = new Petrinet();
+    IPlace p1 = petrinet.createPlace("Stelle1");
+    p1.setMark(1);
+    IPlace p2 = petrinet.createPlace("Stelle2");
+    p2.setMark(1);
+    IPlace p3 = petrinet.createPlace("Stelle3");
+    p3.setMark(1);
+    ITransition t1 = petrinet.createTransition("t1", Renews.IDENTITY);
+    petrinet.createArc("", p1, t1);
+    petrinet.createArc("", t1, p2);
+    ITransition t2 = petrinet.createTransition("t2", Renews.IDENTITY);
+    petrinet.createArc("", p2, t2);
+    petrinet.createArc("", t2, p3);
+    ITransition t3 = petrinet.createTransition("t3", Renews.IDENTITY);
+    petrinet.createArc("", p3, t3);
+    petrinet.createArc("", t3, p1);
+        return petrinet;
+}
+
     public void stepped(Simulation s) {
-        engine.getGraphEditor().getGraphPanel().repaint();
     }
 
     public void started(Simulation s) {
-        
+        //block Buttons
     }
 
     public void stopped(Simulation s) {
-        
+        //enable Buttons
     }
 }
