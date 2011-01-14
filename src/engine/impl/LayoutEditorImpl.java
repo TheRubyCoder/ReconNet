@@ -88,6 +88,4 @@ class LayoutEditorImpl implements LayoutEditor {
     public void setLayout(engine.impl.Layout l) {
     	context.setLayout(l.getInstance(context.getGraph()));
     }
-
-
 }

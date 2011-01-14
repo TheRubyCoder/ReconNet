@@ -3,6 +3,7 @@ package engine.impl;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Collections;
 import java.util.Set;
 
 import javax.swing.JPanel;
@@ -26,8 +27,6 @@ class GraphEditorImpl implements GraphEditor {
     private final EngineContext context;
 
     private GraphPanel graphPanel;
-
-    public static final String PROPERTY_EDIT_MODE = "editMode";
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
@@ -117,5 +116,9 @@ class GraphEditorImpl implements GraphEditor {
 
     public boolean hasListeners(String propertyName) {
         return pcs.hasListeners(propertyName);
+    }
+
+    public Set<INode> getPickedNodes() {
+        return graphPanel == null ? Collections.<INode>emptySet() : graphPanel.getSelectedNodes();
     }
 }

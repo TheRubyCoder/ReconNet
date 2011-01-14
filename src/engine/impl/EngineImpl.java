@@ -70,6 +70,4 @@ class EngineImpl implements Engine {
     public void transform(IRule rule) {
         Transformations.transform(context.getPetrinet(), rule);
     }
-
-
 }

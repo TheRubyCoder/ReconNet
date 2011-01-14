@@ -114,6 +114,10 @@ public class GraphPanel extends JPanel {
 		edgeInit();
 	}
 
+    public Set<INode> getSelectedNodes() {
+        return new HashSet<INode>(picked);
+    }
+
 	private void vertexInit() {
     	vv.getRenderContext().setVertexLabelTransformer(new Transformer<INode, String>() {
 			@Override

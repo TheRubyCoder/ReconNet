@@ -63,4 +63,11 @@ public interface GraphEditor {
      * @return das JPanel zum Anzeigen des Graphen
      */
     public JPanel getGraphPanel();
+
+    /**
+     * Gibt die ausgewählten Knoten / Kanten des Graphen zurück.
+     *
+     * @return die ausgewählten Knoten / Kanten des Graphen zurück.
+     */
+    Set<INode> getPickedNodes();
 }
