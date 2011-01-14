@@ -5,7 +5,8 @@ import engine.Simulation;
 import engine.StepListener;
 import java.util.HashSet;
 import java.util.Set;
-import javax.swing.JInternalFrame;
+import javax.swing.*;
+
 import petrinetze.IPetrinet;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
@@ -52,7 +53,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     }
 
     private void step(){
-        Project pro = projects.getProject(jDesktopPane1.getSelectedFrame());
+        Project pro = getActiveProject();
         try{
             pro.getEngine().getSimulation().step();
         }catch(Exception ex){
@@ -60,9 +61,56 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         }
     }
 
+    private Project getActiveProject() {
+        return projects.getProject(jDesktopPane1.getSelectedFrame());
+    }
+
     private void stepXtimes(){
-        for(int i = 0 ; i< (Integer)jSpinner1.getValue();i++){
-            step();
+        stepXTimes(getActiveProject(), (Integer) jSpinner1.getValue());
+    }
+
+    private void stepXTimes(final Project project, final int times) {
+        if (times < 1000) {
+            stepXTimesInternal(project, times);
+        }
+        else {
+            final SwingWorker w = new SwingWorker<Void,Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    stepXTimesInternal(project, times);
+                    return null;
+                }
+
+                @Override
+                protected void done() {
+
+                }
+            };
+
+            w.execute();
+        }
+    }
+
+    private void stepXTimesInternal(Project project, int times) {
+        final Simulation sim = getActiveProject().getEngine().getSimulation();
+
+        // TODO GUI müsste hier gesperrt werden...
+        sim.removeStepListener(this);
+        sim.removeStepListener(project);
+
+        int i = 0;
+        try {
+            for(i = 0; i < times; i++){
+                sim.step();
+            }
+        }
+        catch (Exception ex) {
+            Error.create(String.format("Kann nicht mehr schalten (nach %d Schritten)", i));  // TODO i18n
+        }
+        finally {
+            // TODO GUI entsperren
+            sim.addStepListener(this);
+            sim.addStepListener(project);
         }
     }
 
@@ -244,7 +292,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
 
         jToolBar1.setRollover(true);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
         jToolBar1.add(jComboBox1);
 
         fileMenu.setText("File");

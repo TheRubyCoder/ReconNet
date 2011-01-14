@@ -50,6 +50,7 @@ public class EngineTest extends TestCase{
         engine = EngineFactory.newFactory().createEngine(petrinet);
 		location = new Point2D.Float(0,0);
 		location2= new Point2D.Float(1,1);
+        node = petrinet.createPlace("test");
 	}
 	
 	/**

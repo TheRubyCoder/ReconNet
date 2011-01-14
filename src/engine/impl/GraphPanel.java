@@ -75,7 +75,9 @@ public class GraphPanel extends JPanel {
                     Set<INode> picked = new HashSet<INode>();
                     picked.addAll(vv.getPickedVertexState().getPicked());
                     picked.addAll(vv.getPickedEdgeState().getPicked());
+
                     GraphPanel.this.picked = picked;
+                    firePropertyChange("pickedNodes", null, picked);
                 }
             }
         };

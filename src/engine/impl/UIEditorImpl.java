@@ -46,7 +46,7 @@ public class UIEditorImpl implements UIEditor {
         final Map<Integer,String> colorMap = new HashMap<Integer,String>(vertexPaint.size());
 
         for (Map.Entry<Integer,Color> e : vertexPaint.entrySet()) {
-            colorMap.put(e.getKey(), String.format("#%06f", e.getValue().getRGB()));
+            colorMap.put(e.getKey(), String.format("#%06d", e.getValue().getRGB()));
         }
 
         return colorMap;
