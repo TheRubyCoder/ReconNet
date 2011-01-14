@@ -9,25 +9,19 @@ import edu.uci.ics.jung.graph.Graph;
 
 
 public enum Layout {
-	FRLayout(FRLayout.class),
-	KKLayout(KKLayout.class);
+	FRLayout {
+        @Override
+        public AbstractLayout<INode, IArc> getInstance(Graph<INode, IArc> graph) {
+            return new FRLayout<INode, IArc>(graph);
+        }
+    },
 
-	@SuppressWarnings("rawtypes")
-	private final Class<? extends AbstractLayout> layoutClass;
+	KKLayout {
+        @Override
+        public AbstractLayout<INode, IArc> getInstance(Graph<INode, IArc> graph) {
+            return new KKLayout<INode, IArc>(graph);
+        }
+    };
 
-	@SuppressWarnings("rawtypes")
-	private Layout(Class<? extends AbstractLayout> layoutClass) {
-		this.layoutClass = layoutClass;
-
-	}
-
-	@SuppressWarnings("unchecked")
-	public AbstractLayout<INode, IArc> getInstance(Graph<INode, IArc> graph) {
-		try {
-			return layoutClass.getConstructor(Graph.class).newInstance(graph);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
-	}
+	public abstract AbstractLayout<INode, IArc> getInstance(Graph<INode, IArc> graph);
 }

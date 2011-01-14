@@ -139,11 +139,13 @@ public interface IPetrinet {
 	 * @return
 	 */
 	public IGraphElement getAllGraphElement();
+
 	/**
 	 * 
 	 * @param l
 	 */
 	void addPetrinetListener(IPetrinetListener l);
+
 	/**
 	 * 
 	 * @param l

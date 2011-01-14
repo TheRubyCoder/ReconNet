@@ -77,13 +77,13 @@ public interface ITransition extends INode {
 	/**
 	 * Die uebegebene Kante wird in die Liste der ausgehenden Kanten 
 	 * mitaufgenommen.
-	 * @param aufzunehmende Kante
+	 * @param arc aufzunehmende Kante
 	 */
 	public void setStartArcs (IArc arc);
 	/**
 	 * Die uebegebene Kante wird in die Liste der eingehenden Kanten 
 	 * mitaufgenommen.
-	 * @param aufzunehmende Kante
+	 * @param arc aufzunehmende Kante
 	 */
 	public void setEndArcs (IArc arc);
 	/**
@@ -97,6 +97,11 @@ public interface ITransition extends INode {
 	 * @return
 	 */
 	public List<IArc> getEndArcs();
-	
 
+    /**
+     * Stellt fest, ob die Transition aktiviert ist.
+     *
+     * @return <tt>true</tt> wenn aktiviert, <tt>false</tt> sonst
+     */
+    public boolean isActivated();
 }

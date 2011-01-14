@@ -58,9 +58,10 @@ public interface IPlace extends INode {
 	 * @return
 	 */
 	public List<IArc> getEndArcs();
-	
-	public void setStartArcs (IArc arc);
-	public void setEndArcs (IArc arc);
-	
-	
+
+    // TODO umbenennen in addStartArc(), warum public?
+    public void setStartArcs (IArc arc);
+
+    // TODO umbenennen in addEndArc(), warum public?
+    public void setEndArcs (IArc arc);
 }

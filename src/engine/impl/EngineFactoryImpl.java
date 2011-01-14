@@ -15,6 +15,6 @@ public class EngineFactoryImpl extends EngineFactory {
 
     @Override
     public Engine createEngine(IPetrinet petrinet) {
-        return new EngineImpl(new EngineContext(petrinet));
+        return new EngineImpl(petrinet);
     }
 }

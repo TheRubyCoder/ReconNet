@@ -62,7 +62,7 @@ public interface LayoutEditor {
     void apply(VisualizationViewer<INode, IArc> vv);
 
     /**
-     * Es muﬂ im Anschluﬂ <code>#apply</code> aufgerufen werden damit das Layout angewendet wird.
+     * Es muss im Anschluss <code>#apply</code> aufgerufen werden damit das Layout angewendet wird.
      * @param l
      */
     public void setLayout(engine.impl.Layout l);

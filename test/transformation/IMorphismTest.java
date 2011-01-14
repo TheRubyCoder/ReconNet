@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package transformation.test;
+package transformation;
 
 import java.util.Map;
 import org.junit.After;
@@ -144,7 +144,7 @@ public class IMorphismTest {
         fail("The test case is a prototype.");
     }
 
-    public class IMorphismImpl implements IMorphism {
+    public static class IMorphismImpl implements IMorphism {
 
         public Map<ITransition, ITransition> temp_transitions() {
             return null;

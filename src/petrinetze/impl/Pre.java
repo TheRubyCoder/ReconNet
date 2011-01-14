@@ -4,28 +4,26 @@ import java.util.Arrays;
 
 import petrinetze.IPre;
 
-public class Pre implements IPre {
+class Pre implements IPre {
 	
-	private int [][] pre;
-	private int []tIds;
-	private int []pIds;
+	private int[][] pre;
+	private int[] tIds;
+	private int[] pIds;
 	
-	public Pre (int[][] pre, int[] pId, int[] tId) {
+	Pre(int[][] pre, int[] pId, int[] tId) {
 		this.pIds = pId;
 		this.tIds = tId;
 		this.pre = pre;
-		
-		
 	}
 	
 	@Override
 	public int[][] getPreAsArray() {
-		return this.pre;
+		return pre;
 	}
 
 	@Override
 	public int[] getTransitionIds() {
-		return this.tIds;
+		return tIds;
 	}
 
 	@Override
@@ -38,18 +36,19 @@ public class Pre implements IPre {
 	 */
 	@Override
 	public String toString() {
-		String output = "\n";
+		final String nl = System.getProperty("line.separator", "\n");
+        StringBuilder sb = new StringBuilder("Pre [pre=").append(nl);
 		
 		for (int i = 0; i < pIds.length; i++) {
 			for (int z = 0; z < tIds.length; z++) {
-				output += " [" + pre[i][z] + "]";
+				sb.append(" [").append(pre[i][z]).append(']');
 			}
-			output += "\n";
+			sb.append(nl);
 		}
 		
 
-	return "Pre [pre=" + output + ", tIds="
-			+ Arrays.toString(tIds) + ", pIds=" + Arrays.toString(pIds)
-			+ "]";
-}
+	    return sb.append("tIds=").append(Arrays.toString(tIds))
+                 .append(", pIds=").append(Arrays.toString(pIds))
+                 .append(']').toString();
+    }
 }

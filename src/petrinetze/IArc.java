@@ -8,45 +8,43 @@ package petrinetze;
  */
 public interface IArc extends INode {
 
-	public String getName();
+	String getName();
 
-	public int getId();
+	int getId();
 
-	public void setName(String name);
+	void setName(String name);
 
 	/**
 	 * @return Die maximal mögliche Kantengewichtung. 
 	 */
-	public int getMark();
+	int getMark();
 
 	/**
 	 * @param mark
 	 * 			Die maximal mögliche Kantengewichtung.
 	 */
-	public void setMark(int mark);
+	void setMark(int mark);
 
 	/**
 	 * @return Den Startknoten der Kante.
 	 */
-	public INode getStart();
+	INode getStart();
 
 	/**
 	 * @return Den Endknoten der Kante.
 	 */
-	public INode getEnd();
+	INode getEnd();
 
 	/**
 	 * @param start
 	 * 			Den Startknoten der Kante.
 	 */
-	public void setStart(INode start) throws IllegalArgumentException
-;
+	void setStart(INode start) throws IllegalArgumentException;
 
 	/**
 	 * @param end
 	 * 			Den Endknoten der Kante.
 	 */
-	public void setEnd(INode end) throws IllegalArgumentException
-;
+	void setEnd(INode end) throws IllegalArgumentException;
 
 }

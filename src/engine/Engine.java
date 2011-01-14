@@ -48,10 +48,13 @@ public interface Engine {
      */
     Simulation getSimulation();
 
+    UIEditor getUIEditor();
+
     /**
      * Anwenden einer Transformationsregel.
      *
      * @param rule die anzuwendende Regel
      */
     void transform(IRule rule);
+
 }

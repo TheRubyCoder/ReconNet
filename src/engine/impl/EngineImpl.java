@@ -1,10 +1,7 @@
 package engine.impl;
 
 import edu.uci.ics.jung.graph.DirectedGraph;
-import engine.Engine;
-import engine.GraphEditor;
-import engine.LayoutEditor;
-import engine.Simulation;
+import engine.*;
 import petrinetze.IArc;
 import petrinetze.INode;
 import petrinetze.IPetrinet;
@@ -35,6 +32,10 @@ class EngineImpl implements Engine {
         this.layoutEditor = new LayoutEditorImpl(context);
     }
 
+    public EngineImpl(IPetrinet petrinet) {
+        this(new EngineContext(petrinet));
+    }
+
     @Override
     public IPetrinet getNet() {
         return context.getPetrinet();
@@ -61,7 +62,14 @@ class EngineImpl implements Engine {
     }
 
     @Override
+    public UIEditor getUIEditor() {
+        return context.getUIEditor();
+    }
+
+    @Override
     public void transform(IRule rule) {
         Transformations.transform(context.getPetrinet(), rule);
     }
+
+
 }

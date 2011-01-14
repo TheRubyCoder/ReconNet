@@ -14,9 +14,8 @@ public class PetrinetMock implements IPetrinet {
 private static final Pattern pat = Pattern.compile("#");
 	
 	private static int nextPlaceId;
-	private static int nextTransitionId;
 
-	
+    private static int nextTransitionId;
 
 	private final int[][] preMatrix;
 	private final int[][] postMatrix;

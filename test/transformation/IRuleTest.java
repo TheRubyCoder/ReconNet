@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package transformation.test;
+package transformation;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -85,7 +85,7 @@ public class IRuleTest {
     }
 
     // TODO
-    public class IRuleImpl implements IRule {
+    public static class IRuleImpl implements IRule {
 
         public IPetrinet L() {
             return null;

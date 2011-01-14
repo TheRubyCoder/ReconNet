@@ -2,20 +2,13 @@ package engine.impl.ctrl;
 
 import java.awt.Component;
 import java.awt.Cursor;
-import java.awt.Dimension;
 import java.awt.ItemSelectable;
 import java.awt.event.InputEvent;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import javax.swing.ButtonGroup;
-import javax.swing.Icon;
 import javax.swing.JComboBox;
-import javax.swing.JMenu;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.plaf.basic.BasicIconFactory;
 
 import org.apache.commons.collections15.Factory;
 
@@ -23,12 +16,10 @@ import petrinetze.IArc;
 import petrinetze.INode;
 import edu.uci.ics.jung.visualization.MultiLayerTransformer;
 import edu.uci.ics.jung.visualization.RenderContext;
-import edu.uci.ics.jung.visualization.annotations.AnnotatingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.AbstractModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.AnimatedPickingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
 import edu.uci.ics.jung.visualization.control.EditingGraphMousePlugin;
-import edu.uci.ics.jung.visualization.control.EditingPopupGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.LabelEditingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.PickingGraphMousePlugin;
@@ -50,13 +41,15 @@ public class EditingModalGraphMouseEx<V extends INode, E extends IArc> extends A
 
 	protected MultiLayerTransformer basicTransformer;
 	protected RenderContext<V, E> rc;
+    private PetrinetPopupMousePlugin popupPlugin;
 
-	/**
+    /**
 	 * create an instance with default values
 	 *
 	 */
 	public EditingModalGraphMouseEx(Engine engine, RenderContext<V, E> rc) {
 		this(engine, rc, 1.1f, 1 / 1.1f);
+        setMode(Mode.PICKING);
 	}
 
 	/**
@@ -91,10 +84,12 @@ public class EditingModalGraphMouseEx<V extends INode, E extends IArc> extends A
 		rotatingPlugin = new RotatingGraphMousePlugin();
 		shearingPlugin = new ShearingGraphMousePlugin();
 
-		editingPlugin = new EditingGraphMousePluginEx<V, E>(engine.getGraphEditor(), vertexFactory, edgeFactory);
-		labelEditingPlugin = new LabelEditingGraphMousePlugin<V, E>();
+        labelEditingPlugin = new LabelEditingGraphMousePlugin<V, E>();
+        editingPlugin = new EditingGraphMousePluginEx<V, E>(engine, vertexFactory, edgeFactory);
 
-		
+        popupPlugin = new PetrinetPopupMousePlugin(engine);
+
+        add(popupPlugin);
 		add(scalingPlugin);
 		setMode(Mode.EDITING);
 	}
@@ -181,18 +176,18 @@ public class EditingModalGraphMouseEx<V extends INode, E extends IArc> extends A
 		private char t = 't';
 		private char p = 'p';
 		private char e = 'e';
-		private char a = 'a';
+        private char a = 'a';
+
 		protected ModalGraphMouse graphMouse;
 
 		public ModeKeyAdapter(ModalGraphMouse graphMouse) {
 			this.graphMouse = graphMouse;
 		}
 
-		public ModeKeyAdapter(char t, char p, char e, char a, ModalGraphMouse graphMouse) {
+		public ModeKeyAdapter(char t, char p, char e, ModalGraphMouse graphMouse) {
 			this.t = t;
 			this.p = p;
 			this.e = e;
-			this.a = a;
 			this.graphMouse = graphMouse;
 		}
 
@@ -209,7 +204,9 @@ public class EditingModalGraphMouseEx<V extends INode, E extends IArc> extends A
 				((Component) event.getSource()).setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 				graphMouse.setMode(Mode.EDITING);
 			}
-
+            else if (keyChar == a) {
+                graphMouse.setMode(Mode.ANNOTATING);
+            }
 		}
 	}
 

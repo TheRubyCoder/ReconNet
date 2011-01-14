@@ -29,14 +29,14 @@ import petrinetze.impl.Petrinet;
  */
 public class MorphismTest {
 
-	public static IPetrinet fromPn;
-    public static IPetrinet toPn;
+	private static IPetrinet fromPn;
+    private static IPetrinet toPn;
     
     private static IPlace[] from_p, to_p;
     private static ITransition[] from_t, to_t;
     private static IArc[] from_a, to_a;
     
-    private static IMorphism testObject;
+    private IMorphism testObject;
     
     private static Map<IPlace, IPlace> expectedPlaceMap;
     private static Map<ITransition, ITransition> expectedTransitionMap;
@@ -61,9 +61,6 @@ public class MorphismTest {
     	setupExpectedResults();
     	
     	testObject = MorphismFactory.createMorphism(fromPn, toPn);
-    	
-    	
-
     }
 
     @After

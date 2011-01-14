@@ -178,7 +178,7 @@ public class Transition implements ITransition {
 
 		for (IArc arc : endArcs) {
 			IPlace p = (IPlace) arc.getStart();
-			pre.put(new Integer(p.getId()), new Integer(arc.getMark()));
+			pre.put(Integer.valueOf(p.getId()), Integer.valueOf(arc.getMark()));
 		}
 
         return pre;
@@ -193,7 +193,7 @@ public class Transition implements ITransition {
 
 		for (IArc arc : startArcs) {
 			IPlace p = (IPlace) arc.getEnd();
-			post.put(new Integer(p.getId()), new Integer(arc.getMark()));
+			post.put(Integer.valueOf(p.getId()), Integer.valueOf(arc.getMark()));
 		}
 
         return post;
@@ -207,12 +207,24 @@ public class Transition implements ITransition {
 		return endArcs;
 	}
 
-
     boolean removeStartArc(IArc arc) {
         return startArcs.remove(arc);
     }
 
     boolean removeEndArc(IArc arc) {
         return endArcs.remove(arc);
+    }
+
+    @Override
+    public boolean isActivated() {
+        // TODO aus Petrinet übernommen - prüfen!
+        for (IArc a : getEndArcs()) {
+			IPlace p = (IPlace) a.getStart();
+
+			if (p.getMark() < a.getMark()) {
+				return false;
+			}
+		}
+		return true;
     }
 }

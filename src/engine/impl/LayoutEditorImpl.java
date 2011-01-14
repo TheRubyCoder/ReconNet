@@ -2,6 +2,7 @@ package engine.impl;
 
 import java.awt.geom.Point2D;
 
+import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import petrinetze.IArc;
 import petrinetze.INode;
 import edu.uci.ics.jung.visualization.VisualizationViewer;

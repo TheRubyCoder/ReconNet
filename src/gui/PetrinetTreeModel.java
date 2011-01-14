@@ -1,15 +1,13 @@
 package gui;
 
+import engine.Engine;
 import petrinetze.IPetrinet;
-import petrinetze.impl.Petrinet;
 import transformation.IRule;
-import transformation.Rule;
 
-import javax.swing.*;
-import javax.swing.event.TreeModelListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -75,14 +73,47 @@ public class PetrinetTreeModel extends DefaultTreeModel {
     }
 
     static class RootNode extends DefaultMutableTreeNode {
+
         RootNode() {
             super("Petrinetze", true);
         }
 
-        public PetrinetNode addPetrinet(String name, IPetrinet petrinet) {
-            final PetrinetNode node = new PetrinetNode(name, petrinet);
+        public PetrinetNode addPetrinet(String name, Engine engine) {
+            final PetrinetNode node = new PetrinetNode(name, engine);
             add(node);
             return node;
+        }
+
+        @Override
+        public boolean isRoot() {
+            return true;
+        }
+    }
+
+    static class RulesNode extends DefaultMutableTreeNode {
+
+        RulesNode() {
+            super("Rules");
+        }
+
+        @Override
+        public boolean isLeaf() {
+            return false;
+        }
+
+        @Override
+        public PetrinetNode getParent() {
+            return (PetrinetNode)super.getParent();
+        }
+
+        public List<IRule> getRules() {
+            final List<IRule> rules = new ArrayList<IRule>(children.size());
+
+            for (Object c : children) {
+                rules.add(((RuleNode)c).getRule());
+            }
+
+            return rules;
         }
     }
 
@@ -90,14 +121,9 @@ public class PetrinetTreeModel extends DefaultTreeModel {
 
         private final DefaultMutableTreeNode rulesNode;
 
-        PetrinetNode(String name, IPetrinet petrinet) {
-            super(new Named<IPetrinet>(name, petrinet), true);
-            rulesNode = new DefaultMutableTreeNode("Regeln") {
-                @Override
-                public boolean isLeaf() {
-                    return false;
-                }
-            };
+        PetrinetNode(String name, Engine engine) {
+            super(new Named<Engine>(name, engine), true);
+            rulesNode = new RulesNode();
             add(rulesNode);
         }
 
@@ -109,6 +135,14 @@ public class PetrinetTreeModel extends DefaultTreeModel {
         public boolean isLeaf() {
             return false;
         }
+
+        public Engine getEngine() {
+            return ((Engine)getUserObject());
+        }
+
+        public IPetrinet getPetrinet() {
+            return getEngine().getNet();
+        }
     }
 
     static class RuleNode extends DefaultMutableTreeNode {
@@ -118,9 +152,14 @@ public class PetrinetTreeModel extends DefaultTreeModel {
         private final IRule rule;
 
         RuleNode(String name, IRule rule) {
-            super(new Named<IRule>(name,rule), false);
+            super(new Named<IRule>(name,rule), true);
             this.name = name;
             this.rule = rule;
+        }
+
+        @Override
+        public RulesNode getParent() {
+            return (RulesNode) super.getParent();
         }
 
         public String getName() {
@@ -137,53 +176,22 @@ public class PetrinetTreeModel extends DefaultTreeModel {
         }
     }
 
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                final PetrinetTreeModel model = new PetrinetTreeModel();
-
-                final PetrinetNode n1 = model.addPetrinet("Untitled 1", new Petrinet());
-                final PetrinetNode n2 = model.addPetrinet("Wecker", new Petrinet());
-                final PetrinetNode n3 = model.addPetrinet("TV", new Petrinet());
-
-                n1.addRule("Regel 1", new Rule());
-
-                final JTree tree = new JTree(model);
-                final JFrame f = new JFrame();
-
-                f.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                f.setContentPane(new JScrollPane(tree));
-                f.pack();
-                f.setLocationRelativeTo(null);
-                f.setVisible(true);
-
-                tree.addTreeSelectionListener(new TreeSelectionListener() {
-                    @Override
-                    public void valueChanged(TreeSelectionEvent e) {
-                        System.out.println(e.getNewLeadSelectionPath().getLastPathComponent());
-                    }
-                });
-            }
-        });
-    }
-
     public PetrinetTreeModel(RootNode root) {
-        super(root);
+        super(root, false);
     }
 
     public PetrinetTreeModel() {
         this(new RootNode());
     }
 
-    public PetrinetNode addPetrinet(String name, IPetrinet petrinet) {
-        return getRoot().addPetrinet(name, petrinet);
+    public PetrinetNode addPetrinet(String name, Engine engine) {
+        PetrinetNode node = getRoot().addPetrinet(name, engine);
+        nodeChanged(root);
+        return node;
     }
 
     @Override
     public RootNode getRoot() {
-        return (RootNode)super.getRoot();
+        return (RootNode)root;
     }
 }

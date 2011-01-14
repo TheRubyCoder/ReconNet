@@ -1,6 +1,6 @@
 package gui;
 
-import engine.GraphEditor.CreateMode;
+import engine.EditMode;
 import engine.Simulation;
 import engine.StepListener;
 import java.util.HashSet;
@@ -367,11 +367,11 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     }//GEN-LAST:event_newMenuItemActionPerformed
 
     private void toggleButtonPlaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleButtonPlaceActionPerformed
-        projects.setCreateMode(CreateMode.PLACE);
+        projects.setCreateMode(EditMode.ADD_PLACE);
     }//GEN-LAST:event_toggleButtonPlaceActionPerformed
 
     private void toggleButtonTransitionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleButtonTransitionActionPerformed
-        projects.setCreateMode(CreateMode.TRANSITION);
+        projects.setCreateMode(EditMode.ADD_TRANSITION);
     }//GEN-LAST:event_toggleButtonTransitionActionPerformed
 
     private void buttonStepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStepActionPerformed

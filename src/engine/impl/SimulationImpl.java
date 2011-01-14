@@ -4,6 +4,9 @@ import engine.Simulation;
 import engine.StepListener;
 import petrinetze.ITransition;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -23,6 +26,18 @@ class SimulationImpl implements Simulation {
     private final EngineContext context;
 
     private final Logger logger = Logger.getLogger(SimulationImpl.class.getName());
+
+    private Timer timer = new Timer(1500, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (context.getPetrinet().getActivatedTransitions().isEmpty()) {
+                stop();
+            }
+            else {
+                step();
+            }
+        }
+    });
 
     SimulationImpl(EngineContext context) {
         this.context = context;
@@ -44,7 +59,9 @@ class SimulationImpl implements Simulation {
         if (logger.isLoggable(Level.FINE)) {
             logger.log(Level.FINE, "Starting simulation with delay of {0}ms.", delay);
         }
-        throw new UnsupportedOperationException("Not implemented");
+        timer.setDelay((int)delay);
+        timer.start();
+        fireStarted();
     }
 
     @Override
@@ -52,7 +69,8 @@ class SimulationImpl implements Simulation {
         if (logger.isLoggable(Level.FINE)) {
             logger.log(Level.FINE, "Stopping simulation.");
         }
-        throw new UnsupportedOperationException("Not implemented");
+        timer.stop();
+        fireStopped();
     }
 
     @Override
@@ -72,7 +90,7 @@ class SimulationImpl implements Simulation {
     }
 
     public boolean isRunning() {
-        throw new UnsupportedOperationException("Not implemented");
+        return timer.isRunning();
     }
 
     /**

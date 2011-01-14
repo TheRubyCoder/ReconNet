@@ -5,7 +5,7 @@
 
 package gui;
 
-import engine.GraphEditor.CreateMode;
+import engine.EditMode;
 import gui.PetrinetTreeModel.PetrinetNode;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +33,9 @@ public class Projects {
         return null;
     }
 
-    public void setCreateMode(CreateMode mode){
+    public void setCreateMode(EditMode mode){
         for(Project pro : projects){
-            pro.getEngine().getGraphEditor().setCreateMode(mode);
+            pro.getEngine().getGraphEditor().setEditMode(mode);
         }
     }
 
@@ -63,7 +63,7 @@ public class Projects {
     public PetrinetTreeModel getPetrinetTreeModel(){
         PetrinetTreeModel model = new PetrinetTreeModel();
         for(Project pro : projects){
-            PetrinetNode n = model.addPetrinet(pro.getName(), pro.getPetrinet());
+            PetrinetNode n = model.addPetrinet(pro.getName(), pro.getEngine());
             for(String name :pro.getRules().keySet()){
                 n.addRule(name, pro.getRules().get(name));
             }

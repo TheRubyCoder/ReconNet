@@ -14,6 +14,7 @@ import java.awt.geom.Point2D;
 
 import javax.swing.JComponent;
 
+import engine.Engine;
 import org.apache.commons.collections15.Factory;
 
 import petrinetze.IArc;
@@ -36,14 +37,13 @@ import engine.GraphEditor;
 public class EditingGraphMousePluginEx<V extends INode, E extends IArc> extends EditingGraphMousePlugin<V, E> {
 
 
-	private GraphEditor graphEditor;
+	private Engine engine;
 
-	public EditingGraphMousePluginEx(GraphEditor graphEditor, Factory<V> vertexFactory, Factory<E> edgeFactory) {
+	public EditingGraphMousePluginEx(Engine engine, Factory<V> vertexFactory, Factory<E> edgeFactory) {
 		super(MouseEvent.BUTTON1_MASK, vertexFactory, edgeFactory);
-		this.graphEditor = graphEditor;
+		this.engine = engine;
+        this.edgeIsDirected = EdgeType.DIRECTED;
 	}
-
-
 
 	/**
 	 * If the mouse is pressed in an empty area, create a new vertex there. If
@@ -56,44 +56,28 @@ public class EditingGraphMousePluginEx<V extends INode, E extends IArc> extends 
 			final VisualizationViewer<V, E> vv = (VisualizationViewer<V, E>) e.getSource();
 			final Point2D p = e.getPoint();
 			GraphElementAccessor<V, E> pickSupport = vv.getPickSupport();
-			if (pickSupport != null) {
-				Graph<V, E> graph = vv.getModel().getGraphLayout().getGraph();
-				// set default edge type
-				if (graph instanceof DirectedGraph) {
-					edgeIsDirected = EdgeType.DIRECTED;
-				} else {
-					edgeIsDirected = EdgeType.UNDIRECTED;
-				}
 
+			if (pickSupport != null) {
 				final V vertex = pickSupport.getVertex(vv.getModel().getGraphLayout(), p.getX(), p.getY());
 				if (vertex != null) { // get ready to make an edge
 					startVertex = vertex;
 					down = e.getPoint();
 					transformEdgeShape(down, down);
 					vv.addPostRenderPaintable(edgePaintable);
-					if ((e.getModifiers() & MouseEvent.SHIFT_MASK) != 0
-							&& vv.getModel().getGraphLayout().getGraph() instanceof UndirectedGraph == false) {
-						edgeIsDirected = EdgeType.DIRECTED;
-					}
-					if (edgeIsDirected == EdgeType.DIRECTED) {
-						transformArrowShape(down, e.getPoint());
-						vv.addPostRenderPaintable(arrowPaintable);
-					}
+
+                    transformArrowShape(down, e.getPoint());
+                    vv.addPostRenderPaintable(arrowPaintable);
 				} else { // make a new vertex
+                    final Point2D location = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(p);
 
-//					V newVertex = vertexFactory.create();
-//					Layout<V, E> layout = vv.getModel().getGraphLayout();
-//					graph.addVertex(newVertex);
-//					layout.setLocation(newVertex,
-//							vv.getRenderContext().getMultiLayerTransformer().inverseTransform(e.getPoint()));				}
-
-					//TODO changed code
-					if(graphEditor.getCreateMode() == GraphEditor.CreateMode.PLACE) {
-						graphEditor.createPlace(vv.getRenderContext().getMultiLayerTransformer().inverseTransform(e.getPoint()));
-					}
-					else {
-						graphEditor.createTransition(vv.getRenderContext().getMultiLayerTransformer().inverseTransform(e.getPoint()));
-					}
+                    switch (engine.getGraphEditor().getEditMode()) {
+                        case ADD_PLACE:
+                            engine.getGraphEditor().createPlace(location);
+                            break;
+                        case ADD_TRANSITION:
+                            engine.getGraphEditor().createTransition(location);
+                            break;
+                    }
 				}
 
 			}
@@ -121,7 +105,7 @@ public class EditingGraphMousePluginEx<V extends INode, E extends IArc> extends 
 					//TODO changed code
 					if(startVertex instanceof ITransition && vertex instanceof IPlace
 							|| vertex instanceof ITransition && startVertex instanceof IPlace) {
-						graphEditor.createArc(startVertex, vertex);
+						engine.getGraphEditor().createArc(startVertex, vertex);
 					}					
 				}
 			}

@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.SoftBevelBorder;
 
+import engine.EditMode;
 import org.apache.commons.collections15.Transformer;
 
 import petrinetze.IArc;
@@ -30,7 +31,7 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import engine.Engine;
 import engine.GraphEditor;
 import engine.impl.ctrl.EditingModalGraphMouseEx;
-import engine.impl.mock.Petrinet;
+import petrinetze.impl.Petrinet;
 
 public class Test {
 
@@ -58,10 +59,7 @@ public class Test {
 
 				BufferedImage pi = new BufferedImage(s, s, BufferedImage.TYPE_4BYTE_ABGR);
 
-				Graphics2D g = null;
-
-
-				g = pi.createGraphics();
+				Graphics2D g = pi.createGraphics();
 				g.setColor(Color.BLUE);
 				g.fillOval(0, 0, s, s);
 				g.dispose();
@@ -108,20 +106,20 @@ public class Test {
     	List<JComponent> controlElements = new ArrayList<JComponent>();
 
     	controlElements.add(cb("FRLayout", new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				engine.getLayoutEditor().setLayout(Layout.FRLayout);
-				engine.getLayoutEditor().apply(vv);
-				System.out.println("FRLayout");
-			}
-		}));
+            public void actionPerformed(ActionEvent e) {
+                engine.getLayoutEditor().setLayout(Layout.FRLayout);
+                engine.getLayoutEditor().apply(vv);
+                System.out.println("FRLayout");
+            }
+        }));
 
     	controlElements.add(cb("KKLayout", new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				engine.getLayoutEditor().setLayout(Layout.KKLayout);
-				System.out.println("KKLayout");
-				engine.getLayoutEditor().apply(vv);
-			}
-		}));
+            public void actionPerformed(ActionEvent e) {
+                engine.getLayoutEditor().setLayout(Layout.KKLayout);
+                System.out.println("KKLayout");
+                engine.getLayoutEditor().apply(vv);
+            }
+        }));
 
     	controlElements.add(cb("DoLayout", new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -131,13 +129,13 @@ public class Test {
 
     	controlElements.add(cb("Place", new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				engine.getGraphEditor().setCreateMode(GraphEditor.CreateMode.PLACE);
+				engine.getGraphEditor().setEditMode(EditMode.ADD_PLACE);
 			}
 		}));
 
     	controlElements.add(cb("Transition", new ActionListener() {
     		public void actionPerformed(ActionEvent e) {
-    			engine.getGraphEditor().setCreateMode(GraphEditor.CreateMode.TRANSITION);
+    			engine.getGraphEditor().setEditMode(EditMode.ADD_TRANSITION);
     		}
     	}));
 
@@ -170,11 +168,11 @@ public class Test {
     	frame.pack();
     	EventQueue.invokeLater(new Runnable() {
 
-			@Override
-			public void run() {
-				frame.setVisible(true);
-			}
-		});
+            @Override
+            public void run() {
+                frame.setVisible(true);
+            }
+        });
 
 
 	}

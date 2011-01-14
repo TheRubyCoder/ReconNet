@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package transformation.test;
+package transformation;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -95,7 +95,7 @@ public class ITransformationTest {
         fail("The test case is a prototype.");
     }
 
-    public class ITransformationImpl implements ITransformation {
+    public static class ITransformationImpl implements ITransformation {
 
         public IRule rule() {
             return null;

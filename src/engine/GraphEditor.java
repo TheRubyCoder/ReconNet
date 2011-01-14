@@ -16,13 +16,9 @@ import petrinetze.ITransition;
  */
 public interface GraphEditor {
 
-    public enum CreateMode{
-        TRANSITION, PLACE;
-    };
+    EditMode getEditMode();
 
-    void setCreateMode(CreateMode mode);
-
-    CreateMode getCreateMode();
+    void setEditMode(EditMode mode);
 
     /**
      * Erzeugen einer Stelle an angegebener Position.
@@ -42,8 +38,6 @@ public interface GraphEditor {
      */
     ITransition createTransition(Point2D location);
 
-
-
     /**
      * Erzeugen einer Kante zwischen Transition und Stelle.
      *
@@ -62,7 +56,7 @@ public interface GraphEditor {
      *
      * @param nodes die zu entfernenden Knoten
      */
-    void remove(Set<INode> nodes);
+    void remove(Set<? extends INode> nodes);
 
     /**
      * Gibt das JPanel zum Anzeigen des Graphen zurück

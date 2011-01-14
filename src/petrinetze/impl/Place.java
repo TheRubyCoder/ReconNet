@@ -148,12 +148,9 @@ public class Place implements IPlace {
 	public List<IArc> getStartArcs() {
 		return startArcs;
 	}
+
 	@Override
 	public List<IArc> getEndArcs() {
 		return endArcs;
 	}
-
-	
-	
-	
 }

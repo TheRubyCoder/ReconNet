@@ -24,7 +24,7 @@ import petrinetze.impl.RenewCount;
  */
 public class TransformationTest {
 
-    private Rule rule1;
+    // private Rule rule1;
 
     public TransformationTest() {
     }
@@ -59,7 +59,7 @@ public class TransformationTest {
         rule1.fromKtoR(p5);
         IPlace p6 = rule1.K().createPlace("Wecker aus");
         rule1.fromKtoL(p6);
-        ITransition t1 = rule1.K().createTransition("", new RenewCount());
+        ITransition t1 = rule1.K().createTransition("", Renews.COUNT);
         rule1.fromKtoL(t1);
         IArc arc = rule1.K().createArc("");
         arc.setStart(p1);
@@ -69,7 +69,7 @@ public class TransformationTest {
         arc.setStart(t1);
         arc.setEnd(p4);
         rule1.fromKtoL(arc);
-        ITransition t2 = rule1.K().createTransition("", new RenewCount());
+        ITransition t2 = rule1.K().createTransition("", Renews.COUNT);
         rule1.fromKtoL(t2);
         arc = rule1.K().createArc("");
         arc.setStart(p3);
@@ -79,7 +79,7 @@ public class TransformationTest {
         arc.setStart(t2);
         arc.setEnd(p6);
         rule1.fromKtoL(arc);
-        ITransition t3 = rule1.K().createTransition("", new RenewCount());
+        ITransition t3 = rule1.K().createTransition("", Renews.COUNT);
         rule1.fromKtoR(t3);
         arc = rule1.K().createArc("");
         arc.setStart(p2);
@@ -89,7 +89,7 @@ public class TransformationTest {
         arc.setStart(t3);
         arc.setEnd(p4);
         rule1.fromKtoR(arc);
-        ITransition t4 = rule1.K().createTransition("", new RenewCount());
+        ITransition t4 = rule1.K().createTransition("", Renews.COUNT);
         rule1.fromKtoR(t4);
         arc = rule1.K().createArc("");
         arc.setStart(p3);

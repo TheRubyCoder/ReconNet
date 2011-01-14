@@ -1,5 +1,7 @@
 package engine.impl;
 
+import engine.EditMode;
+import engine.UIEditor;
 import petrinetze.IArc;
 import petrinetze.INode;
 import petrinetze.IPetrinet;
@@ -8,6 +10,9 @@ import edu.uci.ics.jung.algorithms.layout.KKLayout;
 import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import engine.Engine;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,6 +24,9 @@ import engine.Engine;
 class EngineContext {
 
 
+    public static final String PROPERTY_EDIT_MODE = "editMode";
+
+    public static final String PROPERTY_LAYOUT= "layout";
 
     private IPetrinet petrinet;
 
@@ -26,14 +34,21 @@ class EngineContext {
 
     private AbstractLayout<INode, IArc> layout = new KKLayout<INode,IArc>(graph);
 
+    private transient final PropertyChangeSupport pcs;
+
+    private EditMode editMode;
+
+    private final UIEditorImpl uiEditor;
 
 
     public EngineContext(IPetrinet petrinet) {
         this.petrinet = petrinet;
 
-        // TODO hier Graph aufbauen!
-        // Dafür muss allerdings das Petrinetz zuerst die Elemente bereitstellen...
+        this.uiEditor = new UIEditorImpl();
+
         createGraph();
+
+        pcs = new PropertyChangeSupport(this);
     }
 
 	private void createGraph() {
@@ -47,9 +62,6 @@ class EngineContext {
 
     	for(IArc edge : petrinet.getAllArcs())
     		graph.addEdge(edge, edge.getStart(), edge.getEnd());
-
-
-
 	}
 
 	public IPetrinet getPetrinet() {
@@ -65,8 +77,42 @@ class EngineContext {
     }
 
 	public void setLayout(AbstractLayout<INode, IArc> layout) {
+        final AbstractLayout old = this.layout;
 		this.layout = layout;
+        pcs.firePropertyChange(PROPERTY_LAYOUT, old, layout);
 	}
 
+    public EditMode getEditMode() {
+        return editMode;
+    }
 
+    public void setEditMode(EditMode editMode) {
+        final EditMode old = this.editMode;
+        this.editMode = editMode;
+        pcs.firePropertyChange(PROPERTY_EDIT_MODE, old, editMode);
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        pcs.removePropertyChangeListener(listener);
+    }
+
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(propertyName, listener);
+    }
+
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        pcs.removePropertyChangeListener(propertyName, listener);
+    }
+
+    public boolean hasListeners(String propertyName) {
+        return pcs.hasListeners(propertyName);
+    }
+
+    public UIEditorImpl getUIEditor() {
+        return uiEditor;
+    }
 }

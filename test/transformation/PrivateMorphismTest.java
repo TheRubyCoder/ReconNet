@@ -54,30 +54,27 @@ public class PrivateMorphismTest {
 				this.transitions = transitions;
 			}
 
+            @Override
+            public boolean equals(Object o) {
+                if (this == o) return true;
+                if (o == null || getClass() != o.getClass()) return false;
 
-			@Override
-			public boolean equals(Object obj) {
-				if (this == obj)
-					return true;
-				if (obj == null)
-					return false;
-				if (getClass() != obj.getClass())
-					return false;
-				Container other = (Container) obj;
-				if (places == null) {
-					if (other.places != null)
-						return false;
-				} else if (!places.equals(other.places))
-					return false;
-				if (transitions == null) {
-					if (other.transitions != null)
-						return false;
-				} else if (!transitions.equals(other.transitions))
-					return false;
-				return true;
-			}
+                Container container = (Container) o;
 
-		}
+                if (places != null ? !places.equals(container.places) : container.places != null) return false;
+                if (transitions != null ? !transitions.equals(container.transitions) : container.transitions != null)
+                    return false;
+
+                return true;
+            }
+
+            @Override
+            public int hashCode() {
+                int result = places != null ? places.hashCode() : 0;
+                result = 31 * result + (transitions != null ? transitions.hashCode() : 0);
+                return result;
+            }
+        }
 
 		List<Container> results = new LinkedList<Container>();
 

@@ -1,20 +1,17 @@
 package transformation;
 
 
-interface Matrix {
+public interface Matrix {
 
-
-	public int getNumRows();
+	int getNumRows();
 	
 	
-	public int getNumCols();
+	int getNumCols();
 	
 	
-	public int get(int row, int col);
+	int get(int row, int col);
 
 
-	public void set(int row, int col, int value);
-	
-
+	void set(int row, int col, int value);
 
 }

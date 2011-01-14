@@ -1,14 +1,15 @@
 package engine.impl;
 
 import java.awt.geom.Point2D;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.Set;
 
 import javax.swing.JPanel;
 
-import petrinetze.IArc;
-import petrinetze.INode;
-import petrinetze.IPlace;
-import petrinetze.ITransition;
+import engine.EditMode;
+import org.apache.commons.collections15.Transformer;
+import petrinetze.*;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import engine.Engine;
 import engine.GraphEditor;
@@ -23,19 +24,23 @@ import engine.GraphEditor;
 class GraphEditorImpl implements GraphEditor {
 
     private final EngineContext context;
-    private CreateMode createMode = CreateMode.PLACE;
+
     private GraphPanel graphPanel;
+
+    public static final String PROPERTY_EDIT_MODE = "editMode";
+
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
 	public GraphEditorImpl(EngineContext context, Engine engine) {
         this.context = context;
-
         graphPanel = new GraphPanel(engine, context);
-
     }
 
-    private <T extends INode> T initNode(T node, Point2D location) {
+    private <T extends INode> T initNode(T node, final Point2D location) {
         context.getGraph().addVertex(node);
-        context.getLayout().setLocation(node, location);
+        System.out.println("in: " + location);
+        context.getLayout().setLocation(node, location.getX(), location.getY());
+        System.out.println("out: " + context.getLayout().getX(node) + "," + context.getLayout().getY(node));
         return node;
     }
 
@@ -47,23 +52,18 @@ class GraphEditorImpl implements GraphEditor {
     public ITransition createTransition(Point2D location) {
     	System.out.println(String.format("createTransition(%s)",location));
     	//TODO IRenew durchreichen
-        return initNode(context.getPetrinet().createTransition("untitled", null), location);
+        return initNode(context.getPetrinet().createTransition("untitled", Renews.IDENTITY), location);
     }
 
     public IArc createArc(INode from, INode to) {
-    	try {
-    		System.out.println(String.format("createArc(%s, %s)",from, to));
-    		IArc arc = context.getPetrinet().createArc("", from, to);
-    		context.getGraph().addEdge(arc, from, to, EdgeType.DIRECTED);
-    		return arc;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
+        System.out.println(String.format("createArc(%s, %s)",from, to));
+        IArc arc = context.getPetrinet().createArc("", from, to);
+        context.getGraph().addEdge(arc, from, to, EdgeType.DIRECTED);
+        return arc;
     }
 
 
-    public void remove(Set<INode> nodes) {
+    public void remove(Set<? extends INode> nodes) {
         for (INode node : nodes) {
             // TODO besser nur aus Petrinet l�schen und dann bei Listener-Callback aus Graph entfernen?
             if (node instanceof IArc) {
@@ -83,26 +83,39 @@ class GraphEditorImpl implements GraphEditor {
         }
     }
 
-    /**
-     * @return den gewählten createMode;
-     */
-    public CreateMode getCreateMode() {
-		return createMode;
-	}
+    @Override
+    public EditMode getEditMode() {
+        return context.getEditMode();
+    }
 
-    /**
-     * Setzt den gegebenen createMode.
-     * Hiervon ist abhängig ob beim Klicken in einen leeren Bereich des Graphenpannels
-     * im Editmode eine Transition oder ein Place erzeugt wird.
-     */
-	public void setCreateMode(CreateMode createMode) {
-		if(createMode == null) throw new IllegalArgumentException("createMode must not be null");
-		this.createMode = createMode;
-	}
+    @Override
+    public void setEditMode(EditMode editMode) {
+        if (editMode == null) throw new IllegalArgumentException("EditMode must not be null");
+        context.setEditMode(editMode);
+    }
 
-	@Override
+    @Override
 	public JPanel getGraphPanel() {
 		return graphPanel;
 	}
 
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        pcs.removePropertyChangeListener(listener);
+    }
+
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(propertyName, listener);
+    }
+
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        pcs.removePropertyChangeListener(propertyName, listener);
+    }
+
+    public boolean hasListeners(String propertyName) {
+        return pcs.hasListeners(propertyName);
+    }
 }

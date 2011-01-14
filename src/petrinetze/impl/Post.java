@@ -4,25 +4,20 @@ import java.util.Arrays;
 
 import petrinetze.IPost;
 
-public class Post implements IPost {
+class Post implements IPost {
 
-	private int [][] post;
-	private int []tIds;
-	private int []pIds;
+	private int[][] post;
+
+    private int[] tIds;
+
+    private int[] pIds;
 	
-	public Post (int[][] post, int[] pId, int[] tId) {
+	Post (int[][] post, int[] pId, int[] tId) {
 		this.pIds = pId;
 		this.tIds = tId;
 		this.post = post;
-		
-		
 	}
 	
-//	@Override
-//	public int[][] getPreAsArray() {
-//		return this.post;
-//	}
-
 	@Override
 	public int[] getTransitionIds() {
 		return this.tIds;
@@ -38,24 +33,23 @@ public class Post implements IPost {
 	 */
 	@Override
 	public String toString() {
-		String output = "\n";
-		
-			for (int i = 0; i < pIds.length; i++) {
-				for (int z = 0; z < tIds.length; z++) {
-					output += " [" + post[i][z] + "]";
-				}
-				output += "\n";
-			}
-			
+        final String nl = System.getProperty("line.separator", "\n");
+        StringBuilder sb = new StringBuilder("Post [post=").append(nl);
 
-		return "Post [post=" + output + ", tIds="
-				+ Arrays.toString(tIds) + ", pIds=" + Arrays.toString(pIds)
-				+ "]";
+        for (int i = 0; i < pIds.length; i++) {
+            for (int z = 0; z < tIds.length; z++) {
+                sb.append(" [").append(post[i][z]).append(']');
+            }
+            sb.append(nl);
+        }
+
+		return sb.append(", tIds=").append(Arrays.toString(tIds))
+                 .append(", pIds=").append(Arrays.toString(pIds))
+                .append(']').toString();
 	}
 
 	@Override
 	public int[][] getPostAsArray() {
 		return this.post;
 	}
-
 }

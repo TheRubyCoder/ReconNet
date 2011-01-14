@@ -6,7 +6,5 @@
  * Zusätzlich implementiert sie das Tokenspiel.
  * </p>
  *
- *
- *
  */
 package engine;

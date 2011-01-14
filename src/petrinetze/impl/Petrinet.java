@@ -263,17 +263,18 @@ public class Petrinet implements IPetrinet {
 
 	private Random random = new Random();
 	@Override
-	public Set<INode> fire() 
-	{
+	public Set<INode> fire() {
+        List<ITransition> active = new ArrayList<ITransition>(getActivatedTransitions());
+
+        if (active.isEmpty()) {
+            throw new IllegalStateException("No activated transitions");
+        }
+
 		//We use an iterator here because we do not know, wich indexes are in the set
 		//and this way we will get a random one without knowing its id.
-		Set<ITransition> activated = getActivatedTransitions();
-		int id = random.nextInt(activated.size());
-		Iterator<ITransition> iterator = activated.iterator();
-		for(int i = 0; i < id; i++)
-			iterator.next();
-		
-		return fire(iterator.next().getId());
+		int id = random.nextInt(active.size());
+
+		return fire(active.get(id).getId());
 	}
 	
 	@Override
@@ -317,11 +318,11 @@ public class Petrinet implements IPetrinet {
 			//Findet den Index der Transition in Pre-Matrix (Array)
 			int tmpTransitionId = getIdFromArray(t.getId(), tId);
 			//
-			for (Integer p : prePlaces.keySet()) {
-				int tmpPlaceId = getIdFromArray(p.intValue(), pId);
+			for (Entry<Integer,Integer> e : prePlaces.entrySet()) {
+				int tmpPlaceId = getIdFromArray(e.getKey().intValue(), pId);
 				
 				if (tmpPlaceId >= 0 && tmpTransitionId >= 0) {
-					preValues[tmpPlaceId][tmpTransitionId] = prePlaces.get(p);
+					preValues[tmpPlaceId][tmpTransitionId] = e.getValue().intValue();
 				}
 			}
 		}
@@ -344,8 +345,8 @@ public class Petrinet implements IPetrinet {
 
 	/**
 	 * Initialisiert ein zweidimensionales Array mit Nullen
-	 * @param Groesse der 1. Dimension
-	 * @param Groesse der 2. Dimension
+	 * @param m Groesse der 1. Dimension
+	 * @param n Groesse der 2. Dimension
 	 * @return initialisiertes Array
 	 */
 	private int[][] init(int m, int n) {
@@ -398,11 +399,11 @@ public class Petrinet implements IPetrinet {
 			final Hashtable<Integer, Integer> postPlaces = t.getPost();
 			//Findet den Index der Transition in Post-Matrix (Array)
 			int tmpTransitionId = getIdFromArray(t.getId(), tId);
-			for (Integer p : postPlaces.keySet()) {
-				int tmpPlaceId = getIdFromArray(p.intValue(), pId);
+			for (Entry<Integer,Integer> e : postPlaces.entrySet()) {
+				int tmpPlaceId = getIdFromArray(e.getKey().intValue(), pId);
 				
 				if (tmpPlaceId >= 0 && tmpTransitionId >= 0) {
-					postValues[tmpPlaceId][tmpTransitionId] = postPlaces.get(p);
+					postValues[tmpPlaceId][tmpTransitionId] = e.getValue().intValue();
 				}
 			}
 		}

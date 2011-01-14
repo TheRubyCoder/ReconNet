@@ -15,7 +15,7 @@ import petrinetze.ITransition;
 * @version 1.0
 */
 
-public class Arc implements IArc{
+class Arc implements IArc {
 
 	/**
 	 *  Die maximal mögliche Kantengewichtung.
@@ -51,7 +51,6 @@ public class Arc implements IArc{
 	 */
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
 		return this.name;
 	}
 
@@ -70,7 +69,6 @@ public class Arc implements IArc{
 	public void setName(String name) {
 		this.name = name;
 	}
-
 
 	/* (non-Javadoc)
 	 * @see haw.wp.rcpn.impl.IArc#getMark()
@@ -120,10 +118,10 @@ public class Arc implements IArc{
 		//Jede StartKante registriert sich bei dem entsprechenden
 		//INode als Startkante, damit die Berechnung von Pre und
 		//Post von statten gehen kann.
-		if (start instanceof Place) {
-			((Place) this.start).setStartArcs(this);
+		if (start instanceof IPlace) {
+			((IPlace) this.start).setStartArcs(this);
 		} else {
-			((Transition) this.start).setStartArcs(this);
+			((ITransition) this.start).setStartArcs(this);
 		}
 		petrinet.onEdgeChanged(this, ActionType.changed);
 		
@@ -153,10 +151,10 @@ public class Arc implements IArc{
 		//Jede EndKante registriert sich bei dem entsprechenden
 		//INode als Endkante, damit die Berechnung von Pre und
 		//Post von statten gehen kann.
-		if (end instanceof Place) {
-			((Place) this.end).setEndArcs(this);
+		if (end instanceof IPlace) {
+			((IPlace) this.end).setEndArcs(this);
 		} else {
-			((Transition) this.end).setEndArcs(this);
+			((ITransition) this.end).setEndArcs(this);
 		}
 		this.end = end;
 		petrinet.onEdgeChanged(this, ActionType.changed);
@@ -170,6 +168,4 @@ public class Arc implements IArc{
 		return "Arc [mark=" + mark + ", name=" + name + ", start=" + start
 				+ ", end=" + end + ", id=" + id + "]";
 	}
-
-	
 }

@@ -21,17 +21,17 @@ public interface IPre {
 	 * Senkrecht: Stellen
 	 * Waagerecht: Transitionen 
 	 */
-	public int [][] getPreAsArray ();
+	public int[][] getPreAsArray ();
 	
 	/**
 	 * Die Identifier der Transitionen, die in dem Pre Matrix vorhanden sind. 
 	 * @return Array mit den Ids.
 	 */
-	public int [] getTransitionIds();
+	public int[] getTransitionIds();
 	
 	/**
 	 * Die Identifier der Places, die in dem Pre Matrix vorhanden sind. 
 	 * @return Array mit den Ids.
 	 */
-	public int [] getPlaceIds();
+	public int[] getPlaceIds();
 }
