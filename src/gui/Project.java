@@ -9,16 +9,13 @@ import engine.Engine;
 import engine.EngineFactory;
 import engine.Simulation;
 import engine.StepListener;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.swing.JInternalFrame;
 import javax.swing.JScrollPane;
 import petrinetze.IPetrinet;
 import petrinetze.impl.Petrinet;
 import transformation.IRule;
-import transformation.Rule;
 
 /**
  *

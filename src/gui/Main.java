@@ -7,10 +7,6 @@ package gui;
 
 
 import javax.swing.UIManager;
-import petrinetze.IPlace;
-import petrinetze.ITransition;
-import petrinetze.Renews;
-import petrinetze.impl.Petrinet;
 
 /**
  *

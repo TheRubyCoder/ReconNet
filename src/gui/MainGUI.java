@@ -6,7 +6,6 @@ import engine.StepListener;
 import java.util.HashSet;
 import java.util.Set;
 import javax.swing.JInternalFrame;
-import javax.swing.JScrollPane;
 import petrinetze.IPetrinet;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
@@ -70,7 +69,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     private void startSimulation(){
         Project pro = projects.getProject(jDesktopPane1.getSelectedFrame());
         try{
-            pro.getEngine().getSimulation().start(2);
+            pro.getEngine().getSimulation().start(200);
         }catch(Exception ex){
             Error.create(ex.getMessage());
         }
@@ -144,6 +143,8 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         jDesktopPane1 = new javax.swing.JDesktopPane();
         status = new javax.swing.JLabel();
         progressBar = new javax.swing.JProgressBar();
+        jToolBar1 = new javax.swing.JToolBar();
+        jComboBox1 = new javax.swing.JComboBox();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newMenuItem = new javax.swing.JMenuItem();
@@ -241,6 +242,11 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         status.setText("Status");
         status.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
+        jToolBar1.setRollover(true);
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jToolBar1.add(jComboBox1);
+
         fileMenu.setText("File");
 
         newMenuItem.setText("New");
@@ -322,7 +328,9 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(editToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(playToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(playToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(status)
@@ -335,9 +343,10 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(playToolBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(editToolBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(playToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(editToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE))
@@ -383,7 +392,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     }//GEN-LAST:event_buttonStepsActionPerformed
 
     private void toggleButtonPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleButtonPlayActionPerformed
-        if(toggleButtonPlay.isEnabled()){
+        if(toggleButtonPlay.isSelected()){
             startSimulation();
         }else{
             stopSimulation();
@@ -402,12 +411,14 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     private javax.swing.JToolBar editToolBar;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
+    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JSpinner jSpinner1;
+    private javax.swing.JToolBar jToolBar1;
     private javax.swing.JMenu languageMenu;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem newMenuItem;
