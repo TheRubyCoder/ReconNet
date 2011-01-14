@@ -267,8 +267,9 @@ public class Petrinet implements IPetrinet {
 	{
 		//We use an iterator here because we do not know, wich indexes are in the set
 		//and this way we will get a random one without knowing its id.
-		int id = random.nextInt(transitions.size());
-		Iterator<ITransition> iterator = transitions.iterator();
+		Set<ITransition> activated = getActivatedTransitions();
+		int id = random.nextInt(activated.size());
+		Iterator<ITransition> iterator = activated.iterator();
 		for(int i = 0; i < id; i++)
 			iterator.next();
 		
