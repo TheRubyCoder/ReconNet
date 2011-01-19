@@ -1,10 +1,11 @@
-/*
+/*a
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
 
-package gui;
+package gui.TableModels;
 
+import gui.TableModels.PropertiesTable;
 import petrinetze.IArc;
 
 /**
@@ -13,40 +14,52 @@ import petrinetze.IArc;
  */
 public class ArcTableModel extends PropertiesTable.AbstractModel{
 
-    private ;
+    private String[] names;
+    private Object[] values;
+    private IArc arc;
 
     public ArcTableModel(IArc arc){
         this.arc = arc;
+        names = new String[2];
+        names[0] = "Name";
+        names[1] = "Mark";
+        values = new Object[2];
+        values[0] =  arc.getName();
+        values[1] =  arc.getMark();
     }
 
     @Override
     protected int getPropertyCount() {
-        return 1;
+        return names.length;
     }
 
     @Override
     protected String getPropertyName(int rowIndex) {
-        return "Mark";
+        return names[rowIndex];
     }
 
     @Override
     protected Object getPropertyValue(int rowIndex) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return values[rowIndex];
     }
 
     @Override
     protected void setPropertyValue(int rowIndex, Object value) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if(rowIndex == 0){
+            arc.setName((String)value);
+        }else if(rowIndex == 1){
+            arc.setMark((Integer)value);
+        }
     }
 
     @Override
     protected Class<?> getPropertyClass(int rowIndex) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return values[rowIndex].getClass();
     }
 
     @Override
     protected boolean isWritable(int rowIndex) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return true;
     }
 
 

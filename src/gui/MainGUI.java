@@ -23,7 +23,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
 
     /** Creates new form MainGUI */
     public MainGUI() {
-        projects = new Projects();
+        projects = new Projects(petrinetTree,jDesktopPane1);
         initComponents();
         petrinetTree.setModel(projects.getPetrinetTreeModel());
         initLanguage("de", "DE");
@@ -92,7 +92,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     private void stepXTimesInternal(Project project, int times) {
         final Simulation sim = getActiveProject().getEngine().getSimulation();
 
-        // TODO GUI müsste hier gesperrt werden...
+        // TODO GUI mï¿½sste hier gesperrt werden...
         sim.removeStepListener(this);
         sim.removeStepListener(project);
 
@@ -288,13 +288,10 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         jScrollPane2.setViewportView(jTable1);
@@ -302,14 +299,6 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         status.setText("Status");
         status.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
-<<<<<<< .mine
-=======
-        jToolBar1.setRollover(true);
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
-        jToolBar1.add(jComboBox1);
-
->>>>>>> .r194
         fileMenu.setText("File");
 
         newMenuItem.setText("New");
@@ -412,13 +401,10 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(playToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(editToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)))
+                            .addComponent(playToolBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(editToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()

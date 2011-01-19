@@ -1,4 +1,4 @@
-package gui;
+package gui.TableModels;
 
 import gui.*;
 import javax.swing.*;

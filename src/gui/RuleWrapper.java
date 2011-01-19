@@ -35,9 +35,11 @@ public class RuleWrapper {
         this.frame = createFrame();
     }
 
-    public void updateFrame(){
-        
-    }
+    public IRule getRule(){return rule;}
+
+    public String getName(){return name;}
+    public void setName(String name){this.name = name;}
+
 
     public JInternalFrame createFrame(){
         JInternalFrame internalRuleFrame = new javax.swing.JInternalFrame();
@@ -55,20 +57,22 @@ public class RuleWrapper {
         internalRuleFrame.setTitle(this.name);
         internalRuleFrame.setVisible(true);
 
-        ruleLeftPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("L"));
+        //ruleLeftPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("L"));
+        //ruleGluePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("K"));
+        //ruleRightPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("R"));
 
-        javax.swing.GroupLayout ruleLeftPanelLayout = new javax.swing.GroupLayout(ruleLeftPanel);
-        ruleLeftPanel.setLayout(ruleLeftPanelLayout);
-        ruleLeftPanelLayout.setHorizontalGroup(
-            ruleLeftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 76, Short.MAX_VALUE)
-        );
-        ruleLeftPanelLayout.setVerticalGroup(
-            ruleLeftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 193, Short.MAX_VALUE)
-        );
+        //javax.swing.GroupLayout ruleLeftPanelLayout = new javax.swing.GroupLayout(ruleLeftPanel);
+        //ruleLeftPanel.setLayout(ruleLeftPanelLayout);
+        //ruleLeftPanelLayout.setHorizontalGroup(
+        //    ruleLeftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        //    .addGap(0, 76, Short.MAX_VALUE)
+        //);
+       // ruleLeftPanelLayout.setVerticalGroup(
+       //     ruleLeftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+       //     .addGap(0, 193, Short.MAX_VALUE)
+       // );
 
-        ruleGluePanel.setBorder(javax.swing.BorderFactory.createTitledBorder("K"));
+        
 
         javax.swing.GroupLayout ruleGluePanelLayout = new javax.swing.GroupLayout(ruleGluePanel);
         ruleGluePanel.setLayout(ruleGluePanelLayout);
@@ -81,7 +85,7 @@ public class RuleWrapper {
             .addGap(0, 193, Short.MAX_VALUE)
         );
 
-        ruleRightPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("R"));
+        
 
         javax.swing.GroupLayout ruleRightPanelLayout = new javax.swing.GroupLayout(ruleRightPanel);
         ruleRightPanel.setLayout(ruleRightPanelLayout);

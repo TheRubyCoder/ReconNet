@@ -3,13 +3,15 @@
  * and open the template in the editor.
  */
 
-package gui;
+package gui.TableModels;
+
+import gui.TableModels.PropertiesTable;
 
 /**
  *
  * @author steffen
  */
-public class TransitionTableModel extends PropertiesTable.AbstractModel{
+public class PlaceTalbeModel extends PropertiesTable.AbstractModel{
 
     @Override
     protected int getPropertyCount() {
