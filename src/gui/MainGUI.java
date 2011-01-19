@@ -3,8 +3,6 @@ package gui;
 import engine.EditMode;
 import engine.Simulation;
 import engine.StepListener;
-import java.util.HashSet;
-import java.util.Set;
 import javax.swing.*;
 
 import petrinetze.IPetrinet;
@@ -12,7 +10,9 @@ import petrinetze.IPlace;
 import petrinetze.ITransition;
 import petrinetze.Renews;
 import petrinetze.impl.Petrinet;
+import petrinetze.impl.RenewCount;
 import transformation.IRule;
+import transformation.Rule;
 
 /*
  * GUI zum anzeigen, bearbeiten und testen von Petrinetzen
@@ -20,12 +20,10 @@ import transformation.IRule;
 public class MainGUI extends javax.swing.JFrame implements StepListener {
 
     private Projects projects;
-    private Set<JInternalFrame> internalFrames;
 
     /** Creates new form MainGUI */
     public MainGUI() {
         projects = new Projects();
-        internalFrames = new HashSet<JInternalFrame>();
         initComponents();
         petrinetTree.setModel(projects.getPetrinetTreeModel());
         initLanguage("de", "DE");
@@ -133,7 +131,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     }
 
     private Project getSelectedProject(){
-        return projects.getProject((String) petrinetTree.getSelectionPath().getPath()[1]);
+        return projects.getProject((String) petrinetTree.getSelectionPath().getPath()[1].toString());
     }
 
     private IRule getSelectedRule(){
@@ -189,13 +187,14 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         jSeparator2 = new javax.swing.JToolBar.Separator();
         toggleButtonPlay = new javax.swing.JToggleButton();
         jDesktopPane1 = new javax.swing.JDesktopPane();
-        status = new javax.swing.JLabel();
         progressBar = new javax.swing.JProgressBar();
-        jToolBar1 = new javax.swing.JToolBar();
-        jComboBox1 = new javax.swing.JComboBox();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        status = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         newMenuItem = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
         openMenuItem = new javax.swing.JMenuItem();
         saveMenuItem = new javax.swing.JMenuItem();
         saveAsMenuItem = new javax.swing.JMenuItem();
@@ -287,14 +286,30 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
 
         jDesktopPane1.setBackground(new java.awt.Color(204, 204, 204));
 
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(jTable1);
+
         status.setText("Status");
         status.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
+<<<<<<< .mine
+=======
         jToolBar1.setRollover(true);
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[]{"Item 1", "Item 2", "Item 3", "Item 4"}));
         jToolBar1.add(jComboBox1);
 
+>>>>>>> .r194
         fileMenu.setText("File");
 
         newMenuItem.setText("New");
@@ -304,6 +319,14 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
             }
         });
         fileMenu.add(newMenuItem);
+
+        jMenuItem1.setText("Add Rule");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        fileMenu.add(jMenuItem1);
 
         openMenuItem.setText("Open");
         fileMenu.add(openMenuItem);
@@ -369,21 +392,19 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jScrollPane2, 0, 0, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE))
+                    .addComponent(status))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(editToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(editToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(playToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(status)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 691, Short.MAX_VALUE)
-                        .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(playToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 180, Short.MAX_VALUE)
+                        .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 776, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -391,17 +412,24 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(playToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(editToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(playToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(editToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(status)
-                    .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(status))
+                .addContainerGap())
         );
 
         pack();
@@ -447,6 +475,16 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         }
     }//GEN-LAST:event_toggleButtonPlayActionPerformed
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        RuleWrapper wrapper = new RuleWrapper("Rule1",creteTestRule());
+
+        
+        JInternalFrame frame = wrapper.createFrame();
+        jDesktopPane1.add(frame);
+        frame.setBounds(40, 20, 360, 250);
+        frame.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem EnglishMenuItem;
     private javax.swing.JButton buttonStep;
@@ -459,14 +497,15 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     private javax.swing.JToolBar editToolBar;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
-    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JDesktopPane jDesktopPane1;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JSpinner jSpinner1;
-    private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JTable jTable1;
     private javax.swing.JMenu languageMenu;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem newMenuItem;
@@ -508,6 +547,31 @@ public IPetrinet getTestPetrinet(){
     petrinet.createArc("", t3, p1);
         return petrinet;
 }
+
+    public IRule creteTestRule(){
+        IRule rule1 = new Rule();
+        //L von r1
+        IPlace p1 = rule1.L().createPlace("Wecker ein");
+        IPlace p2 = rule1.K().createPlace("Wecker ein");
+        p2.setMark(1);
+        IPlace p3 = rule1.K().createPlace("");
+        IPlace p4 = rule1.K().createPlace("");
+        IPlace p5 = rule1.K().createPlace("Wecker aus");
+        IPlace p6 = rule1.L().createPlace("Wecker aus");
+        ITransition t1 = rule1.L().createTransition("", new RenewCount());
+        rule1.L().createArc("", p1, t1);
+        rule1.L().createArc("", t1, rule1.fromKtoL(p4));
+        ITransition t2 = rule1.L().createTransition("", new RenewCount());
+        rule1.L().createArc("", rule1.fromKtoL(p3), t2);
+        rule1.L().createArc("", t2, p6);
+        ITransition t3 = rule1.R().createTransition("", new RenewCount());
+        rule1.R().createArc("", rule1.fromKtoR(p2), t3);
+        rule1.R().createArc("", t3, rule1.fromKtoR(p4));
+        ITransition t4 = rule1.R().createTransition("", new RenewCount());
+        rule1.R().createArc("", rule1.fromKtoR(p3), t4);
+        rule1.R().createArc("", t4, rule1.fromKtoR(p5));
+        return rule1;
+    }
 
     public void stepped(Simulation s) {
     }

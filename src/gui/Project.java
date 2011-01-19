@@ -9,10 +9,15 @@ import engine.Engine;
 import engine.EngineFactory;
 import engine.Simulation;
 import engine.StepListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import javax.swing.JInternalFrame;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import petrinetze.INode;
 import petrinetze.IPetrinet;
 import petrinetze.impl.Petrinet;
 import transformation.IRule;
@@ -28,23 +33,23 @@ public class Project implements StepListener{
     private IPetrinet petrinet;
     private boolean locked;
     private JInternalFrame petrinetFrame;
-    private Map<String,IRule> rules;
-    private Map<IRule,JInternalFrame> ruleFrames;
+    private JTable table;
+    private Map<String,RuleWrapper> rules;
 
-    public Project(String name){
-        this(name,new Petrinet());
+    public Project(String name,JTable table){
+        this(name,new Petrinet(),table);
     }
 
-    public Project(String name,IPetrinet net){
-        this(name,net,new HashMap<String,IRule>());
+    public Project(String name,IPetrinet net,JTable table){
+        this(name,net,new HashMap<String,RuleWrapper>(),table);
     }
 
-    public Project(String name,IPetrinet net, Map<String,IRule> rules){
+    public Project(String name,IPetrinet net, Map<String,RuleWrapper> rules,JTable table){
         this.locked = false;
         this.name = name;
         this.petrinet = net;
         this.rules = rules;
-        this.ruleFrames = new HashMap<IRule,JInternalFrame>();
+        this.table = table;
         this.engine = EngineFactory.newFactory().createEngine(petrinet);
         engine.getSimulation().addStepListener(this);
         this.petrinetFrame = new JInternalFrame();
@@ -53,15 +58,25 @@ public class Project implements StepListener{
         petrinetFrame.setIconifiable(true);
         petrinetFrame.setMaximizable(true);
         petrinetFrame.setResizable(true);
+        engine.getGraphEditor().getGraphPanel().addPropertyChangeListener("pickedNodes", new PropertyChangeListener() {
+
+            public void propertyChange(PropertyChangeEvent evt) {
+                Set<INode> nodes = (Set<INode>) evt.getNewValue();
+            }
+        });
     }
 
     public JInternalFrame getPetrinetFrame(){
         return petrinetFrame;
     }
 
-    public void addRule(String name,IRule r){
-        rules.put(name, r);
+    public JInternalFrame addRule(String name,IRule r){
+        RuleWrapper wrapper = new RuleWrapper(name,r);
+        rules.put(name, wrapper);
+        return wrapper.createFrame();
     }
+
+   
 
     public String getName(){
         return name;
@@ -75,7 +90,7 @@ public class Project implements StepListener{
         return petrinet;
     }
 
-    public Map<String,IRule> getRules(){
+    public Map<String,RuleWrapper> getRules(){
         return rules;
     }
 
