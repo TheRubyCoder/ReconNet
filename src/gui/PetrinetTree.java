@@ -39,9 +39,7 @@ public class PetrinetTree extends JTree {
     }
 
     public void setEditMode(EditMode mode) {
-        for (Engine e : getModel().getPetrinets()) {
-            e.getGraphEditor().setEditMode(mode);
-        }
+        getModel().setEditMode(mode);
     }
 
     PetrinetNode addPetrinet(String name, Engine engine) {

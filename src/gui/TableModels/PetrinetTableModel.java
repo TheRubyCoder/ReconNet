@@ -5,7 +5,8 @@
 
 package gui.TableModels;
 
-import gui.Project;
+import gui.PetrinetTreeModel.*;
+import petrinetze.impl.Petrinet;
 
 /**
  *
@@ -15,14 +16,14 @@ public class PetrinetTableModel extends PropertiesTable.AbstractModel{
 
     private String[] names;
     private Object[] values;
-    private Project project;
+    //private Project project;
 
-    public PetrinetTableModel(Project pro){
-        project = pro;
+    public PetrinetTableModel(Petrinet net,String name){
+       // project = pro;
         names = new String[1];
         names[0] = "Name";
         values = new Object[1];
-        values[0] = project.getName();
+        //values[0] = project.getName();
     }
 
     @Override
@@ -43,7 +44,7 @@ public class PetrinetTableModel extends PropertiesTable.AbstractModel{
     @Override
     protected void setPropertyValue(int rowIndex, Object value) {
         values[rowIndex] = value;
-        project.setName((String)value);
+       // project.setName((String)value);
     }
 
     @Override

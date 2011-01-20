@@ -98,7 +98,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         final Set<JMenuItem> ruleItems = new HashSet<JMenuItem>();
         petrinetsItems.add(menu.add(addPetrinetAction));
         petrinetItems.add(menu.add(showPetrinetAction));
-        rulesItems.add(menu.add(addRuleAction));
+        petrinetItems.add(menu.add(addRuleAction));
         ruleItems.add(menu.add(showRuleAction));
         ruleItems.add(menu.add(transfromPetrinetAction));
 
@@ -224,13 +224,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         fileMenu.setText(I18n.translate("file"));
         openMenuItem.setText(I18n.translate("open"));
         saveMenuItem.setText(I18n.translate("save"));
-        saveAsMenuItem.setText(I18n.translate("saveas"));
         exitMenuItem.setText(I18n.translate("exit"));
-        editMenu.setText(I18n.translate("edit"));
-        cutMenuItem.setText(I18n.translate("cut"));
-        copyMenuItem.setText(I18n.translate("copy"));
-        pasteMenuItem.setText(I18n.translate("paste"));
-        deleteMenuItem.setText(I18n.translate("delete"));
         languageMenu.setText(I18n.translate("language"));
         deutschMenuItem.setText(I18n.translate("german"));
         EnglishMenuItem.setText(I18n.translate("english"));
@@ -266,17 +260,9 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         status = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
-        newMenuItem = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
         openMenuItem = new javax.swing.JMenuItem();
         saveMenuItem = new javax.swing.JMenuItem();
-        saveAsMenuItem = new javax.swing.JMenuItem();
         exitMenuItem = new javax.swing.JMenuItem();
-        editMenu = new javax.swing.JMenu();
-        cutMenuItem = new javax.swing.JMenuItem();
-        copyMenuItem = new javax.swing.JMenuItem();
-        pasteMenuItem = new javax.swing.JMenuItem();
-        deleteMenuItem = new javax.swing.JMenuItem();
         languageMenu = new javax.swing.JMenu();
         deutschMenuItem = new javax.swing.JMenuItem();
         EnglishMenuItem = new javax.swing.JMenuItem();
@@ -372,30 +358,11 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
 
         fileMenu.setText("File");
 
-        newMenuItem.setText("New");
-        newMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                newMenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(newMenuItem);
-
-        jMenuItem1.setText("Add Rule");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
-            }
-        });
-        fileMenu.add(jMenuItem1);
-
         openMenuItem.setText("Open");
         fileMenu.add(openMenuItem);
 
         saveMenuItem.setText("Save");
         fileMenu.add(saveMenuItem);
-
-        saveAsMenuItem.setText("Save As ...");
-        fileMenu.add(saveAsMenuItem);
 
         exitMenuItem.setText("Exit");
         exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
@@ -406,22 +373,6 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         fileMenu.add(exitMenuItem);
 
         menuBar.add(fileMenu);
-
-        editMenu.setText("Edit");
-
-        cutMenuItem.setText("Cut");
-        editMenu.add(cutMenuItem);
-
-        copyMenuItem.setText("Copy");
-        editMenu.add(copyMenuItem);
-
-        pasteMenuItem.setText("Paste");
-        editMenu.add(pasteMenuItem);
-
-        deleteMenuItem.setText("Delete");
-        editMenu.add(deleteMenuItem);
-
-        menuBar.add(editMenu);
 
         languageMenu.setText("Language");
 
@@ -504,10 +455,6 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         initLanguage("en", "US");
     }//GEN-LAST:event_EnglishMenuItemActionPerformed
 
-    private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMenuItemActionPerformed
-       //createProject();
-    }//GEN-LAST:event_newMenuItemActionPerformed
-
     private void toggleButtonPlaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleButtonPlaceActionPerformed
         petrinetTree.setEditMode(EditMode.ADD_PLACE);
     }//GEN-LAST:event_toggleButtonPlaceActionPerformed
@@ -533,28 +480,16 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     }//GEN-LAST:event_toggleButtonPlayActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        RuleWrapper wrapper = new RuleWrapper("Rule1", createTestRule());
-
-        JInternalFrame frame = wrapper.getRuleFrame();
-        desktop.add(frame);
-        frame.setBounds(40, 20, 360, 250);
-        frame.setVisible(true);
-
+    
     }//GEN-LAST:event_jMenuItem1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem EnglishMenuItem;
     private javax.swing.JButton buttonStep;
     private javax.swing.JButton buttonSteps;
-    private javax.swing.JMenuItem copyMenuItem;
-    private javax.swing.JMenuItem cutMenuItem;
-    private javax.swing.JMenuItem deleteMenuItem;
-    private javax.swing.JDesktopPane desktop;
     private javax.swing.JMenuItem deutschMenuItem;
-    private javax.swing.JMenu editMenu;
     private javax.swing.JToolBar editToolBar;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JToolBar.Separator jSeparator1;
@@ -564,18 +499,16 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     private javax.swing.JTable jTable1;
     private javax.swing.JMenu languageMenu;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenuItem newMenuItem;
     private javax.swing.JMenuItem openMenuItem;
-    private javax.swing.JMenuItem pasteMenuItem;
     private javax.swing.ButtonGroup petriTools;
     private javax.swing.JToolBar playToolBar;
     private javax.swing.JProgressBar progressBar;
-    private javax.swing.JMenuItem saveAsMenuItem;
     private javax.swing.JMenuItem saveMenuItem;
     private javax.swing.JLabel status;
     private javax.swing.JToggleButton toggleButtonPlace;
     private javax.swing.JToggleButton toggleButtonPlay;
     private javax.swing.JToggleButton toggleButtonTransition;
+    private javax.swing.JDesktopPane desktop;
     // End of variables declaration//GEN-END:variables
 
     public IPetrinet getTestPetrinet() {
@@ -683,12 +616,23 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
 
         if (input != null) {
             IRule rule = new Rule();
-            RuleWrapper wrapper = new RuleWrapper(input, rule);
+            PetrinetNode node = (PetrinetNode) petrinetTree.getSelectionPath().getLastPathComponent();
+            RuleWrapper wrapper = new RuleWrapper(input, rule,jTable1);
+            node.addRule(input, wrapper);
             JInternalFrame frame = wrapper.getRuleFrame();
             desktop.add(frame);
             frame.setBounds(40, 20, 360, 250);
             frame.setVisible(true);
             frame.requestFocusInWindow();
         }
+    }
+    
+    private void showRule(){
+        RuleNode node = (RuleNode) petrinetTree.getSelectionPath().getLastPathComponent();
+        JInternalFrame frame = node.getWrapper().getRuleFrame();
+        desktop.add(frame);
+        frame.setBounds(40, 20, 360, 250);
+        frame.setVisible(true);
+        frame.requestFocusInWindow();
     }
 }

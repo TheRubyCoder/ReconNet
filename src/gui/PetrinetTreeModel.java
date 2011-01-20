@@ -1,6 +1,7 @@
 package gui;
 
 import com.sun.java.swing.SwingUtilities3;
+import engine.EditMode;
 import engine.Engine;
 import petrinetze.IPetrinet;
 import transformation.IRule;
@@ -95,6 +96,14 @@ public class PetrinetTreeModel extends DefaultTreeModel {
 
             return res;
         }
+        
+        public void setEditMode(EditMode mode){
+            for(Object node : children){
+                if(node instanceof PetrinetNode){
+                    ((PetrinetNode)node).setEditMode(mode);
+                }
+            }
+        }
 
         @Override
         public boolean isRoot() {
@@ -111,6 +120,12 @@ public class PetrinetTreeModel extends DefaultTreeModel {
         @Override
         public boolean isLeaf() {
             return false;
+        }
+        
+        public void setEditMode(EditMode mode){
+            for (Object c : children) {
+                ((RuleNode)c).setEditMode(mode);
+            }
         }
 
         @Override
@@ -141,13 +156,17 @@ public class PetrinetTreeModel extends DefaultTreeModel {
             add(rulesNode);
         }
 
-        public void addRule(String name, IRule rule) {
+        public void addRule(String name, RuleWrapper rule) {
             rulesNode.add(new RuleNode(name, rule));
         }
 
         @Override
         public boolean isLeaf() {
             return false;
+        }
+        
+        public void setEditMode(EditMode mode){
+            ((RulesNode)rulesNode).setEditMode(mode);
         }
 
         public Engine getEngine() {
@@ -174,12 +193,16 @@ public class PetrinetTreeModel extends DefaultTreeModel {
 
         private final String name;
 
-        private final IRule rule;
+        private final RuleWrapper rule;
 
-        RuleNode(String name, IRule rule) {
-            super(new Named<IRule>(name,rule), true);
+        RuleNode(String name, RuleWrapper rule) {
+            super(new Named<RuleWrapper>(name,rule), true);
             this.name = name;
             this.rule = rule;
+        }
+        
+        public void setEditMode(EditMode mode){
+            rule.setEditMode(mode);
         }
 
         @Override
@@ -190,9 +213,13 @@ public class PetrinetTreeModel extends DefaultTreeModel {
         public String getName() {
             return name;
         }
+        
+        public RuleWrapper getWrapper(){
+            return rule;
+        }
 
         public IRule getRule() {
-            return rule;
+            return rule.getRule();
         }
 
         @Override
@@ -213,6 +240,10 @@ public class PetrinetTreeModel extends DefaultTreeModel {
         PetrinetNode node = getRoot().addPetrinet(name, engine);
         nodeChanged(root);
         return node;
+    }
+    
+    public void setEditMode(EditMode mode){
+        getRoot().setEditMode(mode);
     }
 
     public List<Engine> getPetrinets() {
