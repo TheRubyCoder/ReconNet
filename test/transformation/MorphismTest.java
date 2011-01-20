@@ -43,9 +43,7 @@ public class MorphismTest {
     private static Map<IArc, IArc> expectedArcMap;
 
     
-    public MorphismTest() {
-    }
-
+    
     @BeforeClass
     public static void setUpClass() throws Exception {
     }
@@ -67,18 +65,22 @@ public class MorphismTest {
     public void tearDown() {
     }
 
+    
+
     /**
-     * Test of IsValid method, of class Morphism.
+     * Test of places method, of class Morphism.
      */
     @Test
-    public void testIsValid() {
-        System.out.println("IsValid");
-        Morphism instance = null;
-        boolean expResult = false;
-        boolean result = instance.IsValid();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    public void testPlaces() {
+        assertEquals(expectedPlaceMap, testObject.places());
+    }
+
+    /**
+     * Test of transitions method, of class Morphism.
+     */
+    @Test
+    public void testTransitions() {
+        assertEquals(expectedTransitionMap, testObject.transitions());
     }
 
     /**
@@ -86,8 +88,6 @@ public class MorphismTest {
      */
     @Test
     public void testEdges() {
-        System.out.println("edges");
-        System.out.println(testObject.edges());
         assertEquals(expectedArcMap, testObject.edges());
     }
 
@@ -96,9 +96,9 @@ public class MorphismTest {
      */
     @Test
     public void testMorph_ITransition() {
-    	System.out.println("transitions");
-        System.out.println(testObject.transitions());
-        assertEquals(expectedTransitionMap, testObject.transitions());
+    	for (Map.Entry<ITransition, ITransition> entry : expectedTransitionMap.entrySet()) {
+    		assertEquals(entry.getValue(), testObject.morph(entry.getKey()));
+    	}
     }
 
     /**
@@ -106,9 +106,9 @@ public class MorphismTest {
      */
     @Test
     public void testMorph_IPlace() {
-    	System.out.println("places");
-        System.out.println(testObject.places());
-        assertEquals(expectedPlaceMap, testObject.places());
+    	for (Map.Entry<IPlace, IPlace> entry : expectedPlaceMap.entrySet()) {
+    		assertEquals(entry.getValue(), testObject.morph(entry.getKey()));
+    	}
     }
 
     /**
@@ -116,42 +116,9 @@ public class MorphismTest {
      */
     @Test
     public void testMorph_IArc() {
-        System.out.println("morph");
-        IArc arc = null;
-        Morphism instance = null;
-        IArc expResult = null;
-        IArc result = instance.morph(arc);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of places method, of class Morphism.
-     */
-    @Test
-    public void testPlaces() {
-        System.out.println("places");
-        Morphism instance = null;
-        Map expResult = null;
-        Map result = instance.places();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of transitions method, of class Morphism.
-     */
-    @Test
-    public void testTransitions() {
-        System.out.println("transitions");
-        Morphism instance = null;
-        Map expResult = null;
-        Map result = instance.transitions();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    	for (Map.Entry<IArc, IArc> entry : expectedArcMap.entrySet()) {
+    		assertEquals(entry.getValue(), testObject.morph(entry.getKey()));
+    	}
     }
 
     /**
@@ -159,13 +126,7 @@ public class MorphismTest {
      */
     @Test
     public void testFrom() {
-        System.out.println("From");
-        Morphism instance = null;
-        IPetrinet expResult = null;
-        IPetrinet result = instance.From();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    	assertEquals(fromPn, testObject.From());
     }
 
     /**
@@ -173,13 +134,7 @@ public class MorphismTest {
      */
     @Test
     public void testTo() {
-        System.out.println("To");
-        Morphism instance = null;
-        IPetrinet expResult = null;
-        IPetrinet result = instance.To();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(toPn, testObject.To());
     }
     
     
