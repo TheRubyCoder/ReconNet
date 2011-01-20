@@ -551,10 +551,10 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     }//GEN-LAST:event_toggleButtonPlayActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        RuleWrapper wrapper = new RuleWrapper("Rule1",creteTestRule());
+        RuleWrapper wrapper = new RuleWrapper("Rule1",createTestRule());
 
         
-        JInternalFrame frame = wrapper.createFrame();
+        JInternalFrame frame = wrapper.getRuleFrame();
         desktop.add(frame);
         frame.setBounds(40, 20, 360, 250);
         frame.setVisible(true);
@@ -622,7 +622,7 @@ public IPetrinet getTestPetrinet(){
         return petrinet;
 }
 
-    public IRule creteTestRule(){
+    public IRule createTestRule(){
         IRule rule1 = new Rule();
         //L von r1
         IPlace p1 = rule1.L().createPlace("Wecker ein");
@@ -701,6 +701,10 @@ public IPetrinet getTestPetrinet(){
     }
     
     private void addRule(){
-        
+        RuleWrapper wrapper = new RuleWrapper("Rule1",createTestRule());
+        JInternalFrame frame = wrapper.getRuleFrame();
+        desktop.add(frame);
+        frame.setBounds(40, 20, 360, 250);
+        frame.setVisible(true);
     }
 }
