@@ -8,6 +8,7 @@ import engine.EditMode;
 import engine.Engine;
 import engine.EngineFactory;
 import gui.TableModels.*;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -15,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Set;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
@@ -97,8 +99,11 @@ public class RuleWrapper {
         internalRuleFrame.setMaximizable(true);
         
         JPanel ruleLeftPanel = Lengine.getGraphEditor().getGraphPanel();
+        ruleLeftPanel.setBorder(BorderFactory.createLineBorder(Color.black));
         JPanel ruleGluePanel = Kengine.getGraphEditor().getGraphPanel();
+        ruleGluePanel.setBorder(BorderFactory.createLineBorder(Color.black));
         JPanel ruleRightPanel = Rengine.getGraphEditor().getGraphPanel();
+        ruleRightPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 
         GridLayout ruleGrid = new java.awt.GridLayout(1, 3);
         JPanel rulePanel = new javax.swing.JPanel(ruleGrid);
@@ -107,7 +112,8 @@ public class RuleWrapper {
         rulePanel.add(ruleRightPanel);
         
         FlowLayout flowLayoutArrows = new java.awt.FlowLayout();
-        JButton left = new javax.swing.JButton("<-");
+        JButton left = new javax.swing.JButton();
+        left.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/resource/arrow_left.png")));
         left.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -116,7 +122,8 @@ public class RuleWrapper {
                }
             }
         });
-        JButton right = new javax.swing.JButton("->");
+        JButton right = new javax.swing.JButton();
+        right.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/resource/arrow_right.png")));
         right.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
