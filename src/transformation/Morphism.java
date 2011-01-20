@@ -66,7 +66,7 @@ class Morphism implements IMorphism {
 
 	@Override
 	public boolean IsValid() {
-		return true;
+		throw new UnsupportedOperationException();
 	}
 
 
