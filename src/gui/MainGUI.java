@@ -269,6 +269,11 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        petrinetTree.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
+            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
+                petrinetTreeValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(petrinetTree);
 
         editToolBar.setRollover(true);
@@ -482,6 +487,16 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
     
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void petrinetTreeValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_petrinetTreeValueChanged
+        Object o = evt.getNewLeadSelectionPath().getLastPathComponent();
+        if(o instanceof PetrinetNode){
+            jTable1.setModel(new PetrinetTableModel((PetrinetNode) o));
+        }else if(o instanceof RuleNode){
+            jTable1.setModel(new RuleTableModel((RuleNode)o));
+        }
+    }//GEN-LAST:event_petrinetTreeValueChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem EnglishMenuItem;
     private javax.swing.JButton buttonStep;

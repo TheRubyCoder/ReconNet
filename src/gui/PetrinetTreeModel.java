@@ -144,7 +144,7 @@ public class PetrinetTreeModel extends DefaultTreeModel {
         }
     }
 
-    static class PetrinetNode extends DefaultMutableTreeNode {
+    public static class PetrinetNode extends DefaultMutableTreeNode {
 
         private final DefaultMutableTreeNode rulesNode;
 
@@ -189,9 +189,9 @@ public class PetrinetTreeModel extends DefaultTreeModel {
         }
     }
 
-    static class RuleNode extends DefaultMutableTreeNode {
+    public static class RuleNode extends DefaultMutableTreeNode {
 
-        private final String name;
+        private String name;
 
         private final RuleWrapper rule;
 
@@ -211,7 +211,11 @@ public class PetrinetTreeModel extends DefaultTreeModel {
         }
 
         public String getName() {
-            return name;
+            return ((Named<?>)getUserObject()).getName();
+        }
+        
+        public void setName(String name){
+            ((Named<?>)getUserObject()).setName(name);
         }
         
         public RuleWrapper getWrapper(){

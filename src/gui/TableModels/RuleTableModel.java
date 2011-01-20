@@ -5,6 +5,7 @@
 
 package gui.TableModels;
 
+import gui.PetrinetTreeModel.RuleNode;
 import gui.RuleWrapper;
 import transformation.Rule;
 
@@ -22,9 +23,9 @@ public class RuleTableModel extends PropertiesTable.AbstractModel{
         "Name"
     };
 
-    private RuleWrapper rule;
+    private RuleNode rule;
 
-    public RuleTableModel(RuleWrapper rule){
+    public RuleTableModel(RuleNode rule){
         this.rule = rule;
         names = new String[1];
         names[0] = "Name";

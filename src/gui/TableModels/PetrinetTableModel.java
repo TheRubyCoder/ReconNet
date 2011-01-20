@@ -14,16 +14,15 @@ import petrinetze.impl.Petrinet;
  */
 public class PetrinetTableModel extends PropertiesTable.AbstractModel{
 
-    private String[] names;
-    private Object[] values;
-    //private Project project;
+    public static final int PROPERTY_NAME = 0;
+    
+    private String[] names = {
+        "Name"
+    };
+    private PetrinetNode petrinet;
 
-    public PetrinetTableModel(Petrinet net,String name){
-       // project = pro;
-        names = new String[1];
-        names[0] = "Name";
-        values = new Object[1];
-        //values[0] = project.getName();
+    public PetrinetTableModel(PetrinetNode net){
+       petrinet = net;
     }
 
     @Override
@@ -38,18 +37,23 @@ public class PetrinetTableModel extends PropertiesTable.AbstractModel{
 
     @Override
     protected Object getPropertyValue(int rowIndex) {
-        return values[rowIndex];
+        if(rowIndex == PROPERTY_NAME){
+            return ((Named<?>)petrinet.getUserObject()).getName();
+        }else{
+            return null;
+        }
     }
 
     @Override
     protected void setPropertyValue(int rowIndex, Object value) {
-        values[rowIndex] = value;
-       // project.setName((String)value);
+        if(rowIndex == PROPERTY_NAME){
+            ((Named<?>)petrinet.getUserObject()).setName((String)value);
+        }
     }
 
     @Override
     protected Class<?> getPropertyClass(int rowIndex) {
-        return values[rowIndex].getClass();
+        return String.class;
     }
 
     @Override
