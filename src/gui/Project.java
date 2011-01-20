@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package gui;
 
 import engine.Engine;
@@ -26,7 +25,7 @@ import transformation.IRule;
  *
  * @author steffen
  */
-public class Project implements StepListener{
+public class Project implements StepListener {
 
     private String name;
     private Engine engine;
@@ -34,17 +33,17 @@ public class Project implements StepListener{
     private boolean locked;
     private JInternalFrame petrinetFrame;
     private JTable table;
-    private Map<String,RuleWrapper> rules;
+    private Map<String, RuleWrapper> rules;
 
-    public Project(String name,JTable table){
-        this(name,new Petrinet(),table);
+    public Project(String name, JTable table) {
+        this(name, new Petrinet(), table);
     }
 
-    public Project(String name,IPetrinet net,JTable table){
-        this(name,net,new HashMap<String,RuleWrapper>(),table);
+    public Project(String name, IPetrinet net, JTable table) {
+        this(name, net, new HashMap<String, RuleWrapper>(), table);
     }
 
-    public Project(String name,IPetrinet net, Map<String,RuleWrapper> rules,JTable table){
+    public Project(String name, IPetrinet net, Map<String, RuleWrapper> rules, JTable table) {
         this.locked = false;
         this.name = name;
         this.petrinet = net;
@@ -66,30 +65,33 @@ public class Project implements StepListener{
         });
     }
 
-    public JInternalFrame getPetrinetFrame(){
+    public JInternalFrame getPetrinetFrame() {
         return petrinetFrame;
     }
 
-    public JInternalFrame addRule(String name,IRule r){
-        RuleWrapper wrapper = new RuleWrapper(name,r);
+    public JInternalFrame addRule(String name, IRule r) {
+        RuleWrapper wrapper = new RuleWrapper(name, r);
         rules.put(name, wrapper);
-        return wrapper.createFrame();
+        return wrapper.getRuleFrame();
     }
 
-   
+    public String getName() {
+        return name;
+    }
 
-    public String getName(){ return name;}
-    public void setName(String name){this.name = name;}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public Engine getEngine(){
+    public Engine getEngine() {
         return engine;
     }
 
-    public IPetrinet getPetrinet(){
+    public IPetrinet getPetrinet() {
         return petrinet;
     }
 
-    public Map<String,RuleWrapper> getRules(){
+    public Map<String, RuleWrapper> getRules() {
         return rules;
     }
 
@@ -106,5 +108,4 @@ public class Project implements StepListener{
         petrinetFrame.setEnabled(true);
         locked = false;
     }
-
 }

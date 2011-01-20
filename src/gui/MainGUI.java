@@ -139,7 +139,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     private void stepXTimesInternal(PetrinetNode node, int times) {
         final Simulation sim = node.getEngine().getSimulation();
 
-        // TODO GUI mÔø?sste hier gesperrt werden...
+        // TODO GUI mï¿½ï¿½?sste hier gesperrt werden...
         sim.removeStepListener(this);
 
         // TODO muss node benachrichtigt werden ?
@@ -356,7 +356,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         jMenuItem1.setText("Add Rule");
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                addRuleActionPerformed(evt);
             }
         });
         fileMenu.add(jMenuItem1);
@@ -437,7 +437,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
                         .addComponent(playToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 242, Short.MAX_VALUE)
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jDesktopPane1))
+                    .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 776, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -505,15 +505,13 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         }
     }//GEN-LAST:event_toggleButtonPlayActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        RuleWrapper wrapper = new RuleWrapper("Rule1",creteTestRule());
-
-        
-        JInternalFrame frame = wrapper.createFrame();
+    private void addRuleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addRuleActionPerformed
+        RuleWrapper wrapper = new RuleWrapper("Rule1",createTestRule());
+        JInternalFrame frame = wrapper.getRuleFrame();
         desktop.add(frame);
         frame.setBounds(40, 20, 360, 250);
         frame.setVisible(true);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_addRuleActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem EnglishMenuItem;
@@ -576,7 +574,7 @@ public IPetrinet getTestPetrinet(){
         return petrinet;
 }
 
-    public IRule creteTestRule(){
+    public IRule createTestRule(){
         IRule rule1 = new Rule();
         //L von r1
         IPlace p1 = rule1.L().createPlace("Wecker ein");
@@ -618,7 +616,7 @@ public IPetrinet getTestPetrinet(){
         final String input =
             JOptionPane.showInputDialog(
                 this,
-                "Bitte geben Sie einen Namen für das Petrinetz ein", "Neues Petrinetz"
+                "Bitte geben Sie einen Namen fï¿½r das Petrinetz ein", "Neues Petrinetz"
             );
 
         if (input != null) {

@@ -24,7 +24,7 @@
                 <Property name="text" type="java.lang.String" value="Add Rule"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItem1ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addRuleActionPerformed"/>
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="openMenuItem">
@@ -145,7 +145,7 @@
                       <EmptySpace pref="242" max="32767" attributes="0"/>
                       <Component id="progressBar" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jDesktopPane1" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jDesktopPane1" alignment="0" pref="776" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
