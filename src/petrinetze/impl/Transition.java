@@ -25,7 +25,7 @@ public class Transition implements ITransition {
 
     private IRenew rnw;
 
-    private String tlb;
+    private String tlb = "";
 
 	/**
 	 * Liste aller Kanten, die von dieser Transition
