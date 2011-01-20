@@ -27,8 +27,8 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         initComponents();
         petrinetTree.setModel(projects.getPetrinetTreeModel());
         initLanguage("de", "DE");
-        Project pro = new Project("Petrinetz1",this.getTestPetrinet());
-        openProject(pro);
+        //Project pro = new Project("Petrinetz1",this.getTestPetrinet(),jTable1);
+        //openProject(pro);
         //test();
     }
 
@@ -38,7 +38,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     }
 
     private void openProject(Project pro){
-       petrinetTree.setModel(projects.addProject(pro));
+       projects.addProject(pro);
        jDesktopPane1.add(pro.getPetrinetFrame());
        pro.getPetrinetFrame().setBounds(40, 20, 360, 250);
        pro.getPetrinetFrame().setVisible(true);
@@ -46,7 +46,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     
 
     private void createPetrinet(String name){
-        Project p = new Project(name);
+        Project p = new Project(name,jTable1);
         openProject(p);
     }
 
@@ -434,7 +434,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     }//GEN-LAST:event_EnglishMenuItemActionPerformed
 
     private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMenuItemActionPerformed
-       this.createPetrinet("Test");
+       projects.createProject();
     }//GEN-LAST:event_newMenuItemActionPerformed
 
     private void toggleButtonPlaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleButtonPlaceActionPerformed
