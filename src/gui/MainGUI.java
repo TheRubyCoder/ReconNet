@@ -535,11 +535,11 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         RuleWrapper wrapper = new RuleWrapper("Rule1", createTestRule());
 
-
         JInternalFrame frame = wrapper.getRuleFrame();
         desktop.add(frame);
         frame.setBounds(40, 20, 360, 250);
         frame.setVisible(true);
+
     }//GEN-LAST:event_jMenuItem1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem EnglishMenuItem;
