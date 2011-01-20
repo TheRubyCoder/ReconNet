@@ -123,9 +123,12 @@ public class PetrinetTreeModel extends DefaultTreeModel {
         }
         
         public void setEditMode(EditMode mode){
-            for (Object c : children) {
-                ((RuleNode)c).setEditMode(mode);
+            if(children != null){
+                for (Object c : children) {
+                    ((RuleNode)c).setEditMode(mode);
+                }
             }
+            
         }
 
         @Override

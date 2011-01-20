@@ -58,7 +58,11 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     private final Action showRuleAction = new AbstractAction("Anzeigen") {
 
         public void actionPerformed(ActionEvent e) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            JInternalFrame frame = ((RuleNode)petrinetTree.getSelectionPath().getLastPathComponent()).getWrapper().getRuleFrame();
+            desktop.add(frame);
+            frame.setBounds(40, 20, 360, 250);
+            frame.setVisible(true);
+            frame.requestFocusInWindow();
         }
     };
     private final Action transfromPetrinetAction = new AbstractAction("Anwenden") {
@@ -642,13 +646,5 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
             frame.requestFocusInWindow();
         }
     }
-    
-    private void showRule(){
-        RuleNode node = (RuleNode) petrinetTree.getSelectionPath().getLastPathComponent();
-        JInternalFrame frame = node.getWrapper().getRuleFrame();
-        desktop.add(frame);
-        frame.setBounds(40, 20, 360, 250);
-        frame.setVisible(true);
-        frame.requestFocusInWindow();
-    }
+
 }
