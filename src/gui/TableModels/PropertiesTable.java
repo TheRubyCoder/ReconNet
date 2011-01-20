@@ -1,15 +1,9 @@
 package gui.TableModels;
 
-import gui.*;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableModel;
-import java.beans.BeanInfo;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 
 public class PropertiesTable extends JTable {
 
@@ -78,7 +72,7 @@ public class PropertiesTable extends JTable {
 
     @Override
     public AbstractModel getModel() {
-        return (AbstractModel) super.getModel();    //To change body of overridden methods use File | Settings | File Templates.
+        return (AbstractModel) super.getModel();
     }
 
     @Override

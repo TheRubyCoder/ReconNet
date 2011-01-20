@@ -5,42 +5,79 @@
 
 package gui.TableModels;
 
-import gui.TableModels.PropertiesTable;
+import petrinetze.IPlace;
 
 /**
  *
  * @author steffen
  */
-public class PlaceTalbeModel extends PropertiesTable.AbstractModel{
+public class PlaceTalbeModel extends PropertiesTable.AbstractModel {
+
+    public static final int PROPERTY_ID = 0;
+
+    public static final int PROPERTY_NAME = 1;
+
+    public static final int PROPERTY_MARK = 2;
+
+    private final String[] propertyNames = {
+        "ID",
+        "Name",
+        "Markierung"
+    };
+
+    private IPlace place;
+
+    public PlaceTalbeModel(IPlace place) {
+        this.place = place;
+    }
 
     @Override
     protected int getPropertyCount() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return propertyNames.length;
     }
 
     @Override
     protected String getPropertyName(int rowIndex) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return propertyNames[rowIndex];
     }
 
     @Override
     protected Object getPropertyValue(int rowIndex) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        switch (rowIndex) {
+            case PROPERTY_ID:
+                return place.getId();
+            case PROPERTY_NAME:
+                return place.getName();
+            case PROPERTY_MARK:
+                return place.getMark();
+
+            default: return null;
+        }
     }
 
     @Override
     protected void setPropertyValue(int rowIndex, Object value) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        switch (rowIndex) {
+            case PROPERTY_NAME:
+                place.setName((String)value);
+                break;
+            case PROPERTY_MARK:
+                place.setMark(((Integer)value).intValue());
+                break;
+        }
     }
 
     @Override
     protected Class<?> getPropertyClass(int rowIndex) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        switch (rowIndex) {
+            case PROPERTY_NAME: return String.class;
+            default: return Integer.class;
+        }
     }
 
     @Override
     protected boolean isWritable(int rowIndex) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return rowIndex > 0;
     }
 
 }

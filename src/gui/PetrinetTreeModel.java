@@ -1,14 +1,15 @@
 package gui;
 
+import com.sun.java.swing.SwingUtilities3;
 import engine.Engine;
 import petrinetze.IPetrinet;
 import transformation.IRule;
 
 import javax.swing.tree.*;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.LinkedList;
+import java.util.Collections;
 import java.util.List;
+import javax.swing.SwingUtilities;
 
 /**
  * Created by IntelliJ IDEA.
@@ -84,6 +85,17 @@ public class PetrinetTreeModel extends DefaultTreeModel {
             return node;
         }
 
+        public List<Engine> getChildren() {
+            final List<Engine> res = new ArrayList<Engine>(children.size());
+            for (Object node : children) {
+                if (node instanceof PetrinetNode) {
+                    res.add(((PetrinetNode)node).getEngine());
+                }
+            }
+
+            return res;
+        }
+
         @Override
         public boolean isRoot() {
             return true;
@@ -121,6 +133,8 @@ public class PetrinetTreeModel extends DefaultTreeModel {
 
         private final DefaultMutableTreeNode rulesNode;
 
+        private PetrinetFrame frame;
+
         PetrinetNode(String name, Engine engine) {
             super(new Named<Engine>(name, engine), true);
             rulesNode = new RulesNode();
@@ -142,6 +156,16 @@ public class PetrinetTreeModel extends DefaultTreeModel {
 
         public IPetrinet getPetrinet() {
             return getEngine().getNet();
+        }
+
+        public PetrinetFrame getFrame() {
+            assert SwingUtilities.isEventDispatchThread();
+
+            if (frame == null) {
+                frame = new PetrinetFrame(this);
+            }
+
+            return frame;
         }
     }
 
@@ -188,6 +212,10 @@ public class PetrinetTreeModel extends DefaultTreeModel {
         PetrinetNode node = getRoot().addPetrinet(name, engine);
         nodeChanged(root);
         return node;
+    }
+
+    public List<Engine> getPetrinets() {
+        return getRoot().getChildren();
     }
 
     @Override

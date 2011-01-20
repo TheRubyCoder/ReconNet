@@ -79,8 +79,6 @@ public class Projects {
         project.getPetrinetFrame().setVisible(true);
     }
 
-    
-
     public void addProject(Project pro){
         projects.add(pro);
         this.updateTree();

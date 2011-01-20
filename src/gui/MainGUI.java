@@ -1,9 +1,18 @@
 package gui;
 
 import engine.EditMode;
+import engine.Engine;
+import engine.EngineFactory;
 import engine.Simulation;
 import engine.StepListener;
+import gui.PetrinetTreeModel.PetrinetNode;
+import java.awt.ComponentOrientation;
+import java.awt.event.ActionEvent;
+import java.util.HashSet;
+import java.util.Set;
 import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 
 import petrinetze.IPetrinet;
 import petrinetze.IPlace;
@@ -19,63 +28,101 @@ import transformation.Rule;
  */
 public class MainGUI extends javax.swing.JFrame implements StepListener {
 
-    private Projects projects;
+    private JDesktopPane desktop;
+
+    private PetrinetTree petrinetTree;
+
+    private final Action addPetrinetAction = new AbstractAction("Neues Petrinetz") {
+
+        @Override
+        public void actionPerformed(ActionEvent ae) {
+            createProject();
+        }
+    };
 
     /** Creates new form MainGUI */
     public MainGUI() {
-        projects = new Projects(petrinetTree,jDesktopPane1);
+        desktop = new JDesktopPane();
+
+        initTree();
         initComponents();
-        petrinetTree.setModel(projects.getPetrinetTreeModel());
         initLanguage("de", "DE");
-        //Project pro = new Project("Petrinetz1",this.getTestPetrinet(),jTable1);
-        //openProject(pro);
-        //test();
     }
 
-    private void test(){
-        Project pro = getSelectedProject();
-        
+    private PetrinetNode activeNode() {
+        final PetrinetFrame frame = (PetrinetFrame)desktop.getSelectedFrame();
+
+        return frame == null ? null : frame.getNode();
     }
 
+    private void setVisible(Iterable<? extends JMenuItem> items, boolean visible) {
+        for (JMenuItem item : items) item.setVisible(visible);
+    }
+
+    private void initTree() {
+        petrinetTree = new PetrinetTree();
+
+        JPopupMenu menu = new JPopupMenu();
+
+        final Set<JMenuItem> petrinetsItems = new HashSet<JMenuItem>();
+        petrinetsItems.add(menu.add(addPetrinetAction));
+        setVisible(petrinetsItems, false);
+
+        petrinetTree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
+
+            @Override
+            public void valueChanged(TreeSelectionEvent tse) {
+                final Object selected = tse.getNewLeadSelectionPath().getLastPathComponent();
+
+                if (selected == petrinetTree.getModel().getRoot()) {
+                    setVisible(petrinetsItems, true);
+                }
+                // if (... instanceof ...)
+                else {
+                    setVisible(petrinetsItems, false);
+                }
+            }
+        });
+
+        petrinetTree.setComponentPopupMenu(menu);
+    }
+
+    /*
     private void openProject(Project pro){
+       petrinetTree.getModel().addPetrinet(null, null)
        projects.addProject(pro);
-       jDesktopPane1.add(pro.getPetrinetFrame());
+       desktop.add(pro.getPetrinetFrame());
        pro.getPetrinetFrame().setBounds(40, 20, 360, 250);
        pro.getPetrinetFrame().setVisible(true);
     }
-    
+     */
 
     private void createPetrinet(String name){
         Project p = new Project(name,jTable1);
-        openProject(p);
+        // TODO openProject(p);
     }
 
     private void step(){
-        Project pro = getActiveProject();
         try{
-            pro.getEngine().getSimulation().step();
+            activeNode().getEngine().getSimulation().step();
         }catch(Exception ex){
             Error.create(ex.getMessage());
         }
     }
 
-    private Project getActiveProject() {
-        return projects.getProject(jDesktopPane1.getSelectedFrame());
-    }
-
     private void stepXtimes(){
-        stepXTimes(getActiveProject(), (Integer) jSpinner1.getValue());
+        stepXTimes(activeNode(), (Integer) jSpinner1.getValue());
     }
 
-    private void stepXTimes(final Project project, final int times) {
+    private void stepXTimes(final PetrinetNode node, final int times) {
         if (times < 1000) {
-            stepXTimesInternal(project, times);
+            stepXTimesInternal(node, times);
         }
         else {
             final SwingWorker w = new SwingWorker<Void,Void>() {
                 @Override
                 protected Void doInBackground() throws Exception {
-                    stepXTimesInternal(project, times);
+                    stepXTimesInternal(node, times);
                     return null;
                 }
 
@@ -89,12 +136,14 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         }
     }
 
-    private void stepXTimesInternal(Project project, int times) {
-        final Simulation sim = getActiveProject().getEngine().getSimulation();
+    private void stepXTimesInternal(PetrinetNode node, int times) {
+        final Simulation sim = node.getEngine().getSimulation();
 
-        // TODO GUI mï¿½sste hier gesperrt werden...
+        // TODO GUI mÔø?sste hier gesperrt werden...
         sim.removeStepListener(this);
-        sim.removeStepListener(project);
+
+        // TODO muss node benachrichtigt werden ?
+        // sim.removeStepListener(project);
 
         int i = 0;
         try {
@@ -108,30 +157,26 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         finally {
             // TODO GUI entsperren
             sim.addStepListener(this);
-            sim.addStepListener(project);
+
+            // TODO s.o.
+            // sim.addStepListener(project);
         }
     }
 
     private void startSimulation(){
-        Project pro = projects.getProject(jDesktopPane1.getSelectedFrame());
         try{
-            pro.getEngine().getSimulation().start(200);
+            activeNode().getEngine().getSimulation().start(200);
         }catch(Exception ex){
             Error.create(ex.getMessage());
         }
     }
 
     private void stopSimulation(){
-        Project pro = projects.getProject(jDesktopPane1.getSelectedFrame());
         try{
-            pro.getEngine().getSimulation().stop();
+            activeNode().getEngine().getSimulation().stop();
         }catch(Exception ex){
             Error.create(ex.getMessage());
         }
-    }
-
-    private Project getSelectedProject(){
-        return projects.getProject((String) petrinetTree.getSelectionPath().getPath()[1].toString());
     }
 
     private IRule getSelectedRule(){
@@ -174,7 +219,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
 
         petriTools = new javax.swing.ButtonGroup();
         jScrollPane1 = new javax.swing.JScrollPane();
-        petrinetTree = new javax.swing.JTree();
+        javax.swing.JTree petrinetTree = this.petrinetTree;
         editToolBar = new javax.swing.JToolBar();
         toggleButtonPlace = new javax.swing.JToggleButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
@@ -186,7 +231,8 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         buttonSteps = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JToolBar.Separator();
         toggleButtonPlay = new javax.swing.JToggleButton();
-        jDesktopPane1 = new javax.swing.JDesktopPane();
+        javax.swing.JDesktopPane jDesktopPane1 = desktop
+        ;
         progressBar = new javax.swing.JProgressBar();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -210,8 +256,6 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("root");
-        petrinetTree.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
         jScrollPane1.setViewportView(petrinetTree);
 
         editToolBar.setRollover(true);
@@ -391,9 +435,9 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
                         .addComponent(editToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(playToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 180, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 242, Short.MAX_VALUE)
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 776, Short.MAX_VALUE))
+                    .addComponent(jDesktopPane1))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -403,7 +447,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(playToolBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(playToolBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
                             .addComponent(editToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE))
@@ -434,15 +478,15 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     }//GEN-LAST:event_EnglishMenuItemActionPerformed
 
     private void newMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newMenuItemActionPerformed
-       projects.createProject();
+       createProject();
     }//GEN-LAST:event_newMenuItemActionPerformed
 
     private void toggleButtonPlaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleButtonPlaceActionPerformed
-        projects.setCreateMode(EditMode.ADD_PLACE);
+        petrinetTree.setEditMode(EditMode.ADD_PLACE);
     }//GEN-LAST:event_toggleButtonPlaceActionPerformed
 
     private void toggleButtonTransitionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleButtonTransitionActionPerformed
-        projects.setCreateMode(EditMode.ADD_TRANSITION);
+        petrinetTree.setEditMode(EditMode.ADD_TRANSITION);
     }//GEN-LAST:event_toggleButtonTransitionActionPerformed
 
     private void buttonStepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonStepActionPerformed
@@ -466,7 +510,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
 
         
         JInternalFrame frame = wrapper.createFrame();
-        jDesktopPane1.add(frame);
+        desktop.add(frame);
         frame.setBounds(40, 20, 360, 250);
         frame.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
@@ -483,7 +527,6 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     private javax.swing.JToolBar editToolBar;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
-    private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -498,7 +541,6 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.JMenuItem pasteMenuItem;
     private javax.swing.ButtonGroup petriTools;
-    private javax.swing.JTree petrinetTree;
     private javax.swing.JToolBar playToolBar;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JMenuItem saveAsMenuItem;
@@ -570,5 +612,18 @@ public IPetrinet getTestPetrinet(){
     public void stopped(Simulation s) {
         toggleButtonTransition.setEnabled(true);
         toggleButtonPlace.setEnabled(true);
+    }
+
+    private void createProject() {
+        final String input =
+            JOptionPane.showInputDialog(
+                this,
+                "Bitte geben Sie einen Namen für das Petrinetz ein", "Neues Petrinetz"
+            );
+
+        if (input != null) {
+            IPetrinet pn = new Petrinet();
+            petrinetTree.addPetrinet(input, EngineFactory.newFactory().createEngine(pn));
+        }
     }
 }

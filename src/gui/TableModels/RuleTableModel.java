@@ -15,17 +15,19 @@ import transformation.Rule;
  * @author steffen
  */
 public class RuleTableModel extends PropertiesTable.AbstractModel{
+
+    public static final int PROPERTY_NAME = 0;
     
-    private String[] names;
-    private Object[] values;
+    private String[] names = {
+        "Name"
+    };
+
     private RuleWrapper rule;
 
     public RuleTableModel(RuleWrapper rule){
         this.rule = rule;
         names = new String[1];
         names[0] = "Name";
-        values = new Object[1];
-        values[0] = rule.getName();
     }
 
     @Override
@@ -40,18 +42,24 @@ public class RuleTableModel extends PropertiesTable.AbstractModel{
 
     @Override
     protected Object getPropertyValue(int rowIndex) {
-        return values[rowIndex];
+        switch (rowIndex) {
+            case PROPERTY_NAME: return rule.getName();
+            default: return null;
+        }
     }
 
     @Override
     protected void setPropertyValue(int rowIndex, Object value) {
-        values[rowIndex] = value;
-        rule.setName((String) value);
+        switch (rowIndex) {
+            case PROPERTY_NAME:
+                rule.setName((String) value);
+                break;
+        }
     }
 
     @Override
     protected Class<?> getPropertyClass(int rowIndex) {
-        return values[rowIndex].getClass();
+        return String.class;
     }
 
     @Override

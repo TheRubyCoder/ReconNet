@@ -1,7 +1,6 @@
 package engine.impl;
 
 import engine.EditMode;
-import engine.UIEditor;
 import petrinetze.IArc;
 import petrinetze.INode;
 import petrinetze.IPetrinet;
@@ -9,7 +8,6 @@ import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.algorithms.layout.KKLayout;
 import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
-import engine.Engine;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
