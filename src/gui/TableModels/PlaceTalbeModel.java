@@ -62,7 +62,7 @@ public class PlaceTalbeModel extends PropertiesTable.AbstractModel {
                 place.setName((String)value);
                 break;
             case PROPERTY_MARK:
-                place.setMark(((Integer)value).intValue());
+                place.setMark(Integer.parseInt((String) value));
                 break;
         }
     }

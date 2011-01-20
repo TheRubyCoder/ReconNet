@@ -151,7 +151,8 @@ public class PetrinetTreeModel extends DefaultTreeModel {
         }
 
         public Engine getEngine() {
-            return ((Engine)getUserObject());
+            Named<Engine> object = (Named<Engine>) getUserObject();
+            return object.getValue();
         }
 
         public IPetrinet getPetrinet() {

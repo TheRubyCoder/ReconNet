@@ -11,13 +11,13 @@ import gui.Project;
  *
  * @author steffen
  */
-public class ProjectTableModel extends PropertiesTable.AbstractModel{
+public class PetrinetTableModel extends PropertiesTable.AbstractModel{
 
     private String[] names;
     private Object[] values;
     private Project project;
 
-    public ProjectTableModel(Project pro){
+    public PetrinetTableModel(Project pro){
         project = pro;
         names = new String[1];
         names[0] = "Name";
