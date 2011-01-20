@@ -166,6 +166,7 @@ public class PetrinetTreeModel extends DefaultTreeModel {
         }
         
         public void setEditMode(EditMode mode){
+            ((Named<Engine>)getUserObject()).getValue().getGraphEditor().setEditMode(mode);
             ((RulesNode)rulesNode).setEditMode(mode);
         }
 

@@ -64,7 +64,8 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     private final Action transfromPetrinetAction = new AbstractAction("Anwenden") {
 
         public void actionPerformed(ActionEvent e) {
-            throw new UnsupportedOperationException("Not supported yet.");
+            PetrinetNode node = (PetrinetNode)petrinetTree.getSelectionPath().getPathComponent(1);
+            node.getEngine().transform(((RuleNode)petrinetTree.getSelectionPath().getLastPathComponent()).getRule());
         }
     };
 
