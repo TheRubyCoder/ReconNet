@@ -93,21 +93,21 @@ public class MorphismFactory {
 
 
 	private void init() {
-		Map<Integer, Integer>[][] temp = countEdges(netA_pre);
-		netA_placesOutEdges = temp[0];
-		netA_transitionsInEdges = temp[1];
+		Container temp = countEdges(netA_pre);
+		netA_placesOutEdges = temp.places;
+		netA_transitionsInEdges = temp.transitions;
 
 		temp = countEdges(netA_post);
-		netA_placesInEdges = temp[0];
-		netA_transitionsOutEdges = temp[1];
+		netA_placesInEdges = temp.places;
+		netA_transitionsOutEdges = temp.transitions;
 
 		temp = countEdges(netB_pre);
-		netB_placesOutEdges = temp[0];
-		netB_transitionsInEdges = temp[1];
+		netB_placesOutEdges = temp.places;
+		netB_transitionsInEdges = temp.transitions;
 
 		temp = countEdges(netB_post);
-		netB_placesInEdges = temp[0];
-		netB_transitionsOutEdges = temp[1];
+		netB_placesInEdges = temp.places;
+		netB_transitionsOutEdges = temp.transitions;
 	}
 
 
@@ -144,6 +144,8 @@ public class MorphismFactory {
 			for (int indexB = 0; indexB < netB_numTransitions; indexB++) {
 				final ITransition transitionB = netB.getTransitionById(netB.getPre().getTransitionIds()[indexB]);
 				if (	transitionA.getName().equals(transitionB.getName()) &&
+						transitionA.getTlb().equals(transitionB.getTlb()) &&
+						transitionA.getRnw().equals(transitionB.getRnw()) &&
 						testTransitionEdges(netA_transitionsInEdges[indexA], netB_transitionsInEdges[indexB]) &&
 						testTransitionEdges(netA_transitionsOutEdges[indexA], netB_transitionsOutEdges[indexB])) {
 
@@ -170,20 +172,16 @@ public class MorphismFactory {
 			if (numWeightA > numWeightB) {
 				return false;
 			}
-//			int numWeightB = (temp == null ? 0 : temp);
-//			if (numWeightA > numWeightB) {
-//				return false;
-//			}
 		}
 		return true;
 	}
 
 
-	// Achtung: Aus der Map edgesNetB werden Elemente geloescht!
 	private boolean testTransitionEdges(Map<Integer, Integer> edgesNetA, Map<Integer, Integer> edgesNetB) {
 		return edgesNetA.equals(edgesNetB);
 //		for (Entry<Integer, Integer> e : edgesNetA.entrySet()) {
 //			int numWeightA = e.getValue();
+			// Achtung: Aus der Map edgesNetB werden Elemente geloescht!
 //			Integer temp = edgesNetB.remove(e.getKey());
 //			int numWeightB = (temp == null ? 0 : temp);
 //			if (numWeightA != numWeightB || !edgesNetB.isEmpty()) {
@@ -193,10 +191,20 @@ public class MorphismFactory {
 //		return true;
 	}
 
+	
+	private static class Container {
+		final Map<Integer, Integer>[] places;
+		final Map<Integer, Integer>[] transitions;
+		
+		public Container(Map<Integer, Integer>[] places, Map<Integer, Integer>[] transitions) {
+			this.places = places;
+			this.transitions = transitions;
+		}
+		
+	}
 
-
-
-	private Map<Integer, Integer>[][] countEdges(Matrix m) {
+	
+	private Container countEdges(Matrix m) {
 
 		@SuppressWarnings("serial")
 		class MyMap extends HashMap<Integer, Integer> {
@@ -230,14 +238,8 @@ public class MorphismFactory {
 				}
 			}
 		}
-		return new MyMap[][]{places, transitions};
+		return new Container(places, transitions);
 	}
-
-
-
-
-
-
 
 
 	private boolean findMorphism() {
@@ -356,9 +358,9 @@ public class MorphismFactory {
 
 		if (currentRow < 0) {
 			// Kein Morphismus vorhanden
-			System.out.println("Kein Morphismus");
 			return false;
-		} else { // currentRow == numVertices
+		} else {
+			assert currentRow == numVertices;
 			final int temp = currentRow - 1;
 
 			//				System.out.printf("m_places%n%s%nm_transitions%n%s%n", 
@@ -367,7 +369,7 @@ public class MorphismFactory {
 
 			places = createPlacesMap(m_places[temp]);
 			transitions = createTransitionsMap(m_transitions[temp]);
-			//TODO edges erstellen
+			edges = createEdgesMap();
 			return true;
 		}
 	}
@@ -678,7 +680,6 @@ public class MorphismFactory {
 		}
 
 	} // class BoolMatrix
-
 
 
 }
