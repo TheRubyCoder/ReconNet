@@ -11,7 +11,9 @@ import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
+import petrinetze.IPetrinet;
 import transformation.IRule;
+import transformation.Rule;
 
 /**
  *
@@ -53,6 +55,7 @@ public class RuleWrapper {
 
     private JInternalFrame createFrame() {
         JInternalFrame internalRuleFrame = new javax.swing.JInternalFrame();
+        internalRuleFrame.setTitle(getName());
         internalRuleFrame.setClosable(true);
         internalRuleFrame.setResizable(true);
         internalRuleFrame.setMaximizable(true);

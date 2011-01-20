@@ -35,9 +35,7 @@ import transformation.Rule;
  */
 public class MainGUI extends javax.swing.JFrame implements StepListener {
 
-
     private PetrinetTree petrinetTree;
-
     private final Action addPetrinetAction = new AbstractAction("Neues Petrinetz") {
 
         @Override
@@ -45,40 +43,30 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
             createPetrinet();
         }
     };
-    
-    private final Action showPetrinetAction = new AbstractAction("Anzeigen"){
+    private final Action showPetrinetAction = new AbstractAction("Anzeigen") {
 
         public void actionPerformed(ActionEvent e) {
             openPetrinet();
         }
-        
     };
-    
-    private final Action addRuleAction = new AbstractAction("Neue Regel"){
+    private final Action addRuleAction = new AbstractAction("Neue Regel") {
 
         public void actionPerformed(ActionEvent e) {
             addRule();
         }
-        
     };
-    
-    private final Action showRuleAction = new AbstractAction("Anzeigen"){
+    private final Action showRuleAction = new AbstractAction("Anzeigen") {
 
         public void actionPerformed(ActionEvent e) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
-        
     };
-    
-    private final Action transfromPetrinetAction = new AbstractAction("Anwenden"){
+    private final Action transfromPetrinetAction = new AbstractAction("Anwenden") {
 
         public void actionPerformed(ActionEvent e) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
-        
     };
-    
-    
 
     /** Creates new form MainGUI */
     public MainGUI() {
@@ -88,13 +76,15 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     }
 
     private PetrinetNode activeNode() {
-        final PetrinetFrame frame = (PetrinetFrame)desktop.getSelectedFrame();
+        final PetrinetFrame frame = (PetrinetFrame) desktop.getSelectedFrame();
 
         return frame == null ? null : frame.getNode();
     }
 
     private void setVisible(Iterable<? extends JMenuItem> items, boolean visible) {
-        for (JMenuItem item : items) item.setVisible(visible);
+        for (JMenuItem item : items) {
+            item.setVisible(visible);
+        }
     }
 
     private void initTree() {
@@ -111,7 +101,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         rulesItems.add(menu.add(addRuleAction));
         ruleItems.add(menu.add(showRuleAction));
         ruleItems.add(menu.add(transfromPetrinetAction));
-        
+
         setVisible(petrinetsItems, false);
 
         petrinetTree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
@@ -122,26 +112,25 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
 
                 if (selected == petrinetTree.getModel().getRoot()) {
                     setVisible(petrinetsItems, true);
-                    setVisible(petrinetItems,false);
-                    setVisible(rulesItems,false);
-                    setVisible(ruleItems,false);
-                }else if (selected instanceof PetrinetNode){
-                    setVisible(petrinetItems,true);
-                    setVisible(petrinetsItems,false);
-                    setVisible(rulesItems,false);
-                    setVisible(ruleItems,false);
-                }else if(selected instanceof RulesNode){
+                    setVisible(petrinetItems, false);
+                    setVisible(rulesItems, false);
+                    setVisible(ruleItems, false);
+                } else if (selected instanceof PetrinetNode) {
+                    setVisible(petrinetItems, true);
                     setVisible(petrinetsItems, false);
-                    setVisible(petrinetItems,false);
-                    setVisible(rulesItems,true);
-                    setVisible(ruleItems,false);
-                }else if(selected instanceof RuleNode){
+                    setVisible(rulesItems, false);
+                    setVisible(ruleItems, false);
+                } else if (selected instanceof RulesNode) {
                     setVisible(petrinetsItems, false);
-                    setVisible(petrinetItems,false);
-                    setVisible(rulesItems,false);
-                    setVisible(ruleItems,true);
-                }
-                else {
+                    setVisible(petrinetItems, false);
+                    setVisible(rulesItems, true);
+                    setVisible(ruleItems, false);
+                } else if (selected instanceof RuleNode) {
+                    setVisible(petrinetsItems, false);
+                    setVisible(petrinetItems, false);
+                    setVisible(rulesItems, false);
+                    setVisible(ruleItems, true);
+                } else {
                     setVisible(petrinetsItems, false);
                 }
             }
@@ -150,26 +139,24 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         petrinetTree.setComponentPopupMenu(menu);
     }
 
-
-
-    private void step(){
-        try{
+    private void step() {
+        try {
             activeNode().getEngine().getSimulation().step();
-        }catch(Exception ex){
+        } catch (Exception ex) {
             Error.create(ex.getMessage());
         }
     }
 
-    private void stepXtimes(){
+    private void stepXtimes() {
         stepXTimes(activeNode(), (Integer) jSpinner1.getValue());
     }
 
     private void stepXTimes(final PetrinetNode node, final int times) {
         if (times < 1000) {
             stepXTimesInternal(node, times);
-        }
-        else {
-            final SwingWorker w = new SwingWorker<Void,Void>() {
+        } else {
+            final SwingWorker w = new SwingWorker<Void, Void>() {
+
                 @Override
                 protected Void doInBackground() throws Exception {
                     stepXTimesInternal(node, times);
@@ -178,7 +165,6 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
 
                 @Override
                 protected void done() {
-
                 }
             };
 
@@ -197,14 +183,12 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
 
         int i = 0;
         try {
-            for(i = 0; i < times; i++){
+            for (i = 0; i < times; i++) {
                 sim.step();
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             Error.create(String.format("Kann nicht mehr schalten (nach %d Schritten)", i));  // TODO i18n
-        }
-        finally {
+        } finally {
             // TODO GUI entsperren
             sim.addStepListener(this);
 
@@ -213,23 +197,21 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         }
     }
 
-    private void startSimulation(){
-        try{
+    private void startSimulation() {
+        try {
             activeNode().getEngine().getSimulation().start(200);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             Error.create(ex.getMessage());
         }
     }
 
-    private void stopSimulation(){
-        try{
+    private void stopSimulation() {
+        try {
             activeNode().getEngine().getSimulation().stop();
-        }catch(Exception ex){
+        } catch (Exception ex) {
             Error.create(ex.getMessage());
         }
     }
-
-
 
     private void initLanguage(String lang, String lang2) {
         I18n.setLocale(lang, lang2);
@@ -543,23 +525,22 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     }//GEN-LAST:event_buttonStepsActionPerformed
 
     private void toggleButtonPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_toggleButtonPlayActionPerformed
-        if(toggleButtonPlay.isSelected()){
+        if (toggleButtonPlay.isSelected()) {
             startSimulation();
-        }else{
+        } else {
             stopSimulation();
         }
     }//GEN-LAST:event_toggleButtonPlayActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        RuleWrapper wrapper = new RuleWrapper("Rule1",createTestRule());
+        RuleWrapper wrapper = new RuleWrapper("Rule1", createTestRule());
 
-        
+
         JInternalFrame frame = wrapper.getRuleFrame();
         desktop.add(frame);
         frame.setBounds(40, 20, 360, 250);
         frame.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem EnglishMenuItem;
     private javax.swing.JButton buttonStep;
@@ -597,32 +578,27 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     private javax.swing.JToggleButton toggleButtonTransition;
     // End of variables declaration//GEN-END:variables
 
-
-    
-
-
-
-public IPetrinet getTestPetrinet(){
-    Petrinet petrinet = new Petrinet();
-    IPlace p1 = petrinet.createPlace("Stelle1");
-    p1.setMark(1);
-    IPlace p2 = petrinet.createPlace("Stelle2");
-    p2.setMark(1);
-    IPlace p3 = petrinet.createPlace("Stelle3");
-    p3.setMark(1);
-    ITransition t1 = petrinet.createTransition("t1", Renews.IDENTITY);
-    petrinet.createArc("", p1, t1);
-    petrinet.createArc("", t1, p2);
-    ITransition t2 = petrinet.createTransition("t2", Renews.IDENTITY);
-    petrinet.createArc("", p2, t2);
-    petrinet.createArc("", t2, p3);
-    ITransition t3 = petrinet.createTransition("t3", Renews.IDENTITY);
-    petrinet.createArc("", p3, t3);
-    petrinet.createArc("", t3, p1);
+    public IPetrinet getTestPetrinet() {
+        Petrinet petrinet = new Petrinet();
+        IPlace p1 = petrinet.createPlace("Stelle1");
+        p1.setMark(1);
+        IPlace p2 = petrinet.createPlace("Stelle2");
+        p2.setMark(1);
+        IPlace p3 = petrinet.createPlace("Stelle3");
+        p3.setMark(1);
+        ITransition t1 = petrinet.createTransition("t1", Renews.IDENTITY);
+        petrinet.createArc("", p1, t1);
+        petrinet.createArc("", t1, p2);
+        ITransition t2 = petrinet.createTransition("t2", Renews.IDENTITY);
+        petrinet.createArc("", p2, t2);
+        petrinet.createArc("", t2, p3);
+        ITransition t3 = petrinet.createTransition("t3", Renews.IDENTITY);
+        petrinet.createArc("", p3, t3);
+        petrinet.createArc("", t3, p1);
         return petrinet;
-}
+    }
 
-    public IRule createTestRule(){
+    public IRule createTestRule() {
         IRule rule1 = new Rule();
         //L von r1
         IPlace p1 = rule1.L().createPlace("Wecker ein");
@@ -662,10 +638,9 @@ public IPetrinet getTestPetrinet(){
 
     private void createPetrinet() {
         final String input =
-            JOptionPane.showInputDialog(
+                JOptionPane.showInputDialog(
                 this,
-                "Bitte geben Sie einen Namen für das Petrinetz ein", "Neues Petrinetz"
-            );
+                "Bitte geben Sie einen Namen für das Petrinetz ein", "Neues Petrinetz");
 
         if (input != null) {
             IPetrinet pn = new Petrinet();
@@ -676,12 +651,12 @@ public IPetrinet getTestPetrinet(){
                 public void propertyChange(PropertyChangeEvent evt) {
                     Set<INode> nodes = (Set<INode>) evt.getNewValue();
                     INode node = nodes.iterator().next();
-                    if(node instanceof IArc){
-                       jTable1.setModel(new ArcTableModel((IArc) node));                         
-                    }else if(node instanceof ITransition){
-                       jTable1.setModel(new TransitionTableModel((ITransition) node));
-                    }else if(node instanceof IPlace){
-                       jTable1.setModel(new PlaceTalbeModel((IPlace) node));
+                    if (node instanceof IArc) {
+                        jTable1.setModel(new ArcTableModel((IArc) node));
+                    } else if (node instanceof ITransition) {
+                        jTable1.setModel(new TransitionTableModel((ITransition) node));
+                    } else if (node instanceof IPlace) {
+                        jTable1.setModel(new PlaceTalbeModel((IPlace) node));
                     }
                 }
             });
@@ -691,20 +666,29 @@ public IPetrinet getTestPetrinet(){
             frame.setVisible(true);
         }
     }
-    
-    private void openPetrinet(){
+
+    private void openPetrinet() {
         PetrinetNode node = (PetrinetNode) petrinetTree.getSelectionPath().getLastPathComponent();
         PetrinetFrame frame = new PetrinetFrame(node);
         desktop.add(frame);
         frame.setBounds(40, 20, 360, 250);
         frame.setVisible(true);
     }
-    
-    private void addRule(){
-        RuleWrapper wrapper = new RuleWrapper("Rule1",createTestRule());
-        JInternalFrame frame = wrapper.getRuleFrame();
-        desktop.add(frame);
-        frame.setBounds(40, 20, 360, 250);
-        frame.setVisible(true);
+
+    private void addRule() {
+        final String input =
+                JOptionPane.showInputDialog(
+                this,
+                "Bitte geben Sie einen Namen für die Regel ein", "Neue Regel");
+
+        if (input != null) {
+            IRule rule = new Rule();
+            RuleWrapper wrapper = new RuleWrapper(input, rule);
+            JInternalFrame frame = wrapper.getRuleFrame();
+            desktop.add(frame);
+            frame.setBounds(40, 20, 360, 250);
+            frame.setVisible(true);
+            frame.requestFocusInWindow();
+        }
     }
 }
