@@ -19,6 +19,7 @@ import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.border.LineBorder;
@@ -135,7 +136,13 @@ public class RuleWrapper {
         JPanel arrowPanel = new javax.swing.JPanel(flowLayoutArrows);
         arrowPanel.add(left);
         arrowPanel.add(right);
-        
+
+        JPanel LkrPanel = new javax.swing.JPanel();
+        LkrPanel.add(new JLabel("L"));
+        LkrPanel.add(new JLabel("K"));
+        LkrPanel.add(new JLabel("R"));
+
+        internalRuleFrame.add(LkrPanel,"North");
         internalRuleFrame.add(rulePanel,"Center");
         internalRuleFrame.add(arrowPanel,"South");
         internalRuleFrame.pack();
