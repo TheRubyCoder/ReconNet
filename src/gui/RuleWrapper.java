@@ -56,22 +56,31 @@ public class RuleWrapper {
         internalRuleFrame.setClosable(true);
         internalRuleFrame.setResizable(true);
         internalRuleFrame.setMaximizable(true);
+        
+        JPanel ruleLeftPanel = Lengine.getGraphEditor().getGraphPanel();
+        JPanel ruleGluePanel = Kengine.getGraphEditor().getGraphPanel();
+        JPanel ruleRightPanel = Rengine.getGraphEditor().getGraphPanel();
+
+
         GridLayout ruleGrid = new java.awt.GridLayout(1, 3);
         JPanel rulePanel = new javax.swing.JPanel(ruleGrid);
+        rulePanel.add(ruleLeftPanel);
+        rulePanel.add(ruleGluePanel);
+        rulePanel.add(ruleRightPanel);
+        
         FlowLayout flowLayoutArrows = new java.awt.FlowLayout();
         JButton left = new javax.swing.JButton("<-");
         JButton right = new javax.swing.JButton("->");
         JPanel arrowPanel = new javax.swing.JPanel(flowLayoutArrows);
         arrowPanel.add(left);
         arrowPanel.add(right);
-        JPanel ruleLeftPanel = Lengine.getGraphEditor().getGraphPanel();
-        JPanel ruleGluePanel = Kengine.getGraphEditor().getGraphPanel();
-        JPanel ruleRightPanel = Rengine.getGraphEditor().getGraphPanel();
+        
         internalRuleFrame.add(rulePanel,"Center");
         internalRuleFrame.add(arrowPanel,"South");
         internalRuleFrame.pack();
         internalRuleFrame.setLocation(10, 10);
         internalRuleFrame.setVisible(true);
+        
         return internalRuleFrame;
     }
 }
