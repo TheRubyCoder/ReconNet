@@ -146,7 +146,7 @@ public class Transition implements ITransition {
 	 */
 	@Override
 	public String toString() {
-		return "Transition [" + ", id=" + id + ", name=" + name
+		return "Transition [Label=" + tlb + ", id=" + id + ", name=" + name
 				+ "]";
 	}
 	@Override
