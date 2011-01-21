@@ -14,7 +14,7 @@ public class Transformation implements ITransformation {
 	private final IMorphism morphism;
 	private final IRule rule; 
 	
-	/**
+	/**	
 	 * Constructor for the class Transformation
 	 * @param net,the petrinet to transform
 	 * @param morph, the morphism to use
@@ -64,6 +64,7 @@ public class Transformation implements ITransformation {
 	}		
 	/**
 	 * Method for starting the transform. 
+	 * Call this one in Order to start the shit !
 	 * 
 	 */
 	@Override
@@ -73,7 +74,7 @@ public class Transformation implements ITransformation {
 		Set<IArc> KArc = K.getAllArcs();		
 		for (INode i : KNode)  // Add K - L Places
 		{
-			if(rule.fromKtoL(i) == null) {
+			if(rule.fromKtoL(i) == null) { // If K not in L do,.....
 				if(i instanceof IPlace){   
 					N.createPlace(i.getName());					
 				}
@@ -95,7 +96,7 @@ public class Transformation implements ITransformation {
 		}
 		for (INode i : KNode) // Delete K - R Places
 		{
-			if (rule.fromKtoR(i) == null) {
+			if (rule.fromKtoR(i) == null) { 
 				if(i instanceof IPlace){
 					N.deletePlaceById(morphism.morph((IPlace)i).getId());
 				}
