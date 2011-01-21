@@ -9,7 +9,6 @@ import gui.PetrinetTreeModel.PetrinetNode;
 import gui.PetrinetTreeModel.RuleNode;
 import gui.PetrinetTreeModel.RulesNode;
 import gui.TableModels.*;
-import java.awt.ComponentOrientation;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -69,7 +68,12 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
 
         public void actionPerformed(ActionEvent e) {
             PetrinetNode node = (PetrinetNode)petrinetTree.getSelectionPath().getPathComponent(1);
-            node.getEngine().transform(((RuleNode)petrinetTree.getSelectionPath().getLastPathComponent()).getRule());
+            try{
+                node.getEngine().transform(((RuleNode)petrinetTree.getSelectionPath().getLastPathComponent()).getRule());
+            }catch(Exception ex){
+                Error.create(ex);
+            }
+            
         }
     };
 
@@ -137,6 +141,9 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
                     setVisible(ruleItems, true);
                 } else {
                     setVisible(petrinetsItems, false);
+                    setVisible(petrinetItems, false);
+                    setVisible(rulesItems, false);
+                    setVisible(ruleItems, false);
                 }
             }
         });

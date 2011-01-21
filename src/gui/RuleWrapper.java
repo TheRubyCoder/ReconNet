@@ -66,6 +66,36 @@ public class RuleWrapper {
                     }
                 }
         });
+        Rengine.getGraphEditor().getGraphPanel().addPropertyChangeListener("pickedNodes", new PropertyChangeListener() {
+
+                public void propertyChange(PropertyChangeEvent evt) {
+                    Set<INode> nodes = (Set<INode>) evt.getNewValue();
+                    selected = nodes;
+                    INode node = nodes.iterator().next();
+                    if (node instanceof IArc) {
+                        table.setModel(new ArcTableModel((IArc) node));
+                    } else if (node instanceof ITransition) {
+                        table.setModel(new TransitionTableModel((ITransition) node));
+                    } else if (node instanceof IPlace) {
+                        table.setModel(new PlaceTalbeModel((IPlace) node));
+                    }
+                }
+        });
+        Lengine.getGraphEditor().getGraphPanel().addPropertyChangeListener("pickedNodes", new PropertyChangeListener() {
+
+                public void propertyChange(PropertyChangeEvent evt) {
+                    Set<INode> nodes = (Set<INode>) evt.getNewValue();
+                    selected = nodes;
+                    INode node = nodes.iterator().next();
+                    if (node instanceof IArc) {
+                        table.setModel(new ArcTableModel((IArc) node));
+                    } else if (node instanceof ITransition) {
+                        table.setModel(new TransitionTableModel((ITransition) node));
+                    } else if (node instanceof IPlace) {
+                        table.setModel(new PlaceTalbeModel((IPlace) node));
+                    }
+                }
+        });
         this.frame = createFrame();
         
     }
