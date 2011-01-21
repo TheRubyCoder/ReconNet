@@ -255,6 +255,8 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         jScrollPane1 = new javax.swing.JScrollPane();
         javax.swing.JTree petrinetTree = this.petrinetTree;
         editToolBar = new javax.swing.JToolBar();
+        translateButton = new javax.swing.JToggleButton();
+        pickButton = new javax.swing.JToggleButton();
         toggleButtonPlace = new javax.swing.JToggleButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
         toggleButtonTransition = new javax.swing.JToggleButton();
@@ -289,6 +291,30 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         jScrollPane1.setViewportView(petrinetTree);
 
         editToolBar.setRollover(true);
+
+        petriTools.add(translateButton);
+        translateButton.setText("Translate");
+        translateButton.setFocusable(false);
+        translateButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        translateButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        translateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                translateButtonActionPerformed(evt);
+            }
+        });
+        editToolBar.add(translateButton);
+
+        petriTools.add(pickButton);
+        pickButton.setText("Pick");
+        pickButton.setFocusable(false);
+        pickButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        pickButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        pickButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pickButtonActionPerformed(evt);
+            }
+        });
+        editToolBar.add(pickButton);
 
         petriTools.add(toggleButtonPlace);
         toggleButtonPlace.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/resource/place.png"))); // NOI18N
@@ -428,10 +454,13 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(editToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(playToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 242, Short.MAX_VALUE)
-                        .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 421, Short.MAX_VALUE)
+                                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(playToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(desktop, javax.swing.GroupLayout.DEFAULT_SIZE, 776, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -441,11 +470,11 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(playToolBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE)
-                            .addComponent(editToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 54, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(desktop, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(editToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
+                            .addComponent(playToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(desktop, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -509,6 +538,14 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         }
     }//GEN-LAST:event_petrinetTreeValueChanged
 
+    private void pickButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pickButtonActionPerformed
+        petrinetTree.setEditMode(EditMode.PICK);
+    }//GEN-LAST:event_pickButtonActionPerformed
+
+    private void translateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_translateButtonActionPerformed
+        petrinetTree.setEditMode(EditMode.TRANSLATE);
+    }//GEN-LAST:event_translateButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem EnglishMenuItem;
     private javax.swing.JButton buttonStep;
@@ -528,6 +565,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JMenuItem openMenuItem;
     private javax.swing.ButtonGroup petriTools;
+    private javax.swing.JToggleButton pickButton;
     private javax.swing.JToolBar playToolBar;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JMenuItem saveMenuItem;
@@ -535,6 +573,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     private javax.swing.JToggleButton toggleButtonPlace;
     private javax.swing.JToggleButton toggleButtonPlay;
     private javax.swing.JToggleButton toggleButtonTransition;
+    private javax.swing.JToggleButton translateButton;
     private javax.swing.JDesktopPane desktop;
     // End of variables declaration//GEN-END:variables
 
