@@ -3,14 +3,22 @@ package gui;
 import com.sun.java.swing.SwingUtilities3;
 import engine.EditMode;
 import engine.Engine;
+import petrinetze.ActionType;
+import petrinetze.IArc;
+import petrinetze.INode;
 import petrinetze.IPetrinet;
 import transformation.IRule;
 
 import javax.swing.tree.*;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.SwingUtilities;
+import petrinetze.IPetrinetListener;
+import petrinetze.IRenew;
+import petrinetze.Renews;
 
 /**
  * Created by IntelliJ IDEA.
@@ -114,7 +122,7 @@ public class PetrinetTreeModel extends DefaultTreeModel {
     static class RulesNode extends DefaultMutableTreeNode {
 
         RulesNode() {
-            super("Rules");
+            super("Rules", true);
         }
 
         @Override
@@ -147,16 +155,18 @@ public class PetrinetTreeModel extends DefaultTreeModel {
         }
     }
 
-    public static class PetrinetNode extends DefaultMutableTreeNode {
+    public static class PetrinetNode extends DefaultMutableTreeNode implements IPetrinetListener {
 
         private final DefaultMutableTreeNode rulesNode;
 
-        private PetrinetFrame frame;
+        private volatile PetrinetFrame frame;
 
         PetrinetNode(String name, Engine engine) {
             super(new Named<Engine>(name, engine), true);
             rulesNode = new RulesNode();
             add(rulesNode);
+
+            engine.getNet().addPetrinetListener(this);
         }
 
         public void addRule(String name, RuleWrapper rule) {
@@ -190,6 +200,36 @@ public class PetrinetTreeModel extends DefaultTreeModel {
             }
 
             return frame;
+        }
+
+        @Override
+        public void changed(IPetrinet petrinet, INode element, ActionType actionType) {
+            if (frame != null) frame.repaint();
+        }
+
+        @Override
+        public void changed(IPetrinet petrinet, IArc element, ActionType actionType) {
+            if (frame != null) frame.repaint();
+        }
+    }
+
+    public static abstract class NamedNode<T> extends DefaultMutableTreeNode {
+
+        protected NamedNode(Named<T> content) {
+            super(content, true);
+        }
+
+        public String getName() {
+            return ((NamedNode<T>)userObject).getName();
+        }
+
+        public void setName(String name) {
+            // TODO Listener notification?
+            ((NamedNode<T>)userObject).setName(name);
+        }
+
+        public T getValue() {
+            return ((NamedNode<T>)userObject).getValue();
         }
     }
 
@@ -233,6 +273,36 @@ public class PetrinetTreeModel extends DefaultTreeModel {
         @Override
         public boolean isLeaf() {
             return true;
+        }
+    }
+
+
+    public static class RenewsNode extends DefaultMutableTreeNode {
+
+        RenewsNode() {
+            super("Renews");
+            add("id", Renews.IDENTITY);
+            add("count", Renews.COUNT);
+        }
+
+        public final void add(String name, IRenew renew) {
+            add(new RenewNode(name, renew));
+        }
+
+        public Map<IRenew,String> getRenews() {
+            final Map<IRenew,String> renews = new IdentityHashMap<IRenew, String>();
+
+            for (Object c : children) {
+                renews.put(((RenewNode)c).getValue(), ((RenewNode)c).getName());
+            }
+
+            return renews;
+        }
+    }
+
+    public static class RenewNode extends NamedNode<IRenew> {
+        RenewNode(String name, IRenew renew) {
+            super(new Named<IRenew>(name, renew));
         }
     }
 

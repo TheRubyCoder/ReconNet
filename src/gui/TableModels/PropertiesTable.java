@@ -1,9 +1,11 @@
 package gui.TableModels;
 
+import gui.RenewComboBox;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableModel;
+import petrinetze.IRenew;
 
 public class PropertiesTable extends JTable {
 
@@ -62,6 +64,48 @@ public class PropertiesTable extends JTable {
         protected abstract Class<?> getPropertyClass(int rowIndex);
 
         protected abstract boolean isWritable(int rowIndex);
+    }
+
+    static final class EmptyModel extends AbstractModel {
+
+        @Override
+        protected int getPropertyCount() {
+            return 0;
+        }
+
+        @Override
+        protected String getPropertyName(int rowIndex) {
+            throw new UnsupportedOperationException("Not supported.");
+        }
+
+        @Override
+        protected Object getPropertyValue(int rowIndex) {
+            throw new UnsupportedOperationException("Not supported.");
+        }
+
+        @Override
+        protected void setPropertyValue(int rowIndex, Object value) {
+            throw new UnsupportedOperationException("Not supported.");
+        }
+
+        @Override
+        protected Class<?> getPropertyClass(int rowIndex) {
+            return Object.class;
+        }
+
+        @Override
+        protected boolean isWritable(int rowIndex) {
+            return false;
+        }
+    }
+
+    public PropertiesTable(AbstractModel model) {
+        super(model);
+        setDefaultEditor(IRenew.class, new DefaultCellEditor(new RenewComboBox()));
+    }
+
+    public PropertiesTable() {
+        this(new EmptyModel());
     }
 
     @Override

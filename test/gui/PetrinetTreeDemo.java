@@ -150,7 +150,7 @@ public class PetrinetTreeDemo extends JScrollPane {
                 final EngineFactory factory = EngineFactory.newFactory();
 
                 PetrinetTreeModel.PetrinetNode node = panel.addPetrinet("Wecker", factory.createEngine(new Petrinet()));
-                node.addRule("zerstören", new Rule());
+                // node.addRule("zerstören", new Rule());
 
                 panel.setBorder(BorderFactory.createEmptyBorder()); // nur falls direkt im JFrame!
                 frame.setContentPane(panel);

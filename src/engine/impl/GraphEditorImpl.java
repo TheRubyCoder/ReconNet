@@ -1,5 +1,6 @@
 package engine.impl;
 
+import edu.uci.ics.jung.graph.DirectedGraph;
 import java.awt.geom.Point2D;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -30,13 +31,58 @@ class GraphEditorImpl implements GraphEditor {
 
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-	public GraphEditorImpl(EngineContext context, Engine engine) {
+    public GraphEditorImpl(EngineContext context, Engine engine) {
         this.context = context;
         graphPanel = new GraphPanel(engine, context);
+
+        // FIXME hotfix for reacting direct on additions to IPetrinet
+        engine.getNet().addPetrinetListener(new IPetrinetListener() {
+
+            @Override
+            public void changed(IPetrinet petrinet, INode element, ActionType actionType) {
+                final DirectedGraph<INode,IArc> g = GraphEditorImpl.this.context.getGraph();
+
+                switch (actionType) {
+                    case added:
+                        if (!g.containsVertex(element)) {
+                            g.addVertex(element);
+                        }
+                        break;
+
+                    case deleted:
+                        if (g.containsVertex(element)) {
+                            g.removeVertex(element);
+                        }
+                        break;
+                }
+            }
+
+            @Override
+            public void changed(IPetrinet petrinet, IArc element, ActionType actionType) {
+                final DirectedGraph<INode,IArc> g = GraphEditorImpl.this.context.getGraph();
+
+                switch (actionType) {
+                    case added:
+                        if (!g.containsEdge(element)) {
+                            g.addEdge(element, element.getStart(), element.getEnd());
+                        }
+                        break;
+
+                    case deleted:
+                        if (g.containsEdge(element)) {
+                            g.removeEdge(element);
+                        }
+                        break;
+                }
+            }
+        });
     }
 
     private <T extends INode> T initNode(T node, final Point2D location) {
-        context.getGraph().addVertex(node);
+        // FIXME hotfix for reacting direct on additions to IPetrinet
+        if (!context.getGraph().containsVertex(node)) {
+            context.getGraph().addVertex(node);
+        }
         System.out.println("in: " + location);
         context.getLayout().setLocation(node, location.getX(), location.getY());
         System.out.println("out: " + context.getLayout().getX(node) + "," + context.getLayout().getY(node));
@@ -57,10 +103,9 @@ class GraphEditorImpl implements GraphEditor {
     public IArc createArc(INode from, INode to) {
         System.out.println(String.format("createArc(%s, %s)",from, to));
         IArc arc = context.getPetrinet().createArc("", from, to);
-        context.getGraph().addEdge(arc, from, to, EdgeType.DIRECTED);
+        // context.getGraph().addEdge(arc, from, to, EdgeType.DIRECTED);
         return arc;
     }
-
 
     public void remove(Set<? extends INode> nodes) {
         for (INode node : nodes) {
