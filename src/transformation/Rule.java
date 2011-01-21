@@ -80,10 +80,18 @@ public class Rule implements IRule
 		r
 	}
 	
+	//These are used in the Listener, to indicate, which net has originally been changeed to prevent cycles.
 	private boolean rChanging = false;
 	private boolean kChanging = false;
 	private boolean lChanging = false;
 	
+	/**
+	 * 
+	 * This Listener is used to listen for events on the L K and R nets.
+	 * When anything is added to K, it will get added to R and L.
+	 * When anything is added to L or R, it will get added to K.
+	 *
+	 */
 	private class Listener implements IPetrinetListener
 	{
 		private final Net net;
