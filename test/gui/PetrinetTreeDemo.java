@@ -39,7 +39,7 @@ public class PetrinetTreeDemo extends JScrollPane {
         };
 
     private final Action addRuleAction =
-        new AbstractAction("Hinzufügen") { // TODO i18n
+        new AbstractAction("Hinzufï¿½gen") { // TODO i18n
             @Override
             public void actionPerformed(ActionEvent e) {
                 throw new UnsupportedOperationException("Not implemented");
@@ -150,7 +150,7 @@ public class PetrinetTreeDemo extends JScrollPane {
                 final EngineFactory factory = EngineFactory.newFactory();
 
                 PetrinetTreeModel.PetrinetNode node = panel.addPetrinet("Wecker", factory.createEngine(new Petrinet()));
-                // node.addRule("zerstören", new Rule());
+                //node.addRule("zerstï¿½ren", new Rule());
 
                 panel.setBorder(BorderFactory.createEmptyBorder()); // nur falls direkt im JFrame!
                 frame.setContentPane(panel);
