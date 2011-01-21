@@ -73,7 +73,7 @@ public class Transformation implements ITransformation {
 		Set<IArc> KArc = K.getAllArcs();		
 		for (INode i : KNode)  // Add K - L Places
 		{
-			if(rule.fromKtoL(i) != null) {
+			if(rule.fromKtoL(i) == null) {
 				if(i instanceof IPlace){   
 					N.createPlace(i.getName());					
 				}
@@ -84,7 +84,7 @@ public class Transformation implements ITransformation {
 			}				  
 		}
 		for (IArc a : KArc){ //Add K - L Arcs
-			if(rule.fromKtoL(a) != null) {
+			if(rule.fromKtoL(a) == null) {
 				if(a.getStart() instanceof IPlace){
 					N.createArc(a.getName(),morphism.morph((IPlace)a.getStart()),morphism.morph((ITransition)a.getEnd()));
 				}
@@ -95,7 +95,7 @@ public class Transformation implements ITransformation {
 		}
 		for (INode i : KNode) // Delete K - R Places
 		{
-			if (rule.fromKtoR(i) != null) {
+			if (rule.fromKtoR(i) == null) {
 				if(i instanceof IPlace){
 					N.deletePlaceById(morphism.morph((IPlace)i).getId());
 				}
@@ -105,7 +105,7 @@ public class Transformation implements ITransformation {
 			}
 		}
 		for (IArc i : KArc){ // Delete K - R Arc´s
-			if (rule.fromKtoR(i) != null) {
+			if (rule.fromKtoR(i) == null) {
 				N.deleteArcByID(morphism.morph(i).getId());
 			}			
 		}

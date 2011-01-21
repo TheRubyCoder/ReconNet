@@ -17,6 +17,8 @@ class MatrixImpl implements Matrix {
 
 	@Override
 	public int getNumCols() {
+		if(m.length == 0)
+			return 0;
 		return m[0].length;
 	}
 

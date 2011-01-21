@@ -62,6 +62,7 @@ public final class Transformations
 	public static void transform(IPetrinet net, IRule rule)
 	{
 		new Transformation(net, rule).transform();
+		System.out.println(net);
 	}
 
 }
