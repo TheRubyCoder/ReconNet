@@ -31,7 +31,9 @@ public class MorphismFactory {
 	}
 
 
-
+	// Netzmorphismus: netA --> netB von netA nach netB
+	// Die Stellen und Transitionen werden im folgenden ueber ihre Zeilennr. bzw. Spaltennr. in der pre- und post-Matrix identifiziert
+	
 	private final IPetrinet netA;
 	private final IPetrinet netB;
 
@@ -45,11 +47,15 @@ public class MorphismFactory {
 	private final int netB_numTransitions;
 
 
-	private Map<Integer, Integer>[] netA_placesInEdges;
-	private Map<Integer, Integer>[] netA_placesOutEdges;
-	private Map<Integer, Integer>[] netA_transitionsInEdges;
-	private Map<Integer, Integer>[] netA_transitionsOutEdges;
-	private Map<Integer, Integer>[] netB_placesInEdges;
+	// Bedeutung von Arrayindex, key und value der Maps in den folgenden Zeilen:
+	// Arrayindex: Eine Stelle/Transition (Zeilennr./Spaltennr. in pre-/post-Matrix)
+	// key: Kantengewicht
+	// value: Die Anzahl der Kanten, die dieses Kantengewicht haben 
+	private Map<Integer, Integer>[] netA_placesInEdges; // Kantengewichte der in die Stellen von netA eingehenden Kanten
+	private Map<Integer, Integer>[] netA_placesOutEdges; // Kantengewichte der aus den Stellen von netA ausgehenden Kanten
+	private Map<Integer, Integer>[] netA_transitionsInEdges; // Kantengewichte der in die Transitionen von netA eingehenden Kanten
+	private Map<Integer, Integer>[] netA_transitionsOutEdges; // Kantengewichte der aus den Transitionen von netA ausgehenden Kanten
+	private Map<Integer, Integer>[] netB_placesInEdges; // ab hier das gleiche fuer netB
 	private Map<Integer, Integer>[] netB_placesOutEdges;
 	private Map<Integer, Integer>[] netB_transitionsInEdges;
 	private Map<Integer, Integer>[] netB_transitionsOutEdges;
@@ -77,6 +83,8 @@ public class MorphismFactory {
 		netB_numTransitions = netB_pre.getNumCols();
 
 		init();
+		
+		// Nun werden die 
 		createM0_places();
 		createM0_transitions();
 	}
@@ -119,6 +127,7 @@ public class MorphismFactory {
 			final IPlace placeA = netA.getPlaceById(netA.getPre().getPlaceIds()[indexA]);
 			for (int indexB = 0; indexB < netB_numPlaces; indexB++) {
 				final IPlace placeB = netB.getPlaceById(netB.getPre().getPlaceIds()[indexB]);
+				// Alle Bedingungen pruefen, die erfuellt sein muessen, damit die m0-Matrix fuer das aktuelle Mapping placeA --> placeB einen true-Eintrag bekommt
 				if (	placeA.getName().equals(placeB.getName()) &&
 						placeA.getMark() <= placeB.getMark() &&
 						testPlaceEdges(netA_placesInEdges[indexA], netB_placesInEdges[indexB]) &&
@@ -165,7 +174,7 @@ public class MorphismFactory {
 
 	private boolean testPlaceEdges(Map<Integer, Integer> edgesNetA, Map<Integer, Integer> edgesNetB) {
 		for (Entry<Integer, Integer> e : edgesNetA.entrySet()) {
-			int numWeightA = e.getValue(); // key: Gewichtung einer Kante, value: Anzahl Kanten mit dieser Gewichtung
+			int numWeightA = e.getValue(); // key: Kantengewicht, value: Anzahl Kanten mit diesem Kantengewicht
 			Integer numWeightB = edgesNetB.get(e.getKey());
 			if (numWeightB == null) {
 				return false;
