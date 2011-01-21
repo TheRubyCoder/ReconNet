@@ -23,9 +23,8 @@ import petrinetze.Renews;
 /**
  * Created by IntelliJ IDEA.
  * User: moritz
- * Date: 07.01.11
- * Time: 10:14
- * To change this template use File | Settings | File Templates.
+ *
+ * @todo Listenerbenachrichtigung muss erweitert werden
  */
 public class PetrinetTreeModel extends DefaultTreeModel {
 
@@ -82,7 +81,7 @@ public class PetrinetTreeModel extends DefaultTreeModel {
         }
     }
 
-    static class RootNode extends DefaultMutableTreeNode {
+    class RootNode extends DefaultMutableTreeNode {
 
         RootNode() {
             super("Petrinetze", true);
@@ -119,7 +118,7 @@ public class PetrinetTreeModel extends DefaultTreeModel {
         }
     }
 
-    static class RulesNode extends DefaultMutableTreeNode {
+    class RulesNode extends DefaultMutableTreeNode {
 
         RulesNode() {
             super("Rules", true);
@@ -136,7 +135,6 @@ public class PetrinetTreeModel extends DefaultTreeModel {
                     ((RuleNode)c).setEditMode(mode);
                 }
             }
-            
         }
 
         @Override
@@ -155,7 +153,7 @@ public class PetrinetTreeModel extends DefaultTreeModel {
         }
     }
 
-    public static class PetrinetNode extends DefaultMutableTreeNode implements IPetrinetListener {
+    public class PetrinetNode extends DefaultMutableTreeNode implements IPetrinetListener {
 
         private final DefaultMutableTreeNode rulesNode;
 
@@ -170,14 +168,22 @@ public class PetrinetTreeModel extends DefaultTreeModel {
         }
 
         public void addRule(String name, RuleWrapper rule) {
-            rulesNode.add(new RuleNode(name, rule));
+            final RuleNode node = new RuleNode(name, rule);
+            rulesNode.add(node);
+
+            fireTreeNodesInserted(
+                PetrinetTreeModel.this,
+                rulesNode.getPath(),
+                new int[] { rulesNode.getIndex(node) },
+                new Object[] { node }
+            );
         }
 
         @Override
         public boolean isLeaf() {
             return false;
         }
-        
+
         public void setEditMode(EditMode mode){
             ((Named<Engine>)getUserObject()).getValue().getGraphEditor().setEditMode(mode);
             ((RulesNode)rulesNode).setEditMode(mode);
@@ -306,12 +312,9 @@ public class PetrinetTreeModel extends DefaultTreeModel {
         }
     }
 
-    public PetrinetTreeModel(RootNode root) {
-        super(root, false);
-    }
-
     public PetrinetTreeModel() {
-        this(new RootNode());
+        super(null, false);
+        this.root = new RootNode();
     }
 
     public PetrinetNode addPetrinet(String name, Engine engine) {
