@@ -22,7 +22,7 @@ import javax.swing.JOptionPane;
  */
 public class Error {
     
-    public static Logger logger;
+    private static Logger logger;
 
 static {
     try {
@@ -49,6 +49,10 @@ static {
         System.out.println(sw.toString());
         logger.warning(sw.toString());
     }
+    
+    private static void print(String ex){
+        logger.warning(ex);
+    }
 
 
     public static void create(Exception ex){
@@ -58,6 +62,7 @@ static {
 
     public static void create(String ex){
         JOptionPane.showMessageDialog(null,ex,I18n.translate("error"),JOptionPane.ERROR_MESSAGE);
+        print(ex);
     }
 
     public static void create(Component parentComponent,Exception ex){
@@ -67,6 +72,7 @@ static {
 
     public static void create(Component parentComponent,String ex){
         JOptionPane.showMessageDialog(parentComponent,ex,I18n.translate("error"),JOptionPane.ERROR_MESSAGE);
+        print(ex);
     }
 
     
