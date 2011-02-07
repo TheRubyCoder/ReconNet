@@ -12,8 +12,12 @@ import gui.TableModels.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -409,6 +413,11 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         fileMenu.add(openMenuItem);
 
         saveMenuItem.setText("Save");
+        saveMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveMenuItemActionPerformed(evt);
+            }
+        });
         fileMenu.add(saveMenuItem);
 
         exitMenuItem.setText("Exit");
@@ -550,6 +559,10 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         petrinetTree.setEditMode(EditMode.TRANSLATE);
     }//GEN-LAST:event_translateButtonActionPerformed
 
+    private void saveMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveMenuItemActionPerformed
+        Error.create(new RuntimeException("Geht nicht!"));
+    }//GEN-LAST:event_saveMenuItemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem EnglishMenuItem;
     private javax.swing.JButton buttonStep;
@@ -580,7 +593,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     private javax.swing.JToggleButton toggleButtonPlay;
     private javax.swing.JToggleButton toggleButtonTransition;
     private javax.swing.JToggleButton translateButton;
-	private javax.swing.JDesktopPane desktop;
+    private javax.swing.JDesktopPane desktop;
     // End of variables declaration//GEN-END:variables
 
     public IPetrinet getTestPetrinet() {
