@@ -256,7 +256,9 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         javax.swing.JTree petrinetTree = this.petrinetTree;
         editToolBar = new javax.swing.JToolBar();
         translateButton = new javax.swing.JToggleButton();
+        jSeparator5 = new javax.swing.JToolBar.Separator();
         pickButton = new javax.swing.JToggleButton();
+        jSeparator4 = new javax.swing.JToolBar.Separator();
         toggleButtonPlace = new javax.swing.JToggleButton();
         jSeparator3 = new javax.swing.JToolBar.Separator();
         toggleButtonTransition = new javax.swing.JToggleButton();
@@ -303,6 +305,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
             }
         });
         editToolBar.add(translateButton);
+        editToolBar.add(jSeparator5);
 
         petriTools.add(pickButton);
         pickButton.setText("Pick");
@@ -315,6 +318,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
             }
         });
         editToolBar.add(pickButton);
+        editToolBar.add(jSeparator4);
 
         petriTools.add(toggleButtonPlace);
         toggleButtonPlace.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/resource/place.png"))); // NOI18N
@@ -456,7 +460,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
                         .addComponent(editToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 421, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 409, Short.MAX_VALUE)
                                 .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -559,6 +563,8 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     private javax.swing.JToolBar.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
+    private javax.swing.JToolBar.Separator jSeparator4;
+    private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTable jTable1;
     private javax.swing.JMenu languageMenu;
@@ -574,7 +580,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     private javax.swing.JToggleButton toggleButtonPlay;
     private javax.swing.JToggleButton toggleButtonTransition;
     private javax.swing.JToggleButton translateButton;
-    private javax.swing.JDesktopPane desktop;
+	private javax.swing.JDesktopPane desktop;
     // End of variables declaration//GEN-END:variables
 
     public IPetrinet getTestPetrinet() {
