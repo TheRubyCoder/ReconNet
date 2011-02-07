@@ -32,7 +32,7 @@ public class Transformation implements ITransformation {
 	public Transformation(IPetrinet net,IRule Rule){
 		N = net; 
 		rule = Rule;
-		morphism = MorphismFactory.createMorphism(N,Rule.L());
+		morphism = MorphismFactory.createMorphism(Rule.L(),N);
 		
 	}		
 	/**
@@ -76,22 +76,41 @@ public class Transformation implements ITransformation {
 		{
 			if(rule.fromKtoL(i) == null) { // If K not in L do,.....
 				if(i instanceof IPlace){   
-					N.createPlace(i.getName());					
+					IPlace n = N.createPlace(i.getName());
+					morphism.places().put((IPlace)i, n);
 				}
 				else{
 					IRenew rnw = ((ITransition) i).getRnw();
-					N.createTransition(i.getName(),rnw);
+					ITransition n = N.createTransition(i.getName(),rnw);
+					morphism.transitions().put((ITransition)i, n);
 				}
-			}				  
+			}
+			else
+			{
+				// just add the nodes to create d
+				if(i instanceof IPlace){   
+					morphism.places().put((IPlace)i, morphism.morph((IPlace)rule.fromKtoL(i)));
+				}
+				else{
+					morphism.transitions().put((ITransition)i, morphism.morph((ITransition)rule.fromKtoL(i)));
+				}
+			}
 		}
 		for (IArc a : KArc){ //Add K - L Arcs
 			if(rule.fromKtoL(a) == null) {
 				if(a.getStart() instanceof IPlace){
-					N.createArc(a.getName(),morphism.morph((IPlace)a.getStart()),morphism.morph((ITransition)a.getEnd()));
+					IArc n = N.createArc(a.getName(),morphism.morph((IPlace)a.getStart()),morphism.morph((ITransition)a.getEnd()));
+					morphism.edges().put(a, n);
 				}
 				else{
-					N.createArc(a.getName(),morphism.morph((ITransition)a.getStart()),morphism.morph((IPlace)a.getEnd()));
+					IArc n = N.createArc(a.getName(),morphism.morph((ITransition)a.getStart()),morphism.morph((IPlace)a.getEnd()));
+					morphism.edges().put(a, n);
 				}	
+			}
+			else
+			{
+				// just add the edges to create d
+				morphism.edges().put(a, morphism.morph(rule.fromKtoL(a)));
 			}
 		}
 		for (INode i : KNode) // Delete K - R Places

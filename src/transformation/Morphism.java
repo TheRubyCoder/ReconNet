@@ -1,5 +1,6 @@
 package transformation;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import petrinetze.IArc;
@@ -22,9 +23,9 @@ class Morphism implements IMorphism {
 			Map<ITransition, ITransition> transitions, Map<IArc, IArc> edges) {
 		this.from = from;
 		this.to = to;
-		this.places = places;
-		this.transitions = transitions;
-		this.edges = edges;
+		this.places = new HashMap<IPlace, IPlace>(places);
+		this.transitions = new HashMap<ITransition, ITransition>(transitions);
+		this.edges = new HashMap<IArc, IArc>(edges);
 	}
 
 
