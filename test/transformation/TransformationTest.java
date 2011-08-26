@@ -131,12 +131,21 @@ public class TransformationTest {
     @Test
     public void testMorphism() {
         System.out.println("morphism");
-        Transformation instance = null;
-        IMorphism expResult = null;
-        IMorphism result = instance.morphism();
-        assertEquals(expResult, result);
+        System.out.println("Test auskommentiert: testMorphism() in TransformationTest.java:131");
+        
+/*
+ * Grosse Baustelle: Niklas fragen, was er beabsichtigte zu testen
+ * Dieses hier kann nicht gehen
+ * Gerhard: 26.08.211
+ */
+        
+        
+//        Transformation instance = null;
+//        IMorphism expResult = null;
+//        IMorphism result = instance.morphism();
+//        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+//        fail("The test case is a prototype.");
     }
 
 
