@@ -2,7 +2,7 @@ package petrinetze.impl;
 
 /**
 * Diese Klasse stellt eine Transition in Petrinetze dar und
-* bietet die dazu gehörige Methoden dafuer an.
+* bietet die dazu gehoerige Methoden dafuer an.
 * 
 * @author Reiter, Safai
 * @version 1.0
@@ -217,7 +217,7 @@ public class Transition implements ITransition {
 
     @Override
     public boolean isActivated() {
-        // TODO aus Petrinet übernommen - prüfen!
+        // TODO aus Petrinet uebernommen - pruefen!
         for (IArc a : getEndArcs()) {
 			IPlace p = (IPlace) a.getStart();
 

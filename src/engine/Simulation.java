@@ -3,18 +3,18 @@ package engine;
 import petrinetze.ITransition;
 
 /**
- * Steuerungsklasse für das Tokenspiel.
+ * Steuerungsklasse fÃ¼r das Tokenspiel.
  * 
  */
 public interface Simulation {
 
     /**
-     * Durchführen eines Simulationsschrittes.
+     * DurchfÃ¼hren eines Simulationsschrittes.
      */
     void step();
 
     /**
-     * Durchführen eines Simulationsschrittes mit gegebener Transition.
+     * DurchfÃ¼hren eines Simulationsschrittes mit gegebener Transition.
      *
      * @todo Exception im Fehlerfall?
      *
@@ -25,7 +25,7 @@ public interface Simulation {
     /**
      * Starten der kontinuierlichen Simulation.
      *
-     * @param delay Zeitverzögerung in Millisekunden
+     * @param delay ZeitverzÃ¶gerung in Millisekunden
      *
      * @throws IllegalStateException falls die Simulation aktiv ist
      */
@@ -39,14 +39,14 @@ public interface Simulation {
 
 
     /**
-     * Aktueller Ausführungszustand
+     * Aktueller AusfÃ¼hrungszustand
      *
      * @return <code>true</code> wenn die Simulation aktiv ist, <code>false</code> sonst
      */
     boolean isRunning();
 
     /**
-     * Hinzufügen eines Listeners, der bei jedem Schritt benachrichtigt wird.
+     * HinzufÃ¼gen eines Listeners, der bei jedem Schritt benachrichtigt wird.
      *
      * @param listener der zu benachrichtigende {@link StepListener}.
      */

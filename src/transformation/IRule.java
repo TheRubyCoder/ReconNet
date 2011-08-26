@@ -5,7 +5,7 @@ import petrinetze.INode;
 import petrinetze.IPetrinet;
 /**
  * An Interface for Rules.
- * @author Philipp Kühn
+ * @author Philipp Kuehn
  *
  */
 public interface IRule 

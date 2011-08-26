@@ -8,7 +8,7 @@ import petrinetze.IPlace;
 import petrinetze.ITransition;
 /**
  * An interface for morphisms on IPetrinet.
- * @author Philipp Kühn
+ * @author Philipp Kuehn
  *
  */
 public interface IMorphism 

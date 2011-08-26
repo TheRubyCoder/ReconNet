@@ -4,7 +4,7 @@ import petrinetze.INode;
 
 /**
  * Ist die Oberklasse fuer Stellen und Transition in Petrinetze, 
- * und stellt die gemeinsamen Methoden zur Verfügung.
+ * und stellt die gemeinsamen Methoden zur Verfuegung.
  * 
  * @author Reiter, Safai
  * @version 1.0

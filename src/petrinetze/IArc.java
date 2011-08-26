@@ -15,13 +15,13 @@ public interface IArc extends INode {
 	void setName(String name);
 
 	/**
-	 * @return Die maximal mögliche Kantengewichtung. 
+	 * @return Die maximal mÃ¶gliche Kantengewichtung. 
 	 */
 	int getMark();
 
 	/**
 	 * @param mark
-	 * 			Die maximal mögliche Kantengewichtung.
+	 * 			Die maximal mÃ¶gliche Kantengewichtung.
 	 */
 	void setMark(int mark);
 

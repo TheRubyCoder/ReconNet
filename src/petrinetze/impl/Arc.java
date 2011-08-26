@@ -9,7 +9,7 @@ import petrinetze.ITransition;
 
 /**
 * Diese Klasse stellt eine Kante in Petrinetze dar und
-* bietet die dazu gehörige Methoden dafuer an.
+* bietet die dazu gehoerige Methoden dafuer an.
 * 
 * @author Reiter, Safai
 * @version 1.0
@@ -18,7 +18,7 @@ import petrinetze.ITransition;
 class Arc implements IArc {
 
 	/**
-	 *  Die maximal mögliche Kantengewichtung.
+	 *  Die maximal moegliche Kantengewichtung.
 	 */
 	private int mark = 1;
 	private String name;

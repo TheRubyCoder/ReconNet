@@ -4,7 +4,7 @@ import petrinetze.IPetrinet;
 
 /**
  * 
- * @author Philipp Kühn
+ * @author Philipp Kuehn
  *
  */
 public final class Transformations 

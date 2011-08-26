@@ -49,7 +49,7 @@ public class Petrinet implements IPetrinet {
 	@Override
 	public void deletePlaceById(int id) {
 		IPlace toBeDelete = null;
-		//TODO: Es sollen auch die ankommenden und ausgehenden Kanten mitgelöscht werden.
+		//TODO: Es sollen auch die ankommenden und ausgehenden Kanten mitgeloescht werden.
 		//und jedes Mal ein Event abfeuern.
 		for (IPlace p : places) {
 			if (p.getId() == id) {
@@ -75,7 +75,7 @@ public class Petrinet implements IPetrinet {
 	}
 
     private void deleteArc(IArc arc) {
-        // ein-/ausgehende Kanten der Transitionen löschen
+        // ein-/ausgehende Kanten der Transitionen loeschen
         if (arc.getStart() != null && arc.getStart() instanceof Transition) {
             ((Transition)arc.getStart()).removeStartArc(arc);
         }
@@ -104,7 +104,7 @@ public class Petrinet implements IPetrinet {
     @Override
 	public void deleteTransitionByID(int id) {
 		ITransition toBeDelete = null;
-		//TODO: Es sollen auch die ankommenden und ausgehenden Kanten mitgelöscht werden.
+		//TODO: Es sollen auch die ankommenden und ausgehenden Kanten mitgeloescht werden.
 		//und jedes Mal ein Event abfeuern.
 		for (ITransition t : transitions) {
 			if (t.getId() == id) {

@@ -15,7 +15,7 @@ import petrinetze.impl.Petrinet;
 
 /**
  * 
- * @author Philipp Kühn
+ * @author Philipp Kuehn
  *
  */
 

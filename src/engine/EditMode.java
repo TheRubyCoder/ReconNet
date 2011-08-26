@@ -9,7 +9,7 @@ package engine;
  */
 public enum EditMode {
 
-    /** Ausw‰hlen v. Stellen / Transitionen */
+    /** Ausw√§hlen v. Stellen / Transitionen */
     PICK,
 
     ADD_TRANSITION,

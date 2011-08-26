@@ -3,7 +3,7 @@ package transformation;
 import petrinetze.IPetrinet;
 /**
  * An Interface for transformations on IPetrinet.
- * @author Philipp Kühn
+ * @author Philipp Kuehn
  *
  */
 public interface ITransformation 

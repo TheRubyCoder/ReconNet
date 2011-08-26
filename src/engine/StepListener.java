@@ -9,7 +9,7 @@ package engine;
 public interface StepListener {
     
     /**
-     * Callback-Methode für das Schaltereignis.
+     * Callback-Methode fÃ¼r das Schaltereignis.
      *
      * @param s die Simulation, die das Schalten veranlasst hat
      * @todo Soll das Petrinetz hier mitgegeben werden?

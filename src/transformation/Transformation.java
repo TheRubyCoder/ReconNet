@@ -124,7 +124,7 @@ public class Transformation implements ITransformation {
 				}
 			}
 		}
-		for (IArc i : KArc){ // Delete K - R Arc´s
+		for (IArc i : KArc){ // Delete K - R Arcs
 			if (rule.fromKtoR(i) == null) {
 				N.deleteArcByID(morphism.morph(i).getId());
 			}			

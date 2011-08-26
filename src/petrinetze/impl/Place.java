@@ -11,7 +11,7 @@ import petrinetze.ITransition;
 
 /**
 * Diese Klasse stellt eine Stelle in Petrinetze dar und
-* bietet die dazu gehörige Methoden dafuer an.
+* bietet die dazu gehoerige Methoden dafuer an.
 * 
 * @author Reiter, Safai
 * @version 1.0
@@ -20,7 +20,7 @@ import petrinetze.ITransition;
 public class Place implements IPlace {
 	private String name;
 	/**
-	 * Die maximal mögliche Anzahl von Token.
+	 * Die maximal moegliche Anzahl von Token.
 	 */
 	private int mark;
 	private int id;

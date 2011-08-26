@@ -298,12 +298,12 @@ public class MorphismFactory {
 						// Wenn keine Moeglichkeit der Zuordnung vorhanden, eine Zeile zurueck gehen
 						transitionsB[currentRow] = null;
 						currentRow--;
-						searchReady = true; // Die innere Schleife beenden und dann die aeußere Schleife wiederholen
+						searchReady = true; // Die innere Schleife beenden und dann die aeussere Schleife wiederholen
 					} else {
 						// Eine Zuordnung festlegen und aus der Liste der moegl. Zuordnungen entfernen
 						final int currentTransB = possibleMappings.remove(0);
 
-						// Die Matrizen für diesen Iterationsschritt als Kopien aus den Vorgaenger-Matrizen erstellen
+						// Die Matrizen fuer diesen Iterationsschritt als Kopien aus den Vorgaenger-Matrizen erstellen
 						m_transitions[currentRow] = new BoolMatrix(prev_M_trans);
 						m_places[currentRow] = new BoolMatrix(prev_M_places);
 
@@ -319,7 +319,7 @@ public class MorphismFactory {
 
 						// Wenn eine Zuordnung gefunden, die keine Nullzeilen produziert, eine Zeile weiter gehen
 						currentRow++;
-						searchReady = true; // Aus der inneren Schleife ausbrechen und dann die aeußere Schleife wiederholen
+						searchReady = true; // Aus der inneren Schleife ausbrechen und dann die aeussere Schleife wiederholen
 					}
 				} while (!searchReady);
 
@@ -339,12 +339,12 @@ public class MorphismFactory {
 						// Wenn keine Moeglichkeit der Zuordnung vorhanden, eine Zeile zurueck gehen
 						placesB[currentRowPlaces] = null;						
 						currentRow--;
-						searchReady = true; // Die innere Schleife beenden und dann die aeußere Schleife wiederholen
+						searchReady = true; // Die innere Schleife beenden und dann die aeussere Schleife wiederholen
 					} else {
 						// Eine Zuordnung festlegen und aus der Liste der moegl. Zuordnungen entfernen
 						final int currentPlaceB = possibleMappings.remove(0);
 
-						// Die Matrizen für diesen Iterationsschritt als Kopien aus den Vorgaenger-Matrizen erstellen
+						// Die Matrizen fuer diesen Iterationsschritt als Kopien aus den Vorgaenger-Matrizen erstellen
 						m_transitions[currentRow] = new BoolMatrix(prev_M_trans);
 						m_places[currentRow] = new BoolMatrix(prev_M_places);
 
@@ -360,7 +360,7 @@ public class MorphismFactory {
 
 						// Wenn eine Zuordnung gefunden, die keine Nullzeilen produziert, eine Zeile weiter gehen
 						currentRow++;
-						searchReady = true; // Aus der inneren Schleife ausbrechen und dann die aeußere Schleife wiederholen
+						searchReady = true; // Aus der inneren Schleife ausbrechen und dann die aeussere Schleife wiederholen
 					}
 				} while (!searchReady);
 			}

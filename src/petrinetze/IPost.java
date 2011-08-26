@@ -9,7 +9,7 @@ package petrinetze;
 public interface IPost {
 	/**
 	 * Liefert das Post von dem entsprechenden Petrinetz.
-	 * Das heiﬂt, die Kantengewichte der jeweiligen Transitionen und 
+	 * Das hei√üt, die Kantengewichte der jeweiligen Transitionen und 
 	 * Stellen.
 	 * 
 	 * 	0 1 3 6 

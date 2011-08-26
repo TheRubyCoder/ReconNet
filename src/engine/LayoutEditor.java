@@ -20,7 +20,7 @@ public interface LayoutEditor {
     void lock(INode node);
 
     /**
-     * Aufhebung der Positionssperre f¸r einen Knoten.
+     * Aufhebung der Positionssperre f√ºr einen Knoten.
      *
      * @param node
      */
@@ -35,7 +35,7 @@ public interface LayoutEditor {
     boolean isLocked(INode node);
 
     /**
-     * Position der grafischen Repr‰sentation des Knoten.
+     * Position der grafischen Repr√§sentation des Knoten.
      *
      * @param node
      *
@@ -44,7 +44,7 @@ public interface LayoutEditor {
     Point2D getPosition(INode node);
 
     /**
-     * Setzen der Position der grafischen Repr‰sentation des Knoten.
+     * Setzen der Position der grafischen Repr√§sentation des Knoten.
      *
      * @param node
      * @param location
