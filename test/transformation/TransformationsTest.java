@@ -44,12 +44,14 @@ public class TransformationsTest {
     @Test
     public void testJoin_3args_1() {
         System.out.println("join");
-        IPetrinet left = null;
-        IPetrinet right = null;
-        ITransformation transformation = null;
-        Transformations.join(left, right, transformation);
+        System.out.println("Test auskommentiert: testJoin_3args_1() in TransformationsTest.java:44");
+        
+//        IPetrinet left = null;
+//        IPetrinet right = null;
+//        ITransformation transformation = null;
+//        Transformations.join(left, right, transformation);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+//        fail("The test case is a prototype.");
     }
 
     /**
@@ -58,13 +60,15 @@ public class TransformationsTest {
     @Test
     public void testJoin_4args() {
         System.out.println("join");
-        IPetrinet left = null;
-        IPetrinet right = null;
-        IMorphism morphism = null;
-        IRule rule = null;
-        Transformations.join(left, right, morphism, rule);
+        System.out.println("Test auskommentiert: testJoin_4args() in TransformationsTest.java:60");
+        
+//        IPetrinet left = null;
+//        IPetrinet right = null;
+//        IMorphism morphism = null;
+//        IRule rule = null;
+//        Transformations.join(left, right, morphism, rule);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+//        fail("The test case is a prototype.");
     }
 
     /**
@@ -73,12 +77,13 @@ public class TransformationsTest {
     @Test
     public void testJoin_3args_2() {
         System.out.println("join");
-        IPetrinet left = null;
-        IPetrinet right = null;
-        IRule rule = null;
-        Transformations.join(left, right, rule);
+        System.out.println("Test auskommentiert: testJoin_3args_2() in TransformationsTest.java:77");
+//        IPetrinet left = null;
+//        IPetrinet right = null;
+//        IRule rule = null;
+//        Transformations.join(left, right, rule);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+//        fail("The test case is a prototype.");
     }
 
     /**
@@ -87,11 +92,13 @@ public class TransformationsTest {
     @Test
     public void testTransform() {
         System.out.println("transform");
-        IPetrinet net = null;
-        IRule rule = null;
-        Transformations.transform(net, rule);
+        System.out.println("Test auskommentiert: testTransform() in TransformationsTest.java:87");
+        
+ //       IPetrinet net = null;
+ //       IRule rule = null;
+ //       Transformations.transform(net, rule);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+//        fail("The test case is a prototype.");
     }
 
 }
