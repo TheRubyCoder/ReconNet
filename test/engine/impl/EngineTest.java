@@ -23,6 +23,8 @@ import java.awt.geom.Point2D.Float;
  *
  */
 public class EngineTest extends TestCase{
+	
+	public final double delta=1e-5;
 
     private IPetrinet petrinet;
 
@@ -46,6 +48,8 @@ public class EngineTest extends TestCase{
 	 */
 	@Before
 	public void setUp() throws Exception {
+		
+		
         petrinet = new Petrinet();
         engine = EngineFactory.newFactory().createEngine(petrinet);
 		location = new Point2D.Float(0,0);
@@ -93,12 +97,12 @@ public class EngineTest extends TestCase{
 	public void testPostitionLE(){
 		engine.getLayoutEditor().setPosition(node, location);
 		location2 = engine.getLayoutEditor().getPosition(node);
-		assertEquals(location.getX(), location2.getX());
-		assertEquals(location.getY(), location2.getY());
-		location.setLocation(5, -4);
+		assertEquals(location.getX(), location2.getX(),delta);
+		assertEquals(location.getY(), location2.getY(),delta);
+		location.setLocation(5.0, -4);
 		engine.getLayoutEditor().setPosition(node, location);
-		assertEquals(location.getX(), 5.0);
-		assertEquals(location.getY(), -4.0);
+		assertEquals(location.getX(), 5.0,delta);
+		assertEquals(location.getY(), -4.0,delta);
 	}
 	/*
 	 * Test for the class GraphEditor
