@@ -57,6 +57,7 @@
     <target name="junit-test" depends="build-project" description="run junit test">
     	<echo message="performing junit-tests"/>
     	<junit>
+    		<classpath refid="${wppetrinetze.classpath}"/>
     		<formatter type="plain"/>
     		<test name="harness.AllTests" todir="${basedir}" />
     		
