@@ -13,7 +13,7 @@ import petrinetze.IPetrinetListener;
 /**
  * 
  * Simple Listener
- * @author Philipp Kühn
+ * @author Philipp Kuehn
  *
  */
 public class SimpleListener implements IPetrinetListener

@@ -5,14 +5,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
+//import org.junit.BeforeClass;
 import org.junit.Test;
 
 import petrinetze.*;
 
 /**
  *
- * @author Philipp Kühn
+ * @author Philipp Kuehn
  *
  */
 public class PetrinetzTest {

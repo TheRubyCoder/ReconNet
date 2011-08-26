@@ -6,7 +6,7 @@
 package transformation;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+//import static org.junit.Assert.fail;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -180,7 +180,7 @@ public class MorphismTest {
     	to_p[5] = toPn.createPlace("");
     	to_p[6] = toPn.createPlace("Wecker Aus");
     	to_p[7] = toPn.createPlace("Badezimmer");
-    	to_p[8] = toPn.createPlace("Küche");
+    	to_p[8] = toPn.createPlace("KÃ¼che");
     	to_p[9] = toPn.createPlace("");
     	
     	to_t[0] = toPn.createTransition("");
