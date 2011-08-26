@@ -117,12 +117,20 @@ public class TransformationTest {
     @Test
     public void testN() {
         System.out.println("N");
-        Transformation instance = null;
-        IPetrinet expResult = null;
-        IPetrinet result = instance.N();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        System.out.println("Test auskommentiert: testN() in TransformationTest.java:117");
+        
+        /*
+         * Grosse Baustelle: Niklas fragen, was er beabsichtigte zu testen
+         * Dieses hier kann nicht gehen
+         * Gerhard: 26.08.211
+         */
+        
+//        Transformation instance = null;
+//        IPetrinet expResult = null;
+//        IPetrinet result = instance.N();
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
     }
 
     /**
@@ -155,10 +163,13 @@ public class TransformationTest {
     @Test
     public void testTransform() {
         System.out.println("transform");
-        Transformation instance = null;
-        instance.transform();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        System.out.println("Test auskommentiert: testTransform() in TransformationTest.java:163");
+        
+//        Transformation instance = null;
+//        instance.transform();
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
     }
 
 }
