@@ -6,7 +6,6 @@ import petrinetze.IArc;
 import petrinetze.IPetrinet;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
-import sun.nio.ch.SocketOpts.IP;
 /**
  * An interface for morphisms on IPetrinet.
  * @author Philipp Kühn
