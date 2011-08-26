@@ -56,6 +56,9 @@
          ================================= -->
     <target name="junit-test" depends="build-project" description="run junit test">
     	<echo message="performing junit-tests"/>
+    	<junit>
+    		<test name="harness.AllTests"/>
+    	</junit>
     </target>
 
     <target name="build-project" depends="init">
