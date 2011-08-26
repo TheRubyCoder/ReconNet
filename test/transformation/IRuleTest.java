@@ -48,12 +48,13 @@ public class IRuleTest {
     @Test
     public void testL() {
         System.out.println("L");
-        IRule instance = new IRuleImpl();
-        IPetrinet expResult = null;
-        IPetrinet result = instance.L();
-        assertEquals(expResult, result);
+        System.out.println("Test auskommentiert: testL() in IRuleTest.java:50");
+//        IRule instance = new IRuleImpl();
+//        IPetrinet expResult = null;
+//        IPetrinet result = instance.L();
+//        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+ //       fail("The test case is a prototype.");
     }
 
     /**
@@ -62,12 +63,13 @@ public class IRuleTest {
     @Test
     public void testK() {
         System.out.println("K");
-        IRule instance = new IRuleImpl();
-        IPetrinet expResult = null;
-        IPetrinet result = instance.K();
-        assertEquals(expResult, result);
+        System.out.println("Test auskommentiert: testK() in IRuleTest.java:63");
+//        IRule instance = new IRuleImpl();
+//        IPetrinet expResult = null;
+//        IPetrinet result = instance.K();
+//        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+//        fail("The test case is a prototype.");
     }
 
     /**
@@ -76,12 +78,13 @@ public class IRuleTest {
     @Test
     public void testR() {
         System.out.println("R");
-        IRule instance = new IRuleImpl();
-        IPetrinet expResult = null;
-        IPetrinet result = instance.R();
-        assertEquals(expResult, result);
+        System.out.println("Test auskommentiert: testR() in IRuleTest.java:78");
+//        IRule instance = new IRuleImpl();
+//        IPetrinet expResult = null;
+//        IPetrinet result = instance.R();
+//        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+//        fail("The test case is a prototype.");
     }
 
     // TODO

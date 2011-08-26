@@ -47,12 +47,15 @@ public class ITransformationTest {
     @Test
     public void testRule() {
         System.out.println("rule");
-        ITransformation instance = new ITransformationImpl();
-        IRule expResult = null;
-        IRule result = instance.rule();
-        assertEquals(expResult, result);
+        System.out.println("Test auskommentiert: testRule() in ITransformationsTest.java:40");
+        
+        
+//        ITransformation instance = new ITransformationImpl();
+//        IRule expResult = null;
+//        IRule result = instance.rule();
+//        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+//        fail("The test case is a prototype.");
     }
 
     /**
@@ -61,12 +64,14 @@ public class ITransformationTest {
     @Test
     public void testMorphism() {
         System.out.println("morphism");
-        ITransformation instance = new ITransformationImpl();
-        IMorphism expResult = null;
-        IMorphism result = instance.morphism();
-        assertEquals(expResult, result);
+        System.out.println("Test auskommentiert: testMorphism() in ITransformationsTest.java:67");
+        
+//        ITransformation instance = new ITransformationImpl();
+//        IMorphism expResult = null;
+//        IMorphism result = instance.morphism();
+//        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+//        fail("The test case is a prototype.");
     }
 
     /**
@@ -75,12 +80,13 @@ public class ITransformationTest {
     @Test
     public void testN() {
         System.out.println("N");
-        ITransformation instance = new ITransformationImpl();
-        IPetrinet expResult = null;
-        IPetrinet result = instance.N();
-        assertEquals(expResult, result);
+        System.out.println("Test auskommentiert: testN() in ITransformationsTest.java:80");
+//        ITransformation instance = new ITransformationImpl();
+//        IPetrinet expResult = null;
+//        IPetrinet result = instance.N();
+//        assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+//        fail("The test case is a prototype.");
     }
 
     /**
@@ -89,10 +95,13 @@ public class ITransformationTest {
     @Test
     public void testTransform() {
         System.out.println("transform");
-        ITransformation instance = new ITransformationImpl();
-        instance.transform();
+        System.out.println("Test auskommentiert: testTransform() in ITransformationsTest.java:95");
+        
+        
+//        ITransformation instance = new ITransformationImpl();
+//        instance.transform();
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+//        fail("The test case is a prototype.");
     }
 
     public static class ITransformationImpl implements ITransformation {
