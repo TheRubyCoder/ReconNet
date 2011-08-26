@@ -10,6 +10,8 @@ import petrinetze.INode;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
 
+// Anders encoding
+
 /**
  * Klasse zur Manipulation der Graphendarstellung des Petrinetzes.
  *
@@ -65,9 +67,9 @@ public interface GraphEditor {
     public JPanel getGraphPanel();
 
     /**
-     * Gibt die ausgewählten Knoten / Kanten des Graphen zurück.
+     * Gibt die ausgewï¿½hlten Knoten / Kanten des Graphen zurï¿½ck.
      *
-     * @return die ausgewählten Knoten / Kanten des Graphen zurück.
+     * @return die ausgewï¿½hlten Knoten / Kanten des Graphen zurï¿½ck.
      */
     Set<INode> getPickedNodes();
 }
