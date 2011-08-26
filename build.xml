@@ -10,9 +10,11 @@
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.6"/>
     <property name="source" value="1.6"/>
+	<property name="lib.dir" value="${basedir}/lib"/>
+
     <path id="JUnit 4.libraryclasspath">
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.junit_4.8.2.v4_8_2_v20110321-1705/junit.jar"/>
-        <pathelement location="${ECLIPSE_HOME}/plugins/org.hamcrest.core_1.1.0.v20090501071000.jar"/>
+        <pathelement location="${lib.dir}/junit-4.8.2.jar"/>
+        <pathelement location="${lib.dir}/hamcrest-1.1.0.jar"/>
     </path>
     <path id="wppetrinetze.classpath">
         <pathelement location="bin"/>
