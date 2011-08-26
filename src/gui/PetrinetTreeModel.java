@@ -1,24 +1,24 @@
 package gui;
 
-import com.sun.java.swing.SwingUtilities3;
-import engine.EditMode;
-import engine.Engine;
+import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.SwingUtilities;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+
 import petrinetze.ActionType;
 import petrinetze.IArc;
 import petrinetze.INode;
 import petrinetze.IPetrinet;
-import transformation.IRule;
-
-import javax.swing.tree.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import javax.swing.SwingUtilities;
 import petrinetze.IPetrinetListener;
 import petrinetze.IRenew;
 import petrinetze.Renews;
+import transformation.IRule;
+import engine.EditMode;
+import engine.Engine;
 
 /**
  * Created by IntelliJ IDEA.
