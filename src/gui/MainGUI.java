@@ -5,6 +5,7 @@ import engine.Engine;
 import engine.EngineFactory;
 import engine.Simulation;
 import engine.StepListener;
+import exceptions.GeneralPetrinetException;
 import gui.PetrinetTreeModel.PetrinetNode;
 import gui.PetrinetTreeModel.RuleNode;
 import gui.PetrinetTreeModel.RulesNode;
@@ -74,7 +75,10 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
             PetrinetNode node = (PetrinetNode)petrinetTree.getSelectionPath().getPathComponent(1);
             try{
                 node.getEngine().transform(((RuleNode)petrinetTree.getSelectionPath().getLastPathComponent()).getRule());
-            }catch(Exception ex){
+            }catch(GeneralPetrinetException gpex){
+                Error.create(gpex);
+            }
+            catch(Exception ex){
                 Error.create(ex);
             }
             

@@ -90,14 +90,16 @@ class GraphEditorImpl implements GraphEditor {
     }
 
     public IPlace createPlace(Point2D location) {
-    	System.out.println(String.format("createPlace(%s)",location));
-        return initNode(context.getPetrinet().createPlace("untitled"), location);
+    	INode place = initNode(context.getPetrinet().createPlace("untitled"), location);
+    	System.out.println(String.format("createPlace(%d,%s)",place.getId(),location));
+        return (IPlace)place;
     }
 
     public ITransition createTransition(Point2D location) {
-    	System.out.println(String.format("createTransition(%s)",location));
+    	INode transition = initNode(context.getPetrinet().createTransition("untitled", Renews.IDENTITY), location);
+    	System.out.println(String.format("createTransition(%d,%s)",transition.getId(), location));
     	//TODO IRenew durchreichen
-        return initNode(context.getPetrinet().createTransition("untitled", Renews.IDENTITY), location);
+        return (ITransition)transition;
     }
 
     public IArc createArc(INode from, INode to) {
@@ -109,7 +111,7 @@ class GraphEditorImpl implements GraphEditor {
 
     public void remove(Set<? extends INode> nodes) {
         for (INode node : nodes) {
-            // TODO besser nur aus Petrinet l�schen und dann bei Listener-Callback aus Graph entfernen?
+            // TODO besser nur aus Petrinet l?schen und dann bei Listener-Callback aus Graph entfernen?
             if (node instanceof IArc) {
                 context.getGraph().removeEdge((IArc)node);
                 context.getPetrinet().deleteArcByID(node.getId());

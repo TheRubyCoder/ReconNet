@@ -8,6 +8,8 @@ import petrinetze.IRenew;
 import petrinetze.ITransition;
 import java.util.Set;
 
+import exceptions.GeneralPetrinetException;
+
 public class Transformation implements ITransformation {
 	
 	private final IPetrinet N;
@@ -28,11 +30,14 @@ public class Transformation implements ITransformation {
 	 * Constructor for the class Transformation
 	 * @param net, petrinet to transform
 	 * @param Rule, the rule to apply
+	 * @throws Exception 
 	 */	
-	public Transformation(IPetrinet net,IRule Rule){
+	public Transformation(IPetrinet net,IRule Rule) throws GeneralPetrinetException{
 		N = net; 
 		rule = Rule;
 		morphism = MorphismFactory.createMorphism(Rule.L(),N);
+		if (morphism == null)
+			throw new GeneralPetrinetException("Keinen Morphismus gefunden");
 		
 	}		
 	/**

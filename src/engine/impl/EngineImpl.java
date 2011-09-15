@@ -2,6 +2,7 @@ package engine.impl;
 
 import edu.uci.ics.jung.graph.DirectedGraph;
 import engine.*;
+import exceptions.GeneralPetrinetException;
 import petrinetze.IArc;
 import petrinetze.INode;
 import petrinetze.IPetrinet;
@@ -67,7 +68,7 @@ class EngineImpl implements Engine {
     }
 
     @Override
-    public void transform(IRule rule) {
+    public void transform(IRule rule) throws GeneralPetrinetException {
         Transformations.transform(context.getPetrinet(), rule);
     }
 }

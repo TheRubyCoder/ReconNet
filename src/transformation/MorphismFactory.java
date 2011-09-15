@@ -95,7 +95,8 @@ public class MorphismFactory {
 		if (successful) {
 			return new Morphism(netA, netB, places, transitions, edges);
 		} else {
-			return new Morphism(new Petrinet(), new Petrinet(), new HashMap<IPlace, IPlace>(), new HashMap<ITransition, ITransition>(), new HashMap<IArc, IArc>());
+			return null;
+			//return new Morphism(new Petrinet(), new Petrinet(), new HashMap<IPlace, IPlace>(), new HashMap<ITransition, ITransition>(), new HashMap<IArc, IArc>());
 		}
 	}
 

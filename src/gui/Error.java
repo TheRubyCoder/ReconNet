@@ -22,7 +22,7 @@ import javax.swing.JOptionPane;
  */
 public class Error {
     
-    private static Logger logger;
+    private static Logger logger= Logger.getLogger("Error");
 
 static {
     try {
@@ -30,7 +30,6 @@ static {
       FileHandler fh = new FileHandler("Error.log", append);
       //fh.setFormatter(new XMLFormatter());
       fh.setFormatter(new SimpleFormatter());
-      logger = Logger.getLogger("Error");
       logger.addHandler(fh);
      
     }

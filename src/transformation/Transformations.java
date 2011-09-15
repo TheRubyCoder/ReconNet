@@ -1,5 +1,6 @@
 package transformation;
 
+import exceptions.GeneralPetrinetException;
 import petrinetze.IPetrinet;
 
 /**
@@ -47,8 +48,9 @@ public final class Transformations
 	 * @param left the left petrinet.
 	 * @param right the right petrinet.
 	 * @param rule the rule to use.
+	 * @throws Exception 
 	 */
-	public static void join(IPetrinet left, IPetrinet right, IRule rule)
+	public static void join(IPetrinet left, IPetrinet right, IRule rule) throws GeneralPetrinetException
 	{
 		left.addNet(right);
 		new Transformation(left, rule).transform();
@@ -58,8 +60,9 @@ public final class Transformations
 	 * Will transform the given petrinet using the given rule and a random morphism.
 	 * @param net the petrinet.
 	 * @param rule the rule to use.
+	 * @throws Exception 
 	 */
-	public static void transform(IPetrinet net, IRule rule)
+	public static void transform(IPetrinet net, IRule rule) throws GeneralPetrinetException
 	{
 		new Transformation(net, rule).transform();
 		System.out.println(net);

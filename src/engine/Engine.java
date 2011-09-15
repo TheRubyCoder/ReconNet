@@ -5,6 +5,7 @@ import petrinetze.IPetrinet;
 import petrinetze.INode;
 import transformation.IRule;
 import edu.uci.ics.jung.graph.DirectedGraph;
+import exceptions.GeneralPetrinetException;
 
 
 /**
@@ -54,7 +55,8 @@ public interface Engine {
      * Anwenden einer Transformationsregel.
      *
      * @param rule die anzuwendende Regel
+     * @throws Exception 
      */
-    void transform(IRule rule);
+    void transform(IRule rule) throws GeneralPetrinetException;
 
 }
