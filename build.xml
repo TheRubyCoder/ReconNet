@@ -4,19 +4,36 @@
               To include a user specific buildfile here, simply create one in the same
               directory with the processing instruction <?eclipse.ant.import?>
               as the first entry and export the buildfile again. -->
-<project basedir="." default="build" name="wppetrinetze">
+<project basedir="." default="build" name="wppetrinetze"
+	xmlns:ivy="antlib:org.apache.ivy.ant" xmlns="antlib:org.apache.tools.ant">
+	
     <property environment="env"/>
     <property name="ECLIPSE_HOME" value="C:/eclipse"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.6"/>
     <property name="source" value="1.6"/>
 	<property name="lib.dir" value="${basedir}/lib"/>
+	
+	<property name="ivy.dir" value="${basedir}/ivy"/>
+	<property name="ivy.settings.file" value="${ivy.dir}/ivysettings.xml"/>
+	<property name="ivy.cache.dir" value="${ivy.dir}/cache"/>
+	
+	
+	<!-- Classpath definiton -->
+	    <path id="wppetrinetze.classpath">
+	        <pathelement path="${java.class.path}/" />
+	    	<pathelement path="${basedir}/bin/" />
+	        <fileset dir="${lib.dir}">
+	            <include name="**/*.jar"/>
+	            <include name="**/*.zip"/>
+	        </fileset>
+	    </path> 
 
     <path id="JUnit 4.libraryclasspath">
         <pathelement location="${lib.dir}/junit-4.8.2.jar"/>
         <pathelement location="${lib.dir}/hamcrest-1.1.0.jar"/>
     </path>
-    <path id="wppetrinetze.classpath">
+    <path id="wppetrinetze_addon.classpath">
         <pathelement location="${basedir}/bin"/>
         <pathelement location="lib/jung2-2_0_1/collections-generic-4.01.jar"/>
         <pathelement location="lib/jung2-2_0_1/colt-1.2.0.jar"/>
@@ -28,6 +45,30 @@
         <pathelement location="lib/jung2-2_0_1/vecmath-1.3.1.jar"/>
         <path refid="JUnit 4.libraryclasspath"/>
     </path>
+
+	
+	<!-- ================================= 
+	          target: resolve
+	     
+	     let ivy handle depencies to other projects                   
+	     ================================= -->
+    <target name="resolve" description="--> retrieve dependencies with ivy">
+    	<ivy:settings file="${ivy.settings.file}" />
+	    <ivy:resolve />
+        <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact]-[revision](-[classifier]).[ext]" sync="true" />
+	    <ivy:report todir="${ivy.dir}/reports"/>
+
+		<!-- after (hopefully) retrieving all dependencies, add the tasks -->
+		<!-- cobertura -->
+<!--		<taskdef classpathref="tools.classpath" resource="tasks.properties"/> -->
+	    <!-- JUnit -->
+    	<!--		<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask" classpathref="tools.classpath" /> -->
+		<!-- Checkstyle -->
+    	<!--		<taskdef resource="checkstyletask.properties"   classpathref="tools.classpath"/> -->
+
+    </target>
+	
+	
     <target name="init">
         <mkdir dir="bin"/>
         <copy includeemptydirs="false" todir="bin">
@@ -41,12 +82,16 @@
             </fileset>
         </copy>
     </target>
+	
+	
     <target name="clean">
         <delete dir="bin"/>
     </target>
+	
     <target depends="clean" name="cleanall"/>
 	
-    <target name="build" depends="build-subprojects,build-project,junit-test"/>
+	
+    <target name="build" depends="init,resolve,build-subprojects,build-project,junit-test"/>
 	
 
 	<target name="build-subprojects"/>

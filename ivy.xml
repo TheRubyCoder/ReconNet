@@ -1,0 +1,46 @@
+<ivy-module version="2.0" 
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd"
+            xmlns:m="http://ant.apache.org/ivy/maven">
+
+    <info organisation="de.harper-hall" module="bookkeeper" revision="0.1"/>
+
+    <publications>
+    	<artifact name="bookkeeper" type="jar"/>
+    	<artifact name="bookkeeper-source" type="source" ext="jar"/>
+    	<artifact name="bookkeeper-javadoc" type="javadoc" ext="jar"/>
+    	<artifact name="bookkeeper-resources" type="resources" ext="jar"/>
+    </publications>
+    
+    <dependencies>
+    
+        <dependency org="net.sf.jung" name="jung-algorithms" rev="2.0.1" conf="*->compile"/>
+        <dependency org="net.sf.jung" name="jung-api" rev="2.0.1" conf="*->compile"/>
+        <dependency org="net.sf.jung" name="jung-graph-impl" rev="2.0.1">  
+			<artifact name="jung-graph-impl" type="jar" />
+        </dependency>          
+        <dependency org="net.sf.jung" name="jung-visualization" rev="2.0.1">
+			<artifact name="jung-visualization" type="jar" />
+        </dependency>
+        
+        
+
+            
+        <!-- Intra-Timadorus -->
+		<dependency org="org.timadorus" name="timadorus-util" rev="latest.integration" changing="true"/>
+		
+		<dependency org="com.google.code.guice" name="guice" rev="2.0"/>		
+		<dependency org="de.harper-hall" name="harper-hall-util" rev="532"/>
+		<dependency org="commons-configuration" name="commons-configuration" rev="1.6" conf="*->default,provided"/>
+		<dependency org="commons-jxpath" name="commons-jxpath" rev="1.3" conf="*->default"/>
+		
+		<dependency org="log4j" name="log4j" rev="1.2.9" conf="*->default"/>
+		
+		<!--  tools -->		
+		<dependency org="junit" name="junit" rev="4.8.2"/>
+		<dependency org="cobertura" name="cobertura" rev="1.9.4.1" conf="*->runtime"/>
+		<dependency org="com.puppycrawl.tools" name="checkstyle" rev="5.3" conf="*->default" />
+		
+    </dependencies>
+    
+</ivy-module>
