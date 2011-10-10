@@ -13,6 +13,7 @@
     <property name="target" value="1.6"/>
     <property name="source" value="1.6"/>
 	<property name="lib.dir" value="${basedir}/lib"/>
+	<property name="build.dir" value="${basedir}/bin"/>
 	
 	<!--EMMA testing sources -->
 	<property name="coverage.dir" value="${basedir}/coverage"/>
@@ -68,7 +69,8 @@
 
 		<!-- after (hopefully) retrieving all dependencies, add the tasks -->
     	
-    	<!-- Emma --><taskdef classpathref="wppetrinetze.classpath" resource="emma_ant.properties"/>
+    	<!-- Emma -->
+    	<taskdef classpathref="wppetrinetze.classpath" resource="emma_ant.properties"/>
     	
     	
 		<!-- cobertura -->
@@ -84,14 +86,14 @@
     <target name="init">
     	<mkdir dir="${instrumented.bindir}"/>
     	<mkdir dir="${coverage.dir}"/>
-        <mkdir dir="bin"/>
-        <copy includeemptydirs="false" todir="bin">
+        <mkdir dir="${build.dir}"/>
+        <copy includeemptydirs="false" todir="${build.dir}">
             <fileset dir="src">
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
     	
-        <copy includeemptydirs="false" todir="bin">
+        <copy includeemptydirs="false" todir="${build.dir}">
             <fileset dir="test">
                 <exclude name="**/*.java"/>
             </fileset>
@@ -101,7 +103,7 @@
 	
 	
     <target name="clean">
-        <delete dir="bin"/>
+        <delete dir="${build.dir}"/>
     </target>
 	
     <target depends="clean" name="cleanall"/>
@@ -148,11 +150,11 @@
 	
     <target name="build-project" depends="init">
         <echo message="${ant.project.name}: ${ant.file}"/>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${build.dir}" source="${source}" target="${target}">
             <src path="src"/>
             <classpath refid="wppetrinetze.classpath"/>
         </javac>
-        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
+        <javac debug="true" debuglevel="${debuglevel}" destdir="${build.dir}" source="${source}" target="${target}">
             <src path="test"/>
             <classpath refid="wppetrinetze.classpath"/>
         </javac>
