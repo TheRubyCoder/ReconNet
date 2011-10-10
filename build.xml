@@ -14,6 +14,14 @@
     <property name="source" value="1.6"/>
 	<property name="lib.dir" value="${basedir}/lib"/>
 	
+	<!--EMMA testing sources -->
+	<property name="coverage.dir" value="${basedir}/coverage"/>
+	<property name="instrumented.bindir" value="${basedir}/instrumented.bin" description="loc. to store instrumented binaries"/>
+	<!-- never used
+	<property name="test-report.dir" value="${basedir}/test-results"/>
+	-->
+	<!--END EMMA -->
+	
 	<property name="ivy.dir" value="${basedir}/ivy"/>
 	<property name="ivy.settings.file" value="${ivy.dir}/ivysettings.xml"/>
 	<property name="ivy.cache.dir" value="${ivy.dir}/cache"/>
@@ -59,6 +67,10 @@
 	    <ivy:report todir="${ivy.dir}/reports"/>
 
 		<!-- after (hopefully) retrieving all dependencies, add the tasks -->
+    	
+    	<!-- Emma --><taskdef classpathref="wppetrinetze.classpath" resource="emma_ant.properties"/>
+    	
+    	
 		<!-- cobertura -->
 <!--		<taskdef classpathref="tools.classpath" resource="tasks.properties"/> -->
 	    <!-- JUnit -->
@@ -70,17 +82,21 @@
 	
 	
     <target name="init">
+    	<mkdir dir="${instrumented.bindir}"/>
+    	<mkdir dir="${coverage.dir}"/>
         <mkdir dir="bin"/>
         <copy includeemptydirs="false" todir="bin">
             <fileset dir="src">
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
+    	
         <copy includeemptydirs="false" todir="bin">
             <fileset dir="test">
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
+    	
     </target>
 	
 	
@@ -97,18 +113,39 @@
 	<target name="build-subprojects"/>
 	
 	<!-- ================================= 
+          target: instrument-java              
+         ================================= -->
+	
+	<target name="instrument-java" depends="resolve">
+		<emma enabled="true">
+			<instr instrpath="${build.dir}" destdir="${instrumented.bindir}" metadatafile="${coverage.dir}/metadata.emma" merge="true">
+				<filter excludes="au.com.jenisys.view.*"/>
+			</instr>
+		</emma>
+	</target>
+	
+	
+	<!-- ================================= 
           target: junit-test              
          ================================= -->
-    <target name="junit-test" depends="build-project" description="run junit test">
+    <target name="junit-test" depends="build-project,instrument-java" description="run junit test">
     	<echo message="performing junit-tests"/>
     	<junit>
-    		<classpath refid="wppetrinetze.classpath"/>
-    		<formatter type="plain"/>
+    		
+    		<classpath> 
+    			<path refid="wppetrinetze.classpath"/>
+    			<pathelement path="${instrumented.bindir}"/>
+    			<pathelement path="${build.dir}"/>
+    		</classpath>
+    		<formatter type="xml"/>
+    		<formatter type="plain" usefile="false"/>
+    		
     		<test name="harness.AllTests" todir="${basedir}" />
     		
     	</junit>
     </target>
 
+	
     <target name="build-project" depends="init">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="bin" source="${source}" target="${target}">
