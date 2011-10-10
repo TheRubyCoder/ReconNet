@@ -22,6 +22,7 @@ public final class Renews {
     public static final IRenew COUNT = new RenewCount();
 
     public static final IRenew fromMap(Map<String,String> f) {
+    	
         return new RenewMap(f);
     }
 }
