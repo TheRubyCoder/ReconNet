@@ -26,7 +26,7 @@
 	<property name="ivy.settings.file" value="${ivy.dir}/ivysettings.xml"/>
 	<property name="ivy.cache.dir" value="${ivy.dir}/cache"/>
 	
-	<echo message="1: Before Classpath definiton"/>
+	
 	
 	<!-- Classpath definiton -->
 	    <path id="wppetrinetze.classpath">
@@ -55,14 +55,14 @@
         <path refid="JUnit 4.libraryclasspath"/>
     </path>
 
-	<echo message="2: resolve"/>
+	
 	
 	<!-- ================================= 
 	          target: resolve
 	     
 	     let ivy handle depencies to other projects                   
 	     ================================= -->
-    <target name="resolve" description="--> retrieve dependencies with ivy">
+    <target name="resolve" depends="init" description="--> retrieve dependencies with ivy">
     	<ivy:settings file="${ivy.settings.file}" />
 	    <ivy:resolve />
         <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact]-[revision](-[classifier]).[ext]" sync="true" />
@@ -83,7 +83,7 @@
 
     </target>
 	
-	<echo message="3: init"/>
+	
 	
     <target name="init">
     	<mkdir dir="${instrumented.bindir}"/>
@@ -113,18 +113,18 @@
     <target depends="clean" name="cleanall"/>
 	
 	
-    <target name="build" depends="init,resolve,build-subprojects,build-project,junit-test"/>
+    <target name="build" depends="init,resolve,compile,junit-test"/>
 	
 
-	<target name="build-subprojects"/>
+	
 	
 	<!-- ================================= 
           target: instrument-java              
          ================================= -->
 	
-	<echo message="4: instrument-java"/>
 	
-	<target name="instrument-java" depends="build-project">
+	
+	<target name="instrument-java" depends="compile">
 		<emma enabled="true">
 			<instr instrpath="${build.dir}" destdir="${instrumented.bindir}" metadatafile="${coverage.dir}/metadata.emma" merge="true">
 				<filter excludes="au.com.jenisys.view.*"/>
@@ -152,7 +152,6 @@
     		
     	</junit>
     	
-    	<echo message="5: prepare the coverage report"/>
     	
     	<!-- prepare the coverage report -->
     	<move todir="${coverage.dir}">
@@ -161,7 +160,6 @@
     		</fileset>
     	</move>
     	
-    	<echo message="6: report"/>
     	
     	<emma enabled="true">
     		<report sourcepath="${src.dir}" depth="method">
@@ -176,9 +174,9 @@
     </target>
 
 	
-	<echo message="7: build-project"/>
 	
-    <target name="build-project" depends="init, resolve">
+	
+    <target name="compile" depends="init, resolve">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="${build.dir}" source="${source}" target="${target}">
             <src path="src"/>
@@ -190,7 +188,7 @@
         </javac>
     </target>
 
-	<target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+	
     <target name="Main">
         <java classname="gui.Main" failonerror="true" fork="yes">
             <classpath refid="wppetrinetze.classpath"/>
