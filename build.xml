@@ -12,26 +12,26 @@
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.6"/>
     <property name="source" value="1.6"/>
+	<property name="src.dir" value="${basedir}/src"/>
 	<property name="lib.dir" value="${basedir}/lib"/>
 	<property name="build.dir" value="${basedir}/bin"/>
 	
 	<!--EMMA testing sources -->
 	<property name="coverage.dir" value="${basedir}/coverage"/>
 	<property name="instrumented.bindir" value="${basedir}/instrumented.bin" description="loc. to store instrumented binaries"/>
-	<!-- never used
 	<property name="test-report.dir" value="${basedir}/test-results"/>
-	-->
 	<!--END EMMA -->
 	
 	<property name="ivy.dir" value="${basedir}/ivy"/>
 	<property name="ivy.settings.file" value="${ivy.dir}/ivysettings.xml"/>
 	<property name="ivy.cache.dir" value="${ivy.dir}/cache"/>
 	
+	<echo message="1: Before Classpath definiton"/>
 	
 	<!-- Classpath definiton -->
 	    <path id="wppetrinetze.classpath">
 	        <pathelement path="${java.class.path}/" />
-	    	<pathelement path="${basedir}/bin/" />
+	    <!--    	<pathelement path="${basedir}/bin/" /> -->
 	        <fileset dir="${lib.dir}">
 	            <include name="**/*.jar"/>
 	            <include name="**/*.zip"/>
@@ -55,6 +55,7 @@
         <path refid="JUnit 4.libraryclasspath"/>
     </path>
 
+	<echo message="2: resolve"/>
 	
 	<!-- ================================= 
 	          target: resolve
@@ -82,11 +83,13 @@
 
     </target>
 	
+	<echo message="3: init"/>
 	
     <target name="init">
     	<mkdir dir="${instrumented.bindir}"/>
     	<mkdir dir="${coverage.dir}"/>
         <mkdir dir="${build.dir}"/>
+    	<mkdir dir="${test-report.dir}"/>
         <copy includeemptydirs="false" todir="${build.dir}">
             <fileset dir="src">
                 <exclude name="**/*.java"/>
@@ -104,6 +107,7 @@
 	
     <target name="clean">
         <delete dir="${build.dir}"/>
+    	<delete dir="${instrumented.bindir}"/>
     </target>
 	
     <target depends="clean" name="cleanall"/>
@@ -117,6 +121,8 @@
 	<!-- ================================= 
           target: instrument-java              
          ================================= -->
+	
+	<echo message="4: instrument-java"/>
 	
 	<target name="instrument-java" depends="resolve">
 		<emma enabled="true">
@@ -145,8 +151,32 @@
     		<test name="harness.AllTests" todir="${basedir}" />
     		
     	</junit>
+    	
+    	<echo message="5: prepare the coverage report"/>
+    	
+    	<!-- prepare the coverage report -->
+    	<move todir="${coverage.dir}">
+    		<fileset dir="${basedir}">
+    			<filename name="coverage.ec"/>
+    		</fileset>
+    	</move>
+    	
+    	<echo message="6: report"/>
+    	
+    	<emma enabled="true">
+    		<report sourcepath="${src.dir}" depth="method">
+    			<fileset dir="${coverage.dir}">
+    				<include name="*.emma"/>
+    				<include name="*.ec"/>
+    			</fileset>
+    			<html outfile="${coverage.dir}/coverage.html"/>
+    			<xml outfile="${coverage.dir}/coverage.xml"/>
+    		</report>
+    	</emma>
     </target>
 
+	
+	<echo message="7: build-project"/>
 	
     <target name="build-project" depends="init">
         <echo message="${ant.project.name}: ${ant.file}"/>
