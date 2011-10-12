@@ -7,7 +7,6 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
     petrinetze.impl.PetrinetTest.class,
     petrinetze.impl.PetrinetzTest.class,
-    transformation.TransformationSuite.class,
-    engine.impl.EngineTest.class
+    transformation.TransformationSuite.class
 })
 public class AllTests {}
