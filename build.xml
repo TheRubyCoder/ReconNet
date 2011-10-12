@@ -124,7 +124,7 @@
 	
 	<echo message="4: instrument-java"/>
 	
-	<target name="instrument-java" depends="resolve">
+	<target name="instrument-java" depends="build-project">
 		<emma enabled="true">
 			<instr instrpath="${build.dir}" destdir="${instrumented.bindir}" metadatafile="${coverage.dir}/metadata.emma" merge="true">
 				<filter excludes="au.com.jenisys.view.*"/>
@@ -136,7 +136,7 @@
 	<!-- ================================= 
           target: junit-test              
          ================================= -->
-    <target name="junit-test" depends="build-project,instrument-java" description="run junit test">
+    <target name="junit-test" depends="instrument-java" description="run junit test">
     	<echo message="performing junit-tests"/>
     	<junit>
     		
@@ -178,7 +178,7 @@
 	
 	<echo message="7: build-project"/>
 	
-    <target name="build-project" depends="init">
+    <target name="build-project" depends="init, resolve">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="true" debuglevel="${debuglevel}" destdir="${build.dir}" source="${source}" target="${target}">
             <src path="src"/>
