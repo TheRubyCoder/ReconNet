@@ -108,9 +108,14 @@
     <target name="clean">
         <delete dir="${build.dir}"/>
     	<delete dir="${instrumented.bindir}"/>
+    	<delete dir="${coverage.dir}"/>
+    	<delete file="${basedir}/coverage.ec"/>
+    	<delete dir="${test-report.dir}"/>
     </target>
 	
-    <target depends="clean" name="cleanall"/>
+    <target name="cleanall" depends="clean">
+    	<delete dir="${ivy.cache.dir}"/>
+    </target>
 	
 	
     <target name="build" depends="init,resolve,compile,junit-test"/>
@@ -138,7 +143,7 @@
          ================================= -->
     <target name="junit-test" depends="instrument-java" description="run junit test">
     	<echo message="performing junit-tests"/>
-    	<junit>
+    	<junit fork="yes">
     		
     		<classpath> 
     			<path refid="wppetrinetze.classpath"/>
@@ -162,7 +167,7 @@
     	
     	
     	<emma enabled="true">
-    		<report sourcepath="${src.dir}" depth="method">
+    		<report sourcepath="${src.dir}" depth="method">    			
     			<fileset dir="${coverage.dir}">
     				<include name="*.emma"/>
     				<include name="*.ec"/>
