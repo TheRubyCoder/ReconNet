@@ -1,5 +1,10 @@
 package exceptions;
 
+/*
+ * The purpose of this class is simply to distinguish between our and system's Exceptions 
+ * 
+ */
+
 public class GeneralPetrinetException extends Exception {
 
 	/**
@@ -25,6 +30,10 @@ public class GeneralPetrinetException extends Exception {
 		super(message, cause);
 		// TODO Auto-generated constructor stub
 	}
+	
+	/*
+	 * This Constructor is add-on in JAVA7
+	 */
 /*
 	public GeneralPetrinetException(String message, Throwable cause,
 			boolean enableSuppression, boolean writableStackTrace) {

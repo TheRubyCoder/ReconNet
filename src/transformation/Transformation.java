@@ -37,7 +37,7 @@ public class Transformation implements ITransformation {
 		rule = Rule;
 		morphism = MorphismFactory.createMorphism(Rule.L(),N);
 		if (morphism == null)
-			throw new GeneralPetrinetException("Keinen Morphismus gefunden");
+			throw new GeneralPetrinetException("No Morphism detected");
 		
 	}		
 	/**
