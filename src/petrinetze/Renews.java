@@ -6,13 +6,6 @@ import petrinetze.impl.RenewMap;
 
 import java.util.Map;
 
-/**
- * Created by IntelliJ IDEA.
- * User: moritz
- * Date: 10.12.10
- * Time: 09:09
- * To change this template use File | Settings | File Templates.
- */
 public final class Renews {
 
     private Renews() {}

@@ -14,7 +14,7 @@ public class RenewId implements IRenew {
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -22,7 +22,7 @@ public class RenewId implements IRenew {
 		return getClass().hashCode();
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
