@@ -496,8 +496,13 @@ public class Petrinet implements IPetrinet {
 	 */
 	@Override
 	public String toString() {
-		return "Petrinet [id=" + id + "\n\t places=" + places + "\n\t transitions="
-				+ transitions + "\n\t arcs=" + arcs + "]";
+		String result = "Petrinet [id=" + id + "\n\t places=" + places + "\n\t transitions="
+				+ transitions + "\n\t arcs=[";
+		for (IArc arc: arcs) {
+			result += "\n\t\t"+arc;
+			
+		}
+		return result + "\n\t]";
 	}
 
 
