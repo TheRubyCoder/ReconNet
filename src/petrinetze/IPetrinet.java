@@ -18,7 +18,6 @@ public interface IPetrinet {
 	 * Fuegt eine Stelle hinzu.
 	 * @param name
 	 * 			Der Name der Stelle.
-	 * 			Die Anzahl der maximal möglichen Token.
 	 */
 	public IPlace createPlace(String name);
 	
