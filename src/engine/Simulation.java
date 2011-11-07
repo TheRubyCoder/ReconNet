@@ -3,59 +3,61 @@ package engine;
 import petrinetze.ITransition;
 
 /**
- * Steuerungsklasse für das Tokenspiel.
+ * Control class for the token game.
  * 
  */
 public interface Simulation {
 
     /**
-     * Durchführen eines Simulationsschrittes.
+     * Execution of a Simulation step.
      */
     void step();
 
     /**
-     * Durchführen eines Simulationsschrittes mit gegebener Transition.
+     * Execution of a Simulation step with given transition.
+     * 
+     * @param transition : transition where the step should be done
      *
-     * @todo Exception im Fehlerfall?
+     * @todo Exception when transition could not be stepped
      *
      * @see petrinetze.IPetrinet#fire(int) 
      */
     void step(ITransition transition);
 
     /**
-     * Starten der kontinuierlichen Simulation.
+     * start of continuous simulation.
      *
-     * @param delay Zeitverzögerung in Millisekunden
+     * @param delay Time delay in milliseconds
      *
-     * @throws IllegalStateException falls die Simulation aktiv ist
+     * @throws IllegalStateException if simulation is active
      */
     void start(long delay);
 
     /**
-     * Stoppen der kontinuierlichen Simulation.
+     * stop of continuous simulation.
      *
      */
     void stop();
 
-
+    
     /**
-     * Aktueller Ausführungszustand
+     * checks if simulation is active
      *
-     * @return <code>true</code> wenn die Simulation aktiv ist, <code>false</code> sonst
+     * @return <code>true</code> if simulation is active, <code>false</code> otherwise
      */
     boolean isRunning();
 
     /**
-     * Hinzufügen eines Listeners, der bei jedem Schritt benachrichtigt wird.
+     * adds a Listener, which is notified at each step.
      *
-     * @param listener der zu benachrichtigende {@link StepListener}.
+     * @param listener  {@link StepListener} to be notified.
      */
     void addStepListener(StepListener listener);
 
     /**
-     * Entfernen eines Listeners.
+     * removes a listener.
      *
-     * @param listener der zu entfernende {@link StepListener}.
+     * @param listener  {@link StepListener} to be removed.
      */
     void removeStepListener(StepListener listener);
 

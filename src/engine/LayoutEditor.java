@@ -8,62 +8,64 @@ import java.awt.geom.Point2D;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 
 /**
- * Klasse zum Bearbeiten des Layouts.
+ * class for editing the layouts
  *
  */
 public interface LayoutEditor {
 
     /**
-     * Sperren der Position eines Knoten.
-     * @param node
+     * Lock the position of a node. So it cannot be moved
+     * @param node which should be locked
      */
     void lock(INode node);
 
     /**
-     * Aufhebung der Positionssperre für einen Knoten.
+     * Unlock the position of a node. So it can be moved
      *
-     * @param node
+     * @param node which should be unlocked
      */
     void unlockNode(INode node);
 
     /**
-     * Abfragen des Sperrzustandes eines Knoten
+     * checks if a node is locked
      *
-     * @param node
-     * @return
+     * @param node the node to be checked
+     * @return <code> true </code> if node is locked, <code> false </code> otherwise
      */
     boolean isLocked(INode node);
 
     /**
-     * Position der grafischen Repräsentation des Knoten.
+     * gets the position of the graphical representation of the node.
      *
-     * @param node
+     * @param node which position you want to get
      *
-     * @return
+     * @return position as a 2D Point 
      */
     Point2D getPosition(INode node);
 
     /**
-     * Setzen der Position der grafischen Repräsentation des Knoten.
+     * sets the position of the graphical representation of the node.
      *
-     * @param node
-     * @param location
+     * @param node which position you want to set
+     * @param location position where the point should be set
      */
     void setPosition(INode node, Point2D location);
 
     /**
-     * Alle gesperrten Knoten entsperren.
+     * Unlock all locked nodes.
      */
     void unlockAll();
 
     /**
-     * Anwenden des LayoutEditor.
+     * Applys the new layout.
+     * @param vv new Visualition Viewer
      */
     void apply(VisualizationViewer<INode, IArc> vv);
-
+   
     /**
-     * Es muss im Anschluss <code>#apply</code> aufgerufen werden damit das Layout angewendet wird.
-     * @param l
+     * Sets new layout
+     * After this the method <code>#apply</code> must be called to apply the layout.
+     * @param l Layout to be set
      */
     public void setLayout(engine.impl.Layout l);
 }

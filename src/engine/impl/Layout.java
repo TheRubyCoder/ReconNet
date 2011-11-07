@@ -7,7 +7,10 @@ import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.KKLayout;
 import edu.uci.ics.jung.graph.Graph;
 
-
+/**
+ * Enumeration for different Layouts.
+ * 
+ */
 public enum Layout {
 	FRLayout {
         @Override
