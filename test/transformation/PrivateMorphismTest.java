@@ -95,7 +95,7 @@ public class PrivateMorphismTest {
 //			System.out.printf("places %s   transitions %s%n", mm.places(), mm.transitions());
 
 			int index;
-			Container cont = new Container(mm.places(), mm.transitions());
+			Container cont = new Container(mm.getPlacesMorphism(), mm.getTransitionsMorphism());
 			if ((index = results.indexOf(cont)) == -1) {
 				counter[results.size()]++;
 				results.add(cont);

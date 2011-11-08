@@ -90,15 +90,15 @@ public class IRuleTest {
     // TODO
     public static class IRuleImpl implements IRule {
 
-        public IPetrinet L() {
+        public IPetrinet getL() {
             return null;
         }
 
-        public IPetrinet K() {
+        public IPetrinet getK() {
             return null;
         }
 
-        public IPetrinet R() {
+        public IPetrinet getR() {
             return null;
         }
 

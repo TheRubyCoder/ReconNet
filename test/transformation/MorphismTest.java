@@ -72,7 +72,7 @@ public class MorphismTest {
      */
     @Test
     public void testPlaces() {
-        assertEquals(expectedPlaceMap, testObject.places());
+        assertEquals(expectedPlaceMap, testObject.getPlacesMorphism());
     }
 
     /**
@@ -80,7 +80,7 @@ public class MorphismTest {
      */
     @Test
     public void testTransitions() {
-        assertEquals(expectedTransitionMap, testObject.transitions());
+        assertEquals(expectedTransitionMap, testObject.getTransitionsMorphism());
     }
 
     /**
@@ -88,7 +88,7 @@ public class MorphismTest {
      */
     @Test
     public void testEdges() {
-        assertEquals(expectedArcMap, testObject.edges());
+        assertEquals(expectedArcMap, testObject.getEdgesMorphism());
     }
 
     /**
@@ -97,7 +97,7 @@ public class MorphismTest {
     @Test
     public void testMorph_ITransition() {
     	for (Map.Entry<ITransition, ITransition> entry : expectedTransitionMap.entrySet()) {
-    		assertEquals(entry.getValue(), testObject.morph(entry.getKey()));
+    		assertEquals(entry.getValue(), testObject.getTransitionMorphism(entry.getKey()));
     	}
     }
 
@@ -107,7 +107,7 @@ public class MorphismTest {
     @Test
     public void testMorph_IPlace() {
     	for (Map.Entry<IPlace, IPlace> entry : expectedPlaceMap.entrySet()) {
-    		assertEquals(entry.getValue(), testObject.morph(entry.getKey()));
+    		assertEquals(entry.getValue(), testObject.getPlaceMorphism(entry.getKey()));
     	}
     }
 
@@ -117,7 +117,7 @@ public class MorphismTest {
     @Test
     public void testMorph_IArc() {
     	for (Map.Entry<IArc, IArc> entry : expectedArcMap.entrySet()) {
-    		assertEquals(entry.getValue(), testObject.morph(entry.getKey()));
+    		assertEquals(entry.getValue(), testObject.getArcMorphism(entry.getKey()));
     	}
     }
 
@@ -126,7 +126,7 @@ public class MorphismTest {
      */
     @Test
     public void testFrom() {
-    	assertEquals(fromPn, testObject.From());
+    	assertEquals(fromPn, testObject.getFrom());
     }
 
     /**
@@ -134,7 +134,7 @@ public class MorphismTest {
      */
     @Test
     public void testTo() {
-        assertEquals(toPn, testObject.To());
+        assertEquals(toPn, testObject.getTo());
     }
     
     

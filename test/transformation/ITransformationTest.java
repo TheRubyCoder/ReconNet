@@ -106,15 +106,15 @@ public class ITransformationTest {
 
     public static class ITransformationImpl implements ITransformation {
 
-        public IRule rule() {
+        public IRule getRule() {
             return null;
         }
 
-        public IMorphism morphism() {
+        public IMorphism getMorphism() {
             return null;
         }
 
-        public IPetrinet N() {
+        public IPetrinet getPetrinet() {
             return null;
         }
 
