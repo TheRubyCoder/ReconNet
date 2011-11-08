@@ -16,25 +16,47 @@ import petrinetze.impl.Petrinet;
 /**
  * 
  * @author Philipp Kuehn
+ * @author Marvin Ede
+ * @author Oliver Willhoeft
  *
  */
 
 public class Rule implements IRule
 {
 	
+	/** K part of the rule */
 	private final IPetrinet k;
+	/** L part of the rule */
 	private final IPetrinet l;
+	/** R part of the rule */
 	private final IPetrinet r;
+	/** Listener that listens to changes in K */
 	private final Listener kListener;
+	/** Listener that listens to changes in L */
 	private final Listener lListener;
+	/** Listener that listens to changes in R */
 	private final Listener rListener;
+	/** Mapping of nodes between L and K */
 	private final Map<INode, INode> lKSameNodes;
+	/** Mapping of nodes between R and K */
 	private final Map<INode, INode> rKSameNodes;
+	/** Mapping of edges between L and K */
 	private final Map<IArc, IArc> lkSameEdges;
+	/** Mapping of edges between R and K */
 	private final Map<IArc, IArc> rKSameEdges;
 	
-	public Rule()
-	{
+
+	/** Indicates that R has initially been changed to prevent cycle.<br\> Used in the Listener */ 
+	private boolean rChanging = false;
+	/** Indicates that K has initially been changed to prevent cycle.<br\> Used in the Listener */ 
+	private boolean kChanging = false;
+	/** Indicates that L has initially been changed to prevent cycle.<br\> Used in the Listener */ 
+	private boolean lChanging = false;
+	
+	/**
+	 * Creates an empty rule
+	 */
+	public Rule() {
 		k = new Petrinet();
 		l = new Petrinet();
 		r = new Petrinet();
@@ -44,11 +66,15 @@ public class Rule implements IRule
 		lkSameEdges = new HashMap<IArc, IArc>();
 		rKSameEdges = new HashMap<IArc, IArc>();
 		
-		kListener = new Listener(Net.k, l, k, r);
-		lListener = new Listener(Net.l, l, k, r);
-		rListener = new Listener(Net.r, l, k, r);
+		kListener = new Listener(Net.K, l, k, r);
+		lListener = new Listener(Net.L, l, k, r);
+		rListener = new Listener(Net.R, l, k, r);
 	}
 	
+	/*
+	 * Make sure garbage collector also kills the listeners
+	 * (Not quite sure?)
+	 */
 	@Override
 	protected void finalize() throws Throwable 
 	{
@@ -58,33 +84,120 @@ public class Rule implements IRule
 		r.removePetrinetListener(rListener);
 	}
 
+	/**
+	 * @see IRule#getK()
+	 */
 	@Override
-	public IPetrinet K() {
+	public IPetrinet getK() {
 		return k;
 	}
 
+	/**
+	 * @see IRule#getL()
+	 */
 	@Override
-	public IPetrinet L() {
+	public IPetrinet getL() {
 		return l;
 	}
 
+	/**
+	 * @see IRule#getR()
+	 */
 	@Override
-	public IPetrinet R() {
+	public IPetrinet getR() {
 		return r;
 	}
-	
-	private enum Net
+
+	/**
+	 * Gets the key from a given value in a map. <br/> Does not check for multiple keys
+	 * @param map The map to look at
+	 * @param value The value to find the key to
+	 * @return First key that is found<br/><tt>null</tt> if no key found
+	 */
+	private <K, V> K getKeyFromValue(Map<K, V> map, V value)
 	{
-		l,
-		k,
-		r
+		for(Entry<K, V> e : map.entrySet())
+			if(e.getValue().equals(value))
+				return e.getKey();
+		return null;
+	}
+
+	/**
+	 * @see IRule#fromKtoL(INode)
+	 */
+	@Override
+	public INode fromKtoL(INode node) {
+		return getKeyFromValue(lKSameNodes, node);
+	}
+
+	/**
+	 * @see IRule#fromKtoL(IArc)
+	 */
+	@Override
+	public IArc fromKtoL(IArc edge) {
+		return getKeyFromValue(lkSameEdges, edge);
+	}
+
+	/**
+	 * @see IRule#fromKtoR(INode)
+	 */
+	@Override
+	public INode fromKtoR(INode node) {
+		return getKeyFromValue(rKSameNodes, node);
+	}
+
+	/**
+	 * @see IRule#fromKtoR(IArc)
+	 */
+	@Override
+	public IArc fromKtoR(IArc edge) {
+		return getKeyFromValue(rKSameEdges, edge);
+	}
+
+	/**
+	 * @see IRule#fromLtoK(INode)
+	 */
+	@Override
+	public INode fromLtoK(INode node) {
+		if(lKSameNodes.containsKey(node))
+			return lKSameNodes.get(node);
+		return null;
+	}
+
+	/**
+	 * @see IRule#fromLtoK(IArc)
+	 */
+	@Override
+	public IArc fromLtoK(IArc edge) {
+		if(lkSameEdges.containsKey(edge))
+			return lkSameEdges.get(edge);
+		return null;
+	}
+
+	/**
+	 * @see IRule#fromRtoK(INode)
+	 */
+	@Override
+	public INode fromRtoK(INode node) {
+		if(rKSameNodes.containsKey(node))
+			return rKSameNodes.get(node);
+		return null;
+	}
+
+	/**
+	 * @see IRule#fromRtoK(IArc)
+	 */
+	@Override
+	public IArc fromRtoK(IArc edge) {
+		if(rKSameEdges.containsKey(edge))
+			return rKSameEdges.get(edge);
+		return null;
 	}
 	
-	//These are used in the Listener, to indicate, which net has originally been changeed to prevent cycles.
-	private boolean rChanging = false;
-	private boolean kChanging = false;
-	private boolean lChanging = false;
+	/** Enum for Listener so they know what they are listening to */
+	private enum Net { L,K,R }
 	
+
 	/**
 	 * 
 	 * This Listener is used to listen for events on the L K and R nets.
@@ -105,11 +218,11 @@ public class Rule implements IRule
 			this.k = k;
 			this.l = l;
 			this.r = r;
-			if(net == Net.l)
+			if(net == Net.L)
 				l.addPetrinetListener(this);
-			else if(net == Net.k)
+			else if(net == Net.K)
 				k.addPetrinetListener(this);
-			else if(net == Net.r)
+			else if(net == Net.R)
 				r.addPetrinetListener(this);
 			
 		}
@@ -117,7 +230,7 @@ public class Rule implements IRule
 		@Override
 		public void changed(IPetrinet petrinet, INode element, ActionType actionType) 
 		{
-			if(net == Net.l)
+			if(net == Net.L)
 			{
 				if(!kChanging && !rChanging)
 				{
@@ -126,7 +239,7 @@ public class Rule implements IRule
 					lChanging = false;
 				}
 			}
-			else if(net == Net.k)
+			else if(net == Net.K)
 			{
 				if(!lChanging && !rChanging)
 				{
@@ -135,7 +248,7 @@ public class Rule implements IRule
 					kChanging = false;
 				}
 			}
-			else if(net == Net.r)
+			else if(net == Net.R)
 			{
 				if(!lChanging && !kChanging)
 				{
@@ -149,7 +262,7 @@ public class Rule implements IRule
 		@Override
 		public void changed(IPetrinet petrinet, IArc element, ActionType actionType) 
 		{
-			if(net == Net.l)
+			if(net == Net.L)
 			{
 				if(!kChanging && !rChanging)
 				{
@@ -158,7 +271,7 @@ public class Rule implements IRule
 					lChanging = false;
 				}
 			}
-			else if(net == Net.k)
+			else if(net == Net.K)
 			{
 				if(!lChanging && !rChanging)
 				{
@@ -167,7 +280,7 @@ public class Rule implements IRule
 					kChanging = false;
 				}
 			}
-			else if(net == Net.r)
+			else if(net == Net.R)
 			{
 				if(!lChanging && !kChanging)
 				{
@@ -391,62 +504,6 @@ public class Rule implements IRule
 				}
 			}
 		}	
-	}
-
-	private <K, V> K getKeyFromValue(Map<K, V> map, V value)
-	{
-		for(Entry<K, V> e : map.entrySet())
-			if(e.getValue().equals(value))
-				return e.getKey();
-		return null;
-	}
-
-	@Override
-	public INode fromKtoL(INode node) {
-		return getKeyFromValue(lKSameNodes, node);
-	}
-
-	@Override
-	public IArc fromKtoL(IArc edge) {
-		return getKeyFromValue(lkSameEdges, edge);
-	}
-
-	@Override
-	public INode fromKtoR(INode node) {
-		return getKeyFromValue(rKSameNodes, node);
-	}
-
-	@Override
-	public IArc fromKtoR(IArc edge) {
-		return getKeyFromValue(rKSameEdges, edge);
-	}
-
-	@Override
-	public INode fromLtoK(INode node) {
-		if(lKSameNodes.containsKey(node))
-			return lKSameNodes.get(node);
-		return null;
-	}
-
-	@Override
-	public IArc fromLtoK(IArc edge) {
-		if(lkSameEdges.containsKey(edge))
-			return lkSameEdges.get(edge);
-		return null;
-	}
-
-	@Override
-	public INode fromRtoK(INode node) {
-		if(rKSameNodes.containsKey(node))
-			return rKSameNodes.get(node);
-		return null;
-	}
-
-	@Override
-	public IArc fromRtoK(IArc edge) {
-		if(rKSameEdges.containsKey(edge))
-			return rKSameEdges.get(edge);
-		return null;
 	}
 
 

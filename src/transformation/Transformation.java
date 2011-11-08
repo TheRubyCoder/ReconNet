@@ -12,7 +12,7 @@ import exceptions.GeneralPetrinetException;
 
 public class Transformation implements ITransformation {
 	
-	private final IPetrinet N;
+	private final IPetrinet petrinet;
 	private final IMorphism morphism;
 	private final IRule rule; 
 	
@@ -22,32 +22,51 @@ public class Transformation implements ITransformation {
 	 * @param morph, the morphism to use
 	 * @param r, the rule that should apply
 	 */	
-	public Transformation(IPetrinet net,IMorphism morph,IRule r){
-		N = net; morphism = morph; rule = r;
+	private Transformation(IPetrinet petrinet,IMorphism morphism,IRule rule){
+		this.petrinet = petrinet; 
+		this.morphism = morphism; 
+		this.rule = rule;
 		
 	}
+	
 	/**
-	 * Constructor for the class Transformation
-	 * @param net, petrinet to transform
-	 * @param Rule, the rule to apply
-	 * @throws Exception 
-	 */	
-	public Transformation(IPetrinet net,IRule Rule) throws GeneralPetrinetException{
-		N = net; 
-		rule = Rule;
-		morphism = MorphismFactory.createMorphism(Rule.L(),N);
-		if (morphism == null)
+	 * Creates a new Transformation with given parameters
+	 * @param petrinet Petrinet to transform
+	 * @param morphism Morphism to use the rule under
+	 * @param rule Rule to apply to petrinet
+	 * @return the transformation
+	 */
+	public static ITransformation createTransformation(IPetrinet petrinet,
+			IMorphism morphism,
+			IRule rule){
+		return new Transformation(petrinet, morphism, rule);
+	}
+	
+	/**
+	 * Creates a new Transformation with given parameters
+	 * @param petrinet Petrinet to transform
+	 * @param morphism Morphism to use the rule under
+	 * @param rule Rule to apply to petrinet
+	 * @return the transformation
+	 * @throws GeneralPetrinetException When no default morphism found
+	 */
+	public static ITransformation createTransformationWithAnyMorphism(IPetrinet petrinet,
+			IRule rule) throws GeneralPetrinetException{
+		IMorphism tempMorphism = MorphismFactory.createMorphism(rule.getL(),petrinet);
+		if(tempMorphism == null){
 			throw new GeneralPetrinetException("No Morphism detected");
-		
-	}		
+		}
+		return new Transformation(petrinet, tempMorphism, rule);
+	}
+	
 	/**
 	 * Returns the IPetrinet of this transformation.
 	 * This net will be changed when transform() is called.
 	 * @return the IRule of this transformation.
 	 */
 	@Override
-	public IPetrinet N() {
-		return N;
+	public IPetrinet getPetrinet() {
+		return petrinet;
 	}
 	
 	/**
@@ -55,7 +74,7 @@ public class Transformation implements ITransformation {
 	 * @return the IMorphism of this transformation.
 	 */
 	@Override
-	public IMorphism morphism() {
+	public IMorphism getMorphism() {
 		return morphism;
 	}
 	
@@ -64,74 +83,73 @@ public class Transformation implements ITransformation {
 	 * @return the IRule of this transformation.
 	 */	
 	@Override
-	public IRule rule() {
+	public IRule getRule() {
 		return rule;
-	}		
+	}	
+	
 	/**
 	 * Method for starting the transform. 
-	 * Call this one in Order to start the shit !
-	 * 
 	 */
 	@Override
 	public void transform() {
-		IPetrinet K = rule.K();
+		IPetrinet K = rule.getK();
 		Set<INode> KNode = K.getAllGraphElement().getAllNodes();
 		Set<IArc> KArc = K.getAllArcs();		
 		for (INode i : KNode)  // Add K - L Places
 		{
 			if(rule.fromKtoL(i) == null) { // If K not in L do,.....
 				if(i instanceof IPlace){   
-					IPlace n = N.createPlace(i.getName());
-					morphism.places().put((IPlace)i, n);
+					IPlace n = petrinet.createPlace(i.getName());
+					morphism.getPlacesMorphism().put((IPlace)i, n);
 				}
 				else{
 					IRenew rnw = ((ITransition) i).getRnw();
-					ITransition n = N.createTransition(i.getName(),rnw);
-					morphism.transitions().put((ITransition)i, n);
+					ITransition n = petrinet.createTransition(i.getName(),rnw);
+					morphism.getTransitionsMorphism().put((ITransition)i, n);
 				}
 			}
 			else
 			{
 				// just add the nodes to create d
 				if(i instanceof IPlace){   
-					morphism.places().put((IPlace)i, morphism.morph((IPlace)rule.fromKtoL(i)));
+					morphism.getPlacesMorphism().put((IPlace)i, morphism.getPlaceMorphism((IPlace)rule.fromKtoL(i)));
 				}
 				else{
-					morphism.transitions().put((ITransition)i, morphism.morph((ITransition)rule.fromKtoL(i)));
+					morphism.getTransitionsMorphism().put((ITransition)i, morphism.getTransitionMorphism((ITransition)rule.fromKtoL(i)));
 				}
 			}
 		}
 		for (IArc a : KArc){ //Add K - L Arcs
 			if(rule.fromKtoL(a) == null) {
 				if(a.getStart() instanceof IPlace){
-					IArc n = N.createArc(a.getName(),morphism.morph((IPlace)a.getStart()),morphism.morph((ITransition)a.getEnd()));
-					morphism.edges().put(a, n);
+					IArc n = petrinet.createArc(a.getName(),morphism.getPlaceMorphism((IPlace)a.getStart()),morphism.getTransitionMorphism((ITransition)a.getEnd()));
+					morphism.getEdgesMorphism().put(a, n);
 				}
 				else{
-					IArc n = N.createArc(a.getName(),morphism.morph((ITransition)a.getStart()),morphism.morph((IPlace)a.getEnd()));
-					morphism.edges().put(a, n);
+					IArc n = petrinet.createArc(a.getName(),morphism.getTransitionMorphism((ITransition)a.getStart()),morphism.getPlaceMorphism((IPlace)a.getEnd()));
+					morphism.getEdgesMorphism().put(a, n);
 				}	
 			}
 			else
 			{
 				// just add the edges to create d
-				morphism.edges().put(a, morphism.morph(rule.fromKtoL(a)));
+				morphism.getEdgesMorphism().put(a, morphism.getArcMorphism(rule.fromKtoL(a)));
 			}
 		}
 		for (INode i : KNode) // Delete K - R Places
 		{
 			if (rule.fromKtoR(i) == null) { 
 				if(i instanceof IPlace){
-					N.deletePlaceById(morphism.morph((IPlace)i).getId());
+					petrinet.deletePlaceById(morphism.getPlaceMorphism((IPlace)i).getId());
 				}
 				else {
-					N.deleteTransitionByID(morphism.morph((ITransition)i).getId());
+					petrinet.deleteTransitionByID(morphism.getTransitionMorphism((ITransition)i).getId());
 				}
 			}
 		}
 		for (IArc i : KArc){ // Delete K - R Arcs
 			if (rule.fromKtoR(i) == null) {
-				N.deleteArcByID(morphism.morph(i).getId());
+				petrinet.deleteArcByID(morphism.getArcMorphism(i).getId());
 			}			
 		}
 	}

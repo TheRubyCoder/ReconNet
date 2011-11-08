@@ -1,36 +1,47 @@
 package transformation;
 
-class MatrixImpl implements Matrix {
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-	private final int[][] m;
+/**
+ * A simple matrix with Integers in it 
+ */
+class MatrixImpl implements IMatrix {
+
+	/** Matrix is internally realized as a nested array */
+	private final int[][] matrix;
 	
 	
-	public MatrixImpl(int[][] m) {
-		this.m = m;
+	public MatrixImpl(int[][] matrix) {
+		this.matrix = matrix;
 	}
 	
 	
 	@Override
 	public int getNumRows() {
-		return m.length;
+		return matrix.length;
 	}
 
 	@Override
 	public int getNumCols() {
-		if(m.length == 0)
+		if(matrix.length == 0)
 			return 0;
-		return m[0].length;
+		return matrix[0].length;
 	}
 
+	/**
+	 * @see IMatrix#get(int, int)
+	 */
 	@Override
-	public int get(int row, int col) {
-		return m[row][col];
+	public int get(int row, int column) {
+		return matrix[row][column];
 	}
 
+	/**
+	 * @see IMatrix#set(int, int, int)
+	 */
 	@Override
 	public void set(int row, int col, int value) {
-		// TODO Auto-generated method stub
-		
+		throw new NotImplementedException();
 	}
 
 }

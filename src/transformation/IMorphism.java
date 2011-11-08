@@ -7,8 +7,12 @@ import petrinetze.IPetrinet;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
 /**
- * An interface for morphisms on IPetrinet.
+ * An interface for morphisms on IPetrinet.<br\>
+ * A morphism maps places, transitions and edges in a way that pre and post
+ * have the same "structure" in 'from' and 'to'. For more details look at documnets of the petrinet course. 
  * @author Philipp Kuehn
+ * @author Marvin Ede
+ * @author Oliver Willhoeft
  *
  */
 public interface IMorphism 
@@ -17,57 +21,58 @@ public interface IMorphism
 	 * Returns the morphisms of all transition.
 	 * @return the morphisms of all transition.
 	 */
-	Map<ITransition, ITransition> transitions();
+	Map<ITransition, ITransition> getTransitionsMorphism();
 	
 	/**
 	 * Returns the morphisms of all places.
 	 * @return the morphisms of all places.
 	 */
-	Map<IPlace, IPlace> places();
+	Map<IPlace, IPlace> getPlacesMorphism();
 	
 	/**
 	 * Returns the morphism of all edges.
 	 * @return the morphism of all edges.
 	 */
-	Map<IArc, IArc> edges();
+	Map<IArc, IArc> getEdgesMorphism();
 	
 	/**
-	 * Applies this morphism to a transition.
-	 * @param transition the transition to apply this morphism to.
-	 * @return the transition after applying this morphism.
+	 * Returns the morphism to a single transition.
+	 * @param transition transition in the "from" net
+	 * @return the respective transition in the "to" net
 	 */
-	ITransition morph(ITransition transition);
+	ITransition getTransitionMorphism(ITransition transition);
 
 	/**
-	 * Applies this morphism to a place.
-	 * @param place the transition to apply this morphism to.
-	 * @return the place after applying this morphism .
+	 * Returns the morphism to a single place.
+	 * @param place place in the "from" net
+	 * @return the respective place in the "to" net
 	 */
-	IPlace morph(IPlace place);
+	IPlace getPlaceMorphism(IPlace place);
 
 	/**
-	 * Applies this morphism to a place.
-	 * @param place the transition to apply this morphism to.
-	 * @return the arc after applying this morphism.
+	 * Returns the morphism to a single arc.
+	 * @param arc arc in the "from" net
+	 * @return the respective arc in the "to" net
 	 */
-	IArc morph(IArc arc);
+	IArc getArcMorphism(IArc arc);
 	
-
 	/**
 	 * Returns true if this morphism is valid.
 	 * @return true if this morphism is valid.
+	 * @deprecated There is no functionality behind it
 	 */
-	boolean IsValid();
+	@Deprecated
+	boolean isValid();
 	
 	/**
 	 * Returns the Petrinet from which this morphism starts.
 	 * @return the Petrinet from which this morphism starts.
 	 */
-	IPetrinet From();
+	IPetrinet getFrom();
 	
 	/**
 	 * Returns the Petrinet into which this morphism maps to.
 	 * @return the Petrinet into which this morphism maps to.
 	 */
-	IPetrinet To();
+	IPetrinet getTo();
 }

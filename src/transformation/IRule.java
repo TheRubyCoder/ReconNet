@@ -4,8 +4,13 @@ import petrinetze.IArc;
 import petrinetze.INode;
 import petrinetze.IPetrinet;
 /**
- * An Interface for Rules.
+ * An Interface for Rules<br\>
+ * Rules define how a petrinet can be reconfigured<br\>
+ * Where L must be found in the petrinet, K is the context of all involved nodes
+ * and R is the resulting part-graph
  * @author Philipp Kuehn
+ * @author Marvin Ede
+ * @author Oliver Willhoeft
  *
  */
 public interface IRule 
@@ -14,19 +19,19 @@ public interface IRule
 	 * Returns the left IPetrinet of this rule.
 	 * @return the left IPetrinet of this rule.
 	 */
-	public IPetrinet L();
+	public IPetrinet getL();
 	
 	/**
 	 * Returns the gluing IPetrinet of this rule.
 	 * @return the gluing IPetrinet of this rule.
 	 */
-	public IPetrinet K();
+	public IPetrinet getK();
 
 	/**
 	 * Returns the right IPetrinet of this rule.
 	 * @return the right IPetrinet of this rule.
 	 */
-	public IPetrinet R();
+	public IPetrinet getR();
 	
 	/**
 	 * Returns the corresponding node in K.

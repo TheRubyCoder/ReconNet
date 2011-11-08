@@ -4,8 +4,9 @@ import exceptions.GeneralPetrinetException;
 import petrinetze.IPetrinet;
 
 /**
- * 
  * @author Philipp Kuehn
+ * @author Marvin Ede
+ * @author Oliver Willhoeft
  *
  */
 public final class Transformations 
@@ -39,7 +40,8 @@ public final class Transformations
 	public static void join(IPetrinet left, IPetrinet right, IMorphism morphism, IRule rule)
 	{
 		left.addNet(right);
-		new Transformation(left, morphism, rule).transform();
+		Transformation.createTransformation(left, morphism, rule).transform();
+//		new Transformation(left, morphism, rule).transform();
 	}
 
 	/**
@@ -53,7 +55,8 @@ public final class Transformations
 	public static void join(IPetrinet left, IPetrinet right, IRule rule) throws GeneralPetrinetException
 	{
 		left.addNet(right);
-		new Transformation(left, rule).transform();
+		Transformation.createTransformationWithAnyMorphism(left, rule).transform();
+//		new Transformation(left, rule).transform();
 	}
 	
 	/**
@@ -64,8 +67,9 @@ public final class Transformations
 	 */
 	public static void transform(IPetrinet net, IRule rule) throws GeneralPetrinetException
 	{
-		new Transformation(net, rule).transform();
-		System.out.println(net);
+		Transformation.createTransformationWithAnyMorphism(net, rule).transform();
+//		new Transformation(net, rule).transform();
+//		System.out.println(net);
 	}
 
 }

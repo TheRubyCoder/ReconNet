@@ -17,11 +17,14 @@ import petrinetze.IPlace;
 import petrinetze.ITransition;
 import petrinetze.impl.Petrinet;
 
+/**
+ * Finds Morphisms between two petrinets in a not deterministic way
+ */
 public class MorphismFactory {
 
 	
 	/**
-	 * Finds a morphism between two petrinets.<br\>
+	 * Finds a morphism between two petrinets.<br/>
 	 * Not deterministic.
 	 * @param from the Petrinet from which this morphism starts.
 	 * @param to the Petrinet into which this morphism maps to.
@@ -30,30 +33,48 @@ public class MorphismFactory {
 	public static IMorphism createMorphism(IPetrinet from, IPetrinet to) {
 		return new MorphismFactory(from, to).getMorphism();
 	}
-
-
-	// Netzmorphismus: netA --> netB von netA nach netB
-	// Die Stellen und Transitionen werden im folgenden ueber ihre Zeilennr. bzw. Spaltennr. in der pre- und post-Matrix identifiziert
 	
-	private final IPetrinet netA;
-	private final IPetrinet netB;
-
-	private final Matrix netA_pre;
-	private final Matrix netA_post;
-	private final int netA_numPlaces;
-	private final int netA_numTransitions;
-	private final Matrix netB_pre;
-	private final Matrix netB_post;
-	private final int netB_numPlaces;
-	private final int netB_numTransitions;
+	/** "from" petrinet of the morphism to find */
+	private final IPetrinet fromNet;
+	/** Matrix that represents pre of "from" matrix */
+	private final IMatrix fromNetPre;
+	/** Matrix that represents post of "from" matrix */
+	private final IMatrix fromNetPost;
+	/** Number of places in "from" net */
+	private final int numPlacesFromNet;
+	/** Number of transitions in "from" net */
+	private final int numTransitionsFromNet;
+	
+	/** "to" petrinet of the morphism to find */
+	private final IPetrinet toNet;
+	/** Matrix that represents pre of "to" matrix */
+	private final IMatrix toNetPre;
+	/** Matrix that represents post of "to" matrix */
+	private final IMatrix toNetPost;
+	/** Number of places in "to" net */
+	private final int numPlacesToNet;
+	/** Number of transitions in "to" net */
+	private final int numTransitionsToNet;
 
 
 	// Bedeutung von Arrayindex, key und value der Maps in den folgenden Zeilen:
 	// Arrayindex: Eine Stelle/Transition (Zeilennr./Spaltennr. in pre-/post-Matrix)
 	// key: Kantengewicht
 	// value: Die Anzahl der Kanten, die dieses Kantengewicht haben 
-	private Map<Integer, Integer>[] netA_placesInEdges; // Kantengewichte der in die Stellen von netA eingehenden Kanten
-	private Map<Integer, Integer>[] netA_placesOutEdges; // Kantengewichte der aus den Stellen von netA ausgehenden Kanten
+	/** Mapping for each entry in the <b>preMatrix</b> of "from" net with <ul><tt>key</tt> = weight of edges and <br/><tt>value</tt> = number of edges with that weight</ul>
+	 * <h1>Examples:</h1>
+	 * If there is an 8 in the matrix, does it mean <ul><li>1 edge with weight 5 and 1 edge with weight 3 (5+3)</li> 
+	 * <li>or 1 edge with weight 6 and 1 edge weight 2 (6+2)</li>
+	 * <li>or just 1 edge with weight 8 (8)?</li></ul> */
+	private Map<Integer, Integer>[] weightDistributionInPreFrom; // Kantengewichte der in die Stellen von netA eingehenden Kanten
+	
+	/** Mapping for each entry in the <b>postMatrix</b>of "from" net with <ul><tt>key</tt> = weight of edges and <br/><tt>value</tt> = number of edges with that weight</ul>
+	 * <h1>Examples:</h1>
+	 * If there is an 8 in the matrix, does it mean <ul><li>1 edge with weight 5 and 1 edge with weight 3 (5+3)</li> 
+	 * <li>or 1 edge with weight 6 and 1 edge weight 2 (6+2)</li>
+	 * <li>or just 1 edge with weight 8 (8)?</li></ul> */
+	private Map<Integer, Integer>[] weightDistributionInPostFrom; // Kantengewichte der aus den Stellen von netA ausgehenden Kanten
+	
 	private Map<Integer, Integer>[] netA_transitionsInEdges; // Kantengewichte der in die Transitionen von netA eingehenden Kanten
 	private Map<Integer, Integer>[] netA_transitionsOutEdges; // Kantengewichte der aus den Transitionen von netA ausgehenden Kanten
 	private Map<Integer, Integer>[] netB_placesInEdges; // ab hier das gleiche fuer netB
@@ -61,8 +82,8 @@ public class MorphismFactory {
 	private Map<Integer, Integer>[] netB_transitionsInEdges;
 	private Map<Integer, Integer>[] netB_transitionsOutEdges;
 
-	/*private*/ boolean[][] m0_places;
-	/*private*/ boolean[][] m0_transitions;
+	boolean[][] m0_places;
+	boolean[][] m0_transitions;
 
 	private Map<IPlace, IPlace> places;
 	private Map<ITransition, ITransition> transitions;
@@ -72,16 +93,16 @@ public class MorphismFactory {
 
 
 	private MorphismFactory(IPetrinet from, IPetrinet to) {
-		netA = from;
-		netB = to;
-		netA_pre = new MatrixImpl(netA.getPre().getPreAsArray());
-		netA_post = new MatrixImpl(netA.getPost().getPostAsArray());
-		netA_numPlaces = netA_pre.getNumRows();
-		netA_numTransitions = netA_pre.getNumCols();
-		netB_pre = new MatrixImpl(netB.getPre().getPreAsArray());
-		netB_post = new MatrixImpl(netB.getPost().getPostAsArray());
-		netB_numPlaces = netB_pre.getNumRows();
-		netB_numTransitions = netB_pre.getNumCols();
+		fromNet = from;
+		toNet = to;
+		fromNetPre = new MatrixImpl(fromNet.getPre().getPreAsArray());
+		fromNetPost = new MatrixImpl(fromNet.getPost().getPostAsArray());
+		numPlacesFromNet = fromNetPre.getNumRows();
+		numTransitionsFromNet = fromNetPre.getNumCols();
+		toNetPre = new MatrixImpl(toNet.getPre().getPreAsArray());
+		toNetPost = new MatrixImpl(toNet.getPost().getPostAsArray());
+		numPlacesToNet = toNetPre.getNumRows();
+		numTransitionsToNet = toNetPre.getNumCols();
 
 		init();
 		
@@ -94,7 +115,7 @@ public class MorphismFactory {
 	private IMorphism getMorphism() {
 		boolean successful = findMorphism();
 		if (successful) {
-			return new Morphism(netA, netB, places, transitions, edges);
+			return new Morphism(fromNet, toNet, places, transitions, edges);
 		} else {
 			return null;
 			//return new Morphism(new Petrinet(), new Petrinet(), new HashMap<IPlace, IPlace>(), new HashMap<ITransition, ITransition>(), new HashMap<IArc, IArc>());
@@ -104,36 +125,36 @@ public class MorphismFactory {
 
 
 	private void init() {
-		Container temp = countEdges(netA_pre);
-		netA_placesOutEdges = temp.places;
+		Container temp = countEdges(fromNetPre);
+		weightDistributionInPostFrom = temp.places;
 		netA_transitionsInEdges = temp.transitions;
 
-		temp = countEdges(netA_post);
-		netA_placesInEdges = temp.places;
+		temp = countEdges(fromNetPost);
+		weightDistributionInPreFrom = temp.places;
 		netA_transitionsOutEdges = temp.transitions;
 
-		temp = countEdges(netB_pre);
+		temp = countEdges(toNetPre);
 		netB_placesOutEdges = temp.places;
 		netB_transitionsInEdges = temp.transitions;
 
-		temp = countEdges(netB_post);
+		temp = countEdges(toNetPost);
 		netB_placesInEdges = temp.places;
 		netB_transitionsOutEdges = temp.transitions;
 	}
 
 
 	private void createM0_places() {
-		m0_places = new boolean[netA_numPlaces][netB_numPlaces];
+		m0_places = new boolean[numPlacesFromNet][numPlacesToNet];
 
-		for (int indexA = 0; indexA < netA_numPlaces; indexA++) {
-			final IPlace placeA = netA.getPlaceById(netA.getPre().getPlaceIds()[indexA]);
-			for (int indexB = 0; indexB < netB_numPlaces; indexB++) {
-				final IPlace placeB = netB.getPlaceById(netB.getPre().getPlaceIds()[indexB]);
+		for (int indexA = 0; indexA < numPlacesFromNet; indexA++) {
+			final IPlace placeA = fromNet.getPlaceById(fromNet.getPre().getPlaceIds()[indexA]);
+			for (int indexB = 0; indexB < numPlacesToNet; indexB++) {
+				final IPlace placeB = toNet.getPlaceById(toNet.getPre().getPlaceIds()[indexB]);
 				// Alle Bedingungen pruefen, die erfuellt sein muessen, damit die m0-Matrix fuer das aktuelle Mapping placeA --> placeB einen true-Eintrag bekommt
 				if (	placeA.getName().equals(placeB.getName()) &&
 						placeA.getMark() <= placeB.getMark() &&
-						testPlaceEdges(netA_placesInEdges[indexA], netB_placesInEdges[indexB]) &&
-						testPlaceEdges(netA_placesOutEdges[indexA], netB_placesOutEdges[indexB])) {
+						testPlaceEdges(weightDistributionInPreFrom[indexA], netB_placesInEdges[indexB]) &&
+						testPlaceEdges(weightDistributionInPostFrom[indexA], netB_placesOutEdges[indexB])) {
 
 					m0_places[indexA][indexB] = true;
 				}
@@ -141,20 +162,20 @@ public class MorphismFactory {
 		}
 
 		// Speicherplatz freigeben
-		netA_placesInEdges = null;
+		weightDistributionInPreFrom = null;
 		netB_placesInEdges = null;
-		netA_placesOutEdges = null;
+		weightDistributionInPostFrom = null;
 		netB_placesOutEdges = null;
 	}
 
 
 	private void createM0_transitions() {
-		m0_transitions = new boolean[netA_numTransitions][netB_numTransitions];
+		m0_transitions = new boolean[numTransitionsFromNet][numTransitionsToNet];
 
-		for (int indexA = 0; indexA < netA_numTransitions; indexA++) {
-			final ITransition transitionA = netA.getTransitionById(netA.getPre().getTransitionIds()[indexA]);
-			for (int indexB = 0; indexB < netB_numTransitions; indexB++) {
-				final ITransition transitionB = netB.getTransitionById(netB.getPre().getTransitionIds()[indexB]);
+		for (int indexA = 0; indexA < numTransitionsFromNet; indexA++) {
+			final ITransition transitionA = fromNet.getTransitionById(fromNet.getPre().getTransitionIds()[indexA]);
+			for (int indexB = 0; indexB < numTransitionsToNet; indexB++) {
+				final ITransition transitionB = toNet.getTransitionById(toNet.getPre().getTransitionIds()[indexB]);
 				if (	transitionA.getName().equals(transitionB.getName()) &&
 						transitionA.getTlb().equals(transitionB.getTlb()) &&
 						transitionA.getRnw().equals(transitionB.getRnw()) &&
@@ -216,7 +237,7 @@ public class MorphismFactory {
 	}
 
 	
-	private Container countEdges(Matrix m) {
+	private Container countEdges(IMatrix m) {
 
 		@SuppressWarnings("serial")
 		class MyMap extends HashMap<Integer, Integer> {
@@ -255,13 +276,13 @@ public class MorphismFactory {
 
 
 	private boolean findMorphism() {
-		final int numVertices = netA_numPlaces + netA_numTransitions;
+		final int numVertices = numPlacesFromNet + numTransitionsFromNet;
 
 		final BoolMatrix[] m_places = new BoolMatrix[numVertices];
 		final BoolMatrix[] m_transitions = new BoolMatrix[numVertices];
 
-		final List<Integer>[] placesB = new List[netA_numPlaces]; // Alle moeglichen Zuordnungen von Stellen
-		final List<Integer>[] transitionsB = new List[netA_numTransitions]; // Alle moeglichen Zuordnungen von Transitionen
+		final List<Integer>[] placesB = new List[numPlacesFromNet]; // Alle moeglichen Zuordnungen von Stellen
+		final List<Integer>[] transitionsB = new List[numTransitionsFromNet]; // Alle moeglichen Zuordnungen von Transitionen
 
 
 		final BoolMatrix m0_placesExt = new BoolMatrix(m0_places);
@@ -284,7 +305,7 @@ public class MorphismFactory {
 				prev_M_places = m_places[currentRow - 1];
 			}
 
-			if (currentRow < netA_numTransitions) {
+			if (currentRow < numTransitionsFromNet) {
 				// ------------------- Die Transition-Matrix bearbeiten ---------------------------------------------
 
 				List<Integer> possibleMappings = transitionsB[currentRow]; // Die Liste aller moeglichen Zuordnungen in der aktuellen Zeile
@@ -328,7 +349,7 @@ public class MorphismFactory {
 			} else {
 				// ------------------- Die Place-Matrix bearbeiten ---------------------------------------------
 
-				final int currentRowPlaces = currentRow  - netA_numTransitions; // Index berechnen fuer den Zugriff auf das Array placesB
+				final int currentRowPlaces = currentRow  - numTransitionsFromNet; // Index berechnen fuer den Zugriff auf das Array placesB
 				List<Integer> possibleMappings = placesB[currentRowPlaces]; // Die Liste aller moeglichen Zuordnungen in der aktuellen Zeile
 				if (possibleMappings == null) {
 					possibleMappings = prev_M_places.getVerticesB(currentRowPlaces);
@@ -389,14 +410,14 @@ public class MorphismFactory {
 
 	private boolean neighbourCheckTransition(final int transA, final int transB, BoolMatrix m_places) {
 		// Nachbarschaften im Vorbereich der Transition testen
-		for (int placeA = 0; placeA < netA_numPlaces; placeA++) {
-			final int a = netA_pre.get(placeA, transA);
+		for (int placeA = 0; placeA < numPlacesFromNet; placeA++) {
+			final int a = fromNetPre.get(placeA, transA);
 			if (a > 0) { // Stelle im Vorbereich von transA: placeA
 				// Abbildungen von placeA nach placeB ermitteln
-				for (int placeB = 0; placeB < netB_numPlaces; placeB++) {
+				for (int placeB = 0; placeB < numPlacesToNet; placeB++) {
 					// Bei allen moeglichen Zuordnungen placeA --> placeB die Nachbarschaftsbedingung pruefen
 					if (m_places.getValue(placeA, placeB)) {
-						if (netB_pre.get(placeB, transB) != a) {
+						if (toNetPre.get(placeB, transB) != a) {
 							m_places.setFalse(placeA, placeB);
 							if (m_places.getNumTrues(placeA) == 0) {
 								return false;
@@ -408,14 +429,14 @@ public class MorphismFactory {
 		}
 
 		// Nachbarschaften im Nachbereich der Transition testen
-		for (int placeA = 0; placeA < netA_numPlaces; placeA++) {
-			final int a = netA_post.get(placeA, transA);
+		for (int placeA = 0; placeA < numPlacesFromNet; placeA++) {
+			final int a = fromNetPost.get(placeA, transA);
 			if (a > 0) { // Stelle im Nachbereich von transA: placeA
 				// Abbildungen von placeA nach placeB ermitteln
-				for (int placeB = 0; placeB < netB_numPlaces; placeB++) {
+				for (int placeB = 0; placeB < numPlacesToNet; placeB++) {
 					// Bei allen moeglichen Zuordnungen placeA --> placeB die Nachbarschaftsbedingung pruefen
 					if (m_places.getValue(placeA, placeB)) {
-						if (netB_post.get(placeB, transB) != a) {
+						if (toNetPost.get(placeB, transB) != a) {
 							m_places.setFalse(placeA, placeB);
 							if (m_places.getNumTrues(placeA) == 0) {
 								return false;
@@ -434,14 +455,14 @@ public class MorphismFactory {
 
 	private boolean neighbourCheckPlace(final int placeA, final int placeB, BoolMatrix m_transitions) {
 		// Nachbarschaften im Vorbereich der Stelle testen
-		for (int transA = 0; transA < netA_numTransitions; transA++) {
-			final int a = netA_post.get(placeA, transA);
+		for (int transA = 0; transA < numTransitionsFromNet; transA++) {
+			final int a = fromNetPost.get(placeA, transA);
 			if (a > 0) { // Stelle im Vorbereich von placeA: transA
 				// Abbildungen von transA nach transB ermitteln
-				for (int transB = 0; transB < netB_numTransitions; transB++) {
+				for (int transB = 0; transB < numTransitionsToNet; transB++) {
 					// Bei allen moeglichen Zuordnungen transA --> transB die Nachbarschaftsbedingung pruefen
 					if (m_transitions.getValue(transA, transB)) {
-						if (netB_post.get(placeB, transB) != a) {
+						if (toNetPost.get(placeB, transB) != a) {
 							m_transitions.setFalse(transA, transB);
 							if (m_transitions.getNumTrues(transA) == 0) {
 								return false;
@@ -453,14 +474,14 @@ public class MorphismFactory {
 		}
 
 		// Nachbarschaften im Nachbereich der Stelle testen
-		for (int transA = 0; transA < netA_numTransitions; transA++) {
-			final int a = netA_pre.get(placeA, transA);
+		for (int transA = 0; transA < numTransitionsFromNet; transA++) {
+			final int a = fromNetPre.get(placeA, transA);
 			if (a > 0) { // Stelle im Vorbereich von placeA: transA
 				// Abbildungen von transA nach transB ermitteln
-				for (int transB = 0; transB < netB_numTransitions; transB++) {
+				for (int transB = 0; transB < numTransitionsToNet; transB++) {
 					// Bei allen moeglichen Zuordnungen transA --> transB die Nachbarschaftsbedingung pruefen
 					if (m_transitions.getValue(transA, transB)) {
-						if (netB_pre.get(placeB, transB) != a) {
+						if (toNetPre.get(placeB, transB) != a) {
 							m_transitions.setFalse(transA, transB);
 							if (m_transitions.getNumTrues(transA) == 0) {
 								return false;
@@ -480,10 +501,10 @@ public class MorphismFactory {
 
 		for (int r = 0; r < matrix.getNumRows(); r++) {
 			assert matrix.getNumTrues(r) == 1;
-			final IPlace placeA = netA.getPlaceById(netA.getPre().getPlaceIds()[r]);
+			final IPlace placeA = fromNet.getPlaceById(fromNet.getPre().getPlaceIds()[r]);
 			for (int c = 0; /*c < m[0].getNumCols()*/; c++) {
 				if (matrix.getValue(r, c)) {
-					final IPlace placeB = netB.getPlaceById(netB.getPre().getPlaceIds()[c]);
+					final IPlace placeB = toNet.getPlaceById(toNet.getPre().getPlaceIds()[c]);
 					result.put(placeA, placeB);
 					break;
 				}
@@ -499,10 +520,10 @@ public class MorphismFactory {
 
 		for (int r = 0; r < m.getNumRows(); r++) {
 			assert m.getNumTrues(r) == 1;
-			final ITransition transitionA = netA.getTransitionById(netA.getPre().getTransitionIds()[r]);
+			final ITransition transitionA = fromNet.getTransitionById(fromNet.getPre().getTransitionIds()[r]);
 			for (int c = 0; /*c < m[0].getNumCols()*/; c++) {
 				if (m.getValue(r, c)) {
-					final ITransition transitionB = netB.getTransitionById(netB.getPre().getTransitionIds()[c]);
+					final ITransition transitionB = toNet.getTransitionById(toNet.getPre().getTransitionIds()[c]);
 					result.put(transitionA, transitionB);
 					break;
 				}
@@ -516,8 +537,8 @@ public class MorphismFactory {
 	private Map<IArc, IArc> createEdgesMap() {
 		Map<IArc, IArc> result = new HashMap<IArc, IArc>();
 		
-		Set<IArc> arcsA = netA.getAllArcs();
-		Set<IArc> arcsB = netB.getAllArcs();
+		Set<IArc> arcsA = fromNet.getAllArcs();
+		Set<IArc> arcsB = toNet.getAllArcs();
 		
 		Set<IArc> arcsB_p_to_t = new HashSet<IArc>();
 		Set<IArc> arcsB_t_to_p = new HashSet<IArc>();

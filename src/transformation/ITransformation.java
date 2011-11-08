@@ -2,8 +2,12 @@ package transformation;
 
 import petrinetze.IPetrinet;
 /**
- * An Interface for transformations on IPetrinet.
+ * An Interface for transformations on IPetrinet.<br\>
+ * The Transformation applies a rule on an petrinet under a certain morphism
+ * 
  * @author Philipp Kuehn
+ * @author Marvin Ede
+ * @author Oliver Willhoeft
  *
  */
 public interface ITransformation 
@@ -12,25 +16,25 @@ public interface ITransformation
 	 * Returns the IRule of this transformation.
 	 * @return the IRule of this transformation.
 	 */
-	IRule rule();
+	IRule getRule();
 
 	/**
 	 * Returns the IMorphism of this transformation.
 	 * @return the IMorphism of this transformation.
 	 */
-	IMorphism morphism();
+	IMorphism getMorphism();
 	
 	/**
 	 * Returns the IPetrinet of this transformation.
 	 * This net will be changed when transform() is called.
 	 * @return the IRule of this transformation.
 	 */
-	IPetrinet N();
+	IPetrinet getPetrinet();
 	
 	/**
-	 * This will transform the IPetrinet returned by N()
-	 * using the IRule returned by Rule() and
-	 * the IMorphism returned by morphism().
+	 * This will transform the petrinet
+	 * using the IRule returned by getRule() and
+	 * the IMorphism returned by getMorphism().
 	 */
 	void transform();
 }
