@@ -18,11 +18,22 @@ import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.EditingGraphMousePlugin;
 
+/**
+ * @author edit by alex
+ *
+ * @param <V> Vertexe
+ * @param <E> Edges
+ */
 public class EditingGraphMousePluginEx<V extends INode, E extends IArc> extends EditingGraphMousePlugin<V, E> {
-
 
 	private Engine engine;
 
+	/**
+	 * Constructor for this Class
+	 * @param engine engine for Class
+	 * @param vertexFactory vertex for Class
+	 * @param edgeFactory edge for Class
+	 */
 	public EditingGraphMousePluginEx(Engine engine, Factory<V> vertexFactory, Factory<E> edgeFactory) {
 		super(MouseEvent.BUTTON1_MASK, vertexFactory, edgeFactory);
 		this.engine = engine;
@@ -102,8 +113,6 @@ public class EditingGraphMousePluginEx<V extends INode, E extends IArc> extends 
 		}
 	}
 
-
-
 	/**
 	 * code lifted from PluggableRenderer to move an edge shape into an
 	 * arbitrary position
@@ -139,5 +148,4 @@ public class EditingGraphMousePluginEx<V extends INode, E extends IArc> extends 
         xform.rotate(thetaRadians);
         arrowShape = xform.createTransformedShape(rawArrowShape);
     }
-
 }

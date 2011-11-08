@@ -1,23 +1,39 @@
 package engine.impl.ctrl;
 
-import edu.uci.ics.jung.visualization.VisualizationServer;
-import edu.uci.ics.jung.visualization.VisualizationViewer;
-import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
-import engine.Engine;
-import engine.GraphEditor;
-import engine.impl.Layout;
-import petrinetze.IArc;
-import petrinetze.INode;
-import petrinetze.IPlace;
-import petrinetze.ITransition;
-
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ButtonGroup;
+import javax.swing.JMenu;
+import javax.swing.JPopupMenu;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JSeparator;
+
+import petrinetze.IArc;
+import petrinetze.INode;
+import edu.uci.ics.jung.visualization.VisualizationViewer;
+import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
+import engine.Engine;
+import engine.impl.Layout;
+
+/**
+ * 
+ * @author edit by alex
+ *
+ */
 public class PetrinetPopupMousePlugin extends AbstractPopupGraphMousePlugin {
 
+	/**
+	 * Popupmenu for an right click
+	 * include:
+	 * - Perform Layout
+	 * - Change Layout
+	 * -- KKLayout
+	 * -- FRLayout
+	 * - Delete
+	 */
     private JPopupMenu popupMenu;
 
     private VisualizationViewer<INode,IArc> viewer;
@@ -25,7 +41,10 @@ public class PetrinetPopupMousePlugin extends AbstractPopupGraphMousePlugin {
     private final Engine engine;
 
     private final Action deleteAction = new AbstractAction("Delete") {
-        @Override
+
+		private static final long serialVersionUID = 4353136895080536189L;
+
+		@Override
         public void actionPerformed(ActionEvent e) {
             engine.getGraphEditor().remove(viewer.getPickedVertexState().getPicked());
             engine.getGraphEditor().remove(viewer.getPickedEdgeState().getPicked());
@@ -33,29 +52,45 @@ public class PetrinetPopupMousePlugin extends AbstractPopupGraphMousePlugin {
     };
 
     private final Action layoutAction = new AbstractAction("Perform Layout") {
-        @Override
+
+		private static final long serialVersionUID = 8284060951365630301L;
+
+		@Override
         public void actionPerformed(ActionEvent e) {
             engine.getLayoutEditor().apply(viewer);
         }
     };
 
     private final Action kkLayoutAction = new AbstractAction("KKLayout") {
-        @Override
+
+		private static final long serialVersionUID = -3397103612335429766L;
+
+		@Override
         public void actionPerformed(ActionEvent e) {
             engine.getLayoutEditor().setLayout(Layout.KKLayout);
         }
     };
 
     private final Action frLayoutAction = new AbstractAction("FRLayout") {
-        @Override
+
+		private static final long serialVersionUID = -289433404847293940L;
+
+		@Override
         public void actionPerformed(ActionEvent e) {
             engine.getLayoutEditor().setLayout(Layout.FRLayout);
         }
     };
 
+    /**
+     * Constructor for this Class.
+     * It build an Popupmenu for an right click.
+     * @param engine
+     */
     public PetrinetPopupMousePlugin(Engine engine) {
         this.engine = engine;
         this.popupMenu = new JPopupMenu();
+        
+        // add first entry: Perform Layout
         this.popupMenu.add(layoutAction);
 
         final JMenu layoutMenu = new JMenu("Change Layout");
@@ -67,12 +102,19 @@ public class PetrinetPopupMousePlugin extends AbstractPopupGraphMousePlugin {
         layoutGroup.add(kkItem);
         layoutGroup.add(frItem);
         layoutGroup.setSelected(kkItem.getModel(), true);
-        popupMenu.add(layoutMenu);
+        
+        // add submenu with: KKLayout; LRLayout
+        this.popupMenu.add(layoutMenu);
 
         this.popupMenu.add(new JSeparator());
+        
+        // all last entry: Delete
         this.popupMenu.add(deleteAction);
     }
 
+    /**
+     * Methode zum behandeln von MausEvents
+     */
     @Override
     @SuppressWarnings("unchecked")
     protected void handlePopup(MouseEvent e) {

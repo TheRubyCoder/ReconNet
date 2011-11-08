@@ -29,19 +29,48 @@ import edu.uci.ics.jung.visualization.control.ShearingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.TranslatingGraphMousePlugin;
 import engine.Engine;
 
+/**
+ * 
+ * @author edit by alex
+ *
+ * @param <V>
+ * @param <E>
+ */
 public class EditingModalGraphMouseEx<V extends INode, E extends IArc> extends AbstractModalGraphMouse implements
 		ModalGraphMouse, ItemSelectable {
 
 	private Engine engine;
+	private PetrinetPopupMousePlugin popupPlugin;
 
+	/**
+	 * eine Instanze der Factory fuer Knoten 
+	 */
 	protected Factory<V> vertexFactory;
+	
+	/**
+	 * eine Instanze der Factory fuer Kanten
+	 */
 	protected Factory<E> edgeFactory;
+	
+	/**
+	 * eine instanze von EditingGraphMousePlugin
+	 */
 	protected EditingGraphMousePlugin<V, E> editingPlugin;
+	
+	/**
+	 * eine Instanze von LabelEditingGraphMousePlugin
+	 */
 	protected LabelEditingGraphMousePlugin<V, E> labelEditingPlugin;
 
+	/**
+	 * eine Instanze von MultiLayerTransformer
+	 */
 	protected MultiLayerTransformer basicTransformer;
-	protected RenderContext<V, E> rc;
-    private PetrinetPopupMousePlugin popupPlugin;
+	
+	/**
+	 * eine Instanze von RenderContext
+	 */
+	protected RenderContext<V, E> rc;    
 
     /**
 	 * create an instance with default values
@@ -55,10 +84,8 @@ public class EditingModalGraphMouseEx<V extends INode, E extends IArc> extends A
 	/**
 	 * create an instance with passed values
 	 *
-	 * @param in
-	 *            override value for scale in
-	 * @param out
-	 *            override value for scale out
+	 * @param in override value for scale in
+	 * @param out override value for scale out
 	 */
 	public EditingModalGraphMouseEx(Engine engine, RenderContext<V, E> rc, float in, float out) {
 		super(in, out);
@@ -75,7 +102,6 @@ public class EditingModalGraphMouseEx<V extends INode, E extends IArc> extends A
 	 *
 	 */
 	@Override
-
 	protected void loadPlugins() {
 		pickingPlugin = new PickingGraphMousePlugin<INode, IArc>();
 		animatedPickingPlugin = new AnimatedPickingGraphMousePlugin<INode, IArc>();
@@ -100,7 +126,7 @@ public class EditingModalGraphMouseEx<V extends INode, E extends IArc> extends A
 	 */
 	@Override
 	public void setMode(Mode mode) {
-		if (this.mode != mode) {
+		if (mode != null && this.mode != mode) {
 			fireItemStateChanged(new ItemEvent(this, ItemEvent.ITEM_STATE_CHANGED, this.mode, ItemEvent.DESELECTED));
 			this.mode = mode;
 			if (mode == Mode.TRANSFORMING) {
@@ -119,6 +145,9 @@ public class EditingModalGraphMouseEx<V extends INode, E extends IArc> extends A
 		}
 	}
 
+	/**
+	 * setter fuer den picking modus
+	 */
 	@Override
 	protected void setPickingMode() {
 		remove(translatingPlugin);
@@ -132,6 +161,9 @@ public class EditingModalGraphMouseEx<V extends INode, E extends IArc> extends A
 
 	}
 
+	/**
+	 * setter fuer den Transformationsmodus
+	 */
 	@Override
 	protected void setTransformingMode() {
 		remove(pickingPlugin);
@@ -145,6 +177,9 @@ public class EditingModalGraphMouseEx<V extends INode, E extends IArc> extends A
 
 	}
 
+	/**
+	 * setter fuer den Editingmodus
+	 */
 	protected void setEditingMode() {
 		remove(pickingPlugin);
 		remove(animatedPickingPlugin);
@@ -154,9 +189,7 @@ public class EditingModalGraphMouseEx<V extends INode, E extends IArc> extends A
 		remove(labelEditingPlugin);
 
 		add(editingPlugin);
-
 	}
-
 
 	/**
 	 * @return the modeBox.
@@ -171,7 +204,11 @@ public class EditingModalGraphMouseEx<V extends INode, E extends IArc> extends A
 		return modeBox;
 	}
 
-
+	/**
+	 * @author edit by alex
+	 * Klasse um auf das auswählen eines Maus-Klicks zu reagieren.
+	 * Es werden dann die Setter-Methoden aufgerufen.
+	 */
 	public static class ModeKeyAdapter extends KeyAdapter {
 		private char t = 't';
 		private char p = 'p';
@@ -180,10 +217,21 @@ public class EditingModalGraphMouseEx<V extends INode, E extends IArc> extends A
 
 		protected ModalGraphMouse graphMouse;
 
+		/**
+		 * Konstruktor fuer diese Klasse
+		 * @param graphMouse ist ein Model für die Maus
+		 */
 		public ModeKeyAdapter(ModalGraphMouse graphMouse) {
 			this.graphMouse = graphMouse;
 		}
 
+		/**
+		 * Konstruktor fuer diese Klasse
+		 * @param t zusetzende Option
+		 * @param p zusetzende Option
+		 * @param e zusetzende Option
+		 * @param graphMouse ist ein Model für die Maus 
+		 */
 		public ModeKeyAdapter(char t, char p, char e, ModalGraphMouse graphMouse) {
 			this.t = t;
 			this.p = p;
@@ -191,6 +239,9 @@ public class EditingModalGraphMouseEx<V extends INode, E extends IArc> extends A
 			this.graphMouse = graphMouse;
 		}
 
+		/**
+		 * Hier wird die gewaehlte Option umgesetzt. (setter-aufrufe)
+		 */
 		@Override
 		public void keyTyped(KeyEvent event) {
 			char keyChar = event.getKeyChar();
@@ -209,7 +260,4 @@ public class EditingModalGraphMouseEx<V extends INode, E extends IArc> extends A
             }
 		}
 	}
-
-
-
 }
