@@ -7,6 +7,7 @@ import java.util.List;
  * entsprechenden Methooden dafuer an.
  *  
  * @author Reiter, Safai
+ * @see INode for exlplanation
  *
  */
 public interface IPlace extends INode {

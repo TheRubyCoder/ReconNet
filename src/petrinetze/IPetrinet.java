@@ -139,16 +139,17 @@ public interface IPetrinet {
 	public IGraphElement getAllGraphElement();
 
 	/**
-	 * 
+	 * GUI stuff.
 	 * @param l
 	 */
 	void addPetrinetListener(IPetrinetListener l);
 
 	/**
-	 * 
+	 * GUI stuff.
 	 * @param l
 	 */
 	void removePetrinetListener(IPetrinetListener l);
+	
 	/**
 	 * Fuegt einem bestehenden Petrinetz ein weiters hinzu
 	 * @param net

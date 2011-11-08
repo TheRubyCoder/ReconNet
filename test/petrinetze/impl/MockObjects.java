@@ -4,7 +4,13 @@ import java.util.HashMap;
 
 import petrinetze.IPlace;
 import petrinetze.ITransition;
-
+/**
+ * blabla
+ * 
+ * @image html Isomorphism_placesneu_small.png so macht man ein bild d^-^b
+ *  
+ *
+ **/
 public class MockObjects {
 	
 	//graphs from Isomorphism_transitions_neu.png TODO: change this comment!

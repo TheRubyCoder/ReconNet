@@ -62,7 +62,7 @@ class Arc implements IArc {
 		return this.id;
 	}
 
-	/* (non-Javadoc)
+	/**
 	 * @see haw.wp.rcpn.impl.IArc#setName(java.lang.String)
 	 */
 	@Override

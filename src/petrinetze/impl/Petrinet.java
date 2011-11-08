@@ -5,6 +5,8 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import engine.impl.Test;
+
 import petrinetze.ActionType;
 import petrinetze.IArc;
 import petrinetze.IGraphElement;
@@ -18,6 +20,16 @@ import petrinetze.IRenew;
 import petrinetze.ITransition;
 import petrinetze.Renews;
 
+/**
+ * @mainpage
+ * Hier entsteht die Mainpage.
+ * <li>
+ * 
+ * \li {@link MockObjects Mocki}
+ * 
+ * </li>
+ *
+ */
 public class Petrinet implements IPetrinet {
 
 	private final Logger logger = Logger.getLogger(Petrinet.class
