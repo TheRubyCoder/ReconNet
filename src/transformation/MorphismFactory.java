@@ -21,7 +21,8 @@ public class MorphismFactory {
 
 	
 	/**
-	 * Creates a new morphism.
+	 * Finds a morphism between two petrinets.<br\>
+	 * Not deterministic.
 	 * @param from the Petrinet from which this morphism starts.
 	 * @param to the Petrinet into which this morphism maps to.
 	 * @return the new morphism or null if no morphism exists between from and to
