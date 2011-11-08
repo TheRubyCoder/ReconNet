@@ -20,8 +20,9 @@ import petrinetze.Renews;
 
 public class Petrinet implements IPetrinet {
 
-    private final Logger logger = Logger.getLogger(Petrinet.class.getCanonicalName());
-	
+	private final Logger logger = Logger.getLogger(Petrinet.class
+			.getCanonicalName());
+
 	private int id;
 	private final Set<IPetrinetListener> listeners = new HashSet<IPetrinetListener>();
 	private Set<IPlace> places;
@@ -49,8 +50,9 @@ public class Petrinet implements IPetrinet {
 	@Override
 	public void deletePlaceById(int id) {
 		IPlace toBeDelete = null;
-		//TODO: Es sollen auch die ankommenden und ausgehenden Kanten mitgeloescht werden.
-		//und jedes Mal ein Event abfeuern.
+		// TODO: Es sollen auch die ankommenden und ausgehenden Kanten
+		// mitgeloescht werden.
+		// und jedes Mal ein Event abfeuern.
 		for (IPlace p : places) {
 			if (p.getId() == id) {
 				toBeDelete = p;
@@ -60,32 +62,31 @@ public class Petrinet implements IPetrinet {
 		if (toBeDelete != null) {
 			List<IArc> start = toBeDelete.getStartArcs();
 			List<IArc> end = toBeDelete.getEndArcs();
-			//Alle ausgehenden Kanten loeschen und Event abfeuern.
-			for(IArc arc : start){
+			// Alle ausgehenden Kanten loeschen und Event abfeuern.
+			for (IArc arc : start) {
 				deleteArc(arc);
 			}
-			//Alle eingehenden Kanten loeschen und Event abfeuern.
-			for(IArc arc : end) {
+			// Alle eingehenden Kanten loeschen und Event abfeuern.
+			for (IArc arc : end) {
 				deleteArc(arc);
 			}
-			
+
 			places.remove(toBeDelete);
 			onNodeChanged(toBeDelete, ActionType.deleted);
 		}
 	}
 
-    private void deleteArc(IArc arc) {
-        // ein-/ausgehende Kanten der Transitionen loeschen
-        if (arc.getStart() != null && arc.getStart() instanceof Transition) {
-            ((Transition)arc.getStart()).removeStartArc(arc);
-        }
-        else if (arc.getEnd() != null && arc.getEnd() instanceof Transition) {
-            ((Transition)arc.getEnd()).removeEndArc(arc);
-        }
+	private void deleteArc(IArc arc) {
+		// ein-/ausgehende Kanten der Transitionen loeschen
+		if (arc.getStart() != null && arc.getStart() instanceof Transition) {
+			((Transition) arc.getStart()).removeStartArc(arc);
+		} else if (arc.getEnd() != null && arc.getEnd() instanceof Transition) {
+			((Transition) arc.getEnd()).removeEndArc(arc);
+		}
 
-        arcs.remove(arc);
-        onEdgeChanged(arc, ActionType.deleted);
-    }
+		arcs.remove(arc);
+		onEdgeChanged(arc, ActionType.deleted);
+	}
 
 	@Override
 	public ITransition createTransition(String name, IRenew rnw) {
@@ -96,16 +97,17 @@ public class Petrinet implements IPetrinet {
 		return t;
 	}
 
-    @Override
-    public ITransition createTransition(String name) {
-        return createTransition(name, Renews.IDENTITY);
-    }
+	@Override
+	public ITransition createTransition(String name) {
+		return createTransition(name, Renews.IDENTITY);
+	}
 
-    @Override
+	@Override
 	public void deleteTransitionByID(int id) {
 		ITransition toBeDelete = null;
-		//TODO: Es sollen auch die ankommenden und ausgehenden Kanten mitgeloescht werden.
-		//und jedes Mal ein Event abfeuern.
+		// TODO: Es sollen auch die ankommenden und ausgehenden Kanten
+		// mitgeloescht werden.
+		// und jedes Mal ein Event abfeuern.
 		for (ITransition t : transitions) {
 			if (t.getId() == id) {
 				toBeDelete = t;
@@ -116,12 +118,12 @@ public class Petrinet implements IPetrinet {
 			final List<IArc> arcs = new LinkedList<IArc>();
 			arcs.addAll(toBeDelete.getStartArcs());
 			arcs.addAll(toBeDelete.getEndArcs());
-			
-			//Alle ausgehenden Kanten loeschen und Event abfeuern.
-			for(IArc arc : arcs){
+
+			// Alle ausgehenden Kanten loeschen und Event abfeuern.
+			for (IArc arc : arcs) {
 				deleteArc(arc);
 			}
-			
+
 			transitions.remove(toBeDelete);
 			onNodeChanged(toBeDelete, ActionType.deleted);
 		}
@@ -130,27 +132,27 @@ public class Petrinet implements IPetrinet {
 	@Override
 	public IArc createArc(String name, INode start, INode end) {
 		final IArc arc = new Arc(UUID.getaID(), this, start, end);
-		//Fuege Arc in die Startliste von Transition hinzu
-		if(start instanceof ITransition) {
+		// Fuege Arc in die Startliste von Transition hinzu
+		if (start instanceof ITransition) {
 			((ITransition) start).setStartArcs(arc);
 		}
-		//Fuege Arc in die Endliste von Transition hinzu
-		if(end instanceof ITransition) {
+		// Fuege Arc in die Endliste von Transition hinzu
+		if (end instanceof ITransition) {
 			((ITransition) end).setEndArcs(arc);
 		}
-		
-		//Fuege Arc in die Startliste von Place hinzu
-		if(start instanceof IPlace) {
+
+		// Fuege Arc in die Startliste von Place hinzu
+		if (start instanceof IPlace) {
 			((IPlace) start).setStartArcs(arc);
 		}
-		//Fuege Arc in die Endliste von Place hinzu
-		if(end instanceof IPlace) {
+		// Fuege Arc in die Endliste von Place hinzu
+		if (end instanceof IPlace) {
 			((IPlace) end).setEndArcs(arc);
 		}
-		
+
 		arc.setName(name);
 		arcs.add(arc);
-		//fireChanged(arc);
+		// fireChanged(arc);
 		onEdgeChanged(arc, ActionType.added);
 		return arc;
 	}
@@ -171,12 +173,12 @@ public class Petrinet implements IPetrinet {
 
 	@Override
 	public Set<ITransition> getActivatedTransitions() {
-		
-		//Eine Transition ist aktiviert bzw. schaltbereit, falls sich 
-		//in allen Eingangsstellen mindestens so viele Marken befinden, 
-		//wie die Transition Kosten verursacht und alle Ausgangsstellen 
-		//noch genug Kapazitaet haben, um die neuen Marken aufnehmen zu k?nnen.
-		//TODO
+
+		// Eine Transition ist aktiviert bzw. schaltbereit, falls sich
+		// in allen Eingangsstellen mindestens so viele Marken befinden,
+		// wie die Transition Kosten verursacht und alle Ausgangsstellen
+		// noch genug Kapazitaet haben, um die neuen Marken aufnehmen zu k?nnen.
+		// TODO
 		Set<ITransition> activitedTransitions = new HashSet<ITransition>();
 		for (ITransition t : transitions) {
 			if (isActivited(t)) {
@@ -190,93 +192,88 @@ public class Petrinet implements IPetrinet {
 		List<IArc> incoming = t.getEndArcs();
 		for (IArc a : incoming) {
 			IPlace p = (IPlace) a.getStart();
-			
+
 			if (p.getMark() < a.getMark()) {
 				return false;
-			} 
+			}
 		}
 		return true;
 	}
 
-
-
 	@Override
-	public Set<INode> fire(int id) 
-	{
-		//Get the transition
+	public Set<INode> fire(int id) {
+		// Get the transition
 		ITransition transition = null;
-		for(ITransition t : transitions)
-		{
-			if(t.getId() == id)
-			{
+		for (ITransition t : transitions) {
+			if (t.getId() == id) {
 				transition = t;
 				break;
 			}
 		}
-		
-		//Get all pre and post places and check if they have enough tokens
+
+		// Get all pre and post places and check if they have enough tokens
 		Map<IPlace, Integer> inc = new HashMap<IPlace, Integer>();
 		Map<IPlace, Integer> out = new HashMap<IPlace, Integer>();
-		for(IArc arc : arcs)
-		{
-			if(arc.getEnd().equals(transition)) {
-				if(arc.getMark() > ((IPlace)arc.getStart()).getMark()) {
-					throw new IllegalArgumentException("The place " + arc.getStart() + " does not have enough tokens");
+		for (IArc arc : arcs) {
+			if (arc.getEnd().equals(transition)) {
+				if (arc.getMark() > ((IPlace) arc.getStart()).getMark()) {
+					throw new IllegalArgumentException("The place "
+							+ arc.getStart() + " does not have enough tokens");
 				}
-				inc.put((IPlace)arc.getStart(), arc.getMark());
-			}
-			else if(arc.getStart().equals(transition))
-			{
-				out.put((IPlace)arc.getEnd(), arc.getMark());
+				inc.put((IPlace) arc.getStart(), arc.getMark());
+			} else if (arc.getStart().equals(transition)) {
+				out.put((IPlace) arc.getEnd(), arc.getMark());
 			}
 		}
-		
-		//set tokens
-		for(Entry<IPlace, Integer> e : inc.entrySet())
+
+		// set tokens
+		for (Entry<IPlace, Integer> e : inc.entrySet())
 			e.getKey().setMark(e.getKey().getMark() - e.getValue());
-		for(Entry<IPlace, Integer> e : out.entrySet())
+		for (Entry<IPlace, Integer> e : out.entrySet())
 			e.getKey().setMark(e.getKey().getMark() + e.getValue());
-		
-		//all changed nodes
+
+		// all changed nodes
 		Set<INode> changedNodes = new HashSet<INode>(inc.keySet());
 		changedNodes.addAll(out.keySet());
-		
-		//Renew
+
+		// Renew
 		transition.rnw();
-		
-		//fire event
+
+		// fire event
 		fireChanged(changedNodes, ActionType.changed);
 
 		return changedNodes;
 	}
 
-    private void fireChanged(Iterable<INode> nodes, ActionType action) {
-        for (INode node : nodes) {
-            try {
-                onNodeChanged(node, action);
-            }
-            catch (Exception ex) {
-                logger.log(Level.SEVERE, "Error on change notification", ex);
-            }
-        }
-    }
+	private void fireChanged(Iterable<INode> nodes, ActionType action) {
+		for (INode node : nodes) {
+			try {
+				onNodeChanged(node, action);
+			} catch (Exception ex) {
+				logger.log(Level.SEVERE, "Error on change notification", ex);
+			}
+		}
+	}
 
 	private Random random = new Random();
+
 	@Override
 	public Set<INode> fire() {
-        List<ITransition> active = new ArrayList<ITransition>(getActivatedTransitions());
+		List<ITransition> active = new ArrayList<ITransition>(
+				getActivatedTransitions());
 
-        if (active.isEmpty()) {
-            throw new IllegalStateException("No activated transitions");
-        }
+		if (active.isEmpty()) {
+			throw new IllegalStateException("No activated transitions");
+		}
 
-		//We use an iterator here because we do not know, wich indexes are in the set
-		//and this way we will get a random one without knowing its id.
+		// We use an iterator here because we do not know, wich indexes are in
+		// the set
+		// and this way we will get a random one without knowing its id.
 		int id = random.nextInt(active.size());
 
 		return fire(active.get(id).getId());
 	}
-	
+
 	@Override
 	/**
 	 * Liefert das Pre-Objekt zu dem Netz zurueck
@@ -285,53 +282,57 @@ public class Petrinet implements IPetrinet {
 	 * @return {@link IPre}
 	 */
 	public IPre getPre() {
-		//Initialisierung 
+		// Initialisierung
 		int[] pId = new int[places.size()];
-		
-		int i=0;
-		//Fuellen mit den entsprechenden Ids
+
+		int i = 0;
+		// Fuellen mit den entsprechenden Ids
 		for (IPlace place : places) {
-			pId[i]=place.getId();
+			pId[i] = place.getId();
 			i++;
 		}
-		//Initialisierung
+		// Initialisierung
 		int[] tId = new int[transitions.size()];
-		
-		int z=0;
-		//Fuellen mit den entsprechenden Ids
+
+		int z = 0;
+		// Fuellen mit den entsprechenden Ids
 		for (ITransition transition : transitions) {
-			tId[z]=transition.getId();
+			tId[z] = transition.getId();
 			z++;
 		}
-		
-		
-		//Initialisierung mit 0
-		int[][] preValues = init(places.size(),transitions.size());
-		//Zu jeder Transition holen wir die Stellen und
-		//merken uns das in der perValueMatrix (sagt Florian)
+
+		// Initialisierung mit 0
+		int[][] preValues = init(places.size(), transitions.size());
+		// Zu jeder Transition holen wir die Stellen und
+		// merken uns das in der perValueMatrix (sagt Florian)
 		for (ITransition t : transitions) {
-			//Das Pre von der entsprechenden Transition
-			//D.h., alle Stellen aus dem Vorbereich
-			//Das Ergebnis wird in Form eines Hashtables geliefert
-			//und zwar <Id, Mark> der Stelle
+			// Das Pre von der entsprechenden Transition
+			// D.h., alle Stellen aus dem Vorbereich
+			// Das Ergebnis wird in Form eines Hashtables geliefert
+			// und zwar <Id, Mark> der Stelle
 			final Hashtable<Integer, Integer> prePlaces = t.getPre();
-			//Findet den Index der Transition in Pre-Matrix (Array)
+			// Findet den Index der Transition in Pre-Matrix (Array)
 			int tmpTransitionId = getIdFromArray(t.getId(), tId);
 			//
-			for (Entry<Integer,Integer> e : prePlaces.entrySet()) {
+			for (Entry<Integer, Integer> e : prePlaces.entrySet()) {
 				int tmpPlaceId = getIdFromArray(e.getKey().intValue(), pId);
-				
+
 				if (tmpPlaceId >= 0 && tmpTransitionId >= 0) {
-					preValues[tmpPlaceId][tmpTransitionId] = e.getValue().intValue();
+					preValues[tmpPlaceId][tmpTransitionId] = e.getValue()
+							.intValue();
 				}
 			}
 		}
 		return new Pre(preValues, pId, tId);
 	}
+
 	/**
 	 * Findet die Position der Id in der Id-Liste
-	 * @param intValue = Id der Transition/Stelle
-	 * @param ids = Liste aller Ids Transition/Stelle
+	 * 
+	 * @param intValue
+	 *            = Id der Transition/Stelle
+	 * @param ids
+	 *            = Liste aller Ids Transition/Stelle
 	 * @return position der Transition/Stelle
 	 */
 	private int getIdFromArray(int intValue, int[] ids) {
@@ -345,12 +346,15 @@ public class Petrinet implements IPetrinet {
 
 	/**
 	 * Initialisiert ein zweidimensionales Array mit Nullen
-	 * @param m Groesse der 1. Dimension
-	 * @param n Groesse der 2. Dimension
+	 * 
+	 * @param m
+	 *            Groesse der 1. Dimension
+	 * @param n
+	 *            Groesse der 2. Dimension
 	 * @return initialisiertes Array
 	 */
 	private int[][] init(int m, int n) {
-		int tmp [][] = new int[m][n];
+		int tmp[][] = new int[m][n];
 		for (int i = 0; i < m; i++) {
 			for (int z = 0; z < n; z++) {
 				tmp[i][z] = 0;
@@ -359,51 +363,49 @@ public class Petrinet implements IPetrinet {
 		return tmp;
 	}
 
-
-
 	@Override
 	/**
 	 * Liefert das Post-Objekt zu dem Netz zurueck
 	 * @return {@link IPost}
 	 */
 	public IPost getPost() {
-		//Initialisierung 
+		// Initialisierung
 		int[] pId = new int[places.size()];
-		
-		int i=0;
-		//Fuellen mit den entsprechenden Ids
+
+		int i = 0;
+		// Fuellen mit den entsprechenden Ids
 		for (IPlace place : places) {
-			pId[i]=place.getId();
+			pId[i] = place.getId();
 			i++;
 		}
-		//Initialisierung
+		// Initialisierung
 		int[] tId = new int[transitions.size()];
-		
-		int z=0;
-		//Fuellen mit den entsprechenden Ids
+
+		int z = 0;
+		// Fuellen mit den entsprechenden Ids
 		for (ITransition transition : transitions) {
-			tId[z]=transition.getId();
+			tId[z] = transition.getId();
 			z++;
 		}
-		
-		
-		//Initialisierung mit 0
-		int[][] postValues = init(places.size(),transitions.size());
-		//Zu jeder Transition holen wir die Stellen und
-		//merken uns das in der perValueMatrix (sagt Florian)
+
+		// Initialisierung mit 0
+		int[][] postValues = init(places.size(), transitions.size());
+		// Zu jeder Transition holen wir die Stellen und
+		// merken uns das in der perValueMatrix (sagt Florian)
 		for (ITransition t : transitions) {
-			//Das Post von der entsprechenden Transition
-			//D.h., alle Stellen aus dem Nachbereich
-			//Das Ergebnis wird in Form eines Hashtables geliefert
-			//und zwar <Id, Mark> der Stelle
+			// Das Post von der entsprechenden Transition
+			// D.h., alle Stellen aus dem Nachbereich
+			// Das Ergebnis wird in Form eines Hashtables geliefert
+			// und zwar <Id, Mark> der Stelle
 			final Hashtable<Integer, Integer> postPlaces = t.getPost();
-			//Findet den Index der Transition in Post-Matrix (Array)
+			// Findet den Index der Transition in Post-Matrix (Array)
 			int tmpTransitionId = getIdFromArray(t.getId(), tId);
-			for (Entry<Integer,Integer> e : postPlaces.entrySet()) {
+			for (Entry<Integer, Integer> e : postPlaces.entrySet()) {
 				int tmpPlaceId = getIdFromArray(e.getKey().intValue(), pId);
-				
+
 				if (tmpPlaceId >= 0 && tmpTransitionId >= 0) {
-					postValues[tmpPlaceId][tmpTransitionId] = e.getValue().intValue();
+					postValues[tmpPlaceId][tmpTransitionId] = e.getValue()
+							.intValue();
 				}
 			}
 		}
@@ -414,7 +416,6 @@ public class Petrinet implements IPetrinet {
 	public int getId() {
 		return this.id;
 	}
-
 
 	@Override
 	public Set<IPlace> getAllPlaces() {
@@ -446,83 +447,92 @@ public class Petrinet implements IPetrinet {
 		}
 		((GraphElement) graphElements).setNodes(nodes);
 		((GraphElement) graphElements).setArcs(tarcs);
-		
+
 		return graphElements;
 	}
 
 	public void addPetrinetListener(IPetrinetListener l) {
 		listeners.add(l);
-		
+
 	}
 
 	public void removePetrinetListener(IPetrinetListener l) {
-		if(listeners.contains(l))
+		if (listeners.contains(l))
 			listeners.remove(l);
-		
+
 	}
-	
+
 	/**
-	 * Notify all listeners, that a node has changed.
-	 * This will also be called by all Nodes in this petrinet.
-	 * @param element the element which has changed
-	 * @param actionType the ActionType
+	 * Notify all listeners, that a node has changed. This will also be called
+	 * by all Nodes in this petrinet.
+	 * 
+	 * @param element
+	 *            the element which has changed
+	 * @param actionType
+	 *            the ActionType
 	 */
-	void onNodeChanged(INode element, ActionType actionType)
-	{
-		Set<IPetrinetListener> tempListeners = new HashSet<IPetrinetListener>(listeners);
-		for(IPetrinetListener listener : tempListeners) {
+	void onNodeChanged(INode element, ActionType actionType) {
+		Set<IPetrinetListener> tempListeners = new HashSet<IPetrinetListener>(
+				listeners);
+		for (IPetrinetListener listener : tempListeners) {
 			listener.changed(this, element, actionType);
 		}
 	}
 
 	/**
-	 * Notify all listeners, that a node has changed.
-	 * This will also be called by Edges in this petrinet.
-	 * @param element the element which has changed
-	 * @param actionType the ActionType
+	 * Notify all listeners, that a node has changed. This will also be called
+	 * by Edges in this petrinet.
+	 * 
+	 * @param element
+	 *            the element which has changed
+	 * @param actionType
+	 *            the ActionType
 	 */
-	void onEdgeChanged(IArc element, ActionType actionType)
-	{
-		Set<IPetrinetListener> tempListeners = new HashSet<IPetrinetListener>(listeners);
-		for(IPetrinetListener listener : tempListeners) {
+	void onEdgeChanged(IArc element, ActionType actionType) {
+		Set<IPetrinetListener> tempListeners = new HashSet<IPetrinetListener>(
+				listeners);
+		for (IPetrinetListener listener : tempListeners) {
 			listener.changed(this, element, actionType);
 		}
 	}
 
-
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		String result = "Petrinet [id=" + id + "\n\t places=" + places + "\n\t transitions="
-				+ transitions + "\n\t arcs=[";
-		for (IArc arc: arcs) {
-			result += "\n\t\t"+arc;
-			
+		String result = "Petrinet [id=" + id + "\n\t places= [";
+		for (IPlace place : places) {
+			result += "\n\t\t" + place;
+		}
+		result += "\n\t]\n\t transitions=[";
+		for (ITransition transition : transitions) {
+			result += "\n\t\t" + transition;
+		}
+		result += "\n\t]\n\t arcs=[";
+		for (IArc arc : arcs) {
+			result += "\n\t\t" + arc;
+
 		}
 		return result + "\n\t]";
 	}
 
-
-
 	@Override
 	public IPlace getPlaceById(int id) {
-		for (IPlace  p : places) {
-			if(p.getId() == id) {
+		for (IPlace p : places) {
+			if (p.getId() == id) {
 				return p;
 			}
 		}
 		return null;
 	}
 
-
-
 	@Override
 	public ITransition getTransitionById(int id) {
-		for (ITransition  t : transitions) {
-			if(t.getId() == id) {
+		for (ITransition t : transitions) {
+			if (t.getId() == id) {
 				return t;
 			}
 		}
@@ -539,16 +549,18 @@ public class Petrinet implements IPetrinet {
 			final Set<IPlace> places = net.getAllPlaces();
 			final Set<ITransition> transitions = net.getAllTransitions();
 			final Set<IArc> arcs = net.getAllArcs();
-			
+
 			addPlaces(places);
 			addTransitions(transitions);
 			addArcs(arcs);
-			//Vervollstaendige die Liste der graphischen Elemente
+			// Vervollstaendige die Liste der graphischen Elemente
 			getAllGraphElement();
 		}
 	}
+
 	/**
 	 * Die uebergebene Liste wird der besthenden hinzu gefuegt.
+	 * 
 	 * @param arcs2
 	 */
 	private void addArcs(Set<IArc> arcs2) {
@@ -556,18 +568,22 @@ public class Petrinet implements IPetrinet {
 			this.arcs.add(arc);
 		}
 	}
+
 	/**
 	 * Die uebergebene Liste wird der besthenden hinzu gefuegt.
+	 * 
 	 * @param transitions2
 	 */
 	private void addTransitions(Set<ITransition> transitions2) {
 		for (ITransition transition : transitions2) {
 			this.transitions.add(transition);
 		}
-		
+
 	}
+
 	/**
 	 * Die uebergebene Liste wird der besthenden hinzu gefuegt.
+	 * 
 	 * @param places2
 	 */
 	private void addPlaces(Set<IPlace> places2) {

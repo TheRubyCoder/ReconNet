@@ -17,7 +17,7 @@ public final class Transformations
 	}
 	
 	/**
-	 * Will join both petrinets, using the given transformation.
+	 * Joins both petrinets, using the given transformation.
 	 * The right petrinet will be modified and will be the resulting net.
 	 * @param left the left petrinet.
 	 * @param right the right petrinet.
@@ -30,7 +30,7 @@ public final class Transformations
 	}
 
 	/**
-	 * Will join both petrinets, using the given morphism and rule.
+	 * Joins both petrinets, using the given morphism and rule.
 	 * The right petrinet will be modified and will be the resulting net.
 	 * @param left the left petrinet.
 	 * @param right the right petrinet.

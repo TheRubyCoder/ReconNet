@@ -11,7 +11,8 @@ import petrinetze.impl.RenewId;
 
 /**
  * This Class contains the test data for transformation test. 
- * 
+ * DONT CHANGE THE ORDER IN WICH PLACES OR TRANSITIONS ARE CREATED! (as Ids are used in the tests)
+ * (better dont change anything at all until you know the test very well) 
  * 
  */
 public class MorphismData {
@@ -232,7 +233,7 @@ public class MorphismData {
 		
 		IRenew rnwId = new RenewId();
 		
-		addSubnetToPetrinetLikeInMorphismTransition(result, "P1".split(" "), "P2 P3".split(" "), "A", rnwId);
+		addSubnetToPetrinetLikeInMorphismTransition(result, "P1".split(" "), "P2 P3".split(" "), "A", rnwId, "1");
 		
 		return result;
 	}
@@ -267,21 +268,23 @@ public class MorphismData {
 		String[] post8 = {"P2", "P3"};
 		
 		String[] name = {"A", "A", "A", "B", "A", "A", "A", "A"};
+		String[] tlb =  {"1", "1", "2", "1", "1", "1", "1", "1"};
 		
-		addSubnetToPetrinetLikeInMorphismTransition(result,pre1,post1,name[0],rnwId);
-		addSubnetToPetrinetLikeInMorphismTransition(result,pre2,post2,name[1],rnwCount);
-		addSubnetToPetrinetLikeInMorphismTransition(result,pre3,post3,name[2],rnwId);
-		addSubnetToPetrinetLikeInMorphismTransition(result,pre4,post4,name[3],rnwId);
-		addSubnetToPetrinetLikeInMorphismTransition(result,pre5,post5,name[4],rnwId);
-		addSubnetToPetrinetLikeInMorphismTransition(result,pre6,post6,name[5],rnwId);
-		addSubnetToPetrinetLikeInMorphismTransition(result,pre7,post7,name[6],rnwId);
-		addSubnetToPetrinetLikeInMorphismTransition(result,pre8,post8,name[7],rnwId);
+		addSubnetToPetrinetLikeInMorphismTransition(result,pre1,post1,name[0],rnwId,tlb[0]);
+		addSubnetToPetrinetLikeInMorphismTransition(result,pre2,post2,name[1],rnwCount,tlb[1]);
+		addSubnetToPetrinetLikeInMorphismTransition(result,pre3,post3,name[2],rnwId,tlb[2]);
+		addSubnetToPetrinetLikeInMorphismTransition(result,pre4,post4,name[3],rnwId,tlb[3]);
+		addSubnetToPetrinetLikeInMorphismTransition(result,pre5,post5,name[4],rnwId,tlb[4]);
+		addSubnetToPetrinetLikeInMorphismTransition(result,pre6,post6,name[5],rnwId,tlb[5]);
+		addSubnetToPetrinetLikeInMorphismTransition(result,pre7,post7,name[6],rnwId,tlb[6]);
+		addSubnetToPetrinetLikeInMorphismTransition(result,pre8,post8,name[7],rnwId,tlb[7]);
 		return result;
 	}
 	
 	
-	private static void addSubnetToPetrinetLikeInMorphismTransition(IPetrinet petrinet, String[] pre, String[] post, String name, IRenew renew){
+	private static void addSubnetToPetrinetLikeInMorphismTransition(IPetrinet petrinet, String[] pre, String[] post, String name, IRenew renew, String tlb){
 		ITransition transition = petrinet.createTransition(name,renew);
+		transition.setTlb(tlb);
 		for (String string: pre) {
 			IPlace place = petrinet.createPlace(string);
 			petrinet.createArc("", place, transition);
