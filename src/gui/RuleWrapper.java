@@ -48,9 +48,9 @@ public class RuleWrapper {
     public RuleWrapper(String name, IRule rule,final JTable table) {
         this.name = name;
         this.rule = rule;
-        this.Kengine = EngineFactory.newFactory().createEngine(rule.K());
-        this.Lengine = EngineFactory.newFactory().createEngine(rule.L());
-        this.Rengine = EngineFactory.newFactory().createEngine(rule.R());
+        this.Kengine = EngineFactory.newFactory().createEngine(rule.getK());
+        this.Lengine = EngineFactory.newFactory().createEngine(rule.getL());
+        this.Rengine = EngineFactory.newFactory().createEngine(rule.getR());
         Kengine.getGraphEditor().getGraphPanel().addPropertyChangeListener("pickedNodes", new PropertyChangeListener() {
 
                 public void propertyChange(PropertyChangeEvent evt) {

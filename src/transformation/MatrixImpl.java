@@ -1,6 +1,6 @@
 package transformation;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+//import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * A simple matrix with Integers in it 
@@ -41,7 +41,8 @@ class MatrixImpl implements IMatrix {
 	 */
 	@Override
 	public void set(int row, int col, int value) {
-		throw new NotImplementedException();
+//		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 }

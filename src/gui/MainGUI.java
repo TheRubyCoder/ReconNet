@@ -623,25 +623,25 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     public IRule createTestRule() {
         IRule rule1 = new Rule();
         //L von r1
-        IPlace p1 = rule1.L().createPlace("Wecker ein");
-        IPlace p2 = rule1.K().createPlace("Wecker ein");
+        IPlace p1 = rule1.getL().createPlace("Wecker ein");
+        IPlace p2 = rule1.getK().createPlace("Wecker ein");
         p2.setMark(1);
-        IPlace p3 = rule1.K().createPlace("");
-        IPlace p4 = rule1.K().createPlace("");
-        IPlace p5 = rule1.K().createPlace("Wecker aus");
-        IPlace p6 = rule1.L().createPlace("Wecker aus");
-        ITransition t1 = rule1.L().createTransition("", new RenewCount());
-        rule1.L().createArc("", p1, t1);
-        rule1.L().createArc("", t1, rule1.fromKtoL(p4));
-        ITransition t2 = rule1.L().createTransition("", new RenewCount());
-        rule1.L().createArc("", rule1.fromKtoL(p3), t2);
-        rule1.L().createArc("", t2, p6);
-        ITransition t3 = rule1.R().createTransition("", new RenewCount());
-        rule1.R().createArc("", rule1.fromKtoR(p2), t3);
-        rule1.R().createArc("", t3, rule1.fromKtoR(p4));
-        ITransition t4 = rule1.R().createTransition("", new RenewCount());
-        rule1.R().createArc("", rule1.fromKtoR(p3), t4);
-        rule1.R().createArc("", t4, rule1.fromKtoR(p5));
+        IPlace p3 = rule1.getK().createPlace("");
+        IPlace p4 = rule1.getK().createPlace("");
+        IPlace p5 = rule1.getK().createPlace("Wecker aus");
+        IPlace p6 = rule1.getL().createPlace("Wecker aus");
+        ITransition t1 = rule1.getL().createTransition("", new RenewCount());
+        rule1.getL().createArc("", p1, t1);
+        rule1.getL().createArc("", t1, rule1.fromKtoL(p4));
+        ITransition t2 = rule1.getL().createTransition("", new RenewCount());
+        rule1.getL().createArc("", rule1.fromKtoL(p3), t2);
+        rule1.getL().createArc("", t2, p6);
+        ITransition t3 = rule1.getR().createTransition("", new RenewCount());
+        rule1.getR().createArc("", rule1.fromKtoR(p2), t3);
+        rule1.getR().createArc("", t3, rule1.fromKtoR(p4));
+        ITransition t4 = rule1.getR().createTransition("", new RenewCount());
+        rule1.getR().createArc("", rule1.fromKtoR(p3), t4);
+        rule1.getR().createArc("", t4, rule1.fromKtoR(p5));
         return rule1;
     }
 
