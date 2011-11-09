@@ -52,6 +52,7 @@ public class ProvisionalMorphismPlacesTest {
 
 	@Test
 	public void testPlacesMorphismCount() {
+		System.out.println("TEST SYSO TO SEE WHETHER THIS TEST IS EXECUTED ON JENKINS OR NOT");
 
 		// only 4 morphisms should have been possible
 		assertEquals(4, counter.size());
