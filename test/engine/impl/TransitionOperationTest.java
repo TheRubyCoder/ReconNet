@@ -172,14 +172,14 @@ public class TransitionOperationTest extends TestCase {
 		System.out.println(p2.toString());
 		
 		place3.setMark(3);
-		Set<INode> nodeSet3 = p2.fire(transition12.getId());
-//		System.out.println("node: " + nodeSet3.toString());
+		Set<INode> nodeSet3 = p2.fire();
+		System.out.println("node: " + nodeSet3.toString());
 
 		assertEquals(place3.getMark(), 2);
 		assertEquals(place4.getMark(), 1);
 		
-		Set<INode> nodeSet4 = p2.fire(transition32.getId());
-//		System.out.println("node: " + nodeSet4.toString());
+		Set<INode> nodeSet4 = p2.fire();
+		System.out.println("node: " + nodeSet4.toString());
 
 		assertEquals(place5.getMark(), 1);
 		assertEquals(place4.getMark(), 0);
