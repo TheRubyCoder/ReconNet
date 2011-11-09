@@ -81,13 +81,9 @@ public class ProvisionalMorphismPlacesTest {
 		 * see if we got the right places id=1 is in "from" ids=[2,4,7,8] should
 		 * be matched in "to"
 		 */
-		assertEquals(1, fromPlace.getId());
+		assertEquals(MorphismData.getIdFromPlaces(), fromPlace.getId());
 
-		Set<Integer> expectedMatches = new HashSet<Integer>();
-		expectedMatches.add(2);
-		expectedMatches.add(4);
-		expectedMatches.add(7);
-		expectedMatches.add(8);
+		Set<Integer> expectedMatches = MorphismData.getIdsMatchedPlaces();
 		
 		Set<Integer> actualMatches = new HashSet<Integer>();
 		for (IPlace place : counter.keySet()) {

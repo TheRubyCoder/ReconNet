@@ -17,26 +17,32 @@ import org.junit.runners.Suite;
  * @author Niklas
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({TransformationsTest.class,
-	MorphismTest.class,
-	TransformationTest.class,
-	RuleTest.class})
+@Suite.SuiteClasses({
+//	TransformationsTest.class,
+//	TransformationTest.class,
+//	MorphismTest.class,
+	RuleTest.class,
+	ProvisionalMorphismPlacesTest.class,
+	ProvisorialMorphismTransitionsTest.class
+	}
+)
+
 public class TransformationSuite {
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
-    }
+//
+//    @BeforeClass
+//    public static void setUpClass() throws Exception {
+//    }
+//
+//    @AfterClass
+//    public static void tearDownClass() throws Exception {
+//    }
+//
+//    @Before
+//    public void setUp() throws Exception {
+//    }
+//
+//    @After
+//    public void tearDown() throws Exception {
+//    }
 
 }

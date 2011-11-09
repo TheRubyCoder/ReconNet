@@ -1,5 +1,8 @@
 package data;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import petrinetze.IPetrinet;
 import petrinetze.IPlace;
 import petrinetze.IRenew;
@@ -17,6 +20,32 @@ import petrinetze.impl.RenewId;
  */
 public class MorphismData {
 	
+
+	
+	public static int getIdFromTransitions() {
+		return idFromTransitions;
+	}
+
+	public static int getIdFromPlaces() {
+		return idFromPlaces;
+	}
+
+	public static int getIdMatchedTransition() {
+		return idMatchedTransition;
+	}
+
+	public static Set<Integer> getIdsMatchedPlaces() {
+		return idsMatchedPlaces;
+	}
+
+	private static int idFromTransitions;
+
+	private static int idFromPlaces;
+	
+	private static int idMatchedTransition;
+	
+	private static Set<Integer> idsMatchedPlaces = new HashSet<Integer>();
+	
 	
 	private MorphismData(){}
 	
@@ -29,6 +58,8 @@ public class MorphismData {
 		IRenew renewId = new RenewId();
 		
 		IPlace p1 = result.createPlace("P1");
+		
+		idFromPlaces = p1.getId();
 		
 		ITransition t1 = result.createTransition("A", renewId);
 		ITransition t2 = result.createTransition("A", renewId);
@@ -62,6 +93,8 @@ public class MorphismData {
 		IRenew renewId = new RenewId();
 		
 		IPlace p1 = result.createPlace("P1");
+		
+		idsMatchedPlaces.add(p1.getId());
 		
 		ITransition t11 = result.createTransition("A", renewId);
 		ITransition t12 = result.createTransition("A", renewId);
@@ -109,6 +142,8 @@ public class MorphismData {
 		// The matching subnet mark is 1 more  
 		// with following int 3
 		IPlace p3 = result.createPlace("P1");
+		idsMatchedPlaces.add(p3.getId());
+
 				
 		ITransition t31 = result.createTransition("A", renewId);
 		ITransition t32 = result.createTransition("A", renewId);
@@ -174,6 +209,8 @@ public class MorphismData {
 		// The matching subnet pre is to many  
 		// with following int 6
 		IPlace p6 = result.createPlace("P1");
+		idsMatchedPlaces.add(p6.getId());
+
 						
 		ITransition t61 = result.createTransition("A", renewId);
 		ITransition t62 = result.createTransition("A", renewId);
@@ -199,6 +236,8 @@ public class MorphismData {
 		// The matching subnet post is to many  
 		// with following int 7
 		IPlace p7 = result.createPlace("P1");
+		idsMatchedPlaces.add(p7.getId());
+
 								
 		ITransition t71 = result.createTransition("A", renewId);
 		ITransition t72 = result.createTransition("A", renewId);
@@ -233,7 +272,7 @@ public class MorphismData {
 		
 		IRenew rnwId = new RenewId();
 		
-		addSubnetToPetrinetLikeInMorphismTransition(result, "P1".split(" "), "P2 P3".split(" "), "A", rnwId, "1");
+		idFromTransitions = addSubnetToPetrinetLikeInMorphismTransition(result, "P1".split(" "), "P2 P3".split(" "), "A", rnwId, "1");
 		
 		return result;
 	}
@@ -270,7 +309,7 @@ public class MorphismData {
 		String[] name = {"A", "A", "A", "B", "A", "A", "A", "A"};
 		String[] tlb =  {"1", "1", "2", "1", "1", "1", "1", "1"};
 		
-		addSubnetToPetrinetLikeInMorphismTransition(result,pre1,post1,name[0],rnwId,tlb[0]);
+		idMatchedTransition = addSubnetToPetrinetLikeInMorphismTransition(result,pre1,post1,name[0],rnwId,tlb[0]);
 		addSubnetToPetrinetLikeInMorphismTransition(result,pre2,post2,name[1],rnwCount,tlb[1]);
 		addSubnetToPetrinetLikeInMorphismTransition(result,pre3,post3,name[2],rnwId,tlb[2]);
 		addSubnetToPetrinetLikeInMorphismTransition(result,pre4,post4,name[3],rnwId,tlb[3]);
@@ -282,7 +321,12 @@ public class MorphismData {
 	}
 	
 	
-	private static void addSubnetToPetrinetLikeInMorphismTransition(IPetrinet petrinet, String[] pre, String[] post, String name, IRenew renew, String tlb){
+	private static int addSubnetToPetrinetLikeInMorphismTransition(IPetrinet petrinet, 
+			String[] pre, 
+			String[] post, 
+			String name, 
+			IRenew renew, 
+			String tlb){
 		ITransition transition = petrinet.createTransition(name,renew);
 		transition.setTlb(tlb);
 		for (String string: pre) {
@@ -293,6 +337,7 @@ public class MorphismData {
 			IPlace place = petrinet.createPlace(string);
 			petrinet.createArc("", transition, place);
 		}
+		return transition.getId();
 	}
 	
 	

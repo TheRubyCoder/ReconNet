@@ -88,10 +88,10 @@ public class ProvisorialMorphismTransitionsTest {
 		 * id=1 is in "from". 
 		 * id=2 should be matched in "to"
 		 */
-		assertEquals(1, fromTransition.getId());
+		assertEquals(MorphismData.getIdFromTransitions(), fromTransition.getId());
 
 		Set<Integer> expectedMatches = new HashSet<Integer>();
-		expectedMatches.add(2);
+		expectedMatches.add(MorphismData.getIdMatchedTransition());
 
 		Set<Integer> actualMatches = new HashSet<Integer>();
 		for (ITransition transition : counter.keySet()) {
