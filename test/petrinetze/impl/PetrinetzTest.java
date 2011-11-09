@@ -115,7 +115,8 @@ public class PetrinetzTest {
 		petrinet.createArc("ap", a, p);
 		petrinet.createArc("bp", b, p);
 
-		int times = 100000000;
+//		int times = 100000000; // for serious testing
+		int times = 1000; // for every day testing so jenkins does not take 5 minutes per build
 		for(int i = 0; i < times; i++)
 			petrinet.fire();
 		

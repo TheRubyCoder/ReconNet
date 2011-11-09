@@ -10,6 +10,8 @@ import petrinetze.ITransition;
  * An interface for morphisms on IPetrinet.<br\>
  * A morphism maps places, transitions and edges in a way that pre and post
  * have the same "structure" in 'from' and 'to'. For more details look at documnets of the petrinet course. 
+ * <h4>changelog</h4>
+ * method isValid() deleted at 9-11-2011 because it was not implemented
  * @author Philipp Kuehn
  * @author Marvin Ede
  * @author Oliver Willhoeft
@@ -56,13 +58,6 @@ public interface IMorphism
 	 */
 	IArc getArcMorphism(IArc arc);
 	
-	/**
-	 * Returns true if this morphism is valid.
-	 * @return true if this morphism is valid.
-	 * @deprecated There is no functionality behind it
-	 */
-	@Deprecated
-	boolean isValid();
 	
 	/**
 	 * Returns the Petrinet from which this morphism starts.

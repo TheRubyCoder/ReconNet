@@ -1,5 +1,7 @@
 package transformation;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -8,11 +10,10 @@ import java.util.Set;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import petrinetze.IArc;
 import petrinetze.IPetrinet;
 import petrinetze.IPlace;
 import data.MorphismData;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Testing the morphism of places like specified in "../additional/images/Isomorphism_places.png"
@@ -90,6 +91,22 @@ public class ProvisionalMorphismPlacesTest {
 			actualMatches.add(place.getId());
 		}
 		assertEquals(expectedMatches, actualMatches);
-
+	}
+	
+	@Test
+	public void testStupidMethodToGetCodeCoverageForGetters(){
+		IMorphism morphism = MorphismFactory.createMorphism(placesFromNet, placesToNet);
+		IArc arc = placesFromNet.getAllArcs().iterator().next();
+		morphism.getArcMorphism(arc);
+		
+		morphism.getEdgesMorphism();
+		
+		morphism.getFrom();
+		
+		morphism.getPlacesMorphism();
+		
+		morphism.getTo();
+		
+		morphism.getTransitionsMorphism();
 	}
 }

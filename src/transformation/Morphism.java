@@ -86,14 +86,6 @@ class Morphism implements IMorphism {
 		return edges.get(arc);
 	}
 
-	/**
-	 * @see transformation.IMorphism#isValid()
-	 */
-	@Deprecated
-	@Override
-	public boolean isValid() {
-		throw new UnsupportedOperationException();
-	}
 
 	/**
 	 * @see transformation.IMorphism#getFrom()
