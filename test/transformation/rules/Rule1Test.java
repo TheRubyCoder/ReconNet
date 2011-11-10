@@ -25,15 +25,14 @@ public class Rule1Test {
 				//Because the reference stays the same after transformation
 				//nPetrinet will always equals itself, no matter what happens in transformation
 				//so we check the toString() of its pre-matrix instead
-				String preBefore = nPetrinet.getPre().toString();
-				String postBefore = nPetrinet.getPost().toString();
+				String preBefore = nPetrinet.getPre().matrixStringOnly();
+				String postBefore = nPetrinet.getPost().matrixStringOnly();
 				Transformations.transform(nPetrinet, rule);
-				String preAfter = nPetrinet.getPre().toString();
-				String postAfter = nPetrinet.getPost().toString();
+				String preAfter = nPetrinet.getPre().matrixStringOnly();
+				String postAfter = nPetrinet.getPost().matrixStringOnly();
 				assertEquals(preBefore, preAfter);
 				assertEquals(postBefore, postAfter);
 			}
-			System.out.println(nPetrinet.getPre().matrixStringOnly());
 		} catch (GeneralPetrinetException e) {
 			fail("Morphism should have been found");
 		}

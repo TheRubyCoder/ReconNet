@@ -5,12 +5,10 @@
 
 package transformation;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
+
+import transformation.rules.*;
 
 /**
  *
@@ -23,7 +21,8 @@ import org.junit.runners.Suite;
 	MorphismTest.class,
 	RuleTest.class,
 	MorphismPlacesTest.class,
-	MorphismTransitionsTest.class
+	MorphismTransitionsTest.class,
+	Rule1Test.class
 	}
 )
 
