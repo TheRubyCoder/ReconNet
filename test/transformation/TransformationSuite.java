@@ -20,10 +20,10 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 //	TransformationsTest.class,
 //	TransformationTest.class,
-	MorphismTest.class,
+//	MorphismTest.class,
 	RuleTest.class,
-	ProvisionalMorphismPlacesTest.class,
-	ProvisorialMorphismTransitionsTest.class
+	MorphismPlacesTest.class,
+	MorphismTransitionsTest.class
 	}
 )
 
