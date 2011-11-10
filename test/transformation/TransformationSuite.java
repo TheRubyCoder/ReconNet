@@ -20,29 +20,11 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
 //	TransformationsTest.class,
 //	TransformationTest.class,
-//	MorphismTest.class,
+	MorphismTest.class,
 	RuleTest.class,
 	ProvisionalMorphismPlacesTest.class,
 	ProvisorialMorphismTransitionsTest.class
 	}
 )
 
-public class TransformationSuite {
-//
-//    @BeforeClass
-//    public static void setUpClass() throws Exception {
-//    }
-//
-//    @AfterClass
-//    public static void tearDownClass() throws Exception {
-//    }
-//
-//    @Before
-//    public void setUp() throws Exception {
-//    }
-//
-//    @After
-//    public void tearDown() throws Exception {
-//    }
-
-}
+public class TransformationSuite { }
