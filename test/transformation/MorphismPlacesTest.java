@@ -18,7 +18,9 @@ import data.MorphismData;
 /**
  * Testing the morphism of places like specified in "../additional/images/Isomorphism_places.png"
  */
-public class ProvisionalMorphismPlacesTest {
+public class MorphismPlacesTest {
+	
+	private static int morphismCount = 2000;
 
 	private static IPetrinet placesFromNet = MorphismData
 			.getPetrinetIsomorphismPlacesFrom();
@@ -38,7 +40,7 @@ public class ProvisionalMorphismPlacesTest {
 
 		IPlace targetPlace;
 		// try 100 morphism and count them
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < morphismCount; i++) {
 			IMorphism morphism = MorphismFactory.createMorphism(placesFromNet,
 					placesToNet);
 			targetPlace = morphism.getPlaceMorphism(fromPlace);
@@ -53,8 +55,6 @@ public class ProvisionalMorphismPlacesTest {
 
 	@Test
 	public void testPlacesMorphismCount() {
-		System.out.println("TEST SYSO TO SEE WHETHER THIS TEST IS EXECUTED ON JENKINS OR NOT");
-
 		// only 4 morphisms should have been possible
 		assertEquals(4, counter.size());
 	}
@@ -63,16 +63,17 @@ public class ProvisionalMorphismPlacesTest {
 	public void testPlacesMorphismMatchingDistribution() {
 		// since its not deterministic we check if its approximately equally
 		// often machted
-		int average = 25;
-		int allowedDeviation = 12;
+		int average = morphismCount / 4;
+		int allowedDeviation = average / 3;
 		int max = average + allowedDeviation;
 		int min = average - allowedDeviation;
 		for (Integer count : counter.values()) {
 			boolean accepted = min < count && count < max;
-			assertEquals(true, accepted);
 			if (!accepted)
 				System.out
-						.println("This test failed due to non determinism. Its not too bad it failed.");
+						.println("This test failed due to non determinism. Its not too bad it failed.\n" +
+								"It should have been between " + min + " and " + max + " but was " + count);
+			assertEquals(true, accepted);
 		}
 	}
 

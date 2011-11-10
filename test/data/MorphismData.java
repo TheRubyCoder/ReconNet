@@ -13,7 +13,7 @@ import petrinetze.impl.RenewId;
 
 
 /**
- * This Class contains the test data for transformation test. 
+ * This Class contains the test data for morphism test. 
  * DONT CHANGE THE ORDER IN WICH PLACES OR TRANSITIONS ARE CREATED! (as Ids are used in the tests)
  * (better dont change anything at all until you know the test very well) 
  * 

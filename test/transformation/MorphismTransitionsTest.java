@@ -18,7 +18,7 @@ import data.MorphismData;
  * Testing the morphism of places like specified in
  * "../additional/images/Isomorphism_transitions.png"
  */
-public class ProvisorialMorphismTransitionsTest {
+public class MorphismTransitionsTest {
 
 	private static IPetrinet transitionFromNet = MorphismData
 			.getPetrinetIsomorphismTransitionsFrom();
@@ -32,8 +32,6 @@ public class ProvisorialMorphismTransitionsTest {
 	@BeforeClass
 	public static void setUpOnce() throws Exception {
 
-		System.out.println(transitionFromNet);
-		System.out.println(transitionToNet);
 		// Get the first (and only) transition in the "from" net
 		fromTransition = transitionFromNet.getAllTransitions().iterator()
 				.next();
@@ -59,7 +57,6 @@ public class ProvisorialMorphismTransitionsTest {
 	public void testPlacesMorphismCount() {
 
 		// only 1 morphisms should have been possible
-		System.out.println(counter);
 		assertEquals(1, counter.size());
 	}
 
