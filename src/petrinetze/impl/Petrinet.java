@@ -5,8 +5,6 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import engine.impl.Test;
-
 import petrinetze.ActionType;
 import petrinetze.IArc;
 import petrinetze.IGraphElement;
@@ -41,6 +39,26 @@ public class Petrinet implements IPetrinet {
 	private Set<ITransition> transitions;
 	private Set<IArc> arcs;
 	private IGraphElement graphElements;
+
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null)
+			return false;
+		if(!(obj instanceof IPetrinet))
+			return false;
+		IPetrinet other = (IPetrinet) obj;
+		if(!getPre().matrixStringOnly().equals(other.getPre().matrixStringOnly()))
+			return false;
+		if(!getPost().matrixStringOnly().equals(other.getPost().matrixStringOnly()))
+			return false;
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return super.hashCode();
+	}
 
 	public Petrinet() {
 		id = UUID.getnID();

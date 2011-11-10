@@ -17,6 +17,16 @@ class Pre implements IPre {
 	}
 	
 	@Override
+	public boolean equals(Object obj){
+		if(obj == null)
+			return false;
+		if(!(obj instanceof IPre))
+			return false;
+		IPre other = (IPre) obj;
+		return Arrays.deepEquals(getPreAsArray(),other.getPreAsArray());
+	}
+	
+	@Override
 	public int[][] getPreAsArray() {
 		return pre;
 	}
@@ -29,6 +39,11 @@ class Pre implements IPre {
 	@Override
 	public int[] getPlaceIds() {
 		return this.pIds;
+	}
+	
+	@Override
+	public String matrixStringOnly(){
+		return toString().split("=")[1].split("tIds")[0];
 	}
 
 	/* (non-Javadoc)

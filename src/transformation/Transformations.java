@@ -60,10 +60,10 @@ public final class Transformations
 	}
 	
 	/**
-	 * Will transform the given petrinet using the given rule and a random morphism.
-	 * @param net the petrinet.
-	 * @param rule the rule to use.
-	 * @throws Exception 
+	 * Transformations the petrinet like defined in rule with random morphism
+	 * @param petrinet Petrinet to transform
+	 * @param rule Rule to apply to petrinet
+	 * @throws GeneralPetrinetException When no default morphism found
 	 */
 	public static void transform(IPetrinet net, IRule rule) throws GeneralPetrinetException
 	{

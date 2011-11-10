@@ -34,4 +34,10 @@ public interface IPre {
 	 * @return Array mit den Ids.
 	 */
 	public int[] getPlaceIds();
+	
+	/**
+	 * Returns only the part of toString() that represents the matrix
+	 * @return Matrix like looking String
+	 */
+	public String matrixStringOnly();
 }

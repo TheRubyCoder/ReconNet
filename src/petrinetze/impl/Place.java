@@ -3,7 +3,6 @@ package petrinetze.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
 
 import petrinetze.IArc;
 import petrinetze.IPlace;

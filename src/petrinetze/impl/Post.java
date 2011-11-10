@@ -3,6 +3,7 @@ package petrinetze.impl;
 import java.util.Arrays;
 
 import petrinetze.IPost;
+import petrinetze.IPre;
 
 class Post implements IPost {
 
@@ -19,6 +20,16 @@ class Post implements IPost {
 	}
 	
 	@Override
+	public boolean equals(Object obj){
+		if(obj == null)
+			return false;
+		if(!(obj instanceof IPost))
+			return false;
+		IPost other = (IPost) obj;
+		return Arrays.deepEquals(getPostAsArray(),other.getPostAsArray());
+	}
+	
+	@Override
 	public int[] getTransitionIds() {
 		return this.tIds;
 	}
@@ -26,6 +37,11 @@ class Post implements IPost {
 	@Override
 	public int[] getPlaceIds() {
 		return this.pIds;
+	}
+	
+	@Override
+	public String matrixStringOnly(){
+		return toString().split("=")[1].split("tIds")[0];
 	}
 
 	/* (non-Javadoc)
