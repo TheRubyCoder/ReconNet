@@ -1,9 +1,5 @@
 package data;
 
-import org.junit.BeforeClass;
-
-import com.sun.xml.internal.ws.developer.StreamingAttachment;
-
 import petrinetze.IPetrinet;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
