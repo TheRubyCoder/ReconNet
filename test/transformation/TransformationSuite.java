@@ -22,7 +22,9 @@ import transformation.rules.*;
 	RuleTest.class,
 	MorphismPlacesTest.class,
 	MorphismTransitionsTest.class,
-	Rule1Test.class 
+	Rule7Test.class,
+	Rule2Test.class, // fails
+	Rule1Test.class,
 	}
 )
 

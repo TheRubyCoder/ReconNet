@@ -11,6 +11,11 @@ import transformation.Transformations;
 import data.Rule1Data;
 import exceptions.GeneralPetrinetException;
 
+/**
+ * Testing if Rule 1 like specified in /../additional/images/Rule_1.png
+ * works correctly
+ *
+ */
 public class Rule1Test {
 	
 	private static IPetrinet nPetrinet = Rule1Data.getnPetrinet();

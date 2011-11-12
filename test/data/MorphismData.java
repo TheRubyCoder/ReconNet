@@ -21,6 +21,9 @@ import petrinetze.impl.RenewId;
 public class MorphismData {
 	
 
+	public static int getIdMatchesInRule2(){
+		return idOfThird;
+	}
 	
 	public static int getIdFromTransitions() {
 		return idFromTransitions;
@@ -45,6 +48,8 @@ public class MorphismData {
 	private static int idMatchedTransition;
 	
 	private static Set<Integer> idsMatchedPlaces = new HashSet<Integer>();
+	
+	private static int idOfThird;
 	
 	
 	private MorphismData(){}
@@ -143,6 +148,7 @@ public class MorphismData {
 		// with following int 3
 		IPlace p3 = result.createPlace("P1");
 		idsMatchedPlaces.add(p3.getId());
+		idOfThird = p3.getId();
 
 				
 		ITransition t31 = result.createTransition("A", renewId);
