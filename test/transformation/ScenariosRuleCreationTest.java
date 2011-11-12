@@ -60,4 +60,27 @@ public class ScenariosRuleCreationTest {
 		assertTrue("R should be empty",r.getAllPlaces().isEmpty());
 		assertTrue("R should be empty",r.getAllTransitions().isEmpty());
 	}
+	
+	@Test
+	public void scenario3(){
+		IPetrinet k = getRuleScenario3().getK();
+		IPetrinet l = getRuleScenario3().getL();
+		IPetrinet r = getRuleScenario3().getR();
+		
+		r.createPlace("P1");
+		
+		IPlace firstInK = k.getAllPlaces().iterator().next();
+		IPlace firstInR = r.getAllPlaces().iterator().next();
+		
+		//R and K have "P1"?
+		assertEquals("P1",firstInK.getName());
+		assertEquals("P1",firstInR.getName());
+		//R and K equal?
+		assertEquals(k,r);
+		//L not equal?
+		assertFalse("L should not equal K or R",k.equals(l));
+		//L empty?
+		assertTrue("L should be empty",l.getAllPlaces().isEmpty());
+		assertTrue("L should be empty",l.getAllTransitions().isEmpty());
+	}
 }
