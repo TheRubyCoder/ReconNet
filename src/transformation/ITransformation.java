@@ -35,6 +35,7 @@ public interface ITransformation
 	 * This will transform the petrinet
 	 * using the IRule returned by getRule() and
 	 * the IMorphism returned by getMorphism().
+	 * @return the Transformation that was used (this)
 	 */
-	void transform();
+	ITransformation transform();
 }

@@ -64,10 +64,11 @@ public final class Transformations
 	 * @param petrinet Petrinet to transform
 	 * @param rule Rule to apply to petrinet
 	 * @throws GeneralPetrinetException When no default morphism found
+	 * @return the transformation that was used for transforming (containing rule, nNet and morphism)
 	 */
-	public static void transform(IPetrinet net, IRule rule) throws GeneralPetrinetException
+	public static ITransformation transform(IPetrinet net, IRule rule) throws GeneralPetrinetException
 	{
-		Transformation.createTransformationWithAnyMorphism(net, rule).transform();
+		return Transformation.createTransformationWithAnyMorphism(net, rule).transform();
 //		new Transformation(net, rule).transform();
 //		System.out.println(net);
 	}

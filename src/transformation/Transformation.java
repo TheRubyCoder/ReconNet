@@ -88,10 +88,10 @@ public class Transformation implements ITransformation {
 	}	
 	
 	/**
-	 * Method for starting the transform. 
+	 * @see ITransformation#transform()
 	 */
 	@Override
-	public void transform() {
+	public ITransformation transform() {
 		IPetrinet K = rule.getK();
 		Set<INode> KNode = K.getAllGraphElement().getAllNodes();
 		Set<IArc> KArc = K.getAllArcs();		
@@ -152,6 +152,7 @@ public class Transformation implements ITransformation {
 				petrinet.deleteArcByID(morphism.getArcMorphism(i).getId());
 			}			
 		}
+		return this;
 	}
 
 }
