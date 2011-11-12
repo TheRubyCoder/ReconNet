@@ -1,14 +1,11 @@
 package transformation.rules;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import petrinetze.IPetrinet;
-import petrinetze.IPlace;
 import transformation.IRule;
 import transformation.ITransformation;
 import transformation.Transformations;
