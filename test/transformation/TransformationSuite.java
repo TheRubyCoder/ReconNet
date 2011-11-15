@@ -18,9 +18,10 @@ import transformation.rules.*;
 	MorphismPlacesTest.class,
 	MorphismTransitionsTest.class,
 	Rule7Test.class,
+//	Rule3Test.class, // fails
 //	Rule2Test.class, // fails
 	Rule1Test.class,
-	ScenariosRuleCreationTest.class
+	ScenariosRuleCreationTest.class //fails partially
 	}
 )
 
