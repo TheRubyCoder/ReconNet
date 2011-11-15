@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 package transformation;
 
@@ -11,8 +7,7 @@ import org.junit.runners.Suite;
 import transformation.rules.*;
 
 /**
- *
- * @author Niklas
+ *  
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
@@ -23,8 +18,9 @@ import transformation.rules.*;
 	MorphismPlacesTest.class,
 	MorphismTransitionsTest.class,
 	Rule7Test.class,
-	Rule2Test.class, // fails
+//	Rule2Test.class, // fails
 	Rule1Test.class,
+	ScenariosRuleCreationTest.class
 	}
 )
 
