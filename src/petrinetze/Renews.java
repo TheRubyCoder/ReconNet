@@ -1,8 +1,5 @@
 package petrinetze;
 
-import petrinetze.impl.RenewCount;
-import petrinetze.impl.RenewId;
-import petrinetze.impl.RenewMap;
 
 import java.util.Map;
 

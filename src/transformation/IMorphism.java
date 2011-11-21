@@ -2,12 +2,12 @@ package transformation;
 
 import java.util.Map;
 
-import petrinetze.IArc;
-import petrinetze.IPetrinet;
-import petrinetze.IPlace;
-import petrinetze.ITransition;
+import petrinetze.Arc;
+import petrinetze.Petrinet;
+import petrinetze.Place;
+import petrinetze.Transition;
 /**
- * An interface for morphisms on IPetrinet.<br\>
+ * An interface for morphisms on Petrinet.<br\>
  * A morphism maps places, transitions and edges in a way that pre and post
  * have the same "structure" in 'from' and 'to'. For more details look at documnets of the petrinet course. 
  * <h4>changelog</h4>
@@ -23,51 +23,51 @@ public interface IMorphism
 	 * Returns the morphisms of all transition.
 	 * @return the morphisms of all transition.
 	 */
-	Map<ITransition, ITransition> getTransitionsMorphism();
+	Map<Transition, Transition> getTransitionsMorphism();
 	
 	/**
 	 * Returns the morphisms of all places.
 	 * @return the morphisms of all places.
 	 */
-	Map<IPlace, IPlace> getPlacesMorphism();
+	Map<Place, Place> getPlacesMorphism();
 	
 	/**
 	 * Returns the morphism of all edges.
 	 * @return the morphism of all edges.
 	 */
-	Map<IArc, IArc> getEdgesMorphism();
+	Map<Arc, Arc> getEdgesMorphism();
 	
 	/**
 	 * Returns the morphism to a single transition.
 	 * @param transition transition in the "from" net
 	 * @return the respective transition in the "to" net
 	 */
-	ITransition getTransitionMorphism(ITransition transition);
+	Transition getTransitionMorphism(Transition transition);
 
 	/**
 	 * Returns the morphism to a single place.
 	 * @param place place in the "from" net
 	 * @return the respective place in the "to" net
 	 */
-	IPlace getPlaceMorphism(IPlace place);
+	Place getPlaceMorphism(Place place);
 
 	/**
 	 * Returns the morphism to a single arc.
 	 * @param arc arc in the "from" net
 	 * @return the respective arc in the "to" net
 	 */
-	IArc getArcMorphism(IArc arc);
+	Arc getArcMorphism(Arc arc);
 	
 	
 	/**
 	 * Returns the Petrinet from which this morphism starts.
 	 * @return the Petrinet from which this morphism starts.
 	 */
-	IPetrinet getFrom();
+	Petrinet getFrom();
 	
 	/**
 	 * Returns the Petrinet into which this morphism maps to.
 	 * @return the Petrinet into which this morphism maps to.
 	 */
-	IPetrinet getTo();
+	Petrinet getTo();
 }

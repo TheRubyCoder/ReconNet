@@ -11,7 +11,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 
-import petrinetze.IArc;
+import petrinetze.Arc;
 import petrinetze.INode;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
@@ -36,7 +36,7 @@ public class PetrinetPopupMousePlugin extends AbstractPopupGraphMousePlugin {
 	 */
     private JPopupMenu popupMenu;
 
-    private VisualizationViewer<INode,IArc> viewer;
+    private VisualizationViewer<INode,Arc> viewer;
 
     private final Engine engine;
 
@@ -119,7 +119,7 @@ public class PetrinetPopupMousePlugin extends AbstractPopupGraphMousePlugin {
     @SuppressWarnings("unchecked")
     protected void handlePopup(MouseEvent e) {
 
-        viewer = (VisualizationViewer<INode, IArc>) e.getSource();
+        viewer = (VisualizationViewer<INode, Arc>) e.getSource();
 
         /*
         final INode selected = viewer.getPickSupport().getVertex(viewer.getGraphLayout(), e.getX(), e.getY());

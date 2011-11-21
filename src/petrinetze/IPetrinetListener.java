@@ -2,12 +2,13 @@ package petrinetze;
 
 
 
+
 public interface IPetrinetListener {
 
-//	void fired(IPetrinet petrinet, ITransition transition);
-	void changed(IPetrinet petrinet, INode element, ActionType actionType);
+//	void fired(Petrinet petrinet, ITransition transition);
+	void changed(Petrinet petrinet, INode element, ActionType actionType);
 
-    void changed(IPetrinet petrinet, IArc element, ActionType actionType);
+    void changed(Petrinet petrinet, Arc element, ActionType actionType);
 
 
 }

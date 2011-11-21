@@ -3,20 +3,20 @@ package transformation;
 import java.util.HashMap;
 import java.util.Map;
 
-import petrinetze.IArc;
-import petrinetze.IPetrinet;
-import petrinetze.IPlace;
-import petrinetze.ITransition;
+import petrinetze.Arc;
+import petrinetze.Petrinet;
+import petrinetze.Place;
+import petrinetze.Transition;
 
 class Morphism implements IMorphism {
 
-	private final IPetrinet from;
-	private final IPetrinet to;
+	private final Petrinet from;
+	private final Petrinet to;
 	
 	
-	private final Map<IPlace, IPlace> places;
-	private final Map<ITransition, ITransition> transitions;
-	private final Map<IArc, IArc> edges;
+	private final Map<Place, Place> places;
+	private final Map<Transition, Transition> transitions;
+	private final Map<Arc, Arc> edges;
 	
 	/**
 	 * Creates a new Morphism with the given parameters
@@ -26,15 +26,15 @@ class Morphism implements IMorphism {
 	 * @param transitions mapping of transitions
 	 * @param edges mapping of edges
 	 */
-	public Morphism(IPetrinet from, IPetrinet to, 
-			Map<IPlace, IPlace> places,
-			Map<ITransition, ITransition> transitions, 
-			Map<IArc, IArc> edges) {
+	public Morphism(Petrinet from, Petrinet to, 
+			Map<Place, Place> places,
+			Map<Transition, Transition> transitions, 
+			Map<Arc, Arc> edges) {
 		this.from = from;
 		this.to = to;
-		this.places = new HashMap<IPlace, IPlace>(places);
-		this.transitions = new HashMap<ITransition, ITransition>(transitions);
-		this.edges = new HashMap<IArc, IArc>(edges);
+		this.places = new HashMap<Place, Place>(places);
+		this.transitions = new HashMap<Transition, Transition>(transitions);
+		this.edges = new HashMap<Arc, Arc>(edges);
 	}
 
 
@@ -42,7 +42,7 @@ class Morphism implements IMorphism {
 	 * @see transformation.IMorphism#getTransitionsMorphism()
 	 */
 	@Override
-	public Map<ITransition, ITransition> getTransitionsMorphism() {
+	public Map<Transition, Transition> getTransitionsMorphism() {
 		return transitions;
 	}
 	
@@ -50,7 +50,7 @@ class Morphism implements IMorphism {
 	 * @see transformation.IMorphism#getPlacesMorphism()
 	 */
 	@Override
-	public Map<IPlace, IPlace> getPlacesMorphism() {
+	public Map<Place, Place> getPlacesMorphism() {
 		return places;
 	}
 
@@ -58,7 +58,7 @@ class Morphism implements IMorphism {
 	 * @see transformation.IMorphism#getEdgesMorphism()
 	 */
 	@Override
-	public Map<IArc, IArc> getEdgesMorphism() {
+	public Map<Arc, Arc> getEdgesMorphism() {
 		return edges;
 	}
 
@@ -66,7 +66,7 @@ class Morphism implements IMorphism {
 	 * @see transformation.IMorphism#getTransitionMorphism()
 	 */
 	@Override
-	public ITransition getTransitionMorphism(ITransition transition) {
+	public Transition getTransitionMorphism(Transition transition) {
 		return transitions.get(transition);
 	}
 
@@ -74,7 +74,7 @@ class Morphism implements IMorphism {
 	 * @see transformation.IMorphism#getPlaceMorphism()
 	 */
 	@Override
-	public IPlace getPlaceMorphism(IPlace place) {
+	public Place getPlaceMorphism(Place place) {
 		return places.get(place);
 	}
 
@@ -82,7 +82,7 @@ class Morphism implements IMorphism {
 	 * @see transformation.IMorphism#getArcMorphism()
 	 */
 	@Override
-	public IArc getArcMorphism(IArc arc) {
+	public Arc getArcMorphism(Arc arc) {
 		return edges.get(arc);
 	}
 
@@ -91,7 +91,7 @@ class Morphism implements IMorphism {
 	 * @see transformation.IMorphism#getFrom()
 	 */
 	@Override
-	public IPetrinet getFrom() {
+	public Petrinet getFrom() {
 		return from;
 	}
 
@@ -99,7 +99,7 @@ class Morphism implements IMorphism {
 	 * @see transformation.IMorphism#getTo()
 	 */
 	@Override
-	public IPetrinet getTo() {
+	public Petrinet getTo() {
 		return to;
 	}
 	

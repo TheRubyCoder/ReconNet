@@ -22,15 +22,15 @@ import java.util.logging.SimpleFormatter;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import petrinetze.IArc;
 import petrinetze.INode;
 
-import petrinetze.IPetrinet;
-import petrinetze.IPlace;
-import petrinetze.ITransition;
+import petrinetze.Arc;
+import petrinetze.Petrinet;
+import petrinetze.Place;
+import petrinetze.Transition;
+import petrinetze.Petrinet;
+import petrinetze.RenewCount;
 import petrinetze.Renews;
-import petrinetze.impl.Petrinet;
-import petrinetze.impl.RenewCount;
 import transformation.IRule;
 import transformation.Rule;
 
@@ -600,21 +600,21 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     private javax.swing.JDesktopPane desktop;
     // End of variables declaration//GEN-END:variables
 
-    public IPetrinet getTestPetrinet() {
+    public Petrinet getTestPetrinet() {
         Petrinet petrinet = new Petrinet();
-        IPlace p1 = petrinet.createPlace("Stelle1");
+        Place p1 = petrinet.createPlace("Stelle1");
         p1.setMark(1);
-        IPlace p2 = petrinet.createPlace("Stelle2");
+        Place p2 = petrinet.createPlace("Stelle2");
         p2.setMark(1);
-        IPlace p3 = petrinet.createPlace("Stelle3");
+        Place p3 = petrinet.createPlace("Stelle3");
         p3.setMark(1);
-        ITransition t1 = petrinet.createTransition("t1", Renews.IDENTITY);
+        Transition t1 = petrinet.createTransition("t1", Renews.IDENTITY);
         petrinet.createArc("", p1, t1);
         petrinet.createArc("", t1, p2);
-        ITransition t2 = petrinet.createTransition("t2", Renews.IDENTITY);
+        Transition t2 = petrinet.createTransition("t2", Renews.IDENTITY);
         petrinet.createArc("", p2, t2);
         petrinet.createArc("", t2, p3);
-        ITransition t3 = petrinet.createTransition("t3", Renews.IDENTITY);
+        Transition t3 = petrinet.createTransition("t3", Renews.IDENTITY);
         petrinet.createArc("", p3, t3);
         petrinet.createArc("", t3, p1);
         return petrinet;
@@ -623,23 +623,23 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     public IRule createTestRule() {
         IRule rule1 = new Rule();
         //L von r1
-        IPlace p1 = rule1.getL().createPlace("Wecker ein");
-        IPlace p2 = rule1.getK().createPlace("Wecker ein");
+        Place p1 = rule1.getL().createPlace("Wecker ein");
+        Place p2 = rule1.getK().createPlace("Wecker ein");
         p2.setMark(1);
-        IPlace p3 = rule1.getK().createPlace("");
-        IPlace p4 = rule1.getK().createPlace("");
-        IPlace p5 = rule1.getK().createPlace("Wecker aus");
-        IPlace p6 = rule1.getL().createPlace("Wecker aus");
-        ITransition t1 = rule1.getL().createTransition("", new RenewCount());
+        Place p3 = rule1.getK().createPlace("");
+        Place p4 = rule1.getK().createPlace("");
+        Place p5 = rule1.getK().createPlace("Wecker aus");
+        Place p6 = rule1.getL().createPlace("Wecker aus");
+        Transition t1 = rule1.getL().createTransition("", new RenewCount());
         rule1.getL().createArc("", p1, t1);
         rule1.getL().createArc("", t1, rule1.fromKtoL(p4));
-        ITransition t2 = rule1.getL().createTransition("", new RenewCount());
+        Transition t2 = rule1.getL().createTransition("", new RenewCount());
         rule1.getL().createArc("", rule1.fromKtoL(p3), t2);
         rule1.getL().createArc("", t2, p6);
-        ITransition t3 = rule1.getR().createTransition("", new RenewCount());
+        Transition t3 = rule1.getR().createTransition("", new RenewCount());
         rule1.getR().createArc("", rule1.fromKtoR(p2), t3);
         rule1.getR().createArc("", t3, rule1.fromKtoR(p4));
-        ITransition t4 = rule1.getR().createTransition("", new RenewCount());
+        Transition t4 = rule1.getR().createTransition("", new RenewCount());
         rule1.getR().createArc("", rule1.fromKtoR(p3), t4);
         rule1.getR().createArc("", t4, rule1.fromKtoR(p5));
         return rule1;
@@ -665,7 +665,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
                 "Bitte geben Sie einen Namen für das Petrinetz ein", "Neues Petrinetz");
 
         if (input != null) {
-            IPetrinet pn = new Petrinet();
+            Petrinet pn = new Petrinet();
             Engine engine = EngineFactory.newFactory().createEngine(pn);
             PetrinetNode node = petrinetTree.addPetrinet(input, engine);
             engine.getGraphEditor().getGraphPanel().addPropertyChangeListener("pickedNodes", new PropertyChangeListener() {
@@ -673,12 +673,12 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
                 public void propertyChange(PropertyChangeEvent evt) {
                     Set<INode> nodes = (Set<INode>) evt.getNewValue();
                     INode node = nodes.iterator().next();
-                    if (node instanceof IArc) {
-                        jTable1.setModel(new ArcTableModel((IArc) node));
-                    } else if (node instanceof ITransition) {
-                        jTable1.setModel(new TransitionTableModel((ITransition) node));
-                    } else if (node instanceof IPlace) {
-                        jTable1.setModel(new PlaceTalbeModel((IPlace) node));
+                    if (node instanceof Arc) {
+                        jTable1.setModel(new ArcTableModel((Arc) node));
+                    } else if (node instanceof Transition) {
+                        jTable1.setModel(new TransitionTableModel((Transition) node));
+                    } else if (node instanceof Place) {
+                        jTable1.setModel(new PlaceTalbeModel((Place) node));
                     }
                 }
             });

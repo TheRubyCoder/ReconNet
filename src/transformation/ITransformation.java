@@ -1,8 +1,8 @@
 package transformation;
 
-import petrinetze.IPetrinet;
+import petrinetze.Petrinet;
 /**
- * An Interface for transformations on IPetrinet.<br\>
+ * An Interface for transformations on Petrinet.<br\>
  * The Transformation applies a rule on an petrinet under a certain morphism
  * 
  * @author Philipp Kuehn
@@ -25,11 +25,11 @@ public interface ITransformation
 	IMorphism getMorphism();
 	
 	/**
-	 * Returns the IPetrinet of this transformation.
+	 * Returns the Petrinet of this transformation.
 	 * This net will be changed when transform() is called.
 	 * @return the IRule of this transformation.
 	 */
-	IPetrinet getPetrinet();
+	Petrinet getPetrinet();
 	
 	/**
 	 * This will transform the petrinet

@@ -1,21 +1,12 @@
-package petrinetze.impl;
+package petrinetze;
 
 
-import petrinetze.ActionType;
-import petrinetze.IArc;
-import petrinetze.INode;
-import petrinetze.IPlace;
-import petrinetze.ITransition;
 
 /**
-* Diese Klasse stellt eine Kante in Petrinetze dar und
-* bietet die dazu gehoerige Methoden dafuer an.
-* 
-* @author Reiter, Safai
-* @version 1.0
-*/
-
-class Arc implements IArc {
+ * Bildet die Kante eines Petrinetzes und bietet die entsprechenden
+ * Methoden an.
+ */
+public class Arc implements INode{
 
 	/**
 	 *  Die maximal moegliche Kantengewichtung.
@@ -46,18 +37,12 @@ class Arc implements IArc {
 		this.end = end;
 	}
 
-	/* (non-Javadoc)
-	 * @see haw.wp.rcpn.impl.IArc#getName()
-	 */
-	@Override
+	
 	public String getName() {
 		return this.name;
 	}
 
-	/* (non-Javadoc)
-	 * @see haw.wp.rcpn.impl.IArc#getId()
-	 */
-	@Override
+	
 	public int getId() {
 		return this.id;
 	}
@@ -65,23 +50,24 @@ class Arc implements IArc {
 	/**
 	 * @see haw.wp.rcpn.impl.IArc#setName(java.lang.String)
 	 */
-	@Override
+	
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	/* (non-Javadoc)
-	 * @see haw.wp.rcpn.impl.IArc#getMark()
+	/**
+	 * @return Die maximal mögliche Kantengewichtung. 
 	 */
-	@Override
+	
 	public int getMark() {
 		return mark;
 	}
 	
-	/* (non-Javadoc)
-	 * @see haw.wp.rcpn.impl.IArc#setMark(int)
+	/**
+	 * @param mark
+	 * 			Die maximal mögliche Kantengewichtung.
 	 */
-	@Override
+	
 	public void setMark(int mark) {
 		if (mark > 0) {
 			this.mark = mark;
@@ -89,26 +75,23 @@ class Arc implements IArc {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see haw.wp.rcpn.impl.IArc#getStart()
+	/**
+	 * @return Den Startknoten der Kante.
 	 */
-	@Override
+	
 	public INode getStart() {
 		return start;
 	}
 
-	/* (non-Javadoc)
-	 * @see haw.wp.rcpn.impl.IArc#getEnd()
+	/**
+	 * @return Den Endknoten der Kante.
 	 */
-	@Override
+	
 	public INode getEnd() {
 		return end;
 	}
 
-	/* (non-Javadoc)
-	 * @see haw.wp.rcpn.impl.IArc#setStart(haw.wp.rcpn.INode)
-	 */
-	@Override
+	
 	public void setStart(INode start) throws IllegalArgumentException
  {
 		if (!isValidPrecondition(start, end)) {
@@ -118,10 +101,10 @@ class Arc implements IArc {
 		//Jede StartKante registriert sich bei dem entsprechenden
 		//INode als Startkante, damit die Berechnung von Pre und
 		//Post von statten gehen kann.
-		if (start instanceof IPlace) {
-			((IPlace) this.start).setStartArcs(this);
+		if (start instanceof Place) {
+			((Place) this.start).setStartArcs(this);
 		} else {
-			((ITransition) this.start).setStartArcs(this);
+			((Transition) this.start).setStartArcs(this);
 		}
 		petrinet.onEdgeChanged(this, ActionType.changed);
 		
@@ -129,19 +112,20 @@ class Arc implements IArc {
 
 	private static boolean isValidPrecondition(INode start, INode end) {
 		
-		if (start instanceof IPlace) {
-			return (end instanceof ITransition);
+		if (start instanceof Place) {
+			return (end instanceof Transition);
 		}
-		if (start instanceof ITransition) {
-			return (end instanceof IPlace);
+		if (start instanceof Transition) {
+			return (end instanceof Place);
 		}
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see haw.wp.rcpn.impl.IArc#setEnd(haw.wp.rcpn.INode)
+	/**
+	 * @param end
+	 * 			Den Endknoten der Kante.
 	 */
-	@Override
+	
 	public void setEnd(INode end) throws IllegalArgumentException
 {
 		if (!isValidPrecondition(start, end)) {
@@ -151,10 +135,10 @@ class Arc implements IArc {
 		//Jede EndKante registriert sich bei dem entsprechenden
 		//INode als Endkante, damit die Berechnung von Pre und
 		//Post von statten gehen kann.
-		if (end instanceof IPlace) {
-			((IPlace) this.end).setEndArcs(this);
+		if (end instanceof Place) {
+			((Place) this.end).setEndArcs(this);
 		} else {
-			((ITransition) this.end).setEndArcs(this);
+			((Transition) this.end).setEndArcs(this);
 		}
 		this.end = end;
 		petrinet.onEdgeChanged(this, ActionType.changed);
@@ -163,9 +147,10 @@ class Arc implements IArc {
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
-	@Override
+	
 	public String toString() {
 		return "Arc [mark=" + mark + ", name=" + name + ", start=" + start
 				+ ", end=" + end + ", id=" + id + "]";
 	}
 }
+

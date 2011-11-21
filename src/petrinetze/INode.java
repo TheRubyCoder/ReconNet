@@ -1,9 +1,6 @@
 package petrinetze;
 /**
- * Ist die Oberklasse fuer Place und Transitionen
- * und bietet die gemeinsamen Methoden an.
- * 
- * @author Reiter, Safai
+ * Marker interface for JUNG layouting
  *
  */
 public interface INode {

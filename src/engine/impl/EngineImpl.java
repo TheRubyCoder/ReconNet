@@ -3,19 +3,12 @@ package engine.impl;
 import edu.uci.ics.jung.graph.DirectedGraph;
 import engine.*;
 import exceptions.GeneralPetrinetException;
-import petrinetze.IArc;
+import petrinetze.Arc;
 import petrinetze.INode;
-import petrinetze.IPetrinet;
+import petrinetze.Petrinet;
 import transformation.IRule;
 import transformation.Transformations;
 
-/**
- * Created by IntelliJ IDEA.
- * User: moritz
- * Date: 12.11.2010
- * Time: 16:31:11
- * To change this template use File | Settings | File Templates.
- */
 class EngineImpl implements Engine {
 
     private final EngineContext context;
@@ -33,17 +26,17 @@ class EngineImpl implements Engine {
         this.layoutEditor = new LayoutEditorImpl(context);
     }
 
-    public EngineImpl(IPetrinet petrinet) {
+    public EngineImpl(Petrinet petrinet) {
         this(new EngineContext(petrinet));
     }
 
     @Override
-    public IPetrinet getNet() {
+    public Petrinet getNet() {
         return context.getPetrinet();
     }
 
     @Override
-    public DirectedGraph<INode, IArc> getGraph() {
+    public DirectedGraph<INode, Arc> getGraph() {
         return context.getGraph();
     }
 

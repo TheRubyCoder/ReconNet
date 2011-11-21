@@ -12,7 +12,6 @@ import org.junit.Test;
 import junit.framework.TestCase;
 import static org.junit.Assert.*;
 import petrinetze.*;
-import petrinetze.impl.Petrinet;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Float;

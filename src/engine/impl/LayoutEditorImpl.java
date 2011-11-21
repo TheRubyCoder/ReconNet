@@ -2,8 +2,7 @@ package engine.impl;
 
 import java.awt.geom.Point2D;
 
-import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
-import petrinetze.IArc;
+import petrinetze.Arc;
 import petrinetze.INode;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.layout.LayoutTransition;
@@ -59,7 +58,7 @@ class LayoutEditorImpl implements LayoutEditor {
     }
 
     @Override
-    public void apply(VisualizationViewer<INode, IArc> vv) {
+    public void apply(VisualizationViewer<INode, Arc> vv) {
 
         PickedState<INode> pvs = vv.getPickedVertexState();
 
@@ -76,8 +75,8 @@ class LayoutEditorImpl implements LayoutEditor {
         context.getLayout().setInitializer(vv.getGraphLayout());
         context.getLayout().setSize(vv.getSize());
 
-		LayoutTransition<INode, IArc> lt =
-			new LayoutTransition<INode, IArc>(vv, vv.getGraphLayout(), context.getLayout());
+		LayoutTransition<INode, Arc> lt =
+			new LayoutTransition<INode, Arc>(vv, vv.getGraphLayout(), context.getLayout());
 		Animator animator = new Animator(lt);
 		animator.start();
 		vv.getRenderContext().getMultiLayerTransformer().setToIdentity();

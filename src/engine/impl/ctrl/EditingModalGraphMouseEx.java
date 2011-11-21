@@ -12,7 +12,7 @@ import javax.swing.JComboBox;
 
 import org.apache.commons.collections15.Factory;
 
-import petrinetze.IArc;
+import petrinetze.Arc;
 import petrinetze.INode;
 import edu.uci.ics.jung.visualization.MultiLayerTransformer;
 import edu.uci.ics.jung.visualization.RenderContext;
@@ -36,7 +36,7 @@ import engine.Engine;
  * @param <V>
  * @param <E>
  */
-public class EditingModalGraphMouseEx<V extends INode, E extends IArc> extends AbstractModalGraphMouse implements
+public class EditingModalGraphMouseEx<V extends INode, E extends Arc> extends AbstractModalGraphMouse implements
 		ModalGraphMouse, ItemSelectable {
 
 	private Engine engine;
@@ -103,8 +103,8 @@ public class EditingModalGraphMouseEx<V extends INode, E extends IArc> extends A
 	 */
 	@Override
 	protected void loadPlugins() {
-		pickingPlugin = new PickingGraphMousePlugin<INode, IArc>();
-		animatedPickingPlugin = new AnimatedPickingGraphMousePlugin<INode, IArc>();
+		pickingPlugin = new PickingGraphMousePlugin<INode, Arc>();
+		animatedPickingPlugin = new AnimatedPickingGraphMousePlugin<INode, Arc>();
 		translatingPlugin = new TranslatingGraphMousePlugin(InputEvent.BUTTON1_MASK);
 		scalingPlugin = new ScalingGraphMousePlugin(new CrossoverScalingControl(), 0, in, out);
 		rotatingPlugin = new RotatingGraphMousePlugin();

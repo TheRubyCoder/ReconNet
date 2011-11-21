@@ -10,8 +10,8 @@ import petrinetze.IArc;
 import petrinetze.INode;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
+import petrinetze.Petrinet;
 import petrinetze.Renews;
-import petrinetze.impl.Petrinet;
 import petrinetze.impl.SimpleListener;
 
 public class TransitionOperationTest extends TestCase {

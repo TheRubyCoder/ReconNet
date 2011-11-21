@@ -1,15 +1,8 @@
 package engine;
 
 import engine.impl.EngineFactoryImpl;
-import petrinetze.IPetrinet;
+import petrinetze.Petrinet;
 
-/**
- * Created by IntelliJ IDEA.
- * User: moritz
- * Date: 12.11.2010
- * Time: 16:43:48
- * To change this template use File | Settings | File Templates.
- */
 public abstract class EngineFactory {
 
     protected EngineFactory() {}
@@ -18,5 +11,5 @@ public abstract class EngineFactory {
         return new EngineFactoryImpl();
     }
 
-    public abstract Engine createEngine(IPetrinet petrinet);
+    public abstract Engine createEngine(Petrinet petrinet);
 }

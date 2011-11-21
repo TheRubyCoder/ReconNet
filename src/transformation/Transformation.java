@@ -1,18 +1,18 @@
 package transformation;
 
-import petrinetze.IArc;
+import petrinetze.Arc;
 import petrinetze.INode;
-import petrinetze.IPetrinet;
-import petrinetze.IPlace;
+import petrinetze.Petrinet;
+import petrinetze.Place;
 import petrinetze.IRenew;
-import petrinetze.ITransition;
+import petrinetze.Transition;
 import java.util.Set;
 
 import exceptions.GeneralPetrinetException;
 
 public class Transformation implements ITransformation {
 	
-	private final IPetrinet petrinet;
+	private final Petrinet petrinet;
 	private final IMorphism morphism;
 	private final IRule rule; 
 	
@@ -22,7 +22,7 @@ public class Transformation implements ITransformation {
 	 * @param morph, the morphism to use
 	 * @param r, the rule that should apply
 	 */	
-	private Transformation(IPetrinet petrinet,IMorphism morphism,IRule rule){
+	private Transformation(Petrinet petrinet,IMorphism morphism,IRule rule){
 		this.petrinet = petrinet; 
 		this.morphism = morphism; 
 		this.rule = rule;
@@ -36,7 +36,7 @@ public class Transformation implements ITransformation {
 	 * @param rule Rule to apply to petrinet
 	 * @return the transformation
 	 */
-	public static ITransformation createTransformation(IPetrinet petrinet,
+	public static ITransformation createTransformation(Petrinet petrinet,
 			IMorphism morphism,
 			IRule rule){
 		return new Transformation(petrinet, morphism, rule);
@@ -50,7 +50,7 @@ public class Transformation implements ITransformation {
 	 * @return the transformation
 	 * @throws GeneralPetrinetException When no default morphism found
 	 */
-	public static ITransformation createTransformationWithAnyMorphism(IPetrinet petrinet,
+	public static ITransformation createTransformationWithAnyMorphism(Petrinet petrinet,
 			IRule rule) throws GeneralPetrinetException{
 		IMorphism tempMorphism = MorphismFactory.createMorphism(rule.getL(),petrinet);
 		if(tempMorphism == null){
@@ -60,12 +60,12 @@ public class Transformation implements ITransformation {
 	}
 	
 	/**
-	 * Returns the IPetrinet of this transformation.
+	 * Returns the Petrinet of this transformation.
 	 * This net will be changed when transform() is called.
 	 * @return the IRule of this transformation.
 	 */
 	@Override
-	public IPetrinet getPetrinet() {
+	public Petrinet getPetrinet() {
 		return petrinet;
 	}
 	
@@ -92,41 +92,41 @@ public class Transformation implements ITransformation {
 	 */
 	@Override
 	public ITransformation transform() {
-		IPetrinet K = rule.getK();
+		Petrinet K = rule.getK();
 		Set<INode> KNode = K.getAllGraphElement().getAllNodes();
-		Set<IArc> KArc = K.getAllArcs();		
+		Set<Arc> KArc = K.getAllArcs();		
 		for (INode i : KNode)  // Add K - L Places
 		{
 			if(rule.fromKtoL(i) == null) { // If K not in L do,.....
-				if(i instanceof IPlace){   
-					IPlace n = petrinet.createPlace(i.getName());
-					morphism.getPlacesMorphism().put((IPlace)i, n);
+				if(i instanceof Place){   
+					Place n = petrinet.createPlace(i.getName());
+					morphism.getPlacesMorphism().put((Place)i, n);
 				}
 				else{
-					IRenew rnw = ((ITransition) i).getRnw();
-					ITransition n = petrinet.createTransition(i.getName(),rnw);
-					morphism.getTransitionsMorphism().put((ITransition)i, n);
+					IRenew rnw = ((Transition) i).getRnw();
+					Transition n = petrinet.createTransition(i.getName(),rnw);
+					morphism.getTransitionsMorphism().put((Transition)i, n);
 				}
 			}
 			else
 			{
 				// just add the nodes to create d
-				if(i instanceof IPlace){   
-					morphism.getPlacesMorphism().put((IPlace)i, morphism.getPlaceMorphism((IPlace)rule.fromKtoL(i)));
+				if(i instanceof Place){   
+					morphism.getPlacesMorphism().put((Place)i, morphism.getPlaceMorphism((Place)rule.fromKtoL(i)));
 				}
 				else{
-					morphism.getTransitionsMorphism().put((ITransition)i, morphism.getTransitionMorphism((ITransition)rule.fromKtoL(i)));
+					morphism.getTransitionsMorphism().put((Transition)i, morphism.getTransitionMorphism((Transition)rule.fromKtoL(i)));
 				}
 			}
 		}
-		for (IArc a : KArc){ //Add K - L Arcs
+		for (Arc a : KArc){ //Add K - L Arcs
 			if(rule.fromKtoL(a) == null) {
-				if(a.getStart() instanceof IPlace){
-					IArc n = petrinet.createArc(a.getName(),morphism.getPlaceMorphism((IPlace)a.getStart()),morphism.getTransitionMorphism((ITransition)a.getEnd()));
+				if(a.getStart() instanceof Place){
+					Arc n = petrinet.createArc(a.getName(),morphism.getPlaceMorphism((Place)a.getStart()),morphism.getTransitionMorphism((Transition)a.getEnd()));
 					morphism.getEdgesMorphism().put(a, n);
 				}
 				else{
-					IArc n = petrinet.createArc(a.getName(),morphism.getTransitionMorphism((ITransition)a.getStart()),morphism.getPlaceMorphism((IPlace)a.getEnd()));
+					Arc n = petrinet.createArc(a.getName(),morphism.getTransitionMorphism((Transition)a.getStart()),morphism.getPlaceMorphism((Place)a.getEnd()));
 					morphism.getEdgesMorphism().put(a, n);
 				}	
 			}
@@ -139,15 +139,15 @@ public class Transformation implements ITransformation {
 		for (INode i : KNode) // Delete K - R Places
 		{
 			if (rule.fromKtoR(i) == null) { 
-				if(i instanceof IPlace){
-					petrinet.deletePlaceById(morphism.getPlaceMorphism((IPlace)i).getId());
+				if(i instanceof Place){
+					petrinet.deletePlaceById(morphism.getPlaceMorphism((Place)i).getId());
 				}
 				else {
-					petrinet.deleteTransitionByID(morphism.getTransitionMorphism((ITransition)i).getId());
+					petrinet.deleteTransitionByID(morphism.getTransitionMorphism((Transition)i).getId());
 				}
 			}
 		}
-		for (IArc i : KArc){ // Delete K - R Arcs
+		for (Arc i : KArc){ // Delete K - R Arcs
 			if (rule.fromKtoR(i) == null) {
 				petrinet.deleteArcByID(morphism.getArcMorphism(i).getId());
 			}			

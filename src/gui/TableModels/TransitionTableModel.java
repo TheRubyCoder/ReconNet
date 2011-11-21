@@ -6,7 +6,7 @@
 package gui.TableModels;
 
 import petrinetze.IRenew;
-import petrinetze.ITransition;
+import petrinetze.Transition;
 
 /**
  *
@@ -29,9 +29,9 @@ public class TransitionTableModel extends PropertiesTable.AbstractModel {
         "Renew"
     };
 
-    private ITransition transition;
+    private Transition transition;
 
-    public TransitionTableModel(ITransition transition) {
+    public TransitionTableModel(Transition transition) {
         this.transition = transition;
     }
 

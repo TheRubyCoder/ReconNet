@@ -16,7 +16,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import petrinetze.*;
 
-import petrinetze.impl.RenewCount;
 
 /**
  *

@@ -1,12 +1,9 @@
-package petrinetze.impl;
+package petrinetze;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-import petrinetze.IArc;
-import petrinetze.IPlace;
-import petrinetze.ITransition;
 
 /**
 * Diese Klasse stellt eine Stelle in Petrinetze dar und
@@ -16,7 +13,7 @@ import petrinetze.ITransition;
 * @version 1.0
 */
 
-public class Place implements IPlace {
+public class Place implements INode{
 	private String name;
 	/**
 	 * Die maximal moegliche Anzahl von Token.
@@ -27,64 +24,59 @@ public class Place implements IPlace {
 	 * Liste aller Kanten, die von dieser Stelle
 	 * abgehen.
 	 */
-	private List<IArc> startArcs;
+	private List<Arc> startArcs;
 	/**
 	 * Liste aller Kanten, die in diese Stelle
 	 * eingehen.
 	 */
-	private List<IArc> endArcs;
+	private List<Arc> endArcs;
 	
-	public void setStartArcs (IArc arc) {
+	public void setStartArcs (Arc arc) {
 		this.startArcs.add(arc);
 	}
-	public void setEndArcs (IArc arc) {
+	public void setEndArcs (Arc arc) {
 		this.endArcs.add(arc);
 	}
 
 	public Place(int id) {
 		super();
 		this.id = id;
-		this.endArcs = new ArrayList<IArc>();
-		this.startArcs = new ArrayList<IArc>();
+		this.endArcs = new ArrayList<Arc>();
+		this.startArcs = new ArrayList<Arc>();
 	}
 
 	/* (non-Javadoc)
-	 * @see haw.wp.rcpn.IPlace#getName()
+	 * @see haw.wp.rcpn.Place#getName()
 	 */
-	@Override
 	public String getName() {
 		return this.name;
 	}
 
 	/* (non-Javadoc)
-	 * @see haw.wp.rcpn.IPlace#getId()
+	 * @see haw.wp.rcpn.Place#getId()
 	 */
-	@Override
 	public int getId() {
 		return this.id;
 	}
 
 	/* (non-Javadoc)
-	 * @see haw.wp.rcpn.IPlace#setName(java.lang.String)
+	 * @see haw.wp.rcpn.Place#setName(java.lang.String)
 	 */
-	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
 
 
 	/* (non-Javadoc)
-	 * @see haw.wp.rcpn.IPlace#getMark()
+	 * @see haw.wp.rcpn.Place#getMark()
 	 */
-	@Override
 	public int getMark() {
 		return mark;
 	}
 
 	/* (non-Javadoc)
-	 * @see haw.wp.rcpn.IPlace#setMark(int)
+	 * @see haw.wp.rcpn.Place#setMark(int)
 	 */
-	@Override
 	public void setMark(int mark) {
 		this.mark = mark;
 	}
@@ -125,31 +117,27 @@ public class Place implements IPlace {
 		return "Place [name=" + name + ", mark=" + mark + ", id=" + id + "]";
 	}
 	
-	@Override
-	public List<ITransition> getIncomingTransitions() {
-		List<ITransition> in = new ArrayList<ITransition>();
-		for (IArc arc : endArcs) {
-			in.add((ITransition) arc.getStart());
+	public List<Transition> getIncomingTransitions() {
+		List<Transition> in = new ArrayList<Transition>();
+		for (Arc arc : endArcs) {
+			in.add((Transition) arc.getStart());
 		}
 		return in;
 	}
 	
-	@Override
-	public List<ITransition> getOutgoingTransitions() {
-		List<ITransition> out = new ArrayList<ITransition>();
-		for (IArc arc : startArcs) {
-			out.add((ITransition) arc.getEnd());
+	public List<Transition> getOutgoingTransitions() {
+		List<Transition> out = new ArrayList<Transition>();
+		for (Arc arc : startArcs) {
+			out.add((Transition) arc.getEnd());
 		}
 		return out;
 	}
 	
-	@Override
-	public List<IArc> getStartArcs() {
+	public List<Arc> getStartArcs() {
 		return startArcs;
 	}
 
-	@Override
-	public List<IArc> getEndArcs() {
+	public List<Arc> getEndArcs() {
 		return endArcs;
 	}
 }

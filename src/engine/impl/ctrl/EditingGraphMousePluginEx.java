@@ -8,10 +8,10 @@ import java.awt.geom.Point2D;
 import engine.Engine;
 import org.apache.commons.collections15.Factory;
 
-import petrinetze.IArc;
+import petrinetze.Arc;
 import petrinetze.INode;
-import petrinetze.IPlace;
-import petrinetze.ITransition;
+import petrinetze.Place;
+import petrinetze.Transition;
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.util.EdgeType;
@@ -24,7 +24,7 @@ import edu.uci.ics.jung.visualization.control.EditingGraphMousePlugin;
  * @param <V> Vertexe
  * @param <E> Edges
  */
-public class EditingGraphMousePluginEx<V extends INode, E extends IArc> extends EditingGraphMousePlugin<V, E> {
+public class EditingGraphMousePluginEx<V extends INode, E extends Arc> extends EditingGraphMousePlugin<V, E> {
 
 	private Engine engine;
 
@@ -98,8 +98,8 @@ public class EditingGraphMousePluginEx<V extends INode, E extends IArc> extends 
 				if (vertex != null && startVertex != null) {
 					System.out.println("Must create arc");
 					//TODO changed code
-					if(startVertex instanceof ITransition && vertex instanceof IPlace
-							|| vertex instanceof ITransition && startVertex instanceof IPlace) {
+					if(startVertex instanceof Transition && vertex instanceof Place
+							|| vertex instanceof Transition && startVertex instanceof Place) {
 						engine.getGraphEditor().createArc(startVertex, vertex);
 					}					
 				}

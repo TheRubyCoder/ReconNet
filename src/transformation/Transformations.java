@@ -1,20 +1,14 @@
 package transformation;
 
 import exceptions.GeneralPetrinetException;
-import petrinetze.IPetrinet;
+import petrinetze.Petrinet;
 
 /**
- * @author Philipp Kuehn
- * @author Marvin Ede
- * @author Oliver Willhoeft
  *
  */
 public final class Transformations 
 {
-	private Transformations()
-	{
-		
-	}
+	private Transformations() {}
 	
 	/**
 	 * Joins both petrinets, using the given transformation.
@@ -23,7 +17,7 @@ public final class Transformations
 	 * @param right the right petrinet.
 	 * @param transformation the transformation to use.
 	 */
-	public static void join(IPetrinet left, IPetrinet right, ITransformation transformation)
+	public static void join(Petrinet left, Petrinet right, ITransformation transformation)
 	{
 		left.addNet(right);
 		transformation.transform();
@@ -37,7 +31,7 @@ public final class Transformations
 	 * @param morphism the morphism to use.
 	 * @param rule the rule to use.
 	 */
-	public static void join(IPetrinet left, IPetrinet right, IMorphism morphism, IRule rule)
+	public static void join(Petrinet left, Petrinet right, IMorphism morphism, IRule rule)
 	{
 		left.addNet(right);
 		Transformation.createTransformation(left, morphism, rule).transform();
@@ -52,7 +46,7 @@ public final class Transformations
 	 * @param rule the rule to use.
 	 * @throws Exception 
 	 */
-	public static void join(IPetrinet left, IPetrinet right, IRule rule) throws GeneralPetrinetException
+	public static void join(Petrinet left, Petrinet right, IRule rule) throws GeneralPetrinetException
 	{
 		left.addNet(right);
 		Transformation.createTransformationWithAnyMorphism(left, rule).transform();
@@ -66,11 +60,9 @@ public final class Transformations
 	 * @throws GeneralPetrinetException When no default morphism found
 	 * @return the transformation that was used for transforming (containing rule, nNet and morphism)
 	 */
-	public static ITransformation transform(IPetrinet net, IRule rule) throws GeneralPetrinetException
+	public static ITransformation transform(Petrinet net, IRule rule) throws GeneralPetrinetException
 	{
 		return Transformation.createTransformationWithAnyMorphism(net, rule).transform();
-//		new Transformation(net, rule).transform();
-//		System.out.println(net);
 	}
 
 }

@@ -1,6 +1,6 @@
 package engine;
 
-import petrinetze.IArc;
+import petrinetze.Arc;
 import petrinetze.INode;
 
 import java.awt.geom.Point2D;
@@ -60,7 +60,7 @@ public interface LayoutEditor {
      * Applys the new layout.
      * @param vv new Visualition Viewer
      */
-    void apply(VisualizationViewer<INode, IArc> vv);
+    void apply(VisualizationViewer<INode, Arc> vv);
    
     /**
      * Sets new layout

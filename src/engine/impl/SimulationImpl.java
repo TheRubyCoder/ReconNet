@@ -2,7 +2,7 @@ package engine.impl;
 
 import engine.Simulation;
 import engine.StepListener;
-import petrinetze.ITransition;
+import petrinetze.Transition;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -12,13 +12,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * Created by IntelliJ IDEA.
- * User: moritz
- * Date: 12.11.2010
- * Time: 14:40:32
- * To change this template use File | Settings | File Templates.
- */
 class SimulationImpl implements Simulation {
 
     private transient final List<StepListener> listeners = new ArrayList<StepListener>();
@@ -58,7 +51,7 @@ class SimulationImpl implements Simulation {
      * 
      * @param transition transition where the step should be done
      */   
-    public void step(ITransition transition) {
+    public void step(Transition transition) {
         context.getPetrinet().fire(transition.getId());
         fireStepped();
     }

@@ -1,9 +1,7 @@
-package petrinetze.impl;
+package petrinetze;
 
 import java.util.Arrays;
 
-import petrinetze.IPost;
-import petrinetze.IPre;
 
 class Post implements IPost {
 

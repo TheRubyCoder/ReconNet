@@ -1,25 +1,18 @@
 package engine;
 
 import petrinetze.INode;
-import petrinetze.IPlace;
+import petrinetze.Place;
 import petrinetze.IRenew;
 
 import java.awt.Color;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by IntelliJ IDEA.
- * User: moritz
- * Date: 13.01.11
- * Time: 10:45
- * To change this template use File | Settings | File Templates.
- */
 public interface UIEditor {
 
-    Color getPlacePaint(IPlace node);
+    Color getPlacePaint(Place node);
 
-    void setPlacePaint(IPlace node, Color paint);
+    void setPlacePaint(Place node, Color paint);
 
     Map<Integer,String> getColorMap();
 

@@ -24,14 +24,14 @@ import javax.swing.border.SoftBevelBorder;
 import engine.EditMode;
 import org.apache.commons.collections15.Transformer;
 
-import petrinetze.IArc;
+import petrinetze.Arc;
 import petrinetze.INode;
-import petrinetze.ITransition;
+import petrinetze.Transition;
+import petrinetze.Petrinet;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import engine.Engine;
 import engine.GraphEditor;
 import engine.impl.ctrl.EditingModalGraphMouseEx;
-import petrinetze.impl.Petrinet;
 
 public class Test {
 
@@ -44,7 +44,7 @@ public class Test {
     	final EngineContext ec = new EngineContext(new Petrinet());
     	final Engine engine = new EngineImpl(ec);
 
-    	final VisualizationViewer<INode, IArc> vv = new VisualizationViewer<INode, IArc>(ec.getLayout(), new Dimension(600,600));
+    	final VisualizationViewer<INode, Arc> vv = new VisualizationViewer<INode, Arc>(ec.getLayout(), new Dimension(600,600));
     	vv.getRenderContext().setVertexLabelTransformer(new Transformer<INode, String>() {
 			@Override
 			public String transform(INode arg0) {
@@ -76,7 +76,7 @@ public class Test {
 
 			@Override
 			public Icon transform(INode node) {
-				if(node instanceof ITransition) {
+				if(node instanceof Transition) {
 					return transIcon;
 				}
 
@@ -84,16 +84,16 @@ public class Test {
 			}
 		});
 
-    	vv.getRenderContext().setEdgeLabelTransformer(new Transformer<IArc, String>() {
+    	vv.getRenderContext().setEdgeLabelTransformer(new Transformer<Arc, String>() {
 
 			@Override
-			public String transform(IArc arg0) {
+			public String transform(Arc arg0) {
 				return ""+arg0.getMark();
 			}
 		});
 
-		final EditingModalGraphMouseEx<INode, IArc> graphMouse =
-        	new EditingModalGraphMouseEx<INode, IArc>(engine, vv.getRenderContext());
+		final EditingModalGraphMouseEx<INode, Arc> graphMouse =
+        	new EditingModalGraphMouseEx<INode, Arc>(engine, vv.getRenderContext());
 
         vv.setGraphMouse(graphMouse);
 

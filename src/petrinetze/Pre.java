@@ -1,8 +1,7 @@
-package petrinetze.impl;
+package petrinetze;
 
 import java.util.Arrays;
 
-import petrinetze.IPre;
 
 class Pre implements IPre {
 	

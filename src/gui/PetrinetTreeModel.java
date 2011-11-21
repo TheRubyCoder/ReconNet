@@ -10,9 +10,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import petrinetze.ActionType;
-import petrinetze.IArc;
+import petrinetze.Arc;
 import petrinetze.INode;
-import petrinetze.IPetrinet;
+import petrinetze.Petrinet;
 import petrinetze.IPetrinetListener;
 import petrinetze.IRenew;
 import petrinetze.Renews;
@@ -194,7 +194,7 @@ public class PetrinetTreeModel extends DefaultTreeModel {
             return object.getValue();
         }
 
-        public IPetrinet getPetrinet() {
+        public Petrinet getPetrinet() {
             return getEngine().getNet();
         }
 
@@ -209,12 +209,12 @@ public class PetrinetTreeModel extends DefaultTreeModel {
         }
 
         @Override
-        public void changed(IPetrinet petrinet, INode element, ActionType actionType) {
+        public void changed(Petrinet petrinet, INode element, ActionType actionType) {
             if (frame != null) frame.repaint();
         }
 
         @Override
-        public void changed(IPetrinet petrinet, IArc element, ActionType actionType) {
+        public void changed(Petrinet petrinet, Arc element, ActionType actionType) {
             if (frame != null) frame.repaint();
         }
     }

@@ -16,13 +16,6 @@ import edu.uci.ics.jung.graph.util.EdgeType;
 import engine.Engine;
 import engine.GraphEditor;
 
-/**
- * Created by IntelliJ IDEA.
- * User: moritz
- * Date: 12.11.2010
- * Time: 16:16:12
- * To change this template use File | Settings | File Templates.
- */
 class GraphEditorImpl implements GraphEditor {
 
     private final EngineContext context;
@@ -36,46 +29,7 @@ class GraphEditorImpl implements GraphEditor {
         graphPanel = new GraphPanel(engine, context);
 
         // FIXME hotfix for reacting direct on additions to IPetrinet
-        engine.getNet().addPetrinetListener(new IPetrinetListener() {
-
-            @Override
-            public void changed(IPetrinet petrinet, INode element, ActionType actionType) {
-                final DirectedGraph<INode,IArc> g = GraphEditorImpl.this.context.getGraph();
-
-                switch (actionType) {
-                    case added:
-                        if (!g.containsVertex(element)) {
-                            g.addVertex(element);
-                        }
-                        break;
-
-                    case deleted:
-                        if (g.containsVertex(element)) {
-                            g.removeVertex(element);
-                        }
-                        break;
-                }
-            }
-
-            @Override
-            public void changed(IPetrinet petrinet, IArc element, ActionType actionType) {
-                final DirectedGraph<INode,IArc> g = GraphEditorImpl.this.context.getGraph();
-
-                switch (actionType) {
-                    case added:
-                        if (!g.containsEdge(element)) {
-                            g.addEdge(element, element.getStart(), element.getEnd());
-                        }
-                        break;
-
-                    case deleted:
-                        if (g.containsEdge(element)) {
-                            g.removeEdge(element);
-                        }
-                        break;
-                }
-            }
-        });
+        engine.getNet().addPetrinetListener(new HotFixPetrinetListener(this.context));
     }
 
     private <T extends INode> T initNode(T node, final Point2D location) {
@@ -89,22 +43,22 @@ class GraphEditorImpl implements GraphEditor {
         return node;
     }
 
-    public IPlace createPlace(Point2D location) {
+    public Place createPlace(Point2D location) {
     	INode place = initNode(context.getPetrinet().createPlace("untitled"), location);
     	System.out.println(String.format("createPlace(%d,%s)",place.getId(),location));
-        return (IPlace)place;
+        return (Place)place;
     }
 
-    public ITransition createTransition(Point2D location) {
+    public Transition createTransition(Point2D location) {
     	INode transition = initNode(context.getPetrinet().createTransition("untitled", Renews.IDENTITY), location);
     	System.out.println(String.format("createTransition(%d,%s)",transition.getId(), location));
     	//TODO IRenew durchreichen
-        return (ITransition)transition;
+        return (Transition)transition;
     }
 
-    public IArc createArc(INode from, INode to) {
+    public Arc createArc(INode from, INode to) {
         System.out.println(String.format("createArc(%s, %s)",from, to));
-        IArc arc = context.getPetrinet().createArc("", from, to);
+        Arc arc = context.getPetrinet().createArc("", from, to);
         // context.getGraph().addEdge(arc, from, to, EdgeType.DIRECTED);
         return arc;
     }
@@ -112,17 +66,17 @@ class GraphEditorImpl implements GraphEditor {
     public void remove(Set<? extends INode> nodes) {
         for (INode node : nodes) {
             // TODO besser nur aus Petrinet l?schen und dann bei Listener-Callback aus Graph entfernen?
-            if (node instanceof IArc) {
-                context.getGraph().removeEdge((IArc)node);
+            if (node instanceof Arc) {
+                context.getGraph().removeEdge((Arc)node);
                 context.getPetrinet().deleteArcByID(node.getId());
             }
             else {
                 context.getGraph().removeVertex(node);
 
-                if (node instanceof ITransition) {
+                if (node instanceof Transition) {
                     context.getPetrinet().deleteTransitionByID(node.getId());
                 }
-                else if (node instanceof IPlace) {
+                else if (node instanceof Place) {
                     context.getPetrinet().deletePlaceById(node.getId());
                 }
             }
@@ -167,5 +121,53 @@ class GraphEditorImpl implements GraphEditor {
 
     public Set<INode> getPickedNodes() {
         return graphPanel == null ? Collections.<INode>emptySet() : graphPanel.getSelectedNodes();
+    }
+    
+    private static class HotFixPetrinetListener implements IPetrinetListener{
+    	
+    	private EngineContext engineContext;
+    	
+    	HotFixPetrinetListener(EngineContext engineContext){
+    		this.engineContext = engineContext;
+    	}
+
+    	@Override
+        public void changed(Petrinet petrinet, INode element, ActionType actionType) {
+            final DirectedGraph<INode,Arc> g = engineContext.getGraph();
+
+            switch (actionType) {
+                case added:
+                    if (!g.containsVertex(element)) {
+                        g.addVertex(element);
+                    }
+                    break;
+
+                case deleted:
+                    if (g.containsVertex(element)) {
+                        g.removeVertex(element);
+                    }
+                    break;
+            }
+        }
+
+        @Override
+        public void changed(Petrinet petrinet, Arc element, ActionType actionType) {
+            final DirectedGraph<INode,Arc> g = engineContext.getGraph();
+
+            switch (actionType) {
+                case added:
+                    if (!g.containsEdge(element)) {
+                        g.addEdge(element, element.getStart(), element.getEnd());
+                    }
+                    break;
+
+                case deleted:
+                    if (g.containsEdge(element)) {
+                        g.removeEdge(element);
+                    }
+                    break;
+            }
+        }
+    	
     }
 }

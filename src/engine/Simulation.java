@@ -1,6 +1,6 @@
 package engine;
 
-import petrinetze.ITransition;
+import petrinetze.Transition;
 
 /**
  * Control class for the token game.
@@ -22,7 +22,7 @@ public interface Simulation {
      *
      * @see petrinetze.IPetrinet#fire(int) 
      */
-    void step(ITransition transition);
+    void step(Transition transition);
 
     /**
      * start of continuous simulation.

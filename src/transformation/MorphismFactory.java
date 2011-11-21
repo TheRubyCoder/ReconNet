@@ -10,12 +10,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import petrinetze.IArc;
+import petrinetze.Arc;
 import petrinetze.INode;
-import petrinetze.IPetrinet;
-import petrinetze.IPlace;
-import petrinetze.ITransition;
-import petrinetze.impl.Petrinet;
+import petrinetze.Petrinet;
+import petrinetze.Place;
+import petrinetze.Transition;
+import petrinetze.Petrinet;
 
 /**
  * Finds Morphisms between two petrinets in a not deterministic way
@@ -30,12 +30,12 @@ public class MorphismFactory {
 	 * @param to the Petrinet into which this morphism maps to.
 	 * @return the new morphism or null if no morphism exists between from and to
 	 */
-	public static IMorphism createMorphism(IPetrinet from, IPetrinet to) {
+	public static IMorphism createMorphism(Petrinet from, Petrinet to) {
 		return new MorphismFactory(from, to).getMorphism();
 	}
 	
 	/** "from" petrinet of the morphism to find */
-	private final IPetrinet fromNet;
+	private final Petrinet fromNet;
 	/** Matrix that represents pre of "from" matrix */
 	private final IMatrix fromNetPre;
 	/** Matrix that represents post of "from" matrix */
@@ -46,7 +46,7 @@ public class MorphismFactory {
 	private final int numTransitionsFromNet;
 	
 	/** "to" petrinet of the morphism to find */
-	private final IPetrinet toNet;
+	private final Petrinet toNet;
 	/** Matrix that represents pre of "to" matrix */
 	private final IMatrix toNetPre;
 	/** Matrix that represents post of "to" matrix */
@@ -85,14 +85,14 @@ public class MorphismFactory {
 	boolean[][] m0_places;
 	boolean[][] m0_transitions;
 
-	private Map<IPlace, IPlace> places;
-	private Map<ITransition, ITransition> transitions;
-	private Map<IArc, IArc> edges;
+	private Map<Place, Place> places;
+	private Map<Transition, Transition> transitions;
+	private Map<Arc, Arc> edges;
 
 
 
 
-	private MorphismFactory(IPetrinet from, IPetrinet to) {
+	private MorphismFactory(Petrinet from, Petrinet to) {
 		fromNet = from;
 		toNet = to;
 		fromNetPre = new MatrixImpl(fromNet.getPre().getPreAsArray());
@@ -118,7 +118,7 @@ public class MorphismFactory {
 			return new Morphism(fromNet, toNet, places, transitions, edges);
 		} else {
 			return null;
-			//return new Morphism(new Petrinet(), new Petrinet(), new HashMap<IPlace, IPlace>(), new HashMap<ITransition, ITransition>(), new HashMap<IArc, IArc>());
+			//return new Morphism(new Petrinet(), new Petrinet(), new HashMap<Place, Place>(), new HashMap<Transition, Transition>(), new HashMap<Arc, Arc>());
 		}
 	}
 
@@ -147,9 +147,9 @@ public class MorphismFactory {
 		m0_places = new boolean[numPlacesFromNet][numPlacesToNet];
 
 		for (int indexA = 0; indexA < numPlacesFromNet; indexA++) {
-			final IPlace placeA = fromNet.getPlaceById(fromNet.getPre().getPlaceIds()[indexA]);
+			final Place placeA = fromNet.getPlaceById(fromNet.getPre().getPlaceIds()[indexA]);
 			for (int indexB = 0; indexB < numPlacesToNet; indexB++) {
-				final IPlace placeB = toNet.getPlaceById(toNet.getPre().getPlaceIds()[indexB]);
+				final Place placeB = toNet.getPlaceById(toNet.getPre().getPlaceIds()[indexB]);
 				// Alle Bedingungen pruefen, die erfuellt sein muessen, damit die m0-Matrix fuer das aktuelle Mapping placeA --> placeB einen true-Eintrag bekommt
 				if (	placeA.getName().equals(placeB.getName()) &&
 						placeA.getMark() <= placeB.getMark() &&
@@ -173,9 +173,9 @@ public class MorphismFactory {
 		m0_transitions = new boolean[numTransitionsFromNet][numTransitionsToNet];
 
 		for (int indexA = 0; indexA < numTransitionsFromNet; indexA++) {
-			final ITransition transitionA = fromNet.getTransitionById(fromNet.getPre().getTransitionIds()[indexA]);
+			final Transition transitionA = fromNet.getTransitionById(fromNet.getPre().getTransitionIds()[indexA]);
 			for (int indexB = 0; indexB < numTransitionsToNet; indexB++) {
-				final ITransition transitionB = toNet.getTransitionById(toNet.getPre().getTransitionIds()[indexB]);
+				final Transition transitionB = toNet.getTransitionById(toNet.getPre().getTransitionIds()[indexB]);
 				if (	transitionA.getName().equals(transitionB.getName()) &&
 						transitionA.getTlb().equals(transitionB.getTlb()) &&
 						transitionA.getRnw().equals(transitionB.getRnw()) &&
@@ -496,15 +496,15 @@ public class MorphismFactory {
 	}
 
 
-	private Map<IPlace, IPlace> createPlacesMap(BoolMatrix matrix) {
-		Map<IPlace, IPlace> result = new HashMap<IPlace, IPlace>();
+	private Map<Place, Place> createPlacesMap(BoolMatrix matrix) {
+		Map<Place, Place> result = new HashMap<Place, Place>();
 
 		for (int r = 0; r < matrix.getNumRows(); r++) {
 			assert matrix.getNumTrues(r) == 1;
-			final IPlace placeA = fromNet.getPlaceById(fromNet.getPre().getPlaceIds()[r]);
+			final Place placeA = fromNet.getPlaceById(fromNet.getPre().getPlaceIds()[r]);
 			for (int c = 0; /*c < m[0].getNumCols()*/; c++) {
 				if (matrix.getValue(r, c)) {
-					final IPlace placeB = toNet.getPlaceById(toNet.getPre().getPlaceIds()[c]);
+					final Place placeB = toNet.getPlaceById(toNet.getPre().getPlaceIds()[c]);
 					result.put(placeA, placeB);
 					break;
 				}
@@ -515,15 +515,15 @@ public class MorphismFactory {
 	}
 
 
-	private Map<ITransition, ITransition> createTransitionsMap(BoolMatrix m) {
-		Map<ITransition, ITransition> result = new HashMap<ITransition, ITransition>();
+	private Map<Transition, Transition> createTransitionsMap(BoolMatrix m) {
+		Map<Transition, Transition> result = new HashMap<Transition, Transition>();
 
 		for (int r = 0; r < m.getNumRows(); r++) {
 			assert m.getNumTrues(r) == 1;
-			final ITransition transitionA = fromNet.getTransitionById(fromNet.getPre().getTransitionIds()[r]);
+			final Transition transitionA = fromNet.getTransitionById(fromNet.getPre().getTransitionIds()[r]);
 			for (int c = 0; /*c < m[0].getNumCols()*/; c++) {
 				if (m.getValue(r, c)) {
-					final ITransition transitionB = toNet.getTransitionById(toNet.getPre().getTransitionIds()[c]);
+					final Transition transitionB = toNet.getTransitionById(toNet.getPre().getTransitionIds()[c]);
 					result.put(transitionA, transitionB);
 					break;
 				}
@@ -534,41 +534,41 @@ public class MorphismFactory {
 	}
 	
 	
-	private Map<IArc, IArc> createEdgesMap() {
-		Map<IArc, IArc> result = new HashMap<IArc, IArc>();
+	private Map<Arc, Arc> createEdgesMap() {
+		Map<Arc, Arc> result = new HashMap<Arc, Arc>();
 		
-		Set<IArc> arcsA = fromNet.getAllArcs();
-		Set<IArc> arcsB = toNet.getAllArcs();
+		Set<Arc> arcsA = fromNet.getAllArcs();
+		Set<Arc> arcsB = toNet.getAllArcs();
 		
-		Set<IArc> arcsB_p_to_t = new HashSet<IArc>();
-		Set<IArc> arcsB_t_to_p = new HashSet<IArc>();
+		Set<Arc> arcsB_p_to_t = new HashSet<Arc>();
+		Set<Arc> arcsB_t_to_p = new HashSet<Arc>();
 		
-		for (IArc arcB : arcsB) {
-			if (arcB.getStart() instanceof IPlace) {
+		for (Arc arcB : arcsB) {
+			if (arcB.getStart() instanceof Place) {
 				arcsB_p_to_t.add(arcB);
-			} else { // arcB.getStart() instanceof ITransition
+			} else { // arcB.getStart() instanceof Transition
 				arcsB_t_to_p.add(arcB);
 			}
 		}
 		
-		for (IArc arcA : arcsA) {
-			IPlace placeB;
-			ITransition transB;
+		for (Arc arcA : arcsA) {
+			Place placeB;
+			Transition transB;
 			INode tempStartA = arcA.getStart();
 
-			if (tempStartA instanceof IPlace) {
+			if (tempStartA instanceof Place) {
 				placeB = places.get(tempStartA);
 				transB = transitions.get(arcA.getEnd());
-				for (IArc arcB : arcsB_p_to_t) {
+				for (Arc arcB : arcsB_p_to_t) {
 					if (arcB.getStart() == placeB && arcB.getEnd() == transB) {
 						result.put(arcA, arcB);
 						break;
 					}
 				}
-			} else { // tempStartA instanceof ITransition
+			} else { // tempStartA instanceof Transition
 				transB = transitions.get(tempStartA);
 				placeB = places.get(arcA.getEnd());
-				for (IArc arcB : arcsB_t_to_p) {
+				for (Arc arcB : arcsB_t_to_p) {
 					if (arcB.getStart() == transB && arcB.getEnd() == placeB) {
 						result.put(arcA, arcB);
 						break;

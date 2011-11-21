@@ -1,9 +1,9 @@
 package engine.impl;
 
 import engine.EditMode;
-import petrinetze.IArc;
+import petrinetze.Arc;
 import petrinetze.INode;
-import petrinetze.IPetrinet;
+import petrinetze.Petrinet;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.algorithms.layout.KKLayout;
 import edu.uci.ics.jung.graph.DirectedGraph;
@@ -12,13 +12,6 @@ import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-/**
- * Created by IntelliJ IDEA.
- * User: moritz
- * Date: 12.11.2010
- * Time: 16:09:26
- * To change this template use File | Settings | File Templates.
- */
 class EngineContext {
 
 
@@ -26,11 +19,11 @@ class EngineContext {
 
     public static final String PROPERTY_LAYOUT= "layout";
 
-    private IPetrinet petrinet;
+    private Petrinet petrinet;
 
-    private DirectedGraph<INode,IArc> graph = new DirectedSparseGraph<INode,IArc>();
+    private DirectedGraph<INode,Arc> graph = new DirectedSparseGraph<INode,Arc>();
 
-    private AbstractLayout<INode, IArc> layout = new KKLayout<INode,IArc>(graph);
+    private AbstractLayout<INode, Arc> layout = new KKLayout<INode,Arc>(graph);
 
     private transient final PropertyChangeSupport pcs;
 
@@ -39,7 +32,7 @@ class EngineContext {
     private final UIEditorImpl uiEditor;
 
 
-    public EngineContext(IPetrinet petrinet) {
+    public EngineContext(Petrinet petrinet) {
         this.petrinet = petrinet;
 
         this.uiEditor = new UIEditorImpl();
@@ -58,23 +51,23 @@ class EngineContext {
     	for(INode node : petrinet.getAllTransitions())
     		graph.addVertex(node);
 
-    	for(IArc edge : petrinet.getAllArcs())
+    	for(Arc edge : petrinet.getAllArcs())
     		graph.addEdge(edge, edge.getStart(), edge.getEnd());
 	}
 
-	public IPetrinet getPetrinet() {
+	public Petrinet getPetrinet() {
         return petrinet;
     }
 
-    public DirectedGraph<INode, IArc> getGraph() {
+    public DirectedGraph<INode, Arc> getGraph() {
         return graph;
     }
 
-    public AbstractLayout<INode, IArc> getLayout() {
+    public AbstractLayout<INode, Arc> getLayout() {
         return layout;
     }
 
-	public void setLayout(AbstractLayout<INode, IArc> layout) {
+	public void setLayout(AbstractLayout<INode, Arc> layout) {
         final AbstractLayout old = this.layout;
 		this.layout = layout;
         pcs.firePropertyChange(PROPERTY_LAYOUT, old, layout);

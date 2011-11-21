@@ -25,13 +25,13 @@ import edu.uci.ics.jung.visualization.transform.shape.GraphicsDecorator;
 import engine.EditMode;
 import org.apache.commons.collections15.Transformer;
 
-import petrinetze.IArc;
+import petrinetze.Arc;
 import petrinetze.INode;
-import petrinetze.IPlace;
+import petrinetze.Place;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import engine.Engine;
 import engine.impl.ctrl.EditingModalGraphMouseEx;
-import petrinetze.ITransition;
+import petrinetze.Transition;
 
 public class GraphPanel extends JPanel {
 
@@ -39,20 +39,20 @@ public class GraphPanel extends JPanel {
 	
 	private final EngineContext ec;
 
-    private final VisualizationViewer<INode, IArc> vv;
+    private final VisualizationViewer<INode, Arc> vv;
 
-    private final EditingModalGraphMouseEx<INode, IArc> graphMouse;
+    private final EditingModalGraphMouseEx<INode, Arc> graphMouse;
 
     private Set<INode> picked = Collections.emptySet();
 
 	public GraphPanel(Engine engine, EngineContext context) {
 		ec = context;
-		vv = new VisualizationViewer<INode, IArc>(ec.getLayout());
+		vv = new VisualizationViewer<INode, Arc>(ec.getLayout());
 		
 		setLayout(new BorderLayout());
 		add(vv, BorderLayout.CENTER);
 		
-		graphMouse = new EditingModalGraphMouseEx<INode, IArc>(engine, vv.getRenderContext());
+		graphMouse = new EditingModalGraphMouseEx<INode, Arc>(engine, vv.getRenderContext());
 		vv.setGraphMouse(graphMouse);
 		vv.addKeyListener(graphMouse.getModeKeyListener());
         vv.setBackground(Color.WHITE);
@@ -88,7 +88,7 @@ public class GraphPanel extends JPanel {
             @SuppressWarnings("unchecked")
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getPropertyName().equals(EngineContext.PROPERTY_LAYOUT)) {
-                    vv.setGraphLayout((AbstractLayout<INode,IArc>)evt.getNewValue());
+                    vv.setGraphLayout((AbstractLayout<INode,Arc>)evt.getNewValue());
                 }
                 else if (evt.getPropertyName().equals(EngineContext.PROPERTY_EDIT_MODE)) {
                     switch ((EditMode)evt.getNewValue()) {
@@ -136,28 +136,28 @@ public class GraphPanel extends JPanel {
 
             @Override
             public Shape transform(INode node) {
-                return (node instanceof ITransition) ? transitionShape : placeShape;
+                return (node instanceof Transition) ? transitionShape : placeShape;
             }
         });
 
         vv.getRenderContext().setVertexFillPaintTransformer(new Transformer<INode,Paint>() {
             @Override
             public Paint transform(INode node) {
-                if (node instanceof IPlace) {
-                    return ec.getUIEditor().getPlacePaint((IPlace)node);
+                if (node instanceof Place) {
+                    return ec.getUIEditor().getPlacePaint((Place)node);
                 }
 
-                return (node instanceof ITransition && ((ITransition)node).isActivated()) ?
+                return (node instanceof Transition && ((Transition)node).isActivated()) ?
                     Color.BLACK : Color.WHITE;
             }
         });
 
-        vv.getRenderer().setVertexRenderer(new BasicVertexRenderer<INode, IArc>() {
+        vv.getRenderer().setVertexRenderer(new BasicVertexRenderer<INode, Arc>() {
             @Override
-            protected void paintShapeForVertex(RenderContext<INode, IArc> rc, INode node, Shape shape) {
+            protected void paintShapeForVertex(RenderContext<INode, Arc> rc, INode node, Shape shape) {
                 super.paintShapeForVertex(rc, node, shape);
-                if (node instanceof IPlace) {
-                    final IPlace place = (IPlace) node;
+                if (node instanceof Place) {
+                    final Place place = (Place) node;
 
 
                     if (place.getMark() == 1) {
@@ -189,10 +189,10 @@ public class GraphPanel extends JPanel {
 	
 	private void edgeInit() {
 
-		vv.getRenderContext().setEdgeLabelTransformer(new Transformer<IArc, String>() {
+		vv.getRenderContext().setEdgeLabelTransformer(new Transformer<Arc, String>() {
 
             @Override
-            public String transform(IArc arg0) {
+            public String transform(Arc arg0) {
                 return String.valueOf(arg0.getMark());
             }
         });

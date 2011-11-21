@@ -2,6 +2,7 @@ package petrinetze;
 
 import java.util.Set;
 
+
 public interface IGraphElement {
 	/**
 	 * Liefert alle Stellen und Transitionen
@@ -12,5 +13,5 @@ public interface IGraphElement {
 	 * Liefert alle Kanten
 	 * @return {@link}
 	 */
-	public Set<IArc> getAllArcs();
+	public Set<Arc> getAllArcs();
 }

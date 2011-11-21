@@ -5,13 +5,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import petrinetze.ActionType;
-import petrinetze.IArc;
+import petrinetze.Arc;
 import petrinetze.INode;
-import petrinetze.IPetrinet;
+import petrinetze.Petrinet;
 import petrinetze.IPetrinetListener;
-import petrinetze.IPlace;
-import petrinetze.ITransition;
-import petrinetze.impl.Petrinet;
+import petrinetze.Place;
+import petrinetze.Transition;
+import petrinetze.Petrinet;
 
 /**
  * 
@@ -25,11 +25,11 @@ public class Rule implements IRule
 {
 	
 	/** K part of the rule */
-	private final IPetrinet k;
+	private final Petrinet k;
 	/** L part of the rule */
-	private final IPetrinet l;
+	private final Petrinet l;
 	/** R part of the rule */
-	private final IPetrinet r;
+	private final Petrinet r;
 	/** Listener that listens to changes in K */
 	private final Listener kListener;
 	/** Listener that listens to changes in L */
@@ -41,9 +41,9 @@ public class Rule implements IRule
 	/** Mapping of nodes between R and K */
 	private final Map<INode, INode> rKSameNodes;
 	/** Mapping of edges between L and K */
-	private final Map<IArc, IArc> lkSameEdges;
+	private final Map<Arc, Arc> lkSameEdges;
 	/** Mapping of edges between R and K */
-	private final Map<IArc, IArc> rKSameEdges;
+	private final Map<Arc, Arc> rKSameEdges;
 	
 
 	/** Indicates that R has initially been changed to prevent cycle.<br\> Used in the Listener */ 
@@ -63,8 +63,8 @@ public class Rule implements IRule
 		
 		lKSameNodes = new HashMap<INode, INode>();
 		rKSameNodes = new HashMap<INode, INode>();
-		lkSameEdges = new HashMap<IArc, IArc>();
-		rKSameEdges = new HashMap<IArc, IArc>();
+		lkSameEdges = new HashMap<Arc, Arc>();
+		rKSameEdges = new HashMap<Arc, Arc>();
 		
 		kListener = new Listener(Net.K, l, k, r);
 		lListener = new Listener(Net.L, l, k, r);
@@ -88,7 +88,7 @@ public class Rule implements IRule
 	 * @see IRule#getK()
 	 */
 	@Override
-	public IPetrinet getK() {
+	public Petrinet getK() {
 		return k;
 	}
 
@@ -96,7 +96,7 @@ public class Rule implements IRule
 	 * @see IRule#getL()
 	 */
 	@Override
-	public IPetrinet getL() {
+	public Petrinet getL() {
 		return l;
 	}
 
@@ -104,7 +104,7 @@ public class Rule implements IRule
 	 * @see IRule#getR()
 	 */
 	@Override
-	public IPetrinet getR() {
+	public Petrinet getR() {
 		return r;
 	}
 
@@ -131,10 +131,10 @@ public class Rule implements IRule
 	}
 
 	/**
-	 * @see IRule#fromKtoL(IArc)
+	 * @see IRule#fromKtoL(Arc)
 	 */
 	@Override
-	public IArc fromKtoL(IArc edge) {
+	public Arc fromKtoL(Arc edge) {
 		return getKeyFromValue(lkSameEdges, edge);
 	}
 
@@ -147,10 +147,10 @@ public class Rule implements IRule
 	}
 
 	/**
-	 * @see IRule#fromKtoR(IArc)
+	 * @see IRule#fromKtoR(Arc)
 	 */
 	@Override
-	public IArc fromKtoR(IArc edge) {
+	public Arc fromKtoR(Arc edge) {
 		return getKeyFromValue(rKSameEdges, edge);
 	}
 
@@ -165,10 +165,10 @@ public class Rule implements IRule
 	}
 
 	/**
-	 * @see IRule#fromLtoK(IArc)
+	 * @see IRule#fromLtoK(Arc)
 	 */
 	@Override
-	public IArc fromLtoK(IArc edge) {
+	public Arc fromLtoK(Arc edge) {
 		if(lkSameEdges.containsKey(edge))
 			return lkSameEdges.get(edge);
 		return null;
@@ -185,10 +185,10 @@ public class Rule implements IRule
 	}
 
 	/**
-	 * @see IRule#fromRtoK(IArc)
+	 * @see IRule#fromRtoK(Arc)
 	 */
 	@Override
-	public IArc fromRtoK(IArc edge) {
+	public Arc fromRtoK(Arc edge) {
 		if(rKSameEdges.containsKey(edge))
 			return rKSameEdges.get(edge);
 		return null;
@@ -208,11 +208,11 @@ public class Rule implements IRule
 	private class Listener implements IPetrinetListener
 	{
 		private final Net net;
-		private final IPetrinet k;
-		private final IPetrinet l;
-		private final IPetrinet r;
+		private final Petrinet k;
+		private final Petrinet l;
+		private final Petrinet r;
 		
-		Listener(Net net, IPetrinet l, IPetrinet k, IPetrinet r)
+		Listener(Net net, Petrinet l, Petrinet k, Petrinet r)
 		{
 			this.net = net;
 			this.k = k;
@@ -228,7 +228,7 @@ public class Rule implements IRule
 		}
 
 		@Override
-		public void changed(IPetrinet petrinet, INode element, ActionType actionType) 
+		public void changed(Petrinet petrinet, INode element, ActionType actionType) 
 		{
 			if(net == Net.L)
 			{
@@ -260,7 +260,7 @@ public class Rule implements IRule
 		}
 
 		@Override
-		public void changed(IPetrinet petrinet, IArc element, ActionType actionType) 
+		public void changed(Petrinet petrinet, Arc element, ActionType actionType) 
 		{
 			if(net == Net.L)
 			{
@@ -295,26 +295,26 @@ public class Rule implements IRule
 		{
 			if(actionType == ActionType.added)
 			{
-				if(element instanceof IPlace && !lKSameNodes.containsKey(element))
+				if(element instanceof Place && !lKSameNodes.containsKey(element))
 				{
 					INode node = k.createPlace(element.getName());
 					lKSameNodes.put(element, node);
 				}
-				else if(element instanceof ITransition && !lKSameNodes.containsKey(element))
+				else if(element instanceof Transition && !lKSameNodes.containsKey(element))
 				{
-					INode node = k.createTransition(element.getName(), ((ITransition)element).getRnw());
+					INode node = k.createTransition(element.getName(), ((Transition)element).getRnw());
 					lKSameNodes.put(element, node);
 				}
 			}
 			else if(actionType == ActionType.deleted)
 			{
-				if(element instanceof IPlace && !r.getAllPlaces().contains(element) && lKSameNodes.containsKey(element))
+				if(element instanceof Place && !r.getAllPlaces().contains(element) && lKSameNodes.containsKey(element))
 				{
 					INode node = lKSameNodes.get(element);
 					lKSameNodes.remove(element);
 					k.deletePlaceById(node.getId());
 				}
-				else if(element instanceof ITransition && !r.getAllTransitions().contains(element) && lKSameNodes.containsKey(element))
+				else if(element instanceof Transition && !r.getAllTransitions().contains(element) && lKSameNodes.containsKey(element))
 				{
 					INode node = lKSameNodes.get(element);
 					lKSameNodes.remove(element);
@@ -326,7 +326,7 @@ public class Rule implements IRule
 		{
 			if(actionType == ActionType.added)
 			{
-				if(element instanceof IPlace)
+				if(element instanceof Place)
 				{
 					if(!lKSameNodes.containsValue(element))
 					{
@@ -339,23 +339,23 @@ public class Rule implements IRule
 						rKSameNodes.put(node, element);
 					}
 				}
-				else if(element instanceof ITransition)
+				else if(element instanceof Transition)
 				{
 					if(!lKSameNodes.containsValue(element))
 					{
-						INode node = l.createTransition(element.getName(), ((ITransition)element).getRnw());
+						INode node = l.createTransition(element.getName(), ((Transition)element).getRnw());
 						lKSameNodes.put(node, element);
 					}
 					if(!rKSameNodes.containsValue(element))
 					{
-						INode node = r.createTransition(element.getName(), ((ITransition)element).getRnw());
+						INode node = r.createTransition(element.getName(), ((Transition)element).getRnw());
 						rKSameNodes.put(node, element);
 					}
 				}
 			}
 			else if(actionType == ActionType.deleted)
 			{
-				if(element instanceof IPlace)
+				if(element instanceof Place)
 				{
 					if(lKSameNodes.containsValue(element))
 					{
@@ -370,7 +370,7 @@ public class Rule implements IRule
 						r.deletePlaceById(node.getId());
 					}
 				}
-				else if(element instanceof ITransition && !r.getAllTransitions().contains(element) && lKSameNodes.containsKey(element))
+				else if(element instanceof Transition && !r.getAllTransitions().contains(element) && lKSameNodes.containsKey(element))
 				{
 					if(lKSameNodes.containsValue(element))
 					{
@@ -392,26 +392,26 @@ public class Rule implements IRule
 		{
 			if(actionType == ActionType.added)
 			{
-				if(element instanceof IPlace && !rKSameNodes.containsKey(element))
+				if(element instanceof Place && !rKSameNodes.containsKey(element))
 				{
 					INode node = k.createPlace(element.getName());
 					rKSameNodes.put(element, node);
 				}
-				else if(element instanceof ITransition && !rKSameNodes.containsKey(element))
+				else if(element instanceof Transition && !rKSameNodes.containsKey(element))
 				{
-					INode node = k.createTransition(element.getName(), ((ITransition)element).getRnw());
+					INode node = k.createTransition(element.getName(), ((Transition)element).getRnw());
 					rKSameNodes.put(element, node);
 				}
 			}
 			else if(actionType == ActionType.deleted)
 			{
-				if(element instanceof IPlace && !r.getAllPlaces().contains(element) && rKSameNodes.containsKey(element))
+				if(element instanceof Place && !r.getAllPlaces().contains(element) && rKSameNodes.containsKey(element))
 				{
 					INode node = rKSameNodes.get(element);
 					rKSameNodes.remove(element);
 					k.deletePlaceById(node.getId());
 				}
-				else if(element instanceof ITransition && !r.getAllTransitions().contains(element) && rKSameNodes.containsKey(element))
+				else if(element instanceof Transition && !r.getAllTransitions().contains(element) && rKSameNodes.containsKey(element))
 				{
 					INode node = rKSameNodes.get(element);
 					rKSameNodes.remove(element);
@@ -420,7 +420,7 @@ public class Rule implements IRule
 			}
 		}
 		
-		private void lEdgeChanged(IArc element, ActionType actionType)
+		private void lEdgeChanged(Arc element, ActionType actionType)
 		{
 			if(actionType == ActionType.added)
 			{
@@ -428,7 +428,7 @@ public class Rule implements IRule
 				{
                     INode start = lKSameNodes.get(element.getStart());
                     INode end = lKSameNodes.get(element.getEnd());
-					IArc edge = k.createArc(element.getName(), start, end);
+					Arc edge = k.createArc(element.getName(), start, end);
 
 					lkSameEdges.put(element, edge);
 				}
@@ -437,13 +437,13 @@ public class Rule implements IRule
 			{
 				if(lkSameEdges.containsKey(element))
 				{
-					IArc edge = lkSameEdges.get(element);
+					Arc edge = lkSameEdges.get(element);
 					lkSameEdges.remove(element);
 					k.deleteArcByID(edge.getId());
 				}
 			}
 		}
-		private void kEdgeChanged(IArc element, ActionType actionType)
+		private void kEdgeChanged(Arc element, ActionType actionType)
 		{
 			if(actionType == ActionType.added)
 			{
@@ -452,7 +452,7 @@ public class Rule implements IRule
                     INode start = getKeyFromValue(lKSameNodes, element.getStart());
                     INode end = getKeyFromValue(lKSameNodes, element.getEnd());
 
-                    IArc edge = l.createArc(element.getName(), start, end);
+                    Arc edge = l.createArc(element.getName(), start, end);
 
 
                     lkSameEdges.put(edge, element);
@@ -461,7 +461,7 @@ public class Rule implements IRule
 				{
                     INode start = getKeyFromValue(rKSameNodes, element.getStart());
                     INode end = getKeyFromValue(rKSameNodes, element.getEnd());
-                    IArc edge = r.createArc(element.getName(), start, end);
+                    Arc edge = r.createArc(element.getName(), start, end);
                     rKSameEdges.put(edge, element);
 				}
 			}
@@ -469,20 +469,20 @@ public class Rule implements IRule
 			{
 				if(lkSameEdges.containsValue(element))
 				{
-					IArc edge = getKeyFromValue(lkSameEdges, element);
+					Arc edge = getKeyFromValue(lkSameEdges, element);
 					lkSameEdges.remove(element);
 					l.deleteArcByID(edge.getId());
 				}
 				if(rKSameEdges.containsValue(element))
 				{
-					IArc edge = getKeyFromValue(rKSameEdges, element);
+					Arc edge = getKeyFromValue(rKSameEdges, element);
 					rKSameEdges.remove(element);
 					r.deleteArcByID(edge.getId());
 				}
 			}
 		}
 		
-		private void rEdgeChanged(IArc element, ActionType actionType)
+		private void rEdgeChanged(Arc element, ActionType actionType)
 		{
 			if(actionType == ActionType.added)
 			{
@@ -490,7 +490,7 @@ public class Rule implements IRule
 				{
                     INode start = (rKSameNodes.get(element.getStart()));
                     INode end = rKSameNodes.get(element.getEnd());
-                    IArc edge = k.createArc(element.getName(), start, end);
+                    Arc edge = k.createArc(element.getName(), start, end);
 					rKSameEdges.put(element, edge);
 				}
 			}
@@ -498,7 +498,7 @@ public class Rule implements IRule
 			{
 				if(rKSameEdges.containsKey(element))
 				{
-					IArc edge = rKSameEdges.get(element);
+					Arc edge = rKSameEdges.get(element);
 					rKSameEdges.remove(element);
 					k.deleteArcByID(edge.getId());
 				}

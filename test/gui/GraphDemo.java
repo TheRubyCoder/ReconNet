@@ -2,7 +2,6 @@ package gui;
 
 import engine.*;
 import petrinetze.*;
-import petrinetze.impl.Petrinet;
 
 import javax.swing.*;
 import javax.swing.Timer;

@@ -23,11 +23,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.border.LineBorder;
-import petrinetze.IArc;
+
+import petrinetze.Arc;
 import petrinetze.INode;
-import petrinetze.IPetrinet;
-import petrinetze.IPlace;
-import petrinetze.ITransition;
+import petrinetze.Petrinet;
+import petrinetze.Place;
+import petrinetze.Transition;
 import transformation.IRule;
 import transformation.Rule;
 
@@ -57,12 +58,12 @@ public class RuleWrapper {
                     Set<INode> nodes = (Set<INode>) evt.getNewValue();
                     selected = nodes;
                     INode node = nodes.iterator().next();
-                    if (node instanceof IArc) {
-                        table.setModel(new ArcTableModel((IArc) node));
-                    } else if (node instanceof ITransition) {
-                        table.setModel(new TransitionTableModel((ITransition) node));
-                    } else if (node instanceof IPlace) {
-                        table.setModel(new PlaceTalbeModel((IPlace) node));
+                    if (node instanceof Arc) {
+                        table.setModel(new ArcTableModel((Arc) node));
+                    } else if (node instanceof Transition) {
+                        table.setModel(new TransitionTableModel((Transition) node));
+                    } else if (node instanceof Place) {
+                        table.setModel(new PlaceTalbeModel((Place) node));
                     }
                 }
         });
@@ -72,12 +73,12 @@ public class RuleWrapper {
                     Set<INode> nodes = (Set<INode>) evt.getNewValue();
                     selected = nodes;
                     INode node = nodes.iterator().next();
-                    if (node instanceof IArc) {
-                        table.setModel(new ArcTableModel((IArc) node));
-                    } else if (node instanceof ITransition) {
-                        table.setModel(new TransitionTableModel((ITransition) node));
-                    } else if (node instanceof IPlace) {
-                        table.setModel(new PlaceTalbeModel((IPlace) node));
+                    if (node instanceof Arc) {
+                        table.setModel(new ArcTableModel((Arc) node));
+                    } else if (node instanceof Transition) {
+                        table.setModel(new TransitionTableModel((Transition) node));
+                    } else if (node instanceof Place) {
+                        table.setModel(new PlaceTalbeModel((Place) node));
                     }
                 }
         });
@@ -87,12 +88,12 @@ public class RuleWrapper {
                     Set<INode> nodes = (Set<INode>) evt.getNewValue();
                     selected = nodes;
                     INode node = nodes.iterator().next();
-                    if (node instanceof IArc) {
-                        table.setModel(new ArcTableModel((IArc) node));
-                    } else if (node instanceof ITransition) {
-                        table.setModel(new TransitionTableModel((ITransition) node));
-                    } else if (node instanceof IPlace) {
-                        table.setModel(new PlaceTalbeModel((IPlace) node));
+                    if (node instanceof Arc) {
+                        table.setModel(new ArcTableModel((Arc) node));
+                    } else if (node instanceof Transition) {
+                        table.setModel(new TransitionTableModel((Transition) node));
+                    } else if (node instanceof Place) {
+                        table.setModel(new PlaceTalbeModel((Place) node));
                     }
                 }
         });

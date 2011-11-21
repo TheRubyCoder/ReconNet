@@ -1,7 +1,7 @@
 package engine;
 
-import petrinetze.IArc;
-import petrinetze.IPetrinet;
+import petrinetze.Arc;
+import petrinetze.Petrinet;
 import petrinetze.INode;
 import transformation.IRule;
 import edu.uci.ics.jung.graph.DirectedGraph;
@@ -18,7 +18,7 @@ public interface Engine {
      *
      * @return
      */
-    IPetrinet getNet();
+    Petrinet getNet();
 
 
     /**
@@ -26,7 +26,7 @@ public interface Engine {
      *
      * @return gerichteter Graph
      */
-    DirectedGraph<INode, IArc> getGraph();
+    DirectedGraph<INode, Arc> getGraph();
 
     /**
      * Manipulation des Petrinetzes.

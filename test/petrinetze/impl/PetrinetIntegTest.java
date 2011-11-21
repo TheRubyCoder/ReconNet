@@ -6,6 +6,7 @@ import petrinetze.IPlace;
 import petrinetze.IPost;
 import petrinetze.IPre;
 import petrinetze.ITransition;
+import petrinetze.Petrinet;
 
 public class PetrinetIntegTest {
 

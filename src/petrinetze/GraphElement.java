@@ -1,15 +1,12 @@
-package petrinetze.impl;
+package petrinetze;
 
 import java.util.Set;
 
-import petrinetze.IArc;
-import petrinetze.IGraphElement;
-import petrinetze.INode;
 
 public class GraphElement implements IGraphElement {
 	
 	private Set<INode>nodes;
-	private Set<IArc>arcs;
+	private Set<Arc>arcs;
 	
 	@Override
 	public Set<INode> getAllNodes() {
@@ -17,7 +14,7 @@ public class GraphElement implements IGraphElement {
 	}
 
 	@Override
-	public Set<IArc> getAllArcs() {
+	public Set<Arc> getAllArcs() {
 		return arcs;
 	}
 
@@ -31,7 +28,7 @@ public class GraphElement implements IGraphElement {
 	/**
 	 * @param arcs the arcs to set
 	 */
-	public void setArcs(Set<IArc> arcs) {
+	public void setArcs(Set<Arc> arcs) {
 		this.arcs = arcs;
 	}
 	

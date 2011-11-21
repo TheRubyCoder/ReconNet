@@ -1,4 +1,4 @@
-package petrinetze.impl;
+package petrinetze;
 
 public final class UUID {
 	private static int pID = 0;

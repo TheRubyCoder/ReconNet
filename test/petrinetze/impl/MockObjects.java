@@ -4,6 +4,9 @@ import java.util.HashMap;
 
 import petrinetze.IPlace;
 import petrinetze.ITransition;
+import petrinetze.Petrinet;
+import petrinetze.RenewId;
+import petrinetze.RenewMap;
 /**
  * blabla
  * 

@@ -3,7 +3,7 @@ package gui;
 import engine.Engine;
 import engine.EngineFactory;
 import petrinetze.IPetrinet;
-import petrinetze.impl.Petrinet;
+import petrinetze.Petrinet;
 import transformation.Rule;
 
 import javax.swing.*;

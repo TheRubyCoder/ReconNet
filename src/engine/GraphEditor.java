@@ -5,10 +5,10 @@ import java.util.Set;
 
 import javax.swing.JPanel;
 
-import petrinetze.IArc;
+import petrinetze.Arc;
 import petrinetze.INode;
-import petrinetze.IPlace;
-import petrinetze.ITransition;
+import petrinetze.Place;
+import petrinetze.Transition;
 
 // Anders encoding
 
@@ -29,7 +29,7 @@ public interface GraphEditor {
      *
      * @return neu erzeugte Stelle
      */
-    IPlace createPlace(Point2D location);
+    Place createPlace(Point2D location);
 
     /**
      * Erzeugen einer Transition an angegebener Position.
@@ -38,7 +38,7 @@ public interface GraphEditor {
      *
      * @return neu erzeugte Transition
      */
-    ITransition createTransition(Point2D location);
+    Transition createTransition(Point2D location);
 
     /**
      * Erzeugen einer Kante zwischen Transition und Stelle.
@@ -51,7 +51,7 @@ public interface GraphEditor {
      *
      * @return Kante zwischen Transition und Stelle oder null falls vorbindung nicht erfüllt
      */
-    IArc createArc(INode from, INode to);
+    Arc createArc(INode from, INode to);
 
     /**
      * Entfernen der �bergegebenen Knoten.

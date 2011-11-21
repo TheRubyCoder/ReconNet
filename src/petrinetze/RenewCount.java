@@ -1,6 +1,5 @@
-package petrinetze.impl;
+package petrinetze;
 
-import petrinetze.IRenew;
 
 public class RenewCount implements IRenew {
 

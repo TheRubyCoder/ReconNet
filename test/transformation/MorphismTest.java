@@ -21,7 +21,7 @@ import petrinetze.IArc;
 import petrinetze.IPetrinet;
 import petrinetze.IPlace;
 import petrinetze.ITransition;
-import petrinetze.impl.Petrinet;
+import petrinetze.Petrinet;
 
 /**
  *

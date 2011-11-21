@@ -9,6 +9,7 @@ import petrinetze.IArc;
 import petrinetze.IPlace;
 import petrinetze.IRenew;
 import petrinetze.ITransition;
+import petrinetze.Petrinet;
 
 import engine.Engine;
 import engine.Simulation;

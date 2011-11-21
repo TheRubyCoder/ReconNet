@@ -7,7 +7,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-import petrinetze.IPlace;
+import petrinetze.Place;
 import petrinetze.IRenew;
 import petrinetze.Renews;
 import engine.UIEditor;
@@ -35,7 +35,7 @@ public class UIEditorImpl implements UIEditor {
      * @return Color ist die zuruck zu gebende Farbe
      */
     @Override
-    public Color getPlacePaint(IPlace node) {
+    public Color getPlacePaint(Place node) {
 
         final Color p = vertexPaint.get(node.getId());
 
@@ -48,7 +48,7 @@ public class UIEditorImpl implements UIEditor {
      * @param paint die zu waehlende Farbe
      */
     @Override
-    public void setPlacePaint(IPlace node, Color paint) {
+    public void setPlacePaint(Place node, Color paint) {
         vertexPaint.put(node.getId(), paint);
     }
 

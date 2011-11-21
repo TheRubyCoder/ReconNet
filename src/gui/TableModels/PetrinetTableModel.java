@@ -6,7 +6,6 @@
 package gui.TableModels;
 
 import gui.PetrinetTreeModel.*;
-import petrinetze.impl.Petrinet;
 
 /**
  *

@@ -5,7 +5,8 @@
 
 package gui.TableModels;
 
-import petrinetze.IPlace;
+import petrinetze.Place;
+
 
 /**
  *
@@ -25,9 +26,9 @@ public class PlaceTalbeModel extends PropertiesTable.AbstractModel {
         "Markierung"
     };
 
-    private IPlace place;
+    private Place place;
 
-    public PlaceTalbeModel(IPlace place) {
+    public PlaceTalbeModel(Place place) {
         this.place = place;
     }
 

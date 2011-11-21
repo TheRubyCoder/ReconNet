@@ -5,8 +5,8 @@
 
 package gui.TableModels;
 
+import petrinetze.Arc;
 import gui.TableModels.PropertiesTable;
-import petrinetze.IArc;
 
 /**
  *
@@ -22,9 +22,9 @@ public class ArcTableModel extends PropertiesTable.AbstractModel{
         "Name",
         "Mark"
     };
-    private IArc arc;
+    private Arc arc;
 
-    public ArcTableModel(IArc arc){
+    public ArcTableModel(Arc arc){
         this.arc = arc;
     }
 

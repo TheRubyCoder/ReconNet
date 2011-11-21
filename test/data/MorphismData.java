@@ -7,9 +7,9 @@ import petrinetze.IPetrinet;
 import petrinetze.IPlace;
 import petrinetze.IRenew;
 import petrinetze.ITransition;
-import petrinetze.impl.Petrinet;
-import petrinetze.impl.RenewCount;
-import petrinetze.impl.RenewId;
+import petrinetze.Petrinet;
+import petrinetze.RenewCount;
+import petrinetze.RenewId;
 
 
 /**
