@@ -1,4 +1,4 @@
-package engine.impl.ctrl;
+package engine;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -15,8 +15,6 @@ import petrinetze.Arc;
 import petrinetze.INode;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
-import engine.Engine;
-import engine.impl.Layout;
 
 /**
  * 

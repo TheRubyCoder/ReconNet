@@ -1,11 +1,10 @@
-package engine.impl.ctrl;
+package engine;
 
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 
-import engine.Engine;
 import org.apache.commons.collections15.Factory;
 
 import petrinetze.Arc;

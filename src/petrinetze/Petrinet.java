@@ -287,9 +287,9 @@ public class Petrinet{
 	 * Liefert das Pre-Objekt zu dem Netz zurueck
 	 * PRE in der t-ten Spalte gibt an,
 	 * wieviele Token die Transition t von p wegnimmt
-	 * @return {@link IPre}
+	 * @return {@link Pre}
 	 */
-	public IPre getPre() {
+	public Pre getPre() {
 		// Initialisierung
 		int[] pId = new int[places.size()];
 
@@ -375,7 +375,7 @@ public class Petrinet{
 	 * Liefert das Post-Objekt zu dem Netz zurueck
 	 * @return {@link IPost}
 	 */
-	public IPost getPost() {
+	public Post getPost() {
 		// Initialisierung
 		int[] pId = new int[places.size()];
 

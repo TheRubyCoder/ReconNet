@@ -2,67 +2,85 @@ package petrinetze;
 
 import java.util.Arrays;
 
+/**
+ * Das Objekt bildet das Pre-State eines Petrinetzes. Und Liefert entsprechende
+ * Methoden.
+ */
+public class Pre{
 
-class Pre implements IPre {
-	
 	private int[][] pre;
 	private int[] tIds;
 	private int[] pIds;
-	
+
 	Pre(int[][] pre, int[] pId, int[] tId) {
 		this.pIds = pId;
 		this.tIds = tId;
 		this.pre = pre;
 	}
-	
+
 	@Override
-	public boolean equals(Object obj){
-		if(obj == null)
+	public boolean equals(Object obj) {
+		if (obj == null)
 			return false;
-		if(!(obj instanceof IPre))
+		if (!(obj instanceof Pre))
 			return false;
-		IPre other = (IPre) obj;
-		return Arrays.deepEquals(getPreAsArray(),other.getPreAsArray());
+		Pre other = (Pre) obj;
+		return Arrays.deepEquals(getPreAsArray(), other.getPreAsArray());
 	}
-	
-	@Override
+
+	/**
+	 * Liefert das Pre von dem entsprechenden Petrinetz Kantengewichte der
+	 * jeweiligen Transitionen und Stellen.
+	 * 
+	 * 0 1 3 6 1 1 3 2 2 2 5 3 3 1 3 1
+	 * 
+	 * @return Senkrecht: Stellen Waagerecht: Transitionen
+	 */
 	public int[][] getPreAsArray() {
 		return pre;
 	}
 
-	@Override
+	/**
+	 * Die Identifier der Transitionen, die in dem Pre Matrix vorhanden sind.
+	 * 
+	 * @return Array mit den Ids.
+	 */
 	public int[] getTransitionIds() {
 		return tIds;
 	}
 
-	@Override
+	/**
+	 * Die Identifier der Places, die in dem Pre Matrix vorhanden sind.
+	 * 
+	 * @return Array mit den Ids.
+	 */
 	public int[] getPlaceIds() {
 		return this.pIds;
 	}
-	
-	@Override
-	public String matrixStringOnly(){
+
+	/**
+	 * Returns only the part of toString() that represents the matrix
+	 * 
+	 * @return Matrix like looking String
+	 */
+	public String matrixStringOnly() {
 		return toString().split("=")[1].split("tIds")[0];
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		final String nl = System.getProperty("line.separator", "\n");
-        StringBuilder sb = new StringBuilder("Pre [pre=").append(nl);
-		
+		StringBuilder sb = new StringBuilder("Pre [pre=").append(nl);
+
 		for (int i = 0; i < pIds.length; i++) {
 			for (int z = 0; z < tIds.length; z++) {
 				sb.append(" [").append(pre[i][z]).append(']');
 			}
 			sb.append(nl);
 		}
-		
 
-	    return sb.append("tIds=").append(Arrays.toString(tIds))
-                 .append(", pIds=").append(Arrays.toString(pIds))
-                 .append(']').toString();
-    }
+		return sb.append("tIds=").append(Arrays.toString(tIds))
+				.append(", pIds=").append(Arrays.toString(pIds)).append(']')
+				.toString();
+	}
 }

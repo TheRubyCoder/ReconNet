@@ -16,7 +16,7 @@ import petrinetze.Petrinet;
 import petrinetze.IPetrinetListener;
 import petrinetze.IRenew;
 import petrinetze.Renews;
-import transformation.IRule;
+import transformation.Rule;
 import engine.EditMode;
 import engine.Engine;
 
@@ -142,8 +142,8 @@ public class PetrinetTreeModel extends DefaultTreeModel {
             return (PetrinetNode)super.getParent();
         }
 
-        public List<IRule> getRules() {
-            final List<IRule> rules = new ArrayList<IRule>(children.size());
+        public List<Rule> getRules() {
+            final List<Rule> rules = new ArrayList<Rule>(children.size());
 
             for (Object c : children) {
                 rules.add(((RuleNode)c).getRule());
@@ -272,7 +272,7 @@ public class PetrinetTreeModel extends DefaultTreeModel {
             return rule;
         }
 
-        public IRule getRule() {
+        public Rule getRule() {
             return rule.getRule();
         }
 

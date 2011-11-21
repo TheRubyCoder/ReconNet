@@ -1,12 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package gui;
 
 import engine.EditMode;
-import engine.Engine;
 import engine.EngineFactory;
+import engine.Engine;
 import gui.TableModels.*;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -22,14 +18,11 @@ import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
-import javax.swing.border.LineBorder;
 
 import petrinetze.Arc;
 import petrinetze.INode;
-import petrinetze.Petrinet;
 import petrinetze.Place;
 import petrinetze.Transition;
-import transformation.IRule;
 import transformation.Rule;
 
 /**
@@ -39,14 +32,14 @@ import transformation.Rule;
 public class RuleWrapper {
 
     private String name;
-    private IRule rule;
+    private Rule rule;
     private Engine Lengine;
     private Engine Kengine;
     private Engine Rengine;
     private Set<INode> selected;
     private JInternalFrame frame;
 
-    public RuleWrapper(String name, IRule rule,final JTable table) {
+    public RuleWrapper(String name, Rule rule,final JTable table) {
         this.name = name;
         this.rule = rule;
         this.Kengine = EngineFactory.newFactory().createEngine(rule.getK());
@@ -107,7 +100,7 @@ public class RuleWrapper {
         Rengine.getGraphEditor().setEditMode(mode);
     }
 
-    public IRule getRule() {
+    public Rule getRule() {
         return rule;
     }
 

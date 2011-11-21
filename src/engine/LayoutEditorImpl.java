@@ -1,4 +1,4 @@
-package engine.impl;
+package engine;
 
 import java.awt.geom.Point2D;
 
@@ -8,7 +8,6 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.layout.LayoutTransition;
 import edu.uci.ics.jung.visualization.picking.PickedState;
 import edu.uci.ics.jung.visualization.util.Animator;
-import engine.LayoutEditor;
 
 /**
  * Created by IntelliJ IDEA.
@@ -84,7 +83,7 @@ class LayoutEditorImpl implements LayoutEditor {
 
     }
 
-    public void setLayout(engine.impl.Layout l) {
+    public void setLayout(engine.Layout l) {
     	context.setLayout(l.getInstance(context.getGraph()));
     }
 }

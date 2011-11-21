@@ -1,7 +1,5 @@
-package engine.impl;
+package engine;
 
-import engine.Simulation;
-import engine.StepListener;
 import petrinetze.Transition;
 
 import javax.swing.*;

@@ -1,6 +1,5 @@
 package petrinetze;
 
-
 import java.util.Map;
 
 public final class Renews {

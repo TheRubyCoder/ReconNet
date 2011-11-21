@@ -1,6 +1,5 @@
-package engine.impl;
+package engine;
 
-import engine.EditMode;
 import petrinetze.Arc;
 import petrinetze.INode;
 import petrinetze.Petrinet;

@@ -1,6 +1,5 @@
 package engine;
 
-import engine.impl.EngineFactoryImpl;
 import petrinetze.Petrinet;
 
 public abstract class EngineFactory {

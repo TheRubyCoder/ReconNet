@@ -67,5 +67,5 @@ public interface LayoutEditor {
      * After this the method <code>#apply</code> must be called to apply the layout.
      * @param l Layout to be set
      */
-    public void setLayout(engine.impl.Layout l);
+    public void setLayout(engine.Layout l);
 }

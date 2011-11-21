@@ -1,8 +1,8 @@
 package gui;
 
 import engine.EditMode;
-import engine.Engine;
 import engine.EngineFactory;
+import engine.Engine;
 import engine.Simulation;
 import engine.StepListener;
 import exceptions.GeneralPetrinetException;
@@ -31,7 +31,7 @@ import petrinetze.Transition;
 import petrinetze.Petrinet;
 import petrinetze.RenewCount;
 import petrinetze.Renews;
-import transformation.IRule;
+import transformation.Rule;
 import transformation.Rule;
 
 /*
@@ -620,8 +620,8 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         return petrinet;
     }
 
-    public IRule createTestRule() {
-        IRule rule1 = new Rule();
+    public Rule createTestRule() {
+        Rule rule1 = new Rule();
         //L von r1
         Place p1 = rule1.getL().createPlace("Wecker ein");
         Place p2 = rule1.getK().createPlace("Wecker ein");
@@ -704,7 +704,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
                 "Bitte geben Sie einen Namen für die Regel ein", "Neue Regel");
 
         if (input != null) {
-            IRule rule = new Rule();
+            Rule rule = new Rule();
             PetrinetNode node = (PetrinetNode) petrinetTree.getSelectionPath().getLastPathComponent();
             RuleWrapper wrapper = new RuleWrapper(input, rule,jTable1);
             node.addRule(input, wrapper);

@@ -1,4 +1,4 @@
-package engine.impl;
+package engine;
 
 import petrinetze.Arc;
 import petrinetze.INode;

@@ -1,7 +1,6 @@
-package engine.impl;
+package engine;
 
 import java.awt.*;
-import java.awt.color.ColorSpace;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.geom.Ellipse2D;
@@ -12,25 +11,19 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.swing.Icon;
 import javax.swing.JPanel;
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
-import edu.uci.ics.jung.visualization.Layer;
 import edu.uci.ics.jung.visualization.RenderContext;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
-import edu.uci.ics.jung.visualization.decorators.EdgeShape;
 import edu.uci.ics.jung.visualization.renderers.BasicVertexRenderer;
 import edu.uci.ics.jung.visualization.transform.shape.GraphicsDecorator;
-import engine.EditMode;
 import org.apache.commons.collections15.Transformer;
 
 import petrinetze.Arc;
 import petrinetze.INode;
 import petrinetze.Place;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import engine.Engine;
-import engine.impl.ctrl.EditingModalGraphMouseEx;
 import petrinetze.Transition;
 
 public class GraphPanel extends JPanel {

@@ -7,8 +7,11 @@ import petrinetze.Arc;
 import petrinetze.Petrinet;
 import petrinetze.Place;
 import petrinetze.Transition;
-
-class Morphism implements IMorphism {
+/**
+ * A morphism maps places, transitions and edges in a way that pre and post
+ * have the same "structure" in 'from' and 'to'. For more details look at documnets of the petrinet course. 
+ */
+class Morphism{
 
 	private final Petrinet from;
 	private final Petrinet to;
@@ -39,66 +42,69 @@ class Morphism implements IMorphism {
 
 
 	/**
-	 * @see transformation.IMorphism#getTransitionsMorphism()
+	 * Returns the morphisms of all transition.
+	 * @return the morphisms of all transition.
 	 */
-	@Override
 	public Map<Transition, Transition> getTransitionsMorphism() {
 		return transitions;
 	}
 	
 	/**
-	 * @see transformation.IMorphism#getPlacesMorphism()
+	 * Returns the morphisms of all places.
+	 * @return the morphisms of all places.
 	 */
-	@Override
 	public Map<Place, Place> getPlacesMorphism() {
 		return places;
 	}
 
 	/**
-	 * @see transformation.IMorphism#getEdgesMorphism()
+	 * Returns the morphism of all edges.
+	 * @return the morphism of all edges.
 	 */
-	@Override
 	public Map<Arc, Arc> getEdgesMorphism() {
 		return edges;
 	}
 
 	/**
-	 * @see transformation.IMorphism#getTransitionMorphism()
+	 * Returns the morphism to a single transition.
+	 * @param transition transition in the "from" net
+	 * @return the respective transition in the "to" net
 	 */
-	@Override
 	public Transition getTransitionMorphism(Transition transition) {
 		return transitions.get(transition);
 	}
 
 	/**
-	 * @see transformation.IMorphism#getPlaceMorphism()
+	 * Returns the morphism to a single place.
+	 * @param place place in the "from" net
+	 * @return the respective place in the "to" net
 	 */
-	@Override
 	public Place getPlaceMorphism(Place place) {
 		return places.get(place);
 	}
 
 	/**
-	 * @see transformation.IMorphism#getArcMorphism()
+	 * Returns the morphism to a single arc.
+	 * @param arc arc in the "from" net
+	 * @return the respective arc in the "to" net
 	 */
-	@Override
 	public Arc getArcMorphism(Arc arc) {
 		return edges.get(arc);
 	}
 
 
 	/**
-	 * @see transformation.IMorphism#getFrom()
+	 * Returns the Petrinet from which this morphism starts.
+	 * @return the Petrinet from which this morphism starts.
 	 */
-	@Override
 	public Petrinet getFrom() {
 		return from;
 	}
 
 	/**
-	 * @see transformation.IMorphism#getTo()
+	 * Returns the Petrinet into which this morphism maps to.
+	 * @return the Petrinet into which this morphism maps to.
 	 */
-	@Override
 	public Petrinet getTo() {
 		return to;
 	}

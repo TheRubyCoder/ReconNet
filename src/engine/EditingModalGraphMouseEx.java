@@ -1,4 +1,4 @@
-package engine.impl.ctrl;
+package engine;
 
 import java.awt.Component;
 import java.awt.Cursor;
@@ -27,7 +27,7 @@ import edu.uci.ics.jung.visualization.control.RotatingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.ScalingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.ShearingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.TranslatingGraphMousePlugin;
-import engine.Engine;
+
 
 /**
  * 

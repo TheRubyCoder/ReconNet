@@ -11,17 +11,15 @@ import petrinetze.Petrinet;
 import petrinetze.IPetrinetListener;
 import petrinetze.Place;
 import petrinetze.Transition;
-import petrinetze.Petrinet;
 
 /**
- * 
- * @author Philipp Kuehn
- * @author Marvin Ede
- * @author Oliver Willhoeft
- *
+ * An Interface for Rules<br\>
+ * Rules define how a petrinet can be reconfigured<br\>
+ * Where L must be found in the petrinet, K is the context of all involved nodes
+ * and R is the resulting part-graph
  */
 
-public class Rule implements IRule
+public class Rule
 {
 	
 	/** K part of the rule */
@@ -85,25 +83,25 @@ public class Rule implements IRule
 	}
 
 	/**
-	 * @see IRule#getK()
+	 * Returns the gluing Petrinet of this rule.
+	 * @return the gluing Petrinet of this rule.
 	 */
-	@Override
 	public Petrinet getK() {
 		return k;
 	}
 
 	/**
-	 * @see IRule#getL()
+	 * Returns the left Petrinet of this rule.
+	 * @return the left Petrinet of this rule.
 	 */
-	@Override
 	public Petrinet getL() {
 		return l;
 	}
 
 	/**
-	 * @see IRule#getR()
+	 * Returns the right Petrinet of this rule.
+	 * @return the right Petrinet of this rule.
 	 */
-	@Override
 	public Petrinet getR() {
 		return r;
 	}
@@ -123,41 +121,46 @@ public class Rule implements IRule
 	}
 
 	/**
-	 * @see IRule#fromKtoL(INode)
+	 * Returns the corresponding node in L.
+	 * @param node a node in K.
+	 * @return the corresponding node in L.
 	 */
-	@Override
 	public INode fromKtoL(INode node) {
 		return getKeyFromValue(lKSameNodes, node);
 	}
 
 	/**
-	 * @see IRule#fromKtoL(Arc)
+	 * Returns the corresponding  edge in L.
+	 * @param edge a edge in K.
+	 * @return the corresponding  edge in L.
 	 */
-	@Override
 	public Arc fromKtoL(Arc edge) {
 		return getKeyFromValue(lkSameEdges, edge);
 	}
 
 	/**
-	 * @see IRule#fromKtoR(INode)
+	 * Returns the corresponding node in R.
+	 * @param node a node in K.
+	 * @return the corresponding node in R.
 	 */
-	@Override
 	public INode fromKtoR(INode node) {
 		return getKeyFromValue(rKSameNodes, node);
 	}
 
 	/**
-	 * @see IRule#fromKtoR(Arc)
+	 * Returns the corresponding  edge in R.
+	 * @param edge a edge in K.
+	 * @return the corresponding  edge in R.
 	 */
-	@Override
 	public Arc fromKtoR(Arc edge) {
 		return getKeyFromValue(rKSameEdges, edge);
 	}
 
 	/**
-	 * @see IRule#fromLtoK(INode)
+	 * Returns the corresponding node in K.
+	 * @param node a node in L.
+	 * @return the corresponding node in K.
 	 */
-	@Override
 	public INode fromLtoK(INode node) {
 		if(lKSameNodes.containsKey(node))
 			return lKSameNodes.get(node);
@@ -165,9 +168,10 @@ public class Rule implements IRule
 	}
 
 	/**
-	 * @see IRule#fromLtoK(Arc)
+	 * Returns the corresponding edge in K.
+	 * @param edge a edge in L.
+	 * @return the corresponding edge in K.
 	 */
-	@Override
 	public Arc fromLtoK(Arc edge) {
 		if(lkSameEdges.containsKey(edge))
 			return lkSameEdges.get(edge);
@@ -175,9 +179,10 @@ public class Rule implements IRule
 	}
 
 	/**
-	 * @see IRule#fromRtoK(INode)
+	 * Returns the corresponding node in K.
+	 * @param node a node in R.
+	 * @return the corresponding node in K.
 	 */
-	@Override
 	public INode fromRtoK(INode node) {
 		if(rKSameNodes.containsKey(node))
 			return rKSameNodes.get(node);
@@ -185,9 +190,10 @@ public class Rule implements IRule
 	}
 
 	/**
-	 * @see IRule#fromRtoK(Arc)
+	 * Returns the corresponding edge in K.
+	 * @param edge a edge in R.
+	 * @return the corresponding edge in K.
 	 */
-	@Override
 	public Arc fromRtoK(Arc edge) {
 		if(rKSameEdges.containsKey(edge))
 			return rKSameEdges.get(edge);
@@ -205,6 +211,7 @@ public class Rule implements IRule
 	 * When anything is added to L or R, it will get added to K.
 	 *
 	 */
+	@SuppressWarnings("DONT READ ANY FURTHER THAN THIS LINE. SANITY MAY BE LOST")
 	private class Listener implements IPetrinetListener
 	{
 		private final Net net;

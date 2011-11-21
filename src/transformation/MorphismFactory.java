@@ -15,7 +15,6 @@ import petrinetze.INode;
 import petrinetze.Petrinet;
 import petrinetze.Place;
 import petrinetze.Transition;
-import petrinetze.Petrinet;
 
 /**
  * Finds Morphisms between two petrinets in a not deterministic way
@@ -30,16 +29,16 @@ public class MorphismFactory {
 	 * @param to the Petrinet into which this morphism maps to.
 	 * @return the new morphism or null if no morphism exists between from and to
 	 */
-	public static IMorphism createMorphism(Petrinet from, Petrinet to) {
+	public static Morphism createMorphism(Petrinet from, Petrinet to) {
 		return new MorphismFactory(from, to).getMorphism();
 	}
 	
 	/** "from" petrinet of the morphism to find */
 	private final Petrinet fromNet;
 	/** Matrix that represents pre of "from" matrix */
-	private final IMatrix fromNetPre;
+	private final Matrix fromNetPre;
 	/** Matrix that represents post of "from" matrix */
-	private final IMatrix fromNetPost;
+	private final Matrix fromNetPost;
 	/** Number of places in "from" net */
 	private final int numPlacesFromNet;
 	/** Number of transitions in "from" net */
@@ -48,9 +47,9 @@ public class MorphismFactory {
 	/** "to" petrinet of the morphism to find */
 	private final Petrinet toNet;
 	/** Matrix that represents pre of "to" matrix */
-	private final IMatrix toNetPre;
+	private final Matrix toNetPre;
 	/** Matrix that represents post of "to" matrix */
-	private final IMatrix toNetPost;
+	private final Matrix toNetPost;
 	/** Number of places in "to" net */
 	private final int numPlacesToNet;
 	/** Number of transitions in "to" net */
@@ -95,12 +94,12 @@ public class MorphismFactory {
 	private MorphismFactory(Petrinet from, Petrinet to) {
 		fromNet = from;
 		toNet = to;
-		fromNetPre = new MatrixImpl(fromNet.getPre().getPreAsArray());
-		fromNetPost = new MatrixImpl(fromNet.getPost().getPostAsArray());
+		fromNetPre = new Matrix(fromNet.getPre().getPreAsArray());
+		fromNetPost = new Matrix(fromNet.getPost().getPostAsArray());
 		numPlacesFromNet = fromNetPre.getNumRows();
 		numTransitionsFromNet = fromNetPre.getNumCols();
-		toNetPre = new MatrixImpl(toNet.getPre().getPreAsArray());
-		toNetPost = new MatrixImpl(toNet.getPost().getPostAsArray());
+		toNetPre = new Matrix(toNet.getPre().getPreAsArray());
+		toNetPost = new Matrix(toNet.getPost().getPostAsArray());
 		numPlacesToNet = toNetPre.getNumRows();
 		numTransitionsToNet = toNetPre.getNumCols();
 
@@ -112,7 +111,7 @@ public class MorphismFactory {
 	}
 	
 	
-	private IMorphism getMorphism() {
+	private Morphism getMorphism() {
 		boolean successful = findMorphism();
 		if (successful) {
 			return new Morphism(fromNet, toNet, places, transitions, edges);
@@ -237,7 +236,7 @@ public class MorphismFactory {
 	}
 
 	
-	private Container countEdges(IMatrix m) {
+	private Container countEdges(Matrix m) {
 
 		@SuppressWarnings("serial")
 		class MyMap extends HashMap<Integer, Integer> {

@@ -1,55 +1,83 @@
 package engine;
 
-import petrinetze.Arc;
-import petrinetze.Petrinet;
-import petrinetze.INode;
-import transformation.IRule;
 import edu.uci.ics.jung.graph.DirectedGraph;
+import engine.*;
 import exceptions.GeneralPetrinetException;
+import petrinetze.Arc;
+import petrinetze.INode;
+import petrinetze.Petrinet;
+import transformation.Rule;
+import transformation.Transformations;
 
+public class Engine{
 
-/**
- * Die Petrinetz-Engine.
- */
-public interface Engine {
+    private final EngineContext context;
+
+    private final GraphEditorImpl graphEditor;
+
+    private final SimulationImpl simulation;
+
+    private final LayoutEditorImpl layoutEditor;
+
+    public Engine(EngineContext context) {
+        this.context = context;
+        this.graphEditor = new GraphEditorImpl(context, this);
+        this.simulation = new SimulationImpl(context);
+        this.layoutEditor = new LayoutEditorImpl(context);
+    }
+
+    public Engine(Petrinet petrinet) {
+        this(new EngineContext(petrinet));
+    }
 
     /**
      * Das aktive Petrinetz.
      *
      * @return
      */
-    Petrinet getNet();
-
+    public Petrinet getNet() {
+        return context.getPetrinet();
+    }
 
     /**
      * Die Darstellung des Petrinetzes als gerichteter Graph.
      *
      * @return gerichteter Graph
      */
-    DirectedGraph<INode, Arc> getGraph();
+    public DirectedGraph<INode, Arc> getGraph() {
+        return context.getGraph();
+    }
 
     /**
      * Manipulation des Petrinetzes.
      *
      * @return
      */
-    GraphEditor getGraphEditor();
+    public GraphEditorImpl getGraphEditor() {
+        return graphEditor;
+    }
 
     /**
      * Manipulation des Layouts.
      *
      * @return
      */
-    LayoutEditor getLayoutEditor();
+    public LayoutEditor getLayoutEditor() {
+        return layoutEditor;
+    }
 
     /**
      * Simulation des Petrinetzes.
      * 
      * @return
      */
-    Simulation getSimulation();
+    public Simulation getSimulation() {
+        return simulation;
+    }
 
-    UIEditor getUIEditor();
+    public UIEditor getUIEditor() {
+        return context.getUIEditor();
+    }
 
     /**
      * Anwenden einer Transformationsregel.
@@ -57,6 +85,7 @@ public interface Engine {
      * @param rule die anzuwendende Regel
      * @throws Exception 
      */
-    void transform(IRule rule) throws GeneralPetrinetException;
-
+    public void transform(Rule rule) throws GeneralPetrinetException {
+        Transformations.transform(context.getPetrinet(), rule);
+    }
 }

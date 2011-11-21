@@ -1,4 +1,4 @@
-package engine.impl;
+package engine;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -21,7 +21,6 @@ import javax.swing.JPanel;
 import javax.swing.UIManager;
 import javax.swing.border.SoftBevelBorder;
 
-import engine.EditMode;
 import org.apache.commons.collections15.Transformer;
 
 import petrinetze.Arc;
@@ -29,9 +28,6 @@ import petrinetze.INode;
 import petrinetze.Transition;
 import petrinetze.Petrinet;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import engine.Engine;
-import engine.GraphEditor;
-import engine.impl.ctrl.EditingModalGraphMouseEx;
 
 public class Test {
 
@@ -42,7 +38,7 @@ public class Test {
 
 
     	final EngineContext ec = new EngineContext(new Petrinet());
-    	final Engine engine = new EngineImpl(ec);
+    	final Engine engine = new Engine(ec);
 
     	final VisualizationViewer<INode, Arc> vv = new VisualizationViewer<INode, Arc>(ec.getLayout(), new Dimension(600,600));
     	vv.getRenderContext().setVertexLabelTransformer(new Transformer<INode, String>() {

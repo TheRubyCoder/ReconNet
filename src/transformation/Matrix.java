@@ -5,23 +5,21 @@ package transformation;
 /**
  * A simple matrix with Integers in it 
  */
-class MatrixImpl implements IMatrix {
+class Matrix{
 
 	/** Matrix is internally realized as a nested array */
 	private final int[][] matrix;
 	
 	
-	public MatrixImpl(int[][] matrix) {
+	public Matrix(int[][] matrix) {
 		this.matrix = matrix;
 	}
 	
 	
-	@Override
 	public int getNumRows() {
 		return matrix.length;
 	}
 
-	@Override
 	public int getNumCols() {
 		if(matrix.length == 0)
 			return 0;
@@ -29,20 +27,14 @@ class MatrixImpl implements IMatrix {
 	}
 
 	/**
-	 * @see IMatrix#get(int, int)
+	 * Returns the value at given position
+	 * @param row index of row of position
+	 * @param column index of column of position
+	 * @return value
+	 * @throws ArrayIndexOutOfBoundsException if <tt>row</tt> or <tt>column</tt> bigger than matrix
 	 */
-	@Override
 	public int get(int row, int column) {
 		return matrix[row][column];
-	}
-
-	/**
-	 * @see IMatrix#set(int, int, int)
-	 */
-	@Override
-	public void set(int row, int col, int value) {
-//		throw new NotImplementedException();
-		throw new UnsupportedOperationException();
 	}
 
 }

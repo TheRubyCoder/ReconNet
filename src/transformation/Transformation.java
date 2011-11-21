@@ -9,12 +9,15 @@ import petrinetze.Transition;
 import java.util.Set;
 
 import exceptions.GeneralPetrinetException;
-
-public class Transformation implements ITransformation {
+/**
+ * An Transformation on a Petrinet<br/>
+ * The Transformation applies a rule on an petrinet under a certain morphism
+ */
+public class Transformation{
 	
 	private final Petrinet petrinet;
-	private final IMorphism morphism;
-	private final IRule rule; 
+	private final Morphism morphism;
+	private final Rule rule; 
 	
 	/**	
 	 * Constructor for the class Transformation
@@ -22,7 +25,7 @@ public class Transformation implements ITransformation {
 	 * @param morph, the morphism to use
 	 * @param r, the rule that should apply
 	 */	
-	private Transformation(Petrinet petrinet,IMorphism morphism,IRule rule){
+	private Transformation(Petrinet petrinet,Morphism morphism,Rule rule){
 		this.petrinet = petrinet; 
 		this.morphism = morphism; 
 		this.rule = rule;
@@ -36,9 +39,9 @@ public class Transformation implements ITransformation {
 	 * @param rule Rule to apply to petrinet
 	 * @return the transformation
 	 */
-	public static ITransformation createTransformation(Petrinet petrinet,
-			IMorphism morphism,
-			IRule rule){
+	public static Transformation createTransformation(Petrinet petrinet,
+			Morphism morphism,
+			Rule rule){
 		return new Transformation(petrinet, morphism, rule);
 	}
 	
@@ -50,9 +53,9 @@ public class Transformation implements ITransformation {
 	 * @return the transformation
 	 * @throws GeneralPetrinetException When no default morphism found
 	 */
-	public static ITransformation createTransformationWithAnyMorphism(Petrinet petrinet,
-			IRule rule) throws GeneralPetrinetException{
-		IMorphism tempMorphism = MorphismFactory.createMorphism(rule.getL(),petrinet);
+	public static Transformation createTransformationWithAnyMorphism(Petrinet petrinet,
+			Rule rule) throws GeneralPetrinetException{
+		Morphism tempMorphism = MorphismFactory.createMorphism(rule.getL(),petrinet);
 		if(tempMorphism == null){
 			throw new GeneralPetrinetException("No Morphism detected");
 		}
@@ -62,36 +65,35 @@ public class Transformation implements ITransformation {
 	/**
 	 * Returns the Petrinet of this transformation.
 	 * This net will be changed when transform() is called.
-	 * @return the IRule of this transformation.
+	 * @return the Rule of this transformation.
 	 */
-	@Override
 	public Petrinet getPetrinet() {
 		return petrinet;
 	}
 	
 	/**
-	 * Returns the IMorphism of this transformation.
-	 * @return the IMorphism of this transformation.
+	 * Returns the Morphism of this transformation.
+	 * @return the Morphism of this transformation.
 	 */
-	@Override
-	public IMorphism getMorphism() {
+	public Morphism getMorphism() {
 		return morphism;
 	}
 	
 	/**
-	 * Returns the IRule of this transformation.
-	 * @return the IRule of this transformation.
+	 * Returns the Rule of this transformation.
+	 * @return the Rule of this transformation.
 	 */	
-	@Override
-	public IRule getRule() {
+	public Rule getRule() {
 		return rule;
 	}	
 	
 	/**
-	 * @see ITransformation#transform()
+	 * This will transform the petrinet
+	 * using the Rule returned by getRule() and
+	 * the Morphism returned by getMorphism().
+	 * @return the Transformation that was used (<tt>this</tt>)
 	 */
-	@Override
-	public ITransformation transform() {
+	public Transformation transform() {
 		Petrinet K = rule.getK();
 		Set<INode> KNode = K.getAllGraphElement().getAllNodes();
 		Set<Arc> KArc = K.getAllArcs();		

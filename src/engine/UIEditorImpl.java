@@ -1,4 +1,4 @@
-package engine.impl;
+package engine;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -10,7 +10,6 @@ import java.util.Map;
 import petrinetze.Place;
 import petrinetze.IRenew;
 import petrinetze.Renews;
-import engine.UIEditor;
 
 /**
  * Klasse zum verwalten von RENEWS
