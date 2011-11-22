@@ -11,22 +11,22 @@ public interface StepListener {
     /**
      * Callback-Methode für das Schaltereignis.
      *
-     * @param s die Simulation, die das Schalten veranlasst hat
+     * @param s die SimulationImpl, die das Schalten veranlasst hat
      * @todo Soll das Petrinetz hier mitgegeben werden?
      */
     void stepped(Simulation s);
 
     /**
-     * Callback-Methode bei Start der Simulation.
+     * Callback-Methode bei Start der SimulationImpl.
      *
-     * @param s die gestartete Simulation
+     * @param s die gestartete SimulationImpl
      */
     void started(Simulation s);
 
     /**
-     * Callback-Methode bei Stoppen der Simulation.
+     * Callback-Methode bei Stoppen der SimulationImpl.
      *
-     * @param s die gestoppte Simulation
+     * @param s die gestoppte SimulationImpl
      */
     void stopped(Simulation s);
 }

@@ -3,7 +3,8 @@ package gui;
 import engine.EditMode;
 import engine.EngineFactory;
 import engine.Engine;
-import gui.TableModels.*;
+import gui.tableModelsSmall.*;
+
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;

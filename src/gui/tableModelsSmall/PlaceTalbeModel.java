@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package gui.TableModels;
+package gui.tableModelsSmall;
 
 import petrinetze.Place;
 

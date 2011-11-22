@@ -1,30 +1,38 @@
 package engine;
 
-import petrinetze.Arc;
-import petrinetze.INode;
-
 import java.awt.geom.Point2D;
 
+import petrinetze.Arc;
+import petrinetze.INode;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
+import edu.uci.ics.jung.visualization.layout.LayoutTransition;
+import edu.uci.ics.jung.visualization.picking.PickedState;
+import edu.uci.ics.jung.visualization.util.Animator;
 
-/**
- * class for editing the layouts
- *
- */
-public interface LayoutEditor {
+class LayoutEditor{
 
+    private final EngineContext context;
+
+    public LayoutEditor(EngineContext context) {
+        this.context = context;
+    }
+    
     /**
      * Lock the position of a node. So it cannot be moved
      * @param node which should be locked
      */
-    void lock(INode node);
+    public void lock(INode node) {
+        context.getLayout().lock(node, true);
+    }
 
     /**
      * Unlock the position of a node. So it can be moved
      *
      * @param node which should be unlocked
      */
-    void unlockNode(INode node);
+    public void unlockNode(INode node) {
+        context.getLayout().lock(node, false);
+    }
 
     /**
      * checks if a node is locked
@@ -32,7 +40,9 @@ public interface LayoutEditor {
      * @param node the node to be checked
      * @return <code> true </code> if node is locked, <code> false </code> otherwise
      */
-    boolean isLocked(INode node);
+    public boolean isLocked(INode node) {
+        return context.getLayout().isLocked(node);
+    }
 
     /**
      * gets the position of the graphical representation of the node.
@@ -41,7 +51,10 @@ public interface LayoutEditor {
      *
      * @return position as a 2D Point 
      */
-    Point2D getPosition(INode node);
+    public Point2D getPosition(INode node) {
+        // TODO tut es das, was ich denke?
+        return new Point2D.Double(context.getLayout().getX(node), context.getLayout().getY(node));
+    }
 
     /**
      * sets the position of the graphical representation of the node.
@@ -49,23 +62,54 @@ public interface LayoutEditor {
      * @param node which position you want to set
      * @param location position where the point should be set
      */
-    void setPosition(INode node, Point2D location);
+    public void setPosition(INode node, Point2D location) {
+        context.getLayout().setLocation(node, location);
+    }
 
     /**
      * Unlock all locked nodes.
      */
-    void unlockAll();
+    public void unlockAll() {
+        // TODO tut es das, was ich denke?
+
+    }
 
     /**
      * Applys the new layout.
      * @param vv new Visualition Viewer
      */
-    void apply(VisualizationViewer<INode, Arc> vv);
-   
+    public void apply(VisualizationViewer<INode, Arc> vv) {
+
+        PickedState<INode> pvs = vv.getPickedVertexState();
+
+        if(!pvs.getPicked().isEmpty()) {
+        	context.getLayout().lock(true);
+    		for(INode node : pvs.getPicked()) {
+    			context.getLayout().lock(node, false);
+    		}
+        } else {
+        	context.getLayout().lock(false);
+        }
+
+
+        context.getLayout().setInitializer(vv.getGraphLayout());
+        context.getLayout().setSize(vv.getSize());
+
+		LayoutTransition<INode, Arc> lt =
+			new LayoutTransition<INode, Arc>(vv, vv.getGraphLayout(), context.getLayout());
+		Animator animator = new Animator(lt);
+		animator.start();
+		vv.getRenderContext().getMultiLayerTransformer().setToIdentity();
+		vv.repaint();
+
+    }
+    
     /**
      * Sets new layout
      * After this the method <code>#apply</code> must be called to apply the layout.
      * @param l Layout to be set
      */
-    public void setLayout(engine.Layout l);
+    public void setLayout(engine.Layout l) {
+    	context.setLayout(l.getInstance(context.getGraph()));
+    }
 }

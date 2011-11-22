@@ -3,10 +3,10 @@
  * and open the template in the editor.
  */
 
-package gui.TableModels;
+package gui.tableModelsSmall;
 
 import petrinetze.Arc;
-import gui.TableModels.PropertiesTable;
+import gui.tableModelsSmall.PropertiesTable;
 
 /**
  *

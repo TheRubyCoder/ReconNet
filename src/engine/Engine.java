@@ -15,15 +15,15 @@ public class Engine{
 
     private final GraphEditorImpl graphEditor;
 
-    private final SimulationImpl simulation;
+    private final Simulation simulation;
 
-    private final LayoutEditorImpl layoutEditor;
+    private final LayoutEditor layoutEditor;
 
     public Engine(EngineContext context) {
         this.context = context;
         this.graphEditor = new GraphEditorImpl(context, this);
-        this.simulation = new SimulationImpl(context);
-        this.layoutEditor = new LayoutEditorImpl(context);
+        this.simulation = new Simulation(context);
+        this.layoutEditor = new LayoutEditor(context);
     }
 
     public Engine(Petrinet petrinet) {
