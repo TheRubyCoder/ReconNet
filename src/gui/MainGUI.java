@@ -34,7 +34,8 @@ import petrinet.Transition;
 
 import transformation.Rule;
 
-import static gui.dependency.PetrinetAdapter.createPetrinet; 
+import static gui.dependency.PetrinetManipulationAdapter.createPetrinet;
+import static gui.dependency.PetrinetManipulationAdapter.createRule;
 
 /*
  * GUI zum anzeigen, bearbeiten und testen von Petrinetzen
@@ -603,7 +604,6 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     // End of variables declaration//GEN-END:variables
 
     public Petrinet getTestPetrinet() {
-    	//TODO now
         Petrinet petrinet = createPetrinet();
         Place p1 = petrinet.createPlace("Stelle1");
         p1.setMark(1);
@@ -624,7 +624,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     }
 
     public Rule createTestRule() {
-        Rule rule1 = new Rule();
+        Rule rule1 = createRule();
         //L von r1
         Place p1 = rule1.getL().createPlace("Wecker ein");
         Place p2 = rule1.getK().createPlace("Wecker ein");
@@ -707,7 +707,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
                 "Bitte geben Sie einen Namen für die Regel ein", "Neue Regel");
 
         if (input != null) {
-            Rule rule = new Rule();
+            Rule rule = createRule();
             PetrinetNode node = (PetrinetNode) petrinetTree.getSelectionPath().getLastPathComponent();
             RuleWrapper wrapper = new RuleWrapper(input, rule,jTable1);
             node.addRule(input, wrapper);

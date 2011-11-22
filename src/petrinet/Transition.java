@@ -42,7 +42,7 @@ public class Transition implements INode {
 
 	private final Petrinet petrinet;
 
-	public Transition(int id, IRenew rnw, Petrinet petrinet) {
+	Transition(int id, IRenew rnw, Petrinet petrinet) {
 		this.id = id;
 		this.rnw = rnw;
 		this.endArcs = new ArrayList<Arc>();

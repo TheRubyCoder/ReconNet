@@ -9,5 +9,9 @@ public interface IPetrinet {
 	public Petrinet createPetrinet();
 	
 	public Petrinet getPetrinetById(int id);
+	
+//	public Transition createTransition(Petrinet petrinet, IRenew renew);
+//	
+//	public Transition getTransitionById(int id);
 
 }

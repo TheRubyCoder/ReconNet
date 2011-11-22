@@ -55,7 +55,7 @@ public class Rule
 	/**
 	 * Creates an empty rule
 	 */
-	public Rule() {
+	Rule() {
 		k = createPetrinet();
 		l = createPetrinet();
 		r = createPetrinet();
