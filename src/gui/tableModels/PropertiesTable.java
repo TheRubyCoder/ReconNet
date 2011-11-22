@@ -1,4 +1,4 @@
-package gui.tableModelsSmall;
+package gui.tableModels;
 
 import gui.RenewComboBox;
 import javax.swing.*;

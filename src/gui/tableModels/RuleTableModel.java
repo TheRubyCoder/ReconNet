@@ -1,27 +1,29 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+package gui.tableModels;
 
-package gui.tableModelsSmall;
+import gui.PetrinetTreeModel.RuleNode;
+import gui.RuleWrapper;
+import transformation.Rule;
 
-import gui.PetrinetTreeModel.*;
+
 
 /**
  *
  * @author steffen
  */
-public class PetrinetTableModel extends PropertiesTable.AbstractModel{
+public class RuleTableModel extends PropertiesTable.AbstractModel{
 
     public static final int PROPERTY_NAME = 0;
     
     private String[] names = {
         "Name"
     };
-    private PetrinetNode petrinet;
 
-    public PetrinetTableModel(PetrinetNode net){
-       petrinet = net;
+    private RuleNode rule;
+
+    public RuleTableModel(RuleNode rule){
+        this.rule = rule;
+        names = new String[1];
+        names[0] = "Name";
     }
 
     @Override
@@ -36,17 +38,18 @@ public class PetrinetTableModel extends PropertiesTable.AbstractModel{
 
     @Override
     protected Object getPropertyValue(int rowIndex) {
-        if(rowIndex == PROPERTY_NAME){
-            return ((Named<?>)petrinet.getUserObject()).getName();
-        }else{
-            return null;
+        switch (rowIndex) {
+            case PROPERTY_NAME: return rule.getName();
+            default: return null;
         }
     }
 
     @Override
     protected void setPropertyValue(int rowIndex, Object value) {
-        if(rowIndex == PROPERTY_NAME){
-            ((Named<?>)petrinet.getUserObject()).setName((String)value);
+        switch (rowIndex) {
+            case PROPERTY_NAME:
+                rule.setName((String) value);
+                break;
         }
     }
 

@@ -9,7 +9,7 @@ import exceptions.GeneralPetrinetException;
 import gui.PetrinetTreeModel.PetrinetNode;
 import gui.PetrinetTreeModel.RuleNode;
 import gui.PetrinetTreeModel.RulesNode;
-import gui.tableModelsSmall.*;
+import gui.tableModels.*;
 
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
