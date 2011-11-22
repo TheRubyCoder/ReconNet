@@ -47,7 +47,7 @@ public class Petrinet{
 		return super.hashCode();
 	}
 
-	public Petrinet() {
+	Petrinet() {
 		id = UUID.getnID();
 		places = new HashSet<Place>();
 		transitions = new HashSet<Transition>();

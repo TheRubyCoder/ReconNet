@@ -11,6 +11,7 @@ import petrinet.IPetrinetListener;
 import petrinet.Petrinet;
 import petrinet.Place;
 import petrinet.Transition;
+import static transformation.dependency.PetrinetAdapter.createPetrinet;
 
 /**
  * An Interface for Rules<br\>
@@ -55,9 +56,9 @@ public class Rule
 	 * Creates an empty rule
 	 */
 	public Rule() {
-		k = new Petrinet();
-		l = new Petrinet();
-		r = new Petrinet();
+		k = createPetrinet();
+		l = createPetrinet();
+		r = createPetrinet();
 		
 		lKSameNodes = new HashMap<INode, INode>();
 		rKSameNodes = new HashMap<INode, INode>();

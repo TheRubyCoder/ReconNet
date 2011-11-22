@@ -53,7 +53,7 @@ public class Simulation{
      *
      * @todo Exception when transition could not be stepped
      *
-     * @see petrinetze.IPetrinet#fire(int) 
+     * @see petrinet.IPetrinet#fire(int) 
      */  
     public void step(Transition transition) {
         context.getPetrinet().fire(transition.getId());

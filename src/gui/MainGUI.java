@@ -33,7 +33,8 @@ import petrinet.Renews;
 import petrinet.Transition;
 
 import transformation.Rule;
-import transformation.Rule;
+
+import static gui.dependency.PetrinetAdapter.createPetrinet; 
 
 /*
  * GUI zum anzeigen, bearbeiten und testen von Petrinetzen
@@ -45,7 +46,7 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
-            createPetrinet();
+            privateCreatePetrinet();
         }
     };
     private final Action showPetrinetAction = new AbstractAction("Anzeigen") {
@@ -602,7 +603,8 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
     // End of variables declaration//GEN-END:variables
 
     public Petrinet getTestPetrinet() {
-        Petrinet petrinet = new Petrinet();
+    	//TODO now
+        Petrinet petrinet = createPetrinet();
         Place p1 = petrinet.createPlace("Stelle1");
         p1.setMark(1);
         Place p2 = petrinet.createPlace("Stelle2");
@@ -659,14 +661,14 @@ public class MainGUI extends javax.swing.JFrame implements StepListener {
         toggleButtonPlace.setEnabled(true);
     }
 
-    private void createPetrinet() {
+    private void privateCreatePetrinet() {
         final String input =
                 JOptionPane.showInputDialog(
                 this,
                 "Bitte geben Sie einen Namen für das Petrinetz ein", "Neues Petrinetz");
 
         if (input != null) {
-            Petrinet pn = new Petrinet();
+            Petrinet pn = createPetrinet();
             Engine engine = EngineFactory.newFactory().createEngine(pn);
             PetrinetNode node = petrinetTree.addPetrinet(input, engine);
             engine.getGraphEditor().getGraphPanel().addPropertyChangeListener("pickedNodes", new PropertyChangeListener() {

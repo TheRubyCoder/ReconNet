@@ -25,9 +25,10 @@ import org.apache.commons.collections15.Transformer;
 
 import petrinet.Arc;
 import petrinet.INode;
-import petrinet.Petrinet;
 import petrinet.Transition;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
+
+import static engine.dependency.PetrinetAdapter.createPetrinet;
 
 public class Test {
 
@@ -37,7 +38,7 @@ public class Test {
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
 
-    	final EngineContext ec = new EngineContext(new Petrinet());
+    	final EngineContext ec = new EngineContext(createPetrinet());
     	final Engine engine = new Engine(ec);
 
     	final VisualizationViewer<INode, Arc> vv = new VisualizationViewer<INode, Arc>(ec.getLayout(), new Dimension(600,600));
