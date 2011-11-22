@@ -5,7 +5,8 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableModel;
-import petrinetze.IRenew;
+
+import petrinet.IRenew;
 
 public class PropertiesTable extends JTable {
 

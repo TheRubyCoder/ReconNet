@@ -10,11 +10,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import petrinetze.Arc;
-import petrinetze.INode;
-import petrinetze.Petrinet;
-import petrinetze.Place;
-import petrinetze.Transition;
+import petrinet.Arc;
+import petrinet.INode;
+import petrinet.Petrinet;
+import petrinet.Place;
+import petrinet.Transition;
 
 /**
  * Finds Morphisms between two petrinets in a not deterministic way

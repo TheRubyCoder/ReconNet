@@ -1,11 +1,12 @@
 package transformation;
 
-import petrinetze.Arc;
-import petrinetze.INode;
-import petrinetze.Petrinet;
-import petrinetze.Place;
-import petrinetze.IRenew;
-import petrinetze.Transition;
+import petrinet.Arc;
+import petrinet.INode;
+import petrinet.IRenew;
+import petrinet.Petrinet;
+import petrinet.Place;
+import petrinet.Transition;
+
 import java.util.Set;
 
 import exceptions.GeneralPetrinetException;

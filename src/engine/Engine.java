@@ -3,9 +3,9 @@ package engine;
 import edu.uci.ics.jung.graph.DirectedGraph;
 import engine.*;
 import exceptions.GeneralPetrinetException;
-import petrinetze.Arc;
-import petrinetze.INode;
-import petrinetze.Petrinet;
+import petrinet.Arc;
+import petrinet.INode;
+import petrinet.Petrinet;
 import transformation.Rule;
 import transformation.Transformations;
 

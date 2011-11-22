@@ -7,10 +7,10 @@ import java.awt.geom.Point2D;
 
 import org.apache.commons.collections15.Factory;
 
-import petrinetze.Arc;
-import petrinetze.INode;
-import petrinetze.Place;
-import petrinetze.Transition;
+import petrinet.Arc;
+import petrinet.INode;
+import petrinet.Place;
+import petrinet.Transition;
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.util.EdgeType;

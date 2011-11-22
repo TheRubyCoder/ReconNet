@@ -1,7 +1,7 @@
 package transformation;
 
 import exceptions.GeneralPetrinetException;
-import petrinetze.Petrinet;
+import petrinet.Petrinet;
 
 /**
  *

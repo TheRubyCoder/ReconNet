@@ -5,7 +5,7 @@
 
 package gui.tableModels;
 
-import petrinetze.Place;
+import petrinet.Place;
 
 
 /**

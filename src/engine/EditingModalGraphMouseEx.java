@@ -12,8 +12,8 @@ import javax.swing.JComboBox;
 
 import org.apache.commons.collections15.Factory;
 
-import petrinetze.Arc;
-import petrinetze.INode;
+import petrinet.Arc;
+import petrinet.INode;
 import edu.uci.ics.jung.visualization.MultiLayerTransformer;
 import edu.uci.ics.jung.visualization.RenderContext;
 import edu.uci.ics.jung.visualization.control.AbstractModalGraphMouse;

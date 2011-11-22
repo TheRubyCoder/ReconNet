@@ -2,8 +2,8 @@ package engine;
 
 import java.awt.geom.Point2D;
 
-import petrinetze.Arc;
-import petrinetze.INode;
+import petrinet.Arc;
+import petrinet.INode;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.layout.LayoutTransition;
 import edu.uci.ics.jung.visualization.picking.PickedState;

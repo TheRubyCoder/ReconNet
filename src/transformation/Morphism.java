@@ -3,10 +3,10 @@ package transformation;
 import java.util.HashMap;
 import java.util.Map;
 
-import petrinetze.Arc;
-import petrinetze.Petrinet;
-import petrinetze.Place;
-import petrinetze.Transition;
+import petrinet.Arc;
+import petrinet.Petrinet;
+import petrinet.Place;
+import petrinet.Transition;
 /**
  * A morphism maps places, transitions and edges in a way that pre and post
  * have the same "structure" in 'from' and 'to'. For more details look at documnets of the petrinet course. 

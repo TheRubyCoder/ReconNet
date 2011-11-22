@@ -20,10 +20,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 
-import petrinetze.Arc;
-import petrinetze.INode;
-import petrinetze.Place;
-import petrinetze.Transition;
+import petrinet.Arc;
+import petrinet.INode;
+import petrinet.Place;
+import petrinet.Transition;
 import transformation.Rule;
 
 /**

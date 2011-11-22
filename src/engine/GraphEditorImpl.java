@@ -10,7 +10,8 @@ import java.util.Set;
 import javax.swing.JPanel;
 
 import org.apache.commons.collections15.Transformer;
-import petrinetze.*;
+
+import petrinet.*;
 import edu.uci.ics.jung.graph.util.EdgeType;
 
 public class GraphEditorImpl{

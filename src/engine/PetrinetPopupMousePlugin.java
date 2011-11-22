@@ -11,8 +11,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JSeparator;
 
-import petrinetze.Arc;
-import petrinetze.INode;
+import petrinet.Arc;
+import petrinet.INode;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
 

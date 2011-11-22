@@ -1,6 +1,6 @@
 package engine;
 
-import petrinetze.Transition;
+import petrinet.Transition;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

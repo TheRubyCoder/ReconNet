@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import petrinetze.ActionType;
-import petrinetze.Arc;
-import petrinetze.INode;
-import petrinetze.Petrinet;
-import petrinetze.IPetrinetListener;
-import petrinetze.Place;
-import petrinetze.Transition;
+import petrinet.ActionType;
+import petrinet.Arc;
+import petrinet.INode;
+import petrinet.IPetrinetListener;
+import petrinet.Petrinet;
+import petrinet.Place;
+import petrinet.Transition;
 
 /**
  * An Interface for Rules<br\>

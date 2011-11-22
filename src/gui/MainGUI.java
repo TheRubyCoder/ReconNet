@@ -23,15 +23,15 @@ import java.util.logging.SimpleFormatter;
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import petrinetze.INode;
 
-import petrinetze.Arc;
-import petrinetze.Petrinet;
-import petrinetze.Place;
-import petrinetze.Transition;
-import petrinetze.Petrinet;
-import petrinetze.RenewCount;
-import petrinetze.Renews;
+import petrinet.Arc;
+import petrinet.INode;
+import petrinet.Petrinet;
+import petrinet.Place;
+import petrinet.RenewCount;
+import petrinet.Renews;
+import petrinet.Transition;
+
 import transformation.Rule;
 import transformation.Rule;
 

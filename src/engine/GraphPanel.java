@@ -20,11 +20,11 @@ import edu.uci.ics.jung.visualization.renderers.BasicVertexRenderer;
 import edu.uci.ics.jung.visualization.transform.shape.GraphicsDecorator;
 import org.apache.commons.collections15.Transformer;
 
-import petrinetze.Arc;
-import petrinetze.INode;
-import petrinetze.Place;
+import petrinet.Arc;
+import petrinet.INode;
+import petrinet.Place;
+import petrinet.Transition;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import petrinetze.Transition;
 
 public class GraphPanel extends JPanel {
 

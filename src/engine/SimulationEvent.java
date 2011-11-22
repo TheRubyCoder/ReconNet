@@ -1,7 +1,7 @@
 package engine;
 
-import petrinetze.INode;
-import petrinetze.Petrinet;
+import petrinet.INode;
+import petrinet.Petrinet;
 
 import java.util.Collection;
 import java.util.Collections;

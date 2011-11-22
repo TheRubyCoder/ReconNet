@@ -1,6 +1,6 @@
 package engine;
 
-import petrinetze.Petrinet;
+import petrinet.Petrinet;
 
 public class EngineFactoryImpl extends EngineFactory {
 

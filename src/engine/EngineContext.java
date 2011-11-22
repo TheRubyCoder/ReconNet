@@ -1,8 +1,8 @@
 package engine;
 
-import petrinetze.Arc;
-import petrinetze.INode;
-import petrinetze.Petrinet;
+import petrinet.Arc;
+import petrinet.INode;
+import petrinet.Petrinet;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.algorithms.layout.KKLayout;
 import edu.uci.ics.jung.graph.DirectedGraph;

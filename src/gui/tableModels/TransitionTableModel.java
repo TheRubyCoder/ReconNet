@@ -5,8 +5,8 @@
 
 package gui.tableModels;
 
-import petrinetze.IRenew;
-import petrinetze.Transition;
+import petrinet.IRenew;
+import petrinet.Transition;
 
 /**
  *

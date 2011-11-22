@@ -23,10 +23,10 @@ import javax.swing.border.SoftBevelBorder;
 
 import org.apache.commons.collections15.Transformer;
 
-import petrinetze.Arc;
-import petrinetze.INode;
-import petrinetze.Transition;
-import petrinetze.Petrinet;
+import petrinet.Arc;
+import petrinet.INode;
+import petrinet.Petrinet;
+import petrinet.Transition;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 
 public class Test {

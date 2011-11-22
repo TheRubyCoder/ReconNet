@@ -5,7 +5,7 @@
 
 package gui.tableModels;
 
-import petrinetze.Arc;
+import petrinet.Arc;
 import gui.tableModels.PropertiesTable;
 
 /**

@@ -1,7 +1,7 @@
 package gui;
 
-import petrinetze.IRenew;
-import petrinetze.Renews;
+import petrinet.IRenew;
+import petrinet.Renews;
 
 import javax.swing.*;
 

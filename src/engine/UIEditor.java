@@ -1,8 +1,8 @@
 package engine;
 
-import petrinetze.INode;
-import petrinetze.Place;
-import petrinetze.IRenew;
+import petrinet.INode;
+import petrinet.IRenew;
+import petrinet.Place;
 
 import java.awt.Color;
 import java.util.List;

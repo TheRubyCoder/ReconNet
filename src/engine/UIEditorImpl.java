@@ -7,9 +7,9 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-import petrinetze.Place;
-import petrinetze.IRenew;
-import petrinetze.Renews;
+import petrinet.IRenew;
+import petrinet.Place;
+import petrinet.Renews;
 
 /**
  * Klasse zum verwalten von RENEWS
