@@ -1,12 +1,12 @@
 package engine;
 
 import edu.uci.ics.jung.graph.DirectedGraph;
+import engine.dependency.TransformationAdapter;
 import exceptions.GeneralPetrinetException;
 import petrinet.Arc;
 import petrinet.INode;
 import petrinet.Petrinet;
 import transformation.Rule;
-import transformation.Transformations;
 
 public class Engine{
 
@@ -85,6 +85,6 @@ public class Engine{
      * @throws Exception 
      */
     public void transform(Rule rule) throws GeneralPetrinetException {
-        Transformations.transform(context.getPetrinet(), rule);
+        TransformationAdapter.transform(context.getPetrinet(), rule);
     }
 }

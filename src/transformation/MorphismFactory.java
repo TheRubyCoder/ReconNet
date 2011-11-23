@@ -113,11 +113,21 @@ public class MorphismFactory {
 	
 	private Morphism getMorphism() {
 		boolean successful = findMorphism();
+		//found usual morphism? Great. Lets return it.
 		if (successful) {
 			return new Morphism(fromNet, toNet, places, transitions, edges);
+			//L was empty? Not too bad. Lets return an empty morphism
+		} else if(fromNet.getAllPlaces().isEmpty() 
+				&& fromNet.getAllTransitions().isEmpty()){
+			Morphism emptyMorphism = new Morphism(fromNet, 
+					toNet, 
+					new HashMap<Place, Place>(), 
+					new HashMap<Transition, Transition>(), 
+					new HashMap<Arc, Arc>());
+			return emptyMorphism;
+			//Everything failed? Too bad. Lets return null
 		} else {
 			return null;
-			//return new Morphism(new Petrinet(), new Petrinet(), new HashMap<Place, Place>(), new HashMap<Transition, Transition>(), new HashMap<Arc, Arc>());
 		}
 	}
 

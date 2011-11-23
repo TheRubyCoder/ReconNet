@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 
 /**
  * Control class for the token game.
- * 
  */
 public class Simulation{
 

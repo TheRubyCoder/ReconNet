@@ -29,7 +29,7 @@ public class Morphism{
 	 * @param transitions mapping of transitions
 	 * @param edges mapping of edges
 	 */
-	public Morphism(Petrinet from, Petrinet to, 
+	Morphism(Petrinet from, Petrinet to, 
 			Map<Place, Place> places,
 			Map<Transition, Transition> transitions, 
 			Map<Arc, Arc> edges) {

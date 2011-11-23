@@ -1,16 +1,23 @@
 package engine;
 
+import java.awt.Point;
+import java.util.Map;
+
 import engine.dependency.PetrinetAdapter;
 import engine.dependency.TransformationAdapter;
+import exceptions.GeneralPetrinetException;
+import petrinet.INode;
 import petrinet.Petrinet;
+import transformation.Morphism;
 import transformation.Rule;
+import transformation.Transformation;
 
 /**
  * Singleton that represents the engine component<br/>
  * Other components refer to this object to delegate to the engine component
  * instead of directly reffering to the classes within the component
  */
-public class EngineComponent implements IPetrinetManipulation {
+public class EngineComponent implements IPetrinetManipulation, IPersistence, ISimulation {
 
 	private static EngineComponent instance;
 
@@ -20,10 +27,17 @@ public class EngineComponent implements IPetrinetManipulation {
 		instance = new EngineComponent();
 	}
 	
-	public static IPetrinetManipulation getEngine(){
+	public static IPetrinetManipulation getPetrinetManipulation(){
 		return instance;
 	}
 	
+	public static IPersistence getPersistence(){
+		return instance;
+	}
+	
+	public static ISimulation getSimulation(){
+		return instance;
+	}
 	
 	public Petrinet createPetrinet() {
 		return PetrinetAdapter.createPetrinet();
@@ -39,16 +53,79 @@ public class EngineComponent implements IPetrinetManipulation {
 		return TransformationAdapter.createRule();
 	}
 
-//	@Override
-//	public Transition createTransition(Petrinet petrinet, IRenew renew) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-//
-//	@Override
-//	public Transition getTransitionById(int id) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
 
+	@Override
+	public void join(Petrinet left, Petrinet right,
+			Transformation transformation) {
+		TransformationAdapter.join(left, right, transformation);
+	}
+
+
+	@Override
+	public void join(Petrinet left, Petrinet right, Morphism morphism, Rule rule) {
+		TransformationAdapter.join(left, right, morphism, rule);
+	}
+
+
+	@Override
+	public void join(Petrinet left, Petrinet right, Rule rule)
+			throws GeneralPetrinetException {
+		TransformationAdapter.join(left, right, rule);
+		
+	}
+
+
+	@Override
+	public Transformation transform(Petrinet net, Rule rule){
+		return TransformationAdapter.transform(net, rule);
+	}
+
+
+	@Override
+	public boolean simulateOneStep(Petrinet petrinet) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public boolean simulateKSteps(Petrinet petrinet, int k) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public boolean startSimulation(Petrinet petrinet) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public boolean simulateStep(Petrinet petrinet, Integer[] switchVektor) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public boolean save(Petrinet petrinet, Map<INode, Point> layout, String file) {
+		//TODO delegate to petrinet component. Use Adapter
+		return false;
+	}
+
+
+	@Override
+	public Petrinet loadPetrinet(String file) {
+		//TODO delegate to petrinet component. Use Adapter
+		return null;
+	}
+
+
+	@Override
+	public Map<INode, Point> loadLayout(String file) {
+		//TODO delegate to petrinet component. Use Adapter
+		return null;
+	}
 }

@@ -32,13 +32,13 @@ public class Rule1Test {
 				//so we check the toString() of its pre-matrix instead
 				String preBefore = nPetrinet.getPre().matrixStringOnly();
 				String postBefore = nPetrinet.getPost().matrixStringOnly();
-				TransformationComponent.transform(nPetrinet, rule);
+				TransformationComponent.getTransformation().transform(nPetrinet, rule);
 				String preAfter = nPetrinet.getPre().matrixStringOnly();
 				String postAfter = nPetrinet.getPost().matrixStringOnly();
 				assertEquals(preBefore, preAfter);
 				assertEquals(postBefore, postAfter);
 			}
-		} catch (GeneralPetrinetException e) {
+		} catch (Exception e) {
 			fail("Morphism should have been found");
 		}
 	}

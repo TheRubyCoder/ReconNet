@@ -28,7 +28,7 @@ public class Arc implements INode{
 	
 	private final Petrinet petrinet;
 	
-	public Arc(int id, Petrinet petrinet, INode start, INode end) {
+	Arc(int id, Petrinet petrinet, INode start, INode end) {
 		if(start.getClass().equals(end.getClass()))
 			throw new IllegalArgumentException("can not create an edge from " + start.getClass().getName() + " to " + end.getClass().getName());
 		this.id = id;

@@ -34,9 +34,9 @@ public class Rule7Test {
 		preBefore = nPetrinet.getPre().matrixStringOnly();
 		postBefore = nPetrinet.getPost().matrixStringOnly();
 		try {
-			transformation = TransformationComponent.transform(nPetrinet, rule);
+			transformation = TransformationComponent.getTransformation().transform(nPetrinet, rule);
 			fail("Morphism should have NOT been found");
-		} catch (GeneralPetrinetException e) {
+		} catch (Exception e) {
 			//Transformation successfully failed :)
 		}
 		preAfter = nPetrinet.getPre().matrixStringOnly();

@@ -39,8 +39,8 @@ public class Rule3Test {
 	@BeforeClass
 	public static void applyingRule() {
 		try {
-			transformation = TransformationComponent.transform(nPetrinet, rule);
-		} catch (GeneralPetrinetException e) {
+			transformation = TransformationComponent.getTransformation().transform(nPetrinet, rule);
+		} catch (Exception e) {
 			System.out.println(e);
 			fail("Morphism should not be found, but no error should be raised.");
 		}

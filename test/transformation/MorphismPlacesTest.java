@@ -64,7 +64,7 @@ public class MorphismPlacesTest {
 		// since its not deterministic we check if its approximately equally
 		// often machted
 		int average = morphismCount / 4;
-		int allowedDeviation = average / 3;
+		int allowedDeviation = average / 2;
 		int max = average + allowedDeviation;
 		int min = average - allowedDeviation;
 		for (Integer count : counter.values()) {

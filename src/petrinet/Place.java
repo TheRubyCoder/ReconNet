@@ -38,7 +38,7 @@ public class Place implements INode{
 		this.endArcs.add(arc);
 	}
 
-	public Place(int id) {
+	Place(int id) {
 		super();
 		this.id = id;
 		this.endArcs = new ArrayList<Arc>();

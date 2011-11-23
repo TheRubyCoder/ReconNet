@@ -7,6 +7,7 @@ import petrinet.Petrinet;
 import petrinet.Place;
 import petrinet.Transition;
 
+import java.util.HashMap;
 import java.util.Set;
 
 import exceptions.GeneralPetrinetException;
@@ -40,7 +41,7 @@ public class Transformation{
 	 * @param rule Rule to apply to petrinet
 	 * @return the transformation
 	 */
-	public static Transformation createTransformation(Petrinet petrinet,
+	static Transformation createTransformation(Petrinet petrinet,
 			Morphism morphism,
 			Rule rule){
 		return new Transformation(petrinet, morphism, rule);
@@ -51,16 +52,17 @@ public class Transformation{
 	 * @param petrinet Petrinet to transform
 	 * @param morphism Morphism to use the rule under
 	 * @param rule Rule to apply to petrinet
-	 * @return the transformation
-	 * @throws GeneralPetrinetException When no default morphism found
+	 * @return the transformation<br/><tt>null</tt>if no Morphism found
 	 */
-	public static Transformation createTransformationWithAnyMorphism(Petrinet petrinet,
-			Rule rule) throws GeneralPetrinetException{
+	static Transformation createTransformationWithAnyMorphism(Petrinet petrinet,
+			Rule rule){
 		Morphism tempMorphism = MorphismFactory.createMorphism(rule.getL(),petrinet);
-		if(tempMorphism == null){
-			throw new GeneralPetrinetException("No Morphism detected");
+		//Morphism found?
+		if(tempMorphism != null){
+			return new Transformation(petrinet, tempMorphism, rule);
+		}else{
+			return null;
 		}
-		return new Transformation(petrinet, tempMorphism, rule);
 	}
 	
 	/**
@@ -94,7 +96,7 @@ public class Transformation{
 	 * the Morphism returned by getMorphism().
 	 * @return the Transformation that was used (<tt>this</tt>)
 	 */
-	public Transformation transform() {
+	Transformation transform() {
 		Petrinet K = rule.getK();
 		Set<INode> KNode = K.getAllGraphElement().getAllNodes();
 		Set<Arc> KArc = K.getAllArcs();		
