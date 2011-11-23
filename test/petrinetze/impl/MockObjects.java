@@ -2,17 +2,14 @@ package petrinetze.impl;
 
 import java.util.HashMap;
 
-import petrinet.IPlace;
-import petrinet.ITransition;
+import petrinet.PetrinetComponent;
+import petrinet.Place;
+import petrinet.Transition;
 import petrinet.Petrinet;
 import petrinet.RenewId;
 import petrinet.RenewMap;
 /**
- * blabla
- * 
  * @image html Isomorphism_placesneu_small.png so macht man ein bild d^-^b
- *  
- *
  **/
 public class MockObjects {
 	
@@ -25,14 +22,14 @@ public class MockObjects {
 	public static final RenewId ID=new RenewId();
 	
 	public static Petrinet getPetrinet01(){
-		Petrinet petri =new Petrinet();
-		IPlace p1=petri.createPlace("P1");
-		IPlace p2=petri.createPlace("P2");
-		IPlace p3=petri.createPlace("P3");
+		Petrinet petri =PetrinetComponent.getPetrinet().createPetrinet();
+		Place p1=petri.createPlace("P1");
+		Place p2=petri.createPlace("P2");
+		Place p3=petri.createPlace("P3");
 		
 		
 		
-		ITransition a=petri.createTransition("A",ID);
+		Transition a=petri.createTransition("A",ID);
 		petri.createArc("p1-a",p1,a);
 		petri.createArc("a-p2",a,p2);
 		petri.createArc("a-p3",a,p3);
@@ -44,7 +41,7 @@ public class MockObjects {
 	public static Petrinet getPetrinet02(){
 		Petrinet petri=getPetrinet01();
 		
-		IPlace p4 = petri.createPlace("P4");
+		Place p4 = petri.createPlace("P4");
 		//works only with ONE TRANSITION at Petri01
 		petri.createArc("a-p4", petri.getAllTransitions().iterator().next(), p4);
 		
@@ -54,7 +51,7 @@ public class MockObjects {
 	public static Petrinet getPetrinet03(){
 		Petrinet petri=getPetrinet01();
 		
-		IPlace p4 = petri.createPlace("P4");
+		Place p4 = petri.createPlace("P4");
 		//works only with ONE TRANSITION at Petri01
 		petri.createArc("p4-a", p4, petri.getAllTransitions().iterator().next());
 		
@@ -62,14 +59,14 @@ public class MockObjects {
 	}
 
 	public static Petrinet getPetrinet04(){
-		Petrinet petri =new Petrinet();
-		IPlace p1=petri.createPlace("P1");
-		IPlace p2=petri.createPlace("P2");
-		IPlace p3=petri.createPlace("P3");
+		Petrinet petri =PetrinetComponent.getPetrinet().createPetrinet();
+		Place p1=petri.createPlace("P1");
+		Place p2=petri.createPlace("P2");
+		Place p3=petri.createPlace("P3");
 		
 		
 		
-		ITransition a=petri.createTransition("A",NEXT);
+		Transition a=petri.createTransition("A",NEXT);
 		a.setTlb("yellow");
 		petri.createArc("p1-a",p1,a);
 		petri.createArc("a-p2",a,p2);
@@ -82,14 +79,14 @@ public class MockObjects {
 	
 	
 	public static Petrinet getPetrinet05(){
-		Petrinet petri =new Petrinet();
-		IPlace p1=petri.createPlace("P1");
-		IPlace p2=petri.createPlace("P2");
-		IPlace p3=petri.createPlace("P3");
+		Petrinet petri =PetrinetComponent.getPetrinet().createPetrinet();
+		Place p1=petri.createPlace("P1");
+		Place p2=petri.createPlace("P2");
+		Place p3=petri.createPlace("P3");
 		
 		
 		
-		ITransition a=petri.createTransition("A",NEXT);
+		Transition a=petri.createTransition("A",NEXT);
 		a.setTlb("green");
 		petri.createArc("p1-a",p1,a);
 		petri.createArc("a-p2",a,p2);
@@ -101,14 +98,14 @@ public class MockObjects {
 	
 
 	public static Petrinet getPetrinet06(){
-		Petrinet petri =new Petrinet();
-		IPlace p1=petri.createPlace("P1");
-		IPlace p2=petri.createPlace("P2");
-		IPlace p3=petri.createPlace("P3");
+		Petrinet petri =PetrinetComponent.getPetrinet().createPetrinet();
+		Place p1=petri.createPlace("P1");
+		Place p2=petri.createPlace("P2");
+		Place p3=petri.createPlace("P3");
 		
 		
 		
-		ITransition a=petri.createTransition("B",ID);
+		Transition a=petri.createTransition("B",ID);
 		a.setTlb("yellow");
 		petri.createArc("p1-a",p1,a);
 		petri.createArc("a-p2",a,p2);
@@ -120,14 +117,14 @@ public class MockObjects {
 	
 	
 	public static Petrinet getPetrinet07(){
-		Petrinet petri =new Petrinet();
-		IPlace p1=petri.createPlace("P1");
-		IPlace p2=petri.createPlace("P2");
+		Petrinet petri =PetrinetComponent.getPetrinet().createPetrinet();
+		Place p1=petri.createPlace("P1");
+		Place p2=petri.createPlace("P2");
 
 		
 		
 		
-		ITransition a=petri.createTransition("A",ID);
+		Transition a=petri.createTransition("A",ID);
 		a.setTlb("yellow");
 		petri.createArc("p1-a",p1,a);
 		petri.createArc("a-p2",a,p2);
@@ -137,14 +134,14 @@ public class MockObjects {
 	}
 	
 	public static Petrinet getPetrinet08(){
-		Petrinet petri =new Petrinet();
+		Petrinet petri =PetrinetComponent.getPetrinet().createPetrinet();
 
-		IPlace p2=petri.createPlace("P2");
-		IPlace p3=petri.createPlace("P3");
+		Place p2=petri.createPlace("P2");
+		Place p3=petri.createPlace("P3");
 		
 		
 		
-		ITransition a=petri.createTransition("A",ID);
+		Transition a=petri.createTransition("A",ID);
 		a.setTlb("yellow");
 		petri.createArc("a-p2",a,p2);
 		petri.createArc("a-p3",a,p3);
@@ -158,21 +155,21 @@ public class MockObjects {
 	//graphs from Isomorphism_places_neu.png TODO: change this comment!
 	
 	public static Petrinet getPetrinet10(){
-		Petrinet petri =new Petrinet();
+		Petrinet petri =PetrinetComponent.getPetrinet().createPetrinet();
 
-		IPlace p1=petri.createPlace("P1");
+		Place p1=petri.createPlace("P1");
 		p1.setMark(2);
 		
 		
-		ITransition a=petri.createTransition("A",ID);
+		Transition a=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition b=petri.createTransition("A",ID);
+		Transition b=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition c=petri.createTransition("A",ID);
+		Transition c=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition d=petri.createTransition("A",ID);
+		Transition d=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition e=petri.createTransition("A",ID);
+		Transition e=petri.createTransition("A",ID);
 		a.setTlb("yellow");
 		
 		petri.createArc("a-p1",a,p1);
@@ -187,21 +184,21 @@ public class MockObjects {
 	
 	
 	public static Petrinet getPetrinet11(){
-		Petrinet petri =new Petrinet();
+		Petrinet petri =PetrinetComponent.getPetrinet().createPetrinet();
 
-		IPlace p1=petri.createPlace("P1");
+		Place p1=petri.createPlace("P1");
 		p1.setMark(1);
 		
 		
-		ITransition a=petri.createTransition("A",ID);
+		Transition a=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition b=petri.createTransition("A",ID);
+		Transition b=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition c=petri.createTransition("A",ID);
+		Transition c=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition d=petri.createTransition("A",ID);
+		Transition d=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition e=petri.createTransition("A",ID);
+		Transition e=petri.createTransition("A",ID);
 		a.setTlb("yellow");
 		
 		petri.createArc("a-p1",a,p1);
@@ -214,21 +211,21 @@ public class MockObjects {
 	}
 	
 	public static Petrinet getPetrinet11a(){
-		Petrinet petri =new Petrinet();
+		Petrinet petri =PetrinetComponent.getPetrinet().createPetrinet();
 
-		IPlace p1=petri.createPlace("P1");
+		Place p1=petri.createPlace("P1");
 		p1.setMark(3);
 		
 		
-		ITransition a=petri.createTransition("A",ID);
+		Transition a=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition b=petri.createTransition("A",ID);
+		Transition b=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition c=petri.createTransition("A",ID);
+		Transition c=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition d=petri.createTransition("A",ID);
+		Transition d=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition e=petri.createTransition("A",ID);
+		Transition e=petri.createTransition("A",ID);
 		a.setTlb("yellow");
 		
 		petri.createArc("a-p1",a,p1);
@@ -241,20 +238,20 @@ public class MockObjects {
 	}
 	
 	public static Petrinet getPetrinet12(){
-		Petrinet petri =new Petrinet();
+		Petrinet petri = PetrinetComponent.getPetrinet().createPetrinet();
 
-		IPlace p1=petri.createPlace("P1");
+		Place p1=petri.createPlace("P1");
 		p1.setMark(2);
 		
 		
-		ITransition a=petri.createTransition("A",ID);
+		Transition a=petri.createTransition("A",ID);
 		a.setTlb("yellow");
 		
-		ITransition c=petri.createTransition("A",ID);
+		Transition c=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition d=petri.createTransition("A",ID);
+		Transition d=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition e=petri.createTransition("A",ID);
+		Transition e=petri.createTransition("A",ID);
 		a.setTlb("yellow");
 		
 		petri.createArc("a-p1",a,p1);
@@ -267,19 +264,19 @@ public class MockObjects {
 	
 	
 	public static Petrinet getPetrinet13(){
-		Petrinet petri =new Petrinet();
+		Petrinet petri =PetrinetComponent.getPetrinet().createPetrinet();
 
-		IPlace p1=petri.createPlace("P1");
+		Place p1=petri.createPlace("P1");
 		p1.setMark(2);
 		
 		
-		ITransition a=petri.createTransition("A",ID);
+		Transition a=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition b=petri.createTransition("A",ID);
+		Transition b=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition c=petri.createTransition("A",ID);
+		Transition c=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition d=petri.createTransition("A",ID);
+		Transition d=petri.createTransition("A",ID);
 		a.setTlb("yellow");
 
 		
@@ -293,23 +290,23 @@ public class MockObjects {
 	}
 	
 	public static Petrinet getPetrinet14(){
-		Petrinet petri =new Petrinet();
+		Petrinet petri =PetrinetComponent.getPetrinet().createPetrinet();
 
-		IPlace p1=petri.createPlace("P1");
+		Place p1=petri.createPlace("P1");
 		p1.setMark(2);
 		
 		
-		ITransition a=petri.createTransition("A",ID);
+		Transition a=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition b=petri.createTransition("A",ID);
+		Transition b=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition ba=petri.createTransition("A",ID);
+		Transition ba=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition c=petri.createTransition("A",ID);
+		Transition c=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition d=petri.createTransition("A",ID);
+		Transition d=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition e=petri.createTransition("A",ID);
+		Transition e=petri.createTransition("A",ID);
 		a.setTlb("yellow");
 		
 		petri.createArc("a-p1",a,p1);
@@ -323,23 +320,23 @@ public class MockObjects {
 	}
 	
 	public static Petrinet getPetrinet15(){
-		Petrinet petri =new Petrinet();
+		Petrinet petri =PetrinetComponent.getPetrinet().createPetrinet();
 
-		IPlace p1=petri.createPlace("P1");
+		Place p1=petri.createPlace("P1");
 		p1.setMark(2);
 		
 		
-		ITransition a=petri.createTransition("A",ID);
+		Transition a=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition b=petri.createTransition("A",ID);
+		Transition b=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition ba=petri.createTransition("A",ID);
+		Transition ba=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition c=petri.createTransition("A",ID);
+		Transition c=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition d=petri.createTransition("A",ID);
+		Transition d=petri.createTransition("A",ID);
 		a.setTlb("yellow");
-		ITransition e=petri.createTransition("A",ID);
+		Transition e=petri.createTransition("A",ID);
 		a.setTlb("yellow");
 		
 		petri.createArc("a-p1",a,p1);

@@ -2,18 +2,15 @@ package petrinetze.impl;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
 
-import petrinet.IArc;
-import petrinet.IPlace;
+import petrinet.PetrinetComponent;
+import petrinet.Place;
 import petrinet.IRenew;
-import petrinet.ITransition;
+import petrinet.Transition;
 import petrinet.Petrinet;
 
 import engine.Engine;
 import engine.Simulation;
-import engine.impl.*;
 
 /**
  * Testing example with coffee machine and tea. Custom renew function which changes the label depending on time of day.
@@ -49,41 +46,41 @@ public class CoffeeNetTest {
 	}
 	
 	public CoffeeNetTest() {
-		 COFFEE_NET = new Petrinet();
-		 IPlace ready = COFFEE_NET.createPlace("ready");
+		 COFFEE_NET = PetrinetComponent.getPetrinet().createPetrinet();
+		 Place ready = COFFEE_NET.createPlace("ready");
 		 
-		 ITransition cookCoffee = COFFEE_NET.createTransition("Coffee", new CoffeeTypeRenew());
+		 Transition cookCoffee = COFFEE_NET.createTransition("Coffee", new CoffeeTypeRenew());
 		 COFFEE_NET.createArc("", ready, cookCoffee);
 		 
-		 ITransition cookTea = COFFEE_NET.createTransition("Tea");
+		 Transition cookTea = COFFEE_NET.createTransition("Tea");
 		 COFFEE_NET.createArc("", ready, cookTea);
 		 
-		 IPlace availableCoffees = COFFEE_NET.createPlace("Available Coffees");
+		 Place availableCoffees = COFFEE_NET.createPlace("Available Coffees");
 		 COFFEE_NET.createArc("", availableCoffees, cookCoffee);
 		 
-		 IPlace availableTeas = COFFEE_NET.createPlace("Available Teas");
+		 Place availableTeas = COFFEE_NET.createPlace("Available Teas");
 		 COFFEE_NET.createArc("", availableTeas, cookTea);
 		 
-		 IPlace coffeesCooked = COFFEE_NET.createPlace("Coffees Cooked");
+		 Place coffeesCooked = COFFEE_NET.createPlace("Coffees Cooked");
 		 COFFEE_NET.createArc("", cookCoffee, coffeesCooked);
 		 
-		 ITransition orderCoffee = COFFEE_NET.createTransition("Order Coffee");
+		 Transition orderCoffee = COFFEE_NET.createTransition("Order Coffee");
 		 COFFEE_NET.createArc("", coffeesCooked, orderCoffee).setMark(50);
 		 
-		 IPlace blinkBlink = COFFEE_NET.createPlace("* Blink * Blink *");
+		 Place blinkBlink = COFFEE_NET.createPlace("* Blink * Blink *");
 		 COFFEE_NET.createArc("", orderCoffee, blinkBlink);
 		 
-		 ITransition refillCoffee = COFFEE_NET.createTransition("Refill Coffee");
+		 Transition refillCoffee = COFFEE_NET.createTransition("Refill Coffee");
 		 COFFEE_NET.createArc("", blinkBlink, refillCoffee);
 		 COFFEE_NET.createArc("", refillCoffee, availableCoffees).setMark(50);
 		 
-		 IPlace coffeeReady = COFFEE_NET.createPlace("Coffee Ready");
+		 Place coffeeReady = COFFEE_NET.createPlace("Coffee Ready");
 		 COFFEE_NET.createArc("", cookCoffee, coffeeReady);
 		 
-		 IPlace teaReady = COFFEE_NET.createPlace("Tea Ready");
+		 Place teaReady = COFFEE_NET.createPlace("Tea Ready");
 		 COFFEE_NET.createArc("", cookTea, teaReady);
 		 
-		 Engine engine = new EngineFactoryImpl().createEngine(COFFEE_NET);
+		 Engine engine = new Engine(COFFEE_NET);
 		 Simulation sim =  engine.getSimulation();
 		 
 		 // set start tokens

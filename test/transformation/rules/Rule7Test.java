@@ -8,7 +8,7 @@ import org.junit.Test;
 import petrinet.Petrinet;
 import transformation.Rule;
 import transformation.Transformation;
-import transformation.Transformations;
+import transformation.TransformationComponent;
 import data.Rule2Data;
 import exceptions.GeneralPetrinetException;
 
@@ -34,7 +34,7 @@ public class Rule7Test {
 		preBefore = nPetrinet.getPre().matrixStringOnly();
 		postBefore = nPetrinet.getPost().matrixStringOnly();
 		try {
-			transformation = Transformations.transform(nPetrinet, rule);
+			transformation = TransformationComponent.transform(nPetrinet, rule);
 			fail("Morphism should have NOT been found");
 		} catch (GeneralPetrinetException e) {
 			//Transformation successfully failed :)

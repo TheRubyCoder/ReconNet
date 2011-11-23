@@ -15,7 +15,7 @@ import petrinet.Place;
 
 import transformation.Rule;
 import transformation.Transformation;
-import transformation.Transformations;
+import transformation.TransformationComponent;
 import data.Rule3Data;
 import exceptions.GeneralPetrinetException;
 
@@ -39,7 +39,7 @@ public class Rule3Test {
 	@BeforeClass
 	public static void applyingRule() {
 		try {
-			transformation = Transformations.transform(nPetrinet, rule);
+			transformation = TransformationComponent.transform(nPetrinet, rule);
 		} catch (GeneralPetrinetException e) {
 			System.out.println(e);
 			fail("Morphism should not be found, but no error should be raised.");

@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import petrinet.Petrinet;
 import transformation.Rule;
-import transformation.Transformations;
+import transformation.TransformationComponent;
 import data.Rule1Data;
 import exceptions.GeneralPetrinetException;
 
@@ -32,7 +32,7 @@ public class Rule1Test {
 				//so we check the toString() of its pre-matrix instead
 				String preBefore = nPetrinet.getPre().matrixStringOnly();
 				String postBefore = nPetrinet.getPost().matrixStringOnly();
-				Transformations.transform(nPetrinet, rule);
+				TransformationComponent.transform(nPetrinet, rule);
 				String preAfter = nPetrinet.getPre().matrixStringOnly();
 				String postAfter = nPetrinet.getPost().matrixStringOnly();
 				assertEquals(preBefore, preAfter);
