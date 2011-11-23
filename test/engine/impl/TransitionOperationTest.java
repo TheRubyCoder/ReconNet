@@ -6,10 +6,11 @@ import junit.framework.TestCase;
 
 import org.junit.Before;
 
-import petrinet.IArc;
+import petrinet.Arc;
 import petrinet.INode;
-import petrinet.IPlace;
-import petrinet.ITransition;
+import petrinet.PetrinetComponent;
+import petrinet.Place;
+import petrinet.Transition;
 import petrinet.Petrinet;
 import petrinet.Renews;
 import petrinetze.impl.SimpleListener;
@@ -37,37 +38,37 @@ public class TransitionOperationTest extends TestCase {
 	 */
 	private Petrinet p2;
 	
-    private IPlace place1;
-    private IPlace place2;
-    private IPlace place3;    
-    private IPlace place4;
-    private IPlace place5;
+    private Place place1;
+    private Place place2;
+    private Place place3;    
+    private Place place4;
+    private Place place5;
     
-    private ITransition transition1;
-    private ITransition transition2;    
-    private ITransition transition3;    
-    private ITransition transition4;    
-    private ITransition transition12;
-    private ITransition transition22;    
-    private ITransition transition32;    
-    private ITransition transition42;
+    private Transition transition1;
+    private Transition transition2;    
+    private Transition transition3;    
+    private Transition transition4;    
+    private Transition transition12;
+    private Transition transition22;    
+    private Transition transition32;    
+    private Transition transition42;
     
-    private IArc arc11;
-    private IArc arc12;
-    private IArc arc21;
-    private IArc arc22;
-    private IArc arc31;
-    private IArc arc32;
-    private IArc arc41;
-    private IArc arc42;
-    private IArc arc112;
-    private IArc arc122;
-    private IArc arc212;
-    private IArc arc222;
-    private IArc arc312;
-    private IArc arc322;
-    private IArc arc412;
-    private IArc arc422;
+    private Arc arc11;
+    private Arc arc12;
+    private Arc arc21;
+    private Arc arc22;
+    private Arc arc31;
+    private Arc arc32;
+    private Arc arc41;
+    private Arc arc42;
+    private Arc arc112;
+    private Arc arc122;
+    private Arc arc212;
+    private Arc arc222;
+    private Arc arc312;
+    private Arc arc322;
+    private Arc arc412;
+    private Arc arc422;
     
     private SimpleListener listener;
 	
@@ -76,11 +77,11 @@ public class TransitionOperationTest extends TestCase {
 	 */
 	@Before
 	public void setUp() throws Exception {		
-		p = new Petrinet();
+		p = PetrinetComponent.getPetrinet().createPetrinet();
 		listener = new SimpleListener();
 		p.addPetrinetListener(listener);
 		
-		p2 = new Petrinet();
+		p2 = PetrinetComponent.getPetrinet().createPetrinet();
 		p2.addPetrinetListener(listener);
 
         place1 = p.createPlace("A");
