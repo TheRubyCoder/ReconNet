@@ -9,7 +9,7 @@ import edu.uci.ics.jung.visualization.layout.LayoutTransition;
 import edu.uci.ics.jung.visualization.picking.PickedState;
 import edu.uci.ics.jung.visualization.util.Animator;
 
-class LayoutEditor{
+public class LayoutEditor{
 
     private final EngineContext context;
 

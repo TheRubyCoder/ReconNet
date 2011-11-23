@@ -2,8 +2,9 @@ package gui;
 
 import engine.Engine;
 import engine.EngineFactory;
-import petrinetze.IPetrinet;
-import petrinetze.Petrinet;
+import petrinet.IPetrinet;
+import petrinet.Petrinet;
+import petrinet.PetrinetComponent;
 import transformation.Rule;
 
 import javax.swing.*;
@@ -15,13 +16,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.*;
 
-/**
- * Created by IntelliJ IDEA.
- * User: moritz
- * Date: 08.01.11
- * Time: 14:15
- * To change this template use File | Settings | File Templates.
- */
 public class PetrinetTreeDemo extends JScrollPane {
 
     private JTree tree;
@@ -149,7 +143,7 @@ public class PetrinetTreeDemo extends JScrollPane {
 
                 final EngineFactory factory = EngineFactory.newFactory();
 
-                PetrinetTreeModel.PetrinetNode node = panel.addPetrinet("Wecker", factory.createEngine(new Petrinet()));
+                PetrinetTreeModel.PetrinetNode node = panel.addPetrinet("Wecker", factory.createEngine(PetrinetComponent.getPetrinet().createPetrinet()));
                 //node.addRule("zerst�ren", new Rule());
 
                 panel.setBorder(BorderFactory.createEmptyBorder()); // nur falls direkt im JFrame!

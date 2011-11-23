@@ -5,10 +5,10 @@ import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import petrinetze.IPetrinet;
-import petrinetze.IPlace;
-import transformation.IRule;
-import transformation.ITransformation;
+import petrinet.Petrinet;
+import petrinet.Place;
+import transformation.Rule;
+import transformation.Transformation;
 import transformation.Transformations;
 import data.Rule2Data;
 import exceptions.GeneralPetrinetException;
@@ -20,13 +20,13 @@ import exceptions.GeneralPetrinetException;
  */
 public class Rule2Test {
 	/** petrinet to transform */
-	private static IPetrinet nPetrinet = Rule2Data.getnPetrinet();
+	private static Petrinet nPetrinet = Rule2Data.getnPetrinet();
 	/** rule to apply */
-	private static IRule rule = Rule2Data.getRule();
+	private static Rule rule = Rule2Data.getRule();
 
 	private static String preBefore;
 	private static String postBefore;
-	private static ITransformation transformation;
+	private static Transformation transformation;
 	private static String preAfter;
 	private static String postAfter;
 
@@ -79,7 +79,7 @@ public class Rule2Test {
 		// Only 29 arcs left?
 		assertEquals(29, nPetrinet.getAllArcs().size());
 		// right place deleted?
-		for (IPlace place : nPetrinet.getAllPlaces()) {
+		for (Place place : nPetrinet.getAllPlaces()) {
 			if (place.getId() == Rule2Data.getIdOfMatchedPlace()) {
 				fail("the place that should have been deleted is still in the petrinet");
 			}

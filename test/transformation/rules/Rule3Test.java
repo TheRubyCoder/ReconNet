@@ -10,12 +10,12 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import petrinetze.IPetrinet;
-import petrinetze.IPlace;
-import transformation.IRule;
-import transformation.ITransformation;
+import petrinet.Petrinet;
+import petrinet.Place;
+
+import transformation.Rule;
+import transformation.Transformation;
 import transformation.Transformations;
-import data.Rule2Data;
 import data.Rule3Data;
 import exceptions.GeneralPetrinetException;
 
@@ -28,13 +28,13 @@ import exceptions.GeneralPetrinetException;
 public class Rule3Test {
 	
 	/** petrinet to transform */
-	private static IPetrinet nPetrinet = Rule3Data.getnPetrinet();
+	private static Petrinet nPetrinet = Rule3Data.getnPetrinet();
 	/** rule to apply */
-	private static IRule rule = Rule3Data.getRule();
+	private static Rule rule = Rule3Data.getRule();
 	/** added place need for check equals*/
-	private static IPlace newPlace = Rule3Data.getNewPlace();
+	private static Place newPlace = Rule3Data.getNewPlace();
 
-	private static ITransformation transformation;
+	private static Transformation transformation;
 
 	@BeforeClass
 	public static void applyingRule() {
@@ -56,15 +56,15 @@ public class Rule3Test {
 		assertEquals(newPlace.getId(), transformation.getPetrinet().getPlaceById(newPlace.getId()));
 		
 		//the added Place has no outgoing and incoming Arcs
-		IPlace addedPlace = transformation.getPetrinet().getPlaceById(newPlace.getId());
+		Place addedPlace = transformation.getPetrinet().getPlaceById(newPlace.getId());
 		
 		assertTrue(addedPlace.getStartArcs().isEmpty());
 		assertTrue(addedPlace.getEndArcs().isEmpty());
 		
 		//The count of Places with no incoming and outcoing arcs should be one
-		List<IPlace> placesWithZeroArcs = new ArrayList<IPlace>();
+		List<Place> placesWithZeroArcs = new ArrayList<Place>();
 		
-		for (IPlace place : transformation.getPetrinet().getAllPlaces()) {
+		for (Place place : transformation.getPetrinet().getAllPlaces()) {
 			if(place.getEndArcs().isEmpty() && place.getStartArcs().isEmpty()){
 				placesWithZeroArcs.add(place);
 			}

@@ -1,7 +1,6 @@
 package engine;
 
 import edu.uci.ics.jung.graph.DirectedGraph;
-import engine.*;
 import exceptions.GeneralPetrinetException;
 import petrinet.Arc;
 import petrinet.INode;

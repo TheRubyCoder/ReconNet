@@ -10,8 +10,8 @@ import java.util.Set;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import petrinetze.IPetrinet;
-import petrinetze.ITransition;
+import petrinet.Petrinet;
+import petrinet.Transition;
 import data.MorphismData;
 
 /**
@@ -20,14 +20,14 @@ import data.MorphismData;
  */
 public class MorphismTransitionsTest {
 
-	private static IPetrinet transitionFromNet = MorphismData
+	private static Petrinet transitionFromNet = MorphismData
 			.getPetrinetIsomorphismTransitionsFrom();
 
-	private static IPetrinet transitionToNet = MorphismData
+	private static Petrinet transitionToNet = MorphismData
 			.getPetrinetIsomorphismTransitionsTo();
 
-	private static ITransition fromTransition;
-	private static Map<ITransition, Integer> counter;
+	private static Transition fromTransition;
+	private static Map<Transition, Integer> counter;
 
 	@BeforeClass
 	public static void setUpOnce() throws Exception {
@@ -36,12 +36,12 @@ public class MorphismTransitionsTest {
 		fromTransition = transitionFromNet.getAllTransitions().iterator()
 				.next();
 
-		counter = new HashMap<ITransition, Integer>();
+		counter = new HashMap<Transition, Integer>();
 
-		ITransition targetTransition;
+		Transition targetTransition;
 		// try 100 morphism and count them
 		for (int i = 0; i < 20; i++) {
-			IMorphism morphism = MorphismFactory.createMorphism(
+			Morphism morphism = MorphismFactory.createMorphism(
 					transitionFromNet, transitionToNet);
 			targetTransition = morphism.getTransitionMorphism(fromTransition);
 
@@ -91,7 +91,7 @@ public class MorphismTransitionsTest {
 		expectedMatches.add(MorphismData.getIdMatchedTransition());
 
 		Set<Integer> actualMatches = new HashSet<Integer>();
-		for (ITransition transition : counter.keySet()) {
+		for (Transition transition : counter.keySet()) {
 			actualMatches.add(transition.getId());
 		}
 		assertEquals(expectedMatches, actualMatches);

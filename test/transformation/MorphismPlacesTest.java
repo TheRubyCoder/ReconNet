@@ -10,9 +10,9 @@ import java.util.Set;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import petrinetze.IArc;
-import petrinetze.IPetrinet;
-import petrinetze.IPlace;
+import petrinet.Arc;
+import petrinet.Petrinet;
+import petrinet.Place;
 import data.MorphismData;
 
 /**
@@ -22,26 +22,26 @@ public class MorphismPlacesTest {
 	
 	private static int morphismCount = 2000;
 
-	private static IPetrinet placesFromNet = MorphismData
+	private static Petrinet placesFromNet = MorphismData
 			.getPetrinetIsomorphismPlacesFrom();
 
-	private static IPetrinet placesToNet = MorphismData
+	private static Petrinet placesToNet = MorphismData
 			.getPetrinetIsomorphismPlacesTo();
 
-	private static IPlace fromPlace;
-	private static Map<IPlace, Integer> counter;
+	private static Place fromPlace;
+	private static Map<Place, Integer> counter;
 
 	@BeforeClass
 	public static void setUpOnce() throws Exception {
 		// Get the first (and only) place in the "from" net
 		fromPlace = placesFromNet.getAllPlaces().iterator().next();
 
-		counter = new HashMap<IPlace, Integer>();
+		counter = new HashMap<Place, Integer>();
 
-		IPlace targetPlace;
+		Place targetPlace;
 		// try 100 morphism and count them
 		for (int i = 0; i < morphismCount; i++) {
-			IMorphism morphism = MorphismFactory.createMorphism(placesFromNet,
+			Morphism morphism = MorphismFactory.createMorphism(placesFromNet,
 					placesToNet);
 			targetPlace = morphism.getPlaceMorphism(fromPlace);
 
@@ -88,7 +88,7 @@ public class MorphismPlacesTest {
 		Set<Integer> expectedMatches = MorphismData.getIdsMatchedPlaces();
 		
 		Set<Integer> actualMatches = new HashSet<Integer>();
-		for (IPlace place : counter.keySet()) {
+		for (Place place : counter.keySet()) {
 			actualMatches.add(place.getId());
 		}
 		assertEquals(expectedMatches, actualMatches);
@@ -96,8 +96,8 @@ public class MorphismPlacesTest {
 	
 	@Test
 	public void testStupidMethodToGetCodeCoverageForGetters(){
-		IMorphism morphism = MorphismFactory.createMorphism(placesFromNet, placesToNet);
-		IArc arc = placesFromNet.getAllArcs().iterator().next();
+		Morphism morphism = MorphismFactory.createMorphism(placesFromNet, placesToNet);
+		Arc arc = placesFromNet.getAllArcs().iterator().next();
 		morphism.getArcMorphism(arc);
 		
 		morphism.getEdgesMorphism();

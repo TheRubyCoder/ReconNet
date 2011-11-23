@@ -11,7 +11,7 @@ import petrinet.Transition;
  * A morphism maps places, transitions and edges in a way that pre and post
  * have the same "structure" in 'from' and 'to'. For more details look at documnets of the petrinet course. 
  */
-class Morphism{
+public class Morphism{
 
 	private final Petrinet from;
 	private final Petrinet to;

@@ -5,8 +5,8 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import petrinetze.IPetrinet;
-import transformation.IRule;
+import petrinet.Petrinet;
+import transformation.Rule;
 import transformation.Transformations;
 import data.Rule1Data;
 import exceptions.GeneralPetrinetException;
@@ -18,9 +18,9 @@ import exceptions.GeneralPetrinetException;
  */
 public class Rule1Test {
 	
-	private static IPetrinet nPetrinet = Rule1Data.getnPetrinet();
+	private static Petrinet nPetrinet = Rule1Data.getnPetrinet();
 	
-	private static IRule rule = Rule1Data.getRule();
+	private static Rule rule = Rule1Data.getRule();
 	
 	@Test
 	public void testApplyingRule(){

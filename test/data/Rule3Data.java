@@ -1,28 +1,28 @@
 package data;
 
-import petrinetze.IPetrinet;
-import petrinetze.IPlace;
-import transformation.IRule;
+import petrinet.Petrinet;
+import petrinet.Place;
 import transformation.Rule;
+import transformation.TransformationComponent;
 
 public class Rule3Data {
 	
 	
-	private static IPetrinet nPetrinet = MorphismData.getPetrinetIsomorphismPlacesTo();
+	private static Petrinet nPetrinet = MorphismData.getPetrinetIsomorphismPlacesTo();
 
-	private static IRule rule = new Rule();
+	private static Rule rule = TransformationComponent.getTransformation().createRule();
 	
-	private static IPlace newPlace;
+	private static Place newPlace;
 
-	public static IPetrinet getnPetrinet() {
+	public static Petrinet getnPetrinet() {
 		return nPetrinet;
 	}
 
-	public static IRule getRule() {
+	public static Rule getRule() {
 		return rule;
 	}
 	
-	public static IPlace getNewPlace(){
+	public static Place getNewPlace(){
 		return newPlace;
 	}
 	
@@ -30,7 +30,7 @@ public class Rule3Data {
 		addSubnetToPetrinet(rule.getL());
 	}
 
-	private static void addSubnetToPetrinet(IPetrinet petrinet) {
+	private static void addSubnetToPetrinet(Petrinet petrinet) {
 		newPlace = petrinet.createPlace("NewPlace");
 	}
 

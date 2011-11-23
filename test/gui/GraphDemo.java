@@ -1,7 +1,7 @@
 package gui;
 
 import engine.*;
-import petrinetze.*;
+import petrinet.*;
 
 import javax.swing.*;
 import javax.swing.Timer;
@@ -14,16 +14,13 @@ import java.awt.event.WindowEvent;
 import java.util.*;
 import java.util.List;
 
-/**
- * Created by IntelliJ IDEA.
- * User: moritz
- * Date: 07.01.11
- * Time: 12:42
- * To change this template use File | Settings | File Templates.
- */
 public class GraphDemo extends JFrame {
+	
+	final JToggleButton simButton;
+	
+	final DefaultTableModel model;
 
-    private transient final IPetrinet petrinet = new Petrinet();
+    private transient final Petrinet petrinet = PetrinetComponent.getPetrinet().createPetrinet();
 
     private final Engine engine;
 
@@ -40,14 +37,14 @@ public class GraphDemo extends JFrame {
     public GraphDemo() {
         super("Graph Demo");
         getRootPane().putClientProperty("apple.awt.brushMetalLook", Boolean.TRUE);
-        IPlace a = petrinet.createPlace("A");
+        Place a = petrinet.createPlace("A");
         a.setMark(8);
-        IPlace b = petrinet.createPlace("B");
+        Place b = petrinet.createPlace("B");
         b.setMark(12);
-        IPlace c = petrinet.createPlace("C");
+        Place c = petrinet.createPlace("C");
         c.setMark(1);
 
-        ITransition r = petrinet.createTransition("r", Renews.fromMap(new HashMap<String,String>(){{
+        Transition r = petrinet.createTransition("r", Renews.fromMap(new HashMap<String,String>(){{
             put("hund", "katze");
             put("maus", "hund");
             put("katze", "hamster");
@@ -55,25 +52,25 @@ public class GraphDemo extends JFrame {
         }}));
         r.setTlb("hund");
 
-        ITransition s = petrinet.createTransition("s", Renews.COUNT);
+        Transition s = petrinet.createTransition("s", Renews.COUNT);
         s.setTlb(String.valueOf(0));
 
-        ITransition t = petrinet.createTransition("t", Renews.COUNT);
+        Transition t = petrinet.createTransition("t", Renews.COUNT);
         t.setTlb(String.valueOf(0));
 
-        // IArc j =
+        // Arc j =
         petrinet.createArc("j", a, r);
-        // IArc k =
+        // Arc k =
         petrinet.createArc("k", r, b);
-        IArc l = petrinet.createArc("l", b, s);
+        Arc l = petrinet.createArc("l", b, s);
         l.setMark(16);
-        IArc m = petrinet.createArc("m", s, c);
+        Arc m = petrinet.createArc("m", s, c);
         m.setMark(10);
-        IArc n = petrinet.createArc("n", c, t);
+        Arc n = petrinet.createArc("n", c, t);
         n.setMark(4);
-        IArc o = petrinet.createArc("o", t, a);
+        Arc o = petrinet.createArc("o", t, a);
         o.setMark(7);
-        IArc p = petrinet.createArc("p", t, c);
+        Arc p = petrinet.createArc("p", t, c);
         p.setMark(2);
 
         /*
@@ -88,12 +85,12 @@ public class GraphDemo extends JFrame {
 
         graphPanel = engine.getGraphEditor().getGraphPanel();
 
-        final DefaultTableModel model = new DefaultTableModel();
+        model = new DefaultTableModel();
 
         model.setColumnCount(2);
         model.setColumnIdentifiers(new Object[] { "Transition", "Label" });
 
-        for (ITransition transition : petrinet.getAllTransitions()) {
+        for (Transition transition : petrinet.getAllTransitions()) {
             model.addRow(new Object[] { transition.getName(), transition.getTlb() });
         }
 
@@ -159,43 +156,19 @@ public class GraphDemo extends JFrame {
             }
         };
 
-        final JToggleButton simButton = new JToggleButton(simulationAction);
+        simButton = new JToggleButton(simulationAction);
         simButton.setSelectedIcon(pauseIcon);
         toolBar.add(simButton);
 
         final JLabel statusLabel = new JLabel("Petrinetz geladen");
 
-        petrinet.addPetrinetListener(new IPetrinetListener() {
-            @Override
-            public void changed(IPetrinet petrinet, INode element, ActionType actionType) {
-                if (element instanceof ITransition) {
-                    switch (actionType) {
-                        case added:
-                        case deleted:
-                            final List<ITransition> transitions = getTransitions();
-
-                            while (model.getRowCount() > 0) model.removeRow(0);
-
-                            for (ITransition transition : transitions) {
-                                model.addRow(new Object[] { transition.getName(), transition.getTlb() });
-                            }
-                            labelTable.setModel(model);
-                    }
-                }
-                repaint();
-            }
-
-            @Override
-            public void changed(IPetrinet petrinet, IArc element, ActionType actionType) {
-                repaint();
-            }
-        });
+        petrinet.addPetrinetListener(new TestPetriListener(this));
 
         engine.getSimulation().addStepListener(new StepListener() {
                     @Override
                     public void stepped(Simulation s) {
                         updateTable();
-                        /* only if no IPetriNetListener is attached!
+                        /* only if no PetrinetListener is attached!
                         getContentPane().repaint();
                         */
                     }
@@ -213,22 +186,7 @@ public class GraphDemo extends JFrame {
                     }
                 });
 
-        engine.getNet().addPetrinetListener(new IPetrinetListener() {
-            @Override
-            public void changed(IPetrinet petrinet, INode element, ActionType actionType) {
-                netChanged(petrinet);
-            }
-
-            @Override
-            public void changed(IPetrinet petrinet, IArc element, ActionType actionType) {
-                netChanged(petrinet);
-            }
-
-            private void netChanged(IPetrinet p) {
-                simButton.setEnabled(!p.getActivatedTransitions().isEmpty());
-                graphPanel.repaint();
-            }
-        });
+        engine.getNet().addPetrinetListener(new TestPetriListener2(this));
 
         final JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, graphPanel, new JScrollPane(labelTable));
         split.setContinuousLayout(true);
@@ -245,11 +203,11 @@ public class GraphDemo extends JFrame {
         getContentPane().add(statusLabel, BorderLayout.SOUTH);
     }
 
-    private List<ITransition> getTransitions() {
-        final List<ITransition> ts = new ArrayList<ITransition>(petrinet.getAllTransitions());
-        Collections.sort(ts, new Comparator<ITransition>() {
+    private List<Transition> getTransitions() {
+        final List<Transition> ts = new ArrayList<Transition>(petrinet.getAllTransitions());
+        Collections.sort(ts, new Comparator<Transition>() {
             @Override
-            public int compare(ITransition o1, ITransition o2) {
+            public int compare(Transition o1, Transition o2) {
                 return (o1.getId() > o2.getId()) ? 1 :
                        (o1.getId() == o2.getId()) ? 0 :
                        -1;
@@ -260,7 +218,7 @@ public class GraphDemo extends JFrame {
 
     private void updateTable() {
         int i = 0;
-        for (ITransition t : getTransitions()) {
+        for (Transition t : getTransitions()) {
             labelTable.setValueAt(t.getTlb(), i, 1);
             i++;
         }
@@ -287,5 +245,61 @@ public class GraphDemo extends JFrame {
             }
         });
 
+    }
+    
+    private static class TestPetriListener2 implements IPetrinetListener{
+    	
+    	private GraphDemo graphDemo;
+    	
+    	TestPetriListener2(GraphDemo graphDemo){
+    		this.graphDemo = graphDemo;
+    	}
+    	 @Override
+         public void changed(Petrinet petrinet, INode element, ActionType actionType) {
+             netChanged(petrinet);
+         }
+
+         @Override
+         public void changed(Petrinet petrinet, Arc element, ActionType actionType) {
+             netChanged(petrinet);
+         }
+
+         private void netChanged(Petrinet p) {
+        	 graphDemo.simButton.setEnabled(!p.getActivatedTransitions().isEmpty());
+        	 graphDemo.graphPanel.repaint();
+         }
+    }
+    
+    private static class TestPetriListener implements IPetrinetListener{
+    	
+    	private GraphDemo graphDemo;
+    	
+    	TestPetriListener(GraphDemo graphDemo){
+    		this.graphDemo = graphDemo;
+    	}
+    	
+    	@Override
+        public void changed(Petrinet petrinet, INode element, ActionType actionType) {
+            if (element instanceof Transition) {
+                switch (actionType) {
+                    case added:
+                    case deleted:
+                        final List<Transition> transitions = graphDemo.getTransitions();
+
+                        while (graphDemo.model.getRowCount() > 0) graphDemo.model.removeRow(0);
+
+                        for (Transition transition : transitions) {
+                        	graphDemo.model.addRow(new Object[] { transition.getName(), transition.getTlb() });
+                        }
+                        graphDemo.labelTable.setModel(graphDemo.model);
+                }
+            }
+            graphDemo.repaint();
+        }
+
+        @Override
+        public void changed(Petrinet petrinet, Arc element, ActionType actionType) {
+        	graphDemo.repaint();
+        }
     }
 }

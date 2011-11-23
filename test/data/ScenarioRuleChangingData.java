@@ -1,65 +1,65 @@
 package data;
 
-import petrinetze.IPlace;
-import petrinetze.ITransition;
-import transformation.IRule;
+import petrinet.Place;
+import petrinet.Transition;
 import transformation.Rule;
+import transformation.TransformationComponent;
 
 public class ScenarioRuleChangingData {
 
-	public static IRule getRuleScenario1() {
+	public static Rule getRuleScenario1() {
 		return emptyRule;
 	}
 
-	public static IRule getRuleScenario2() {
+	public static Rule getRuleScenario2() {
 		return emptyRule;
 	}
 
-	public static IRule getRuleScenario3() {
+	public static Rule getRuleScenario3() {
 		return emptyRule;
 	}
 
-	public static IRule getRuleScenario4() {
+	public static Rule getRuleScenario4() {
 		return ruleWithOnePlaceInLKR;
 	}
 
-	public static IRule getRuleScenario5() {
+	public static Rule getRuleScenario5() {
 		return ruleWithOnePlaceInLKR;
 	}
 
-	public static IRule getRuleScenario6() {
+	public static Rule getRuleScenario6() {
 		return ruleWithOnePlaceInLKR;
 	}
 
-	public static IRule getRuleScenario7() {
+	public static Rule getRuleScenario7() {
 		return ruleWithOnePlaceAndOneTransition;
 	}
 
-	public static IRule getRuleScenario8() {
+	public static Rule getRuleScenario8() {
 		return ruleWithOnePlaceAndOneTransition;
 	}
 
-	public static IRule getRuleScenario9() {
+	public static Rule getRuleScenario9() {
 		return ruleWithOnePlaceAndOneTransition;
 	}
 	
-	public static IRule getRuleScenario13() {
+	public static Rule getRuleScenario13() {
 		return ruleWithOnePlaceInLKR;
 	}
 	
-	public static IRule getRuleScenario14() {
+	public static Rule getRuleScenario14() {
 		return ruleWithOnePlaceInLKR;
 	}
 	
-	public static IRule getRuleScenario15() {
+	public static Rule getRuleScenario15() {
 		return ruleWithOnePlaceInLKR;
 	}
 
-	private static IRule emptyRule;
+	private static Rule emptyRule;
 
-	private static IRule ruleWithOnePlaceInLKR;
+	private static Rule ruleWithOnePlaceInLKR;
 
-	private static IRule ruleWithOnePlaceAndOneTransition;
+	private static Rule ruleWithOnePlaceAndOneTransition;
 
 	static {
 		clearAllRuleChanges();
@@ -70,15 +70,15 @@ public class ScenarioRuleChangingData {
 	 * /../additional/images/rule_changing_scenarios.png
 	 */
 	public static void clearAllRuleChanges() {
-		emptyRule = new Rule();
+		emptyRule = TransformationComponent.getTransformation().createRule();
 
-		ruleWithOnePlaceInLKR = new Rule();
+		ruleWithOnePlaceInLKR = TransformationComponent.getTransformation().createRule();
 		ruleWithOnePlaceInLKR.getK().createPlace("P1");
 
-		ruleWithOnePlaceAndOneTransition = new Rule();
-		IPlace placeInK = ruleWithOnePlaceAndOneTransition.getK().createPlace(
+		ruleWithOnePlaceAndOneTransition = TransformationComponent.getTransformation().createRule();
+		Place placeInK = ruleWithOnePlaceAndOneTransition.getK().createPlace(
 				"P1");
-		ITransition transitionInK = ruleWithOnePlaceAndOneTransition.getK()
+		Transition transitionInK = ruleWithOnePlaceAndOneTransition.getK()
 				.createTransition("A");
 		ruleWithOnePlaceAndOneTransition.getK().createArc("", placeInK,
 				transitionInK);

@@ -2,11 +2,11 @@ package petrinetze.impl;
 
 import java.util.HashMap;
 
-import petrinetze.IPlace;
-import petrinetze.ITransition;
-import petrinetze.Petrinet;
-import petrinetze.RenewId;
-import petrinetze.RenewMap;
+import petrinet.IPlace;
+import petrinet.ITransition;
+import petrinet.Petrinet;
+import petrinet.RenewId;
+import petrinet.RenewMap;
 /**
  * blabla
  * 

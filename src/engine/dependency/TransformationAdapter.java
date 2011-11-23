@@ -9,7 +9,7 @@ public class TransformationAdapter {
 	private TransformationAdapter(){};
 	
 	public static Rule createRule() {
-		return TransformationComponent.getPetrinet().createRule();
+		return TransformationComponent.getTransformation().createRule();
 	}
 
 }

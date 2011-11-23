@@ -14,7 +14,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import petrinetze.*;
+
+import petrinet.*;
 
 
 /**
@@ -23,7 +24,7 @@ import petrinetze.*;
  */
 public class RuleTest {
 
-    public IRule rule1;
+    public Rule rule1;
 
     public RuleTest() {
     }
@@ -40,23 +41,23 @@ public class RuleTest {
     public void setUp() {
         rule1 = new Rule();
         //L von r1
-        IPlace p1 = rule1.getL().createPlace("Wecker ein");
-        IPlace p2 = rule1.getK().createPlace("Wecker ein");
+        Place p1 = rule1.getL().createPlace("Wecker ein");
+        Place p2 = rule1.getK().createPlace("Wecker ein");
         p2.setMark(1);
-        IPlace p3 = rule1.getK().createPlace("");
-        IPlace p4 = rule1.getK().createPlace("");
-        IPlace p5 = rule1.getK().createPlace("Wecker aus");
-        IPlace p6 = rule1.getL().createPlace("Wecker aus");
-        ITransition t1 = rule1.getL().createTransition("", Renews.COUNT);
+        Place p3 = rule1.getK().createPlace("");
+        Place p4 = rule1.getK().createPlace("");
+        Place p5 = rule1.getK().createPlace("Wecker aus");
+        Place p6 = rule1.getL().createPlace("Wecker aus");
+        Transition t1 = rule1.getL().createTransition("", Renews.COUNT);
         rule1.getL().createArc("", p1, t1);
         rule1.getL().createArc("", t1, rule1.fromKtoL(p4));
-        ITransition t2 = rule1.getL().createTransition("", Renews.COUNT);
+        Transition t2 = rule1.getL().createTransition("", Renews.COUNT);
         rule1.getL().createArc("", rule1.fromKtoL(p3), t2);
         rule1.getL().createArc("", t2, p6);
-        ITransition t3 = rule1.getR().createTransition("", Renews.COUNT);
+        Transition t3 = rule1.getR().createTransition("", Renews.COUNT);
         rule1.getR().createArc("", rule1.fromKtoR(p2), t3);
         rule1.getR().createArc("", t3, rule1.fromKtoR(p4));
-        ITransition t4 = rule1.getR().createTransition("", Renews.COUNT);
+        Transition t4 = rule1.getR().createTransition("", Renews.COUNT);
         rule1.getR().createArc("", rule1.fromKtoR(p3), t4);
         rule1.getR().createArc("", t4, rule1.fromKtoR(p5));
   
@@ -67,67 +68,67 @@ public class RuleTest {
     }
 
     /**
-     * Test of fromLtoK method, of class IRule.
+     * Test of fromLtoK method, of class Rule.
      */
     @Test
     public void testFromLtoK_INode() {
         System.out.println("fromLtoK");
-        IRule instance = new Rule();
+        Rule instance = new Rule();
         INode node = instance.getL().createPlace("a");
         assertEquals(node.getName(), instance.fromLtoK(node).getName());
     	assertEquals(node.getName(), instance.fromKtoL(instance.fromLtoK(node)).getName());
     }
 
     /**
-     * Test of fromLtoK method, of class IRule.
+     * Test of fromLtoK method, of class Rule.
      */
     @Test
-    public void testFromLtoK_IArc() {
+    public void testFromLtoK_Arc() {
         System.out.println("fromLtoK");
-        IRule instance = new Rule();
-        ITransition node = instance.getL().createTransition("a", Renews.COUNT);
+        Rule instance = new Rule();
+        Transition node = instance.getL().createTransition("a", Renews.COUNT);
         assertEquals(node.getName(), instance.fromLtoK(node).getName());
-        assertEquals(node.getRnw(), ((ITransition)instance.fromLtoK(node)).getRnw());
+        assertEquals(node.getRnw(), ((Transition)instance.fromLtoK(node)).getRnw());
     	assertEquals(node.getName(), instance.fromKtoL(instance.fromLtoK(node)).getName());
-    	assertEquals(node.getRnw(), ((ITransition)instance.fromKtoL(instance.fromLtoK(node))).getRnw());
+    	assertEquals(node.getRnw(), ((Transition)instance.fromKtoL(instance.fromLtoK(node))).getRnw());
     }
 
     /**
-     * Test of fromRtoK method, of class IRule.
+     * Test of fromRtoK method, of class Rule.
      */
     @Test
     public void testFromRtoK_INode() {
         System.out.println("fromRtoK");
-        IRule instance = new Rule();
+        Rule instance = new Rule();
         INode node = instance.getR().createPlace("a");
         assertEquals(node.getName(), instance.fromRtoK(node).getName());
     	assertEquals(node.getName(), instance.fromKtoR(instance.fromRtoK(node)).getName());
     }
 
     /**
-     * Test of fromRtoK method, of class IRule.
+     * Test of fromRtoK method, of class Rule.
      */
     @Test
-    public void testFromRtoK_IArc() {
+    public void testFromRtoK_Arc() {
         System.out.println("fromRtoK");
-        IRule instance = new Rule();
-        ITransition node = instance.getR().createTransition("a", Renews.COUNT);
+        Rule instance = TransformationComponent.getTransformation().createRule();
+        Transition node = instance.getR().createTransition("a", Renews.COUNT);
         assertEquals(node.getName(), instance.fromRtoK(node).getName());
-        assertEquals(node.getRnw(), ((ITransition)instance.fromRtoK(node)).getRnw());
+        assertEquals(node.getRnw(), ((Transition)instance.fromRtoK(node)).getRnw());
     	assertEquals(node.getName(), instance.fromKtoR(instance.fromRtoK(node)).getName());
-    	assertEquals(node.getRnw(), ((ITransition)instance.fromKtoR(instance.fromRtoK(node))).getRnw());
+    	assertEquals(node.getRnw(), ((Transition)instance.fromKtoR(instance.fromRtoK(node))).getRnw());
     }
 
     @Test
     public void testPlaces(){
         System.out.println("Places");
-        Set<IPlace> k = rule1.getK().getAllPlaces();
-        Set<IPlace> l = rule1.getL().getAllPlaces();
-        Set<IPlace> r = rule1.getR().getAllPlaces();
-        for(IPlace place : r){
+        Set<Place> k = rule1.getK().getAllPlaces();
+        Set<Place> l = rule1.getL().getAllPlaces();
+        Set<Place> r = rule1.getR().getAllPlaces();
+        for(Place place : r){
             assertTrue(k.contains(rule1.fromRtoK(place)));
         }
-        for(IPlace place : l){
+        for(Place place : l){
             assertTrue(k.contains(rule1.fromLtoK(place)));
         }
     }
@@ -135,13 +136,13 @@ public class RuleTest {
     @Test
     public void testArcs(){
         System.out.println("Arcs");
-        Set<IArc> k = rule1.getK().getAllArcs();
-        Set<IArc> l = rule1.getL().getAllArcs();
-        Set<IArc> r = rule1.getR().getAllArcs();
-        for(IArc place : r){
+        Set<Arc> k = rule1.getK().getAllArcs();
+        Set<Arc> l = rule1.getL().getAllArcs();
+        Set<Arc> r = rule1.getR().getAllArcs();
+        for(Arc place : r){
             assertTrue(k.contains(rule1.fromRtoK(place)));
         }
-        for(IArc place : l){
+        for(Arc place : l){
             assertTrue(k.contains(rule1.fromLtoK(place)));
         }
     }
@@ -149,13 +150,13 @@ public class RuleTest {
     @Test
     public void testTransitions(){
         System.out.println("Transitions");
-        Set<ITransition> k = rule1.getK().getAllTransitions();
-        Set<ITransition> l = rule1.getL().getAllTransitions();
-        Set<ITransition> r = rule1.getR().getAllTransitions();
-        for(ITransition place : r){
+        Set<Transition> k = rule1.getK().getAllTransitions();
+        Set<Transition> l = rule1.getL().getAllTransitions();
+        Set<Transition> r = rule1.getR().getAllTransitions();
+        for(Transition place : r){
             assertTrue(k.contains(rule1.fromRtoK(place)));
         }
-        for(ITransition place : l){
+        for(Transition place : l){
             assertTrue(k.contains(rule1.fromLtoK(place)));
         }
     }

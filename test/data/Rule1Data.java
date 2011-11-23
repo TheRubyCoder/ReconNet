@@ -1,10 +1,10 @@
 package data;
 
-import petrinetze.IPetrinet;
-import petrinetze.IPlace;
-import petrinetze.ITransition;
-import transformation.IRule;
+import petrinet.Petrinet;
+import petrinet.Place;
+import petrinet.Transition;
 import transformation.Rule;
+import transformation.TransformationComponent;
 
 /**
  * Contains test data for TestCase "Rule_1" <br/>
@@ -13,30 +13,33 @@ import transformation.Rule;
  */
 public class Rule1Data {
 	
-	public static IPetrinet getnPetrinet() {
+	public static Petrinet getnPetrinet() {
 		return nPetrinet;
 	}
 
-	public static IRule getRule() {
+	public static Rule getRule() {
 		return rule;
 	}
 	
-	private static IPetrinet nPetrinet = MorphismData.getPetrinetIsomorphismPlacesTo();
+	private static Petrinet nPetrinet = MorphismData.getPetrinetIsomorphismPlacesTo();
 
-	private static IRule rule = new Rule();
+	
+	
+	
+	private static Rule rule = TransformationComponent.getTransformation().createRule();
 	
 	static {
 		addSubnetToPetrinet(rule.getK());
 	}
 	
-	private static void addSubnetToPetrinet(IPetrinet petrinet){
-		IPlace place = petrinet.createPlace("P1");
+	private static void addSubnetToPetrinet(Petrinet petrinet){
+		Place place = petrinet.createPlace("P1");
 		for (int i = 0; i < 2; i++) {
-			ITransition transition = petrinet.createTransition("A");
+			Transition transition = petrinet.createTransition("A");
 			petrinet.createArc("", place, transition);
 		}
 		for (int i = 0; i < 3; i++) {
-			ITransition transition = petrinet.createTransition("A");
+			Transition transition = petrinet.createTransition("A");
 			petrinet.createArc("", transition, place);
 		}
 	}

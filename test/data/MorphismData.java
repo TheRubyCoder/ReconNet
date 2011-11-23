@@ -3,19 +3,17 @@ package data;
 import java.util.HashSet;
 import java.util.Set;
 
-import petrinetze.IPetrinet;
-import petrinetze.IPlace;
-import petrinetze.IRenew;
-import petrinetze.ITransition;
-import petrinetze.Petrinet;
-import petrinetze.RenewCount;
-import petrinetze.RenewId;
+import petrinet.Petrinet;
+import petrinet.IRenew;
+import petrinet.PetrinetComponent;
+import petrinet.Place;
+import petrinet.RenewCount;
+import petrinet.RenewId;
+import petrinet.Transition;
 
 
 /**
  * This Class contains the test data for morphism test. 
- * DONT CHANGE THE ORDER IN WICH PLACES OR TRANSITIONS ARE CREATED! (as Ids are used in the tests)
- * (better dont change anything at all until you know the test very well) 
  * 
  */
 public class MorphismData {
@@ -58,19 +56,19 @@ public class MorphismData {
 	 * 
 	 * @return the "from" Petrinet that is specified in... 
  	 */
-	public static IPetrinet getPetrinetIsomorphismPlacesFrom(){
-		IPetrinet result = new Petrinet();
+	public static Petrinet getPetrinetIsomorphismPlacesFrom(){
+		Petrinet result = PetrinetComponent.getPetrinet().createPetrinet();
 		IRenew renewId = new RenewId();
 		
-		IPlace p1 = result.createPlace("P1");
+		Place p1 = result.createPlace("P1");
 		
 		idFromPlaces = p1.getId();
 		
-		ITransition t1 = result.createTransition("A", renewId);
-		ITransition t2 = result.createTransition("A", renewId);
-		ITransition t3 = result.createTransition("A", renewId);
-		ITransition t4 = result.createTransition("A", renewId);
-		ITransition t5 = result.createTransition("A", renewId);
+		Transition t1 = result.createTransition("A", renewId);
+		Transition t2 = result.createTransition("A", renewId);
+		Transition t3 = result.createTransition("A", renewId);
+		Transition t4 = result.createTransition("A", renewId);
+		Transition t5 = result.createTransition("A", renewId);
 		
 		// pre
 		result.createArc("", t1, p1);
@@ -92,20 +90,20 @@ public class MorphismData {
 	 * 
 	 * @return the "to" Petrinet that is specified in... 
  	 */
-	public static IPetrinet getPetrinetIsomorphismPlacesTo(){
+	public static Petrinet getPetrinetIsomorphismPlacesTo(){
 		// The matching subnet P1 and T1...
-		IPetrinet result = new Petrinet();
+		Petrinet result = PetrinetComponent.getPetrinet().createPetrinet();
 		IRenew renewId = new RenewId();
 		
-		IPlace p1 = result.createPlace("P1");
+		Place p1 = result.createPlace("P1");
 		
 		idsMatchedPlaces.add(p1.getId());
 		
-		ITransition t11 = result.createTransition("A", renewId);
-		ITransition t12 = result.createTransition("A", renewId);
-		ITransition t13 = result.createTransition("A", renewId);
-		ITransition t14 = result.createTransition("A", renewId);
-		ITransition t15 = result.createTransition("A", renewId);
+		Transition t11 = result.createTransition("A", renewId);
+		Transition t12 = result.createTransition("A", renewId);
+		Transition t13 = result.createTransition("A", renewId);
+		Transition t14 = result.createTransition("A", renewId);
+		Transition t15 = result.createTransition("A", renewId);
 		
 		// pre
 		result.createArc("", t11, p1);
@@ -123,13 +121,13 @@ public class MorphismData {
 		
 		// The not matching subnet mark not enough  
 		// with following int 2
-		IPlace p2 = result.createPlace("P1");
+		Place p2 = result.createPlace("P1");
 				
-		ITransition t21 = result.createTransition("A", renewId);
-		ITransition t22 = result.createTransition("A", renewId);
-		ITransition t23 = result.createTransition("A", renewId);
-		ITransition t24 = result.createTransition("A", renewId);
-		ITransition t25 = result.createTransition("A", renewId);
+		Transition t21 = result.createTransition("A", renewId);
+		Transition t22 = result.createTransition("A", renewId);
+		Transition t23 = result.createTransition("A", renewId);
+		Transition t24 = result.createTransition("A", renewId);
+		Transition t25 = result.createTransition("A", renewId);
 				
 		// pre
 		result.createArc("", t21, p2);
@@ -146,16 +144,16 @@ public class MorphismData {
 		
 		// The matching subnet mark is 1 more  
 		// with following int 3
-		IPlace p3 = result.createPlace("P1");
+		Place p3 = result.createPlace("P1");
 		idsMatchedPlaces.add(p3.getId());
 		idOfThird = p3.getId();
 
 				
-		ITransition t31 = result.createTransition("A", renewId);
-		ITransition t32 = result.createTransition("A", renewId);
-		ITransition t33 = result.createTransition("A", renewId);
-		ITransition t34 = result.createTransition("A", renewId);
-		ITransition t35 = result.createTransition("A", renewId);
+		Transition t31 = result.createTransition("A", renewId);
+		Transition t32 = result.createTransition("A", renewId);
+		Transition t33 = result.createTransition("A", renewId);
+		Transition t34 = result.createTransition("A", renewId);
+		Transition t35 = result.createTransition("A", renewId);
 				
 		// pre
 		result.createArc("", t31, p3);
@@ -172,12 +170,12 @@ public class MorphismData {
 		
 		// The not matching subnet pre is not enough  
 		// with following int 4
-		IPlace p4 = result.createPlace("P1");
+		Place p4 = result.createPlace("P1");
 						
-		ITransition t41 = result.createTransition("A", renewId);
-		ITransition t43 = result.createTransition("A", renewId);
-		ITransition t44 = result.createTransition("A", renewId);
-		ITransition t45 = result.createTransition("A", renewId);
+		Transition t41 = result.createTransition("A", renewId);
+		Transition t43 = result.createTransition("A", renewId);
+		Transition t44 = result.createTransition("A", renewId);
+		Transition t45 = result.createTransition("A", renewId);
 						
 		// pre
 		result.createArc("", t41, p4);
@@ -193,12 +191,12 @@ public class MorphismData {
 		
 		// The not matching subnet post is not enough  
 		// with following int 5
-		IPlace p5 = result.createPlace("P1");
+		Place p5 = result.createPlace("P1");
 				
-		ITransition t51 = result.createTransition("A", renewId);
-		ITransition t52 = result.createTransition("A", renewId);
-		ITransition t54 = result.createTransition("A", renewId);
-		ITransition t55 = result.createTransition("A", renewId);
+		Transition t51 = result.createTransition("A", renewId);
+		Transition t52 = result.createTransition("A", renewId);
+		Transition t54 = result.createTransition("A", renewId);
+		Transition t55 = result.createTransition("A", renewId);
 				
 		// pre
 		result.createArc("", t51, p5);
@@ -214,16 +212,16 @@ public class MorphismData {
 		
 		// The matching subnet pre is to many  
 		// with following int 6
-		IPlace p6 = result.createPlace("P1");
+		Place p6 = result.createPlace("P1");
 		idsMatchedPlaces.add(p6.getId());
 
 						
-		ITransition t61 = result.createTransition("A", renewId);
-		ITransition t62 = result.createTransition("A", renewId);
-		ITransition t63 = result.createTransition("A", renewId);
-		ITransition t64 = result.createTransition("A", renewId);
-		ITransition t65 = result.createTransition("A", renewId);
-		ITransition t66 = result.createTransition("A", renewId);
+		Transition t61 = result.createTransition("A", renewId);
+		Transition t62 = result.createTransition("A", renewId);
+		Transition t63 = result.createTransition("A", renewId);
+		Transition t64 = result.createTransition("A", renewId);
+		Transition t65 = result.createTransition("A", renewId);
+		Transition t66 = result.createTransition("A", renewId);
 						
 		// pre
 		result.createArc("", t61, p6);
@@ -241,16 +239,16 @@ public class MorphismData {
 		
 		// The matching subnet post is to many  
 		// with following int 7
-		IPlace p7 = result.createPlace("P1");
+		Place p7 = result.createPlace("P1");
 		idsMatchedPlaces.add(p7.getId());
 
 								
-		ITransition t71 = result.createTransition("A", renewId);
-		ITransition t72 = result.createTransition("A", renewId);
-		ITransition t73 = result.createTransition("A", renewId);
-		ITransition t74 = result.createTransition("A", renewId);
-		ITransition t75 = result.createTransition("A", renewId);
-		ITransition t76 = result.createTransition("A", renewId);
+		Transition t71 = result.createTransition("A", renewId);
+		Transition t72 = result.createTransition("A", renewId);
+		Transition t73 = result.createTransition("A", renewId);
+		Transition t74 = result.createTransition("A", renewId);
+		Transition t75 = result.createTransition("A", renewId);
+		Transition t76 = result.createTransition("A", renewId);
 								
 		// pre
 		result.createArc("", t71, p7);
@@ -273,8 +271,8 @@ public class MorphismData {
 	/**
 	 * Returns the "from" petrinet specified in '../additional/images/Isomorphism_transitions.png'
 	 */
-	public static IPetrinet getPetrinetIsomorphismTransitionsFrom(){
-		IPetrinet result = new Petrinet();
+	public static Petrinet getPetrinetIsomorphismTransitionsFrom(){
+		Petrinet result = PetrinetComponent.getPetrinet().createPetrinet();
 		
 		IRenew rnwId = new RenewId();
 		
@@ -287,8 +285,8 @@ public class MorphismData {
 	/**
 	 * Returns the "to" petrinet specified in '../additional/images/Isomorphism_transitions.png'
 	 */
-	public static IPetrinet getPetrinetIsomorphismTransitionsTo(){
-		IPetrinet result = new Petrinet();
+	public static Petrinet getPetrinetIsomorphismTransitionsTo(){
+		Petrinet result = PetrinetComponent.getPetrinet().createPetrinet();
 		
 		IRenew rnwId = new RenewId();
 		IRenew rnwCount = new RenewCount();
@@ -327,20 +325,20 @@ public class MorphismData {
 	}
 	
 	
-	private static int addSubnetToPetrinetLikeInMorphismTransition(IPetrinet petrinet, 
+	private static int addSubnetToPetrinetLikeInMorphismTransition(Petrinet petrinet, 
 			String[] pre, 
 			String[] post, 
 			String name, 
 			IRenew renew, 
 			String tlb){
-		ITransition transition = petrinet.createTransition(name,renew);
+		Transition transition = petrinet.createTransition(name,renew);
 		transition.setTlb(tlb);
 		for (String string: pre) {
-			IPlace place = petrinet.createPlace(string);
+			Place place = petrinet.createPlace(string);
 			petrinet.createArc("", place, transition);
 		}
 		for (String string : post) {
-			IPlace place = petrinet.createPlace(string);
+			Place place = petrinet.createPlace(string);
 			petrinet.createArc("", transition, place);
 		}
 		return transition.getId();
@@ -348,10 +346,10 @@ public class MorphismData {
 	
 	
 //	public static void main(String[] args){
-//		IPetrinet from = MorphismData.getPetrinetIsomorphismPlacesFrom();
+//		Petrinet from = MorphismData.getPetrinetIsomorphismPlacesFrom();
 //		System.out.println(from.toString());
 		
-//		IPetrinet to = MorphismData.getPetrinetIsomorphismPlacesTo();
+//		Petrinet to = MorphismData.getPetrinetIsomorphismPlacesTo();
 //		System.out.println(to.toString());
 		
 //	}

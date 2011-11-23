@@ -6,12 +6,12 @@ import junit.framework.TestCase;
 
 import org.junit.Before;
 
-import petrinetze.IArc;
-import petrinetze.INode;
-import petrinetze.IPlace;
-import petrinetze.ITransition;
-import petrinetze.Petrinet;
-import petrinetze.Renews;
+import petrinet.IArc;
+import petrinet.INode;
+import petrinet.IPlace;
+import petrinet.ITransition;
+import petrinet.Petrinet;
+import petrinet.Renews;
 import petrinetze.impl.SimpleListener;
 
 public class TransitionOperationTest extends TestCase {

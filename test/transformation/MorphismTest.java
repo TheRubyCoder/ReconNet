@@ -17,11 +17,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import petrinetze.IArc;
-import petrinetze.IPetrinet;
-import petrinetze.IPlace;
-import petrinetze.ITransition;
-import petrinetze.Petrinet;
+import petrinet.Arc;
+import petrinet.Petrinet;
+import petrinet.PetrinetComponent;
+import petrinet.Place;
+import petrinet.Transition;
 
 /**
  *
@@ -29,18 +29,18 @@ import petrinetze.Petrinet;
  */
 public class MorphismTest {
 
-	private static IPetrinet fromPn;
-    private static IPetrinet toPn;
+	private static Petrinet fromPn;
+    private static Petrinet toPn;
     
-    private static IPlace[] from_p, to_p;
-    private static ITransition[] from_t, to_t;
-    private static IArc[] from_a, to_a;
+    private static Place[] from_p, to_p;
+    private static Transition[] from_t, to_t;
+    private static Arc[] from_a, to_a;
     
-    private IMorphism testObject;
+    private Morphism testObject;
     
-    private static Map<IPlace, IPlace> expectedPlaceMap;
-    private static Map<ITransition, ITransition> expectedTransitionMap;
-    private static Map<IArc, IArc> expectedArcMap;
+    private static Map<Place, Place> expectedPlaceMap;
+    private static Map<Transition, Transition> expectedTransitionMap;
+    private static Map<Arc, Arc> expectedArcMap;
 
     
     
@@ -95,8 +95,8 @@ public class MorphismTest {
      * Test of morph method, of class Morphism.
      */
     @Test
-    public void testMorph_ITransition() {
-    	for (Map.Entry<ITransition, ITransition> entry : expectedTransitionMap.entrySet()) {
+    public void testMorph_Transition() {
+    	for (Map.Entry<Transition, Transition> entry : expectedTransitionMap.entrySet()) {
     		assertEquals(entry.getValue(), testObject.getTransitionMorphism(entry.getKey()));
     	}
     }
@@ -105,8 +105,8 @@ public class MorphismTest {
      * Test of morph method, of class Morphism.
      */
     @Test
-    public void testMorph_IPlace() {
-    	for (Map.Entry<IPlace, IPlace> entry : expectedPlaceMap.entrySet()) {
+    public void testMorph_Place() {
+    	for (Map.Entry<Place, Place> entry : expectedPlaceMap.entrySet()) {
     		assertEquals(entry.getValue(), testObject.getPlaceMorphism(entry.getKey()));
     	}
     }
@@ -115,8 +115,8 @@ public class MorphismTest {
      * Test of morph method, of class Morphism.
      */
     @Test
-    public void testMorph_IArc() {
-    	for (Map.Entry<IArc, IArc> entry : expectedArcMap.entrySet()) {
+    public void testMorph_Arc() {
+    	for (Map.Entry<Arc, Arc> entry : expectedArcMap.entrySet()) {
     		assertEquals(entry.getValue(), testObject.getArcMorphism(entry.getKey()));
     	}
     }
@@ -139,11 +139,11 @@ public class MorphismTest {
     
     
     private void setupPetrinetFrom() {
-    	fromPn = new Petrinet();
+    	fromPn = PetrinetComponent.getPetrinet().createPetrinet();
 
-    	from_p = new IPlace[6];
-    	from_t = new ITransition[2];
-    	from_a = new IArc[4];
+    	from_p = new Place[6];
+    	from_t = new Transition[2];
+    	from_a = new Arc[4];
 
     	from_p[0] = fromPn.createPlace("Wecker Ein");
     	from_p[1] = fromPn.createPlace("");
@@ -164,11 +164,11 @@ public class MorphismTest {
 
     
     private void setupPetrinetTo() {
-    	toPn = new Petrinet();
+    	toPn = PetrinetComponent.getPetrinet().createPetrinet();
     	
-    	to_p = new IPlace[10];
-    	to_t = new ITransition[9];
-    	to_a = new IArc[18];
+    	to_p = new Place[10];
+    	to_t = new Transition[9];
+    	to_a = new Arc[18];
     	
     	to_p[0] = toPn.createPlace("Wecker Ein");
     	to_p[1] = toPn.createPlace("Aufstehen");
@@ -215,9 +215,9 @@ public class MorphismTest {
     
     
     private void setupExpectedResults() {
-    	expectedPlaceMap = new HashMap<IPlace, IPlace>();
-    	expectedTransitionMap = new HashMap<ITransition, ITransition>();
-    	expectedArcMap = new HashMap<IArc, IArc>();
+    	expectedPlaceMap = new HashMap<Place, Place>();
+    	expectedTransitionMap = new HashMap<Transition, Transition>();
+    	expectedArcMap = new HashMap<Arc, Arc>();
     	
     	expectedPlaceMap.put(from_p[0], to_p[0]);
     	expectedPlaceMap.put(from_p[1], to_p[2]);

@@ -8,29 +8,24 @@ import org.junit.Before;
 //import org.junit.BeforeClass;
 import org.junit.Test;
 
-import petrinetze.*;
+import petrinet.*;
 
-/**
- *
- * @author Philipp Kuehn
- *
- */
 public class PetrinetzTest {
 
-    private IPetrinet p;
+    private Petrinet p;
 
-    private IPlace place1;
+    private Place place1;
 
-    private IPlace place2;
+    private Place place2;
 
-    private ITransition transition;
+    private Transition transition;
 
 	private SimpleListener listener;
 
 	@Before
 	public void setUp() throws Exception
 	{
-		p = new Petrinet();
+		p = PetrinetComponent.getPetrinet().createPetrinet();
 		listener = new SimpleListener();
 		p.addPetrinetListener(listener);
 
@@ -70,8 +65,8 @@ public class PetrinetzTest {
 	@Test
 	public void createArc()
 	{
-        ITransition transition = p.createTransition("t");
-		IArc edge1 = p.createArc("edge1", place1, transition);
+        Transition transition = p.createTransition("t");
+		Arc edge1 = p.createArc("edge1", place1, transition);
 		assertEquals("edge1", edge1.getName());
 		assertTrue(p.getAllArcs().contains(edge1));
 		assertTrue(p.getAllGraphElement().getAllArcs().contains(edge1));
@@ -80,7 +75,7 @@ public class PetrinetzTest {
 		assertEquals(1, edge1.getMark());
 		assertTrue(listener.AddedEdges.contains(edge1));
 
-		IArc edge2 = p.createArc("edge2", transition, place2);
+		Arc edge2 = p.createArc("edge2", transition, place2);
 		assertEquals("edge2", edge2.getName());
 		assertTrue(p.getAllArcs().contains(edge2));
 		assertTrue(p.getAllGraphElement().getAllArcs().contains(edge2));
@@ -104,12 +99,12 @@ public class PetrinetzTest {
 	@Test
 	public void randomTokenFire()
 	{
-        final IPetrinet petrinet = new Petrinet();
+        final Petrinet petrinet = PetrinetComponent.getPetrinet().createPetrinet();
 
-		IPlace p = petrinet.createPlace("p");
+		Place p = petrinet.createPlace("p");
         p.setMark(1);
-		ITransition a = petrinet.createTransition("a", Renews.COUNT);
-		ITransition b = petrinet.createTransition("b", Renews.COUNT);
+		Transition a = petrinet.createTransition("a", Renews.COUNT);
+		Transition b = petrinet.createTransition("b", Renews.COUNT);
 		petrinet.createArc("pa", p, a);
 		petrinet.createArc("pb", p, b);
 		petrinet.createArc("ap", a, p);

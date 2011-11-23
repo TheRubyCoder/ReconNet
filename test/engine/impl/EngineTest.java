@@ -1,6 +1,3 @@
-/**
- * 
- */
 package engine.impl;
 import org.junit.After;
 import engine.*;
@@ -11,7 +8,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import junit.framework.TestCase;
 import static org.junit.Assert.*;
-import petrinetze.*;
+import petrinet.*;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Float;
@@ -25,17 +22,17 @@ public class EngineTest extends TestCase{
 	
 	public final double delta=1e-5;
 
-    private IPetrinet petrinet;
+    private Petrinet petrinet;
 
     private Engine engine;
 
     private INode node;
 
-    private IPlace place;
+    private Place place;
 
-    private ITransition trans;
+    private Transition trans;
 
-    private IArc arc;
+    private Arc arc;
 
     private Point2D location;
 
@@ -49,7 +46,7 @@ public class EngineTest extends TestCase{
 	public void setUp() throws Exception {
 		
 		
-        petrinet = new Petrinet();
+        petrinet = PetrinetComponent.getPetrinet().createPetrinet();
         engine = EngineFactory.newFactory().createEngine(petrinet);
 		location = new Point2D.Float(0,0);
 		location2= new Point2D.Float(1,1);

@@ -3,11 +3,11 @@ package petrinetze.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import petrinetze.ActionType;
-import petrinetze.IArc;
-import petrinetze.INode;
-import petrinetze.IPetrinet;
-import petrinetze.IPetrinetListener;
+import petrinet.ActionType;
+import petrinet.Arc;
+import petrinet.INode;
+import petrinet.IPetrinetListener;
+import petrinet.Petrinet;
 
 
 /**
@@ -26,12 +26,12 @@ public class SimpleListener implements IPetrinetListener
 	List<INode> ChangedNodes = new ArrayList<INode>();
 	List<INode> DeletedNodes = new ArrayList<INode>();
 
-	List<IArc> AddedEdges = new ArrayList<IArc>();
-	List<IArc> ChangedEdges = new ArrayList<IArc>();
-	List<IArc> DeletedEdges = new ArrayList<IArc>();
+	List<Arc> AddedEdges = new ArrayList<Arc>();
+	List<Arc> ChangedEdges = new ArrayList<Arc>();
+	List<Arc> DeletedEdges = new ArrayList<Arc>();
 	
 	@Override
-	public void changed(IPetrinet petrinet, INode element,
+	public void changed(Petrinet petrinet, INode element,
 			ActionType actionType) 
 	{
 		if(actionType == ActionType.added)
@@ -44,7 +44,7 @@ public class SimpleListener implements IPetrinetListener
 	}
 
 	@Override
-	public void changed(IPetrinet petrinet, IArc element,
+	public void changed(Petrinet petrinet, Arc element,
 			ActionType actionType) 
 	{
 			if(actionType == ActionType.added)

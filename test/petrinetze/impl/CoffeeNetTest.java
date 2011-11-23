@@ -5,11 +5,11 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
-import petrinetze.IArc;
-import petrinetze.IPlace;
-import petrinetze.IRenew;
-import petrinetze.ITransition;
-import petrinetze.Petrinet;
+import petrinet.IArc;
+import petrinet.IPlace;
+import petrinet.IRenew;
+import petrinet.ITransition;
+import petrinet.Petrinet;
 
 import engine.Engine;
 import engine.Simulation;

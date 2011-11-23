@@ -5,9 +5,9 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import petrinetze.IPetrinet;
-import transformation.IRule;
-import transformation.ITransformation;
+import petrinet.Petrinet;
+import transformation.Rule;
+import transformation.Transformation;
 import transformation.Transformations;
 import data.Rule2Data;
 import exceptions.GeneralPetrinetException;
@@ -15,13 +15,13 @@ import exceptions.GeneralPetrinetException;
 public class Rule7Test {
 	
 	/** petrinet to transform */
-	private static IPetrinet nPetrinet = Rule2Data.getnPetrinet();
+	private static Petrinet nPetrinet = Rule2Data.getnPetrinet();
 	/** rule to apply */
-	private static IRule rule = Rule2Data.getRule();
+	private static Rule rule = Rule2Data.getRule();
 
 	private static String preBefore;
 	private static String postBefore;
-	private static ITransformation transformation;
+	private static Transformation transformation;
 	private static String preAfter;
 	private static String postAfter;
 

@@ -11,8 +11,6 @@ import transformation.rules.*;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-//	TransformationsTest.class,
-//	TransformationTest.class,
 	MorphismTest.class,
 	RuleTest.class,
 	MorphismPlacesTest.class,

@@ -3,8 +3,8 @@ package transformation;
 import org.junit.Before;
 import org.junit.Test;
 
-import petrinetze.IPetrinet;
-import petrinetze.IPlace;
+import petrinet.Petrinet;
+import petrinet.Place;
 
 import static data.ScenarioRuleChangingData.*;
 import static org.junit.Assert.*;
@@ -19,16 +19,16 @@ public class ScenariosRuleCreationTest {
 	/** creating in k */
 	@Test
 	public void scenario1() {
-		IPetrinet k = getRuleScenario1().getK();
-		IPetrinet l = getRuleScenario1().getL();
-		IPetrinet r = getRuleScenario1().getR();
+		Petrinet k = getRuleScenario1().getK();
+		Petrinet l = getRuleScenario1().getL();
+		Petrinet r = getRuleScenario1().getR();
 
 		// user action
 		k.createPlace("P1");
 
-		IPlace firstInK = k.getAllPlaces().iterator().next();
-		IPlace firstInL = l.getAllPlaces().iterator().next();
-		IPlace firstInR = r.getAllPlaces().iterator().next();
+		Place firstInK = k.getAllPlaces().iterator().next();
+		Place firstInL = l.getAllPlaces().iterator().next();
+		Place firstInR = r.getAllPlaces().iterator().next();
 
 		// all have "P1" ?
 		assertEquals("P1", firstInK.getName());
@@ -43,15 +43,15 @@ public class ScenariosRuleCreationTest {
 	/** creating in l */
 	@Test
 	public void scenario2() {
-		IPetrinet k = getRuleScenario2().getK();
-		IPetrinet l = getRuleScenario2().getL();
-		IPetrinet r = getRuleScenario2().getR();
+		Petrinet k = getRuleScenario2().getK();
+		Petrinet l = getRuleScenario2().getL();
+		Petrinet r = getRuleScenario2().getR();
 
 		// user action
 		l.createPlace("P1");
 
-		IPlace firstInK = k.getAllPlaces().iterator().next();
-		IPlace firstInL = l.getAllPlaces().iterator().next();
+		Place firstInK = k.getAllPlaces().iterator().next();
+		Place firstInL = l.getAllPlaces().iterator().next();
 
 		// L and K have "P1"?
 		assertEquals("P1", firstInK.getName());
@@ -68,15 +68,15 @@ public class ScenariosRuleCreationTest {
 	/** creating in r */
 	@Test
 	public void scenario3() {
-		IPetrinet k = getRuleScenario3().getK();
-		IPetrinet l = getRuleScenario3().getL();
-		IPetrinet r = getRuleScenario3().getR();
+		Petrinet k = getRuleScenario3().getK();
+		Petrinet l = getRuleScenario3().getL();
+		Petrinet r = getRuleScenario3().getR();
 
 		// user action
 		r.createPlace("P1");
 
-		IPlace firstInK = k.getAllPlaces().iterator().next();
-		IPlace firstInR = r.getAllPlaces().iterator().next();
+		Place firstInK = k.getAllPlaces().iterator().next();
+		Place firstInR = r.getAllPlaces().iterator().next();
 
 		// R and K have "P1"?
 		assertEquals("P1", firstInK.getName());
@@ -93,9 +93,9 @@ public class ScenariosRuleCreationTest {
 	/** deleting in k */
 	@Test
 	public void scenario4() {
-		IPetrinet k = getRuleScenario4().getK();
-		IPetrinet l = getRuleScenario4().getL();
-		IPetrinet r = getRuleScenario4().getR();
+		Petrinet k = getRuleScenario4().getK();
+		Petrinet l = getRuleScenario4().getL();
+		Petrinet r = getRuleScenario4().getR();
 		int id = k.getAllPlaces().iterator().next().getId();
 
 		// user action
@@ -118,9 +118,9 @@ public class ScenariosRuleCreationTest {
 	/** deleting in l */
 	@Test
 	public void scenario5() {
-		IPetrinet k = getRuleScenario5().getK();
-		IPetrinet l = getRuleScenario5().getL();
-		IPetrinet r = getRuleScenario5().getR();
+		Petrinet k = getRuleScenario5().getK();
+		Petrinet l = getRuleScenario5().getL();
+		Petrinet r = getRuleScenario5().getR();
 		int id = l.getAllPlaces().iterator().next().getId();
 
 		// user action
@@ -146,9 +146,9 @@ public class ScenariosRuleCreationTest {
 	/** deleting in r */
 	@Test
 	public void scenario6() {
-		IPetrinet k = getRuleScenario6().getK();
-		IPetrinet l = getRuleScenario6().getL();
-		IPetrinet r = getRuleScenario6().getR();
+		Petrinet k = getRuleScenario6().getK();
+		Petrinet l = getRuleScenario6().getL();
+		Petrinet r = getRuleScenario6().getR();
 		int id = r.getAllPlaces().iterator().next().getId();
 
 		// user action
@@ -174,9 +174,9 @@ public class ScenariosRuleCreationTest {
 	/** deleting transition in "complex" k */
 	@Test
 	public void scenario7() {
-		IPetrinet k = getRuleScenario7().getK();
-		IPetrinet l = getRuleScenario7().getL();
-		IPetrinet r = getRuleScenario7().getR();
+		Petrinet k = getRuleScenario7().getK();
+		Petrinet l = getRuleScenario7().getL();
+		Petrinet r = getRuleScenario7().getR();
 		int id = k.getAllPlaces().iterator().next().getId();
 
 		// user action
@@ -205,9 +205,9 @@ public class ScenariosRuleCreationTest {
 	/** deleting transition in "complex" l */
 	@Test
 	public void scenario8() {
-		IPetrinet k = getRuleScenario8().getK();
-		IPetrinet l = getRuleScenario8().getL();
-		IPetrinet r = getRuleScenario8().getR();
+		Petrinet k = getRuleScenario8().getK();
+		Petrinet l = getRuleScenario8().getL();
+		Petrinet r = getRuleScenario8().getR();
 		int id = l.getAllPlaces().iterator().next().getId();
 
 		// user action
@@ -242,9 +242,9 @@ public class ScenariosRuleCreationTest {
 	/** deleting transition in "complex" r */
 	@Test
 	public void scenario9() {
-		IPetrinet k = getRuleScenario9().getK();
-		IPetrinet l = getRuleScenario9().getL();
-		IPetrinet r = getRuleScenario9().getR();
+		Petrinet k = getRuleScenario9().getK();
+		Petrinet l = getRuleScenario9().getL();
+		Petrinet r = getRuleScenario9().getR();
 		int id = r.getAllPlaces().iterator().next().getId();
 
 		// user action
@@ -279,17 +279,17 @@ public class ScenariosRuleCreationTest {
 	/** changing mark in k */
 	@Test
 	public void scenario13() {
-		IPetrinet k = getRuleScenario13().getK();
-		IPetrinet l = getRuleScenario13().getL();
-		IPetrinet r = getRuleScenario13().getR();
+		Petrinet k = getRuleScenario13().getK();
+		Petrinet l = getRuleScenario13().getL();
+		Petrinet r = getRuleScenario13().getR();
 		int id = k.getAllPlaces().iterator().next().getId();
 
 		// user action
 		k.getPlaceById(id).setMark(3);
 
-		IPlace firstInK = k.getAllPlaces().iterator().next();
-		IPlace firstInL = l.getAllPlaces().iterator().next();
-		IPlace firstInR = r.getAllPlaces().iterator().next();
+		Place firstInK = k.getAllPlaces().iterator().next();
+		Place firstInL = l.getAllPlaces().iterator().next();
+		Place firstInR = r.getAllPlaces().iterator().next();
 
 		// all have "P1" ?
 		assertEquals("P1", firstInK.getName());
@@ -309,17 +309,17 @@ public class ScenariosRuleCreationTest {
 	/** changing mark in l */
 	@Test
 	public void scenario14() {
-		IPetrinet k = getRuleScenario14().getK();
-		IPetrinet l = getRuleScenario14().getL();
-		IPetrinet r = getRuleScenario14().getR();
+		Petrinet k = getRuleScenario14().getK();
+		Petrinet l = getRuleScenario14().getL();
+		Petrinet r = getRuleScenario14().getR();
 		int id = l.getAllPlaces().iterator().next().getId();
 
 		// user action
 		l.getPlaceById(id).setMark(3);
 
-		IPlace firstInK = k.getAllPlaces().iterator().next();
-		IPlace firstInL = l.getAllPlaces().iterator().next();
-		IPlace firstInR = r.getAllPlaces().iterator().next();
+		Place firstInK = k.getAllPlaces().iterator().next();
+		Place firstInL = l.getAllPlaces().iterator().next();
+		Place firstInR = r.getAllPlaces().iterator().next();
 
 		// all have "P1" ?
 		assertEquals("P1", firstInK.getName());
@@ -337,17 +337,17 @@ public class ScenariosRuleCreationTest {
 	/** changing mark in r */
 	@Test
 	public void scenario15() {
-		IPetrinet k = getRuleScenario15().getK();
-		IPetrinet l = getRuleScenario15().getL();
-		IPetrinet r = getRuleScenario15().getR();
+		Petrinet k = getRuleScenario15().getK();
+		Petrinet l = getRuleScenario15().getL();
+		Petrinet r = getRuleScenario15().getR();
 		int id = r.getAllPlaces().iterator().next().getId();
 
 		// user action
 		r.getPlaceById(id).setMark(3);
 
-		IPlace firstInK = k.getAllPlaces().iterator().next();
-		IPlace firstInL = l.getAllPlaces().iterator().next();
-		IPlace firstInR = r.getAllPlaces().iterator().next();
+		Place firstInK = k.getAllPlaces().iterator().next();
+		Place firstInL = l.getAllPlaces().iterator().next();
+		Place firstInR = r.getAllPlaces().iterator().next();
 
 		// all have "P1" ?
 		assertEquals("P1", firstInK.getName());
