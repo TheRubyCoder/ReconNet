@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pnml xmlns="http://www.pnml.org/version-2009/grammar/pnml">
+  <net type="https://pub.informatik.haw-hamburg.de/home/pub/prof/padberg/rcpn.pnt" id="n1">
+    <page id="top-level">
+      <name>
+        <text>An example rcPN</text>
+      </name>
+      <place id="p1">
+        <graphics>
+          <position x="39.5" y="44.5"/>
+          <dimension x="40.0" y="40.0"/>
+        </graphics>
+        <placeName>
+          <text>myplace</text>
+        </placeName>
+        <initialMarking>
+           <text>2</text>
+        </initialMarking>
+      </place>
+      <transition id="t1">
+        <graphics>
+          <position x="139.5" y="44.5"/>
+          <dimension x="40.0" y="40.0"/>
+        </graphics>
+        <transitionName>
+           <text>mytrans</text>
+        </transitionName>
+        <transitionLabel>
+           <text>red</text>
+        </transitionLabel>
+        <transitionRenew>
+           <text>colors</text>
+        </transitionRenew>
+      </transition>
+      <arc id="a1" source="p1" target="t1">
+        <graphics>
+          <position x="30.0" y="5.0"/>
+          <position x="60.0" y="5.0"/>
+        </graphics>
+        <inscription>
+          <text>2</text>
+        </inscription>
+      </arc>
+    </page>
+  </net>
+</pnml>
