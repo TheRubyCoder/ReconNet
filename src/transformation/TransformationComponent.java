@@ -83,7 +83,6 @@ public class TransformationComponent implements ITransformation{
 	@Override
 	public  Transformation transform(Petrinet net, Rule rule)
 	{
-		System.out.println(rule.getR());
 		return Transformation.createTransformationWithAnyMorphism(net, rule).transform();
 	}
 
