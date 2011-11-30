@@ -9,7 +9,20 @@ import exceptions.GeneralPetrinetException;
  */
 public interface ITransformation {
 
+	/**
+	 * Creates a new empty rule
+	 * @return
+	 */
 	public Rule createRule();
+	
+	/**
+	 * Sets the mark of a node in a rule and modifies other parts of rule accordingly
+	 * @param rule Rule in wich the node is included
+	 * @param placeId id of place
+	 * @param mark new value for mark
+	 * @return needs to be defined by engine group
+	 */
+	public ChangedPetrinetElements setMark(Rule rule, int placeId, int mark);
 	
 	/**
 	 * Joins both petrinets, using the given transformation.

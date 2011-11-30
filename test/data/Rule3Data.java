@@ -27,7 +27,7 @@ public class Rule3Data {
 	}
 	
 	static {
-		addSubnetToPetrinet(rule.getL());
+		addSubnetToPetrinet(rule.getR());
 	}
 
 	private static void addSubnetToPetrinet(Petrinet petrinet) {

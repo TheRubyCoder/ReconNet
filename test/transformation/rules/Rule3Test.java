@@ -2,6 +2,9 @@ package transformation.rules;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
@@ -48,29 +51,19 @@ public class Rule3Test {
 	
 	@Test
 	public void testRightMorphism() {
-		// Has only 1 place been mapped?
-		assertEquals(0, transformation.getMorphism().getPlacesMorphism().size());
-		// Has 5 transitions been mapped?
-		assertEquals(0, transformation.getMorphism().getTransitionsMorphism()
-				.size());
-		assertEquals(newPlace.getId(), transformation.getPetrinet().getPlaceById(newPlace.getId()));
+		assertFalse("nPetrinet should not be empty", nPetrinet.isEmpty());
 		
-		//the added Place has no outgoing and incoming Arcs
-		Place addedPlace = transformation.getPetrinet().getPlaceById(newPlace.getId());
-		
-		assertTrue(addedPlace.getStartArcs().isEmpty());
-		assertTrue(addedPlace.getEndArcs().isEmpty());
-		
-		//The count of Places with no incoming and outcoing arcs should be one
-		List<Place> placesWithZeroArcs = new ArrayList<Place>();
-		
-		for (Place place : transformation.getPetrinet().getAllPlaces()) {
-			if(place.getEndArcs().isEmpty() && place.getStartArcs().isEmpty()){
-				placesWithZeroArcs.add(place);
+		//find added place
+		Place addedPlace = null;
+		for (Place place : nPetrinet.getAllPlaces()) {
+			if(place.getStartArcs().isEmpty() && place.getEndArcs().isEmpty()){
+				addedPlace = place;
 			}
 		}
 		
-		assertEquals(1, placesWithZeroArcs.size());
+		assertNotNull("one place should have no arcs", addedPlace);
+		assertNotSame("places should not be same", newPlace, addedPlace);
+		assertEquals(8,nPetrinet.getAllPlaces().size());
 	}
 	
 

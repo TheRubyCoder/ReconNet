@@ -8,9 +8,11 @@ import engine.dependency.TransformationAdapter;
 import exceptions.GeneralPetrinetException;
 import petrinet.INode;
 import petrinet.Petrinet;
+import transformation.ChangedPetrinetElements;
 import transformation.Morphism;
 import transformation.Rule;
 import transformation.Transformation;
+import transformation.TransformationComponent;
 
 /**
  * Singleton that represents the engine component<br/>
@@ -127,5 +129,10 @@ public class EngineComponent implements IPetrinetManipulation, IPersistence, ISi
 	public Map<INode, Point> loadLayout(String file) {
 		//TODO delegate to petrinet component. Use Adapter
 		return null;
+	}
+
+	@Override
+	public ChangedPetrinetElements setMark(Rule rule, int placeId, int mark) {
+		return TransformationAdapter.setMark(rule, placeId, mark);
 	}
 }

@@ -56,6 +56,7 @@ public class Transformation{
 	 */
 	static Transformation createTransformationWithAnyMorphism(Petrinet petrinet,
 			Rule rule){
+		
 		Morphism tempMorphism = MorphismFactory.createMorphism(rule.getL(),petrinet);
 		//Morphism found?
 		if(tempMorphism != null){

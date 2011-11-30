@@ -41,7 +41,7 @@ public class Rule2Test {
 		try {
 			transformation = TransformationComponent.getTransformation().transform(nPetrinet, rule);
 		} catch (Exception e) {
-			System.out.println(e);
+			e.printStackTrace();
 			fail("Morphism should have been found");
 		}
 		preAfter = nPetrinet.getPre().matrixStringOnly();

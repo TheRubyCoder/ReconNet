@@ -27,7 +27,10 @@ public class MorphismFactory {
 	 * Not deterministic.
 	 * @param from the Petrinet from which this morphism starts.
 	 * @param to the Petrinet into which this morphism maps to.
-	 * @return the new morphism or null if no morphism exists between from and to
+	 * @return the new morphism<br/>
+	 * 	 		Empty morphism is fromNet is empty<br/>
+	 * 			<tt>null</tt> if no morphism found
+	 * 
 	 */
 	public static Morphism createMorphism(Petrinet from, Petrinet to) {
 		return new MorphismFactory(from, to).getMorphism();
@@ -110,24 +113,29 @@ public class MorphismFactory {
 		createM0_transitions();
 	}
 	
-	
+	/**
+	 * 
+	 * @return Empty morphism is fromNet is empty<br/>
+	 * 			<tt>null</tt> if no morphism found
+	 */
 	private Morphism getMorphism() {
-		boolean successful = findMorphism();
-		//found usual morphism? Great. Lets return it.
-		if (successful) {
-			return new Morphism(fromNet, toNet, places, transitions, edges);
-			//L was empty? Not too bad. Lets return an empty morphism
-		} else if(fromNet.getAllPlaces().isEmpty() 
-				&& fromNet.getAllTransitions().isEmpty()){
+		//L was empty? Not too bad. Lets return an empty morphism
+		if(fromNet.isEmpty()){
 			Morphism emptyMorphism = new Morphism(fromNet, 
 					toNet, 
 					new HashMap<Place, Place>(), 
 					new HashMap<Transition, Transition>(), 
 					new HashMap<Arc, Arc>());
 			return emptyMorphism;
-			//Everything failed? Too bad. Lets return null
-		} else {
-			return null;
+		}else{
+			boolean successful = findMorphism();
+			//found usual morphism? Great. Lets return it.
+			if (successful) {
+				return new Morphism(fromNet, toNet, places, transitions, edges);
+			}else{
+				//Failed although L was not empty? No morphism found. Return null
+				return null;
+			}
 		}
 	}
 

@@ -285,8 +285,8 @@ public class ScenariosRuleCreationTest {
 		int id = k.getAllPlaces().iterator().next().getId();
 
 		// user action
-		k.getPlaceById(id).setMark(3);
-
+		TransformationComponent.getTransformation().setMark(getRuleScenario13(), id, 3);
+		
 		Place firstInK = k.getAllPlaces().iterator().next();
 		Place firstInL = l.getAllPlaces().iterator().next();
 		Place firstInR = r.getAllPlaces().iterator().next();
@@ -315,7 +315,7 @@ public class ScenariosRuleCreationTest {
 		int id = l.getAllPlaces().iterator().next().getId();
 
 		// user action
-		l.getPlaceById(id).setMark(3);
+		TransformationComponent.getTransformation().setMark(getRuleScenario14(), id, 3);
 
 		Place firstInK = k.getAllPlaces().iterator().next();
 		Place firstInL = l.getAllPlaces().iterator().next();
@@ -343,7 +343,7 @@ public class ScenariosRuleCreationTest {
 		int id = r.getAllPlaces().iterator().next().getId();
 
 		// user action
-		r.getPlaceById(id).setMark(3);
+		TransformationComponent.getTransformation().setMark(getRuleScenario15(), id, 3);
 
 		Place firstInK = k.getAllPlaces().iterator().next();
 		Place firstInL = l.getAllPlaces().iterator().next();

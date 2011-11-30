@@ -280,6 +280,15 @@ public class Petrinet{
 
 		return fire(active.get(id).getId());
 	}
+	
+	/**
+	 * Returns <tt> true </tt> if there are no Transitions or Places in the petrinet
+	 * @return
+	 */
+	public boolean isEmpty(){
+		return this.getAllPlaces().isEmpty() &&
+			this.getAllTransitions().isEmpty();
+	}
 
 	/**
 	 * Liefert das Pre-Objekt zu dem Netz zurueck

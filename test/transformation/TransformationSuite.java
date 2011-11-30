@@ -16,10 +16,10 @@ import transformation.rules.*;
 	MorphismPlacesTest.class,
 	MorphismTransitionsTest.class,
 	Rule7Test.class,
-//	Rule3Test.class, // fails
-//	Rule2Test.class, // fails
+	Rule3Test.class, 
+//	Rule2Test.class, // Nullpointer in morphism finding
 	Rule1Test.class,
-	ScenariosRuleCreationTest.class //fails partially
+	ScenariosRuleCreationTest.class 
 	}
 )
 

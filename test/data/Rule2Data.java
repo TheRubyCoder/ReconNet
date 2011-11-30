@@ -26,11 +26,11 @@ public class Rule2Data {
 	
 	static {
 		addSubnetToPetrinet(rule.getL());
+		TransformationComponent.getTransformation().setMark(rule, rule.getL().getAllPlaces().iterator().next().getId(), 3);
 	}
 	
 	private static void addSubnetToPetrinet(Petrinet petrinet){
 		Place place = petrinet.createPlace("P1");
-		place.setMark(3);
 		for (int i = 0; i < 2; i++) {
 			Transition transition = petrinet.createTransition("A");
 			petrinet.createArc("", place, transition);
