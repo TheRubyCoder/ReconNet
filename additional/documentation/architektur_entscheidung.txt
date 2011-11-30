@@ -5,21 +5,33 @@ Wie werden Interfaces aus dem UML-Komponenten-Diagramm in Code umgesetzt?
 	Es gibt fuer jedes Interface einen getter auf das Object, das als das jeweilige Interface deklariert ist.
 2) Eine Komponente hat Ausgaenge (UML-Socket)
 	Sie sind modelliert durch sogenannte "Adapter"-Klasse, die reine Utility-Klassen sind (nur statische Methoden, keinen Objekte)
-	Je Ausgang gibt es eine Adapter-Klasse die alle benötigten Methoden der Zielkomponente implementiert
-	In den gewöhnlichen, internen Klassen der Komponente können diese Adapterklassen mit static import verwendet werden.
+	Je Ausgang gibt es eine Adapter-Klasse die alle benoetigten Methoden der Zielkomponente implementiert
+	In den gewoehnlichen, internen Klassen der Komponente koennen diese Adapterklassen mit static import verwendet werden.
 
 Alle Ein- und Ausgaenge sind im package *.dependency angelegt
 
 Dadurch ergibt sich folgende Coderichtlinie:
-	Interne Klassen einer Komponten dürfen keine imports auf Klassen außerhalb der Komponente haben
+	Interne Klassen einer Komponten duerfen keine imports auf Klassen außerhalb der Komponente haben
 	Ausgenommen davon sind nur die Adapter-Klassen
 	
 	
 Warum modellieren wir das so?
-	Dadurch sieht man an einer einzigen Stelle, welche Komponente welche Funktionalitäten von anderen Komponenten verwendet
-	Der Programmier sieht schnell ob er eine Komponentegrenze versehentlich überschreitet
-	Die Adapterklassen sind extra Namespaces für static Methoden damit in der Komponentenklasse nicht zufällig eine Instanz-
+	Dadurch sieht man an einer einzigen Stelle, welche Komponente welche Funktionalitaeten von anderen Komponenten verwendet
+	Der Programmier sieht schnell ob er eine Komponentegrenze versehentlich ueberschreitet
+	Die Adapterklassen sind extra Namespaces fuer static Methoden damit in der Komponentenklasse nicht zufaellig eine Instanz-
 		und eine static Methode gleich heißen (Java erlaubt das nicht)
-	Problem: Wenn etwas public ist, könnte es von überall aus dem Projekt verwendet werden. Daran kann man nachfolgende Entwickler
+	Problem: Wenn etwas public ist, koennte es von ueberall aus dem Projekt verwendet werden. Daran kann man nachfolgende Entwickler
 	nicht hindern, egal wie die Architektur beschaffen ist.
-	Unsere Architektur ermöglicht es aber über die imports schnell fest zu stellen ob gegen die Komponentengrenzen verstoßen wurde.
+	Unsere Architektur ermoeglicht es aber ueber die imports schnell fest zu stellen ob gegen die Komponentengrenzen verstoßen wurde.
+	
+	
+Wie benutzt man die neuen Schnittstellen?
+	Angenommen man schreibt in der Klasse PetrinetHandler in der Engine und möchte auf die Methode "setName(..)" der Petrinetz Komponente
+	zugreifen, so schreibt man oben ein static import rein:
+	
+		static import PetrinetAdapter;
+		
+	Und kann dann unten im Code einfach die entsprechende static Methode des Adapters aufrufen:
+	
+		int myId = 0;
+		boolean success = setName(myId, "neuer Name");
