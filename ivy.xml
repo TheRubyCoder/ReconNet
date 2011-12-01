@@ -17,6 +17,10 @@
 			<artifact name="jung-visualization" type="jar" />
         </dependency>
         
+        <dependency org="com.sun.xml.bind" name="jaxb-impl" rev="2.2.2-promoted-b99">
+    		<artifact name="jaxb-impl" type="jar" />
+		</dependency>
+        
         
 		
 		<!--  tools -->		
