@@ -6,7 +6,7 @@ public class NodeLayoutAttribute {
 
 	private Point2D coordinate;
 	
-	prublic Point2D getCoordinate(){
+	public Point2D getCoordinate(){
 		return coordinate;
 	}
 	
