@@ -22,7 +22,7 @@ class Style {
 	/** Width of the editor pane */
 	public static final int WIDTH_EDITOR_PANE = TOTAL_WIDTH / 3;
 	
-	public static final int WIDTH_SIMULATION_PANE = TOTAL_WIDTH / 3;
+	public static final int WIDTH_SIMULATION_PANE = TOTAL_WIDTH / 2;
 	
 	public static final int WIDTH_OF_LEFT_ELEMENTS = 200;
 	
@@ -48,13 +48,16 @@ class Style {
 	
 	public static final GridLayout EDITOR_PANE_LAYOUT;
 	
-	public static final GridLayout PETRINET_PANE_LAYOUT = new GridLayout(1,1);
-	
-	
 	static {
 		EDITOR_PANE_LAYOUT = new GridLayout(2,2);
 		EDITOR_PANE_LAYOUT.setHgap(10);
 		EDITOR_PANE_LAYOUT.setVgap(10);
 	}
+	
+	public static final GridLayout SIMULATION_PANE_LAYOUT = EDITOR_PANE_LAYOUT;
+	
+	public static final GridLayout PETRINET_PANE_LAYOUT = new GridLayout(1,1);
+	
+	
 	
 }
