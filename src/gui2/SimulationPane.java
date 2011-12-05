@@ -1,15 +1,14 @@
 package gui2;
 
-import java.awt.Color;
-import java.awt.Dimension;
 
-import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import static gui2.Style.*;
+
 /** The Panel that contains buttons and slider for simulation purposes like "fire 1 time", "fire k times"
  * "transform 1 time", etc */
-public class SimulationPane {
+class SimulationPane {
 	
 	/** Internal JPanel */
 	private JPanel simulationPane;
@@ -40,12 +39,14 @@ public class SimulationPane {
 	 * @param width
 	 * @return
 	 */
-	public static SimulationPane initiateSimulationPane(int width){
+	public static SimulationPane initiateSimulationPane(){
 //		getInstance().getSimulationPane().setPreferredSize(new Dimension(width, MainWindow.HEIGHT_TOP_ELEMENTS));
-		getInstance().getSimulationPane().setBounds(0, width, width, MainWindow.HEIGHT_TOP_ELEMENTS);
-		getInstance().getSimulationPane().setBorder(BorderFactory.createEtchedBorder());
-		getInstance().getSimulationPane().setLocation(0, width);
-		getInstance().getSimulationPane().setBackground(Color.BLUE);
+		getInstance().getSimulationPane().setBounds(
+				WIDTH_EDITOR_PANE, 
+				0, 
+				WIDTH_SIMULATION_PANE, 
+				HEIGHT_TOP_ELEMENTS);
+		getInstance().getSimulationPane().setBorder(BORDER_SIMULATION_PANE);
 		return getInstance();
 	}
 	
