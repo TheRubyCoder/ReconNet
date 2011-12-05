@@ -32,7 +32,7 @@ class Style {
 	 * *************************************/
 	
 	/** Height of Panels with buttons at top of gui */
-	private static final int HEIGHT_TOP_ELEMENTS = 150;
+	private static final int HEIGHT_TOP_ELEMENTS = 100;
 	
 	/** Width of Panels at left of gui */
 	private static final int WIDTH_OF_LEFT_ELEMENTS = 200;

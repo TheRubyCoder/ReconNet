@@ -45,7 +45,7 @@ class SimulationPane {
 	
 	/** Private default constructor */
 	private SimulationPane() {
-		simulationPane = new JPanel();
+		simulationPane = new JPanel(new GridLayout(2,3,10,10));
 		
 		oneStepButton = initiateOneStepButton();
 		transformButton = initateTransformButton();
