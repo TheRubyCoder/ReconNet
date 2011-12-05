@@ -3,6 +3,8 @@ package engine;
 import java.awt.Point;
 import java.util.Map;
 
+import javax.swing.JPanel;
+
 import engine.dependency.PetrinetAdapter;
 import engine.dependency.TransformationAdapter;
 import exceptions.GeneralPetrinetException;
@@ -19,7 +21,7 @@ import transformation.TransformationComponent;
  * Other components refer to this object to delegate to the engine component
  * instead of directly reffering to the classes within the component
  */
-public class EngineComponent implements IPetrinetManipulation, IPersistence, ISimulation {
+public class EngineComponent implements IPetrinetManipulation, IPersistence, ISimulation, ILayoutData {
 
 	private static EngineComponent instance;
 
@@ -134,5 +136,11 @@ public class EngineComponent implements IPetrinetManipulation, IPersistence, ISi
 	@Override
 	public ChangedPetrinetElements setMark(Rule rule, int placeId, int mark) {
 		return TransformationAdapter.setMark(rule, placeId, mark);
+	}
+
+	@Override
+	public boolean drawPetrinet(JPanel panel, int id) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
