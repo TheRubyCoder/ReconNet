@@ -13,8 +13,11 @@ public class MainWindow {
 	/** singleton instance */
 	private static MainWindow instance;
 	
-	//static constructor that initiates the singleton instance
+	public static final int HEIGHT_TOP_ELEMENTS;
+	
+	//static constructor that initiates the singleton instance and constants
 	static {
+		HEIGHT_TOP_ELEMENTS = 100;
 		instance = new MainWindow();
 	}
 	
@@ -22,7 +25,9 @@ public class MainWindow {
 	private MainWindow() {
 		initializeMainFrame();
 		addEditorPane();
+		addSimulationPane();
 		mainFrame.pack();
+		mainFrame.setBounds(0, 0, 400, 400);
 	}
 	
 	/** Returns the only instance of the main window */
@@ -40,13 +45,18 @@ public class MainWindow {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		mainFrame.setSize((int)(screenSize.width * 0.8d) , (int)(screenSize.height * 0.8d));
 		mainFrame.setLocationRelativeTo(null);
-		mainFrame.setDefaultCloseOperation(mainFrame.EXIT_ON_CLOSE);
+		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setVisible(true);
 	}
 	
 	private void addEditorPane(){
 		EditorPane editorPane = EditorPane.initiateEditorPane(mainFrame.getWidth() / 3);
 		editorPane.addTo(mainFrame);
+	}
+	
+	private void addSimulationPane(){
+		SimulationPane simulationPane = SimulationPane.initiateSimulationPane(mainFrame.getWidth() / 3);
+		simulationPane.addTo(mainFrame);
 	}
 
 }

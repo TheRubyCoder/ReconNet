@@ -28,6 +28,21 @@ public class EditorPane {
 		return instance;
 	}
 	
+	/**
+	 * Initiates the EditorPane with a certain width and default values for Border, Backgroundcolor etc
+	 * @param width
+	 * @return
+	 */
+	public static EditorPane initiateEditorPane(int width){
+//		getInstance().getEditorPane().setPreferredSize(new Dimension(width, MainWindow.HEIGHT_TOP_ELEMENTS));
+		getInstance().getEditorPane().setBounds(0, 0, width, MainWindow.HEIGHT_TOP_ELEMENTS);
+		getInstance().getEditorPane().setBorder(BorderFactory.createEtchedBorder());
+		getInstance().getEditorPane().setLocation(0, 0);
+		getInstance().getEditorPane().setBackground(Color.GREEN);
+		return getInstance();
+	}
+	
+	/** Internal JPanel */
 	private JPanel editorPane;
 	
 	/** Returns the internal JPanel */
@@ -43,16 +58,5 @@ public class EditorPane {
 		frame.add(getEditorPane());
 	}
 	
-	/**
-	 * Initiates the EditorPane with a certain width and default values for Border, Backgroundcolor etc
-	 * @param width
-	 * @return
-	 */
-	public static EditorPane initiateEditorPane(int width){
-		getInstance().getEditorPane().setPreferredSize(new Dimension(width, 50));
-		getInstance().getEditorPane().setBorder(BorderFactory.createEtchedBorder());
-		getInstance().getEditorPane().setBackground(Color.GREEN);
-		return getInstance();
-	}
 
 }
