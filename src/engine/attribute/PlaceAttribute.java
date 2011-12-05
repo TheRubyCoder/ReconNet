@@ -1,4 +1,4 @@
-package engine.handler;
+package engine.attribute;
 
 public class PlaceAttribute {
 
