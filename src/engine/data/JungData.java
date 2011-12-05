@@ -10,14 +10,25 @@ public class JungData {
 	private DirectedGraph<INode, Arc> jungGraph;
 	private AbstractLayout<INode, Arc> jungLayout;
 	
+	/**
+	 * 
+	 */
 	public JungData clone(){
 		return new JungData(); // TODO: !
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public DirectedGraph<INode, Arc> getJungGraph(){
 		return jungGraph;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public AbstractLayout<INode, Arc> getJungLayout(){
 		return jungLayout;
 	}
