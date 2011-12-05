@@ -7,9 +7,9 @@ import petrinet.INode;
 import petrinet.Place;
 import petrinet.Transition;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
-import engine.handler.ArcAttribute;
-import engine.handler.PlaceAttribute;
-import engine.handler.TransitionAttribute;
+import engine.attribute.ArcAttribute;
+import engine.attribute.PlaceAttribute;
+import engine.attribute.TransitionAttribute;
 
 public interface IPetrinetHandler {
 
