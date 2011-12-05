@@ -46,7 +46,6 @@ class SimulationPane {
 	/** Private default constructor */
 	private SimulationPane() {
 		simulationPane = new JPanel();
-		simulationPane.setLayout(new GridLayout(2, 2));
 		
 		oneStepButton = initiateOneStepButton();
 		transformButton = initateTransformButton();
@@ -65,19 +64,18 @@ class SimulationPane {
 	 */
 	private JComponent[] initiateSimulateButtonAndSlider() {
 		JComponent[] result = new JComponent[2];
-		JPanel panel = new JPanel(new GridLayout(2, 1));
 		
 		JButton button = new JButton("Simulation starten");
-		panel.add(button);
+		button.setSize(BUTTON_WIDHT, BUTTON_HEIGHT);
+//		button.setBounds(0, 0, BUTTON_WIDHT, BUTTON_HEIGHT);
+		getSimulationPane().add(button);
 		
-		JSlider slider = new JSlider(1, 6000, 60);
+		JSlider slider = new JSlider(1, 121, 60);
 		slider.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Schritte pro Minute"));
-		slider.setMinorTickSpacing(600);
-		slider.setPaintLabels(true);
+		slider.setMajorTickSpacing(20);
 		slider.setPaintTicks(true);
-		panel.add(slider);
-		
-		getSimulationPane().add(panel);
+		slider.setPaintLabels(true);
+		getSimulationPane().add(slider);
 		
 		return result;
 	}
@@ -89,17 +87,14 @@ class SimulationPane {
 	private JComponent[] initiateKSpinnerAndButton() {
 		JComponent[] result = new JComponent[2];
 		
-		JPanel panel = new JPanel(new GridLayout(1, 2));
 		JSpinner spinner = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
 		spinner.setBounds(0, 0, 20, 20);
-		panel.add(spinner);
+		getSimulationPane().add(spinner);
 		result[0] = spinner;
 		
 		JButton button = new JButton("k Schritte schalten");
-		panel.add(button);
+		getSimulationPane().add(button);
 		result[1] = button;
-		
-		getSimulationPane().add(panel);
 		
 		return result;
 	}
@@ -132,11 +127,11 @@ class SimulationPane {
 	 */
 	public static SimulationPane initiateSimulationPane(){
 		getInstance().getSimulationPane().setBounds(
-				WIDTH_EDITOR_PANE, 
-				0, 
-				WIDTH_SIMULATION_PANE, 
-				HEIGHT_TOP_ELEMENTS);
-		getInstance().getSimulationPane().setBorder(BORDER_SIMULATION_PANE);
+				SIMULATION_PANEL_X, 
+				SIMULATION_PANEL_Y, 
+				SIMULATION_PANE_WIDTH, 
+				SIMULATION_PANE_HEIGHT);
+		getInstance().getSimulationPane().setBorder(SIMULATION_PANE_BORDER);
 		return getInstance();
 	}
 	

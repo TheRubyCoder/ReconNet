@@ -57,8 +57,11 @@ class EditorPane {
 	 * @return
 	 */
 	public static EditorPane initiateEditorPane(){
-		getInstance().getEditorPane().setBounds(0, 0, WIDTH_EDITOR_PANE, HEIGHT_TOP_ELEMENTS);
-		getInstance().getEditorPane().setBorder(BORDER_EDITOR_PANE);
+		getInstance().getEditorPane().setBounds(EDITOR_PANE_X, 
+				EDITOR_PANE_Y, 
+				EDITOR_PANE_WIDTH, 
+				EDITOR_PANE_HEIGHT);
+		getInstance().getEditorPane().setBorder(EDITOR_PANE_BORDER);
 		getInstance().getEditorPane().setLayout(EDITOR_PANE_LAYOUT);
 		return getInstance();
 	}

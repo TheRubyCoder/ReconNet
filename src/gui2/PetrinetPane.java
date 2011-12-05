@@ -31,10 +31,10 @@ class PetrinetPane {
 		getInstance().getPetrinetPanel().add(getInstance().getDrawingPanel());
 		
 		getInstance().getPetrinetPanel().setBorder(BORDER_PETRINET);
-		getInstance().getPetrinetPanel().setBounds(WIDTH_OF_LEFT_ELEMENTS, 
-				HEIGHT_TOP_ELEMENTS, 
-				TOTAL_WIDTH - WIDTH_OF_LEFT_ELEMENTS - 4 * OFFSET_PER_BORDER, 
-				HEIGHT_PETRINET);
+		getInstance().getPetrinetPanel().setBounds(PETRINET_X, 
+				PETRINET_Y, 
+				PETRINET_WIDTH, 
+				PETRINET_HEIGHT);
 
 		getInstance().getDrawingPanel().setBackground(Color.WHITE);
 		
