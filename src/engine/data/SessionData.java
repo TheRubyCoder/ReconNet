@@ -8,9 +8,9 @@ public class SessionData {
 	
 	/**
 	 * 
-	 * @param id
+	 * @param id 
 	 * @param isSimulation
-	 * @param parentId
+	 * @param parentId 
 	 */
 	public SessionData(int id, boolean isSimulation, int parentId){
 		this.id = id;
@@ -20,7 +20,7 @@ public class SessionData {
 	
 	/**
 	 * 
-	 * @return
+	 * @return the id of the Session
 	 */
 	public int getId(){
 		return id;
@@ -28,7 +28,7 @@ public class SessionData {
 	
 	/**
 	 * 
-	 * @return
+	 * @return if true it is a simulation, else not
 	 */
 	public boolean isSimulation(){
 		return isSimulation;
@@ -36,7 +36,7 @@ public class SessionData {
 	
 	/**
 	 * 
-	 * @return
+	 * @return the ID of the Parent
 	 */
 	public int getParentId(){
 		return parentId;
