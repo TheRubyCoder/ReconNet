@@ -4,8 +4,6 @@ import java.awt.geom.Point2D;
 
 import petrinet.Arc;
 import petrinet.INode;
-import petrinet.Place;
-import petrinet.Transition;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
@@ -21,7 +19,7 @@ public interface IRuleHandler {
 	 * @param id ID of the Rule
 	 * @param from Source of the Arc
 	 * @param to Target of the Arc
-	 * @return <code> true </code> if creation was successful, <code> false </code> otherwise
+	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
 	public boolean createArc(int id, INode from, INode to);
 	
@@ -30,7 +28,7 @@ public interface IRuleHandler {
 	 * 
 	 * @param id ID of the Rule
 	 * @param coordinate Point where the Place will be created
-	 * @return <code> true </code> if creation was successful, <code> false </code> otherwise
+	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwisee
 	 */
 	public boolean createPlace(int id,RuleNet net, Point2D coordinate);
 	
@@ -46,7 +44,7 @@ public interface IRuleHandler {
 	 * 
 	 * @param id ID of the Rule
 	 * @param coordinate Point where the Transition will be created
-	 * @return <code> true </code> if creation was successful, <code> false </code> otherwise
+	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
 	public boolean createTransition(int id,RuleNet net, Point2D coordinate);
 	
@@ -55,7 +53,7 @@ public interface IRuleHandler {
 	 * 
 	 * @param id ID of the Rule
 	 * @param arc which will be deleted
-	 * @return <code> true </code> if deleting was successful, <code> false </code> otherwise
+	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
 	public boolean deleteArc(int id,RuleNet net, Arc arc); // TODO IArc gibt es nicht?
 	
@@ -65,18 +63,18 @@ public interface IRuleHandler {
 	 * 
 	 * @param id ID of the Rule
 	 * @param place which will be deleted
-	 * @return <code> true </code> if deleting was successful, <code> false </code> otherwise
+	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean deletePlace(int id,RuleNet net, Place place);
+	public boolean deletePlace(int id,RuleNet net, INode place);
 	
 	/**
 	 * Deletes a Transition
 	 * 
 	 * @param id ID of the Rule
 	 * @param transition which will be deleted
-	 * @return <code> true </code> if deleting was successful, <code> false </code> otherwise
+	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean deleteTransition(int id,RuleNet net, Transition transition);
+	public boolean deleteTransition(int id,RuleNet net, INode transition);
 	
 	/**
 	 * Gets the Attributes from an Arc
@@ -102,7 +100,7 @@ public interface IRuleHandler {
 	 * @param place which attributes are wanted
 	 * @return PlaceAtrribute
 	 */
-	public PlaceAttribute getPlaceAttribute(int id, Place place);
+	public PlaceAttribute getPlaceAttribute(int id, INode place);
 	
 	/**
 	 * Gets the Attributes from a Transition
@@ -111,7 +109,7 @@ public interface IRuleHandler {
 	 * @param transition which attributes are wanted
 	 * @return TransitionAttribute
 	 */
-	public TransitionAttribute getTransitionAttribute(int id, Transition transition);
+	public TransitionAttribute getTransitionAttribute(int id, INode transition);
 	
 	/**
 	 * Gets the Attributes from a Rule
@@ -127,7 +125,7 @@ public interface IRuleHandler {
 	 * @param id ID of the Rule
 	 * @param node to move
 	 * @param relativePosition relative movement of the node
-	 * @return <code> true </code> if moving was successful, <code> false </code> otherwise
+	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
 	public boolean moveNode(int id, INode node, Point2D relativePosition);
 	
@@ -138,7 +136,7 @@ public interface IRuleHandler {
 	 * @param path where to save the Rule
 	 * @param filename name for the Rule
 	 * @param format which the Rule should be saved. (PNML the only option till now)
-	 * @return <code> true </code> if saving was successful, <code> false </code> otherwise
+	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
 	public boolean save(int id, String path, String filename, String format); // TODO: String format zu => Format format
 	
@@ -148,9 +146,9 @@ public interface IRuleHandler {
 	 * @param id ID of the Rule
 	 * @param place where to set the Mark
 	 * @param marking amount of mark 
-	 * @return <code> true </code> if setting was successful, <code> false </code> otherwise
+	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean setMarking(int id, Place place, int marking);
+	public boolean setMarking(int id, INode place, int marking);
 	
 	/**
 	 * Sets the PName of a Place.
@@ -158,9 +156,9 @@ public interface IRuleHandler {
 	 * @param id ID of the Rule
 	 * @param place where to set the PName
 	 * @param pname PName
-	 * @return <code> true </code> if setting was successful, <code> false </code> otherwise
+	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean setPname(int id, Place place, String pname);
+	public boolean setPname(int id, INode place, String pname);
 	
 	/**
 	 * Sets the Tlb of a Transition.
@@ -168,9 +166,9 @@ public interface IRuleHandler {
 	 * @param id ID of the Rule
 	 * @param transition where to set the tlb
 	 * @param tlb TransitionLabel
-	 * @return <code> true </code> if setting was successful, <code> false </code> otherwise
+	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean setTlb(int id, Transition transition, String tlb);
+	public boolean setTlb(int id, INode transition, String tlb);
 	
 	/**
 	 * Sets the TName of a Transition.
@@ -178,9 +176,9 @@ public interface IRuleHandler {
 	 * @param id ID of the Rule
 	 * @param transition where to set the TName
 	 * @param tname TName
-	 * @return <code> true </code> if setting was successful, <code> false </code> otherwise
+	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean setTname(int id, Transition transition, String tname);
+	public boolean setTname(int id, INode transition, String tname);
 	
 	/**
 	 * Sets the Weight of an Arc.
@@ -188,7 +186,7 @@ public interface IRuleHandler {
 	 * @param id ID of the Rule
 	 * @param arc where to set the weight
 	 * @param weight weight of the arc
-	 * @return <code> true </code> if setting was successful, <code> false </code> otherwise
+	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
 	public boolean setWeight(int id, Arc arc, int weight);
 	

@@ -18,16 +18,18 @@ public class JungData {
 	}
 	
 	/**
+	 * Gets the JungGraph representation
 	 * 
-	 * @return
+	 * @return DirectedGraph<INode,Arc>
 	 */
 	public DirectedGraph<INode, Arc> getJungGraph(){
 		return jungGraph;
 	}
 	
 	/**
+	 * Gets the JungLayout information
 	 * 
-	 * @return
+	 * @return AbstractLayout<INode, Arc>
 	 */
 	public AbstractLayout<INode, Arc> getJungLayout(){
 		return jungLayout;

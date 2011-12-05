@@ -7,16 +7,18 @@ public class PetrinetData {
 	private IPetrinet petrinet;
 	
 	/**
+	 * Gets the Petrinet. 
 	 * 
-	 * @return
+	 * @return IPetrinet
 	 */
 	public IPetrinet getPetrinet(){
 		return petrinet;
 	}
 	
 	/**
+	 * Gets the JungData.
 	 * 
-	 * @return
+	 * @return JungData
 	 */
 	public JungData getJungData(){
 		return null; // TODO: !
