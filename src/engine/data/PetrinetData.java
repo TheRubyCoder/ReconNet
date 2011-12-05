@@ -1,4 +1,4 @@
-package engine.session;
+package engine.data;
 
 import petrinet.IPetrinet;
 

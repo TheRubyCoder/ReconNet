@@ -3,12 +3,11 @@ package engine.jungmodification;
 import java.awt.geom.Point2D;
 import java.util.Collection;
 
-import edu.uci.ics.jung.visualization.layout.PersistentLayout.Point;
-
 import petrinet.Arc;
 import petrinet.INode;
 import petrinet.Place;
 import petrinet.Transition;
+import engine.data.JungData;
 
 public class JungModification {
 
