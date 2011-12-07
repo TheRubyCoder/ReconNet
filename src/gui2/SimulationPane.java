@@ -70,9 +70,9 @@ class SimulationPane {
 //		button.setBounds(0, 0, BUTTON_WIDHT, BUTTON_HEIGHT);
 		getSimulationPane().add(button);
 		
-		JSlider slider = new JSlider(1, 121, 60);
-		slider.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Schritte pro Minute"));
-		slider.setMajorTickSpacing(20);
+		JSlider slider = new JSlider(1, 10, 1);
+		slider.setBorder(BorderFactory.createTitledBorder(SIMULATION_PANE_SPEED_SLIDER_BORDER));
+		slider.setMajorTickSpacing(1);
 		slider.setPaintTicks(true);
 		slider.setPaintLabels(true);
 		getSimulationPane().add(slider);

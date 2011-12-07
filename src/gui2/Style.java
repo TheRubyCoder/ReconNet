@@ -32,7 +32,7 @@ class Style {
 	 * *************************************/
 	
 	/** Height of Panels with buttons at top of gui */
-	private static final int HEIGHT_TOP_ELEMENTS = 100;
+	private static final int HEIGHT_TOP_ELEMENTS = 150;
 	
 	/** Width of Panels at left of gui */
 	private static final int WIDTH_OF_LEFT_ELEMENTS = 200;
@@ -95,6 +95,9 @@ class Style {
 					BorderFactory.createEtchedBorder(), 
 					"Simulieren");
 	
+	public static final Border SIMULATION_PANE_SPEED_SLIDER_BORDER = 
+			BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Geschwindigkeit");
+	
 	
 	/* ************************************* 
 	 * Petrinet pane
@@ -110,16 +113,10 @@ class Style {
 	
 	public static final int PETRINET_HEIGHT = 400;
 	
-	
-	
-	
-	
-	public static final Border BORDER_PETRINET = 
-			
+	public static final Border PETRINET_BORDER = 
 		BorderFactory.createTitledBorder(
 				BorderFactory.createEtchedBorder(),
 				"Petrinetz");
-	
 	
 	public static final GridLayout PETRINET_PANE_LAYOUT = new GridLayout(1,1);
 	
