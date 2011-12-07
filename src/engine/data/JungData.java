@@ -2,6 +2,7 @@ package engine.data;
 
 import petrinet.Arc;
 import petrinet.INode;
+import petrinet.IPetrinet;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.graph.DirectedGraph;
 
@@ -9,6 +10,14 @@ public class JungData {
 
 	private DirectedGraph<INode, Arc> jungGraph;
 	private AbstractLayout<INode, Arc> jungLayout;
+	
+	public JungData(){
+		// TODO : !
+	}
+	
+	public JungData(IPetrinet petrinet){
+		// TODO: build JungData from IPetrinet
+	}
 	
 	/**
 	 * 

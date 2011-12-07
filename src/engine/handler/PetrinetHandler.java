@@ -20,7 +20,24 @@ public class PetrinetHandler implements IPetrinetManipulation {
 
 	@Override
 	public boolean createPlace(int id, Point2D coordinate) {
-		// TODO Auto-generated method stub
+		/*
+		 * 	GUI ruft PetrinetHandler.create[Place|Transition](...) auf
+			PetrinetHandler holt PetrinetData vom SessionManager
+			Handler ruft auf dem Petrinet create[Place|Transition] auf
+			das Petrinetz liefert ein ChangedPetrinetResult, wobei: (das Element der jeweiligen Collection entspricht dem hinzugefügten Knoten)
+				Collection<Arc>.size() == 0
+				Collection<Place>.size() == 1 bei createPlace sonst 0
+				Collection<Transition>.size() == 1 bei createTransition sonst 0
+			wenn createPlace, dann JungModification.createPlace(...)
+			wenn createTransition, dann JungModification.createTransition(...)
+			Rückgabewert (sagt der GUI, dass etwas geändert wurde) :
+				true: im Erfolgsfall
+				false: bei Fehler 
+		 */
+		
+		
+		
+		
 		return false;
 	}
 

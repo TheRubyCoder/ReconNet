@@ -7,6 +7,16 @@ public class SessionData {
 	private int parentId;
 	
 	/**
+	 * SessionManager manage this ID.
+	 * @param id
+	 */
+	public SessionData(int id){
+		this.id = id;
+		
+		// TODO: parentId, isSimulation
+	}
+	
+	/**
 	 * 
 	 * @param id 
 	 * @param isSimulation

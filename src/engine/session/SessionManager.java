@@ -1,19 +1,42 @@
 package engine.session;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import petrinet.IPetrinet;
+import engine.data.JungData;
 import engine.data.PetrinetData;
 import engine.data.RuleData;
 import engine.data.SessionData;
 
 public class SessionManager {
 
+	private SessionManager session;
+	
+	private Map<Integer, PetrinetData> petrinetdata;
+	private int idPetrinetData = 0;
+	
+	private SessionManager(){
+		petrinetdata = new HashMap<Integer, PetrinetData>();
+	}
+	
+	public SessionManager getInstance(){
+		if(session == null){
+			session = new SessionManager();
+		}
+		
+		return session;
+	}
+	
 	/**
-	 * 
-	 * @param id
-	 * @return
+	 * Gets PetrinetData with the ID.
+	 * @param id from the PetrinetData
+	 * @return the PetrinetData with this id
 	 */
 	public PetrinetData getPetrninetData(int id){
-		return null; // TODO: !
+		PetrinetData pd = petrinetdata.get(id);
+		
+		return pd;
 	}
 	
 	/**
@@ -40,7 +63,13 @@ public class SessionManager {
 	 * @return
 	 */
 	public PetrinetData createPetrinetData(IPetrinet petrinet){
-		return null; // TODO: !
+		JungData jd = new JungData(petrinet);
+		
+		PetrinetData pd = new PetrinetData(idPetrinetData, petrinet, jd);
+		
+		idPetrinetData += 1;
+		
+		return pd;
 	}
 	
 	/**
