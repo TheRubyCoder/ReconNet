@@ -17,7 +17,7 @@ import petrinet.PetrinetComponent;
 public class Converter {
 	
 	/** not working yet*/
-	public Pnml convertToPnml(Petrinet petrinet, Map<String, String[]>layout){
+	static public Pnml convertToPnml(Petrinet petrinet, Map<String, String[]>layout){
 		Pnml pnml=new Pnml();
 		pnml.net=new Net();
 		Net net=new Net();
@@ -41,7 +41,7 @@ public class Converter {
 		return pnml;
 	}
 	/** works*/
-	public Petrinet convertToPetrinet(Pnml pnml){
+	static public Petrinet convertToPetrinet(Pnml pnml){
 		IPetrinet ipetrinet=PetrinetComponent.getPetrinet();
 		Petrinet petrinet=ipetrinet.createPetrinet();
 		//Strings sind die IDsfür die objekte AUS der Pnml

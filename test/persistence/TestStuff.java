@@ -28,8 +28,7 @@ public class TestStuff {
 	 //   m.setProperty( Unmarshaller., Boolean.TRUE );
 	    
 	    pnml=(Pnml)m.unmarshal(new File("test/persistence/example.pnml"));
-	    Converter con=new Converter();
-	    petrinet.Petrinet petrinet=con.convertToPetrinet(pnml);
+	    petrinet.Petrinet petrinet=Converter.convertToPetrinet(pnml);
 		
 	    System.out.println(petrinet.getAllArcs());
 
