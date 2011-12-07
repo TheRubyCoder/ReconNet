@@ -2,7 +2,7 @@ package engine.data;
 
 import petrinet.Arc;
 import petrinet.INode;
-import petrinet.IPetrinet;
+import petrinet.Petrinet;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.graph.DirectedGraph;
 
@@ -15,7 +15,7 @@ public class JungData {
 		// TODO : !
 	}
 	
-	public JungData(IPetrinet petrinet){
+	public JungData(Petrinet petrinet){
 		// TODO: build JungData from IPetrinet
 	}
 	

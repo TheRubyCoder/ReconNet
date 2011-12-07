@@ -11,6 +11,18 @@ import engine.data.JungData;
 
 public class JungModification {
 
+	private static JungModification jungModification;
+	
+	private JungModification(){}
+	
+	public static JungModification getInstance(){
+		if(jungModification == null){
+			jungModification = new JungModification();
+		}
+		
+		return jungModification;
+	}
+	
 	/**
 	 * Creates an Arc in the JungRepresentation of the petrinet from a Place to a Transition.
 	 * 

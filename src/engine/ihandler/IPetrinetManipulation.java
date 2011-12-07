@@ -190,4 +190,11 @@ public interface IPetrinetManipulation {
 	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
 	public boolean setWeight(int id, Arc arc, int weight);
+	
+	/**
+	 * Returns the type of the Object.
+	 * @param node to check
+	 * @return Enum composed of Place, Transition
+	 */
+	public Enum getNodeType(INode node);
 }

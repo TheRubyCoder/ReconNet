@@ -1,6 +1,6 @@
 package engine.data;
 
-import petrinet.IPetrinet;
+import petrinet.Petrinet;
 
 /**
  * 
@@ -10,7 +10,7 @@ import petrinet.IPetrinet;
 public class PetrinetData {
 
 	private int id;
-	private IPetrinet petrinet;
+	private Petrinet petrinet;
 	private JungData jungData;
 	
 	/**
@@ -19,9 +19,9 @@ public class PetrinetData {
 	 * @param iPetrinet
 	 * @param jungData
 	 */
-	public PetrinetData(int id, IPetrinet iPetrinet, JungData jungData){
+	public PetrinetData(int id, Petrinet petrinet, JungData jungData){
 		this.id = id;
-		this.petrinet = iPetrinet;
+		this.petrinet = petrinet;
 		this.jungData = jungData;
 	}
 	
@@ -30,7 +30,7 @@ public class PetrinetData {
 	 * 
 	 * @return IPetrinet
 	 */
-	public IPetrinet getPetrinet(){
+	public Petrinet getPetrinet(){
 		return petrinet;
 	}
 	

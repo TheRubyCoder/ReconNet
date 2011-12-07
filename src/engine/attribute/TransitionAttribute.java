@@ -1,20 +1,29 @@
 package engine.attribute;
 
-import com.google.common.collect.ImmutableMap;
-
+import petrinet.IRenew;
 
 public class TransitionAttribute {
 
+	private String tlb;
+	private String tname;
+	private IRenew rnw;
+	
+	public TransitionAttribute(String tlb, String tname, IRenew rnw){
+		this.tlb = tlb;
+		this.tname = tname;
+		this.rnw = rnw;
+	}
+	
 	public String getTLB(){
-		return ""; // TODO: schreiben !
+		return tlb;
 	}
 	
 	public String getTname(){
-		return ""; // TODO: schreiben !
+		return tname;
 	}
 	
-	public ImmutableMap<String, String> getRNW(){
-		return null;
+	public IRenew getRNW(){
+		return rnw;
 	}
 	
 }
