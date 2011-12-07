@@ -2,7 +2,7 @@ package engine.ihandler;
 
 import java.util.Collection;
 
-public interface ISimulationHandler {
+public interface ISimulation {
 
 	/**
 	 * 

@@ -2,9 +2,9 @@ package engine.handler;
 
 import java.util.Collection;
 
-import engine.ihandler.ISimulationHandler;
+import engine.ihandler.ISimulation;
 
-public class SimulationHandler implements ISimulationHandler {
+public class SimulationHandler implements ISimulation {
 
 	@Override
 	public int createSimulationSession(int id) {

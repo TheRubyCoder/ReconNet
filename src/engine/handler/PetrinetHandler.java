@@ -8,9 +8,9 @@ import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.TransitionAttribute;
-import engine.ihandler.IPetrinetHandler;
+import engine.ihandler.IPetrinetManipulation;
 
-public class PetrinetHandler implements IPetrinetHandler {
+public class PetrinetHandler implements IPetrinetManipulation {
 
 	@Override
 	public boolean createArc(int id, INode from, INode to) {

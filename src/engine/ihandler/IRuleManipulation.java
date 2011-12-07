@@ -7,14 +7,16 @@ import petrinet.INode;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
+import engine.attribute.RuleAttribute;
 import engine.attribute.TransitionAttribute;
+import engine.handler.RuleNet;
 
-public interface IPetrinetHandler {
+public interface IRuleManipulation {
 
 	/**
 	 * Creates an Arc
 	 * 
-	 * @param id ID of the Petrinet
+	 * @param id ID of the Rule
 	 * @param from Source of the Arc
 	 * @param to Target of the Arc
 	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
@@ -24,79 +26,77 @@ public interface IPetrinetHandler {
 	/**
 	 * Creates a Place
 	 * 
-	 * @param id ID of the Petrinet
+	 * @param id ID of the Rule
 	 * @param coordinate Point where the Place will be created
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
+	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwisee
 	 */
-	public boolean createPlace(int id, Point2D coordinate);
+	public boolean createPlace(int id,RuleNet net, Point2D coordinate);
 	
 	/**
-	 * Creates a Petrinet
+	 * Creates a Rule
 	 * 
-	 * @return ID of the created Petrinet
+	 * @return ID of the created Rule
 	 */
-	public int createPetrinet();
+	public int createRule();
 	
 	/**
 	 * Creates a Transition
 	 * 
-	 * @param id ID of the Petrinet
+	 * @param id ID of the Rule
 	 * @param coordinate Point where the Transition will be created
 	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean createTransition(int id, Point2D coordinate);
+	public boolean createTransition(int id,RuleNet net, Point2D coordinate);
 	
 	/**
 	 * Deletes an Arc
 	 * 
-	 * @param id ID of the Petrinet
+	 * @param id ID of the Rule
 	 * @param arc which will be deleted
 	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean deleteArc(int id, Arc arc); // TODO IArc gibt es nicht?
+	public boolean deleteArc(int id,RuleNet net, Arc arc); // TODO IArc gibt es nicht?
 	
 	// TODO: da sollte doch ne methode drueber die INode aufloest oder?
 	/**
 	 * Deletes a Place
 	 * 
-	 * @param id ID of the Petrinet
+	 * @param id ID of the Rule
 	 * @param place which will be deleted
 	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean deletePlace(int id, INode place);
+	public boolean deletePlace(int id,RuleNet net, INode place);
 	
 	/**
 	 * Deletes a Transition
 	 * 
-	 * @param id ID of the Petrinet
+	 * @param id ID of the Rule
 	 * @param transition which will be deleted
 	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean deleteTransition(int id, INode transition);
+	public boolean deleteTransition(int id,RuleNet net, INode transition);
 	
 	/**
 	 * Gets the Attributes from an Arc
 	 * 
-	 * @param id ID of the Petrinet
+	 * @param id ID of the Rule
 	 * @param arc which attributes are wanted
 	 * @return ArcAttribute
 	 */
 	public ArcAttribute getArcAttribute(int id, Arc arc); // TODO IArc gibt es nicht?
 	
 	/**
-	 * Gets the JungLayout from the Petrinet
+	 * Gets the JungLayout from the Rule
 	 * 
-	 * @param id ID of the Petrinet
+	 * @param id ID of the Rule
 	 * @return AbstractLayout
 	 */
-	
-	// TODO
-	public AbstractLayout<INode, Arc> getJungLayout(int id); // TODO: AbstractLayout<INode, Arc> richtig?
+	public AbstractLayout<INode, Arc> getJungLayout(int id, RuleNet net); // TODO: AbstractLayout<INode, Arc> richtig?
 	
 	/**
 	 * Gets the Attributes from a Place
 	 * 
-	 * @param id ID of the Petrinet
+	 * @param id ID of the Rule
 	 * @param place which attributes are wanted
 	 * @return PlaceAtrribute
 	 */
@@ -105,25 +105,24 @@ public interface IPetrinetHandler {
 	/**
 	 * Gets the Attributes from a Transition
 	 * 
-	 * @param id ID of the Petrinet
+	 * @param id ID of the Rule
 	 * @param transition which attributes are wanted
 	 * @return TransitionAttribute
 	 */
 	public TransitionAttribute getTransitionAttribute(int id, INode transition);
 	
 	/**
-	 * Moves a Graph.
+	 * Gets the Attributes from a Rule
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param relativePosition relative movement of the Graph
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
+	 * @param id ID of the Rule
+	 * @return RuleAttribute
 	 */
-	public boolean moveGraph(int id, Point2D relativePosition);
+	public RuleAttribute getRuleAttribute(int id);
 	
 	/**
 	 * Moves a node.
 	 * 
-	 * @param id ID of the Petrinet
+	 * @param id ID of the Rule
 	 * @param node to move
 	 * @param relativePosition relative movement of the node
 	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
@@ -131,12 +130,12 @@ public interface IPetrinetHandler {
 	public boolean moveNode(int id, INode node, Point2D relativePosition);
 	
 	/**
-	 * Saves a Petrinet.
+	 * Saves a Rule.
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param path where to save the Petrinet
-	 * @param filename name for the Petrinet
-	 * @param format which the Petrinet should be saved. (PNML the only option till now)
+	 * @param id ID of the Rule
+	 * @param path where to save the Rule
+	 * @param filename name for the Rule
+	 * @param format which the Rule should be saved. (PNML the only option till now)
 	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
 	public boolean save(int id, String path, String filename, String format); // TODO: String format zu => Format format
@@ -144,7 +143,7 @@ public interface IPetrinetHandler {
 	/**
 	 * Sets the Marking of a Place.
 	 * 
-	 * @param id ID of the Petrinet
+	 * @param id ID of the Rule
 	 * @param place where to set the Mark
 	 * @param marking amount of mark 
 	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
@@ -154,7 +153,7 @@ public interface IPetrinetHandler {
 	/**
 	 * Sets the PName of a Place.
 	 * 
-	 * @param id ID of the Petrinet
+	 * @param id ID of the Rule
 	 * @param place where to set the PName
 	 * @param pname PName
 	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
@@ -164,7 +163,7 @@ public interface IPetrinetHandler {
 	/**
 	 * Sets the Tlb of a Transition.
 	 * 
-	 * @param id ID of the Petrinet
+	 * @param id ID of the Rule
 	 * @param transition where to set the tlb
 	 * @param tlb TransitionLabel
 	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
@@ -174,7 +173,7 @@ public interface IPetrinetHandler {
 	/**
 	 * Sets the TName of a Transition.
 	 * 
-	 * @param id ID of the Petrinet
+	 * @param id ID of the Rule
 	 * @param transition where to set the TName
 	 * @param tname TName
 	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
@@ -184,10 +183,11 @@ public interface IPetrinetHandler {
 	/**
 	 * Sets the Weight of an Arc.
 	 * 
-	 * @param id ID of the Petrinet
+	 * @param id ID of the Rule
 	 * @param arc where to set the weight
 	 * @param weight weight of the arc
 	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
 	public boolean setWeight(int id, Arc arc, int weight);
+	
 }

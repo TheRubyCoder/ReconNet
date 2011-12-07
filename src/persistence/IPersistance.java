@@ -31,6 +31,6 @@ public interface IPersistance {
 	 * @param handler A instance of the IPetrinetHandler
 	 * @return Id from Petrinet
 	 */
-	public int load(String pathAndFilename, engine.ihandler.IPetrinetHandler handler);
+	public int load(String pathAndFilename, engine.ihandler.IPetrinetManipulation handler);
 	
 }

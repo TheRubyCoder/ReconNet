@@ -9,9 +9,9 @@ import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.RuleAttribute;
 import engine.attribute.TransitionAttribute;
-import engine.ihandler.IRuleHandler;
+import engine.ihandler.IRuleManipulation;
 
-public class RuleHandler implements IRuleHandler {
+public class RuleHandler implements IRuleManipulation {
 
 	@Override
 	public boolean createArc(int id, INode from, INode to) {
