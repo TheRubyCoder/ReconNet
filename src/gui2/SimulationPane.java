@@ -3,6 +3,7 @@ package gui2;
 
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
+import java.awt.Point;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -45,7 +46,9 @@ class SimulationPane {
 	
 	/** Private default constructor */
 	private SimulationPane() {
-		simulationPane = new JPanel(new GridLayout(2,3,10,10));
+//		simulationPane = new JPanel(new GridLayout(2,3,10,10));
+		simulationPane = new JPanel();
+		simulationPane.setLayout(null);
 		
 		oneStepButton = initiateOneStepButton();
 		transformButton = initateTransformButton();
@@ -93,22 +96,26 @@ class SimulationPane {
 		result[0] = spinner;
 		
 		JButton button = new JButton("k Schritte schalten");
+		button.setLocation(SIMULATION_PANE_BUTTON_KSTEPS_LOCATION);
+		button.setSize(SIMULATION_PANE_BUTTON_KSTEPS_SIZE);
 		getSimulationPane().add(button);
 		result[1] = button;
 		
 		return result;
 	}
 
-
 	private JButton initateTransformButton() {
 		JButton button = new JButton("Transformieren");
 		simulationPane.add(button);
+
 		return button;
 	}
 
 	private JButton initiateOneStepButton() {
 		JButton button = new JButton("Einmal schalten");
 		simulationPane.add(button);
+		button.setLocation(SIMULATION_PANE_BUTTON_ONESTEP_LOCATION);
+		button.setSize(SIMULATION_PANE_BUTTON_ONESTEP_SIZE);
 		return button;
 	}
 

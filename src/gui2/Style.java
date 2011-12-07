@@ -1,6 +1,8 @@
 package gui2;
 
+import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Point;
 
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
@@ -43,9 +45,13 @@ class Style {
 	/** Border of os window */
 	private static final int WINDOW_BORDER = 15;
 	
-	public static final int BUTTON_HEIGHT = 2;
+	public static final int BUTTON_HEIGHT = 30;
 	
-	public static final int BUTTON_WIDHT = 1000;
+	public static final int BUTTON_WIDHT = 130;
+	
+	private static final int INSET_TOP = 20;
+	
+	private static final int INSET_LEFT = 10;
 	
 	
 	/* ************************************* 
@@ -89,6 +95,18 @@ class Style {
 	public static final int SIMULATION_PANE_HEIGHT = HEIGHT_TOP_ELEMENTS;
 	
 	public static final int SIMULATION_PANE_WIDTH = TOTAL_WIDTH / 2;
+	
+	public static final Point SIMULATION_PANE_BUTTON_ONESTEP_LOCATION =
+		new Point(0 + INSET_LEFT, 0 + INSET_TOP);
+	
+	public static final Dimension SIMULATION_PANE_BUTTON_ONESTEP_SIZE = 
+		new Dimension(BUTTON_WIDHT,BUTTON_HEIGHT);
+	
+	public static final Point SIMULATION_PANE_BUTTON_KSTEPS_LOCATION =
+		new Point(0 + INSET_LEFT, BUTTON_HEIGHT + INSET_TOP + (int)(INSET_TOP / 2));
+	
+	public static final Dimension SIMULATION_PANE_BUTTON_KSTEPS_SIZE = 
+		new Dimension(BUTTON_WIDHT,BUTTON_HEIGHT);
 
 	public static final Border SIMULATION_PANE_BORDER = 
 			BorderFactory.createTitledBorder(
