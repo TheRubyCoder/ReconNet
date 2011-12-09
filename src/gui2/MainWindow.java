@@ -47,12 +47,12 @@ class MainWindow {
 	}
 	
 	private void addEditorPane(){
-		EditorPane editorPane = EditorPane.initiateEditorPane();
+		EditorPane editorPane = EditorPane.getInstance();
 		editorPane.addTo(mainFrame);
 	}
 	
 	private void addSimulationPane(){
-		SimulationPane simulationPane = SimulationPane.initiateSimulationPane();
+		SimulationPane simulationPane = SimulationPane.getInstance();
 		simulationPane.addTo(mainFrame);
 	}
 	

@@ -40,30 +40,25 @@ class EditorPane {
 	/** Private default constructor */
 	private EditorPane() {
 		editorPane = new JPanel();
+		getEditorPane().setBounds(EDITOR_PANE_X, 
+				EDITOR_PANE_Y, 
+				EDITOR_PANE_WIDTH, 
+				EDITOR_PANE_HEIGHT);
+		getEditorPane().setBorder(EDITOR_PANE_BORDER);
+		getEditorPane().setLayout(null); //custom layout with setBounds
+//		getEditorPane().setLayout(EDITOR_PANE_LAYOUT);
 		pickButton = initiatePickButton();
 		createPlaceButton = initiateCreatePlaceButton();
 		createTransitionButton = initiateCreateTransitionButton();
 		createArcButton = initiateCreateArcButton();
 	}
 	
-	/** Returns the singleton instance of the editorPane */
-	public static EditorPane getInstance() {
-		return instance;
-	}
-	
 	/**
-	 * Initiates the EditorPane with a certain width and default values for Border, Backgroundcolor etc
-	 * @param width
+	 * Returns the singleton instance
 	 * @return
 	 */
-	public static EditorPane initiateEditorPane(){
-		getInstance().getEditorPane().setBounds(EDITOR_PANE_X, 
-				EDITOR_PANE_Y, 
-				EDITOR_PANE_WIDTH, 
-				EDITOR_PANE_HEIGHT);
-		getInstance().getEditorPane().setBorder(EDITOR_PANE_BORDER);
-		getInstance().getEditorPane().setLayout(EDITOR_PANE_LAYOUT);
-		return getInstance();
+	public static EditorPane getInstance(){
+		return instance;
 	}
 	
 	/** Returns the internal JPanel */
@@ -86,6 +81,8 @@ class EditorPane {
 		pickButton.setToolTipText("Editieren und verschieben sie Stellen und Transitionen " +
 				"indem sie auf sei klicken. Mit drag & drop auf eine weiße Stelle verschieben " +
 				"sie das ganze Petrinetze");
+		pickButton.setLocation(EDITOR_PANE_BUTTON_PICK_LOCATION);
+		pickButton.setSize(EDITOR_PANE_BUTTON_PICK_SIZE);
 		pickButton.addActionListener(new PickButtonListener());
 		getEditorPane().add(pickButton);
 		return pickButton;
@@ -102,12 +99,9 @@ class EditorPane {
 	
 	private JButton initiateCreatePlaceButton() {
 		JButton createPlaceButton = new JButton("Stelle einfügen");
-//		createPlaceButton.setBounds(
-//				WIDTH_SIMULATION_PANE/2, 
-//				0, 
-//				WIDTH_SIMULATION_PANE / 3,
-//				HEIGHT_TOP_ELEMENTS/3);
 		createPlaceButton.setToolTipText("In diesem Modus fügen sie mit einem Klick eine neue Stelle hinzu");
+		createPlaceButton.setLocation(EDITOR_PANE_BUTTON_CREATEPLACE_LOCATION);
+		createPlaceButton.setSize(EDITOR_PANE_BUTTON_CREATEPLACE_SIZE);
 		createPlaceButton.addActionListener(new CreatePlaceButtonListener());
 		getEditorPane().add(createPlaceButton);
 		return createPlaceButton;
@@ -125,6 +119,8 @@ class EditorPane {
 	private JButton initiateCreateTransitionButton(){
 		JButton createTransitionButton = new JButton("Transition einfügen");
 		createTransitionButton.setToolTipText("In diesem Modus fügen sie mit einem Klick eine neue Transition hinzu");
+		createTransitionButton.setLocation(EDITOR_PANE_BUTTON_CREATETRANSITION_LOCATION);
+		createTransitionButton.setSize(EDITOR_PANE_BUTTON_CREATETRANSITION_SIZE);
 		createTransitionButton.addActionListener(new CreateTransitionButtonListener());
 		getEditorPane().add(createTransitionButton);
 		return createTransitionButton;
@@ -141,6 +137,8 @@ class EditorPane {
 	private JButton initiateCreateArcButton(){
 		JButton createArcButton = new JButton("Pfeil einfügen");
 		createArcButton.setToolTipText("In diesem Modus fügen sie mit einem Klick eine neue Kante hinzu");
+		createArcButton.setLocation(EDITOR_PANE_BUTTON_CREATEARC_LOCATION);
+		createArcButton.setSize(EDITOR_PANE_BUTTON_CREATEARC_SIZE);
 		createArcButton.addActionListener(new CreateArcButtonListener());
 		getEditorPane().add(createArcButton);
 		return createArcButton;

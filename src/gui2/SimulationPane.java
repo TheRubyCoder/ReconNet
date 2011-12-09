@@ -7,6 +7,7 @@ import java.awt.Point;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -34,8 +35,11 @@ class SimulationPane {
 	/** Spinner for defining how many steps are simulated */
 	private JSpinner kStepsSpinner;
 	
-	/** Slider for adjusting simulation speed. Value = Ticks per minute */
+	/** Slider for adjusting simulation speed. Abstract speed */
 	private JSlider transformSpeedSlider;
+	
+	/** Combo box for selecting the simulation mode */
+	private JComboBox simulationModePicker;
 	
 	/** The singleton instance of SimulationPane */
 	private static SimulationPane instance;
@@ -46,9 +50,16 @@ class SimulationPane {
 	
 	/** Private default constructor */
 	private SimulationPane() {
-//		simulationPane = new JPanel(new GridLayout(2,3,10,10));
+		
 		simulationPane = new JPanel();
-		simulationPane.setLayout(null);
+		simulationPane.setLayout(null); // custom layout with setBounds(...)
+		
+		simulationPane.setBounds(
+				SIMULATION_PANEL_X, 
+				SIMULATION_PANEL_Y, 
+				SIMULATION_PANE_WIDTH, 
+				SIMULATION_PANE_HEIGHT);
+		simulationPane.setBorder(SIMULATION_PANE_BORDER);
 		
 		oneStepButton = initiateOneStepButton();
 		transformButton = initateTransformButton();
@@ -60,8 +71,19 @@ class SimulationPane {
 		JComponent[] simulateButtonAndSlider = initiateSimulateButtonAndSlider();
 		transformButton = (JButton) simulateButtonAndSlider[0];
 		transformSpeedSlider = (JSlider) simulateButtonAndSlider[1];
+		
+		simulationModePicker = initiateModePicker();
 	}
 	
+	private JComboBox initiateModePicker() {
+		String[] modi = {"Nur Tokenspiel", "Nur Regeln", "Tokenspiel und Regeln"};
+		JComboBox comboBox = new JComboBox(modi);
+		comboBox.setLocation(SIMULATION_PANE_COMBOBOX_LOCATION);
+		comboBox.setSize(SIMULATION_PANE_COMBOBOX_SIZE);
+		getSimulationPane().add(comboBox);
+		return comboBox;
+	}
+
 	/** Initiates simulate button and slider
 	 * @return index 0: JButton<br/>index 1: JSlider
 	 */
@@ -69,12 +91,15 @@ class SimulationPane {
 		JComponent[] result = new JComponent[2];
 		
 		JButton button = new JButton("Simulation starten");
-		button.setSize(BUTTON_WIDHT, BUTTON_HEIGHT);
-//		button.setBounds(0, 0, BUTTON_WIDHT, BUTTON_HEIGHT);
+		button.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+		button.setLocation(SIMULATION_PANE_BUTTON_STARTSIMULATION_LOCATION);
 		getSimulationPane().add(button);
 		
 		JSlider slider = new JSlider(1, 10, 1);
-		slider.setBorder(BorderFactory.createTitledBorder(SIMULATION_PANE_SPEED_SLIDER_BORDER));
+		slider.setLocation(SIMULATION_PANE_SLIDER_LOCATION);
+		slider.setSize(SIMULATION_PANE_SLIDER_SIZE);
+		slider.setBorder(BorderFactory.createTitledBorder(
+				SIMULATION_PANE_SPEED_SLIDER_BORDER));
 		slider.setMajorTickSpacing(1);
 		slider.setPaintTicks(true);
 		slider.setPaintLabels(true);
@@ -91,7 +116,8 @@ class SimulationPane {
 		JComponent[] result = new JComponent[2];
 		
 		JSpinner spinner = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
-		spinner.setBounds(0, 0, 20, 20);
+		spinner.setLocation(SIMULATION_PANE_SPINNER_LOCATION);
+		spinner.setSize(SIMULATION_PANE_SPINNER_SIZE);
 		getSimulationPane().add(spinner);
 		result[0] = spinner;
 		
@@ -106,8 +132,9 @@ class SimulationPane {
 
 	private JButton initateTransformButton() {
 		JButton button = new JButton("Transformieren");
+		button.setLocation(SIMULATION_PANE_BUTTON_TRANSFORM_LOCATION);
+		button.setSize(SIMULATION_PANE_BUTTON_TRANSFORM_SIZE);
 		simulationPane.add(button);
-
 		return button;
 	}
 
@@ -119,10 +146,6 @@ class SimulationPane {
 		return button;
 	}
 
-	public static SimulationPane getInstance(){
-		return instance;
-	}
-	
 	/** returns the internal JPanel */
 	private JPanel getSimulationPane(){
 		return simulationPane;
@@ -132,14 +155,8 @@ class SimulationPane {
 	 * Initiates the SimulationPane with a certain width and default values for Border, Backgroundcolor etc
 	 * @return
 	 */
-	public static SimulationPane initiateSimulationPane(){
-		getInstance().getSimulationPane().setBounds(
-				SIMULATION_PANEL_X, 
-				SIMULATION_PANEL_Y, 
-				SIMULATION_PANE_WIDTH, 
-				SIMULATION_PANE_HEIGHT);
-		getInstance().getSimulationPane().setBorder(SIMULATION_PANE_BORDER);
-		return getInstance();
+	public static SimulationPane getInstance(){
+		return instance;
 	}
 	
 	/**
