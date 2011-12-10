@@ -60,7 +60,7 @@ public class PetrinetHandler implements IPetrinetManipulation {
 			// ***************************
 
 			// call JungModification
-			jungModification.createArc(jungData, fromPlace, toTransition);
+			jungModification.createArc(jungData, arc, fromPlace, toTransition);
 		} else if (this.getNodeType(from).equals(NodeType.Transition)
 				&& this.getNodeType(to).equals(NodeType.Place)) {
 			// transition => place
@@ -77,7 +77,7 @@ public class PetrinetHandler implements IPetrinetManipulation {
 			// ***************************
 
 			// call JungModification
-			jungModification.createArc(jungData, fromTransition, toPlace);
+			jungModification.createArc(jungData, arc, fromTransition, toPlace);
 		} else {
 			// else => error!
 

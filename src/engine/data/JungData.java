@@ -2,28 +2,24 @@ package engine.data;
 
 import petrinet.Arc;
 import petrinet.INode;
-import petrinet.Petrinet;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.graph.DirectedGraph;
 
-public class JungData {
-
+final public class JungData {
 	private DirectedGraph<INode, Arc> jungGraph;
 	private AbstractLayout<INode, Arc> jungLayout;
 	
-	public JungData(){
-		// TODO : !
-	}
-	
-	public JungData(Petrinet petrinet){
-		// TODO: build JungData from IPetrinet
-	}
-	
-	/**
-	 * 
-	 */
-	public JungData clone(){
-		return new JungData(); // TODO: !
+	public JungData(DirectedGraph<INode, Arc> graph, AbstractLayout<INode, Arc> layout) {
+		if (!(graph instanceof DirectedGraph<?, ?>)) {
+			throw new IllegalArgumentException("graph illegal type");
+		}
+		
+		if (!(layout instanceof AbstractLayout<?, ?>)) {
+			throw new IllegalArgumentException("layout illegal type");
+		}		
+		
+		this.jungGraph  = graph;
+		this.jungLayout = layout;
 	}
 	
 	/**
@@ -31,7 +27,7 @@ public class JungData {
 	 * 
 	 * @return DirectedGraph<INode,Arc>
 	 */
-	public DirectedGraph<INode, Arc> getJungGraph(){
+	public DirectedGraph<INode, Arc> getJungGraph() {
 		return jungGraph;
 	}
 	
@@ -40,8 +36,7 @@ public class JungData {
 	 * 
 	 * @return AbstractLayout<INode, Arc>
 	 */
-	public AbstractLayout<INode, Arc> getJungLayout(){
+	public AbstractLayout<INode, Arc> getJungLayout() {
 		return jungLayout;
-	}
-	
+	}	
 }

@@ -64,13 +64,16 @@ public class SessionManager {
 	 * @return the new PetrinetData
 	 */
 	public PetrinetData createPetrinetData(Petrinet petrinet){
-		JungData jd = new JungData(petrinet);
+		/*JungData jd = new JungData(petrinet);
 		
 		PetrinetData pd = new PetrinetData(idPetrinetData, petrinet, jd);
 		
 		idPetrinetData += 1;
+		*/
 		
-		return pd;
+		// TODO createPetrinetData, wie ohne koordinaten aufbauen?
+		throw new UnsupportedOperationException();
+		//return pd;
 	}
 	
 	/**
