@@ -56,6 +56,8 @@ class Style {
 	
 	private static final int INSET_LEFT = 10;
 	
+	public static final GridLayout FILE_PANE_LAYOUT = new GridLayout(2,1,0,SPACING_BUTTONS);
+	
 	
 	/* ************************************* 
 	 * Editor Pane
@@ -71,7 +73,9 @@ class Style {
 	public static final int EDITOR_PANE_HEIGHT = HEIGHT_TOP_ELEMENTS;
 	
 	/** Width of the editor pane */
-	public static final int EDITOR_PANE_WIDTH = TOTAL_WIDTH / 3;
+	public static final int EDITOR_PANE_WIDTH = INSET_LEFT +
+	BUTTON_WIDTH * 2 + 
+	SPACING_BUTTONS * 3;
 	
 	public static final Point EDITOR_PANE_BUTTON_PICK_LOCATION = 
 		new Point( 0 + INSET_LEFT, 0 + INSET_TOP);
@@ -106,22 +110,34 @@ class Style {
 	/** Layout of editor pane */
 	public static final GridLayout EDITOR_PANE_LAYOUT = new GridLayout(2,2,10,10);
 
+	/* ************************************* 
+	 * Attribute pane
+	 * *************************************/
+	
+	public static final int ATTRIBUTE_PANE_X = EDITOR_PANE_X + 
+		EDITOR_PANE_WIDTH + 
+		SPACING_PANES;
+	
+	public static final int ATTRIBUTE_PANE_WIDTH = 181;
+	
 	
 	
 	/* ************************************* 
 	 * Simulation pane
 	 * *************************************/
 	
-	public static final int SIMULATION_PANEL_X = EDITOR_PANE_X + 
-			EDITOR_PANE_WIDTH +
-			SPACING_PANES;
+	public static final int SIMULATION_PANEL_X = ATTRIBUTE_PANE_X +
+		ATTRIBUTE_PANE_WIDTH +
+		SPACING_PANES;
 	
 	public static final int SIMULATION_PANEL_Y = 0;
 	
 	/** Height of simulation panel */
 	public static final int SIMULATION_PANE_HEIGHT = HEIGHT_TOP_ELEMENTS;
 	
-	public static final int SIMULATION_PANE_WIDTH = TOTAL_WIDTH / 2;
+	public static final int SIMULATION_PANE_WIDTH = INSET_LEFT +
+		BUTTON_WIDTH * 3 +
+		SPACING_BUTTONS * 3;
 	
 	public static final Point SIMULATION_PANE_BUTTON_ONESTEP_LOCATION =
 		new Point(0 + INSET_LEFT, 0 + INSET_TOP);
@@ -199,6 +215,50 @@ class Style {
 	
 	public static final GridLayout PETRINET_PANE_LAYOUT = new GridLayout(1,1);
 	
+	/* ************************************* 
+	 * petrinet file pane
+	 * *************************************/
 	
+	public static final int PETRINET_FILE_PANE_X = 0;
 	
+	public static final int PETRINET_FILE_PANE_Y = HEIGHT_TOP_ELEMENTS;
+	
+	public static final int PETRINET_FILE_PANE_WIDTH = WIDTH_OF_LEFT_ELEMENTS;
+	
+	public static final int PETRINET_FILE_PANE_HEIGHT = 400;
+	
+	public static final Border PETRINET_FILE_PANE_BORDER = 
+		BorderFactory.createTitledBorder(
+				BorderFactory.createEtchedBorder(), 
+				"Speichern/Laden - Petrinetze");
+	
+	public static final int NEW_BUTTON_X = 0;
+	public static final int NEW_BUTTON_Y = 0;
+	
+	public static final int SAVE_BUTTON_X = 0;
+	public static final int SAVE_BUTTON_Y = NEW_BUTTON_Y + BUTTON_HEIGHT + SPACING_BUTTONS;
+	
+	public static final int LOAD_BUTTON_X = 0;
+	public static final int LOAD_BUTTON_Y = SAVE_BUTTON_Y + BUTTON_HEIGHT + SPACING_BUTTONS;
+	
+	/* ************************************* 
+	 * rule file pane
+	 * *************************************/
+	
+	public static final int RULE_FILE_PANE_X = 0;
+	
+	public static final int RULE_FILE_PANE_Y = PETRINET_FILE_PANE_Y +
+		PETRINET_FILE_PANE_HEIGHT +
+		SPACING_PANES;
+	
+	public static final int RULE_FILE_PANE_WIDTH = WIDTH_OF_LEFT_ELEMENTS;
+	
+	public static final int RULE_FILE_PANE_HEIGHT = 300;
+	
+	public static final Border RULE_FILE_PANE_BORDER = 
+		BorderFactory.createTitledBorder(
+				BorderFactory.createEtchedBorder(), 
+				"Speichern/Laden");
+	
+
 }
