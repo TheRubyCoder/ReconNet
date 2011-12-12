@@ -7,7 +7,7 @@ import java.awt.Point;
 import javax.swing.BorderFactory;
 import javax.swing.border.Border;
 
-import com.sun.xml.internal.ws.api.pipe.ServerPipeAssemblerContext;
+//import com.sun.xml.internal.ws.api.pipe.ServerPipeAssemblerContext;
 
 /** Utility class for constants of gui styling */
 class Style {
