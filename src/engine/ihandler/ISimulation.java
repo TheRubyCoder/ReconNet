@@ -16,9 +16,8 @@ public interface ISimulation {
 	 * 
 	 * @param id of the petrinet
 	 * @param n how many steps should be done
-	 * @return <code> true </code> if simulation was successful, <code> false </code> otherwise 
 	 */
-	public boolean fire(int id, int n);
+	public void fire(int id, int n);
 	
 	/**
 	 * Saves a Petrinet.
@@ -36,9 +35,8 @@ public interface ISimulation {
 	 * @param id of the petrinet
 	 * @param ruleIDs IDs of the rules that will be used
 	 * @param n how many steps should be done
-	 * @return <code> true </code> if simulation was successful, <code> false </code> otherwise
 	 */
-	public boolean transform(int id,Collection<Integer> ruleIDs, int n);
+	public void transform(int id,Collection<Integer> ruleIDs, int n);
 	
 	/**
 	 * Fires or Applies Rules to a Petrinet. Non Deterministic choice which is done.
@@ -46,9 +44,8 @@ public interface ISimulation {
 	 * @param id of the petrinet
 	 * @param ruleIDs IDs of the rules that will be used
 	 * @param n how many steps should be done
-	 * @return <code> true </code> if simulation was successful, <code> false </code> otherwise
 	 */
-	public boolean fireOrTransform(int id, Collection<Integer> ruleIDs, int n);
+	public void fireOrTransform(int id, Collection<Integer> ruleIDs, int n);
 	// TODO: fire & transform & weitere
 	
 }

@@ -19,18 +19,16 @@ public interface IRuleManipulation {
 	 * @param id ID of the Rule
 	 * @param from Source of the Arc
 	 * @param to Target of the Arc
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean createArc(int id, INode from, INode to);
+	public void createArc(int id, INode from, INode to);
 	
 	/**
 	 * Creates a Place
 	 * 
 	 * @param id ID of the Rule
 	 * @param coordinate Point where the Place will be created
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwisee
 	 */
-	public boolean createPlace(int id,RuleNet net, Point2D coordinate);
+	public void createPlace(int id,RuleNet net, Point2D coordinate);
 	
 	/**
 	 * Creates a Rule
@@ -44,18 +42,16 @@ public interface IRuleManipulation {
 	 * 
 	 * @param id ID of the Rule
 	 * @param coordinate Point where the Transition will be created
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean createTransition(int id,RuleNet net, Point2D coordinate);
+	public void createTransition(int id,RuleNet net, Point2D coordinate);
 	
 	/**
 	 * Deletes an Arc
 	 * 
 	 * @param id ID of the Rule
 	 * @param arc which will be deleted
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean deleteArc(int id,RuleNet net, Arc arc); // TODO IArc gibt es nicht?
+	public void deleteArc(int id,RuleNet net, Arc arc); // TODO IArc gibt es nicht?
 	
 	// TODO: da sollte doch ne methode drueber die INode aufloest oder?
 	/**
@@ -63,18 +59,16 @@ public interface IRuleManipulation {
 	 * 
 	 * @param id ID of the Rule
 	 * @param place which will be deleted
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean deletePlace(int id,RuleNet net, INode place);
+	public void deletePlace(int id,RuleNet net, INode place);
 	
 	/**
 	 * Deletes a Transition
 	 * 
 	 * @param id ID of the Rule
 	 * @param transition which will be deleted
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean deleteTransition(int id,RuleNet net, INode transition);
+	public void deleteTransition(int id,RuleNet net, INode transition);
 	
 	/**
 	 * Gets the Attributes from an Arc
@@ -125,9 +119,8 @@ public interface IRuleManipulation {
 	 * @param id ID of the Rule
 	 * @param node to move
 	 * @param relativePosition relative movement of the node
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean moveNode(int id, INode node, Point2D relativePosition);
+	public void moveNode(int id, INode node, Point2D relativePosition);
 	
 	/**
 	 * Saves a Rule.
@@ -136,9 +129,8 @@ public interface IRuleManipulation {
 	 * @param path where to save the Rule
 	 * @param filename name for the Rule
 	 * @param format which the Rule should be saved. (PNML the only option till now)
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean save(int id, String path, String filename, String format); // TODO: String format zu => Format format
+	public void save(int id, String path, String filename, String format); // TODO: String format zu => Format format
 	
 	/**
 	 * Sets the Marking of a Place.
@@ -146,9 +138,8 @@ public interface IRuleManipulation {
 	 * @param id ID of the Rule
 	 * @param place where to set the Mark
 	 * @param marking amount of mark 
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean setMarking(int id, INode place, int marking);
+	public void setMarking(int id, INode place, int marking);
 	
 	/**
 	 * Sets the PName of a Place.
@@ -156,9 +147,8 @@ public interface IRuleManipulation {
 	 * @param id ID of the Rule
 	 * @param place where to set the PName
 	 * @param pname PName
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean setPname(int id, INode place, String pname);
+	public void setPname(int id, INode place, String pname);
 	
 	/**
 	 * Sets the Tlb of a Transition.
@@ -166,9 +156,8 @@ public interface IRuleManipulation {
 	 * @param id ID of the Rule
 	 * @param transition where to set the tlb
 	 * @param tlb TransitionLabel
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean setTlb(int id, INode transition, String tlb);
+	public void setTlb(int id, INode transition, String tlb);
 	
 	/**
 	 * Sets the TName of a Transition.
@@ -176,9 +165,8 @@ public interface IRuleManipulation {
 	 * @param id ID of the Rule
 	 * @param transition where to set the TName
 	 * @param tname TName
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean setTname(int id, INode transition, String tname);
+	public void setTname(int id, INode transition, String tname);
 	
 	/**
 	 * Sets the Weight of an Arc.
@@ -186,8 +174,7 @@ public interface IRuleManipulation {
 	 * @param id ID of the Rule
 	 * @param arc where to set the weight
 	 * @param weight weight of the arc
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean setWeight(int id, Arc arc, int weight);
+	public void setWeight(int id, Arc arc, int weight);
 	
 }
