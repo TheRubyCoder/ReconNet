@@ -27,5 +27,6 @@
 	<classpathentry kind="lib" path="lib/default/junit-4.8.2-sources.jar"/>
 	<classpathentry kind="lib" path="lib/default/junit-4.8.2.jar"/>
 	<classpathentry kind="lib" path="lib/default/jaxb-api-2.2.2-promoted-b99.jar"/>
+	<classpathentry kind="lib" path="lib/default/jaxb-impl-2.2.2-promoted-b99.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
