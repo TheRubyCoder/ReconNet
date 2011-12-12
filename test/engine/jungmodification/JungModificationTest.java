@@ -39,12 +39,24 @@ public class JungModificationTest {
     private JungModification jungMod;
     private JungData jungData;
 
-    private Point2D pointPositive;
-    private Point2D pointPositive22;
+    private Point2D pointPositive1;
+    private Point2D pointPositive1TooCloseLeft;
+    private Point2D pointPositive1TooCloseTop;
+    private Point2D pointPositive1TooCloseBottom;
+    private Point2D pointPositive1TooCloseRight;
+
+    private Point2D pointPositive1JustEnoughLeft;
+    private Point2D pointPositive1JustEnoughTop;
+    private Point2D pointPositive1JustEnoughBottom;
+    private Point2D pointPositive1JustEnoughRight;
+    
+    private Point2D pointPositive2;
     private Point2D pointNegativeX;
     private Point2D pointNegativeY;
     private Point2D pointNegativeXY; 
-
+    int justFarEnoughAway = JungModification.NODE_RADIUS * 2;
+    int farEnoughAway 	  = justFarEnoughAway + 1;
+    
 	/**
 	 * Erstellen eines Netzes
 	 */    
@@ -70,9 +82,26 @@ public class JungModificationTest {
         jungMod  = JungModification.getInstance();
         jungData = new JungData(graph, new StaticLayout<INode, Arc>(graph));
         
-
-        pointPositive   = new Point(1, 1);
-        pointPositive22 = new Point(2, 2);
+        int x = 100;
+        int y = 100;
+         
+        pointPositive1  = new Point(x, y);
+		
+		pointPositive1TooCloseLeft   = new Point(x - justFarEnoughAway + 1, y);
+		pointPositive1TooCloseRight  = new Point(x + justFarEnoughAway - 1, y);
+		pointPositive1TooCloseTop    = new Point(x, y + justFarEnoughAway - 1);
+		pointPositive1TooCloseBottom = new Point(x, y - justFarEnoughAway + 1);   
+		
+		pointPositive1JustEnoughLeft   = new Point(x - justFarEnoughAway, y);
+		pointPositive1JustEnoughRight  = new Point(x + justFarEnoughAway, y);
+		pointPositive1JustEnoughTop    = new Point(x, y + justFarEnoughAway);
+		pointPositive1JustEnoughBottom = new Point(x, y - justFarEnoughAway);   
+		
+        pointPositive2  = new Point(
+        	x + farEnoughAway, 
+        	y + farEnoughAway
+        );
+        
         pointNegativeX  = new Point(-1, 1);
         pointNegativeY  = new Point(1, -1);
         pointNegativeXY = new Point(-1, -1); 
@@ -82,19 +111,26 @@ public class JungModificationTest {
 	 * Testen der Singleton Eigenschaft
 	 */
 	@Test
-	public void getInstance() {		
+	public void testGetInstance() {		
 		assertNotNull(JungModification.getInstance());
 		assertTrue(JungModification.getInstance() == JungModification.getInstance());		
 	}
-	
-	
+
+	/**
+	 * Mindestentfernung 2er Nodes mindestens 1
+	 */
+	@Test
+	public void testCreateArc_MinNodeDistanceRadiusSize() {		
+		assertTrue(JungModification.NODE_RADIUS >= 1);
+	}
+		
 	/**
 	 * Arc (Place > Transition) nach hinzufügen auch enthalten
 	 */
 	@Test
 	public void testCreateArc_PlaceToTranstion() {
-		jungMod.createPlace(jungData, place1, pointPositive);
-		jungMod.createTransition(jungData, transition1, pointPositive22);
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.createTransition(jungData, transition1, pointPositive2);
 		
 		jungMod.createArc(jungData, arc11, place1, transition1);
 		
@@ -106,8 +142,8 @@ public class JungModificationTest {
 	 */
 	@Test
 	public void testCreateArc_TranstionToPlace() {
-		jungMod.createPlace(jungData, place2, pointPositive);
-		jungMod.createTransition(jungData, transition1, pointPositive22);
+		jungMod.createPlace(jungData, place2, pointPositive1);
+		jungMod.createTransition(jungData, transition1, pointPositive2);
 		
 		jungMod.createArc(jungData, arc12, transition1, place2);
 		
@@ -119,10 +155,10 @@ public class JungModificationTest {
 	 */
 	@Test
 	public void testCreatePlace() {
-		jungMod.createPlace(jungData, place1, pointPositive);
+		jungMod.createPlace(jungData, place1, pointPositive1);
 		assertTrue(jungData.getJungGraph().containsVertex(place1));
-		assertTrue(Double.compare(pointPositive.getX(), jungData.getJungLayout().getX(place1)) == 0);
-		assertTrue(Double.compare(pointPositive.getY(), jungData.getJungLayout().getY(place1)) == 0);
+		assertTrue(Double.compare(pointPositive1.getX(), jungData.getJungLayout().getX(place1)) == 0);
+		assertTrue(Double.compare(pointPositive1.getY(), jungData.getJungLayout().getY(place1)) == 0);
 	}
 
 	/**
@@ -130,10 +166,10 @@ public class JungModificationTest {
 	 */
 	@Test
 	public void testCreateTransition() {
-		jungMod.createTransition(jungData, transition1, pointPositive);
+		jungMod.createTransition(jungData, transition1, pointPositive1);
 		assertTrue(jungData.getJungGraph().containsVertex(transition1));
-		assertTrue(Double.compare(pointPositive.getX(), jungData.getJungLayout().getX(transition1)) == 0);
-		assertTrue(Double.compare(pointPositive.getY(), jungData.getJungLayout().getY(transition1)) == 0);
+		assertTrue(Double.compare(pointPositive1.getX(), jungData.getJungLayout().getX(transition1)) == 0);
+		assertTrue(Double.compare(pointPositive1.getY(), jungData.getJungLayout().getY(transition1)) == 0);
 	}
 	
 
@@ -298,11 +334,13 @@ public class JungModificationTest {
         int y = 1;
         
         for (Place place : p.getAllPlaces()) {
-        	jungMod.createPlace(jung, place, new Point(1, y++));
+        	y = y + farEnoughAway;
+        	jungMod.createPlace(jung, place, new Point(1, y));
         }
         
         for (Transition transition : p.getAllTransitions()) {
-        	jungMod.createTransition(jung, transition, new Point(1, y++));
+        	y = y + farEnoughAway;
+        	jungMod.createTransition(jung, transition, new Point(1, y));
         }
         
         for (Arc arc : p.getAllArcs()) {       	
@@ -319,12 +357,95 @@ public class JungModificationTest {
 
 	@Test
 	public void testMoveNode() {
-		jungMod.createTransition(jungData, transition1, pointPositive);
+		jungMod.createTransition(jungData, transition1, pointPositive1);
 		
-		jungMod.moveNode(jungData, transition1, pointPositive22);		
+		jungMod.moveNode(jungData, transition1, pointPositive2);		
 		
-		assertTrue(Double.compare(pointPositive22.getX(), jungData.getJungLayout().getX(transition1)) == 0);
-		assertTrue(Double.compare(pointPositive22.getY(), jungData.getJungLayout().getY(transition1)) == 0);
+		assertTrue(Double.compare(pointPositive2.getX(), jungData.getJungLayout().getX(transition1)) == 0);
+		assertTrue(Double.compare(pointPositive2.getY(), jungData.getJungLayout().getY(transition1)) == 0);
+	}
+
+	/**
+	 *  Keine Mindestentfernungs-Exception für das bewegen eines Nodes selbst.
+	 */
+	@Test
+	public void testMoveNode_selfOverlay() {
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.moveNode(jungData, place1, pointPositive1);
+	}
+	
+	/**
+	 *  Keine Mindestentfernungs-Exception für das bewegen eines Nodes selbst.
+	 */
+	@Test
+	public void testMoveNode_selfCloseLeft() {
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.moveNode(jungData, place1, pointPositive1TooCloseLeft);
+	}
+	
+	/**
+	 *  Keine Mindestentfernungs-Exception für das bewegen eines Nodes selbst.
+	 */
+	@Test
+	public void testMoveNode_selfCloseRight() {
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.moveNode(jungData, place1, pointPositive1TooCloseRight);
+	}
+	
+	/**
+	 *  Keine Mindestentfernungs-Exception für das bewegen eines Nodes selbst.
+	 */
+	@Test
+	public void testMoveNode_selfCloseTop() {
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.moveNode(jungData, place1, pointPositive1TooCloseTop);
+	}
+	
+	/**
+	 *  Keine Mindestentfernungs-Exception für das bewegen eines Nodes selbst.
+	 */
+	@Test
+	public void testMoveNode_selfCloseBottom() {
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.moveNode(jungData, place1, pointPositive1TooCloseBottom);
+	}	/**
+	 *  Node gerade weit genug weg von einem anderen Node
+	 */
+	@Test
+	public void testMoveNode_JustEnoughLeft() {
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.createPlace(jungData, place2, pointPositive2);
+		jungMod.moveNode(jungData, place2, pointPositive1JustEnoughLeft);
+	}
+	
+	/**
+	 *  Node gerade weit genug weg von einem anderen Node
+	 */
+	@Test
+	public void testMoveNode_JustEnoughRight() {
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.createPlace(jungData, place2, pointPositive2);
+		jungMod.moveNode(jungData, place2, pointPositive1JustEnoughRight);
+	}
+	
+	/**
+	 *  Node gerade weit genug weg von einem anderen Node
+	 */
+	@Test
+	public void testMoveNode_JustEnoughTop() {
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.createPlace(jungData, place2, pointPositive2);
+		jungMod.moveNode(jungData, place2, pointPositive1JustEnoughTop);
+	}
+	
+	/**
+	 *  Node gerade weit genug weg von einem anderen Node
+	 */
+	@Test
+	public void testMoveNode_JustEnoughBottom() {
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.createPlace(jungData, place2, pointPositive2);
+		jungMod.moveNode(jungData, place2, pointPositive1JustEnoughBottom);
 	}
 
 	public void testUpdateArc() {
@@ -362,12 +483,12 @@ public class JungModificationTest {
 	/**
 	 * restliche Null-Tests
 	 */
-	@Test(expected=IllegalArgumentException.class) public void nullTest_createPlace_1() { jungMod.createPlace(null, 	place1, pointPositive); }
-	@Test(expected=IllegalArgumentException.class) public void nullTest_createPlace_2() { jungMod.createPlace(jungData, null, 	pointPositive); }
+	@Test(expected=IllegalArgumentException.class) public void nullTest_createPlace_1() { jungMod.createPlace(null, 	place1, pointPositive1); }
+	@Test(expected=IllegalArgumentException.class) public void nullTest_createPlace_2() { jungMod.createPlace(jungData, null, 	pointPositive1); }
 	@Test(expected=IllegalArgumentException.class) public void nullTest_createPlace_3() { jungMod.createPlace(jungData, place1, null); }
 	
-	@Test(expected=IllegalArgumentException.class) public void nullTest_createTransition_1() { jungMod.createTransition(null, 	  transition1, pointPositive); }
-	@Test(expected=IllegalArgumentException.class) public void nullTest_createTransition_2() { jungMod.createTransition(jungData, null, 	   pointPositive); }
+	@Test(expected=IllegalArgumentException.class) public void nullTest_createTransition_1() { jungMod.createTransition(null, 	  transition1, pointPositive1); }
+	@Test(expected=IllegalArgumentException.class) public void nullTest_createTransition_2() { jungMod.createTransition(jungData, null, 	   pointPositive1); }
 	@Test(expected=IllegalArgumentException.class) public void nullTest_createTransition_3() { jungMod.createTransition(jungData, transition1, null); }
 	
 	@Test(expected=IllegalArgumentException.class) public void nullTest_delete_1() { jungMod.delete(null, 	  new HashSet<Arc>(), new HashSet<INode>()); }
@@ -388,8 +509,8 @@ public class JungModificationTest {
 		jungMod.delete(jungData, new HashSet<Arc>(), nodes); 
 	}
 	
-	@Test(expected=IllegalArgumentException.class) public void nullTest_moveNode_1() { jungMod.moveNode(null, 		place1, 	pointPositive); }
-	@Test(expected=IllegalArgumentException.class) public void nullTest_moveNode_2() { jungMod.moveNode(jungData, 	null, 		pointPositive); }
+	@Test(expected=IllegalArgumentException.class) public void nullTest_moveNode_1() { jungMod.moveNode(null, 		place1, 	pointPositive1); }
+	@Test(expected=IllegalArgumentException.class) public void nullTest_moveNode_2() { jungMod.moveNode(jungData, 	null, 		pointPositive1); }
 	@Test(expected=IllegalArgumentException.class) public void nullTest_moveNode_3() { jungMod.moveNode(jungData, 	place1, 	null); }
 
 	@Test(expected=IllegalArgumentException.class) public void nullTest_updateArc_1() { jungMod.updateArc(null, 	arc11); }
@@ -440,7 +561,7 @@ public class JungModificationTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void invalidArgumentsTest_createArc_PlaceToTranstion_unknownPlace() {
-		jungMod.createTransition(jungData, transition1, pointPositive);
+		jungMod.createTransition(jungData, transition1, pointPositive1);
 		jungMod.createArc(jungData, arc11, place1, transition1);
 	}
 
@@ -449,7 +570,7 @@ public class JungModificationTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void invalidArgumentsTest_createArc_PlaceToTranstion_unknownTransition() {
-		jungMod.createPlace(jungData, place1, pointPositive);
+		jungMod.createPlace(jungData, place1, pointPositive1);
 		jungMod.createArc(jungData, arc11, place1, transition1);
 	}
 
@@ -493,7 +614,7 @@ public class JungModificationTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void invalidArgumentsTest_createArc_TranstionToPlace_unknownPlace() {
-		jungMod.createTransition(jungData, transition1, pointPositive);
+		jungMod.createTransition(jungData, transition1, pointPositive1);
 		jungMod.createArc(jungData, arc11, transition1, place1);
 	}
 
@@ -502,7 +623,7 @@ public class JungModificationTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void invalidArgumentsTest_createArc_TranstionToPlace_unknownTransition() {
-		jungMod.createPlace(jungData, place1, pointPositive);
+		jungMod.createPlace(jungData, place1, pointPositive1);
 		jungMod.createArc(jungData, arc11, transition1, place1);
 	}
 
@@ -520,8 +641,100 @@ public class JungModificationTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void invalidArgumentsTest_createPlace_containsPlace() {
-		jungMod.createPlace(jungData, place1, pointPositive);
-		jungMod.createPlace(jungData, place1, pointPositive);
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.createPlace(jungData, place1, pointPositive1);
+	}
+
+	
+	/**
+	 * Place ist zu nah an einem anderen Place (Überlagerung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_createPlace_toClose_OverlayPlace() {
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.createPlace(jungData, place2, pointPositive1);
+	}
+	
+	/**
+	 * Place ist zu nah an einem anderen Place (Innerhalb der Mindestentfernung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_createPlace_toClose_TooCloseLeftPlace() {
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.createPlace(jungData, place2, pointPositive1TooCloseLeft);
+	}
+	
+	/**
+	 * Place ist zu nah an einem anderen Place (Innerhalb der Mindestentfernung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_createPlace_toClose_TooCloseRightPlace() {
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.createPlace(jungData, place2, pointPositive1TooCloseRight);
+	}
+	
+	/**
+	 * Place ist zu nah an einem anderen Place (Innerhalb der Mindestentfernung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_createPlace_toClose_TooCloseTopPlace() {
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.createPlace(jungData, place2, pointPositive1TooCloseTop);
+	}
+	
+	/**
+	 * Place ist zu nah an einem anderen Place (Innerhalb der Mindestentfernung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_createPlace_toClose_TooCloseBottomPlace() {
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.createPlace(jungData, place2, pointPositive1TooCloseBottom);
+	}
+
+	
+	/**
+	 * Place ist zu nah an einem anderen Transition (Überlagerung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_createPlace_toClose_OverlayTransition() {
+		jungMod.createTransition(jungData, transition1, pointPositive1);
+		jungMod.createPlace(jungData, place2, pointPositive1);
+	}
+	
+	/**
+	 * Place ist zu nah an einem anderen Transition (Innerhalb der Mindestentfernung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_createPlace_toClose_TooCloseLeftTransition() {
+		jungMod.createTransition(jungData, transition1, pointPositive1);
+		jungMod.createPlace(jungData, place2, pointPositive1TooCloseLeft);
+	}
+
+	/**
+	 * Place ist zu nah an einem anderen Transition (Innerhalb der Mindestentfernung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_createPlace_toClose_TooCloseRightTransition() {
+		jungMod.createTransition(jungData, transition1, pointPositive1);
+		jungMod.createPlace(jungData, place2, pointPositive1TooCloseRight);
+	}
+	
+	/**
+	 * Place ist zu nah an einem anderen Transition (Innerhalb der Mindestentfernung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_createPlace_toClose_TooCloseTopTransition() {
+		jungMod.createTransition(jungData, transition1, pointPositive1);
+		jungMod.createPlace(jungData, place2, pointPositive1TooCloseTop);
+	}
+	
+	/**
+	 * Place ist zu nah an einem anderen Transition (Innerhalb der Mindestentfernung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_createPlace_toClose_TooCloseBottomTransition() {
+		jungMod.createTransition(jungData, transition1, pointPositive1);
+		jungMod.createPlace(jungData, place2, pointPositive1TooCloseBottom);
 	}
 
 	/**
@@ -529,9 +742,100 @@ public class JungModificationTest {
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void invalidArgumentsTest_createTransition_containsTransition() {
-		jungMod.createTransition(jungData, transition1, pointPositive);
-		jungMod.createTransition(jungData, transition1, pointPositive);
+		jungMod.createTransition(jungData, transition1, pointPositive1);
+		jungMod.createTransition(jungData, transition1, pointPositive1);
 	}
+		
+	/**
+	 * Transition ist zu nah an einer anderen Transition (Überlagerung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_createTransition_toClose_OverlayTransition() {
+		jungMod.createTransition(jungData, transition1, pointPositive1);
+		jungMod.createTransition(jungData, transition2, pointPositive1);
+	}
+	
+	/**
+	 * Transition ist zu nah an einer anderen Transition (Innerhalb der Mindestentfernung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_createTransition_toClose_TooCloseLeftTransition() {
+		jungMod.createTransition(jungData, transition1, pointPositive1);
+		jungMod.createTransition(jungData, transition2, pointPositive1TooCloseLeft);
+	}
+	
+	/**
+	 * Transition ist zu nah an einer anderen Transition (Innerhalb der Mindestentfernung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_createTransition_toClose_TooCloseRightTransition() {
+		jungMod.createTransition(jungData, transition1, pointPositive1);
+		jungMod.createTransition(jungData, transition2, pointPositive1TooCloseRight);
+	}
+	
+	/**
+	 * Transition ist zu nah an einer anderen Transition (Innerhalb der Mindestentfernung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_createTransition_toClose_TooCloseTopTransition() {
+		jungMod.createTransition(jungData, transition1, pointPositive1);
+		jungMod.createTransition(jungData, transition2, pointPositive1TooCloseTop);
+	}
+	
+	/**
+	 * Transition ist zu nah an einer anderen Transition (Innerhalb der Mindestentfernung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_createTransition_toClose_TooCloseBottomTransition() {
+		jungMod.createTransition(jungData, transition1, pointPositive1);
+		jungMod.createTransition(jungData, transition2, pointPositive1TooCloseBottom);
+	}
+	
+	/**
+	 * Transition ist zu nah an einem Place  (Überlagerung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_createTransition_toClose_OverlayPlace() {
+		jungMod.createPlace(jungData, place2, pointPositive1);
+		jungMod.createTransition(jungData, transition1, pointPositive1);
+	}
+	
+	/**
+	 * Transition ist zu nah an einem Place (Innerhalb der Mindestentfernung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_createTransition_toClose_TooCloseLeftPlace() {
+		jungMod.createPlace(jungData, place2, pointPositive1);
+		jungMod.createTransition(jungData, transition1, pointPositive1TooCloseLeft);
+	}
+	
+	/**
+	 * Transition ist zu nah an einem Place (Innerhalb der Mindestentfernung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_createTransition_toClose_TooCloseRightPlace() {
+		jungMod.createPlace(jungData, place2, pointPositive1);
+		jungMod.createTransition(jungData, transition1, pointPositive1TooCloseRight);
+	}
+	
+	/**
+	 * Transition ist zu nah an einem Place (Innerhalb der Mindestentfernung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_createTransition_toClose_TooCloseTopPlace() {
+		jungMod.createPlace(jungData, place2, pointPositive1);
+		jungMod.createTransition(jungData, transition1, pointPositive1TooCloseTop);
+	}
+	
+	/**
+	 * Transition ist zu nah an einem Place (Innerhalb der Mindestentfernung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_createTransition_toClose_TooCloseBottomPlace() {
+		jungMod.createPlace(jungData, place2, pointPositive1);
+		jungMod.createTransition(jungData, transition1, pointPositive1TooCloseBottom);
+	}
+	
 
 	/**
 	 * Arc nicht im Graphen enthalten
@@ -568,8 +872,8 @@ public class JungModificationTest {
 		Set<Arc> arcs 	 = new HashSet<Arc>();
 		Set<INode> nodes = new HashSet<INode>();
 
-		jungMod.createPlace(jungData, place1, pointPositive);
-		jungMod.createTransition(jungData, transition1, pointPositive22);
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.createTransition(jungData, transition1, pointPositive2);
 		jungMod.createArc(jungData, arc11, place1, transition1);		
 		
 		nodes.add(place1);
@@ -582,7 +886,7 @@ public class JungModificationTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void invalidArgumentsTest_moveNode_NegativeX() { 
-		jungMod.createPlace(jungData, place1, pointPositive);
+		jungMod.createPlace(jungData, place1, pointPositive1);
 		jungMod.moveNode(jungData, place1, pointNegativeX); 
 	}
 
@@ -591,7 +895,7 @@ public class JungModificationTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void invalidArgumentsTest_moveNode_NegativeY() { 
-		jungMod.createPlace(jungData, place1, pointPositive);
+		jungMod.createPlace(jungData, place1, pointPositive1);
 		jungMod.moveNode(jungData, place1, pointNegativeY); 
 	}
 
@@ -600,7 +904,7 @@ public class JungModificationTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void invalidArgumentsTest_moveNode_NegativeXY() { 
-		jungMod.createPlace(jungData, place1, pointPositive);
+		jungMod.createPlace(jungData, place1, pointPositive1);
 		jungMod.moveNode(jungData, place1, pointNegativeXY);
 	}
 
@@ -609,7 +913,57 @@ public class JungModificationTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void invalidArgumentsTest_moveNode_UnknownNode() { 
-		jungMod.moveNode(jungData, place1, pointPositive);
+		jungMod.moveNode(jungData, place1, pointPositive1);
+	}
+	
+	/**
+	 * Node kommt zu nah an einen anderen Node (Überlagerung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_moveNode_Overlay() {
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.createPlace(jungData, place2, pointPositive2);
+		jungMod.moveNode(jungData, place2, pointPositive1);
+	}
+	
+	/**
+	 *  Node kommt zu nah an einen anderen Node (Innerhalb der Mindestentfernung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_moveNode_TooCloseLeft() {
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.createPlace(jungData, place2, pointPositive2);
+		jungMod.moveNode(jungData, place2, pointPositive1TooCloseLeft);
+	}
+	
+	/**
+	 *  Node kommt zu nah an einen anderen Node (Innerhalb der Mindestentfernung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_moveNode_TooCloseRight() {
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.createPlace(jungData, place2, pointPositive2);
+		jungMod.moveNode(jungData, place2, pointPositive1TooCloseRight);
+	}
+	
+	/**
+	 *  Node kommt zu nah an einen anderen Node (Innerhalb der Mindestentfernung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_moveNode_TooCloseTop() {
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.createPlace(jungData, place2, pointPositive2);
+		jungMod.moveNode(jungData, place2, pointPositive1TooCloseTop);
+	}
+	
+	/**
+	 *  Node kommt zu nah an einen anderen Node (Innerhalb der Mindestentfernung)
+	 */
+	@Test(expected=IllegalArgumentException.class)
+	public void invalidArgumentsTest_moveNode_TooCloseBottom() {
+		jungMod.createPlace(jungData, place1, pointPositive1);
+		jungMod.createPlace(jungData, place2, pointPositive2);
+		jungMod.moveNode(jungData, place2, pointPositive1TooCloseBottom);
 	}
 	
 	/**

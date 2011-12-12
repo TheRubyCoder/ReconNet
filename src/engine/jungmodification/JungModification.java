@@ -10,6 +10,7 @@ import petrinet.INode;
 import petrinet.Place;
 import petrinet.Transition;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
+import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.DirectedGraph;
 import engine.data.JungData;
 
@@ -18,6 +19,11 @@ import engine.data.JungData;
  */
 final public class JungModification {
 	private static JungModification jungModification;
+	
+	/**
+	 * radius to check the minimum distance between 2 nodes
+	 */
+	public static final int NODE_RADIUS = 10;
 	
 	private JungModification() {}
 	
@@ -90,8 +96,9 @@ final public class JungModification {
 	public void createPlace(JungData jung, Place place, Point2D coordinate) {
 		checkJungDataInvariant(jung);
 		checkPlaceInvariant(place);
-		checkPoint2DInvariant(coordinate);
-
+		checkPoint2DInvariant(coordinate);		
+		checkPoint2DLocation(jung, coordinate, new HashSet<INode>());
+		
 		check(
 			jung.getJungGraph().addVertex(place),
 			"place couldn't be added"
@@ -110,7 +117,8 @@ final public class JungModification {
 	public void createTransition(JungData jung, Transition transition, Point2D coordinate) {
 		checkJungDataInvariant(jung);
 		checkTransitionInvariant(transition);
-		checkPoint2DInvariant(coordinate);
+		checkPoint2DInvariant(coordinate);		
+		checkPoint2DLocation(jung, coordinate, new HashSet<INode>());
 
 		check(
 			jung.getJungGraph().addVertex(transition),
@@ -170,6 +178,11 @@ final public class JungModification {
 		checkINodeInvariant(node);
 		checkPoint2DInvariant(coordinate);		
 		check(jung.getJungGraph().containsVertex(node), "unknown node");
+		
+		Set<INode> excludes = new HashSet<INode>();
+		excludes.add(node);
+		
+		checkPoint2DLocation(jung, coordinate, excludes);
 	
 		jung.getJungLayout().setLocation(node, coordinate);
 	}
@@ -388,6 +401,36 @@ final public class JungModification {
 	private void checkContainsNodes(JungData jung, Collection<INode> nodes) {
 		for (INode node : nodes) {
 			checkContainsNode(jung, node);
+		}
+	}
+	
+	/**
+	 * checks if a new node were too close to an other node.
+	 * Checking by calculating the boundig box of an node.
+	 * 
+	 * @param jung	 	jung representation
+	 * @param point		point to check
+	 * @param excludes  dont't check to these nodes
+	 */
+	private void checkPoint2DLocation(JungData jung, Point2D point, Collection<INode> excludes) {
+		DirectedGraph<INode, Arc>   graph = jung.getJungGraph();
+		AbstractLayout<INode, Arc> layout = jung.getJungLayout();
+		
+		final double MIN_DISTANCE = 2 * NODE_RADIUS;
+		
+		for (INode node : graph.getVertices()) {
+			if (excludes.contains(node)) {
+				continue;
+			}
+			
+			double xDistance = Math.abs(layout.getX(node) - point.getX());			
+			double yDistance = Math.abs(layout.getY(node) - point.getY());
+			
+			check(
+				Double.compare(xDistance, MIN_DISTANCE) >= 0 
+			 || Double.compare(yDistance, MIN_DISTANCE) >= 0, 
+				"point is too close to a node"
+			);
 		}
 	}
 }
