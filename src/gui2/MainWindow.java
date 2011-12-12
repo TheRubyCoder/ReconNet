@@ -33,6 +33,7 @@ class MainWindow {
 	private MainWindow() {
 		initializeMainFrame();
 		addEditorPane();
+		addAttributePane();
 		addSimulationPane();
 		addPetrinetPane();
 		addFilePane();
@@ -63,6 +64,10 @@ class MainWindow {
 	
 	private void addFilePane(){
 		PetrinetFilePane.getInstance().addTo(mainFrame);
+	}
+	
+	private void addAttributePane(){
+		AttributePane.getInstance().addTo(mainFrame);
 	}
 	
 	private void show(){

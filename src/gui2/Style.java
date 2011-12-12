@@ -118,8 +118,14 @@ class Style {
 		EDITOR_PANE_WIDTH + 
 		SPACING_PANES;
 	
+	public static final int ATTRIBUTE_PANE_Y = 0;
+	
 	public static final int ATTRIBUTE_PANE_WIDTH = 181;
 	
+	public static final int ATTRIBUTE_PANE_HEIGHT = HEIGHT_TOP_ELEMENTS;
+	
+	public static final Border ATTRIBUTE_PANE_BORDER = BorderFactory.createTitledBorder(
+			BorderFactory.createEtchedBorder(), "Knoten-Attribute");
 	
 	
 	/* ************************************* 
