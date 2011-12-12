@@ -18,20 +18,18 @@ public interface IPetrinetManipulation {
 	 * @param id ID of the Petrinet
 	 * @param from Source of the Arc
 	 * @param to Target of the Arc
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 * @throws EngineException 
 	 */
-	public boolean createArc(int id, INode from, INode to) throws EngineException;
+	public void createArc(int id, INode from, INode to) throws EngineException;
 	
 	/**
 	 * Creates a Place
 	 * 
 	 * @param id ID of the Petrinet
 	 * @param coordinate Point where the Place will be created
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 * @throws EngineException 
 	 */
-	public boolean createPlace(int id, Point2D coordinate) throws EngineException;
+	public void createPlace(int id, Point2D coordinate) throws EngineException;
 	
 	/**
 	 * Creates a Petrinet
@@ -45,20 +43,18 @@ public interface IPetrinetManipulation {
 	 * 
 	 * @param id ID of the Petrinet
 	 * @param coordinate Point where the Transition will be created
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 * @throws EngineException 
 	 */
-	public boolean createTransition(int id, Point2D coordinate) throws EngineException;
+	public void createTransition(int id, Point2D coordinate) throws EngineException;
 	
 	/**
 	 * Deletes an Arc
 	 * 
 	 * @param id ID of the Petrinet
 	 * @param arc which will be deleted
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 * @throws EngineException 
 	 */
-	public boolean deleteArc(int id, Arc arc) throws EngineException; // TODO IArc gibt es nicht?
+	public void deleteArc(int id, Arc arc) throws EngineException; // TODO IArc gibt es nicht?
 	
 	// TODO: da sollte doch ne methode drueber die INode aufloest oder?
 	/**
@@ -66,18 +62,16 @@ public interface IPetrinetManipulation {
 	 * 
 	 * @param id ID of the Petrinet
 	 * @param place which will be deleted
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean deletePlace(int id, INode place);
+	public void deletePlace(int id, INode place);
 	
 	/**
 	 * Deletes a Transition
 	 * 
 	 * @param id ID of the Petrinet
 	 * @param transition which will be deleted
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean deleteTransition(int id, INode transition);
+	public void deleteTransition(int id, INode transition);
 	
 	/**
 	 * Gets the Attributes from an Arc
@@ -122,10 +116,9 @@ public interface IPetrinetManipulation {
 	 * 
 	 * @param id ID of the Petrinet
 	 * @param relativePosition relative movement of the Graph
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 * @throws EngineException 
 	 */
-	public boolean moveGraph(int id, Point2D relativePosition) throws EngineException;
+	public void moveGraph(int id, Point2D relativePosition) throws EngineException;
 	
 	/**
 	 * Moves a node.
@@ -133,10 +126,9 @@ public interface IPetrinetManipulation {
 	 * @param id ID of the Petrinet
 	 * @param node to move
 	 * @param relativePosition relative movement of the node
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 * @throws EngineException 
 	 */
-	public boolean moveNode(int id, INode node, Point2D relativePosition) throws EngineException;
+	public void moveNode(int id, INode node, Point2D relativePosition) throws EngineException;
 	
 	/**
 	 * Saves a Petrinet.
@@ -145,9 +137,8 @@ public interface IPetrinetManipulation {
 	 * @param path where to save the Petrinet
 	 * @param filename name for the Petrinet
 	 * @param format which the Petrinet should be saved. (PNML the only option till now)
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 */
-	public boolean save(int id, String path, String filename, String format); // TODO: String format zu => Format format
+	public void save(int id, String path, String filename, String format); // TODO: String format zu => Format format
 	
 	/**
 	 * Sets the Marking of a Place.
@@ -155,10 +146,9 @@ public interface IPetrinetManipulation {
 	 * @param id ID of the Petrinet
 	 * @param place where to set the Mark
 	 * @param marking amount of mark 
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 * @throws EngineException 
 	 */
-	public boolean setMarking(int id, INode place, int marking) throws EngineException;
+	public void setMarking(int id, INode place, int marking) throws EngineException;
 	
 	/**
 	 * Sets the PName of a Place.
@@ -166,10 +156,9 @@ public interface IPetrinetManipulation {
 	 * @param id ID of the Petrinet
 	 * @param place where to set the PName
 	 * @param pname PName
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 * @throws EngineException 
 	 */
-	public boolean setPname(int id, INode place, String pname) throws EngineException;
+	public void setPname(int id, INode place, String pname) throws EngineException;
 	
 	/**
 	 * Sets the Tlb of a Transition.
@@ -177,10 +166,9 @@ public interface IPetrinetManipulation {
 	 * @param id ID of the Petrinet
 	 * @param transition where to set the tlb
 	 * @param tlb TransitionLabel
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 * @throws EngineException 
 	 */
-	public boolean setTlb(int id, INode transition, String tlb) throws EngineException;
+	public void setTlb(int id, INode transition, String tlb) throws EngineException;
 	
 	/**
 	 * Sets the TName of a Transition.
@@ -188,10 +176,9 @@ public interface IPetrinetManipulation {
 	 * @param id ID of the Petrinet
 	 * @param transition where to set the TName
 	 * @param tname TName
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 * @throws EngineException 
 	 */
-	public boolean setTname(int id, INode transition, String tname) throws EngineException;
+	public void setTname(int id, INode transition, String tname) throws EngineException;
 	
 	/**
 	 * Sets the Weight of an Arc.
@@ -199,10 +186,9 @@ public interface IPetrinetManipulation {
 	 * @param id ID of the Petrinet
 	 * @param arc where to set the weight
 	 * @param weight weight of the arc
-	 * @return <code> true </code> if something changed, so the GUI has to refresh <code> false </code> otherwise
 	 * @throws EngineException 
 	 */
-	public boolean setWeight(int id, Arc arc, int weight) throws EngineException;
+	public void setWeight(int id, Arc arc, int weight) throws EngineException;
 	
 	/**
 	 * Returns the type of the Object.

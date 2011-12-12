@@ -42,7 +42,7 @@ public class PetrinetHandler implements IPetrinetManipulation {
 	}
 
 	@Override
-	public boolean createArc(@NotNull int id,@NotNull INode from,@NotNull INode to) throws EngineException {
+	public void createArc(@NotNull int id,@NotNull INode from,@NotNull INode to) throws EngineException {
 
 		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
 		
@@ -99,17 +99,14 @@ public class PetrinetHandler implements IPetrinetManipulation {
 					exception("");
 				}
 			} else {
-				// else => error!
-	
-				// TODO: EngineException
+				exception("PetrinetHandler[102] - wrong combi");
 			}
 		}
-		// TODO: with ChangedPetrinetResult true/false
-		return true;
+		
 	}
 
 	@Override
-	public boolean createPlace(@NotNull int id,@NotNull Point2D coordinate) throws EngineException {
+	public void createPlace(@NotNull int id,@NotNull Point2D coordinate) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
 		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
@@ -137,8 +134,6 @@ public class PetrinetHandler implements IPetrinetManipulation {
 			}
 		}
 		
-		// TODO: with ChangedPetrinetResult true/false
-		return true;
 	}
 
 	@Override
@@ -156,7 +151,7 @@ public class PetrinetHandler implements IPetrinetManipulation {
 	}
 
 	@Override
-	public boolean createTransition(@NotNull int id,@NotNull Point2D coordinate) throws EngineException {
+	public void createTransition(@NotNull int id,@NotNull Point2D coordinate) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
 		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
@@ -185,12 +180,10 @@ public class PetrinetHandler implements IPetrinetManipulation {
 			}
 		}
 		
-		// TODO: with ChangedPetrinetResult true/false
-		return true;
 	}
 
 	@Override
-	public boolean deleteArc(@NotNull int id,@NotNull Arc arc) throws EngineException {
+	public void deleteArc(@NotNull int id,@NotNull Arc arc) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
 		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
@@ -220,19 +213,16 @@ public class PetrinetHandler implements IPetrinetManipulation {
 
 		}
 		
-		return true;
 	}
 
 	@Override
-	public boolean deletePlace(@NotNull int id,@NotNull INode place) {
+	public void deletePlace(@NotNull int id,@NotNull INode place) {
 		// TODO : write with ChangePetrinetResult
-		return true;
 	}
 
 	@Override
-	public boolean deleteTransition(@NotNull int id,@NotNull INode transition) {
+	public void deleteTransition(@NotNull int id,@NotNull INode transition) {
 		// TODO : write with ChangePetrinetResult
-		return true;
 	}
 
 	@Override
@@ -262,8 +252,8 @@ public class PetrinetHandler implements IPetrinetManipulation {
 			exception("PetrinetHandler[243] - id of the Petrinet is wrong");
 		} else {
 		
-			Petrinet petrinet = petrinetData.getPetrinet();
-			JungData jungData = petrinetData.getJungData();
+//			Petrinet petrinet = petrinetData.getPetrinet();
+//			JungData jungData = petrinetData.getJungData();
 
 		}
 			
@@ -319,7 +309,7 @@ public class PetrinetHandler implements IPetrinetManipulation {
 	}
 
 	@Override
-	public boolean moveGraph(@NotNull int id,@NotNull Point2D relativePosition) throws EngineException {
+	public void moveGraph(@NotNull int id,@NotNull Point2D relativePosition) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
 		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
@@ -405,12 +395,11 @@ public class PetrinetHandler implements IPetrinetManipulation {
 			}
 
 		}
-			
-		return true;
+		
 	}
 
 	@Override
-	public boolean moveNode(@NotNull int id,@NotNull INode node,@NotNull Point2D relativePosition) throws EngineException {
+	public void moveNode(@NotNull int id,@NotNull INode node,@NotNull Point2D relativePosition) throws EngineException {
 		
 		// get the Petrinet from the id and SessionManager
 		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
@@ -460,19 +449,17 @@ public class PetrinetHandler implements IPetrinetManipulation {
 
 		}	
 		
-		return true;
 	}
 
 	@Override
-	public boolean save(@NotNull int id,@NotNull String path,@NotNull String filename,@NotNull String format) {
+	public void save(@NotNull int id,@NotNull String path,@NotNull String filename,@NotNull String format) {
 
 		// TODO: Alex... warte auf das Persistence-Team
 
-		return false;
 	}
 
 	@Override
-	public boolean setMarking(@NotNull int id,@NotNull INode place,@NotNull int marking) throws EngineException {
+	public void setMarking(@NotNull int id,@NotNull INode place,@NotNull int marking) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
 		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
@@ -498,20 +485,15 @@ public class PetrinetHandler implements IPetrinetManipulation {
 					// TODO : write text
 					exception("");
 				}
-	
-				return true;
-			} else {
-				return false;
+				
 			}
 
 		}
 		
-		return true;
-		
 	}
 
 	@Override
-	public boolean setPname(@NotNull int id,@NotNull INode place,@NotNull String pname) throws EngineException {
+	public void setPname(@NotNull int id,@NotNull INode place,@NotNull String pname) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
 		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
@@ -538,19 +520,14 @@ public class PetrinetHandler implements IPetrinetManipulation {
 					exception("");
 				}
 	
-				return true;
-			} else {
-				return false;
 			}
-
+			
 		}
-		
-		return true;
 			
 	}
 
 	@Override
-	public boolean setTlb(@NotNull int id,@NotNull INode transition,@NotNull String tlb) throws EngineException {
+	public void setTlb(@NotNull int id,@NotNull INode transition,@NotNull String tlb) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
 		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
@@ -577,19 +554,14 @@ public class PetrinetHandler implements IPetrinetManipulation {
 					exception("");
 				}
 	
-				return true;
-			} else {
-				return false;
 			}
 
 		}
 		
-		return true;
-			
 	}
 
 	@Override
-	public boolean setTname(@NotNull int id,@NotNull INode transition,@NotNull String tname) throws EngineException {
+	public void setTname(@NotNull int id,@NotNull INode transition,@NotNull String tname) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
 		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
@@ -616,19 +588,14 @@ public class PetrinetHandler implements IPetrinetManipulation {
 					exception("");
 				}
 				
-				return true;
-			} else {
-				return false;
-			}
+			} 
 
 		}
-		
-		return true;
 			
 	}
 
 	@Override
-	public boolean setWeight(@NotNull int id,@NotNull Arc arc,@NotNull int weight) throws EngineException {
+	public void setWeight(@NotNull int id,@NotNull Arc arc,@NotNull int weight) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
 		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
@@ -653,8 +620,6 @@ public class PetrinetHandler implements IPetrinetManipulation {
 
 		}
 			
-		return true;
-
 	}
 
 	@Override
