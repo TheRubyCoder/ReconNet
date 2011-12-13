@@ -46,7 +46,7 @@ public interface IPetrinetManipulation {
 	 * @param coordinate Point where the Place will be created
 	 * @throws EngineException 
 	 */
-	public void createPlace(int id, Point2D coordinate) throws EngineException;
+	public INode createPlace(int id, Point2D coordinate) throws EngineException;
 	
 	/**
 	 * Creates a Petrinet
@@ -60,9 +60,10 @@ public interface IPetrinetManipulation {
 	 * 
 	 * @param id ID of the Petrinet
 	 * @param coordinate Point where the Transition will be created
+	 * @return 
 	 * @throws EngineException 
 	 */
-	public void createTransition(int id, Point2D coordinate) throws EngineException;
+	public INode createTransition(int id, Point2D coordinate) throws EngineException;
 	
 	/**
 	 * Deletes an Arc

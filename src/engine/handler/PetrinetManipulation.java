@@ -134,7 +134,7 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	}
 
 	@Override
-	public void createPlace(@NotNull int id,@NotNull Point2D coordinate) throws EngineException {
+	public INode createPlace(@NotNull int id,@NotNull Point2D coordinate) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
 		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
@@ -142,6 +142,7 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 		// Test: is id valid
 		if(petrinetData == null){
 			exception("PetrinetHandler[111] - id of the Petrinet is wrong");
+			return null;
 		} else {
 			Petrinet petrinet = petrinetData.getPetrinet();
 			JungData jungData = petrinetData.getJungData();
@@ -156,10 +157,12 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 			// call JungModificator
 			try {
 				jungModification.createPlace(jungData, newPlace, coordinate);
+				return newPlace;
 			} catch (IllegalArgumentException e) {
 				// TODO : write text
 				exception("");
 			}
+			return null;
 		}
 		
 	}
@@ -179,7 +182,7 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	}
 
 	@Override
-	public void createTransition(@NotNull int id,@NotNull Point2D coordinate) throws EngineException {
+	public INode createTransition(@NotNull int id,@NotNull Point2D coordinate) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
 		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
@@ -187,6 +190,7 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 		// Test: is id valid
 		if(petrinetData == null){
 			exception("PetrinetHandler[154] - id of the Petrinet is wrong");
+			return null;
 		} else {
 			
 			Petrinet petrinet = petrinetData.getPetrinet();
@@ -202,10 +206,12 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 			// call JungModificator
 			try {
 				jungModification.createTransition(jungData, newTransition, coordinate);
+				return newTransition;
 			} catch (IllegalArgumentException e) {
 				// TODO : write text
 				exception("");
 			}
+			return null;
 		}
 		
 	}
