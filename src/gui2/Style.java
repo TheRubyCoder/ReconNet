@@ -84,7 +84,7 @@ class Style {
 	public static final int EDITOR_PANE_HEIGHT = HEIGHT_TOP_ELEMENTS;
 	
 	/** Width of the editor pane */
-	public static final int EDITOR_PANE_WIDTH = INSET_LEFT + 150;
+	public static final int EDITOR_PANE_WIDTH = INSET_LEFT + 120;
 //	BUTTON_WIDTH * 2 + 
 //	SPACING_BUTTONS * 3;
 	
@@ -131,7 +131,7 @@ class Style {
 	
 	public static final int ATTRIBUTE_PANE_Y = 0;
 	
-	public static final int ATTRIBUTE_PANE_WIDTH = 181;
+	public static final int ATTRIBUTE_PANE_WIDTH = 225;
 	
 	public static final int ATTRIBUTE_PANE_HEIGHT = HEIGHT_TOP_ELEMENTS;
 	
