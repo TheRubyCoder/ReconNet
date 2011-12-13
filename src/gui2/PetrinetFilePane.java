@@ -136,7 +136,7 @@ public class PetrinetFilePane {
 		return petrinetTree;
 	}
 
-	public void addTo(JFrame frame) {
+	public void addTo(JPanel frame) {
 		frame.add(getTreeAndButtonContainerWithBorder());
 	}
 

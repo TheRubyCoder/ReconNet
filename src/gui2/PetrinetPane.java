@@ -1,6 +1,7 @@
 package gui2;
 
 import java.awt.Color;
+import java.awt.GridLayout;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -31,10 +32,10 @@ class PetrinetPane {
 		getInstance().getPetrinetPanel().add(getInstance().getDrawingPanel());
 		
 		getInstance().getPetrinetPanel().setBorder(PETRINET_BORDER);
-		getInstance().getPetrinetPanel().setBounds(PETRINET_X, 
-				PETRINET_Y, 
-				PETRINET_WIDTH, 
-				PETRINET_HEIGHT);
+//		getInstance().getPetrinetPanel().setBounds(PETRINET_X, 
+//				PETRINET_Y, 
+//				PETRINET_WIDTH, 
+//				PETRINET_HEIGHT);
 
 		getInstance().getDrawingPanel().setBackground(Color.WHITE);
 		
@@ -67,7 +68,7 @@ class PetrinetPane {
 		
 	}
 	
-	public void addTo(JFrame frame){
+	public void addTo(JPanel frame){
 		frame.add(getPetrinetPanel());
 	}
 }

@@ -163,7 +163,7 @@ class SimulationPane {
 	 * Adds the SimulationPane to a frame
 	 * @param frame
 	 */
-	public void addTo(JFrame frame){
+	public void addTo(JPanel frame){
 		frame.add(getSimulationPane());
 	}
 }

@@ -70,7 +70,7 @@ class EditorPane {
 	 * Adds the EditorPane to a frame
 	 * @param frame
 	 */
-	public void addTo(JFrame frame){
+	public void addTo(JPanel frame){
 		frame.add(getEditorPane());
 	}
 	

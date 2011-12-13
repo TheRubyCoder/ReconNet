@@ -71,7 +71,7 @@ public class AttributePane {
 		table.setModel(model);
 	}
 	
-	public void addTo(JFrame frame){
+	public void addTo(JPanel frame){
 		frame.add(attributePane);
 	}
 	

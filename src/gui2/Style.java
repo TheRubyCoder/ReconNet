@@ -29,6 +29,14 @@ class Style {
 	
 	/** Total height of main window */
 	public static final int TOTAL_HEIGHT = 800;
+	
+	/** Dimension of Header */
+	public static final Dimension HEADER_DIMENSION = new Dimension(1000,125);
+	
+	/** Dimension of left Panel */
+	public static final Dimension LEFT_PANEL_DIMENSION = new Dimension(200,675);
+	
+	
 
 	
 	/* ************************************* 
