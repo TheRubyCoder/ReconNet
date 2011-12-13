@@ -44,14 +44,15 @@ public class SessionManager {
 	
 	/**
 	 * 
-	 * @param id
-	 * @return
+	 * This method return the RuleData for the Id
+	 * 
+	 * @param id from the RuleData
+	 * @return the RuleData or null if the Id is not valid
 	 */
-	public PetrinetData getRuleData(int id){
-//		RuleData rd = ruledata.get(id);
-//		
-//		return rd;
-		return null;
+	public RuleData getRuleData(int id){
+		RuleData rd = ruledata.get(id);
+		
+		return rd;
 	}
 	
 	/**

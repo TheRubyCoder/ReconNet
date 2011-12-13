@@ -45,8 +45,9 @@ public interface IRuleManipulation {
 	 * 
 	 * @param id ID of the Rule
 	 * @param coordinate Point where the Transition will be created
+	 * @throws EngineException 
 	 */
-	public void createTransition(@NotNull int id, @NotNull RuleNet net, @NotNull Point2D coordinate);
+	public void createTransition(@NotNull int id, @NotNull RuleNet net, @NotNull Point2D coordinate) throws EngineException;
 	
 	/**
 	 * Deletes an Arc
@@ -96,23 +97,25 @@ public interface IRuleManipulation {
 	 * @param id ID of the Rule
 	 * @param place which attributes are wanted
 	 * @return PlaceAtrribute
+	 * @throws EngineException 
 	 */
-	public PlaceAttribute getPlaceAttribute(@NotNull int id, @NotNull INode place);
+	public PlaceAttribute getPlaceAttribute(@NotNull int id, @NotNull INode place) throws EngineException;
 	
 	/**
 	 * Gets the Attributes from a Transition
 	 * 
 	 * @param id ID of the Rule
 	 * @param transition which attributes are wanted
-	 * @return TransitionAttribute
+	 * @return TransitionAttribute 
+	 * @throws EngineException 
 	 */
-	public TransitionAttribute getTransitionAttribute(@NotNull int id, @NotNull INode transition);
+	public TransitionAttribute getTransitionAttribute(@NotNull int id, @NotNull INode transition) throws EngineException;
 	
 	/**
 	 * Gets the Attributes from a Rule
 	 * 
 	 * @param id ID of the Rule
-	 * @return RuleAttribute or null if id is not valid
+	 * @return RuleAttribute or it throws a EngineException
 	 * @throws EngineException 
 	 */
 	public RuleAttribute getRuleAttribute(@NotNull int id) throws EngineException;
