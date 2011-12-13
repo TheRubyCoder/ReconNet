@@ -1,10 +1,12 @@
 package gui2;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Point;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.border.Border;
 
 //import com.sun.xml.internal.ws.api.pipe.ServerPipeAssemblerContext;
@@ -34,7 +36,7 @@ class Style {
 	public static final Dimension HEADER_DIMENSION = new Dimension(1000,125);
 	
 	/** Dimension of left Panel */
-	public static final Dimension LEFT_PANEL_DIMENSION = new Dimension(200,675);
+	public static final Dimension LEFT_PANEL_DIMENSION = new Dimension(200,575);
 	
 	
 
@@ -64,7 +66,8 @@ class Style {
 	
 	private static final int INSET_LEFT = 10;
 	
-	public static final GridLayout FILE_PANE_LAYOUT = new GridLayout(2,1,0,SPACING_BUTTONS);
+//	public static final GridLayout FILE_PANE_LAYOUT = new GridLayout(2,1,0,SPACING_BUTTONS);
+	public static final BorderLayout FILE_PANE_LAYOUT = new BorderLayout();
 	
 	
 	/* ************************************* 
@@ -220,7 +223,7 @@ class Style {
 			WIDTH_OF_LEFT_ELEMENTS -
 			WINDOW_BORDER;
 	
-	public static final int PETRINET_HEIGHT = 400;
+	public static final int PETRINET_HEIGHT = 500;
 	
 	public static final Border PETRINET_BORDER = 
 		BorderFactory.createTitledBorder(
@@ -246,14 +249,40 @@ class Style {
 				BorderFactory.createEtchedBorder(), 
 				"Speichern/Laden - Petrinetze");
 	
+	public static final int SOUTH_PANEL_HEIHT = 35;
+	
+	public static final int FILE_PANE_ICON_BUTTON_SIZE = 30;
+	public static final int FILE_PANE_ICON_SPACING_SIZE = 15;
+	
+	
+	public static final ImageIcon NEW_PETRINET_ICON = new ImageIcon("src/gui2/icons/newPetrinet.png");
+	public static final ImageIcon NEW_PETRINET_PRESSED_ICON = new ImageIcon("src/gui2/icons/newPetrinetPressed.png");
+	public static final ImageIcon NEW_PETRINET_DISABLED_ICON = new ImageIcon("src/gui2/icons/newPetrinetDisabled.png");
+	
+	public static final ImageIcon LOAD_PETRINET_ICON = new ImageIcon("src/gui2/icons/loadPertinet.png");
+	public static final ImageIcon LOAD_PETRINET_PRESSED_ICON = new ImageIcon("src/gui2/icons/loadPetrinetPressed.png");
+	public static final ImageIcon LOAD_PETRINET_DISABLED_ICON = new ImageIcon("src/gui2/icons/loadPertinetDisabled.png");
+	
+	public static final ImageIcon SAVE_PETRINET_ICON = new ImageIcon("src/gui2/icons/savePertinet.png");
+	public static final ImageIcon SAVE_PETRINET_PRESSED_ICON = new ImageIcon("src/gui2/icons/savePertinetPressed.png");
+	public static final ImageIcon SAVE_PETRINET_DISABLED_ICON = new ImageIcon("src/gui2/icons/savePertinetDisabled.png");
+	
+	public static final ImageIcon SAVE_AS_PETRINET_ICON = new ImageIcon("src/gui2/icons/saveAsPertinet.png");
+	public static final ImageIcon SAVE_AS_PETRINET_PRESSED_ICON = new ImageIcon("src/gui2/icons/saveAsPertinetPressed.png");
+	public static final ImageIcon SAVE_AS_PETRINET_DISABLED_ICON = new ImageIcon("src/gui2/icons/saveAsPertinetDisabled.png");
+	
 	public static final int NEW_BUTTON_X = 0;
 	public static final int NEW_BUTTON_Y = 0;
 	
-	public static final int SAVE_BUTTON_X = 0;
-	public static final int SAVE_BUTTON_Y = NEW_BUTTON_Y + BUTTON_HEIGHT + SPACING_BUTTONS;
+	public static final int LOAD_BUTTON_X = NEW_BUTTON_X + FILE_PANE_ICON_BUTTON_SIZE + FILE_PANE_ICON_SPACING_SIZE;
+	public static final int LOAD_BUTTON_Y = 0;
 	
-	public static final int LOAD_BUTTON_X = 0;
-	public static final int LOAD_BUTTON_Y = SAVE_BUTTON_Y + BUTTON_HEIGHT + SPACING_BUTTONS;
+	public static final int SAVE_BUTTON_X = LOAD_BUTTON_X + FILE_PANE_ICON_BUTTON_SIZE + FILE_PANE_ICON_SPACING_SIZE;
+	public static final int SAVE_BUTTON_Y = 0;
+	
+	public static final int SAVE_AS_BUTTON_X = SAVE_BUTTON_X + FILE_PANE_ICON_BUTTON_SIZE + FILE_PANE_ICON_SPACING_SIZE;
+	public static final int SAVE_AS_BUTTON_Y = 0;
+	
 	
 	/* ************************************* 
 	 * rule file pane

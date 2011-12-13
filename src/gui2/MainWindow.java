@@ -85,7 +85,6 @@ class MainWindow {
 	private JPanel initializeCenterPanel() {
 		GridLayout layout = new GridLayout(2,1);
 		centerPanel = new JPanel(layout);
-		centerPanel.setBackground(Color.black);
 		
 		return centerPanel;
 	}
