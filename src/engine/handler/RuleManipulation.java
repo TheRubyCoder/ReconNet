@@ -11,18 +11,16 @@ import engine.attribute.RuleAttribute;
 import engine.attribute.TransitionAttribute;
 import engine.ihandler.IRuleManipulation;
 
-public class RuleHandler implements IRuleManipulation {
+public class RuleManipulation implements IRuleManipulation {
 
 	@Override
-	public boolean createArc(int id, INode from, INode to) {
+	public void createArc(int id, INode from, INode to) {
 		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
-	public boolean createPlace(int id, RuleNet net, Point2D coordinate) {
+	public void createPlace(int id, RuleNet net, Point2D coordinate) {
 		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
@@ -32,27 +30,23 @@ public class RuleHandler implements IRuleManipulation {
 	}
 
 	@Override
-	public boolean createTransition(int id, RuleNet net, Point2D coordinate) {
+	public void createTransition(int id, RuleNet net, Point2D coordinate) {
 		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
-	public boolean deleteArc(int id, RuleNet net, Arc arc) {
+	public void deleteArc(int id, RuleNet net, Arc arc) {
 		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
-	public boolean deletePlace(int id, RuleNet net, INode place) {
+	public void deletePlace(int id, RuleNet net, INode place) {
 		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
-	public boolean deleteTransition(int id, RuleNet net, INode transition) {
+	public void deleteTransition(int id, RuleNet net, INode transition) {
 		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
@@ -86,45 +80,38 @@ public class RuleHandler implements IRuleManipulation {
 	}
 
 	@Override
-	public boolean moveNode(int id, INode node, Point2D relativePosition) {
+	public void moveNode(int id, INode node, Point2D relativePosition) {
 		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
-	public boolean save(int id, String path, String filename, String format) {
+	public void save(int id, String path, String filename, String format) {
 		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
-	public boolean setMarking(int id, INode place, int marking) {
+	public void setMarking(int id, INode place, int marking) {
 		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
-	public boolean setPname(int id, INode place, String pname) {
+	public void setPname(int id, INode place, String pname) {
 		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
-	public boolean setTlb(int id, INode transition, String tlb) {
+	public void setTlb(int id, INode transition, String tlb) {
 		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
-	public boolean setTname(int id, INode transition, String tname) {
+	public void setTname(int id, INode transition, String tname) {
 		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
-	public boolean setWeight(int id, Arc arc, int weight) {
+	public void setWeight(int id, Arc arc, int weight) {
 		// TODO Auto-generated method stub
-		return false;
 	}
 
 }

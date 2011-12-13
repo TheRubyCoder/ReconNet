@@ -29,13 +29,30 @@ import engine.session.SessionManager;
 import engine.util.Utility;
 import exceptions.EngineException;
 
-public class PetrinetHandler implements IPetrinetManipulation {
+/**
+ * 
+ * This Class implements engine.ihandler.IPetrinetManipulation.
+ * 
+ * It can be use for all manipulations for an Petrninet.
+ * 	- create[Petrinet|Arc|Place|Transition](..)
+ * 	- delete[Arc|Place|Transition](..)
+ *  - get[Arc|Place|Transition]Attribute(..)
+ *  - getJungLayout(..)
+ *  - move[Graph|Node](..)
+ *  - save(..)
+ *  - set[Marking|Pname|Tlb|Tname|Weight|NodeType](..)
+ * 
+ * @author alex (aas772)
+ *
+ */
+
+public class PetrinetManipulation implements IPetrinetManipulation {
 
 	private final SessionManager sessionManager;
 	private final JungModification jungModification;
 	private final Utility utility;
 
-	public PetrinetHandler() {
+	public PetrinetManipulation() {
 		sessionManager = SessionManager.getInstance();
 		jungModification = JungModification.getInstance();
 		utility = Utility.getInstance();

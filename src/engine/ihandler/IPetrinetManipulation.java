@@ -10,6 +10,23 @@ import engine.attribute.PlaceAttribute;
 import engine.attribute.TransitionAttribute;
 import exceptions.EngineException;
 
+/**
+ * 
+ * This is GUI-Interface for all actions with Petrinet-functions.
+ * 
+ * Some functions are:
+ *  - create[Petrinet|Arc|Place|Transition](..)
+ * 	- delete[Arc|Place|Transition](..)
+ *  - get[Arc|Place|Transition]Attribute(..)
+ *  - getJungLayout(..)
+ *  - move[Graph|Node](..)
+ *  - save(..)
+ *  - set[Marking|Pname|Tlb|Tname|Weight|NodeType](..)
+ * 
+ * @author alex (aas772)
+ *
+ */
+
 public interface IPetrinetManipulation {
 
 	/**

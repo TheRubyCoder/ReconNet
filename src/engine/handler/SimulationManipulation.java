@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import engine.ihandler.ISimulation;
 
-public class SimulationHandler implements ISimulation {
+public class SimulationManipulation implements ISimulation {
 
 	@Override
 	public int createSimulationSession(int id) {
@@ -13,9 +13,8 @@ public class SimulationHandler implements ISimulation {
 	}
 
 	@Override
-	public boolean fire(int id, int n) {
+	public void fire(int id, int n) {
 		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
@@ -25,15 +24,13 @@ public class SimulationHandler implements ISimulation {
 	}
 
 	@Override
-	public boolean transform(int id, Collection<Integer> ruleIDs, int n) {
+	public void transform(int id, Collection<Integer> ruleIDs, int n) {
 		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
-	public boolean fireOrTransform(int id, Collection<Integer> ruleIDs, int n) {
+	public void fireOrTransform(int id, Collection<Integer> ruleIDs, int n) {
 		// TODO Auto-generated method stub
-		return false;
 	}
 
 }
