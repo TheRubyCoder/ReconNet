@@ -121,7 +121,7 @@ class SimulationPane {
 		getSimulationPane().add(spinner);
 		result[0] = spinner;
 		
-		JButton button = new JButton("k Schritte schalten");
+		JButton button = new JButton("k Schritte");
 		button.setLocation(SIMULATION_PANE_BUTTON_KSTEPS_LOCATION);
 		button.setSize(SIMULATION_PANE_BUTTON_KSTEPS_SIZE);
 		getSimulationPane().add(button);

@@ -60,7 +60,7 @@ class Style {
 	
 	public static final int BUTTON_HEIGHT = 30;
 	
-	public static final int BUTTON_WIDTH = 150;
+	public static final int BUTTON_WIDTH = 200;
 	
 	private static final int INSET_TOP = 20;
 	
@@ -84,33 +84,33 @@ class Style {
 	public static final int EDITOR_PANE_HEIGHT = HEIGHT_TOP_ELEMENTS;
 	
 	/** Width of the editor pane */
-	public static final int EDITOR_PANE_WIDTH = INSET_LEFT +
-	BUTTON_WIDTH * 2 + 
-	SPACING_BUTTONS * 3;
+	public static final int EDITOR_PANE_WIDTH = INSET_LEFT + 150;
+//	BUTTON_WIDTH * 2 + 
+//	SPACING_BUTTONS * 3;
 	
-	public static final Point EDITOR_PANE_BUTTON_PICK_LOCATION = 
-		new Point( 0 + INSET_LEFT, 0 + INSET_TOP);
-	
-	public static final Dimension EDITOR_PANE_BUTTON_PICK_SIZE = 
-		new Dimension (BUTTON_WIDTH, BUTTON_HEIGHT);
-	
-	public static final Point EDITOR_PANE_BUTTON_CREATEPLACE_LOCATION = 
-		new Point( 0 + INSET_LEFT + BUTTON_WIDTH + SPACING_BUTTONS, 0 + INSET_TOP);
-	
-	public static final Dimension EDITOR_PANE_BUTTON_CREATEPLACE_SIZE = 
-		new Dimension (BUTTON_WIDTH, BUTTON_HEIGHT);
-	
-	public static final Point EDITOR_PANE_BUTTON_CREATETRANSITION_LOCATION = 
-		new Point( 0 + INSET_LEFT, 0 + INSET_TOP + BUTTON_HEIGHT + SPACING_BUTTONS);
-	
-	public static final Dimension EDITOR_PANE_BUTTON_CREATEARC_SIZE = 
-		new Dimension (BUTTON_WIDTH, BUTTON_HEIGHT);
-	
-	public static final Point EDITOR_PANE_BUTTON_CREATEARC_LOCATION = 
-		new Point( 0 + INSET_LEFT + BUTTON_WIDTH + SPACING_BUTTONS, 0 + INSET_TOP + BUTTON_HEIGHT + SPACING_BUTTONS);
-	
-	public static final Dimension EDITOR_PANE_BUTTON_CREATETRANSITION_SIZE = 
-		new Dimension (BUTTON_WIDTH, BUTTON_HEIGHT);
+//	public static final Point EDITOR_PANE_BUTTON_PICK_LOCATION = 
+//		new Point( 0 + INSET_LEFT, 0 + INSET_TOP);
+//	
+//	public static final Dimension EDITOR_PANE_BUTTON_PICK_SIZE = 
+//		new Dimension (BUTTON_WIDTH, BUTTON_HEIGHT);
+//	
+//	public static final Point EDITOR_PANE_BUTTON_CREATEPLACE_LOCATION = 
+//		new Point( 0 + INSET_LEFT + BUTTON_WIDTH + SPACING_BUTTONS, 0 + INSET_TOP);
+//	
+//	public static final Dimension EDITOR_PANE_BUTTON_CREATEPLACE_SIZE = 
+//		new Dimension (BUTTON_WIDTH, BUTTON_HEIGHT);
+//	
+//	public static final Point EDITOR_PANE_BUTTON_CREATETRANSITION_LOCATION = 
+//		new Point( 0 + INSET_LEFT, 0 + INSET_TOP + BUTTON_HEIGHT + SPACING_BUTTONS);
+//	
+//	public static final Dimension EDITOR_PANE_BUTTON_CREATEARC_SIZE = 
+//		new Dimension (BUTTON_WIDTH, BUTTON_HEIGHT);
+//	
+//	public static final Point EDITOR_PANE_BUTTON_CREATEARC_LOCATION = 
+//		new Point( 0 + INSET_LEFT + BUTTON_WIDTH + SPACING_BUTTONS, 0 + INSET_TOP + BUTTON_HEIGHT + SPACING_BUTTONS);
+//	
+//	public static final Dimension EDITOR_PANE_BUTTON_CREATETRANSITION_SIZE = 
+//		new Dimension (BUTTON_WIDTH, BUTTON_HEIGHT);
 	
 	/** Border of editor pane */
 	public static final Border EDITOR_PANE_BORDER = 
@@ -119,7 +119,7 @@ class Style {
 					"Editieren");
 	
 	/** Layout of editor pane */
-	public static final GridLayout EDITOR_PANE_LAYOUT = new GridLayout(2,2,10,10);
+	public static final GridLayout EDITOR_PANE_LAYOUT = new GridLayout(4,1,10,10);
 
 	/* ************************************* 
 	 * Attribute pane
@@ -163,10 +163,10 @@ class Style {
 		new Dimension(BUTTON_WIDTH,BUTTON_HEIGHT);
 	
 	public static final Point SIMULATION_PANE_BUTTON_KSTEPS_LOCATION =
-		new Point(INSET_LEFT + BUTTON_WIDTH + SPACING_BUTTONS, 0 + INSET_TOP);
+		new Point(INSET_LEFT + BUTTON_WIDTH + BUTTON_WIDTH/2 + SPACING_BUTTONS, 0 + INSET_TOP);
 	
-	public static final Dimension SIMULATION_PANE_BUTTON_KSTEPS_SIZE = 
-		new Dimension(BUTTON_WIDTH,BUTTON_HEIGHT);
+	public static final Dimension SIMULATION_PANE_BUTTON_KSTEPS_SIZE  = 
+		new Dimension(BUTTON_WIDTH / 2,BUTTON_HEIGHT);
 	
 	public static final Point SIMULATION_PANE_BUTTON_TRANSFORM_LOCATION =
 		new Point(0 + INSET_LEFT, BUTTON_HEIGHT + INSET_TOP + SPACING_BUTTONS);
@@ -182,15 +182,14 @@ class Style {
 		new Dimension(BUTTON_WIDTH,BUTTON_HEIGHT);
 	
 	public static final Point SIMULATION_PANE_SPINNER_LOCATION =
-		new Point(INSET_LEFT + (BUTTON_WIDTH + SPACING_BUTTONS) * 2, 
-				0 + INSET_TOP);
+		new Point(INSET_LEFT + BUTTON_WIDTH + SPACING_BUTTONS, 0 + INSET_TOP);
 	
 	public static final Dimension SIMULATION_PANE_SPINNER_SIZE =
 		new Dimension(BUTTON_WIDTH / 2, BUTTON_HEIGHT);
 	
 	public static final Point SIMULATION_PANE_SLIDER_LOCATION =
 		new Point(INSET_LEFT + (BUTTON_WIDTH + SPACING_BUTTONS) * 2, 
-				0 + INSET_TOP + BUTTON_HEIGHT + SPACING_BUTTONS);
+				0 + INSET_TOP );
 	
 	public static final Dimension SIMULATION_PANE_SLIDER_SIZE =
 		new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT * 2 + SPACING_BUTTONS);
