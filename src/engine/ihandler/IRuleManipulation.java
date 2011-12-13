@@ -2,6 +2,8 @@ package engine.ihandler;
 
 import java.awt.geom.Point2D;
 
+import com.sun.istack.NotNull;
+
 import petrinet.Arc;
 import petrinet.INode;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
@@ -10,6 +12,7 @@ import engine.attribute.PlaceAttribute;
 import engine.attribute.RuleAttribute;
 import engine.attribute.TransitionAttribute;
 import engine.handler.RuleNet;
+import exceptions.EngineException;
 
 public interface IRuleManipulation {
 
@@ -20,7 +23,7 @@ public interface IRuleManipulation {
 	 * @param from Source of the Arc
 	 * @param to Target of the Arc
 	 */
-	public void createArc(int id, INode from, INode to);
+	public void createArc(@NotNull int id, @NotNull INode from, @NotNull INode to);
 	
 	/**
 	 * Creates a Place
@@ -28,7 +31,7 @@ public interface IRuleManipulation {
 	 * @param id ID of the Rule
 	 * @param coordinate Point where the Place will be created
 	 */
-	public void createPlace(int id,RuleNet net, Point2D coordinate);
+	public void createPlace(@NotNull int id, @NotNull RuleNet net, @NotNull Point2D coordinate);
 	
 	/**
 	 * Creates a Rule
@@ -43,7 +46,7 @@ public interface IRuleManipulation {
 	 * @param id ID of the Rule
 	 * @param coordinate Point where the Transition will be created
 	 */
-	public void createTransition(int id,RuleNet net, Point2D coordinate);
+	public void createTransition(@NotNull int id, @NotNull RuleNet net, @NotNull Point2D coordinate);
 	
 	/**
 	 * Deletes an Arc
@@ -51,7 +54,7 @@ public interface IRuleManipulation {
 	 * @param id ID of the Rule
 	 * @param arc which will be deleted
 	 */
-	public void deleteArc(int id,RuleNet net, Arc arc); // TODO IArc gibt es nicht?
+	public void deleteArc(@NotNull int id, @NotNull RuleNet net, @NotNull Arc arc); // TODO IArc gibt es nicht?
 	
 	// TODO: da sollte doch ne methode drueber die INode aufloest oder?
 	/**
@@ -60,7 +63,7 @@ public interface IRuleManipulation {
 	 * @param id ID of the Rule
 	 * @param place which will be deleted
 	 */
-	public void deletePlace(int id,RuleNet net, INode place);
+	public void deletePlace(@NotNull int id, @NotNull RuleNet net, @NotNull INode place);
 	
 	/**
 	 * Deletes a Transition
@@ -68,7 +71,7 @@ public interface IRuleManipulation {
 	 * @param id ID of the Rule
 	 * @param transition which will be deleted
 	 */
-	public void deleteTransition(int id,RuleNet net, INode transition);
+	public void deleteTransition(@NotNull int id, @NotNull RuleNet net, @NotNull INode transition);
 	
 	/**
 	 * Gets the Attributes from an Arc
@@ -77,7 +80,7 @@ public interface IRuleManipulation {
 	 * @param arc which attributes are wanted
 	 * @return ArcAttribute
 	 */
-	public ArcAttribute getArcAttribute(int id, Arc arc); // TODO IArc gibt es nicht?
+	public ArcAttribute getArcAttribute(@NotNull int id, @NotNull Arc arc); // TODO IArc gibt es nicht?
 	
 	/**
 	 * Gets the JungLayout from the Rule
@@ -85,7 +88,7 @@ public interface IRuleManipulation {
 	 * @param id ID of the Rule
 	 * @return AbstractLayout
 	 */
-	public AbstractLayout<INode, Arc> getJungLayout(int id, RuleNet net); // TODO: AbstractLayout<INode, Arc> richtig?
+	public AbstractLayout<INode, Arc> getJungLayout(@NotNull int id, @NotNull RuleNet net); // TODO: AbstractLayout<INode, Arc> richtig?
 	
 	/**
 	 * Gets the Attributes from a Place
@@ -94,7 +97,7 @@ public interface IRuleManipulation {
 	 * @param place which attributes are wanted
 	 * @return PlaceAtrribute
 	 */
-	public PlaceAttribute getPlaceAttribute(int id, INode place);
+	public PlaceAttribute getPlaceAttribute(@NotNull int id, @NotNull INode place);
 	
 	/**
 	 * Gets the Attributes from a Transition
@@ -103,15 +106,16 @@ public interface IRuleManipulation {
 	 * @param transition which attributes are wanted
 	 * @return TransitionAttribute
 	 */
-	public TransitionAttribute getTransitionAttribute(int id, INode transition);
+	public TransitionAttribute getTransitionAttribute(@NotNull int id, @NotNull INode transition);
 	
 	/**
 	 * Gets the Attributes from a Rule
 	 * 
 	 * @param id ID of the Rule
-	 * @return RuleAttribute
+	 * @return RuleAttribute or null if id is not valid
+	 * @throws EngineException 
 	 */
-	public RuleAttribute getRuleAttribute(int id);
+	public RuleAttribute getRuleAttribute(@NotNull int id) throws EngineException;
 	
 	/**
 	 * Moves a node.
@@ -119,8 +123,9 @@ public interface IRuleManipulation {
 	 * @param id ID of the Rule
 	 * @param node to move
 	 * @param relativePosition relative movement of the node
+	 * @throws EngineException 
 	 */
-	public void moveNode(int id, INode node, Point2D relativePosition);
+	public void moveNode(@NotNull int id, @NotNull INode node, @NotNull Point2D relativePosition) throws EngineException;
 	
 	/**
 	 * Saves a Rule.
@@ -130,7 +135,7 @@ public interface IRuleManipulation {
 	 * @param filename name for the Rule
 	 * @param format which the Rule should be saved. (PNML the only option till now)
 	 */
-	public void save(int id, String path, String filename, String format); // TODO: String format zu => Format format
+	public void save(@NotNull int id, @NotNull String path, @NotNull String filename, @NotNull String format); // TODO: String format zu => Format format
 	
 	/**
 	 * Sets the Marking of a Place.
@@ -138,8 +143,9 @@ public interface IRuleManipulation {
 	 * @param id ID of the Rule
 	 * @param place where to set the Mark
 	 * @param marking amount of mark 
+	 * @throws EngineException 
 	 */
-	public void setMarking(int id, INode place, int marking);
+	public void setMarking(@NotNull int id, @NotNull INode place, @NotNull int marking) throws EngineException;
 	
 	/**
 	 * Sets the PName of a Place.
@@ -147,8 +153,9 @@ public interface IRuleManipulation {
 	 * @param id ID of the Rule
 	 * @param place where to set the PName
 	 * @param pname PName
+	 * @throws EngineException 
 	 */
-	public void setPname(int id, INode place, String pname);
+	public void setPname(@NotNull int id, @NotNull INode place, @NotNull String pname) throws EngineException;
 	
 	/**
 	 * Sets the Tlb of a Transition.
@@ -156,8 +163,9 @@ public interface IRuleManipulation {
 	 * @param id ID of the Rule
 	 * @param transition where to set the tlb
 	 * @param tlb TransitionLabel
+	 * @throws EngineException 
 	 */
-	public void setTlb(int id, INode transition, String tlb);
+	public void setTlb(@NotNull int id, @NotNull INode transition, @NotNull String tlb) throws EngineException;
 	
 	/**
 	 * Sets the TName of a Transition.
@@ -165,8 +173,9 @@ public interface IRuleManipulation {
 	 * @param id ID of the Rule
 	 * @param transition where to set the TName
 	 * @param tname TName
+	 * @throws EngineException 
 	 */
-	public void setTname(int id, INode transition, String tname);
+	public void setTname(@NotNull int id, @NotNull INode transition, @NotNull String tname) throws EngineException;
 	
 	/**
 	 * Sets the Weight of an Arc.
@@ -174,7 +183,15 @@ public interface IRuleManipulation {
 	 * @param id ID of the Rule
 	 * @param arc where to set the weight
 	 * @param weight weight of the arc
+	 * @throws EngineException 
 	 */
-	public void setWeight(int id, Arc arc, int weight);
+	public void setWeight(@NotNull int id, @NotNull Arc arc, @NotNull int weight) throws EngineException;
+
+	/**
+	 * Returns the type of the Object.
+	 * @param node to check
+	 * @return Enum composed of Place, Transition
+	 */
+	public Enum<?> getNodeType(@NotNull INode node);
 	
 }

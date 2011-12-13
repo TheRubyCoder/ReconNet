@@ -2,7 +2,27 @@ package engine.data;
 
 import transformation.Rule;
 
+/**
+ * 
+ * This Class is a Datacontainer for a Rule and all Petrinet in this Rule.
+ * 
+ * @author alex (aas772)
+ *
+ */
+
 public class RuleData {
+	
+	private Rule rule;
+	private JungData jungDataL;
+	private JungData jungDataK;
+	private JungData jungDataR;
+	
+	public RuleData(Rule rule, JungData lJungData, JungData kJungData, JungData rJungData){
+		this.rule = rule;
+		this.jungDataL = lJungData;
+		this.jungDataK = kJungData;
+		this.jungDataR = rJungData;
+	}
 	
 	/**
 	 * Gets a Rule.  
@@ -10,7 +30,7 @@ public class RuleData {
 	 * @return Rule
 	 */
 	public Rule getRule(){
-		return null; // TODO: !
+		return rule;
 	}
 	
 	/**
@@ -19,7 +39,7 @@ public class RuleData {
 	 * @return JungData
 	 */
 	public JungData getLJungData(){
-		return null; // TODO: !
+		return jungDataL;
 	}
 	
 	/**
@@ -28,7 +48,7 @@ public class RuleData {
 	 * @return JungData
 	 */
 	public JungData getKJungData(){
-		return null; // TODO: !
+		return jungDataK;
 	}
 	
 	/**
@@ -37,7 +57,7 @@ public class RuleData {
 	 * @return JungData
 	 */
 	public JungData getRJungData(){
-		return null; // TODO: !
+		return jungDataR;
 	}
 
 }

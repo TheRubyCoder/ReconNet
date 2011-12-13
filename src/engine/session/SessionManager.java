@@ -14,10 +14,12 @@ public class SessionManager {
 	private static SessionManager session;
 	
 	private Map<Integer, PetrinetData> petrinetdata;
+	private Map<Integer, RuleData> ruledata;
 	private int idPetrinetData = 0;
 	
 	private SessionManager(){
 		petrinetdata = new HashMap<Integer, PetrinetData>();
+		ruledata = new HashMap<Integer, RuleData>();
 	}
 	
 	public static SessionManager getInstance(){
@@ -46,7 +48,10 @@ public class SessionManager {
 	 * @return
 	 */
 	public PetrinetData getRuleData(int id){
-		return null; // TODO: !		
+//		RuleData rd = ruledata.get(id);
+//		
+//		return rd;
+		return null;
 	}
 	
 	/**
@@ -78,13 +83,26 @@ public class SessionManager {
 	
 	/**
 	 * 
-	 * @param l
-	 * @param k
-	 * @param r
-	 * @return
+	 * It create a new RuleData from all Petrinet (l, k, r).
+	 * 
+	 * @param l id of left Petrinet
+	 * @param k id of middle Petrinet
+	 * @param r id of right Petrinet
+	 * @return the new RuleData
+	 * 
 	 */
 	public RuleData createRuleData(PetrinetData l, PetrinetData k, PetrinetData r){
-		return null; // TODO: !
+		
+		// TODO : id for internal map
+		// int id = ..?
+		
+		// TODO : Rule ansich..?
+		
+		// RuleData rd = new RuleData(<Rule>, l, k, r);
+		// return rd;
+		
+		throw new UnsupportedOperationException();
+
 	}
 	
 }

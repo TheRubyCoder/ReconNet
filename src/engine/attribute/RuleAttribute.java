@@ -1,17 +1,35 @@
 package engine.attribute;
 
+/**
+ * 
+ * This Class holds all Id's (Petrinet ID) of a rule.
+ * 
+ * @author alex
+ *
+ */
+
 public class RuleAttribute {
+	
+	private int lId;
+	private int kId;
+	private int rId;
+	
+	public RuleAttribute(int lId, int kId, int rId){
+		this.lId = lId;
+		this.kId = kId;
+		this.rId = rId;
+	}
 
 	public int getLId(){
-		return 0; // TODO: schreiben !
+		return lId;
 	}
 	
 	public int getKId(){
-		return 0; // TODO: schreiben !
+		return kId;
 	}
 	
 	public int getRId(){
-		return 0; // TODO: schreiben !
+		return rId;
 	}
 	
 }

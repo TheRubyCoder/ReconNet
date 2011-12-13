@@ -33,7 +33,9 @@ import exceptions.EngineException;
  * 
  * This Class implements engine.ihandler.IPetrinetManipulation.
  * 
- * It can be use for all manipulations for an Petrninet.
+ * It is a Singleton.
+ * 
+ * It can be use for all manipulations for a Petrninet.
  * 	- create[Petrinet|Arc|Place|Transition](..)
  * 	- delete[Arc|Place|Transition](..)
  *  - get[Arc|Place|Transition]Attribute(..)
@@ -51,11 +53,20 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	private final SessionManager sessionManager;
 	private final JungModification jungModification;
 	private final Utility utility;
+	private static PetrinetManipulation petrinetManipulation;
 
-	public PetrinetManipulation() {
+	private PetrinetManipulation() {
 		sessionManager = SessionManager.getInstance();
 		jungModification = JungModification.getInstance();
 		utility = Utility.getInstance();
+	}
+	
+	public static PetrinetManipulation getInstance(){
+		if(petrinetManipulation == null){
+			petrinetManipulation = new PetrinetManipulation();
+		}
+		
+		return petrinetManipulation;
 	}
 
 	@Override
