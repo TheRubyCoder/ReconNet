@@ -51,8 +51,10 @@ class MainWindow {
 		addSimulationPane();
 		addPetrinetPane();
 		addFilePane();
+		addRulePane();
 		show();
 	}
+
 
 	/** Initializes the main frame with defaults values for title, size and position */
 	private void initializeMainFrame() {
@@ -129,8 +131,13 @@ class MainWindow {
 		AttributePane.getInstance().addTo(headPanel);
 	}
 	
+	private void addRulePane() {
+		RulePane.getInstance().addTo(centerPanel);
+		
+	}
+	
 	private void show(){
-		mainFrame.add(new JPanel());
+//		mainFrame.add(new JPanel());
 		mainFrame.pack();
 		mainFrame.setBounds(0, 0, TOTAL_WIDTH, TOTAL_HEIGHT);
 		mainFrame.setVisible(true);

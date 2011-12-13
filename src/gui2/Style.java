@@ -303,5 +303,31 @@ class Style {
 				BorderFactory.createEtchedBorder(), 
 				"Speichern/Laden");
 	
+	/* ************************************* 
+	 * rule pane
+	 * *************************************/
+	
+	public static final GridLayout RULE_PANEL_LAYOUT = new GridLayout(1,3);
+	
+	public static final Border RULE_PANE_BORDER = 
+			BorderFactory.createTitledBorder(
+					BorderFactory.createEtchedBorder(), 
+					"Regel");
+	
+	public static final Border RULE_PANE_BORDER_L = 
+			BorderFactory.createTitledBorder(
+					BorderFactory.createEtchedBorder(), 
+					"L");
+	
+	public static final Border RULE_PANE_BORDER_K = 
+			BorderFactory.createTitledBorder(
+					BorderFactory.createEtchedBorder(), 
+					"K");
+	
+	public static final Border RULE_PANE_BORDER_R = 
+			BorderFactory.createTitledBorder(
+					BorderFactory.createEtchedBorder(), 
+					"R");
+	
 
 }
