@@ -35,6 +35,7 @@ public class Rule2Test {
 	public static void applyingRule() {
 		System.out.println("Petrinetz:::: " + nPetrinet);
 		System.out.println("Regel-L:::: " + rule.getL());
+		System.out.println("Regel-K:::: " + rule.getK());
 		// Because the reference stays the same after transformation
 		// nPetrinet will always equals itself, no matter what happens in
 		// transformation
@@ -63,10 +64,10 @@ public class Rule2Test {
 	public void testRightMorphism() {
 		// Has only 1 place been mapped?
 		Morphism morphism = transformation.getMorphism();
-		System.out.println(morphism.getPlacesMorphism());
-		assertEquals(1, transformation.getMorphism().getPlacesMorphism().size());
+		System.out.println("MORPISM::PLACES::" + morphism.getPlacesMorphism());
+		assertEquals(2, transformation.getMorphism().getPlacesMorphism().size());
 		// Has 5 transitions been mapped?
-		assertEquals(5, transformation.getMorphism().getTransitionsMorphism()
+		assertEquals(10, transformation.getMorphism().getTransitionsMorphism()
 				.size());
 
 		// Right place matched?
@@ -80,9 +81,9 @@ public class Rule2Test {
 		// Only 6 places left?
 		assertEquals(6, nPetrinet.getAllPlaces().size());
 		// Only 29 transitions left?
-		assertEquals(29, nPetrinet.getAllTransitions().size());
+		assertEquals(30, nPetrinet.getAllTransitions().size());
 		// Only 29 arcs left?
-		assertEquals(29, nPetrinet.getAllArcs().size());
+		assertEquals(30, nPetrinet.getAllArcs().size());
 		// right place deleted?
 		for (Place place : nPetrinet.getAllPlaces()) {
 			if (place.getId() == Rule2Data.getIdOfMatchedPlace()) {

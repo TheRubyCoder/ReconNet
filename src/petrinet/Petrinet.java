@@ -132,6 +132,7 @@ public class Petrinet{
 			onEdgeChanged(arc, ActionType.deleted);
 		}else if(getNodeType(id) == ElementType.PLACE){
 			Place place = getPlaceById(id);
+			result.add(place.getId());
 			for (Arc arc : place.getEndArcs()) {
 				
 				result.addAll(deleteElementById(arc.getId()));
@@ -144,6 +145,7 @@ public class Petrinet{
 			onNodeChanged(place, ActionType.deleted);
 		}else if(getNodeType(id) == ElementType.TRANSITION){
 			Transition transition = getTransitionById(id);
+			result.add(transition.getId());
 			for (Arc arc : transition.getEndArcs()) {
 				result.addAll(deleteElementById(arc.getId()));
 			}

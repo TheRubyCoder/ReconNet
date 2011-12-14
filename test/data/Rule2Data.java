@@ -31,11 +31,11 @@ public class Rule2Data {
 	
 	private static void addSubnetToPetrinet(Petrinet petrinet){
 		Place place = petrinet.createPlace("P1");
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 3; i++) {
 			Transition transition = petrinet.createTransition("A");
 			petrinet.createArc("", place, transition);
 		}
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 2; i++) {
 			Transition transition = petrinet.createTransition("A");
 			petrinet.createArc("", transition, place);
 		}

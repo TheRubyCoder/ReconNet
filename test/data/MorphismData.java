@@ -3,6 +3,8 @@ package data;
 import java.util.HashSet;
 import java.util.Set;
 
+
+import petrinet.Arc;
 import petrinet.Petrinet;
 import petrinet.IRenew;
 import petrinet.PetrinetComponent;
@@ -38,6 +40,10 @@ public class MorphismData {
 	public static Set<Integer> getIdsMatchedPlaces() {
 		return idsMatchedPlaces;
 	}
+	
+	public static Set<Integer> getIdsOfPlaceAndArcsOfThirdPlace() {
+		return idsOfPlaceAndArcsOfThirdPlace;
+	}
 
 	private static int idFromTransitions;
 
@@ -49,6 +55,7 @@ public class MorphismData {
 	
 	private static int idOfThird;
 	
+	private static Set<Integer> idsOfPlaceAndArcsOfThirdPlace = new HashSet<Integer>();
 	
 	private MorphismData(){}
 	
@@ -145,8 +152,10 @@ public class MorphismData {
 		// The matching subnet mark is 1 more  
 		// with following int 3
 		Place p3 = result.createPlace("P1");
-		idsMatchedPlaces.add(p3.getId());
 		idOfThird = p3.getId();
+		idsMatchedPlaces.add(idOfThird);
+		System.out.println("PLACEID 3rd:::  " + idOfThird);
+		idsOfPlaceAndArcsOfThirdPlace.add(idOfThird);
 
 				
 		Transition t31 = result.createTransition("A", renewId);
@@ -154,15 +163,23 @@ public class MorphismData {
 		Transition t33 = result.createTransition("A", renewId);
 		Transition t34 = result.createTransition("A", renewId);
 		Transition t35 = result.createTransition("A", renewId);
+		
+		
+		
 				
 		// pre
-		result.createArc("", t31, p3);
-		result.createArc("", t32, p3);
+		Arc arcPlace31 = result.createArc("", t31, p3);
+		idsOfPlaceAndArcsOfThirdPlace.add(arcPlace31.getId());
+		Arc arcPlace32 = result.createArc("", t32, p3);
+		idsOfPlaceAndArcsOfThirdPlace.add(arcPlace32.getId());
 				
 		//post
-		result.createArc("", p3, t33);
-		result.createArc("", p3, t34);
-		result.createArc("", p3, t35);
+		Arc arcPlace33 = result.createArc("", p3, t33);
+		idsOfPlaceAndArcsOfThirdPlace.add(arcPlace33.getId());
+		Arc arcPlace34 = result.createArc("", p3, t34);
+		idsOfPlaceAndArcsOfThirdPlace.add(arcPlace34.getId());
+		Arc arcPlace35 = result.createArc("", p3, t35);
+		idsOfPlaceAndArcsOfThirdPlace.add(arcPlace35.getId());
 				
 		//mark
 		p3.setMark(3);
