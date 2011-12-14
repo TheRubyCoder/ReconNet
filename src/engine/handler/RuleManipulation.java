@@ -24,9 +24,7 @@ import engine.attribute.TransitionAttribute;
 import engine.data.JungData;
 import engine.data.RuleData;
 import engine.ihandler.IRuleManipulation;
-import engine.jungmodification.JungModification;
 import engine.session.SessionManager;
-import engine.util.Utility;
 import exceptions.EngineException;
 
 /**
@@ -48,17 +46,13 @@ import exceptions.EngineException;
  * 
  */
 
-public class RuleManipulation implements IRuleManipulation {
+final public class RuleManipulation implements IRuleManipulation {
 
 	private final SessionManager sessionManager;
-	private final JungModification jungModification;
-	private final Utility utility;
 	private static RuleManipulation ruleManipulation;
 
 	private RuleManipulation() {
 		sessionManager = SessionManager.getInstance();
-		jungModification = JungModification.getInstance();
-		utility = Utility.getInstance();
 	}
 
 	public static RuleManipulation getInstance() {
@@ -116,9 +110,9 @@ public class RuleManipulation implements IRuleManipulation {
 			// TODO: ChangedPetrinetResult
 			// ***************************
 	
-			// call JungModificator
+			// call Jung
 			try {
-//				jungModification.createTransition(jungData, newTransition, coordinate);
+//				jungData.createTransition(newTransition, coordinate);
 			} catch (IllegalArgumentException e) {
 				// TODO : write text
 				exception("");
@@ -246,12 +240,9 @@ public class RuleManipulation implements IRuleManipulation {
 			JungData kJungData = ruleData.getKJungData();
 			JungData rJungData = ruleData.getRJungData();
 	
-			Map<INode, NodeLayoutAttribute> lLayoutMap = utility
-					.getNodeLayoutAttributes(lJungData);
-			Map<INode, NodeLayoutAttribute> kLayoutMap = utility
-					.getNodeLayoutAttributes(kJungData);
-			Map<INode, NodeLayoutAttribute> rLayoutMap = utility
-					.getNodeLayoutAttributes(rJungData);
+			Map<INode, NodeLayoutAttribute> lLayoutMap = lJungData.getNodeLayoutAttributes();
+			Map<INode, NodeLayoutAttribute> kLayoutMap = kJungData.getNodeLayoutAttributes();
+			Map<INode, NodeLayoutAttribute> rLayoutMap = rJungData.getNodeLayoutAttributes();
 			
 			// move node in l
 			moveNodeInternal(lJungData, lLayoutMap, node, relativePosition);
@@ -292,7 +283,7 @@ public class RuleManipulation implements IRuleManipulation {
 			Point2D point = new Point2D.Double(x, y);
 			
 			try {
-				jungModification.moveNode(jungData, node, point);
+				jungData.moveNode(node, point);
 			} catch (IllegalArgumentException e) {
 				exception("RuleManipulation - error: moveNode");
 			}
@@ -302,7 +293,7 @@ public class RuleManipulation implements IRuleManipulation {
 			Point2D point = new Point2D.Double(newPointX, newPointY);
 			
 			try {
-				jungModification.moveNode(jungData, node, point);
+				jungData.moveNode(node, point);
 			} catch (IllegalArgumentException e) {
 				exception("RuleManipulation - error: moveNode");
 			}
@@ -340,28 +331,30 @@ public class RuleManipulation implements IRuleManipulation {
 				// set new marking
 				p.setMark(marking);
 	
-				// call JungModification for l
+				// call Jung for l
 				try {
-					
-					jungModification.updatePlace(lJungData, p);
+					// TODO existiert nimmer
+					// lJungData.updatePlace(p);
 					
 				} catch (IllegalArgumentException e) {
 					exception("RuleManipulation - error: setMarking in l");
 				}
 
-				// call JungModification for k
+				// call Jung for k
 				try {
 
-					jungModification.updatePlace(kJungData, p);
+					// TODO existiert nimmer
+					//kJungData.updatePlace(p);
 
 				} catch (IllegalArgumentException e) {
 					exception("RuleManipulation - error: setMarking in k");
 				}
 				
-				// call JungModification for r
+				// call Jung for r
 				try {
 					
-					jungModification.updatePlace(rJungData, p);
+					// TODO existiert nimmer
+					//rJungData.updatePlace(p);
 					
 				} catch (IllegalArgumentException e) {
 					exception("RuleManipulation - error: setMarking in r");
@@ -395,23 +388,26 @@ public class RuleManipulation implements IRuleManipulation {
 				// set new Pname
 				p.setName(pname);
 	
-				// call JungModification for l
+				// call Jung for l
 				try {
-					jungModification.updatePlace(lJungData, p);
+					// TODO existiert nimmer
+					// lJungData.updatePlace(p);
 				} catch (IllegalArgumentException e) {
 					exception("RuleManipulation - error: setPname in l");
 				}
 
 				// call JungModification for k
-				try {
-					jungModification.updatePlace(kJungData, p);
+				try {					
+					// TODO existiert nimmer
+					// kJungData.updatePlace(p);
 				} catch (IllegalArgumentException e) {
 					exception("RuleManipulation - error: setPname in k");
 				}
 
 				// call JungModification for r
-				try {
-					jungModification.updatePlace(rJungData, p);
+				try {					
+					// TODO existiert nimmer
+					// rJungData.updatePlace(p);
 				} catch (IllegalArgumentException e) {
 					exception("RuleManipulation - error: setPname in r");
 				}
@@ -444,23 +440,26 @@ public class RuleManipulation implements IRuleManipulation {
 				// set new Tlb
 				t.setTlb(tlb);
 	
-				// call JungModification for l
+				// call Jung for l
 				try {
-					jungModification.updateTransition(lJungData, t);
+					// TODO existiert nimmer
+					// lJungData.updateTransition(t);
 				} catch (IllegalArgumentException e) {
 					exception("RuleManipulation - error: setTlb in l");
 				}
 				
-				// call JungModification for k
+				// call Jung for k
 				try {
-					jungModification.updateTransition(kJungData, t);
+					// TODO existiert nimmer
+					// kJungData.updateTransition(t);
 				} catch (IllegalArgumentException e) {
 					exception("RuleManipulation - error: setTlb in k");
 				}
 				
-				// call JungModification for r
+				// call Jung for r
 				try {
-					jungModification.updateTransition(rJungData, t);
+					// TODO existiert nimmer
+					// rJungData.updateTransition(t);
 				} catch (IllegalArgumentException e) {
 					exception("RuleManipulation - error: setTlb in r");
 				}
@@ -493,23 +492,26 @@ public class RuleManipulation implements IRuleManipulation {
 				// set new Tname
 				t.setName(tname);
 
-				// call JungModification for l
+				// call Jung for l
 				try {
-					jungModification.updateTransition(lJungData, t);
+					// TODO existiert nimmer
+					// lJungData.updateTransition(t);
 				} catch (IllegalArgumentException e) {
 					exception("RuleManipulation - error: setTname in l");
 				}
 
-				// call JungModification for k
+				// call Jung for k
 				try {
-					jungModification.updateTransition(kJungData, t);
+					// TODO existiert nimmer
+					// kJungData.updateTransition(t);
 				} catch (IllegalArgumentException e) {
 					exception("RuleManipulation - error: setTname in k");
 				}
 				
-				// call JungModification for r
+				// call Jung for r
 				try {
-					jungModification.updateTransition(rJungData, t);
+					// TODO existiert nimmer
+					// rJungData.updateTransition(t);
 				} catch (IllegalArgumentException e) {
 					exception("RuleManipulation - error: setTname in r");
 				}
@@ -540,21 +542,24 @@ public class RuleManipulation implements IRuleManipulation {
 
 			// call JungModification for l
 			try {
-				jungModification.updateArc(lJungData, arc);
+				// TODO existiert nimmer
+				// lJungData.updateArc(arc);
 			} catch (IllegalArgumentException e) {
 				exception("RuleManipulation - error: setWeight in l");
 			}
 
 			// call JungModification for k
 			try {
-				jungModification.updateArc(kJungData, arc);
+				// TODO existiert nimmer
+				// kJungData.updateArc(arc);
 			} catch (IllegalArgumentException e) {
 				exception("RuleManipulation - error: setWeight in k");
 			}
 
 			// call JungModification for r
 			try {
-				jungModification.updateArc(rJungData, arc);
+				// TODO existiert nimmer
+				// rJungData.updateArc(arc);
 			} catch (IllegalArgumentException e) {
 				exception("RuleManipulation - error: setWeight in r");
 			}

@@ -9,6 +9,6 @@ import org.junit.runners.Suite;
     petrinetze.impl.PetrinetzTest.class,
     transformation.TransformationSuite.class,
     persistence.PersistanceTest.class,
-    engine.jungmodification.JungModificationTest.class
+    engine.data.JungDataTest.class
 })
 public class AllTests {}

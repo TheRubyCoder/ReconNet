@@ -25,9 +25,7 @@ import engine.attribute.TransitionAttribute;
 import engine.data.JungData;
 import engine.data.PetrinetData;
 import engine.ihandler.IPetrinetManipulation;
-import engine.jungmodification.JungModification;
 import engine.session.SessionManager;
-import engine.util.Utility;
 import exceptions.EngineException;
 
 /**
@@ -49,20 +47,16 @@ import exceptions.EngineException;
  *
  */
 
-public class PetrinetManipulation implements IPetrinetManipulation {
+final public class PetrinetManipulation implements IPetrinetManipulation {
 
 	private final SessionManager sessionManager;
-	private final JungModification jungModification;
-	private final Utility utility;
 	private static PetrinetManipulation petrinetManipulation;
 
 	private PetrinetManipulation() {
 		sessionManager = SessionManager.getInstance();
-		jungModification = JungModification.getInstance();
-		utility = Utility.getInstance();
 	}
 	
-	public static PetrinetManipulation getInstance(){
+	public static IPetrinetManipulation getInstance(){
 		if(petrinetManipulation == null){
 			petrinetManipulation = new PetrinetManipulation();
 		}
@@ -98,9 +92,9 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 				// TODO: ChangedPetrinetResult
 				// ***************************
 	
-				// call JungModification
+				// call Jung
 				try {
-					jungModification.createArc(jungData, arc, fromPlace, toTransition);
+					jungData.createArc(arc, fromPlace, toTransition);
 				} catch (IllegalArgumentException e) {
 					exception("PetrinetManipulation - can not create Arc");
 				}
@@ -119,9 +113,9 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 				// TODO: ChangedPetrinetResult
 				// ***************************
 	
-				// call JungModification
+				// call Jung
 				try {
-					jungModification.createArc(jungData, arc, fromTransition, toPlace);
+					jungData.createArc(arc, fromTransition, toPlace);
 				} catch (IllegalArgumentException e) {
 					exception("PetrinetManipulation - can not create Arc");
 				}
@@ -154,7 +148,7 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	
 			// call JungModificator
 			try {
-				jungModification.createPlace(jungData, newPlace, coordinate);
+				jungData.createPlace(newPlace, coordinate);
 			} catch (IllegalArgumentException e) {
 				exception("PetrinetManipulation - can not create Place");
 			}
@@ -200,7 +194,7 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	
 			// call JungModificator
 			try {
-				jungModification.createTransition(jungData, newTransition, coordinate);
+				jungData.createTransition(newTransition, coordinate);
 			} catch (IllegalArgumentException e) {
 				exception("PetrinetManipulation - can not create Transition");
 			}
@@ -235,7 +229,7 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 			Collection<INode> collINodes = new HashSet<INode>();
 			
 			try {
-				jungModification.delete(jungData, collArc, collINodes);
+				jungData.delete(collArc, collINodes);
 			} catch (IllegalArgumentException e) {
 				exception("PetrinetManipulation - can not delete Arc");
 			}
@@ -353,8 +347,7 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 			JungData jungData = petrinetData.getJungData();
 	
 			// step 1 alles durchgehen kleinstes x,y ; groeßstes x,y
-			Map<INode, NodeLayoutAttribute> layoutMap = utility
-					.getNodeLayoutAttributes(jungData);
+			Map<INode, NodeLayoutAttribute> layoutMap = jungData.getNodeLayoutAttributes();
 	
 			double smallestX = Double.MAX_VALUE;
 			double smallestY = Double.MAX_VALUE;
@@ -400,7 +393,7 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 						addY + nodeLayoutAttribute.getCoordinate().getY());
 	
 				try {
-					jungModification.moveNode(jungData, p, point);
+					jungData.moveNode(p, point);
 				} catch (IllegalArgumentException e) {
 					exception("PetrinetManipulation - can not move Node");
 				}
@@ -416,7 +409,7 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 						addY + nodeLayoutAttribute.getCoordinate().getY());
 	
 				try {
-					jungModification.moveNode(jungData, t, point);
+					jungData.moveNode(t, point);
 				} catch (IllegalArgumentException e) {
 					exception("PetrinetManipulation - can not move Node");
 				}
@@ -440,8 +433,7 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 			JungData jungData = petrinetData.getJungData();
 	
 			// step 1 alles durchgehen kleinstes x,y ; groeßstes x,y
-			Map<INode, NodeLayoutAttribute> layoutMap = utility
-					.getNodeLayoutAttributes(jungData);
+			Map<INode, NodeLayoutAttribute> layoutMap = jungData.getNodeLayoutAttributes();
 			
 			NodeLayoutAttribute nla = layoutMap.get(node);
 			
@@ -456,7 +448,7 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 				Point2D point = new Point2D.Double(x, y);
 				
 				try {
-					jungModification.moveNode(jungData, node, point);
+					jungData.moveNode(node, point);
 				} catch (IllegalArgumentException e) {
 					exception("PetrinetManipulation - can not move Node");
 				}
@@ -466,7 +458,7 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 				Point2D point = new Point2D.Double(newPointX, newPointY);
 				
 				try {
-					jungModification.moveNode(jungData, node, point);
+					jungData.moveNode(node, point);
 				} catch (IllegalArgumentException e) {
 					exception("PetrinetManipulation - can not move Node");
 				}
@@ -504,9 +496,10 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 				// set new marking
 				p.setMark(marking);
 	
-				// call JungModification
+				// call Jung
 				try {
-					jungModification.updatePlace(jungData, p);
+					// TODO existiert nimmer
+					//jungData.updatePlace(p);
 				} catch (IllegalArgumentException e) {
 					exception("PetrinetManipulation - can not update Place");
 				}
@@ -537,9 +530,10 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 				// set new Pname
 				p.setName(pname);
 	
-				// call JungModification
+				// call Jung
 				try {
-					jungModification.updatePlace(jungData, p);
+					// TODO existiert nimmer
+					//jungData.updatePlace(p);
 				} catch (IllegalArgumentException e) {
 					exception("PetrinetManipulation - can not update Place");
 				}
@@ -570,9 +564,10 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 				// set new Tlb
 				t.setTlb(tlb);
 	
-				// call JungModification
+				// call Jung
 				try {
-					jungModification.updateTransition(jungData, t);
+					// TODO existiert nimmer
+					//jungData.updateTransition(t);
 				} catch (IllegalArgumentException e) {
 					exception("PetrinetManipulation - can not update Transition");
 				}
@@ -603,9 +598,10 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 				// set new Tname
 				t.setName(tname);
 	
-				// call JungModification
+				// call Jung
 				try {
-					jungModification.updateTransition(jungData, t);
+					// TODO existiert nimmer
+					//jungData.updateTransition(t);
 				} catch (IllegalArgumentException e) {
 					exception("PetrinetManipulation - can not update Transition");
 				}
@@ -632,9 +628,10 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 			// set new weight
 			arc.setMark(weight);
 	
-			// call JungModification
+			// call Jung
 			try {
-				jungModification.updateArc(jungData, arc);
+				// TODO existiert nimmer
+				//jungData.updateArc(arc);
 			} catch (IllegalArgumentException e) {
 				exception("PetrinetManipulation - can not update Arc");
 			}
