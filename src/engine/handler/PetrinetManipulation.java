@@ -1,5 +1,6 @@
 package engine.handler;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.Collection;
 import java.util.HashSet;
@@ -132,7 +133,7 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	}
 
 	@Override
-	public INode createPlace(@NotNull int id,@NotNull Point2D coordinate) throws EngineException {
+	public void createPlace(@NotNull int id,@NotNull Point2D coordinate) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
 		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
@@ -140,7 +141,6 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 		// Test: is id valid
 		if(petrinetData == null){
 			exception("PetrinetHandler[111] - id of the Petrinet is wrong");
-			return null;
 		} else {
 			Petrinet petrinet = petrinetData.getPetrinet();
 			JungData jungData = petrinetData.getJungData();
@@ -155,11 +155,10 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 			// call JungModificator
 			try {
 				jungModification.createPlace(jungData, newPlace, coordinate);
-				return newPlace;
 			} catch (IllegalArgumentException e) {
 				exception("PetrinetManipulation - can not create Place");
 			}
-			return null;
+			
 		}
 		
 	}
@@ -179,7 +178,7 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	}
 
 	@Override
-	public INode createTransition(@NotNull int id,@NotNull Point2D coordinate) throws EngineException {
+	public void createTransition(@NotNull int id,@NotNull Point2D coordinate) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
 		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
@@ -187,7 +186,6 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 		// Test: is id valid
 		if(petrinetData == null){
 			exception("PetrinetHandler[154] - id of the Petrinet is wrong");
-			return null;
 		} else {
 			
 			Petrinet petrinet = petrinetData.getPetrinet();
@@ -203,11 +201,10 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 			// call JungModificator
 			try {
 				jungModification.createTransition(jungData, newTransition, coordinate);
-				return newTransition;
 			} catch (IllegalArgumentException e) {
 				exception("PetrinetManipulation - can not create Transition");
 			}
-			return null;
+
 		}
 		
 	}
@@ -295,7 +292,7 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	}
 
 	@Override
-	public PlaceAttribute getPlaceAttribute(@NotNull int id,@NotNull INode place) {
+	public PlaceAttribute getPlaceAttribute(@NotNull int id,@NotNull INode place) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
 		// PetrinetData petrinetData = sessionManager.getPetrninetData(id);
@@ -307,8 +304,9 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 
 			int marking = p.getMark();
 			String pname = p.getName();
+			Color color = Color.gray;
 
-			PlaceAttribute placeAttribute = new PlaceAttribute(marking, pname);
+			PlaceAttribute placeAttribute = new PlaceAttribute(marking, pname, color);
 
 			return placeAttribute;
 		}
@@ -317,7 +315,7 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	}
 
 	@Override
-	public TransitionAttribute getTransitionAttribute(@NotNull int id,@NotNull INode transition) {
+	public TransitionAttribute getTransitionAttribute(@NotNull int id,@NotNull INode transition) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
 		// PetrinetData petrinetData = sessionManager.getPetrninetData(id);
@@ -330,9 +328,9 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 			String tlb = t.getTlb();
 			String tname = t.getName();
 			IRenew rnw = t.getRnw();
+			boolean isActivated = false;
 
-			TransitionAttribute transitionAttribute = new TransitionAttribute(
-					tlb, tname, rnw);
+			TransitionAttribute transitionAttribute = new TransitionAttribute(tlb, tname, rnw, isActivated);
 
 			return transitionAttribute;
 		}
@@ -646,13 +644,14 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	}
 
 	@Override
-	public Enum<?> getNodeType(@NotNull INode node) {
+	public Enum<?> getNodeType(@NotNull INode node) throws EngineException {
 
 		if (node instanceof Place) {
 			return NodeType.Place;
 		} else if (node instanceof Transition) {
 			return NodeType.Transition;
 		} else {
+			exception("PetrinetManipulation - wrong type");
 			return null;
 		}
 

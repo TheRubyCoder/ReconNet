@@ -15,7 +15,7 @@ import engine.attribute.TransitionAttribute;
 import engine.handler.RuleNet;
 import exceptions.EngineException;
 
-public interface IRuleManipulation {
+public interface IRulePersistence {
 
 	/**
 	 * 
@@ -27,7 +27,7 @@ public interface IRuleManipulation {
 	 * @return the new Arc
 	 * 
 	 */
-	public void createArc(@NotNull int id, @NotNull INode from, @NotNull INode to);
+	public Arc createArc(@NotNull int id, @NotNull INode from, @NotNull INode to);
 	
 	/**
 	 * 
@@ -38,7 +38,7 @@ public interface IRuleManipulation {
 	 * @return the new Place
 	 * 
 	 */
-	public void createPlace(@NotNull int id, @NotNull RuleNet net, @NotNull Point2D coordinate);
+	public INode createPlace(@NotNull int id, @NotNull RuleNet net, @NotNull Point2D coordinate);
 	
 	/**
 	 * 
@@ -59,34 +59,7 @@ public interface IRuleManipulation {
 	 * @return the new Transition 
 	 * 
 	 */
-	public void createTransition(@NotNull int id, @NotNull RuleNet net, @NotNull Point2D coordinate) throws EngineException;
-	
-	/**
-	 * 
-	 * Deletes an Arc
-	 * 
-	 * @param id ID of the Rule
-	 * @param arc which will be deleted
-	 * 
-	 */
-	public void deleteArc(@NotNull int id, @NotNull RuleNet net, @NotNull Arc arc); // TODO IArc gibt es nicht?
-	
-	// TODO: da sollte doch ne methode drueber die INode aufloest oder?
-	/**
-	 * Deletes a Place
-	 * 
-	 * @param id ID of the Rule
-	 * @param place which will be deleted
-	 */
-	public void deletePlace(@NotNull int id, @NotNull RuleNet net, @NotNull INode place);
-	
-	/**
-	 * Deletes a Transition
-	 * 
-	 * @param id ID of the Rule
-	 * @param transition which will be deleted
-	 */
-	public void deleteTransition(@NotNull int id, @NotNull RuleNet net, @NotNull INode transition);
+	public INode createTransition(@NotNull int id, @NotNull RuleNet net, @NotNull Point2D coordinate) throws EngineException;
 	
 	/**
 	 * Gets the Attributes from an Arc
@@ -133,26 +106,6 @@ public interface IRuleManipulation {
 	 * @throws EngineException 
 	 */
 	public RuleAttribute getRuleAttribute(@NotNull int id) throws EngineException;
-	
-	/**
-	 * Moves a node.
-	 * 
-	 * @param id ID of the Rule
-	 * @param node to move
-	 * @param relativePosition relative movement of the node
-	 * @throws EngineException 
-	 */
-	public void moveNode(@NotNull int id, @NotNull INode node, @NotNull Point2D relativePosition) throws EngineException;
-	
-	/**
-	 * Saves a Rule.
-	 * 
-	 * @param id ID of the Rule
-	 * @param path where to save the Rule
-	 * @param filename name for the Rule
-	 * @param format which the Rule should be saved. (PNML the only option till now)
-	 */
-	public void save(@NotNull int id, @NotNull String path, @NotNull String filename, @NotNull String format); // TODO: String format zu => Format format
 	
 	/**
 	 * Sets the Marking of a Place.

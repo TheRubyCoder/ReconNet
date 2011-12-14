@@ -1,5 +1,6 @@
 package engine.handler;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.Map;
 
@@ -69,15 +70,13 @@ public class RuleManipulation implements IRuleManipulation {
 	}
 
 	@Override
-	public Arc createArc(int id, INode from, INode to) {
+	public void createArc(int id, INode from, INode to) {
 		// TODO
-		return null;
 	}
 
 	@Override
-	public INode createPlace(int id, RuleNet net, Point2D coordinate) {
+	public void createPlace(int id, RuleNet net, Point2D coordinate) {
 		// TODO
-		return null;
 	}
 
 	@Override
@@ -91,7 +90,7 @@ public class RuleManipulation implements IRuleManipulation {
 	}
 
 	@Override
-	public INode createTransition(int id, RuleNet net, Point2D coordinate) throws EngineException {
+	public void createTransition(int id, RuleNet net, Point2D coordinate) throws EngineException {
 
 		// get the RuleData from the id and SessionManager
 		RuleData ruleData = sessionManager.getRuleData(id);
@@ -124,9 +123,8 @@ public class RuleManipulation implements IRuleManipulation {
 				// TODO : write text
 				exception("");
 			}
-		}		
 	
-		return null;
+		}		
 		
 	}
 
@@ -172,8 +170,11 @@ public class RuleManipulation implements IRuleManipulation {
 
 			int marking = p.getMark();
 			String pname = p.getName();
+			
+			// TODO : change default color
+			Color color = Color.gray;
 
-			PlaceAttribute placeAttribute = new PlaceAttribute(marking, pname);
+			PlaceAttribute placeAttribute = new PlaceAttribute(marking, pname, color);
 
 			return placeAttribute;
 		}
@@ -191,9 +192,12 @@ public class RuleManipulation implements IRuleManipulation {
 			String tlb = t.getTlb();
 			String tname = t.getName();
 			IRenew rnw = t.getRnw();
+			
+			// TODO : change default boolean
+			boolean isActivated = false;
 
 			TransitionAttribute transitionAttribute = new TransitionAttribute(
-					tlb, tname, rnw);
+					tlb, tname, rnw, isActivated);
 
 			return transitionAttribute;
 		}

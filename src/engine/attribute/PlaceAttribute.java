@@ -1,5 +1,7 @@
 package engine.attribute;
 
+import java.awt.Color;
+
 /**
  * 
  * This Class holds all Information/Attributes of Places.
@@ -12,10 +14,12 @@ public class PlaceAttribute {
 
 	private int marking;
 	private String pname;
+	private Color color;
 	
-	public PlaceAttribute(int marking, String pname){
+	public PlaceAttribute(int marking, String pname, Color color){
 		this.marking = marking;
 		this.pname = pname;
+		this.color = color;
 	}
 	
 	public int getMarking(){
@@ -24,6 +28,10 @@ public class PlaceAttribute {
 	
 	public String getPname(){
 		return pname;
+	}
+	
+	public Color getColor(){
+		return color;
 	}
 	
 }

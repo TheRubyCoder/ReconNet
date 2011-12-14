@@ -15,11 +15,13 @@ public class TransitionAttribute {
 	private String tlb;
 	private String tname;
 	private IRenew rnw;
+	private boolean isActivated;
 	
-	public TransitionAttribute(String tlb, String tname, IRenew rnw){
+	public TransitionAttribute(String tlb, String tname, IRenew rnw, boolean isActivated){
 		this.tlb = tlb;
 		this.tname = tname;
 		this.rnw = rnw;
+		this.isActivated = isActivated;
 	}
 	
 	public String getTLB(){
@@ -32,6 +34,10 @@ public class TransitionAttribute {
 	
 	public IRenew getRNW(){
 		return rnw;
+	}
+	
+	public boolean getIsActivated(){
+		return isActivated;
 	}
 	
 }

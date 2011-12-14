@@ -12,22 +12,13 @@ import exceptions.EngineException;
 
 /**
  * 
- * This is GUI-Interface for all actions with Petrinet-functions.
- * 
- * Some functions are:
- *  - create[Petrinet|Arc|Place|Transition](..)
- * 	- delete[Arc|Place|Transition](..)
- *  - get[Arc|Place|Transition]Attribute(..)
- *  - getJungLayout(..)
- *  - move[Graph|Node](..)
- *  - save(..)
- *  - set[Marking|Pname|Tlb|Tname|Weight|NodeType](..)
+ * This is a Interface for Persistence Component.
  * 
  * @author alex (aas772)
  *
  */
 
-public interface IPetrinetManipulation {
+public interface IPetrinetPersitence {
 
 	/**
 	 * Creates an Arc
@@ -37,7 +28,7 @@ public interface IPetrinetManipulation {
 	 * @param to Target of the Arc
 	 * @throws EngineException 
 	 */
-	public void createArc(int id, INode from, INode to) throws EngineException;
+	public Arc createArc(int id, INode from, INode to) throws EngineException;
 	
 	/**
 	 * 
@@ -48,7 +39,7 @@ public interface IPetrinetManipulation {
 	 * @throws EngineException 
 	 * 
 	 */
-	public void createPlace(int id, Point2D coordinate) throws EngineException;
+	public INode createPlace(int id, Point2D coordinate) throws EngineException;
 	
 	/**
 	 * 
@@ -67,33 +58,7 @@ public interface IPetrinetManipulation {
 	 * @return 
 	 * @throws EngineException 
 	 */
-	public void createTransition(int id, Point2D coordinate) throws EngineException;
-	
-	/**
-	 * Deletes an Arc
-	 * 
-	 * @param id ID of the Petrinet
-	 * @param arc which will be deleted
-	 * @throws EngineException 
-	 */
-	public void deleteArc(int id, Arc arc) throws EngineException; // TODO IArc gibt es nicht?
-	
-	// TODO: da sollte doch ne methode drueber die INode aufloest oder?
-	/**
-	 * Deletes a Place
-	 * 
-	 * @param id ID of the Petrinet
-	 * @param place which will be deleted
-	 */
-	public void deletePlace(int id, INode place);
-	
-	/**
-	 * Deletes a Transition
-	 * 
-	 * @param id ID of the Petrinet
-	 * @param transition which will be deleted
-	 */
-	public void deleteTransition(int id, INode transition);
+	public INode createTransition(int id, Point2D coordinate) throws EngineException;
 	
 	/**
 	 * Gets the Attributes from an Arc
@@ -121,9 +86,8 @@ public interface IPetrinetManipulation {
 	 * @param id ID of the Petrinet
 	 * @param place which attributes are wanted
 	 * @return PlaceAtrribute
-	 * @throws EngineException 
 	 */
-	public PlaceAttribute getPlaceAttribute(int id, INode place) throws EngineException;
+	public PlaceAttribute getPlaceAttribute(int id, INode place);
 	
 	/**
 	 * Gets the Attributes from a Transition
@@ -131,38 +95,8 @@ public interface IPetrinetManipulation {
 	 * @param id ID of the Petrinet
 	 * @param transition which attributes are wanted
 	 * @return TransitionAttribute
-	 * @throws EngineException 
 	 */
-	public TransitionAttribute getTransitionAttribute(int id, INode transition) throws EngineException;
-	
-	/**
-	 * Moves a Graph.
-	 * 
-	 * @param id ID of the Petrinet
-	 * @param relativePosition relative movement of the Graph
-	 * @throws EngineException 
-	 */
-	public void moveGraph(int id, Point2D relativePosition) throws EngineException;
-	
-	/**
-	 * Moves a node.
-	 * 
-	 * @param id ID of the Petrinet
-	 * @param node to move
-	 * @param relativePosition relative movement of the node
-	 * @throws EngineException 
-	 */
-	public void moveNode(int id, INode node, Point2D relativePosition) throws EngineException;
-	
-	/**
-	 * Saves a Petrinet.
-	 * 
-	 * @param id ID of the Petrinet
-	 * @param path where to save the Petrinet
-	 * @param filename name for the Petrinet
-	 * @param format which the Petrinet should be saved. (PNML the only option till now)
-	 */
-	public void save(int id, String path, String filename, String format); // TODO: String format zu => Format format
+	public TransitionAttribute getTransitionAttribute(int id, INode transition);
 	
 	/**
 	 * Sets the Marking of a Place.
@@ -221,4 +155,5 @@ public interface IPetrinetManipulation {
 	 * @throws EngineException 
 	 */
 	public Enum getNodeType(INode node) throws EngineException;
+	
 }

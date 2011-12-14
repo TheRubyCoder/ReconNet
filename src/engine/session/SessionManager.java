@@ -15,11 +15,13 @@ public class SessionManager {
 	
 	private Map<Integer, PetrinetData> petrinetdata;
 	private Map<Integer, RuleData> ruledata;
+	private Map<Integer, SessionData> sessiondata;
 	private int idPetrinetData = 0;
 	
 	private SessionManager(){
 		petrinetdata = new HashMap<Integer, PetrinetData>();
 		ruledata = new HashMap<Integer, RuleData>();
+		sessiondata = new HashMap<Integer, SessionData>();
 	}
 	
 	public static SessionManager getInstance(){

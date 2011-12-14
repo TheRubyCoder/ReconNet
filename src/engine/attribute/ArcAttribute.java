@@ -16,6 +16,13 @@ public class ArcAttribute {
 		this.weight = weight;
 	}
 	
+	/**
+	 * 
+	 * This methods return the value of a Arc.
+	 * 
+	 * @return the return value (int).
+	 * 
+	 */
 	public int getWeight(){
 		return weight;
 	}
