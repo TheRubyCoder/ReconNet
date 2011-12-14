@@ -8,10 +8,10 @@ import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.TransitionAttribute;
-import engine.ihandler.IPetrinetPersitence;
+import engine.ihandler.IPetrinetPersistence;
 import exceptions.EngineException;
 
-public class PetrinetPersistence implements IPetrinetPersitence {
+public class PetrinetPersistence implements IPetrinetPersistence {
 
 	@Override
 	public Arc createArc(int id, INode from, INode to) throws EngineException {

@@ -18,7 +18,7 @@ import exceptions.EngineException;
  *
  */
 
-public interface IPetrinetPersitence {
+public interface IPetrinetPersistence {
 
 	/**
 	 * Creates an Arc

@@ -11,6 +11,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import engine.ihandler.IPetrinetManipulation;
+import engine.ihandler.IPetrinetPersistence;
 import exceptions.EngineException;
 
 import petrinet.INode;
@@ -94,7 +95,7 @@ public class Converter {
 
 	/** works */
 	static public boolean convertToPetrinet(Pnml pnml,
-			IPetrinetManipulation handler) {
+			IPetrinetPersistence handler) {
 		try {
 			// create petrinet
 			int petrinetID = handler.createPetrinet();

@@ -13,6 +13,7 @@ import petrinet.INode;
 import petrinet.Petrinet;
 import engine.attribute.NodeLayoutAttribute;
 import engine.ihandler.IPetrinetManipulation;
+import engine.ihandler.IPetrinetPersistence;
 
 public class PersistanceUtility implements IPersistance {
 
@@ -31,7 +32,7 @@ public class PersistanceUtility implements IPersistance {
 	}
 
 	@Override
-	public int load(String pathAndFilename, IPetrinetManipulation handler) {
+	public int load(String pathAndFilename, IPetrinetPersistence handler) {
 		Pnml pnml=new Pnml();
 		JAXBContext context;
 		try {
