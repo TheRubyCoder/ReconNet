@@ -25,10 +25,10 @@ public class Converter {
 	static public Pnml convertToPnml(Petrinet petrinet,
 			Map<String, String[]> layout) {
 		Pnml pnml = new Pnml();
-		pnml.net = new Net();
-		Net net = new Net();
-		net.setId(String.valueOf(petrinet.getId()));
-		pnml.net = net;
+		pnml.net = new ArrayList<Net>();
+		Net xmlnet = new Net();
+		xmlnet.setId(String.valueOf(petrinet.getId()));
+		pnml.net.add(xmlnet);
 
 		Page page = new Page();
 		Set<petrinet.Place> set = petrinet.getAllPlaces();
@@ -94,6 +94,7 @@ public class Converter {
 	}
 
 	/** works */
+	// TODO: use ID of existing petrinet
 	static public boolean convertToPetrinet(Pnml pnml,
 			IPetrinetPersistence handler) {
 		try {
@@ -107,7 +108,7 @@ public class Converter {
 			Map<String, petrinet.Arc> arcs = new HashMap<String, petrinet.Arc>();
 
 			// create places
-			for (Place place : pnml.getNet().page.place) {
+			for (Place place : pnml.getNet().get(0).page.place) {
 				INode realPlace = handler.createPlace(petrinetID,
 						positionToPoint2D(place.getGraphics().getPosition()));
 				handler.setPname(petrinetID, realPlace, place.getPlaceName()
@@ -118,7 +119,7 @@ public class Converter {
 			}
 
 			// create transitions
-			for (Transition trans : pnml.getNet().getPage().getTransition()) {
+			for (Transition trans : pnml.getNet().get(0).getPage().getTransition()) {
 				INode realTransition = handler.createTransition(petrinetID,
 						positionToPoint2D(trans.getGraphics().getPosition()));
 
@@ -141,7 +142,9 @@ public class Converter {
 			}
 
 			// create arcs
-			for (Arc arc : pnml.getNet().getPage().getArc()) {
+			for (Arc arc : pnml.getNet().get(0).getPage().getArc()) {
+				handler.createArc(petrinetID, placesAndTransis.get(arc.source), placesAndTransis.get(arc.target));
+				
 				/*
 				 * Set<petrinet.Place> arcsFromPetrinet=petrinet.getAllPlaces();
 				 * 

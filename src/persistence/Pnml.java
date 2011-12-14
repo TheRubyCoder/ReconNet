@@ -10,19 +10,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="pnml", namespace="http://www.pnml.org/version-2009/grammar/pnml")
 public class Pnml {
+	List<Net> net;
 	
-	
-	
-	
-	Net net;
-	
-	@XmlElement
-	public Net getNet() {
+	@XmlElements(value = { @XmlElement })
+	public List<Net> getNet() {
 		return net;
 	}
 
 
-	public void setNet(Net net) {
+	public void setNet(List<Net> net) {
 		this.net = net;
 	}
 	

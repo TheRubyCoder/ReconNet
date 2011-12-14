@@ -9,7 +9,7 @@ public	class Net{
 	private String type;
 	
 	private String id;
-	
+	private String nettype;
 	
 	Page page;
 
@@ -38,5 +38,12 @@ public	class Net{
 	public void setPage(Page page) {
 		this.page = page;
 	}
+	@XmlAttribute
+	public void setNettype(String nettype){
+		this.nettype=nettype;
+	}
 	
+	public String getNettype(){
+		return this.nettype;
+	}
 }

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pnml xmlns="http://www.pnml.org/version-2009/grammar/pnml">
+  <net type="https://pub.informatik.haw-hamburg.de/home/pub/prof/padberg/rcpn.pnt" id="n1" nettype="l">
+    <page id="top-level">
+      <name>
+        <text>An example rcPN</text>
+      </name>
+      <place id="1">
+        <graphics>
+          <position x="39.5" y="44.5"/>
+          <dimension x="40.0" y="40.0"/>
+        </graphics>
+        <placeName>
+          <text>myplace</text>
+        </placeName>
+        <initialMarking>
+           <text>2</text>
+        </initialMarking>
+      </place>
+      <transition id="2">
+        <graphics>
+          <position x="139.5" y="44.5"/>
+          <dimension x="40.0" y="40.0"/>
+        </graphics>
+        <transitionName>
+           <text>mytrans</text>
+        </transitionName>
+        <transitionLabel>
+           <text>red</text>
+        </transitionLabel>
+        <transitionRenew>
+           <text>colors</text>
+        </transitionRenew>
+      </transition>
+      <arc id="3" source="1" target="2">
+        <graphics>
+          <position x="30.0" y="5.0"/>
+          <position x="60.0" y="5.0"/>
+        </graphics>
+        <inscription>
+          <text>2</text>
+        </inscription>
+      </arc>
+    </page>
+  </net>
+  <net type="https://pub.informatik.haw-hamburg.de/home/pub/prof/padberg/rcpn.pnt" id="n1" nettype="k">
+    <page id="top-level">
+      <name>
+        <text>An example rcPN</text>
+      </name>
+      <place id="1">
+        <graphics>
+          <position x="39.5" y="44.5"/>
+          <dimension x="40.0" y="40.0"/>
+        </graphics>
+        <placeName>
+          <text>myplace</text>
+        </placeName>
+        <initialMarking>
+           <text>2</text>
+        </initialMarking>
+      </place>
+      <transition id="2">
+        <graphics>
+          <position x="139.5" y="44.5"/>
+          <dimension x="40.0" y="40.0"/>
+        </graphics>
+        <transitionName>
+           <text>mytrans</text>
+        </transitionName>
+        <transitionLabel>
+           <text>red</text>
+        </transitionLabel>
+        <transitionRenew>
+           <text>colors</text>
+        </transitionRenew>
+      </transition>
+      <arc id="3" source="1" target="2">
+        <graphics>
+          <position x="30.0" y="5.0"/>
+          <position x="60.0" y="5.0"/>
+        </graphics>
+        <inscription>
+          <text>2</text>
+        </inscription>
+      </arc>
+    </page>
+  </net><net type="https://pub.informatik.haw-hamburg.de/home/pub/prof/padberg/rcpn.pnt" id="n1" nettype="r">
+    <page id="top-level">
+      <name>
+        <text>An example rcPN</text>
+      </name>
+      <place id="1">
+        <graphics>
+          <position x="39.5" y="44.5"/>
+          <dimension x="40.0" y="40.0"/>
+        </graphics>
+        <placeName>
+          <text>myplace</text>
+        </placeName>
+        <initialMarking>
+           <text>2</text>
+        </initialMarking>
+      </place>
+      <place id="6">
+        <graphics>
+          <position x="39.5" y="44.5"/>
+          <dimension x="40.0" y="40.0"/>
+        </graphics>
+        <placeName>
+          <text>myplace</text>
+        </placeName>
+        <initialMarking>
+           <text>2</text>
+        </initialMarking>
+      </place>
+       <transition id="4">
+        <graphics>
+          <position x="139.5" y="44.5"/>
+          <dimension x="40.0" y="40.0"/>
+        </graphics>
+        <transitionName>
+           <text>mytrans</text>
+        </transitionName>
+        <transitionLabel>
+           <text>red</text>
+        </transitionLabel>
+        <transitionRenew>
+           <text>colors</text>
+        </transitionRenew>
+      </transition>
+      <transition id="2">
+        <graphics>
+          <position x="139.5" y="44.5"/>
+          <dimension x="40.0" y="40.0"/>
+        </graphics>
+        <transitionName>
+           <text>mytrans</text>
+        </transitionName>
+        <transitionLabel>
+           <text>red</text>
+        </transitionLabel>
+        <transitionRenew>
+           <text>colors</text>
+        </transitionRenew>
+      </transition>
+      <arc id="3" source="1" target="2">
+        <graphics>
+          <position x="30.0" y="5.0"/>
+          <position x="60.0" y="5.0"/>
+        </graphics>
+        <inscription>
+          <text>2</text>
+        </inscription>
+      </arc>
+      <arc id="5" source="4" target="6">
+        <graphics>
+          <position x="30.0" y="5.0"/>
+          <position x="60.0" y="5.0"/>
+        </graphics>
+        <inscription>
+          <text>2</text>
+        </inscription>
+      </arc>
+      <arc id="7" source="6" target="2">
+        <graphics>
+          <position x="30.0" y="5.0"/>
+          <position x="60.0" y="5.0"/>
+        </graphics>
+        <inscription>
+          <text>2</text>
+        </inscription>
+      </arc>
+    </page>
+  </net>
+</pnml>
