@@ -52,6 +52,10 @@ public class MorphismData {
 	public static int getIdPostTransiotionOfThird(){
 		return idPostTransiotionOfThird;
 	}
+	
+	public static int getIdOfDeleteArc(){
+		return idOfDeleteArc;
+	}
 
 	private static int idFromTransitions;
 
@@ -66,6 +70,8 @@ public class MorphismData {
 	private static int idPreTransiotionOfThird;
 	
 	private static int idPostTransiotionOfThird;
+	
+	private static int idOfDeleteArc;
 	
 	private static Set<Integer> idsOfPlaceAndArcsOfThirdPlace = new HashSet<Integer>();
 	
@@ -189,8 +195,9 @@ public class MorphismData {
 				
 		// pre
 		Arc arcPlace31 = result.createArc("", t31, p3);
-		idsOfPlaceAndArcsOfThirdPlace.add(arcPlace31.getId());
-		idsOfTransitioPreAndArcsOfThirdPlace.add(arcPlace31.getId());
+		idOfDeleteArc = arcPlace31.getId();
+		idsOfPlaceAndArcsOfThirdPlace.add(idOfDeleteArc);
+		idsOfTransitioPreAndArcsOfThirdPlace.add(idOfDeleteArc);
 		Arc arcPlace32 = result.createArc("", t32, p3);
 		idsOfPlaceAndArcsOfThirdPlace.add(arcPlace32.getId());
 				

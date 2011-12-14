@@ -51,5 +51,16 @@ public class DeleteTest {
 //		assertEquals(MorphismData.getIdPreTransiotionOfThird(),
 //				new HashSet<Integer>(deletedPost));
 //	}
+	
+	@Test
+	public void checkReturnValueArc(){
+		int toDeleteArc = MorphismData.getIdOfDeleteArc();
+		
+		Collection<Integer> deletedArc = PetrinetComponent.getPetrinet().deleteElementInPetrinet(nPetrinet.getId(),toDeleteArc );
+		assertEquals(1,deletedArc.size());
+		assertEquals(deletedArc.iterator().next(),(Integer)toDeleteArc);
+		Collection<Integer> deleteNothing = PetrinetComponent.getPetrinet().deleteElementInPetrinet(nPetrinet.getId(),toDeleteArc );
+		assertTrue(deleteNothing.isEmpty());
+	}
 
 }
