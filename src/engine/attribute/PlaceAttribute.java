@@ -1,5 +1,13 @@
 package engine.attribute;
 
+/**
+ * 
+ * This Class holds all Information/Attributes of Places.
+ * 
+ * @author alex (aas772)
+ *
+ */
+
 public class PlaceAttribute {
 
 	private int marking;

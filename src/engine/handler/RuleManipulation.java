@@ -9,7 +9,6 @@ import petrinet.IRenew;
 import petrinet.Petrinet;
 import petrinet.Place;
 import petrinet.Transition;
-import transformation.ITransformation;
 import transformation.Rule;
 import transformation.TransformationComponent;
 
@@ -22,7 +21,6 @@ import engine.attribute.PlaceAttribute;
 import engine.attribute.RuleAttribute;
 import engine.attribute.TransitionAttribute;
 import engine.data.JungData;
-import engine.data.PetrinetData;
 import engine.data.RuleData;
 import engine.ihandler.IRuleManipulation;
 import engine.jungmodification.JungModification;
@@ -36,10 +34,14 @@ import exceptions.EngineException;
  * 
  * It is a Singleton.
  * 
- * It can be use for all manipulations for a Rule. -
- * create[Rule|Arc|Place|Transition](..) - delete[Arc|Place|Transition](..) -
- * get[Rule|Arc|Place|Transition]Attribute(..) - getJungLayout(..) -
- * moveNode(..) - save(..) - set[Marking|Pname|Tlb|Tname|Weight|NodeType](..)
+ * It can be use for all manipulations for a Rule. 
+ * - create[Rule|Arc|Place|Transition](..) 
+ * - delete[Arc|Place|Transition](..) 
+ * - get[Rule|Arc|Place|Transition]Attribute(..) 
+ * - getJungLayout(..) 
+ * - moveNode(..) 
+ * - save(..) 
+ * - set[Marking|Pname|Tlb|Tname|Weight|NodeType](..)
  * 
  * @author alex (aas772)
  * 
@@ -67,13 +69,15 @@ public class RuleManipulation implements IRuleManipulation {
 	}
 
 	@Override
-	public void createArc(int id, INode from, INode to) {
+	public Arc createArc(int id, INode from, INode to) {
 		// TODO
+		return null;
 	}
 
 	@Override
-	public void createPlace(int id, RuleNet net, Point2D coordinate) {
+	public INode createPlace(int id, RuleNet net, Point2D coordinate) {
 		// TODO
+		return null;
 	}
 
 	@Override
@@ -87,7 +91,7 @@ public class RuleManipulation implements IRuleManipulation {
 	}
 
 	@Override
-	public void createTransition(int id, RuleNet net, Point2D coordinate) throws EngineException {
+	public INode createTransition(int id, RuleNet net, Point2D coordinate) throws EngineException {
 
 		// get the RuleData from the id and SessionManager
 		RuleData ruleData = sessionManager.getRuleData(id);
@@ -121,6 +125,8 @@ public class RuleManipulation implements IRuleManipulation {
 				exception("");
 			}
 		}		
+	
+		return null;
 		
 	}
 
@@ -265,6 +271,7 @@ public class RuleManipulation implements IRuleManipulation {
 	 * @param node
 	 * @param relativePosition
 	 * @throws EngineException
+	 * 
 	 */
 	private void moveNodeInternal(JungData jungData, Map<INode, NodeLayoutAttribute> layoutMap, INode node, Point2D relativePosition) throws EngineException{
 		

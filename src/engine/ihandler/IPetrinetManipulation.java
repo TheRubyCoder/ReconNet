@@ -40,18 +40,22 @@ public interface IPetrinetManipulation {
 	public void createArc(int id, INode from, INode to) throws EngineException;
 	
 	/**
+	 * 
 	 * Creates a Place
 	 * 
 	 * @param id ID of the Petrinet
 	 * @param coordinate Point where the Place will be created
 	 * @throws EngineException 
+	 * 
 	 */
 	public INode createPlace(int id, Point2D coordinate) throws EngineException;
 	
 	/**
+	 * 
 	 * Creates a Petrinet
 	 * 
 	 * @return ID of the created Petrinet
+	 * 
 	 */
 	public int createPetrinet();
 	

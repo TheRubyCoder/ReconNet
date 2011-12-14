@@ -2,10 +2,11 @@ package engine.ihandler;
 
 import java.awt.geom.Point2D;
 
-import com.sun.istack.NotNull;
-
 import petrinet.Arc;
 import petrinet.INode;
+
+import com.sun.istack.NotNull;
+
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
@@ -17,43 +18,56 @@ import exceptions.EngineException;
 public interface IRuleManipulation {
 
 	/**
+	 * 
 	 * Creates an Arc
 	 * 
 	 * @param id ID of the Rule
 	 * @param from Source of the Arc
 	 * @param to Target of the Arc
+	 * @return the new Arc
+	 * 
 	 */
-	public void createArc(@NotNull int id, @NotNull INode from, @NotNull INode to);
+	public Arc createArc(@NotNull int id, @NotNull INode from, @NotNull INode to);
 	
 	/**
+	 * 
 	 * Creates a Place
 	 * 
 	 * @param id ID of the Rule
 	 * @param coordinate Point where the Place will be created
+	 * @return the new Place
+	 * 
 	 */
-	public void createPlace(@NotNull int id, @NotNull RuleNet net, @NotNull Point2D coordinate);
+	public INode createPlace(@NotNull int id, @NotNull RuleNet net, @NotNull Point2D coordinate);
 	
 	/**
+	 * 
 	 * Creates a Rule
 	 * 
 	 * @return ID of the created Rule
+	 * 
 	 */
 	public int createRule();
 	
 	/**
+	 * 
 	 * Creates a Transition
 	 * 
 	 * @param id ID of the Rule
 	 * @param coordinate Point where the Transition will be created
-	 * @throws EngineException 
+	 * @throws EngineException
+	 * @return the new Transition 
+	 * 
 	 */
-	public void createTransition(@NotNull int id, @NotNull RuleNet net, @NotNull Point2D coordinate) throws EngineException;
+	public INode createTransition(@NotNull int id, @NotNull RuleNet net, @NotNull Point2D coordinate) throws EngineException;
 	
 	/**
+	 * 
 	 * Deletes an Arc
 	 * 
 	 * @param id ID of the Rule
 	 * @param arc which will be deleted
+	 * 
 	 */
 	public void deleteArc(@NotNull int id, @NotNull RuleNet net, @NotNull Arc arc); // TODO IArc gibt es nicht?
 	

@@ -4,8 +4,20 @@ import java.util.Collection;
 
 import engine.ihandler.ISimulation;
 
-public class SimulationManipulation implements ISimulation {
+public class Simulation implements ISimulation {
 
+	private static Simulation simulation;
+	
+	private Simulation(){
+		
+	}
+	
+	public static Simulation getInstance(){
+		if(simulation == null) simulation = new Simulation();
+		
+		return simulation;
+	}
+	
 	@Override
 	public int createSimulationSession(int id) {
 		// TODO Auto-generated method stub

@@ -5,16 +5,17 @@ import java.util.Map;
 
 import javax.swing.JPanel;
 
-import engine.dependency.PetrinetAdapter;
-import engine.dependency.TransformationAdapter;
-import exceptions.GeneralPetrinetException;
 import petrinet.INode;
 import petrinet.Petrinet;
 import transformation.ChangedPetrinetElements;
 import transformation.Morphism;
 import transformation.Rule;
 import transformation.Transformation;
-import transformation.TransformationComponent;
+import engine.dependency.PetrinetAdapter;
+import engine.dependency.TransformationAdapter;
+import engine.handler.PetrinetManipulation;
+import engine.handler.Simulation;
+import exceptions.GeneralPetrinetException;
 
 /**
  * Singleton that represents the engine component<br/>
@@ -32,16 +33,20 @@ public class EngineComponent implements IPetrinetManipulation, IPersistence, ISi
 	}
 	
 	public static IPetrinetManipulation getPetrinetManipulation(){
-		return instance;
+		return (IPetrinetManipulation) PetrinetManipulation.getInstance();
 	}
 	
-	public static IPersistence getPersistence(){
-		return instance;
-	}
+//	public static IPersistence getPersistence(){
+//		return instance;
+//	}
 	
 	public static ISimulation getSimulation(){
-		return instance;
+		return (ISimulation) Simulation.getInstance();		
 	}
+	
+	//*************************************************************************
+	// Engine methods!!! => PetrinetManipulation.getInstance().createPetrinet()
+	//*************************************************************************	
 	
 	public Petrinet createPetrinet() {
 		return PetrinetAdapter.createPetrinet();

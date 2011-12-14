@@ -2,6 +2,14 @@ package engine.attribute;
 
 import petrinet.IRenew;
 
+/**
+ * 
+ * This Class holds all Information for a Transition.
+ * 
+ * @author alex (aas772)
+ *
+ */
+
 public class TransitionAttribute {
 
 	private String tlb;

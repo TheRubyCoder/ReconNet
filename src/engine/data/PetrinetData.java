@@ -7,6 +7,7 @@ import petrinet.Petrinet;
  * This Class holds all information: Petrinet and JungData with a Id
  * 
  */
+
 public class PetrinetData {
 
 	private int id;

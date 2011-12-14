@@ -3,6 +3,14 @@ package engine.attribute;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
+/**
+ * 
+ * This Class holds all Information/Attribute of NodeLayout.
+ * 
+ * @author alex (aas772)
+ *
+ */
+
 public class NodeLayoutAttribute {
 
 	private Point2D coordinate;

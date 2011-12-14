@@ -5,7 +5,16 @@ import petrinet.INode;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.graph.DirectedGraph;
 
+/**
+ * 
+ * This Class save all JUNG Data. (DirectedGraph<INode, Arc> / AbstractLayout<INode, Arc>)
+ * 
+ * @author alex
+ *
+ */
+
 final public class JungData {
+	
 	private DirectedGraph<INode, Arc> jungGraph;
 	private AbstractLayout<INode, Arc> jungLayout;
 	
