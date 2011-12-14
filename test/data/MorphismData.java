@@ -44,6 +44,14 @@ public class MorphismData {
 	public static Set<Integer> getIdsOfPlaceAndArcsOfThirdPlace() {
 		return idsOfPlaceAndArcsOfThirdPlace;
 	}
+	
+	public static int getIdPreTransiotionOfThird(){
+		return idPreTransiotionOfThird;
+	}
+	
+	public static int getIdPostTransiotionOfThird(){
+		return idPostTransiotionOfThird;
+	}
 
 	private static int idFromTransitions;
 
@@ -55,7 +63,15 @@ public class MorphismData {
 	
 	private static int idOfThird;
 	
+	private static int idPreTransiotionOfThird;
+	
+	private static int idPostTransiotionOfThird;
+	
 	private static Set<Integer> idsOfPlaceAndArcsOfThirdPlace = new HashSet<Integer>();
+	
+	private static Set<Integer> idsOfTransitioPreAndArcsOfThirdPlace = new HashSet<Integer>();
+	
+	private static Set<Integer> idsOfTransitionPostAndArcsOfThirdPlace = new HashSet<Integer>();
 	
 	private MorphismData(){}
 	
@@ -159,8 +175,12 @@ public class MorphismData {
 
 				
 		Transition t31 = result.createTransition("A", renewId);
+		idPreTransiotionOfThird = t31.getId();
+		idsOfTransitioPreAndArcsOfThirdPlace.add(idPreTransiotionOfThird);
 		Transition t32 = result.createTransition("A", renewId);
 		Transition t33 = result.createTransition("A", renewId);
+		idPostTransiotionOfThird = t33.getId();
+		idsOfTransitionPostAndArcsOfThirdPlace.add(idPostTransiotionOfThird);
 		Transition t34 = result.createTransition("A", renewId);
 		Transition t35 = result.createTransition("A", renewId);
 		
@@ -170,12 +190,14 @@ public class MorphismData {
 		// pre
 		Arc arcPlace31 = result.createArc("", t31, p3);
 		idsOfPlaceAndArcsOfThirdPlace.add(arcPlace31.getId());
+		idsOfTransitioPreAndArcsOfThirdPlace.add(arcPlace31.getId());
 		Arc arcPlace32 = result.createArc("", t32, p3);
 		idsOfPlaceAndArcsOfThirdPlace.add(arcPlace32.getId());
 				
 		//post
 		Arc arcPlace33 = result.createArc("", p3, t33);
 		idsOfPlaceAndArcsOfThirdPlace.add(arcPlace33.getId());
+		idsOfTransitionPostAndArcsOfThirdPlace.add(arcPlace33.getId());
 		Arc arcPlace34 = result.createArc("", p3, t34);
 		idsOfPlaceAndArcsOfThirdPlace.add(arcPlace34.getId());
 		Arc arcPlace35 = result.createArc("", p3, t35);
