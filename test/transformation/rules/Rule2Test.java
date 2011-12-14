@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import petrinet.Petrinet;
 import petrinet.Place;
+import transformation.Morphism;
 import transformation.Rule;
 import transformation.Transformation;
 import transformation.TransformationComponent;
@@ -32,6 +33,8 @@ public class Rule2Test {
 
 	@BeforeClass
 	public static void applyingRule() {
+		System.out.println("Petrinetz:::: " + nPetrinet);
+		System.out.println("Regel-L:::: " + rule.getL());
 		// Because the reference stays the same after transformation
 		// nPetrinet will always equals itself, no matter what happens in
 		// transformation
@@ -59,6 +62,8 @@ public class Rule2Test {
 	@Test
 	public void testRightMorphism() {
 		// Has only 1 place been mapped?
+		Morphism morphism = transformation.getMorphism();
+		System.out.println(morphism.getPlacesMorphism());
 		assertEquals(1, transformation.getMorphism().getPlacesMorphism().size());
 		// Has 5 transitions been mapped?
 		assertEquals(5, transformation.getMorphism().getTransitionsMorphism()
