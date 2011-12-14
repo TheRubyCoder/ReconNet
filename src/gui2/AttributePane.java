@@ -75,11 +75,51 @@ public class AttributePane {
 		frame.add(attributePane);
 	}
 	
-	/** Table Model for displaying and editing places. All cells need to be String<br/>
+	/** Abstract super class for refactoring the three Table Models for Place, Transition and Arc<br/>
+	 * Table Model for displaying and editing places. All cells need to be String<br/>
 	 * A TableModel is needed to tell Swing what cells are editable */
-	private static class PlaceTableModel extends AbstractTableModel{
+	private static abstract class AbstractPetriTableModel extends AbstractTableModel {
 		
-		private String[] columnNames = {"Atrribut","Wert"};
+		protected abstract String[][] getData();
+		
+		/** Head of table */
+		protected String[] columnNames = {"Atrribut","Wert"};
+		
+		
+		@Override
+		public int getRowCount() {
+			return getData().length;
+		}
+
+		@Override
+		public int getColumnCount() {
+			return getData()[0].length;
+		}
+		
+		@Override
+		public String getColumnName(int col) {
+	        return columnNames[col];
+	    }
+
+		@Override
+		public Object getValueAt(int rowIndex, int columnIndex) {
+			return getData()[rowIndex][columnIndex];
+		}
+		
+		@Override
+		public boolean isCellEditable(int row, int col) {
+//			only bottom right is editable
+			if(row > 0 && col > 0){
+				return true;
+			} else {
+				return false;
+			}
+	    }
+		
+	}
+	
+	/**  */
+	private static class PlaceTableModel extends AbstractPetriTableModel{
 		
 		private String[][] data = {
 				{"Id",""},
@@ -92,42 +132,11 @@ public class AttributePane {
 			data[1][1] = name;
 			data[2][1] = mark;
 		}
-
-		@Override
-		public int getRowCount() {
-			return data.length;
-		}
-
-		@Override
-		public int getColumnCount() {
-			return data[0].length;
-		}
-		
-		public String getColumnName(int col) {
-	        return columnNames[col];
-	    }
-
-		@Override
-		public Object getValueAt(int rowIndex, int columnIndex) {
-			return data[rowIndex][columnIndex];
-		}
 		
 		@Override
-		public void setValueAt(Object value, int row, int col) {
-	        data[row][col] = (String)value;
-	        fireTableCellUpdated(row, col);
-	    }
-		
-		@Override
-		public boolean isCellEditable(int row, int col) {
-//			only bottom right is editable
-			if(row > 0 && col > 0){
-				return true;
-			} else {
-				return false;
-			}
-			
-	    }
+		protected String[][] getData() {
+			return data;
+		}
 	}
 	
 	private static class TransitionTableModel {

@@ -2,10 +2,21 @@ package gui2;
 
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.Point;
+import java.awt.geom.Point2D;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import petrinet.Arc;
+import petrinet.INode;
+
+import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
+import edu.uci.ics.jung.visualization.BasicVisualizationServer;
+import engine.handler.PetrinetManipulation;
+import engine.ihandler.IPetrinetManipulation;
+import exceptions.EngineException;
 
 import static gui2.Style.*;
 
@@ -51,8 +62,7 @@ class PetrinetPane {
 	private PetrinetPane(){
 		petrinetPanel = new JPanel();
 		drawingPanel = new JPanel();
-		dirtyTest();
-//		data.MorphismData.getPetrinetIsomorphismTransitionsTo();
+//		drawingPanel = dirtyTest(); //This is for ad hoc testing the engine
 	}
 	
 	private JPanel getPetrinetPanel(){
@@ -64,7 +74,21 @@ class PetrinetPane {
 	}
 	
 	
-	private void dirtyTest(){
+	private JPanel dirtyTest(){
+		
+		IPetrinetManipulation engine = PetrinetManipulation.getInstance();
+		
+		int petrinetId = engine.createPetrinet();
+		BasicVisualizationServer<INode, Arc> visServer = null;
+		try {
+			engine.createPlace(petrinetId, new Point(0,0));
+			AbstractLayout<INode, Arc> layout = engine.getJungLayout(petrinetId);
+			visServer = new BasicVisualizationServer<INode, Arc>(layout);
+		} catch (EngineException e) {
+			e.printStackTrace();
+		}
+		
+		return visServer;
 		
 	}
 	
