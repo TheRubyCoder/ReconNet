@@ -30,6 +30,9 @@ public class Utility {
 	 * @return Map<INode, NodeLayoutAttribute>  map with INode as Key and his LayoutAttribute as Value
 	 */
 	public Map<INode, NodeLayoutAttribute> getNodeLayoutAttributes(JungData jung){
+		
+		// TODO : write the HashMap
+		
 		return new HashMap<INode, NodeLayoutAttribute>();
 	}
 	
