@@ -8,6 +8,7 @@ import org.junit.runners.Suite;
     petrinetze.impl.PetrinetTest.class,
     petrinetze.impl.PetrinetzTest.class,
     transformation.TransformationSuite.class,
-    persistence.PersistanceTest.class
+    persistence.PersistanceTest.class,
+    engine.jungmodification.JungModificationTest.class
 })
 public class AllTests {}
