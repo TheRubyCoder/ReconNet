@@ -1,5 +1,6 @@
 package petrinet;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +39,17 @@ public class PetrinetComponent implements IPetrinet{
 	@Override
 	public Petrinet getPetrinetById(int id) {
 		return petrinets.get(id);
+	}
+
+	@Override
+	public Collection<Integer> deleteElementInPetrinet(int petrinetId,
+			int elementId) {
+		return getPetrinetById(petrinetId).deleteElementById(elementId);
+	}
+
+	@Override
+	public ElementType getNodeType(int petrinetId, int nodeId) {
+		return getPetrinetById(petrinetId).getNodeType(nodeId);
 	}
 
 //	@Override

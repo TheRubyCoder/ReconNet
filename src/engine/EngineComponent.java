@@ -1,10 +1,12 @@
 package engine;
 
 import java.awt.Point;
+import java.util.Collection;
 import java.util.Map;
 
 import javax.swing.JPanel;
 
+import petrinet.ElementType;
 import petrinet.INode;
 import petrinet.Petrinet;
 import transformation.ChangedPetrinetElements;
@@ -147,5 +149,18 @@ public class EngineComponent implements IPetrinetManipulation, IPersistence, ISi
 	public boolean drawPetrinet(JPanel panel, int id) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public Collection<Integer> deleteElementInPetrinet(int petrinetId,
+			int elementId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public ElementType getNodeType(int petrinetId, int nodeId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

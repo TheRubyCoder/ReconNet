@@ -5,6 +5,10 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
+
+import engine.handler.NodeType;
+
 /**
  * @mainpage
  * Hier entsteht die Mainpage.
@@ -101,6 +105,57 @@ public class Petrinet{
 
 		arcs.remove(arc);
 		onEdgeChanged(arc, ActionType.deleted);
+	}
+	
+	private Arc getArcById(int id){
+		for (Arc arc : getAllArcs()) {
+			if(arc.getId() == id){
+				return arc;
+			}
+		}
+		return null;
+	}
+	
+	public Collection<Integer> deleteElementById(int id){
+		List<Integer> result = new ArrayList<Integer>();
+		if(getNodeType(id) == ElementType.ARC){
+			result.add(id);
+			Arc arc = getArcById(id);
+			// ein-/ausgehende Kanten der Transitionen loeschen
+			if (arc.getStart() != null && arc.getStart() instanceof Transition) {
+				((Transition) arc.getStart()).removeStartArc(arc);
+			} else if (arc.getEnd() != null && arc.getEnd() instanceof Transition) {
+				((Transition) arc.getEnd()).removeEndArc(arc);
+			}
+
+			getAllArcs().remove(arc);
+			onEdgeChanged(arc, ActionType.deleted);
+		}else if(getNodeType(id) == ElementType.PLACE){
+			Place place = getPlaceById(id);
+			for (Arc arc : place.getEndArcs()) {
+				
+				result.addAll(deleteElementById(arc.getId()));
+			}
+			for (Arc arc : place.getStartArcs()) {
+				result.addAll(deleteElementById(arc.getId()));
+			}
+			
+			getAllPlaces().remove(place);
+			onNodeChanged(place, ActionType.deleted);
+		}else if(getNodeType(id) == ElementType.TRANSITION){
+			Transition transition = getTransitionById(id);
+			for (Arc arc : transition.getEndArcs()) {
+				result.addAll(deleteElementById(arc.getId()));
+			}
+			for (Arc arc : transition.getStartArcs()) {
+				result.addAll(deleteElementById(arc.getId()));
+			}
+			
+			getAllTransitions().remove(transition);
+			onNodeChanged(transition, ActionType.deleted);
+		}
+		
+		return result;
 	}
 
 	public Transition createTransition(String name, IRenew rnw) {
@@ -596,6 +651,25 @@ public class Petrinet{
 		for (Place place : places2) {
 			this.places.add(place);
 		}
+	}
+
+	public ElementType getNodeType(int nodeId) {
+		for (Place place : getAllPlaces()) {
+			if(place.getId() == nodeId){
+				return ElementType.PLACE;
+			}
+		}
+		for (Transition transition: getAllTransitions()) {
+			if(transition.getId() == nodeId){
+				return ElementType.TRANSITION;
+			}
+		}
+		for (Arc arc: getAllArcs()) {
+			if(arc.getId() == nodeId){
+				return ElementType.ARC;
+			}
+		}
+		return ElementType.INVALID;
 	}
 
 }
