@@ -30,8 +30,8 @@ final public class JungData {
 	
 	private DirectedGraph<INode, Arc> graph;
 	private AbstractLayout<INode, Arc> layout;
-	private Map<Place, Color> placeColors;
-	
+	private Map<Place, Color> placeColors;	
+
 	public JungData(DirectedGraph<INode, Arc> graph, AbstractLayout<INode, Arc> layout) {
 		if (!(graph instanceof DirectedGraph<?, ?>)) {
 			throw new IllegalArgumentException("graph illegal type");
@@ -74,8 +74,8 @@ final public class JungData {
 		for (INode node : getJungGraph().getVertices()) {
 			Color color = DEFAULT_COLOR_TRANSITION;
 			
-			if (node instanceof Place && placeColors.get(node) instanceof Color) {
-				color = placeColors.get(node);
+			if (node instanceof Place) {
+				color = getPlaceColor((Place) node);
 			}
 						
 			attributes.put(
@@ -90,6 +90,13 @@ final public class JungData {
 		return attributes;
 	}
 	
+	
+	public Color getPlaceColor(Place place) {
+		checkPlaceInvariant(place);
+		checkContainsNode(place);
+				
+		return null == placeColors.get(place) ? DEFAULT_COLOR_PLACE : placeColors.get(place);
+	}
 
 	/**
 	 * Creates an Arc in the JungRepresentation of the petrinet from a Place to a Transition.

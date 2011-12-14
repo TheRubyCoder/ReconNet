@@ -85,7 +85,7 @@ public interface IPetrinetManipulation {
 	 * @param id ID of the Petrinet
 	 * @param place which will be deleted
 	 */
-	public void deletePlace(int id, INode place);
+	public void deletePlace(int id, INode place) throws EngineException;
 	
 	/**
 	 * Deletes a Transition
@@ -93,7 +93,7 @@ public interface IPetrinetManipulation {
 	 * @param id ID of the Petrinet
 	 * @param transition which will be deleted
 	 */
-	public void deleteTransition(int id, INode transition);
+	public void deleteTransition(int id, INode transition) throws EngineException;
 	
 	/**
 	 * Gets the Attributes from an Arc
@@ -102,7 +102,7 @@ public interface IPetrinetManipulation {
 	 * @param arc which attributes are wanted
 	 * @return ArcAttribute
 	 */
-	public ArcAttribute getArcAttribute(int id, Arc arc); // TODO IArc gibt es nicht?
+	public ArcAttribute getArcAttribute(int id, Arc arc) throws EngineException; // TODO IArc gibt es nicht?
 	
 	/**
 	 * Gets the JungLayout from the Petrinet
@@ -162,7 +162,7 @@ public interface IPetrinetManipulation {
 	 * @param filename name for the Petrinet
 	 * @param format which the Petrinet should be saved. (PNML the only option till now)
 	 */
-	public void save(int id, String path, String filename, String format); // TODO: String format zu => Format format
+	public void save(int id, String path, String filename, String format) throws EngineException; // TODO: String format zu => Format format
 	
 	/**
 	 * Sets the Marking of a Place.
