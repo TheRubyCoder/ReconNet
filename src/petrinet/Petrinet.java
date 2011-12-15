@@ -10,16 +10,14 @@ import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
 import engine.handler.NodeType;
 
 /**
- * @mainpage
- * Hier entsteht die Mainpage.
- * <li>
+ * @mainpage Hier entsteht die Mainpage. <li>
  * 
- * \li {@link MockObjects Mocki}
+ *           \li {@link MockObjects Mocki}
  * 
- * </li>
- *
+ *           </li>
+ * 
  */
-public class Petrinet{
+public class Petrinet {
 
 	private final Logger logger = Logger.getLogger(Petrinet.class
 			.getCanonicalName());
@@ -33,14 +31,16 @@ public class Petrinet{
 
 	@Override
 	public boolean equals(Object obj) {
-		if(obj == null)
+		if (obj == null)
 			return false;
-		if(!(obj instanceof Petrinet))
+		if (!(obj instanceof Petrinet))
 			return false;
 		Petrinet other = (Petrinet) obj;
-		if(!getPre().matrixStringOnly().equals(other.getPre().matrixStringOnly()))
+		if (!getPre().matrixStringOnly().equals(
+				other.getPre().matrixStringOnly()))
 			return false;
-		if(!getPost().matrixStringOnly().equals(other.getPost().matrixStringOnly()))
+		if (!getPost().matrixStringOnly().equals(
+				other.getPost().matrixStringOnly()))
 			return false;
 		return true;
 	}
@@ -106,57 +106,70 @@ public class Petrinet{
 		arcs.remove(arc);
 		onEdgeChanged(arc, ActionType.deleted);
 	}
-	
-	private Arc getArcById(int id){
+
+	private Arc getArcById(int id) {
 		for (Arc arc : getAllArcs()) {
-			if(arc.getId() == id){
+			if (arc.getId() == id) {
 				return arc;
 			}
 		}
 		return null;
 	}
-	
-	public Collection<Integer> deleteElementById(int id){
+
+	public Collection<Integer> deleteElementById(int id) {
 		List<Integer> result = new ArrayList<Integer>();
-		if(getNodeType(id) == ElementType.ARC){
+		if (getNodeType(id) == ElementType.ARC) {
 			result.add(id);
 			Arc arc = getArcById(id);
 			// ein-/ausgehende Kanten der Transitionen loeschen
-			if (arc.getStart() != null && arc.getStart() instanceof Transition) {
-				((Transition) arc.getStart()).removeStartArc(arc);
-			} else if (arc.getEnd() != null && arc.getEnd() instanceof Transition) {
-				((Transition) arc.getEnd()).removeEndArc(arc);
+			if (arc.getStart() != null) {
+				if (arc.getStart() instanceof Transition) {
+					((Transition) arc.getStart()).removeStartArc(arc);
+				} else if (arc.getStart() instanceof Place) {
+					((Place) arc.getStart()).removeStartArc(arc);
+				}
+			}
+			if (arc.getEnd() != null) {
+				if (arc.getEnd() instanceof Transition) {
+					((Transition) arc.getEnd()).removeEndArc(arc);
+				} else if (arc.getEnd() instanceof Place) {
+					((Place) arc.getEnd()).removeEndArc(arc);
+				}
 			}
 
 			getAllArcs().remove(arc);
 			onEdgeChanged(arc, ActionType.deleted);
-		}else if(getNodeType(id) == ElementType.PLACE){
+		} else if (getNodeType(id) == ElementType.PLACE) {
 			Place place = getPlaceById(id);
-			result.add(place.getId());
-			for (Arc arc : place.getEndArcs()) {
-				
-				result.addAll(deleteElementById(arc.getId()));
-			}
-			for (Arc arc : place.getStartArcs()) {
-				result.addAll(deleteElementById(arc.getId()));
-			}
 			
+			Collection<Arc> copyOfStartArcs = new ArrayList<Arc>(place.getStartArcs());
+			Collection<Arc> copyOfEndArcs = new ArrayList<Arc>(place.getEndArcs());
+			for (Arc arc : copyOfStartArcs) {
+				result.addAll(deleteElementById(arc.getId()));
+			}
+			for (Arc arc : copyOfEndArcs) {
+				result.addAll(deleteElementById(arc.getId()));
+			}
+
+			result.add(place.getId());
 			getAllPlaces().remove(place);
 			onNodeChanged(place, ActionType.deleted);
-		}else if(getNodeType(id) == ElementType.TRANSITION){
+		} else if (getNodeType(id) == ElementType.TRANSITION) {
 			Transition transition = getTransitionById(id);
 			result.add(transition.getId());
-			for (Arc arc : transition.getEndArcs()) {
+			Collection<Arc> copyOfStartArcs = new ArrayList<Arc>(transition.getStartArcs());
+			Collection<Arc> copyOfEndArcs = new ArrayList<Arc>(transition.getEndArcs());
+			for (Arc arc : copyOfStartArcs) {
 				result.addAll(deleteElementById(arc.getId()));
 			}
-			for (Arc arc : transition.getStartArcs()) {
+			for (Arc arc : copyOfEndArcs) {
 				result.addAll(deleteElementById(arc.getId()));
 			}
-			
+
 			getAllTransitions().remove(transition);
 			onNodeChanged(transition, ActionType.deleted);
 		}
-		
+
 		return result;
 	}
 
@@ -337,20 +350,22 @@ public class Petrinet{
 
 		return fire(active.get(id).getId());
 	}
-	
+
 	/**
-	 * Returns <tt> true </tt> if there are no Transitions or Places in the petrinet
+	 * Returns <tt> true </tt> if there are no Transitions or Places in the
+	 * petrinet
+	 * 
 	 * @return
 	 */
-	public boolean isEmpty(){
-		return this.getAllPlaces().isEmpty() &&
-			this.getAllTransitions().isEmpty();
+	public boolean isEmpty() {
+		return this.getAllPlaces().isEmpty()
+				&& this.getAllTransitions().isEmpty();
 	}
 
 	/**
-	 * Liefert das Pre-Objekt zu dem Netz zurueck
-	 * PRE in der t-ten Spalte gibt an,
-	 * wieviele Token die Transition t von p wegnimmt
+	 * Liefert das Pre-Objekt zu dem Netz zurueck PRE in der t-ten Spalte gibt
+	 * an, wieviele Token die Transition t von p wegnimmt
+	 * 
 	 * @return {@link Pre}
 	 */
 	public Pre getPre() {
@@ -437,6 +452,7 @@ public class Petrinet{
 
 	/**
 	 * Liefert das Post-Objekt zu dem Netz zurueck
+	 * 
 	 * @return {@link IPost}
 	 */
 	public Post getPost() {
@@ -605,6 +621,7 @@ public class Petrinet{
 
 	/**
 	 * Fuegt einem bestehenden Petrinetz ein weiters hinzu
+	 * 
 	 * @param net
 	 */
 	public void addNet(Petrinet net) {
@@ -657,17 +674,17 @@ public class Petrinet{
 
 	public ElementType getNodeType(int nodeId) {
 		for (Place place : getAllPlaces()) {
-			if(place.getId() == nodeId){
+			if (place.getId() == nodeId) {
 				return ElementType.PLACE;
 			}
 		}
-		for (Transition transition: getAllTransitions()) {
-			if(transition.getId() == nodeId){
+		for (Transition transition : getAllTransitions()) {
+			if (transition.getId() == nodeId) {
 				return ElementType.TRANSITION;
 			}
 		}
-		for (Arc arc: getAllArcs()) {
-			if(arc.getId() == nodeId){
+		for (Arc arc : getAllArcs()) {
+			if (arc.getId() == nodeId) {
 				return ElementType.ARC;
 			}
 		}

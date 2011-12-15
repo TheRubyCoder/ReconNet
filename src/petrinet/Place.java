@@ -140,4 +140,12 @@ public class Place implements INode{
 	public List<Arc> getEndArcs() {
 		return endArcs;
 	}
+	
+	public boolean removeStartArc(Arc arc){
+		return startArcs.remove(arc);
+	}
+	
+	public boolean removeEndArc(Arc arc){
+		return endArcs.remove(arc);
+	}
 }

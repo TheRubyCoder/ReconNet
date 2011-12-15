@@ -45,12 +45,20 @@ public class MorphismData {
 		return idsOfPlaceAndArcsOfThirdPlace;
 	}
 	
+	public static Set<Integer> getIdsOfTransitionPreAndArcsOfThirdPlace(){
+		return idsOfTransitionPreAndArcsOfThirdPlace;
+	}
+	
 	public static int getIdPreTransiotionOfThird(){
 		return idPreTransiotionOfThird;
 	}
 	
 	public static int getIdPostTransiotionOfThird(){
 		return idPostTransiotionOfThird;
+	}
+	
+	public static Set<Integer> getIdsOfTransitionPostAndArcsOfThirdPlace(){
+		return idsOfTransitionPostAndArcsOfThirdPlace;
 	}
 	
 	public static int getIdOfDeleteArc(){
@@ -75,7 +83,7 @@ public class MorphismData {
 	
 	private static Set<Integer> idsOfPlaceAndArcsOfThirdPlace = new HashSet<Integer>();
 	
-	private static Set<Integer> idsOfTransitioPreAndArcsOfThirdPlace = new HashSet<Integer>();
+	private static Set<Integer> idsOfTransitionPreAndArcsOfThirdPlace = new HashSet<Integer>();
 	
 	private static Set<Integer> idsOfTransitionPostAndArcsOfThirdPlace = new HashSet<Integer>();
 	
@@ -120,6 +128,9 @@ public class MorphismData {
 	 * @return the "to" Petrinet that is specified in... 
  	 */
 	public static Petrinet getPetrinetIsomorphismPlacesTo(){
+		idsOfTransitionPostAndArcsOfThirdPlace = new HashSet<Integer>();
+		idsOfTransitionPreAndArcsOfThirdPlace = new HashSet<Integer>();
+		
 		// The matching subnet P1 and T1...
 		Petrinet result = PetrinetComponent.getPetrinet().createPetrinet();
 		IRenew renewId = new RenewId();
@@ -176,13 +187,12 @@ public class MorphismData {
 		Place p3 = result.createPlace("P1");
 		idOfThird = p3.getId();
 		idsMatchedPlaces.add(idOfThird);
-		System.out.println("PLACEID 3rd:::  " + idOfThird);
 		idsOfPlaceAndArcsOfThirdPlace.add(idOfThird);
 
 				
 		Transition t31 = result.createTransition("A", renewId);
 		idPreTransiotionOfThird = t31.getId();
-		idsOfTransitioPreAndArcsOfThirdPlace.add(idPreTransiotionOfThird);
+		idsOfTransitionPreAndArcsOfThirdPlace.add(idPreTransiotionOfThird);
 		Transition t32 = result.createTransition("A", renewId);
 		Transition t33 = result.createTransition("A", renewId);
 		idPostTransiotionOfThird = t33.getId();
@@ -197,7 +207,7 @@ public class MorphismData {
 		Arc arcPlace31 = result.createArc("", t31, p3);
 		idOfDeleteArc = arcPlace31.getId();
 		idsOfPlaceAndArcsOfThirdPlace.add(idOfDeleteArc);
-		idsOfTransitioPreAndArcsOfThirdPlace.add(idOfDeleteArc);
+		idsOfTransitionPreAndArcsOfThirdPlace.add(idOfDeleteArc);
 		Arc arcPlace32 = result.createArc("", t32, p3);
 		idsOfPlaceAndArcsOfThirdPlace.add(arcPlace32.getId());
 				
