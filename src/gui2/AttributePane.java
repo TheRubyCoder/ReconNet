@@ -66,7 +66,9 @@ public class AttributePane {
 		currentNodeId = nodeId;
 		//TODO: find out type of node
 		//TODO: get attributes of node
-		TableModel model = new PlaceTableModel("mock1","mock2","mock3");
+//		TableModel model = new PlaceTableModel("mock1","mock2","mock3");
+		TableModel model = new TransitionTableModel("mock1", "mock2", "mock3", "mock4");
+//		TableModel model = new ArcTableModel("mock1", "mock2");
 		model.addTableModelListener(new TableListener());
 		table.setModel(model);
 	}
@@ -139,12 +141,44 @@ public class AttributePane {
 		}
 	}
 	
-	private static class TransitionTableModel {
+	private static class TransitionTableModel extends AbstractPetriTableModel{
 		
+		private String[][] data = {
+				{"Id",""},
+				{"Name",""},
+				{"Label",""},
+				{"Renew",""}
+		};
+		
+		public TransitionTableModel(String id, String name, String label, String renew) {
+			data[0][1] = id;
+			data[1][1] = name;
+			data[2][1] = label;
+			data[3][1] = renew;
+		}
+		
+		@Override
+		protected String[][] getData() {
+			return data;
+		}
 	}
 	
-	private static class ArcTableModel {
+	private static class ArcTableModel extends AbstractPetriTableModel{
 		
+		private String[][] data = {
+				{"Id",""},
+				{"Name",""},
+		};
+		
+		public ArcTableModel(String id, String name) {
+			data[0][1] = id;
+			data[1][1] = name;
+		}
+		
+		@Override
+		protected String[][] getData() {
+			return data;
+		}
 	}
 	
 	private static class TableListener implements TableModelListener {
