@@ -3,6 +3,9 @@ package gui2;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 
 import javax.swing.JButton;
@@ -17,6 +20,7 @@ import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 import engine.handler.PetrinetManipulation;
 import engine.ihandler.IPetrinetManipulation;
 import exceptions.EngineException;
+import gui2.EditorPane.EditorMode;
 
 import static gui2.Style.*;
 
@@ -49,8 +53,42 @@ class PetrinetPane {
 				PETRINET_HEIGHT);
 
 		getInstance().getDrawingPanel().setBackground(Color.WHITE);
+		getInstance().getDrawingPanel().addMouseListener(new PetrinetMouseClickListener());
+//		getInstance().getDrawingPanel().addMouseMotionListener(new PetrinetMouseMotionListener());
 		
 		return getInstance();
+	}
+	
+	/** mouse click listener for the drawing panel */
+	private static class PetrinetMouseClickListener implements MouseListener{
+		/** Indicates whether a new drag has begun or not */
+		private boolean pressedBefore = false;
+		/** X-coordinate of begin of drag */
+		private int pressedX = 0;
+		/** Y-coordinate of begin of drag */
+		private int pressedY = 0;
+		@Override public void mouseClicked(MouseEvent e) {
+			System.out.println("mouse clicked on petrinet at [" + e.getX() + 
+					"," + e.getY() +
+					"] in mode: " + EditorPane.getInstance().getCurrentMode());
+		}
+		@Override public void mouseEntered(MouseEvent e) {}
+		@Override public void mouseExited(MouseEvent e) {}
+		@Override public void mousePressed(MouseEvent e) {
+			if(EditorPane.getInstance().getCurrentMode() == EditorMode.PICK && !pressedBefore){
+				pressedX = e.getX();
+				pressedY = e.getY();
+				pressedBefore = true;
+			}
+		}
+		@Override public void mouseReleased(MouseEvent e) {
+			if(EditorPane.getInstance().getCurrentMode() == EditorMode.PICK && pressedBefore){
+				pressedBefore = false;
+				System.out.println("TODO: Translate petrinet by [" + 
+						(e.getX() - pressedX) + "," + 
+						(e.getY() - pressedY) + "]");
+			}
+		}
 	}
 	
 	/* Static constructor that initiates the singleton */

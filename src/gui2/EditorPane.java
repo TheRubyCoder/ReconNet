@@ -145,7 +145,7 @@ class EditorPane {
 	
 	/** Returns the mode that is currently selected */
 	public EditorMode getCurrentMode(){
-		return EditorMode.valueOf(buttonGroup.getSelection().getActionCommand());
+		return EditorMode.valueOf(buttonGroup.getSelection().getActionCommand().toUpperCase());
 	}
 	
 	/** Enumerable for editor modes*/
