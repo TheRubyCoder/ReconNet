@@ -83,7 +83,12 @@ public class TransformationComponent implements ITransformation{
 	@Override
 	public  Transformation transform(Petrinet net, Rule rule)
 	{
-		return Transformation.createTransformationWithAnyMorphism(net, rule).transform();
+		Transformation transformation = Transformation.createTransformationWithAnyMorphism(net, rule);
+		if(transformation != null){
+			return transformation.transform();
+		}else{
+			return null;
+		}
 	}
 
 	@Override
