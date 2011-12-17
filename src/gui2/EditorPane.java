@@ -17,6 +17,9 @@ class EditorPane {
 	/** Internal JPanel */
 	private JPanel editorPane;
 	
+	/** The group containing all 4 buttons. Only one can be selected */
+	private ButtonGroup buttonGroup;
+	
 	/** Button for choosing pick mode */
 	private JRadioButton pickButton;
 	
@@ -50,12 +53,6 @@ class EditorPane {
 		getEditorPane().setLayout(EDITOR_PANE_LAYOUT);
 		
 		initiateRadioButton();
-//		getEditorPane().setLayout(null);//custom layout with setBounds
-//		getEditorPane().setLayout(EDITOR_PANE_LAYOUT);
-//		pickButton = initiatePickButton();
-//		createPlaceButton = initiateCreatePlaceButton();
-//		createTransitionButton = initiateCreateTransitionButton();
-//		createArcButton = initiateCreateArcButton();
 	}
 	
 
@@ -80,50 +77,58 @@ class EditorPane {
 		frame.add(getEditorPane());
 	}
 	
+	/** Initiates a ButtonGroup with the 4 radio buttons in it */
 	private void initiateRadioButton() {
-		JRadioButton pick = initiateRadioPickButton();
-		JRadioButton createArc = initiateRadioArcButton();
-		JRadioButton createPlace = initiateRadioPlaceButton();
-		JRadioButton createTransition = initiateRadioTransitionButton();
+		pickButton = initiateRadioPickButton();
+		createArcButton = initiateRadioArcButton();
+		createPlaceButton = initiateRadioPlaceButton();
+		createTransitionButton = initiateRadioTransitionButton();
 		
-		ButtonGroup radiobuttonGroup = new ButtonGroup();
-		radiobuttonGroup.add(pick);
-		radiobuttonGroup.add(createArc);
-		radiobuttonGroup.add(createPlace);
-		radiobuttonGroup.add(createTransition);
+		buttonGroup = new ButtonGroup();
+		buttonGroup.add(pickButton);
+		buttonGroup.add(createArcButton);
+		buttonGroup.add(createPlaceButton);
+		buttonGroup.add(createTransitionButton);
 	}
 
+	/** Initiates the transition radio button with text and tool tip */
 	private JRadioButton initiateRadioTransitionButton() {
 		createTransitionButton = new JRadioButton("Stelle einfügen");
 		createTransitionButton.setToolTipText("In diesem Modus fügen Sie mit einem Klick eine neue Transition hinzu");
 		
-		createTransitionButton.setActionCommand("Transition-erstellen-Button");
+		// the action command is used later on to identify wich button is selected
+		createTransitionButton.setActionCommand("transition");
 		getEditorPane().add(createTransitionButton);
 		
 		return createTransitionButton;
 	}
 	
+	/** Initiates the place radio button with text and tool tip */
 	private JRadioButton initiateRadioPlaceButton() {
 		createPlaceButton = new JRadioButton("Stelle einfügen");
 		createPlaceButton.setToolTipText("In diesem Modus fügen Sie mit einem Klick eine neue Stelle hinzu");
 		
-		createPlaceButton.setActionCommand("Stelle-erstellen-Button");
+		// the action command is used later on to identify wich button is selected
+		createPlaceButton.setActionCommand("place");
 		getEditorPane().add(createPlaceButton);
 		
 		return createPlaceButton;
 	}
 	
+	/** Initiates the arc radio button with text and tool tip */
 	private JRadioButton initiateRadioArcButton() {
 		createArcButton = new JRadioButton("Kante einfügen");
 		createArcButton.setToolTipText("In diesem Modus fügen Sie mit einem Klick eine neue Kante hinzu");
 		
-		createArcButton.setActionCommand("Kante-erstellen-Button");
+		// the action command is used later on to identify wich button is selected
+		createArcButton.setActionCommand("arc");
 		getEditorPane().add(createArcButton);
 		
 		return createArcButton;
 	}
 
 
+	/** Initiates the pick radio button with text and tool tip */
 	private JRadioButton initiateRadioPickButton(){
 		pickButton = new JRadioButton("Auswählen");
 		pickButton.setSelected(true);
@@ -131,89 +136,22 @@ class EditorPane {
 				"indem sie auf sei klicken. Mit drag & drop auf eine weiße Stelle verschieben " +
 				"sie das ganze Petrinetze");
 		
-		pickButton.setActionCommand("Auswählen-Button");
+		// the action command is used later on to identify wich button is selected
+		pickButton.setActionCommand("pick");
 		getEditorPane().add(pickButton);
 		
 		return pickButton;
 	}
 	
+	/** Returns the mode that is currently selected */
+	public EditorMode getCurrentMode(){
+		return EditorMode.valueOf(buttonGroup.getSelection().getActionCommand());
+	}
 	
-//	// ##### Pick Button #####
-//	
-//	private JButton initiatePickButton(){
-//		JButton pickButton = new JButton("Auswählen");
-//		pickButton.setToolTipText("Editieren und verschieben sie Stellen und Transitionen " +
-//				"indem sie auf sei klicken. Mit drag & drop auf eine weiße Stelle verschieben " +
-//				"sie das ganze Petrinetze");
-//		pickButton.setLocation(EDITOR_PANE_BUTTON_PICK_LOCATION);
-//		pickButton.setSize(EDITOR_PANE_BUTTON_PICK_SIZE);
-//		pickButton.addActionListener(new PickButtonListener());
-//		getEditorPane().add(pickButton);
-//		return pickButton;
-//	}
-//	
-//	private class PickButtonListener implements ActionListener {
-//		@Override
-//		public void actionPerformed(ActionEvent e) {
-//			System.out.println("Auswählen Button gedrückt");
-//		}
-//	}
-//	
-//	// ##### Create Place Button #####
-//	
-//	private JButton initiateCreatePlaceButton() {
-//		JButton createPlaceButton = new JButton("Stelle einfügen");
-//		createPlaceButton.setToolTipText("In diesem Modus fügen sie mit einem Klick eine neue Stelle hinzu");
-//		createPlaceButton.setLocation(EDITOR_PANE_BUTTON_CREATEPLACE_LOCATION);
-//		createPlaceButton.setSize(EDITOR_PANE_BUTTON_CREATEPLACE_SIZE);
-//		createPlaceButton.addActionListener(new CreatePlaceButtonListener());
-//		getEditorPane().add(createPlaceButton);
-//		return createPlaceButton;
-//	}
-//	
-//	private class CreatePlaceButtonListener implements ActionListener {
-//		@Override
-//		public void actionPerformed(ActionEvent e) {
-//			System.out.println("Stelle einfügen Button gedrückt");
-//		}
-//	}
-//	
-//	// ##### Create Transition Button #####
-//	
-//	private JButton initiateCreateTransitionButton(){
-//		JButton createTransitionButton = new JButton("Transition einfügen");
-//		createTransitionButton.setToolTipText("In diesem Modus fügen sie mit einem Klick eine neue Transition hinzu");
-//		createTransitionButton.setLocation(EDITOR_PANE_BUTTON_CREATETRANSITION_LOCATION);
-//		createTransitionButton.setSize(EDITOR_PANE_BUTTON_CREATETRANSITION_SIZE);
-//		createTransitionButton.addActionListener(new CreateTransitionButtonListener());
-//		getEditorPane().add(createTransitionButton);
-//		return createTransitionButton;
-//	}
-//	
-//	private class CreateTransitionButtonListener implements ActionListener {
-//		@Override
-//		public void actionPerformed(ActionEvent e) {
-//			System.out.println("Transition einfügen Button gedrückt");
-//		}
-//	}
-//	
-//	// ##### Create Arc Button #####
-//	private JButton initiateCreateArcButton(){
-//		JButton createArcButton = new JButton("Pfeil einfügen");
-//		createArcButton.setToolTipText("In diesem Modus fügen sie mit einem Klick eine neue Kante hinzu");
-//		createArcButton.setLocation(EDITOR_PANE_BUTTON_CREATEARC_LOCATION);
-//		createArcButton.setSize(EDITOR_PANE_BUTTON_CREATEARC_SIZE);
-//		createArcButton.addActionListener(new CreateArcButtonListener());
-//		getEditorPane().add(createArcButton);
-//		return createArcButton;
-//	}
-//	
-//	private class CreateArcButtonListener implements ActionListener {
-//		@Override
-//		public void actionPerformed(ActionEvent e) {
-//			System.out.println("Pfeil einfügen Button gedrückt");
-//		}
-//	}
+	/** Enumerable for editor modes*/
+	static enum EditorMode{
+		PLACE, TRANSITION, ARC, PICK
+	}
 
 }
 
