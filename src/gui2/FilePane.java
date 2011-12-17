@@ -1,7 +1,6 @@
 package gui2;
 
 import static gui2.Style.FILE_PANE_ICON_BUTTON_SIZE;
-import static gui2.Style.FILE_PANE_LAYOUT;
 import static gui2.Style.LEFT_PANEL_DIMENSION;
 import static gui2.Style.LOAD_BUTTON_X;
 import static gui2.Style.LOAD_BUTTON_Y;
@@ -49,34 +48,6 @@ import javax.swing.tree.MutableTreeNode;
  * They are in one class as they are almost the same
  *  */
 class FilePane {
-	
-	private static FilePane petrinetFilePane;
-	
-	private static FilePane ruleFilePane;
-	
-	static {
-		petrinetFilePane = new FilePane("Petrinetz", 
-				"Petrinetze", 
-				new NewPetrinetListener(), 
-				new LoadPetrinetListener(), 
-				new SavePetrinetListener(), 
-				new SaveAsPetrinetListener());
-		
-		ruleFilePane = new FilePane("Regel", 
-				"Regeln", 
-				new NewRuleListener(), 
-				new LoadRuleListener(), 
-				new SaveRuleListener(), 
-				new SaveAsRuleListener());
-	}
-
-	public static FilePane getPetrinetFilePane() {
-		return petrinetFilePane;
-	}
-	
-	public static FilePane getRuleFilePane(){
-		return ruleFilePane;
-	}
 	
 	private static class NewPetrinetListener implements ActionListener{
 		@Override
@@ -134,6 +105,28 @@ class FilePane {
 		}
 	}
 	
+	private static FilePane petrinetFilePane;
+	
+	private static FilePane ruleFilePane;
+	
+	static {
+		petrinetFilePane = new FilePane("Petrinetz", "Petrinetze",
+				new NewPetrinetListener(), new LoadPetrinetListener(),
+				new SavePetrinetListener(), new SaveAsPetrinetListener());
+		
+		ruleFilePane = new FilePane("Regel", "Regeln", new NewRuleListener(),
+				new LoadRuleListener(), new SaveRuleListener(),
+				new SaveAsRuleListener());
+	}
+
+	public static FilePane getPetrinetFilePane() {
+		return petrinetFilePane;
+	}
+	
+	public static FilePane getRuleFilePane(){
+		return ruleFilePane;
+	}
+	
 	private JPanel treeAndButtonContainerWithBorder;
 
 	private JPanel buttonContainer;
@@ -150,9 +143,12 @@ class FilePane {
 	
 	private FilePane() {};
 
-	private FilePane(String type, String typePlural,
-			ActionListener newListener, ActionListener loadListener,
-			ActionListener saveListener, ActionListener saveAsListener) {
+	private FilePane(String type, 
+			String typePlural,
+			ActionListener newListener, 
+			ActionListener loadListener,
+			ActionListener saveListener, 
+			ActionListener saveAsListener) {
 		newButton = initiateNewButton(type, newListener);
 		saveButton = initiateSaveButton(type, saveListener);
 		loadButton = initiateLoadButton(type, loadListener);
@@ -168,17 +164,19 @@ class FilePane {
 				typePlural);
 	}
 
-	private JPanel initiateTreeAndButtonContainerWithBorder(JTree tree,
+	private JPanel initiateTreeAndButtonContainerWithBorder(
+			JTree tree,
 			JPanel buttonContainer,
 			String typePlural) {
 		JPanel panel = new JPanel();
-		panel.setLayout(FILE_PANE_LAYOUT);
+		panel.setLayout(new BorderLayout());
 		panel.setBorder(BorderFactory.createTitledBorder(
 				BorderFactory.createEtchedBorder(), 
 				"Speichern/Laden - " + typePlural));
-//				PETRINET_FILE_PANE_BORDER);
-		panel.setBounds(PETRINET_FILE_PANE_X, PETRINET_FILE_PANE_Y,
-				PETRINET_FILE_PANE_WIDTH, PETRINET_FILE_PANE_HEIGHT);
+//		panel.setBounds(PETRINET_FILE_PANE_X, 
+//				PETRINET_FILE_PANE_Y,
+//				PETRINET_FILE_PANE_WIDTH, 
+//				PETRINET_FILE_PANE_HEIGHT);
 
 		panel.add(new JScrollPane(tree), BorderLayout.CENTER);
 		panel.add(buttonContainer, BorderLayout.SOUTH);

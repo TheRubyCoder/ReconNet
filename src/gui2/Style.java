@@ -30,7 +30,7 @@ class Style {
 	public static final int TOTAL_WIDTH = 1000;
 	
 	/** Total height of main window */
-	public static final int TOTAL_HEIGHT = 800;
+	public static final int TOTAL_HEIGHT = 700;
 	
 	/** Dimension of Header */
 	public static final Dimension HEADER_DIMENSION = new Dimension(1000,125);
