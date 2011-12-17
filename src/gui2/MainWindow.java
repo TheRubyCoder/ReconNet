@@ -124,7 +124,8 @@ class MainWindow {
 	}
 	
 	private void addFilePane(){
-		PetrinetFilePane.getInstance().addTo(leftPanel);
+		FilePane.getPetrinetFilePane().addTo(leftPanel);
+//		PetrinetFilePane.getInstance().addTo(leftPanel);
 	}
 	
 	private void addAttributePane(){

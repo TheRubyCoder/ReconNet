@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -131,16 +130,6 @@ public class PetrinetFilePane {
 
 		return panel;
 	}
-
-	// private JPanel initiateRuleTreeContainer() {
-	// // TODO Auto-generated method stub
-	// return null;
-	// }
-	//
-	// private JPanel initiatepetrinetTreeContainer() {
-	// // TODO Auto-generated method stub
-	// return null;
-	// }
 
 	private JPanel initiatetreeAndButtonContainerWithBorder(JTree petrinetTree,
 			JPanel buttonContainer) {
