@@ -1,6 +1,7 @@
 package transformation.rules;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
@@ -13,7 +14,7 @@ import data.Rule2Data;
 import exceptions.GeneralPetrinetException;
 
 public class Rule7Test {
-	
+
 	/** petrinet to transform */
 	private static Petrinet nPetrinet = Rule2Data.getnPetrinet();
 	/** rule to apply */
@@ -33,19 +34,17 @@ public class Rule7Test {
 		// so we check the toString() of its pre-matrix instead
 		preBefore = nPetrinet.getPre().matrixStringOnly();
 		postBefore = nPetrinet.getPost().matrixStringOnly();
-		try {
-			transformation = TransformationComponent.getTransformation().transform(nPetrinet, rule);
-			fail("Morphism should have NOT been found");
-		} catch (Exception e) {
-			//Transformation successfully failed :)
-		}
+		
+		transformation = TransformationComponent.getTransformation().transform(
+				nPetrinet, rule);
+		assertNull("There should be no morphism found", transformation);
+		
 		preAfter = nPetrinet.getPre().matrixStringOnly();
 		postAfter = nPetrinet.getPost().matrixStringOnly();
-		
-		//Did the petrinet stayed untouched?
+
+		// Did the petrinet stayed untouched?
 		assertEquals(preBefore, preAfter);
 		assertEquals(postBefore, postAfter);
 	}
-
 
 }
