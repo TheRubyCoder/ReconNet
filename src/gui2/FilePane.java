@@ -44,11 +44,13 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 
 /**
- * Class for FilePanes (saving and creating petrinets and rules)
- * They are in one class as they are almost the same
+ * Class for FilePanes (saving and creating petrinets and rules)<br/>
+ * They are in one class as they are almost the same<br/>
+ * There are two instances of filePane: petrinet file pane and rule file pane
  *  */
 class FilePane {
 	
+	/** Listener for button new petri net */
 	private static class NewPetrinetListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -56,6 +58,7 @@ class FilePane {
 		}
 	}
 	
+	/** Listener for button load petri net */
 	private static class LoadPetrinetListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -63,6 +66,7 @@ class FilePane {
 		}
 	}
 	
+	/** Listener for button save petri net */
 	private static class SavePetrinetListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -70,13 +74,15 @@ class FilePane {
 		}
 	}
 	
+	/** Listener for button save as petri net */
 	private static class SaveAsPetrinetListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("save as petrinet pressed");
 		}
 	}
-
+	
+	/** Listener for button new rule */
 	private static class NewRuleListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -84,6 +90,7 @@ class FilePane {
 		}
 	}
 	
+	/** Listener for button load rule */
 	private static class LoadRuleListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -91,6 +98,7 @@ class FilePane {
 		}
 	}
 	
+	/** Listener for button save rule */
 	private static class SaveRuleListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -98,6 +106,7 @@ class FilePane {
 		}
 	}
 	
+	/** Listener for button save rule as */
 	private static class SaveAsRuleListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -105,10 +114,16 @@ class FilePane {
 		}
 	}
 	
+	/** One of the instances. This instance is the file pane for petrinets */
 	private static FilePane petrinetFilePane;
 	
+	/** One of the instances. This instance is the file pane for rules */
 	private static FilePane ruleFilePane;
 	
+	/* Initiating the two "singleton" instances 
+	 * (singleton because there can only be one petrinet file pane and only one rule file pane)
+	 * The only differences are the descriptions and the listeners (look at constructors)
+	 * */
 	static {
 		petrinetFilePane = new FilePane("Petrinetz", "Petrinetze",
 				new NewPetrinetListener(), new LoadPetrinetListener(),
@@ -119,30 +134,49 @@ class FilePane {
 				new SaveAsRuleListener());
 	}
 
+	/** Retruns the only instance of a petrinet file panel */
 	public static FilePane getPetrinetFilePane() {
 		return petrinetFilePane;
 	}
 	
+	/** Returns the only instance of a rule file panel */
 	public static FilePane getRuleFilePane(){
 		return ruleFilePane;
 	}
 	
+	/** Top level JPanel for layouting. This is added into the main frame */
 	private JPanel treeAndButtonContainerWithBorder;
 
+	/** Sub level JPanel for layouting buttons. This is added into top level JPanel */
 	private JPanel buttonContainer;
 
+	/** The Tree containing all loaded files*/
 	private JTree tree;
 
+	/** The button for creating a new petrinet/rule */
 	private JButton newButton;
 
+	/** The button for saving a petrinet/rule */
 	private JButton saveButton;
 
+	/** The button for loading a petrinet/rule */
 	private JButton loadButton;
 
+	/** The button for saving a petrinet/rule in a certain file*/
 	private JButton saveAsButton;
 	
+	/** No default instances */
 	private FilePane() {};
 
+	/**
+	 *  Constructor that sets all the instance variables 
+	 * @param type "Petrinetz" / "Regel"
+	 * @param typePlural "Petrinetze" / "Regeln"
+	 * @param newListener Listener for new button
+	 * @param loadListener Listener for load button
+	 * @param saveListener Listener for save button
+	 * @param saveAsListener Listener for save as button
+	 */
 	private FilePane(String type, 
 			String typePlural,
 			ActionListener newListener, 
@@ -164,6 +198,13 @@ class FilePane {
 				typePlural);
 	}
 
+	/**
+	 * Initiates the top level JPanel for layouting
+	 * @param tree
+	 * @param buttonContainer
+	 * @param typePlural Descriptor: "Petrinetze" / "Regeln"
+	 * @return
+	 */
 	private JPanel initiateTreeAndButtonContainerWithBorder(
 			JTree tree,
 			JPanel buttonContainer,
@@ -184,6 +225,11 @@ class FilePane {
 		return panel;
 	}
 
+	/**
+	 * Initiates the tree for loaded files with root node
+	 * @param typePlural
+	 * @return
+	 */
 	private JTree initiateTree(String typePlural) {
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Geladene "
 				+ typePlural);
@@ -199,6 +245,15 @@ class FilePane {
 		return tree;
 	}
 
+	/**
+	 * Initiates an internal JPanel thats used for layouting the buttons. 
+	 * Also adds the buttons to the JPanel
+	 * @param newButton
+	 * @param saveButton
+	 * @param loadButton
+	 * @param saveAsButton
+	 * @return
+	 */
 	private JPanel initiateButtonContainer(JButton newButton,
 			JButton saveButton, 
 			JButton loadButton, 
@@ -215,6 +270,12 @@ class FilePane {
 		return panel;
 	}
 
+	/** 
+	 * Initiates the save as button with size, icon, tooltip etc
+	 * @param type Descriptor: "Petrinetz" / "Regel"
+	 * @param saveAsListener Listener for button
+	 * @return
+	 */
 	private JButton initiateSaveAsButton(String type,
 			ActionListener saveAsListener) {
 		JButton button = new JButton(SAVE_AS_PETRINET_ICON);
@@ -231,6 +292,12 @@ class FilePane {
 		return button;
 	}
 
+	/** 
+	 * Initiates the load button with size, icon, tooltip etc
+	 * @param type Descriptor: "Petrinetz" / "Regel"
+	 * @param loadListener Listener for button
+	 * @return
+	 */
 	private JButton initiateLoadButton(String type, ActionListener loadListener) {
 		JButton button = new JButton(LOAD_PETRINET_ICON);
 		button.setBounds(LOAD_BUTTON_X, LOAD_BUTTON_Y,
@@ -246,6 +313,12 @@ class FilePane {
 		return button;
 	}
 
+	/** 
+	 * Initiates the save button with size, icon, tooltip etc
+	 * @param type Descriptor: "Petrinetz" / "Regel"
+	 * @param saveListener Listener for button
+	 * @return
+	 */
 	private JButton initiateSaveButton(String type, ActionListener saveListener) {
 		JButton button = new JButton(SAVE_PETRINET_ICON);
 		button.setBounds(SAVE_BUTTON_X, SAVE_BUTTON_Y,
@@ -262,6 +335,12 @@ class FilePane {
 		return button;
 	}
 
+	/** 
+	 * Initiates the new button with size, icon, tooltip etc
+	 * @param type Descriptor: "Petrinetz" / "Regel"
+	 * @param newListener Listener for button
+	 * @return
+	 */
 	private JButton initiateNewButton(String type, ActionListener newListener) {
 		JButton button = new JButton(NEW_PETRINET_ICON);
 		button.setBounds(NEW_BUTTON_X, NEW_BUTTON_Y,
@@ -277,6 +356,7 @@ class FilePane {
 		return button;
 	}
 	
+	/** Adds the internal JPanel into the given JPanel "frame" */
 	public void addTo(JPanel frame) {
 		frame.add(treeAndButtonContainerWithBorder);
 	}
