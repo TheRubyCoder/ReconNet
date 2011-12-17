@@ -130,6 +130,7 @@ public class MorphismData {
 	public static Petrinet getPetrinetIsomorphismPlacesTo(){
 		idsOfTransitionPostAndArcsOfThirdPlace = new HashSet<Integer>();
 		idsOfTransitionPreAndArcsOfThirdPlace = new HashSet<Integer>();
+		idsMatchedPlaces = new HashSet<Integer>();
 		
 		// The matching subnet P1 and T1...
 		Petrinet result = PetrinetComponent.getPetrinet().createPetrinet();
