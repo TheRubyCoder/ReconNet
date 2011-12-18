@@ -41,16 +41,16 @@ class PetrinetPane {
 		return instance;
 	}
 	
+	/**
+	 * Set Layout for Petrinetpane
+	 * @return singleton of this instance
+	 */
 	public static PetrinetPane initiatePetrinetPane(){
 		getInstance().getPetrinetPanel().setLayout(PETRINET_PANE_LAYOUT);
 		
 		getInstance().getPetrinetPanel().add(getInstance().getDrawingPanel());
 		
 		getInstance().getPetrinetPanel().setBorder(PETRINET_BORDER);
-		getInstance().getPetrinetPanel().setBounds(PETRINET_X, 
-				PETRINET_Y, 
-				PETRINET_WIDTH, 
-				PETRINET_HEIGHT);
 
 		getInstance().getDrawingPanel().setBackground(Color.WHITE);
 		getInstance().getDrawingPanel().addMouseListener(new PetrinetMouseClickListener());

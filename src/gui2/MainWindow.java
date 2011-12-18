@@ -78,12 +78,11 @@ class MainWindow {
 		mainFrame.getContentPane().add(left, BorderLayout.WEST);
 		
 		JPanel center = initializeCenterPanel();
-		mainFrame.getContentPane().add(center, BorderLayout.CENTER);
-		
-		mainFrame.pack();
-		mainFrame.setVisible(true);
+		mainFrame.getContentPane().add(center, BorderLayout.CENTER);		
 	}
 
+	/** Initialize the Mainpanel in the Center with 2 Rows 
+	 * for the Petrinetpane and Rulepane */
 	private JPanel initializeCenterPanel() {
 		GridLayout layout = new GridLayout(2,1);
 		centerPanel = new JPanel(layout);
@@ -91,14 +90,18 @@ class MainWindow {
 		return centerPanel;
 	}
 
+	/** Initialize the Headpanel with Borderlayout and the Dimension for the Panel*/
 	private JPanel initializeHeadPanel() {
-		headPanel = new JPanel(null);
+		BorderLayout layout = new BorderLayout();
+		headPanel = new JPanel(layout);
 		headPanel.setPreferredSize(HEADER_DIMENSION);
 		headPanel.setMinimumSize(HEADER_DIMENSION);
 		
 		return headPanel;
 	}
 
+	/** Initialize the Panel of the left side with 2 Rows for the FilePanes(Petrinet an Rule) 
+	 *  And set the Dimension of the Pane*/
 	private JPanel initializeLeftPanel() {
 		GridLayout layout = new GridLayout(2,1);
 		leftPanel = new JPanel(layout);
@@ -108,38 +111,42 @@ class MainWindow {
 		return leftPanel;
 	}
 	
-	
+	/** Add the Editorpane to the Headpane*/
 	private void addEditorPane(){
 		EditorPane editorPane = EditorPane.getInstance();
 		editorPane.addTo(headPanel);
 	}
 	
+	/** Add the Simulationpane to the Headpane*/
 	private void addSimulationPane(){
 		SimulationPane simulationPane = SimulationPane.getInstance();
 		simulationPane.addTo(headPanel);
 	}
 	
+	/** Add the Petrinetpane to the Centerpane*/
 	private void addPetrinetPane(){
 		PetrinetPane.initiatePetrinetPane().addTo(centerPanel);
 	}
 	
+	/** Add the Filepanes to the Leftpane*/
 	private void addFilePane(){
 		FilePane.getPetrinetFilePane().addTo(leftPanel);
 		FilePane.getRuleFilePane().addTo(leftPanel);
-//		PetrinetFilePane.getInstance().addTo(leftPanel);
 	}
 	
+	/** Add the Attributepane to the Headpane*/
 	private void addAttributePane(){
 		AttributePane.getInstance().addTo(headPanel);
 	}
 	
+	/** Add the Rulepane to the Centerpane*/
 	private void addRulePane() {
 		RulePane.getInstance().addTo(centerPanel);
 		
 	}
 	
+	/** Set Size of Mainframe and make it visible*/
 	private void show(){
-//		mainFrame.add(new JPanel());
 		mainFrame.pack();
 		mainFrame.setBounds(0, 0, TOTAL_WIDTH, TOTAL_HEIGHT);
 		mainFrame.setVisible(true);

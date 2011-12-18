@@ -13,10 +13,6 @@ import static gui2.Style.NEW_PETRINET_DISABLED_ICON;
 import static gui2.Style.NEW_PETRINET_ICON;
 import static gui2.Style.NEW_PETRINET_PRESSED_ICON;
 import static gui2.Style.PETRINET_FILE_PANE_BORDER;
-import static gui2.Style.PETRINET_FILE_PANE_HEIGHT;
-import static gui2.Style.PETRINET_FILE_PANE_WIDTH;
-import static gui2.Style.PETRINET_FILE_PANE_X;
-import static gui2.Style.PETRINET_FILE_PANE_Y;
 import static gui2.Style.SAVE_AS_BUTTON_X;
 import static gui2.Style.SAVE_AS_BUTTON_Y;
 import static gui2.Style.SAVE_AS_PETRINET_DISABLED_ICON;
@@ -214,10 +210,6 @@ class FilePane {
 		panel.setBorder(BorderFactory.createTitledBorder(
 				BorderFactory.createEtchedBorder(), 
 				"Speichern/Laden - " + typePlural));
-//		panel.setBounds(PETRINET_FILE_PANE_X, 
-//				PETRINET_FILE_PANE_Y,
-//				PETRINET_FILE_PANE_WIDTH, 
-//				PETRINET_FILE_PANE_HEIGHT);
 
 		panel.add(new JScrollPane(tree), BorderLayout.CENTER);
 		panel.add(buttonContainer, BorderLayout.SOUTH);

@@ -1,5 +1,6 @@
 package gui2;
 
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
 import javax.swing.JFrame;
@@ -16,12 +17,15 @@ import static gui2.Style.*;
 /** Singleton class that represents the attribute chart at the middle top */
 public class AttributePane {
 	
+	/** Singleton instancce*/
 	private static AttributePane instance;
 	
+	//static constructor that initiates the singleton instance and constants
 	static {
 		instance = new AttributePane();
 	}
 	
+	/** Returns the only instance of the AttributePane */
 	public static AttributePane getInstance(){
 		return instance;
 	}
@@ -29,24 +33,25 @@ public class AttributePane {
 	/** Table containing data for current node */
 	private JTable table;
 	
+	/** Panel for the Attributes*/
 	private JPanel attributePane;
 	
 	/** Id of the node that is currently shown */
 	private int currentNodeId;
 	
+	/** Private Constructor that configures the pane */
 	private AttributePane(){
 		table = initiateTable();
 		showNode(1);
 		attributePane = initiateAttributePane(table);
 	}
 
+	/** Initialize the Attributepane and set the Dimension and Layout
+	 *  Add the Table to the Pane*/
 	private JPanel initiateAttributePane(JTable table) {
 		JPanel pane = new JPanel();
 		pane.setBorder(ATTRIBUTE_PANE_BORDER);
-		pane.setBounds(ATTRIBUTE_PANE_X, 
-				ATTRIBUTE_PANE_Y, 
-				ATTRIBUTE_PANE_WIDTH, 
-				ATTRIBUTE_PANE_HEIGHT);
+		pane.setMinimumSize(ATTRIBUTE_PANE_DIMENSION);
 		pane.setLayout(new GridLayout(1,1));
 		
 		JScrollPane scrollPane = new JScrollPane(table);
@@ -56,12 +61,13 @@ public class AttributePane {
 		return pane;
 	}
 
+	/** Initiate the Table for Attributepane*/
 	private JTable initiateTable() {
-		
 		JTable table = new JTable();//content,columnNames);
 		return table;
 	}
 	
+	/** Fill the Table with Data of the selected Node*/
 	public void showNode(int nodeId){
 		currentNodeId = nodeId;
 		//TODO: find out type of node
@@ -73,8 +79,12 @@ public class AttributePane {
 		table.setModel(model);
 	}
 	
+	/**
+	 * Add this Panel to given frame
+	 * @param frame wich the pane add to
+	 */
 	public void addTo(JPanel frame){
-		frame.add(attributePane);
+		frame.add(attributePane, BorderLayout.CENTER);
 	}
 	
 	/** Abstract super class for refactoring the three Table Models for Place, Transition and Arc<br/>
@@ -108,6 +118,10 @@ public class AttributePane {
 			return getData()[rowIndex][columnIndex];
 		}
 		
+		/**
+		 * Set wich rows and columns are editable. the first row and the first column 
+		 * are not editable
+		 */
 		@Override
 		public boolean isCellEditable(int row, int col) {
 //			only bottom right is editable
@@ -120,9 +134,12 @@ public class AttributePane {
 		
 	}
 	
-	/**  */
+	/**  Class for the Table with Place Attributes */
 	private static class PlaceTableModel extends AbstractPetriTableModel{
 		
+		/**
+		 * The General Data for the Placetable
+		 */
 		private String[][] data = {
 				{"Id",""},
 				{"Name",""},
@@ -141,8 +158,12 @@ public class AttributePane {
 		}
 	}
 	
+	/**  Class for the Table with Transition Attributes */
 	private static class TransitionTableModel extends AbstractPetriTableModel{
 		
+		/**
+		 * The General Data for the Transitiontable
+		 */
 		private String[][] data = {
 				{"Id",""},
 				{"Name",""},
@@ -163,8 +184,12 @@ public class AttributePane {
 		}
 	}
 	
+	/**  Class for the Table with Arc Attributes */
 	private static class ArcTableModel extends AbstractPetriTableModel{
 		
+		/**
+		 * The General Data for the Arctable
+		 */
 		private String[][] data = {
 				{"Id",""},
 				{"Name",""},
@@ -181,6 +206,7 @@ public class AttributePane {
 		}
 	}
 	
+	/**  Class for Tablelistener to make Userchanges possible */
 	private static class TableListener implements TableModelListener {
 
 		@Override

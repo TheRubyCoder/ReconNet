@@ -20,11 +20,11 @@ class Style {
 	 * Main Window
 	 * *************************************/
 	
-	/** X main window */
-	public static final int TOTAL_X = 0;
+//	/** X main window */
+//	public static final int TOTAL_X = 0;
 	
-	/** Y main window */
-	public static final int TOTAL_Y = 0;
+//	/** Y main window */
+//	public static final int TOTAL_Y = 0;
 
 	/** Total width of main window */
 	public static final int TOTAL_WIDTH = 1000;
@@ -37,7 +37,6 @@ class Style {
 	
 	/** Dimension of left Panel */
 	public static final Dimension LEFT_PANEL_DIMENSION = new Dimension(200,575);
-	
 	
 
 	
@@ -55,7 +54,7 @@ class Style {
 	
 	private static final int SPACING_BUTTONS = 5;
 	
-	/** Border of os window */
+	/** Border of of window */
 	private static final int WINDOW_BORDER = 15;
 	
 	public static final int BUTTON_HEIGHT = 30;
@@ -74,17 +73,20 @@ class Style {
 	 * Editor Pane
 	 * *************************************/
 	
-	/** X of editor pane */
-	public static final int EDITOR_PANE_X = 0;
-	
-	/** Y of editor pane */
-	public static final int EDITOR_PANE_Y = 0;
-	
-	/** Height of editor pane */
-	public static final int EDITOR_PANE_HEIGHT = HEIGHT_TOP_ELEMENTS;
-	
-	/** Width of the editor pane */
+//	/** X of editor pane */
+//	public static final int EDITOR_PANE_X = 0;
+//	
+//	/** Y of editor pane */
+//	public static final int EDITOR_PANE_Y = 0;
+//	
+//	/** Height of editor pane */
+//	public static final int EDITOR_PANE_HEIGHT = HEIGHT_TOP_ELEMENTS;
+//	
+//	/** Width of the editor pane */
 	public static final int EDITOR_PANE_WIDTH = INSET_LEFT + 120;
+	
+	/** Dimension of the Editor Pane*/
+	public static final Dimension EDITOR_PANE_DIMENSION = new Dimension(INSET_LEFT + 120, HEIGHT_TOP_ELEMENTS);
 //	BUTTON_WIDTH * 2 + 
 //	SPACING_BUTTONS * 3;
 	
@@ -125,15 +127,17 @@ class Style {
 	 * Attribute pane
 	 * *************************************/
 	
-	public static final int ATTRIBUTE_PANE_X = EDITOR_PANE_X + 
-		EDITOR_PANE_WIDTH + 
-		SPACING_PANES;
+//	public static final int ATTRIBUTE_PANE_X = 
+//		EDITOR_PANE_WIDTH + 
+//		SPACING_PANES;
+//	
+//	public static final int ATTRIBUTE_PANE_Y = 0;
+//	
+//	public static final int ATTRIBUTE_PANE_WIDTH = 225;
+//	
+//	public static final int ATTRIBUTE_PANE_HEIGHT = HEIGHT_TOP_ELEMENTS;
 	
-	public static final int ATTRIBUTE_PANE_Y = 0;
-	
-	public static final int ATTRIBUTE_PANE_WIDTH = 225;
-	
-	public static final int ATTRIBUTE_PANE_HEIGHT = HEIGHT_TOP_ELEMENTS;
+	public static final Dimension ATTRIBUTE_PANE_DIMENSION = new Dimension(225,HEIGHT_TOP_ELEMENTS);
 	
 	public static final Border ATTRIBUTE_PANE_BORDER = BorderFactory.createTitledBorder(
 			BorderFactory.createEtchedBorder(), "Knoten-Attribute");
@@ -142,19 +146,23 @@ class Style {
 	/* ************************************* 
 	 * Simulation pane
 	 * *************************************/
+//	
+//	public static final int SIMULATION_PANEL_X = ATTRIBUTE_PANE_X +
+//		ATTRIBUTE_PANE_WIDTH +
+//		SPACING_PANES;
+//	
+//	public static final int SIMULATION_PANEL_Y = 0;
+//	
+//	/** Height of simulation panel */
+//	public static final int SIMULATION_PANE_HEIGHT = HEIGHT_TOP_ELEMENTS;
+//	
+//	public static final int SIMULATION_PANE_WIDTH = INSET_LEFT +
+//		BUTTON_WIDTH * 3 +
+//		SPACING_BUTTONS * 3;
 	
-	public static final int SIMULATION_PANEL_X = ATTRIBUTE_PANE_X +
-		ATTRIBUTE_PANE_WIDTH +
-		SPACING_PANES;
-	
-	public static final int SIMULATION_PANEL_Y = 0;
-	
-	/** Height of simulation panel */
-	public static final int SIMULATION_PANE_HEIGHT = HEIGHT_TOP_ELEMENTS;
-	
-	public static final int SIMULATION_PANE_WIDTH = INSET_LEFT +
-		BUTTON_WIDTH * 3 +
-		SPACING_BUTTONS * 3;
+	public static final Dimension SIMULATION_PANE_DIMENSION = new Dimension(INSET_LEFT +
+																			BUTTON_WIDTH * 3 +
+																			SPACING_BUTTONS * 3, HEIGHT_TOP_ELEMENTS);
 	
 	public static final Point SIMULATION_PANE_BUTTON_ONESTEP_LOCATION =
 		new Point(0 + INSET_LEFT, 0 + INSET_TOP);
@@ -178,8 +186,8 @@ class Style {
 		new Point(INSET_LEFT + BUTTON_WIDTH + SPACING_BUTTONS, 
 				0 + INSET_TOP + SPACING_BUTTONS + BUTTON_HEIGHT);
 	
-	public static final Dimension SIMULATION_PANE_BUTTON_STARTSIMULATION_SIZE = 
-		new Dimension(BUTTON_WIDTH,BUTTON_HEIGHT);
+//	public static final Dimension SIMULATION_PANE_BUTTON_STARTSIMULATION_SIZE = 
+//		new Dimension(BUTTON_WIDTH,BUTTON_HEIGHT);
 	
 	public static final Point SIMULATION_PANE_SPINNER_LOCATION =
 		new Point(INSET_LEFT + BUTTON_WIDTH + SPACING_BUTTONS, 0 + INSET_TOP);
@@ -214,16 +222,16 @@ class Style {
 	 * Petrinet pane
 	 * *************************************/
 	
-	public static final int PETRINET_X = WIDTH_OF_LEFT_ELEMENTS;
-	
-	public static final int PETRINET_Y = HEIGHT_TOP_ELEMENTS;
-	
-	public static final int PETRINET_WIDTH = TOTAL_WIDTH -
-			WIDTH_OF_LEFT_ELEMENTS -
-			WINDOW_BORDER;
-	
-	public static final int PETRINET_HEIGHT = 500;
-	
+//	public static final int PETRINET_X = WIDTH_OF_LEFT_ELEMENTS;
+//	
+//	public static final int PETRINET_Y = HEIGHT_TOP_ELEMENTS;
+//	
+//	public static final int PETRINET_WIDTH = TOTAL_WIDTH -
+//			WIDTH_OF_LEFT_ELEMENTS -
+//			WINDOW_BORDER;
+//	
+//	public static final int PETRINET_HEIGHT = 500;
+//	
 	public static final Border PETRINET_BORDER = 
 		BorderFactory.createTitledBorder(
 				BorderFactory.createEtchedBorder(),
@@ -235,14 +243,14 @@ class Style {
 	 * petrinet file pane
 	 * *************************************/
 	
-	public static final int PETRINET_FILE_PANE_X = 0;
-	
-	public static final int PETRINET_FILE_PANE_Y = HEIGHT_TOP_ELEMENTS;
-	
-	public static final int PETRINET_FILE_PANE_WIDTH = WIDTH_OF_LEFT_ELEMENTS;
-	
-	public static final int PETRINET_FILE_PANE_HEIGHT = 400;
-	
+//	public static final int PETRINET_FILE_PANE_X = 0;
+//	
+//	public static final int PETRINET_FILE_PANE_Y = HEIGHT_TOP_ELEMENTS;
+//	
+//	public static final int PETRINET_FILE_PANE_WIDTH = WIDTH_OF_LEFT_ELEMENTS;
+//	
+//	public static final int PETRINET_FILE_PANE_HEIGHT = 400;
+//	
 	public static final Border PETRINET_FILE_PANE_BORDER = 
 		BorderFactory.createTitledBorder(
 				BorderFactory.createEtchedBorder(), 
@@ -287,20 +295,20 @@ class Style {
 	 * rule file pane
 	 * *************************************/
 	
-	public static final int RULE_FILE_PANE_X = 0;
+//	public static final int RULE_FILE_PANE_X = 0;
 	
-	public static final int RULE_FILE_PANE_Y = PETRINET_FILE_PANE_Y +
-		PETRINET_FILE_PANE_HEIGHT +
-		SPACING_PANES;
+//	public static final int RULE_FILE_PANE_Y = PETRINET_FILE_PANE_Y +
+//		PETRINET_FILE_PANE_HEIGHT +
+//		SPACING_PANES;
 	
-	public static final int RULE_FILE_PANE_WIDTH = WIDTH_OF_LEFT_ELEMENTS;
+//	public static final int RULE_FILE_PANE_WIDTH = WIDTH_OF_LEFT_ELEMENTS;
 	
-	public static final int RULE_FILE_PANE_HEIGHT = 300;
+//	public static final int RULE_FILE_PANE_HEIGHT = 300;
 	
-	public static final Border RULE_FILE_PANE_BORDER = 
-		BorderFactory.createTitledBorder(
-				BorderFactory.createEtchedBorder(), 
-				"Speichern/Laden");
+//	public static final Border RULE_FILE_PANE_BORDER = 
+//		BorderFactory.createTitledBorder(
+//				BorderFactory.createEtchedBorder(), 
+//				"Speichern/Laden");
 	
 	/* ************************************* 
 	 * rule pane

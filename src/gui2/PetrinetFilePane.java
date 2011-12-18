@@ -136,8 +136,6 @@ public class PetrinetFilePane {
 		JPanel panel = new JPanel();
 		panel.setLayout(FILE_PANE_LAYOUT);
 		panel.setBorder(PETRINET_FILE_PANE_BORDER);
-		panel.setBounds(PETRINET_FILE_PANE_X, PETRINET_FILE_PANE_Y,
-				PETRINET_FILE_PANE_WIDTH, PETRINET_FILE_PANE_HEIGHT);
 
 		panel.add(new JScrollPane(petrinetTree),BorderLayout.CENTER);
 		panel.add(buttonContainer,BorderLayout.SOUTH);

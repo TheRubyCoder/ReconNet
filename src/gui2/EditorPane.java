@@ -1,5 +1,6 @@
 package gui2;
 
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -45,12 +46,11 @@ class EditorPane {
 	/** Private default constructor */
 	private EditorPane() {
 		editorPane = new JPanel();
-		getEditorPane().setBounds(EDITOR_PANE_X, 
-				EDITOR_PANE_Y, 
-				EDITOR_PANE_WIDTH, 
-				EDITOR_PANE_HEIGHT);
 		getEditorPane().setBorder(EDITOR_PANE_BORDER);
 		getEditorPane().setLayout(EDITOR_PANE_LAYOUT);
+		
+		getEditorPane().setPreferredSize(EDITOR_PANE_DIMENSION);
+		getEditorPane().setMinimumSize(EDITOR_PANE_DIMENSION);
 		
 		initiateRadioButton();
 	}
@@ -74,7 +74,7 @@ class EditorPane {
 	 * @param frame
 	 */
 	public void addTo(JPanel frame){
-		frame.add(getEditorPane());
+		frame.add(getEditorPane(),BorderLayout.LINE_START);
 	}
 	
 	/** Initiates a ButtonGroup with the 4 radio buttons in it */

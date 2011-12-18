@@ -14,12 +14,16 @@ public class RulePane {
 	/** singleton instance of this pane */
 	private static RulePane instance;
 	
+	/** The mail rule panel*/
 	private JPanel RulePanel;
 
+	/** the left panel in main rule panel*/
 	private JScrollPane LPanel;
 
+	/** the middle (k) panel in main rule panel*/
 	private JScrollPane KPanel;
 
+	/** the right panel in main rule panel*/
 	private JScrollPane RPanel;
 	
 	
@@ -28,15 +32,12 @@ public class RulePane {
 		return instance;
 	}
 	
-//	public static RulePane initiatePetrinetPane(){
-//		return getInstance();
-//	}
-//	
-	/* Static constructor that initiates the singleton */
+	/** Returns the only instance of the the Rulepanel */
 	static {
 		instance = new RulePane();
 	}
 	
+	/** Private Constructor that configures the rulepanel */
 	private JPanel getRulePanel(){
 		return RulePanel;
 	}
@@ -55,6 +56,9 @@ public class RulePane {
 		layoutRulePane();
 	}
 	
+	/**
+	 * Layout the rulepanel and the 3 panes within 
+	 */
 	private void layoutRulePane() {
 		RulePanel.setBorder(RULE_PANE_BORDER);
 		
@@ -64,6 +68,7 @@ public class RulePane {
 		
 	}
 
+	
 	public void addTo(JPanel frame) {
 		frame.add(getRulePanel());
 	}

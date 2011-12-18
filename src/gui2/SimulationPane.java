@@ -1,6 +1,7 @@
 package gui2;
 
 
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.Point;
@@ -54,11 +55,9 @@ class SimulationPane {
 		simulationPane = new JPanel();
 		simulationPane.setLayout(null); // custom layout with setBounds(...)
 		
-		simulationPane.setBounds(
-				SIMULATION_PANEL_X, 
-				SIMULATION_PANEL_Y, 
-				SIMULATION_PANE_WIDTH, 
-				SIMULATION_PANE_HEIGHT);
+		simulationPane.setPreferredSize(SIMULATION_PANE_DIMENSION);
+		simulationPane.setMinimumSize(SIMULATION_PANE_DIMENSION);
+		
 		simulationPane.setBorder(SIMULATION_PANE_BORDER);
 		
 		oneStepButton = initiateOneStepButton();
@@ -75,6 +74,10 @@ class SimulationPane {
 		simulationModePicker = initiateModePicker();
 	}
 	
+	/**
+	 * Initaite and layouting the Combobox and set the modi
+	 * @return Combobox with the holding modi
+	 */
 	private JComboBox initiateModePicker() {
 		String[] modi = {"Nur Tokenspiel", "Nur Regeln", "Tokenspiel und Regeln"};
 		JComboBox comboBox = new JComboBox(modi);
@@ -130,6 +133,10 @@ class SimulationPane {
 		return result;
 	}
 
+	/** 
+	 * Initiate and layouting the Transformbutton
+	 * @return the Transformbutton
+	 */
 	private JButton initateTransformButton() {
 		JButton button = new JButton("Transformieren");
 		button.setLocation(SIMULATION_PANE_BUTTON_TRANSFORM_LOCATION);
@@ -137,7 +144,11 @@ class SimulationPane {
 		simulationPane.add(button);
 		return button;
 	}
-
+	
+	/** 
+	 * Initiate and layouting the OneStepbutton
+	 * @return the OneStepbutton
+	 */
 	private JButton initiateOneStepButton() {
 		JButton button = new JButton("Einmal schalten");
 		simulationPane.add(button);
@@ -153,7 +164,7 @@ class SimulationPane {
 
 	/**
 	 * Initiates the SimulationPane with a certain width and default values for Border, Backgroundcolor etc
-	 * @return
+	 * @return instace of Simulationpane
 	 */
 	public static SimulationPane getInstance(){
 		return instance;
@@ -164,6 +175,7 @@ class SimulationPane {
 	 * @param frame
 	 */
 	public void addTo(JPanel frame){
-		frame.add(getSimulationPane());
+		JPanel simulationpane = getSimulationPane();
+		frame.add(simulationpane, BorderLayout.LINE_END);
 	}
 }
