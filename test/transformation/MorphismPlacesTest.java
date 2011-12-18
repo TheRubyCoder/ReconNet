@@ -79,10 +79,6 @@ public class MorphismPlacesTest {
 
 	@Test
 	public void testPlacesMorphismCorrectMatches() {
-		/*
-		 * see if we got the right places id=1 is in "from" ids=[2,4,7,8] should
-		 * be matched in "to"
-		 */
 		assertEquals(MorphismData.getIdFromPlaces(), fromPlace.getId());
 
 		Set<Integer> expectedMatches = MorphismData.getIdsMatchedPlaces();
