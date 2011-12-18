@@ -47,15 +47,15 @@ class Style {
 	/** Height of Panels with buttons at top of gui */
 	private static final int HEIGHT_TOP_ELEMENTS = 125;	
 	/** Width of Panels at left of gui */
-	private static final int WIDTH_OF_LEFT_ELEMENTS = 200;
+//	private static final int WIDTH_OF_LEFT_ELEMENTS = 200;
 
 	/** Space between panes */
-	private static final int SPACING_PANES = 2;
+//	private static final int SPACING_PANES = 2;
 	
 	private static final int SPACING_BUTTONS = 5;
 	
 	/** Border of of window */
-	private static final int WINDOW_BORDER = 15;
+//	private static final int WINDOW_BORDER = 15;
 	
 	public static final int BUTTON_HEIGHT = 30;
 	

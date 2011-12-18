@@ -67,7 +67,7 @@ public class AttributePane {
 		return table;
 	}
 	
-	/** Fill the Table with Data of the selected Node*/
+	/** Fill the Table with Data of the selected Node */
 	public void showNode(int nodeId){
 		currentNodeId = nodeId;
 		//TODO: find out type of node
@@ -146,12 +146,14 @@ public class AttributePane {
 				{"Markierung",""}
 		};
 		
+		/** Initiates the table with actual data for id, name, and mark */
 		public PlaceTableModel(String id, String name, String mark) {
 			data[0][1] = id;
 			data[1][1] = name;
 			data[2][1] = mark;
 		}
 		
+		/** Returns all data (whole table except the head) */
 		@Override
 		protected String[][] getData() {
 			return data;
@@ -171,6 +173,7 @@ public class AttributePane {
 				{"Renew",""}
 		};
 		
+		/** Initiates the table with actual data for id, name, laben and renew */
 		public TransitionTableModel(String id, String name, String label, String renew) {
 			data[0][1] = id;
 			data[1][1] = name;
@@ -178,6 +181,7 @@ public class AttributePane {
 			data[3][1] = renew;
 		}
 		
+		/** Returns all data (whole table except the head) */
 		@Override
 		protected String[][] getData() {
 			return data;
@@ -195,11 +199,13 @@ public class AttributePane {
 				{"Name",""},
 		};
 		
+		/** Initiates the table with actual data for id an name */
 		public ArcTableModel(String id, String name) {
 			data[0][1] = id;
 			data[1][1] = name;
 		}
 		
+		/** Returns all data (whole table except the head) */
 		@Override
 		protected String[][] getData() {
 			return data;

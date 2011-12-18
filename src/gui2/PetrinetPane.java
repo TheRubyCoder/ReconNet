@@ -1,15 +1,10 @@
 package gui2;
 
 import java.awt.Color;
-import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.geom.Point2D;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import petrinet.Arc;
@@ -111,7 +106,7 @@ class PetrinetPane {
 		return drawingPanel;
 	}
 	
-	
+	/** For quick testing if displaying works */
 	private JPanel dirtyTest(){
 		
 		IPetrinetManipulation engine = PetrinetManipulation.getInstance();
@@ -130,6 +125,7 @@ class PetrinetPane {
 		
 	}
 	
+	/** Adds the petrinet pane to the given JPanel (frame) */
 	public void addTo(JPanel frame){
 		frame.add(getPetrinetPanel());
 	}

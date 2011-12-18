@@ -12,7 +12,7 @@ import javax.swing.tree.MutableTreeNode;
 
 import static gui2.Style.*;
 
-/** Singleton class that represents the file tree at the left side */
+/** OBSOLETE */ 
 public class PetrinetFilePane {
 
 	private static PetrinetFilePane instance;

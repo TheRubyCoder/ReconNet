@@ -9,6 +9,7 @@ import java.awt.GridLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+/** The panel for displaying rules */
 public class RulePane {
 	
 	/** singleton instance of this pane */
@@ -68,7 +69,7 @@ public class RulePane {
 		
 	}
 
-	
+	/** Adds the rule panel to the given JPanel (frame) */
 	public void addTo(JPanel frame) {
 		frame.add(getRulePanel());
 	}
