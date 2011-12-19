@@ -51,6 +51,7 @@ class FilePane {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("create new petrinet pressed");
+			UnderConstructionPopUp.pop();
 		}
 	}
 	
