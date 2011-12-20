@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
@@ -76,6 +77,7 @@ class PetrinetPane {
 		/** Y-coordinate of begin of drag */
 		private int pressedY = 0;
 		
+		/** Zoom petrinet on mouse wheel */
 		@Override public void mouseWheelMoved(MouseWheelEvent e){
 			Point point = new Point(e.getX(),e.getY());
 			System.out.println(point);
@@ -99,9 +101,10 @@ class PetrinetPane {
 			if( mode == EditorMode.PICK){
 				if(edge != null){
 					AttributePane.getInstance().displayEdge(edge);
-				}
-				if(vertex != null){
+					edge = null;
+				}else if(vertex != null){
 					AttributePane.getInstance().displayNode(vertex);
+					vertex = null;
 				}
 			}
 		}
@@ -118,9 +121,26 @@ class PetrinetPane {
 			if(EditorPane.getInstance().getCurrentMode() == EditorMode.PICK && pressedBefore){
 				pressedBefore = false;
 				if(e.getX() != pressedX || e.getY() != pressedY){
-					System.out.println("TODO: Translate petrinet by [" + 
-							(e.getX() - pressedX) + "," + 
-							(e.getY() - pressedY) + "]");
+					Point oldPoint = new Point(pressedX,pressedY);
+					Point newPoint = new Point(e.getX(),e.getY());
+					petrinetPane.scaler.scale(petrinetPane.visualizationViewer, 
+							0.5f, 
+							newPoint);
+					petrinetPane.scaler.scale(petrinetPane.visualizationViewer, 
+							2f, 
+							oldPoint);
+					
+//					Rectangle newRect = petrinetPane.scrollPanel.getVisibleRect();
+//					newRect.add(
+//							new Point(
+//									e.getX() - pressedX,
+//									e.getY() - pressedY)
+//							);
+//					petrinetPane.scrollPanel.scrollRectToVisible(newRect);
+					
+//					System.out.println("TODO: Translate petrinet by [" + 
+//							(e.getX() - pressedX) + "," + 
+//							(e.getY() - pressedY) + "]");
 				}
 			}
 		}
