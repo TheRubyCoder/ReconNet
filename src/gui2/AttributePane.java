@@ -12,10 +12,17 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import engine.attribute.ArcAttribute;
+import engine.attribute.PlaceAttribute;
+import engine.attribute.TransitionAttribute;
+import engine.handler.NodeType;
 import exceptions.EngineException;
 
 import petrinet.Arc;
 import petrinet.INode;
+import petrinet.IRenew;
+import petrinet.RenewCount;
+import petrinet.RenewId;
+import petrinet.RenewMap;
 
 import static gui2.Style.*;
 
@@ -233,12 +240,37 @@ public class AttributePane {
 	}
 
 	void displayNode(INode node) {
-		
+		try {
+			NodeType type = (NodeType) MainWindow.getPetrinetManipulation().getNodeType(node);
+			String id = String.valueOf(node.getId());
+			if(type == NodeType.Place){
+				PlaceAttribute placeAttribute = MainWindow.getPetrinetManipulation().getPlaceAttribute(1, node);
+				String name = placeAttribute.getPname();
+				String mark = String.valueOf(placeAttribute.getMarking());
+				table.setModel(new PlaceTableModel(id, name, mark));
+			}else{
+				TransitionAttribute transitionAttribute = MainWindow.getPetrinetManipulation().getTransitionAttribute(1, node);
+				String name = transitionAttribute.getTname();
+				String tlb = transitionAttribute.getTLB();
+				IRenew renew = transitionAttribute.getRNW();
+				String renewString = "unbekannt";
+				if(renew instanceof RenewCount){
+					renewString = "count";
+				}else if(renew instanceof RenewId){
+					renewString = "id";
+				}else if(renew instanceof RenewMap){
+					renewString = "map: " + renew;
+				}
+				table.setModel(new TransitionTableModel(id, name, tlb, renewString));
+			}
+		} catch (EngineException e) {
+			e.printStackTrace();
+		}
 	}
 
 	void displayEdge(Arc edge) {
 		try {
-			String weight = String.valueOf(MainWindow.getPetrinetManipulation().getArcAttribute(edge.getId(), edge).getWeight());
+			String weight = String.valueOf(MainWindow.getPetrinetManipulation().getArcAttribute(1, edge).getWeight());
 			String id = String.valueOf(edge.getId());
 			
 			table.setModel(new ArcTableModel(id,weight));

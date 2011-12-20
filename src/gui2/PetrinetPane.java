@@ -69,25 +69,19 @@ class PetrinetPane {
 		/** Y-coordinate of begin of drag */
 		private int pressedY = 0;
 		@Override public void mouseClicked(MouseEvent e) {
-			super.mousePressed(e);
+			super.mousePressed(e); // mousePressedEvent in class PickingGraphMousePlugin selects nodes
 			EditorMode mode = EditorPane.getInstance().getCurrentMode();
 			int x = e.getX();
 			int y = e.getY();
 
 			if( mode == EditorMode.PICK){
-				System.out.println(""+edge+vertex);
 				if(edge != null){
 					AttributePane.getInstance().displayEdge(edge);
-					System.out.println("Kante " + edge + " wurde angeklickt");
 				}
 				if(vertex != null){
 					AttributePane.getInstance().displayNode(vertex);
-					System.out.println("Knoten " + vertex + " wurde angeklickt");
 				}
 			}
-			System.out.println("mouse clicked on petrinet at [" + e.getX() + 
-					"," + e.getY() +
-					"] in mode: " + EditorPane.getInstance().getCurrentMode());
 		}
 //		@Override public void mouseEntered(MouseEvent e) {}
 //		@Override public void mouseExited(MouseEvent e) {}
