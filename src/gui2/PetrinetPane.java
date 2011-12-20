@@ -1,35 +1,23 @@
 package gui2;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.geom.Point2D;
 
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-import com.sun.org.apache.xml.internal.security.signature.Manifest;
 
 import petrinet.Arc;
 import petrinet.INode;
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
-import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
-import edu.uci.ics.jung.visualization.VisualizationServer;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
 import edu.uci.ics.jung.visualization.control.PickingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.ScalingControl;
-import engine.EngineComponent;
-import engine.EngineMockup;
-import engine.ihandler.IPetrinetManipulation;
 import exceptions.EngineException;
 import gui2.EditorPane.EditorMode;
 
