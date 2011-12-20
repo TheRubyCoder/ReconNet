@@ -8,6 +8,10 @@ import java.awt.GridLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import engine.EngineMockup;
+import engine.ihandler.IPetrinetManipulation;
+import exceptions.EngineException;
+
 
 import static gui2.Style.*;
 
@@ -28,6 +32,9 @@ class MainWindow {
 	/** The Panel of the center*/
 	JPanel centerPanel;
 	
+	/** PetrinetManipulation aspect of engine */
+	private static EngineMockup manipulation;
+	
 	/** singleton instance */
 	private static MainWindow instance;
 	
@@ -43,8 +50,19 @@ class MainWindow {
 		return instance;
 	}
 	
+	public static IPetrinetManipulation getPetrinetManipulation(){
+		return manipulation;
+	}
+	
 	/** Private Constructor that configures the main window */
 	private MainWindow() {
+		manipulation = new EngineMockup();
+		try {
+			manipulation.build();
+		} catch (EngineException e) {
+			e.printStackTrace();
+		}
+		
 		initializeMainFrame();
 		addEditorPane();
 		addAttributePane();
@@ -125,7 +143,7 @@ class MainWindow {
 	
 	/** Add the Petrinetpane to the Centerpane*/
 	private void addPetrinetPane(){
-		PetrinetPane.initiatePetrinetPane().addTo(centerPanel);
+		PetrinetPane.getInstance().addTo(centerPanel);
 	}
 	
 	/** Add the Filepanes to the Leftpane*/

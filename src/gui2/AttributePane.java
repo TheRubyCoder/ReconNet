@@ -3,7 +3,6 @@ package gui2;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -11,6 +10,12 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
+
+import engine.attribute.ArcAttribute;
+import exceptions.EngineException;
+
+import petrinet.Arc;
+import petrinet.INode;
 
 import static gui2.Style.*;
 
@@ -196,13 +201,13 @@ public class AttributePane {
 		 */
 		private String[][] data = {
 				{"Id",""},
-				{"Name",""},
+				{"Gewicht",""},
 		};
 		
 		/** Initiates the table with actual data for id an name */
-		public ArcTableModel(String id, String name) {
+		public ArcTableModel(String id, String weight) {
 			data[0][1] = id;
-			data[1][1] = name;
+			data[1][1] = weight;
 		}
 		
 		/** Returns all data (whole table except the head) */
@@ -223,6 +228,22 @@ public class AttributePane {
 	        String data = (String)model.getValueAt(row, column);
 	        String attribute = (String)model.getValueAt(row, column-1);
 	        System.out.println("Der Wert " + attribute + " wurde auf " + data + " gesetzt.");
+		}
+		
+	}
+
+	void displayNode(INode node) {
+		
+	}
+
+	void displayEdge(Arc edge) {
+		try {
+			String weight = String.valueOf(MainWindow.getPetrinetManipulation().getArcAttribute(edge.getId(), edge).getWeight());
+			String id = String.valueOf(edge.getId());
+			
+			table.setModel(new ArcTableModel(id,weight));
+		} catch (EngineException e) {
+			e.printStackTrace();
 		}
 		
 	}

@@ -12,8 +12,8 @@ public class UnderConstructionPopUp {
 
 	private JFrame frame;
 
-	private UnderConstructionPopUp() {
-		frame = new JFrame("In Arbeit");
+	private UnderConstructionPopUp(String title) {
+		frame = new JFrame(title);
 //		ImageIcon icon = new ImageIcon("src/gui2/icons/newPetrinet.png");
 		ImagePanel underConstructionPanel = new ImagePanel("src/gui2/icons/underConstructionWithText.png");
 		frame.add(underConstructionPanel);
@@ -46,11 +46,7 @@ public class UnderConstructionPopUp {
 
 	}
 	
-	public static void main(String[] args) {
-		new UnderConstructionPopUp();
-	}
-	
-	public static void pop(){
-		new UnderConstructionPopUp();
+	public static void pop(String title){
+		new UnderConstructionPopUp(title);
 	}
 }
