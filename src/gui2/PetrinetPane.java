@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
 
 import javax.swing.JComponent;
@@ -21,7 +23,9 @@ import edu.uci.ics.jung.visualization.BasicVisualizationServer;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.VisualizationServer;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
+import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
 import edu.uci.ics.jung.visualization.control.PickingGraphMousePlugin;
+import edu.uci.ics.jung.visualization.control.ScalingControl;
 import engine.EngineComponent;
 import engine.EngineMockup;
 import engine.ihandler.IPetrinetManipulation;
@@ -39,6 +43,9 @@ class PetrinetPane {
 	/** Internal Panel for scrolling and zooming. This is added to petrinetPanel */
 	private GraphZoomScrollPane scrollPanel;
 	
+	/** For zooming */
+	private ScalingControl scaler;
+	
 	/** Internal JPanel for actually viewing and controlling the petrinet */
 	private VisualizationViewer<INode, Arc> visualizationViewer;
 	
@@ -54,11 +61,11 @@ class PetrinetPane {
 	}
 	
 	/** mouse click listener for the drawing panel */
-	private static class PetrinetMouseClickListener extends PickingGraphMousePlugin<INode, Arc>{
+	private static class PetrinetMouseListener extends PickingGraphMousePlugin<INode, Arc> implements MouseWheelListener{
 		
 		private PetrinetPane petrinetPane;
 		
-		PetrinetMouseClickListener(PetrinetPane petrinetPane){
+		PetrinetMouseListener(PetrinetPane petrinetPane){
 			this.petrinetPane = petrinetPane;
 		}
 		
@@ -68,6 +75,21 @@ class PetrinetPane {
 		private int pressedX = 0;
 		/** Y-coordinate of begin of drag */
 		private int pressedY = 0;
+		
+		@Override public void mouseWheelMoved(MouseWheelEvent e){
+			Point point = new Point(e.getX(),e.getY());
+			System.out.println(point);
+			if(e.getWheelRotation() < 0) {
+				petrinetPane.scaler.scale(petrinetPane.visualizationViewer, 
+						1.1f,
+						point);
+			}else{
+				petrinetPane.scaler.scale(petrinetPane.visualizationViewer, 
+						0.9f, 
+						point);
+			}
+		}
+		
 		@Override public void mouseClicked(MouseEvent e) {
 			super.mousePressed(e); // mousePressedEvent in class PickingGraphMousePlugin selects nodes
 			EditorMode mode = EditorPane.getInstance().getCurrentMode();
@@ -95,9 +117,11 @@ class PetrinetPane {
 		@Override public void mouseReleased(MouseEvent e) {
 			if(EditorPane.getInstance().getCurrentMode() == EditorMode.PICK && pressedBefore){
 				pressedBefore = false;
-				System.out.println("TODO: Translate petrinet by [" + 
-						(e.getX() - pressedX) + "," + 
-						(e.getY() - pressedY) + "]");
+				if(e.getX() != pressedX || e.getY() != pressedY){
+					System.out.println("TODO: Translate petrinet by [" + 
+							(e.getX() - pressedX) + "," + 
+							(e.getY() - pressedY) + "]");
+				}
 			}
 		}
 	}
@@ -114,12 +138,14 @@ class PetrinetPane {
 		petrinetPanel.setBorder(PETRINET_BORDER);
 		
 		visualizationViewer = dirtyTest(); //This is for ad hoc testing the engine
+		scaler = new CrossoverScalingControl();
 		visualizationViewer.setBackground(Color.WHITE);
 		scrollPanel = new GraphZoomScrollPane(visualizationViewer);
 		
 		petrinetPanel.add(scrollPanel);
 		
-		visualizationViewer.addMouseListener(new PetrinetMouseClickListener(this));
+		visualizationViewer.addMouseListener(new PetrinetMouseListener(this));
+		visualizationViewer.addMouseWheelListener(new PetrinetMouseListener(this));
 	}
 	
 	private JPanel getPetrinetPanel(){

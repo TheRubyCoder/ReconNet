@@ -20,8 +20,7 @@ public class Main {
 				super.dispatchEvent(newEvent);
 			} catch (Throwable t) {
 				t.printStackTrace();
-				PopUp.popError(t.toString() + "\n\t"
-						+ t.getStackTrace()[0].toString());
+				PopUp.popError(t);
 			}
 		}
 	}

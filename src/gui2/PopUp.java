@@ -24,6 +24,13 @@ public class PopUp {
 		        JOptionPane.ERROR_MESSAGE);
 	}
 	
+	public static void popError(Throwable t){
+		JOptionPane.showMessageDialog(new JFrame(), 
+				t.toString()+"\n\t"+t.getStackTrace()[0].toString(), 
+				"Ein Fehler ist aufgetreten",
+		        JOptionPane.ERROR_MESSAGE);
+	}
+	
 	private static class UnderConstructionPopUp {
 
 		private JFrame frame;

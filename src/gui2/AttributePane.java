@@ -54,7 +54,6 @@ public class AttributePane {
 	/** Private Constructor that configures the pane */
 	private AttributePane(){
 		table = initiateTable();
-		showNode(1);
 		attributePane = initiateAttributePane(table);
 	}
 
@@ -79,16 +78,49 @@ public class AttributePane {
 		return table;
 	}
 	
-	/** Fill the Table with Data of the selected Node */
-	public void showNode(int nodeId){
-		currentNodeId = nodeId;
-		//TODO: find out type of node
-		//TODO: get attributes of node
-//		TableModel model = new PlaceTableModel("mock1","mock2","mock3");
-		TableModel model = new TransitionTableModel("mock1", "mock2", "mock3", "mock4");
-//		TableModel model = new ArcTableModel("mock1", "mock2");
-		model.addTableModelListener(new TableListener());
-		table.setModel(model);
+	void displayNode(INode node) {
+		try {
+			NodeType type = (NodeType) MainWindow.getPetrinetManipulation().getNodeType(node);
+			String id = String.valueOf(node.getId());
+			if(type == NodeType.Place){
+				PlaceAttribute placeAttribute = MainWindow.getPetrinetManipulation().getPlaceAttribute(1, node);
+				String name = placeAttribute.getPname();
+				String mark = String.valueOf(placeAttribute.getMarking());
+				table.setModel(new PlaceTableModel(id, name, mark));
+			}else{
+				TransitionAttribute transitionAttribute = MainWindow.getPetrinetManipulation().getTransitionAttribute(1, node);
+				String name = transitionAttribute.getTname();
+				String tlb = transitionAttribute.getTLB();
+				IRenew renew = transitionAttribute.getRNW();
+				String renewString = "unbekannt";
+				if(renew instanceof RenewCount){
+					renewString = "count";
+				}else if(renew instanceof RenewId){
+					renewString = "id";
+				}else if(renew instanceof RenewMap){
+					renewString = "map: " + renew;
+				}
+				table.setModel(new TransitionTableModel(id, name, tlb, renewString));
+			}
+		} catch (EngineException e) {
+			e.printStackTrace();
+		}
+	}
+
+	void displayEdge(Arc edge) {
+		try {
+			String weight = String.valueOf(MainWindow.getPetrinetManipulation().getArcAttribute(1, edge).getWeight());
+			String id = String.valueOf(edge.getId());
+			
+			ArcTableModel arcTableModel = new ArcTableModel(id,weight);
+			TableListener tableListener = new TableListener(1, edge);
+			
+			arcTableModel.addTableModelListener(tableListener);
+			table.setModel(arcTableModel);
+		} catch (EngineException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	/**
@@ -226,7 +258,25 @@ public class AttributePane {
 	
 	/**  Class for Tablelistener to make Userchanges possible */
 	private static class TableListener implements TableModelListener {
-
+		
+		private int petrinetId;
+		
+		private INode node;
+		
+		private Arc arc;
+		
+		TableListener(int petrinetId, INode node){
+			this.petrinetId = petrinetId;
+			this.node = node;
+			this.arc = null;
+		}
+		
+		TableListener(int petrinetId, Arc arc){
+			this.petrinetId = petrinetId;
+			this.node = null;
+			this.arc = arc;
+		}
+		
 		@Override
 		public void tableChanged(TableModelEvent e) {
 			int row = e.getFirstRow();
@@ -234,48 +284,20 @@ public class AttributePane {
 	        TableModel model = (TableModel)e.getSource();
 	        String data = (String)model.getValueAt(row, column);
 	        String attribute = (String)model.getValueAt(row, column-1);
+	        if(arc != null){
+	        	if(attribute.equals("Gewicht")){
+	        		try {
+						MainWindow.getPetrinetManipulation().setWeight(petrinetId, arc, Integer.parseInt(data));
+					} catch (NumberFormatException e1) {
+						PopUp.popError("Das gewicht muss eine natürliche Zahl sein.");
+						e1.printStackTrace();
+					} catch (EngineException e1) {
+						PopUp.popError(e1);
+						e1.printStackTrace();
+					}
+	        	}
+	        }
 	        System.out.println("Der Wert " + attribute + " wurde auf " + data + " gesetzt.");
-		}
-		
-	}
-
-	void displayNode(INode node) {
-		try {
-			NodeType type = (NodeType) MainWindow.getPetrinetManipulation().getNodeType(node);
-			String id = String.valueOf(node.getId());
-			if(type == NodeType.Place){
-				PlaceAttribute placeAttribute = MainWindow.getPetrinetManipulation().getPlaceAttribute(1, node);
-				String name = placeAttribute.getPname();
-				String mark = String.valueOf(placeAttribute.getMarking());
-				table.setModel(new PlaceTableModel(id, name, mark));
-			}else{
-				TransitionAttribute transitionAttribute = MainWindow.getPetrinetManipulation().getTransitionAttribute(1, node);
-				String name = transitionAttribute.getTname();
-				String tlb = transitionAttribute.getTLB();
-				IRenew renew = transitionAttribute.getRNW();
-				String renewString = "unbekannt";
-				if(renew instanceof RenewCount){
-					renewString = "count";
-				}else if(renew instanceof RenewId){
-					renewString = "id";
-				}else if(renew instanceof RenewMap){
-					renewString = "map: " + renew;
-				}
-				table.setModel(new TransitionTableModel(id, name, tlb, renewString));
-			}
-		} catch (EngineException e) {
-			e.printStackTrace();
-		}
-	}
-
-	void displayEdge(Arc edge) {
-		try {
-			String weight = String.valueOf(MainWindow.getPetrinetManipulation().getArcAttribute(1, edge).getWeight());
-			String id = String.valueOf(edge.getId());
-			
-			table.setModel(new ArcTableModel(id,weight));
-		} catch (EngineException e) {
-			e.printStackTrace();
 		}
 		
 	}
