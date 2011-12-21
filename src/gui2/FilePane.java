@@ -24,6 +24,11 @@ import static gui2.Style.SAVE_PETRINET_DISABLED_ICON;
 import static gui2.Style.SAVE_PETRINET_ICON;
 import static gui2.Style.SAVE_PETRINET_PRESSED_ICON;
 import static gui2.Style.SOUTH_PANEL_HEIHT;
+import static gui2.Style.DELETE_BUTTON_X;
+import static gui2.Style.DELETE_BUTTON_Y;
+import static gui2.Style.DELETE_PETRINET_DISABLED_ICON;
+import static gui2.Style.DELETE_PETRINET_PRESSED_ICON;
+import static gui2.Style.DELETE_PETRINET;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -111,6 +116,22 @@ class FilePane {
 		}
 	}
 	
+	/** Listener for button delete rule */
+	private static class DeleteRuleListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("delte rule pressed");
+		}
+	}
+	
+	/** Listener for button delete petrinet*/
+	private static class DeletePetrinetListener implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println("delte petrinet pressed");
+		}
+	}
+	
 	/** One of the instances. This instance is the file pane for petrinets */
 	private static FilePane petrinetFilePane;
 	
@@ -124,11 +145,12 @@ class FilePane {
 	static {
 		petrinetFilePane = new FilePane("Petrinetz", "Petrinetze",
 				new NewPetrinetListener(), new LoadPetrinetListener(),
-				new SavePetrinetListener(), new SaveAsPetrinetListener());
+				new SavePetrinetListener(), new SaveAsPetrinetListener(),
+				new DeletePetrinetListener());
 		
 		ruleFilePane = new FilePane("Regel", "Regeln", new NewRuleListener(),
 				new LoadRuleListener(), new SaveRuleListener(),
-				new SaveAsRuleListener());
+				new SaveAsRuleListener(), new DeleteRuleListener());
 	}
 
 	/** Retruns the only instance of a petrinet file panel */
@@ -158,6 +180,9 @@ class FilePane {
 
 	/** The button for loading a petrinet/rule */
 	private JButton loadButton;
+	
+	/** The Button for deleting a petrinet/rule*/
+	private JButton deleteButton;
 
 	/** The button for saving a petrinet/rule in a certain file*/
 	private JButton saveAsButton;
@@ -179,15 +204,18 @@ class FilePane {
 			ActionListener newListener, 
 			ActionListener loadListener,
 			ActionListener saveListener, 
-			ActionListener saveAsListener) {
+			ActionListener saveAsListener,
+			ActionListener deleteListener) {
 		newButton = initiateNewButton(type, newListener);
 		saveButton = initiateSaveButton(type, saveListener);
 		loadButton = initiateLoadButton(type, loadListener);
 		saveAsButton = initiateSaveAsButton(type, saveAsListener);
+		deleteButton = initiateDeleteButton(type, deleteListener);
 		buttonContainer = initiateButtonContainer(newButton, 
 				saveButton,
 				loadButton, 
-				saveAsButton);
+				saveAsButton,
+				deleteButton);
 		tree = initiateTree(typePlural);
 		treeAndButtonContainerWithBorder = initiateTreeAndButtonContainerWithBorder(
 				tree, 
@@ -250,7 +278,8 @@ class FilePane {
 	private JPanel initiateButtonContainer(JButton newButton,
 			JButton saveButton, 
 			JButton loadButton, 
-			JButton saveAsButton) {
+			JButton saveAsButton,
+			JButton deleteButton) {
 		JPanel panel = new JPanel();
 		panel.setLayout(null); // layouting with setbounds(...)
 		panel.setPreferredSize(new Dimension(LEFT_PANEL_DIMENSION.width,
@@ -259,6 +288,7 @@ class FilePane {
 		panel.add(saveButton);
 		panel.add(loadButton);
 		panel.add(saveAsButton);
+		panel.add(deleteButton);
 
 		return panel;
 	}
@@ -282,6 +312,21 @@ class FilePane {
 
 		button.addActionListener(saveAsListener);
 
+		return button;
+	}
+	
+	private JButton initiateDeleteButton(String type, ActionListener deleteListener){
+		JButton button = new JButton(DELETE_PETRINET);
+		button.setBounds(DELETE_BUTTON_X, DELETE_BUTTON_Y, 
+				FILE_PANE_ICON_BUTTON_SIZE, FILE_PANE_ICON_BUTTON_SIZE);
+		button.setPressedIcon(DELETE_PETRINET_PRESSED_ICON);
+		button.setDisabledIcon(DELETE_PETRINET_DISABLED_ICON);
+		
+		button.setToolTipText(type + " löschen oder aus Dateisystem entfernen.");
+		button.setRolloverEnabled(true);
+
+		button.addActionListener(deleteListener);
+		
 		return button;
 	}
 
@@ -360,6 +405,7 @@ class FilePane {
 		newButton.setEnabled(false);
 		saveAsButton.setEnabled(false);
 		saveButton.setEnabled(false);
+		deleteButton.setEnabled(false);
 		tree.setEnabled(false);
 	}
 	
@@ -369,6 +415,7 @@ class FilePane {
 		newButton.setEnabled(true);
 		saveAsButton.setEnabled(true);
 		saveButton.setEnabled(true);
+		deleteButton.setEnabled(true);
 		tree.setEnabled(true);
 	}
 

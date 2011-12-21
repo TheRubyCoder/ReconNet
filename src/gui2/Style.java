@@ -265,7 +265,7 @@ class Style {
 	public static final int SOUTH_PANEL_HEIHT = 35;
 	
 	public static final int FILE_PANE_ICON_BUTTON_SIZE = 30;
-	public static final int FILE_PANE_ICON_SPACING_SIZE = 15;
+	public static final int FILE_PANE_ICON_SPACING_SIZE = 9;
 	
 	
 	public static final ImageIcon NEW_PETRINET_ICON = new ImageIcon("src/gui2/icons/newPetrinet.png");
@@ -284,6 +284,12 @@ class Style {
 	public static final ImageIcon SAVE_AS_PETRINET_PRESSED_ICON = new ImageIcon("src/gui2/icons/saveAsPertinetPressed.png");
 	public static final ImageIcon SAVE_AS_PETRINET_DISABLED_ICON = new ImageIcon("src/gui2/icons/saveAsPertinetDisabled.png");
 	
+	public static final ImageIcon DELETE_PETRINET = new ImageIcon("src/gui2/icons/deletePertinet.png");
+	public static final ImageIcon DELETE_PETRINET_PRESSED_ICON = new ImageIcon("src/gui2/icons/deletePetrinetPressed.png");
+	public static final ImageIcon DELETE_PETRINET_DISABLED_ICON = new ImageIcon("src/gui2/icons/deletePertinetDisabled.png");
+	
+	
+	
 	public static final int NEW_BUTTON_X = 0;
 	public static final int NEW_BUTTON_Y = 0;
 	
@@ -296,6 +302,8 @@ class Style {
 	public static final int SAVE_AS_BUTTON_X = SAVE_BUTTON_X + FILE_PANE_ICON_BUTTON_SIZE + FILE_PANE_ICON_SPACING_SIZE;
 	public static final int SAVE_AS_BUTTON_Y = 0;
 	
+	public static final int DELETE_BUTTON_X = SAVE_AS_BUTTON_X + FILE_PANE_ICON_BUTTON_SIZE + FILE_PANE_ICON_SPACING_SIZE;
+	public static final int DELETE_BUTTON_Y = 0;
 	
 	/* ************************************* 
 	 * rule file pane

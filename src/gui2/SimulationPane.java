@@ -76,6 +76,8 @@ class SimulationPane {
 		kStepsButton = (JButton) kSpinnerAndButton[1];
 		
 		simulationButton = initiateSimulateButton();
+		setSimulationButtonPlay();
+		
 		transformSpeedSlider = initiateSpeedSlider();
 		
 		simulationModePicker = initiateModePicker();
@@ -101,11 +103,8 @@ class SimulationPane {
 	/** Initiate and layouting Simulationbutton*/
 	private JButton initiateSimulateButton(){
 		JButton button = new JButton("start Simulation");
-		simulationButton = button;
 		button.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
 		button.setLocation(SIMULATION_PANE_BUTTON_STARTSIMULATION_LOCATION);
-		
-		setSimulationButtonPlay();
 		
 		button.addActionListener(new SimulateButtonListener());
 		
@@ -140,6 +139,7 @@ class SimulationPane {
 		simulationButton.setToolTipText("startet eine Endlossimulation, bis diese pausiert wird.");
 		simulationButton.setRolloverEnabled(true);
 	}
+	
 	
 	/** The Buttonsetting change to playmode and stop the simulation*/
 	void setSimulationButtonPause(){
@@ -240,7 +240,7 @@ class SimulationPane {
 		kStepsButton.setEnabled(true);
 		kStepsSpinner.setEnabled(true);
 		simulationModePicker.setEnabled(true);
-		transformButton.setEnabled(false);
+		transformButton.setEnabled(true);
 		EditorPane.getInstance().setTheHoleEditorPanelEnable();
 		AttributePane.getInstance().setTableEnable();
 		FilePane.getPetrinetFilePane().setHoleButtonsEnable();
@@ -266,7 +266,7 @@ class SimulationPane {
 			}else{
 				SimulationPane.getInstance().setSimulationButtonPause();
 				setAllOtherPanesDisable();
-//				SimulationPane.getInstance().startAndPauseSimulation();
+				SimulationPane.getInstance().startAndPauseSimulation();
 			}
 			
 		}
