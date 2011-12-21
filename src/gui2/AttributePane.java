@@ -131,6 +131,18 @@ public class AttributePane {
 		frame.add(attributePane, BorderLayout.CENTER);
 	}
 	
+
+	/** Disable the tabe*/
+	void setTableDisable(){
+		table.setEnabled(false);
+	}
+	
+	/** Enable the tabe*/
+	void setTableEnable(){
+		table.setEnabled(true);
+	}
+	
+	
 	/** Abstract super class for refactoring the three Table Models for Place, Transition and Arc<br/>
 	 * Table Model for displaying and editing places. All cells need to be String<br/>
 	 * A TableModel is needed to tell Swing what cells are editable */
@@ -254,6 +266,7 @@ public class AttributePane {
 		protected String[][] getData() {
 			return data;
 		}
+		
 	}
 	
 	/**  Class for Tablelistener to make Userchanges possible */

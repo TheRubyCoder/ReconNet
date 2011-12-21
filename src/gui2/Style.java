@@ -59,7 +59,7 @@ class Style {
 	
 	public static final int BUTTON_HEIGHT = 30;
 	
-	public static final int BUTTON_WIDTH = 200;
+	public static final int BUTTON_WIDTH = 150;
 	
 	private static final int INSET_TOP = 20;
 	
@@ -171,10 +171,10 @@ class Style {
 		new Dimension(BUTTON_WIDTH,BUTTON_HEIGHT);
 	
 	public static final Point SIMULATION_PANE_BUTTON_KSTEPS_LOCATION =
-		new Point(INSET_LEFT + BUTTON_WIDTH + BUTTON_WIDTH/2 + SPACING_BUTTONS, 0 + INSET_TOP);
+		new Point(INSET_LEFT + BUTTON_WIDTH + BUTTON_WIDTH/3 + SPACING_BUTTONS, 0 + INSET_TOP);
 	
 	public static final Dimension SIMULATION_PANE_BUTTON_KSTEPS_SIZE  = 
-		new Dimension(BUTTON_WIDTH / 2,BUTTON_HEIGHT);
+		new Dimension((BUTTON_WIDTH /3)*2 ,BUTTON_HEIGHT);
 	
 	public static final Point SIMULATION_PANE_BUTTON_TRANSFORM_LOCATION =
 		new Point(0 + INSET_LEFT, BUTTON_HEIGHT + INSET_TOP + SPACING_BUTTONS);
@@ -193,7 +193,7 @@ class Style {
 		new Point(INSET_LEFT + BUTTON_WIDTH + SPACING_BUTTONS, 0 + INSET_TOP);
 	
 	public static final Dimension SIMULATION_PANE_SPINNER_SIZE =
-		new Dimension(BUTTON_WIDTH / 2, BUTTON_HEIGHT);
+		new Dimension(BUTTON_WIDTH / 3, BUTTON_HEIGHT);
 	
 	public static final Point SIMULATION_PANE_SLIDER_LOCATION =
 		new Point(INSET_LEFT + (BUTTON_WIDTH + SPACING_BUTTONS) * 2, 
@@ -216,6 +216,12 @@ class Style {
 	
 	public static final Border SIMULATION_PANE_SPEED_SLIDER_BORDER = 
 			BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Geschwindigkeit");
+	
+	public static final ImageIcon SIMULATION_START_ICON =  new ImageIcon("src/gui2/icons/simulationPlay.png");
+	public static final ImageIcon SIMULATION_START_ICON_DISABLE =  new ImageIcon("src/gui2/icons/simulationPlayDisable.png");
+	public static final ImageIcon SIMULATION_START_ICON_PRESSED =  new ImageIcon("src/gui2/icons/simulationPlayPressed.png");
+	public static final ImageIcon SIMULATION_PAUSE_ICON =  new ImageIcon("src/gui2/icons/simulationPause.png");
+	public static final ImageIcon SIMULATION_PAUSE_ICON_PRESSED =  new ImageIcon("src/gui2/icons/simulationPausePressed.png");
 	
 	
 	/* ************************************* 

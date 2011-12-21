@@ -152,6 +152,23 @@ class EditorPane {
 	static enum EditorMode{
 		PLACE, TRANSITION, ARC, PICK
 	}
+	
+	/** Disable all Buuton in this Panel*/
+	void setTheHoleEditorPanelDisable(){
+		createArcButton.setEnabled(false);
+		createPlaceButton.setEnabled(false);
+		createTransitionButton.setEnabled(false);
+		pickButton.setEnabled(false);
+	}
+	
+	
+	/** Enable all Buuton in this Panel*/
+	void setTheHoleEditorPanelEnable(){
+		createArcButton.setEnabled(true);
+		createPlaceButton.setEnabled(true);
+		createTransitionButton.setEnabled(true);
+		pickButton.setEnabled(true);
+	}
 
 }
 

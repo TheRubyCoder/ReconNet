@@ -5,6 +5,8 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -42,6 +44,12 @@ class SimulationPane {
 	/** Combo box for selecting the simulation mode */
 	private JComboBox simulationModePicker;
 	
+	/** Button for start and pause the simulation*/
+	private JButton simulationButton;
+	
+	/** */
+	private boolean simulationIsRunning;
+	
 	/** The singleton instance of SimulationPane */
 	private static SimulationPane instance;
 	
@@ -67,11 +75,14 @@ class SimulationPane {
 		kStepsSpinner = (JSpinner) kSpinnerAndButton[0];
 		kStepsButton = (JButton) kSpinnerAndButton[1];
 		
-		JComponent[] simulateButtonAndSlider = initiateSimulateButtonAndSlider();
-		transformButton = (JButton) simulateButtonAndSlider[0];
-		transformSpeedSlider = (JSlider) simulateButtonAndSlider[1];
+		simulationButton = initiateSimulateButton();
+		transformSpeedSlider = initiateSpeedSlider();
 		
 		simulationModePicker = initiateModePicker();
+	}
+	
+	boolean getSimulationIsRunning(){
+		return simulationIsRunning;
 	}
 	
 	/**
@@ -87,17 +98,23 @@ class SimulationPane {
 		return comboBox;
 	}
 
-	/** Initiates simulate button and slider
-	 * @return index 0: JButton<br/>index 1: JSlider
-	 */
-	private JComponent[] initiateSimulateButtonAndSlider() {
-		JComponent[] result = new JComponent[2];
-		
-		JButton button = new JButton("Simulation starten");
+	/** Initiate and layouting Simulationbutton*/
+	private JButton initiateSimulateButton(){
+		JButton button = new JButton("start Simulation");
+		simulationButton = button;
 		button.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
 		button.setLocation(SIMULATION_PANE_BUTTON_STARTSIMULATION_LOCATION);
-		getSimulationPane().add(button);
 		
+		setSimulationButtonPlay();
+		
+		button.addActionListener(new SimulateButtonListener());
+		
+		getSimulationPane().add(button);
+		return button;
+	}
+	
+	/** Initiate and layouting Speedslider*/
+	private JSlider initiateSpeedSlider(){
 		JSlider slider = new JSlider(1, 10, 1);
 		slider.setLocation(SIMULATION_PANE_SLIDER_LOCATION);
 		slider.setSize(SIMULATION_PANE_SLIDER_SIZE);
@@ -108,8 +125,33 @@ class SimulationPane {
 		slider.setPaintLabels(true);
 		getSimulationPane().add(slider);
 		
-		return result;
+		return slider;
 	}
+	
+	
+	/** The Buttonsetting change to playmode and stop the simulation*/
+	void setSimulationButtonPlay(){
+		simulationIsRunning = false;
+		
+		simulationButton.setIcon(SIMULATION_START_ICON);
+		simulationButton.setDisabledIcon(SIMULATION_START_ICON_DISABLE);
+		simulationButton.setPressedIcon(SIMULATION_START_ICON_PRESSED);
+		
+		simulationButton.setToolTipText("startet eine Endlossimulation, bis diese pausiert wird.");
+		simulationButton.setRolloverEnabled(true);
+	}
+	
+	/** The Buttonsetting change to playmode and stop the simulation*/
+	void setSimulationButtonPause(){
+		simulationIsRunning = true;
+		
+		simulationButton.setIcon(SIMULATION_PAUSE_ICON);
+		simulationButton.setPressedIcon(SIMULATION_PAUSE_ICON_PRESSED);
+		
+		simulationButton.setToolTipText("laufende Endlossimulation pausieren.");
+		simulationButton.setRolloverEnabled(true);
+	}
+	
 
 
 	/** Initiates k spinner and k button
@@ -177,5 +219,57 @@ class SimulationPane {
 	public void addTo(JPanel frame){
 		JPanel simulationpane = getSimulationPane();
 		frame.add(simulationpane, BorderLayout.LINE_END);
+	}
+	
+	/** Sets the other panels disable, so the simualion can running*/
+	void setAllOtherPanesDisable(){
+		oneStepButton.setEnabled(false);
+		kStepsButton.setEnabled(false);
+		kStepsSpinner.setEnabled(false);
+		simulationModePicker.setEnabled(false);
+		transformButton.setEnabled(false);
+		EditorPane.getInstance().setTheHoleEditorPanelDisable();
+		AttributePane.getInstance().setTableDisable();
+		FilePane.getPetrinetFilePane().setHoleButtonsDisable();
+		FilePane.getRuleFilePane().setHoleButtonsDisable();
+	}
+	
+	/** Sets the other panels disable, so the simualion can running*/
+	void setAllOtherPanesEnable(){
+		oneStepButton.setEnabled(true);
+		kStepsButton.setEnabled(true);
+		kStepsSpinner.setEnabled(true);
+		simulationModePicker.setEnabled(true);
+		transformButton.setEnabled(false);
+		EditorPane.getInstance().setTheHoleEditorPanelEnable();
+		AttributePane.getInstance().setTableEnable();
+		FilePane.getPetrinetFilePane().setHoleButtonsEnable();
+		FilePane.getRuleFilePane().setHoleButtonsEnable();
+	}
+	
+	
+	void startAndPauseSimulation(){
+		//TODO: simulation starten und stoppen
+		PopUp.popUnderConstruction("Simulation starten Button");
+	}
+	
+	
+	
+	
+	public class SimulateButtonListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(SimulationPane.getInstance().getSimulationIsRunning()){
+				SimulationPane.getInstance().setSimulationButtonPlay();
+				setAllOtherPanesEnable();
+			}else{
+				SimulationPane.getInstance().setSimulationButtonPause();
+				setAllOtherPanesDisable();
+//				SimulationPane.getInstance().startAndPauseSimulation();
+			}
+			
+		}
+		
 	}
 }

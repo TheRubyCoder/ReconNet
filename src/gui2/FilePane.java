@@ -353,5 +353,23 @@ class FilePane {
 	public void addTo(JPanel frame) {
 		frame.add(treeAndButtonContainerWithBorder);
 	}
+	
+	/** disable hole buttons and tree*/
+	void setHoleButtonsDisable(){
+		loadButton.setEnabled(false);
+		newButton.setEnabled(false);
+		saveAsButton.setEnabled(false);
+		saveButton.setEnabled(false);
+		tree.setEnabled(false);
+	}
+	
+	/** enable hole buttons and tree*/
+	void setHoleButtonsEnable(){
+		loadButton.setEnabled(true);
+		newButton.setEnabled(true);
+		saveAsButton.setEnabled(true);
+		saveButton.setEnabled(true);
+		tree.setEnabled(true);
+	}
 
 }
