@@ -38,11 +38,14 @@ import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 /**
  * Class for FilePanes (saving and creating petrinets and rules)<br/>
@@ -55,8 +58,7 @@ class FilePane {
 	private static class NewPetrinetListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("create new petrinet pressed");
-			PopUp.popUnderConstruction("Petrinetz erstellen");
+			FilePane.getPetrinetFilePane().createNewPetrinetOrRule("Petrinetz");
 		}
 	}
 	
@@ -187,6 +189,8 @@ class FilePane {
 	/** The button for saving a petrinet/rule in a certain file*/
 	private JButton saveAsButton;
 	
+	private DefaultMutableTreeNode root;
+	
 	/** No default instances */
 	private FilePane() {};
 
@@ -198,6 +202,7 @@ class FilePane {
 	 * @param loadListener Listener for load button
 	 * @param saveListener Listener for save button
 	 * @param saveAsListener Listener for save as button
+	 * @param deleteListener Listener for delete button
 	 */
 	private FilePane(String type, 
 			String typePlural,
@@ -252,16 +257,18 @@ class FilePane {
 	 * @return
 	 */
 	private JTree initiateTree(String typePlural) {
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Geladene "
+//		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Geladene "
+//				+ typePlural);
+		root = new DefaultMutableTreeNode("Geladene "
 				+ typePlural);
-		MutableTreeNode mock1 = new DefaultMutableTreeNode("Mock 1");
-		MutableTreeNode mock2 = new DefaultMutableTreeNode(
-				"Mock 2 - sehr langer Dateiname. Ob der wohl noch richtig angezeigt wird?");
-		root.add(mock1);
-		root.add(mock2);
-		for (int i = 0; i <= 10; i++) {
-			root.add(new DefaultMutableTreeNode(i));
-		}
+//		MutableTreeNode mock1 = new DefaultMutableTreeNode("Mock 1");
+//		MutableTreeNode mock2 = new DefaultMutableTreeNode(
+//				"Mock 2 - sehr langer Dateiname. Ob der wohl noch richtig angezeigt wird?");
+//		root.add(mock1);
+//		root.add(mock2);
+//		for (int i = 0; i <= 10; i++) {
+//			root.add(new DefaultMutableTreeNode(i));
+//		}
 		JTree tree = new JTree(root);
 		return tree;
 	}
@@ -315,6 +322,12 @@ class FilePane {
 		return button;
 	}
 	
+	/** 
+	 * Initiates the delete button with size, icon, tooltip etc
+	 * @param type Descriptor: "Petrinetz" / "Regel"
+	 * @param deleteListener Listener for button
+	 * @return
+	 */
 	private JButton initiateDeleteButton(String type, ActionListener deleteListener){
 		JButton button = new JButton(DELETE_PETRINET);
 		button.setBounds(DELETE_BUTTON_X, DELETE_BUTTON_Y, 
@@ -417,6 +430,31 @@ class FilePane {
 		saveButton.setEnabled(true);
 		deleteButton.setEnabled(true);
 		tree.setEnabled(true);
+	}
+	
+	void createNewPetrinetOrRule(String type){
+//		tree.cancelEditing();
+//		tree.clearSelection();
+//		int path = root.getDepth();
+//		tree.collapseRow(path);
+		String eingabe = JOptionPane.showInputDialog("Bitte Name " + "eingeben.", "neues Petrinetz"); 
+		if(eingabe != null){
+			MutableTreeNode mock1 = new DefaultMutableTreeNode(eingabe);
+			root.add(mock1);
+//			Object model = tree.getModel().getRoot();
+//			if(root.isLeaf()){
+//				DefaultMutableTreeNode leaf = root.getLastLeaf();
+//				leaf.add(mock1);
+//			}else{
+//				int leaflevel = 0;
+//				DefaultMutableTreeNode leaf = (DefaultMutableTreeNode)root.getChildAt(leaflevel);
+//				leaf.add(mock1);
+//			}
+//			int path = root.getLastLeaf().getChildCount();
+//			tree.expandRow(path);
+			
+//			PopUp.popUnderConstruction("Petrinetz erstellen");
+		}
 	}
 
 }
