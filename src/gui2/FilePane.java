@@ -58,7 +58,10 @@ class FilePane {
 	private static class NewPetrinetListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			FilePane.getPetrinetFilePane().createNewPetrinetOrRule("Petrinetz");
+			String nameOfPetrinet = FilePane.getPetrinetFilePane().enterDataIntoTree("Petrinetz");
+			if(nameOfPetrinet != null){
+				FilePane.getPetrinetFilePane().createNewPetrinet(nameOfPetrinet);
+			}
 		}
 	}
 	
@@ -90,7 +93,10 @@ class FilePane {
 	private static class NewRuleListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("create new rule pressed");
+			String nameOfRule = FilePane.getRuleFilePane().enterDataIntoTree("Regel");
+			if(nameOfRule != null){
+				FilePane.getRuleFilePane().createNewRule(nameOfRule);
+			}
 		}
 	}
 	
@@ -432,29 +438,38 @@ class FilePane {
 		tree.setEnabled(true);
 	}
 	
-	void createNewPetrinetOrRule(String type){
-//		tree.cancelEditing();
-//		tree.clearSelection();
-//		int path = root.getDepth();
-//		tree.collapseRow(path);
-		String eingabe = JOptionPane.showInputDialog("Bitte Name " + "eingeben.", "neues Petrinetz"); 
+	/**
+	 * write user data into tree
+	 * @param type of panel
+	 * @return name of the petrinet, if no data entered return <tt>null</tt> 
+	 */
+	String enterDataIntoTree(String type){
+		String eingabe = JOptionPane.showInputDialog("Bitte Name für " + type + " eingeben.", "neue(s) " + type); 
 		if(eingabe != null){
+//			FIXME: Eintragen an richtiger stelle. 
+//			tree.getEditingPath();
 			MutableTreeNode mock1 = new DefaultMutableTreeNode(eingabe);
 			root.add(mock1);
-//			Object model = tree.getModel().getRoot();
-//			if(root.isLeaf()){
-//				DefaultMutableTreeNode leaf = root.getLastLeaf();
-//				leaf.add(mock1);
-//			}else{
-//				int leaflevel = 0;
-//				DefaultMutableTreeNode leaf = (DefaultMutableTreeNode)root.getChildAt(leaflevel);
-//				leaf.add(mock1);
-//			}
-//			int path = root.getLastLeaf().getChildCount();
-//			tree.expandRow(path);
 			
-//			PopUp.popUnderConstruction("Petrinetz erstellen");
+			return eingabe;
 		}
+		return null;
+	}
+	
+	/**
+	 * create a new Petrinet
+	 * @param nameOfPetrinet
+	 */
+	void createNewPetrinet(String nameOfPetrinet){
+		PopUp.popUnderConstruction("neues Petrinetz erstellen");
+	}
+	
+	/**
+	 * create a new rule
+	 * @param nameOfRule
+	 */
+	void createNewRule(String nameOfRule){
+		PopUp.popUnderConstruction("neue Regel erstellen");
 	}
 
 }
