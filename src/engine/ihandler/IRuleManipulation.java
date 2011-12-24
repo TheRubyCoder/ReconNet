@@ -19,7 +19,7 @@ import exceptions.EngineException;
  * 
  * This is a Interface for a RuleManipulation from the GUI-Component.
  * 
- * Implementation: engine.handler.RuleManipulation
+ * Implementation: engine.handler.rule.RuleManipulation
  * 
  * @author alex (aas772)
  *

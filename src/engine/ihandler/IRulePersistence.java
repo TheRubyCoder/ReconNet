@@ -19,7 +19,7 @@ import exceptions.EngineException;
  * 
  * This is a Interface for the Persistence-Component.
  * 
- * Implementation: engine.handler.RulePersistence
+ * Implementation: engine.handler.rule.RulePersistence
  * 
  * @author alex (aas772)
  *

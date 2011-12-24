@@ -15,8 +15,8 @@ import transformation.Rule;
 import transformation.Transformation;
 import engine.dependency.PetrinetAdapter;
 import engine.dependency.TransformationAdapter;
-import engine.handler.PetrinetManipulation;
-import engine.handler.Simulation;
+import engine.handler.petrinet.PetrinetManipulation;
+import engine.handler.simulation.Simulation;
 import exceptions.GeneralPetrinetException;
 
 /**

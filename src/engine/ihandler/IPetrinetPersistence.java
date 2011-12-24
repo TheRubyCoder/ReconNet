@@ -14,7 +14,7 @@ import exceptions.EngineException;
  * 
  * This is a Interface for Persistence Component.
  * 
- * Implementation: engine.handler.PetrinetPersistence
+ * Implementation: engine.handler.petrinet.PetrinetPersistence
  * 
  * @author alex (aas772)
  *

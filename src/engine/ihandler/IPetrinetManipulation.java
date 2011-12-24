@@ -14,7 +14,7 @@ import exceptions.EngineException;
  * 
  * This is GUI-Interface for all actions with Petrinet-functions.
  * 
- * Implementation: engine.handler.PetrinetManipulation
+ * Implementation: engine.handler.petrinet.PetrinetManipulation
  * 
  * Some functions are:
  *  - create[Petrinet|Arc|Place|Transition](..)

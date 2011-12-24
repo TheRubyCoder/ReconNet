@@ -1,4 +1,4 @@
-package engine.handler;
+package engine.handler.rule;
 
 import java.awt.geom.Point2D;
 
@@ -9,6 +9,7 @@ import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.RuleAttribute;
 import engine.attribute.TransitionAttribute;
+import engine.handler.RuleNet;
 import engine.ihandler.IRuleManipulation;
 import exceptions.EngineException;
 

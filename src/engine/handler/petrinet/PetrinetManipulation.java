@@ -1,4 +1,4 @@
-package engine.handler;
+package engine.handler.petrinet;
 
 import java.awt.geom.Point2D;
 

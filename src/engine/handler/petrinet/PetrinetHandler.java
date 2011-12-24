@@ -1,4 +1,4 @@
-package engine.handler;
+package engine.handler.petrinet;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
@@ -24,6 +24,7 @@ import engine.attribute.PlaceAttribute;
 import engine.attribute.TransitionAttribute;
 import engine.data.JungData;
 import engine.data.PetrinetData;
+import engine.handler.NodeTypeEnum;
 import engine.ihandler.IPetrinetManipulation;
 import engine.ihandler.IPetrinetPersistence;
 import engine.session.SessionManager;

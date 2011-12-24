@@ -1,4 +1,4 @@
-package engine.handler;
+package engine.handler.rule;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
@@ -23,6 +23,8 @@ import engine.attribute.RuleAttribute;
 import engine.attribute.TransitionAttribute;
 import engine.data.JungData;
 import engine.data.RuleData;
+import engine.handler.NodeTypeEnum;
+import engine.handler.RuleNet;
 import engine.ihandler.IRuleManipulation;
 import engine.session.SessionManager;
 import exceptions.EngineException;
