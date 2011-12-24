@@ -18,7 +18,7 @@ import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.TransitionAttribute;
 import engine.data.JungData;
-import engine.handler.NodeType;
+import engine.handler.NodeTypeEnum;
 import engine.ihandler.IPetrinetManipulation;
 import exceptions.EngineException;
 
@@ -242,11 +242,11 @@ public class EngineMockup implements IPetrinetManipulation {
 	}
 
 	@Override
-	public NodeType getNodeType(INode node) throws EngineException {
+	public NodeTypeEnum getNodeType(INode node) throws EngineException {
 		if (node instanceof Place) {
-			return NodeType.Place;
+			return NodeTypeEnum.Place;
 		} else if (node instanceof Transition) {
-			return NodeType.Transition;
+			return NodeTypeEnum.Transition;
 		} else {
 			throw new EngineException("");
 		}

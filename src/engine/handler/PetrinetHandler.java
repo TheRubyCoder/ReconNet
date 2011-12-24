@@ -29,37 +29,20 @@ import engine.ihandler.IPetrinetPersistence;
 import engine.session.SessionManager;
 import exceptions.EngineException;
 
-/**
- * 
- * This Class implements engine.ihandler.IPetrinetManipulation.
- * 
- * It is a Singleton.
- * 
- * It can be use for all manipulations for a Petrninet.
- * 	- create[Petrinet|Arc|Place|Transition](..)
- * 	- delete[Arc|Place|Transition](..)
- *  - get[Arc|Place|Transition]Attribute(..)
- *  - getJungLayout(..)
- *  - move[Graph|Node](..)
- *  - save(..)
- *  - set[Marking|Pname|Tlb|Tname|Weight|NodeType](..)
- * 
- * @author alex (aas772)
- *
- */
 
-final public class PetrinetManipulationBackend {
+
+final public class PetrinetHandler {
 
 	private final SessionManager sessionManager;
-	private static PetrinetManipulationBackend petrinetManipulation;
+	private static PetrinetHandler petrinetManipulation;
 
-	private PetrinetManipulationBackend() {
+	private PetrinetHandler() {
 		sessionManager = SessionManager.getInstance();
 	}
 	
-	public static PetrinetManipulationBackend getInstance(){
+	protected static PetrinetHandler getInstance(){
 		if(petrinetManipulation == null){
-			petrinetManipulation = new PetrinetManipulationBackend();
+			petrinetManipulation = new PetrinetHandler();
 		}
 		
 		return petrinetManipulation;
@@ -79,8 +62,8 @@ final public class PetrinetManipulationBackend {
 			Petrinet petrinet = petrinetData.getPetrinet();
 			JungData jungData = petrinetData.getJungData();
 	
-			if (this.getNodeType(from).equals(NodeType.Place)
-					&& this.getNodeType(to).equals(NodeType.Transition)) {
+			if (this.getNodeType(from).equals(NodeTypeEnum.Place)
+					&& this.getNodeType(to).equals(NodeTypeEnum.Transition)) {
 				// place => transition
 	
 				// cast objects
@@ -102,8 +85,8 @@ final public class PetrinetManipulationBackend {
 				}
 				
 				return arc;
-			} else if (this.getNodeType(from).equals(NodeType.Transition)
-					&& this.getNodeType(to).equals(NodeType.Place)) {
+			} else if (this.getNodeType(from).equals(NodeTypeEnum.Transition)
+					&& this.getNodeType(to).equals(NodeTypeEnum.Place)) {
 				// transition => place
 	
 				// cast objects
@@ -298,7 +281,7 @@ final public class PetrinetManipulationBackend {
 		// Petrinet petrinet = petrinetData.getPetrinet();
 		// JungData jungData = petrinetData.getJungData();
 
-		if (this.getNodeType(place).equals(NodeType.Place)) {
+		if (this.getNodeType(place).equals(NodeTypeEnum.Place)) {
 			Place p = (Place) place;
 
 			int marking = p.getMark();
@@ -320,7 +303,7 @@ final public class PetrinetManipulationBackend {
 		// Petrinet petrinet = petrinetData.getPetrinet();
 		// JungData jungData = petrinetData.getJungData();
 
-		if (this.getNodeType(transition).equals(NodeType.Transition)) {
+		if (this.getNodeType(transition).equals(NodeTypeEnum.Transition)) {
 			Transition t = (Transition) transition;
 
 			String tlb = t.getTlb();
@@ -489,7 +472,7 @@ final public class PetrinetManipulationBackend {
 		
 			JungData jungData = petrinetData.getJungData();
 	
-			if (this.getNodeType(place).equals(NodeType.Place)) {
+			if (this.getNodeType(place).equals(NodeTypeEnum.Place)) {
 				// cast object
 				Place p = (Place) place;
 	
@@ -522,7 +505,7 @@ final public class PetrinetManipulationBackend {
 		
 			JungData jungData = petrinetData.getJungData();
 	
-			if (this.getNodeType(place).equals(NodeType.Place)) {
+			if (this.getNodeType(place).equals(NodeTypeEnum.Place)) {
 				// cast object
 				Place p = (Place) place;
 	
@@ -555,7 +538,7 @@ final public class PetrinetManipulationBackend {
 		
 			JungData jungData = petrinetData.getJungData();
 	
-			if (this.getNodeType(transition).equals(NodeType.Transition)) {
+			if (this.getNodeType(transition).equals(NodeTypeEnum.Transition)) {
 				// cast object
 				Transition t = (Transition) transition;
 	
@@ -588,7 +571,7 @@ final public class PetrinetManipulationBackend {
 		
 			JungData jungData = petrinetData.getJungData();
 	
-			if (this.getNodeType(transition).equals(NodeType.Transition)) {
+			if (this.getNodeType(transition).equals(NodeTypeEnum.Transition)) {
 				// cast object
 				Transition t = (Transition) transition;
 	
@@ -639,9 +622,9 @@ final public class PetrinetManipulationBackend {
 	public Enum<?> getNodeType(@NotNull INode node) throws EngineException {
 
 		if (node instanceof Place) {
-			return NodeType.Place;
+			return NodeTypeEnum.Place;
 		} else if (node instanceof Transition) {
-			return NodeType.Transition;
+			return NodeTypeEnum.Transition;
 		} else {
 			exception("PetrinetManipulation - wrong type");
 			return null;

@@ -1,5 +1,5 @@
 package engine.handler;
 
-public enum NodeType {
+public enum NodeTypeEnum {
 	Place, Transition;
 }

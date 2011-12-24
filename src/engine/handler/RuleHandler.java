@@ -27,37 +27,20 @@ import engine.ihandler.IRuleManipulation;
 import engine.session.SessionManager;
 import exceptions.EngineException;
 
-/**
- * 
- * This Class implements engine.ihandler.IRuleManipulation.
- * 
- * It is a Singleton.
- * 
- * It can be use for all manipulations for a Rule. 
- * - create[Rule|Arc|Place|Transition](..) 
- * - delete[Arc|Place|Transition](..) 
- * - get[Rule|Arc|Place|Transition]Attribute(..) 
- * - getJungLayout(..) 
- * - moveNode(..) 
- * - save(..) 
- * - set[Marking|Pname|Tlb|Tname|Weight|NodeType](..)
- * 
- * @author alex (aas772)
- * 
- */
 
-final public class RuleManipulationBackend {
+
+final public class RuleHandler {
 
 	private final SessionManager sessionManager;
-	private static RuleManipulationBackend ruleManipulation;
+	private static RuleHandler ruleManipulation;
 
-	private RuleManipulationBackend() {
+	private RuleHandler() {
 		sessionManager = SessionManager.getInstance();
 	}
 
-	public static RuleManipulationBackend getInstance() {
+	protected static RuleHandler getInstance() {
 		if (ruleManipulation == null) {
-			ruleManipulation = new RuleManipulationBackend();
+			ruleManipulation = new RuleHandler();
 		}
 
 		return ruleManipulation;
@@ -149,7 +132,7 @@ final public class RuleManipulationBackend {
 
 	public PlaceAttribute getPlaceAttribute(int id, INode place) throws EngineException {
 		
-		if (this.getNodeType(place).equals(NodeType.Place)) {
+		if (this.getNodeType(place).equals(NodeTypeEnum.Place)) {
 			Place p = (Place) place;
 
 			int marking = p.getMark();
@@ -169,7 +152,7 @@ final public class RuleManipulationBackend {
 
 	public TransitionAttribute getTransitionAttribute(int id, INode transition) throws EngineException {
 		
-		if (this.getNodeType(transition).equals(NodeType.Transition)) {
+		if (this.getNodeType(transition).equals(NodeTypeEnum.Transition)) {
 			Transition t = (Transition) transition;
 
 			String tlb = t.getTlb();
@@ -309,7 +292,7 @@ final public class RuleManipulationBackend {
 			JungData kJungData = ruleData.getKJungData();
 			JungData rJungData = ruleData.getRJungData();
 	
-			if (this.getNodeType(place).equals(NodeType.Place)) {
+			if (this.getNodeType(place).equals(NodeTypeEnum.Place)) {
 				// cast object
 				Place p = (Place) place;
 	
@@ -365,7 +348,7 @@ final public class RuleManipulationBackend {
 			JungData kJungData = ruleData.getKJungData();
 			JungData rJungData = ruleData.getRJungData();
 	
-			if (this.getNodeType(place).equals(NodeType.Place)) {
+			if (this.getNodeType(place).equals(NodeTypeEnum.Place)) {
 				// cast object
 				Place p = (Place) place;
 	
@@ -416,7 +399,7 @@ final public class RuleManipulationBackend {
 			JungData kJungData = ruleData.getKJungData();
 			JungData rJungData = ruleData.getRJungData();
 	
-			if (this.getNodeType(transition).equals(NodeType.Transition)) {
+			if (this.getNodeType(transition).equals(NodeTypeEnum.Transition)) {
 				// cast object
 				Transition t = (Transition) transition;
 	
@@ -467,7 +450,7 @@ final public class RuleManipulationBackend {
 			JungData kJungData = ruleData.getKJungData();
 			JungData rJungData = ruleData.getRJungData();
 
-			if (this.getNodeType(transition).equals(NodeType.Transition)) {
+			if (this.getNodeType(transition).equals(NodeTypeEnum.Transition)) {
 				// cast object
 				Transition t = (Transition) transition;
 
@@ -552,9 +535,9 @@ final public class RuleManipulationBackend {
 	public Enum<?> getNodeType(INode node) {
 
 		if (node instanceof Place) {
-			return NodeType.Place;
+			return NodeTypeEnum.Place;
 		} else if (node instanceof Transition) {
-			return NodeType.Transition;
+			return NodeTypeEnum.Transition;
 		} else {
 			return null;
 		}

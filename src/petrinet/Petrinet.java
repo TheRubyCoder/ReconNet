@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 
 //import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
 
-import engine.handler.NodeType;
+import engine.handler.NodeTypeEnum;
 
 /**
  * @mainpage Hier entsteht die Mainpage. <li>

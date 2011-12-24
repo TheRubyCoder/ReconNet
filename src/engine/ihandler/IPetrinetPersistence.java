@@ -86,8 +86,9 @@ public interface IPetrinetPersistence {
 	 * @param id ID of the Petrinet
 	 * @param place which attributes are wanted
 	 * @return PlaceAtrribute
+	 * @throws EngineException 
 	 */
-	public PlaceAttribute getPlaceAttribute(int id, INode place);
+	public PlaceAttribute getPlaceAttribute(int id, INode place) throws EngineException;
 	
 	/**
 	 * Gets the Attributes from a Transition
@@ -95,8 +96,9 @@ public interface IPetrinetPersistence {
 	 * @param id ID of the Petrinet
 	 * @param transition which attributes are wanted
 	 * @return TransitionAttribute
+	 * @throws EngineException 
 	 */
-	public TransitionAttribute getTransitionAttribute(int id, INode transition);
+	public TransitionAttribute getTransitionAttribute(int id, INode transition) throws EngineException;
 	
 	/**
 	 * Sets the Marking of a Place.

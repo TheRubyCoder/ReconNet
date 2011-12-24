@@ -14,7 +14,7 @@ import javax.swing.table.TableModel;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.TransitionAttribute;
-import engine.handler.NodeType;
+import engine.handler.NodeTypeEnum;
 import exceptions.EngineException;
 
 import petrinet.Arc;
@@ -80,9 +80,9 @@ public class AttributePane {
 	
 	void displayNode(INode node) {
 		try {
-			NodeType type = (NodeType) MainWindow.getPetrinetManipulation().getNodeType(node);
+			NodeTypeEnum type = (NodeTypeEnum) MainWindow.getPetrinetManipulation().getNodeType(node);
 			String id = String.valueOf(node.getId());
-			if(type == NodeType.Place){
+			if(type == NodeTypeEnum.Place){
 				PlaceAttribute placeAttribute = MainWindow.getPetrinetManipulation().getPlaceAttribute(1, node);
 				String name = placeAttribute.getPname();
 				String mark = String.valueOf(placeAttribute.getMarking());

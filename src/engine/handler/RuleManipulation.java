@@ -12,6 +12,25 @@ import engine.attribute.TransitionAttribute;
 import engine.ihandler.IRuleManipulation;
 import exceptions.EngineException;
 
+/**
+ * 
+ * This Class implements engine.ihandler.IRuleManipulation.
+ * 
+ * It is a Singleton.
+ * 
+ * It can be use for all manipulations for a Rule. 
+ * - create[Rule|Arc|Place|Transition](..) 
+ * - delete[Arc|Place|Transition](..) 
+ * - get[Rule|Arc|Place|Transition]Attribute(..) 
+ * - getJungLayout(..) 
+ * - moveNode(..) 
+ * - save(..) 
+ * - set[Marking|Pname|Tlb|Tname|Weight|NodeType](..)
+ * 
+ * @author alex (aas772)
+ * 
+ */
+
 public class RuleManipulation implements IRuleManipulation {
 
 	private static RuleManipulation ruleManipulation;
