@@ -15,6 +15,16 @@ import engine.attribute.TransitionAttribute;
 import engine.handler.RuleNet;
 import exceptions.EngineException;
 
+/**
+ * 
+ * This is a Interface for the Persistence-Component.
+ * 
+ * Implementation: engine.handler.RulePersistence
+ * 
+ * @author alex (aas772)
+ *
+ */
+
 public interface IRulePersistence {
 
 	/**

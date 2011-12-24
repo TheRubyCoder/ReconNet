@@ -2,6 +2,14 @@ package engine.ihandler;
 
 import java.util.Collection;
 
+/**
+ * 
+ * This is a Interface for the GUI-Component for all Simulations.
+ * 
+ * @author alex (aas772)
+ *
+ */
+
 public interface ISimulation {
 
 	/**
