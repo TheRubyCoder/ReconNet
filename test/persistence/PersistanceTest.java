@@ -11,7 +11,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.junit.Test;
 
-import engine.handler.PetrinetManipulation;
+import engine.handler.petrinet.PetrinetHandler;
 
 public class PersistanceTest {
 

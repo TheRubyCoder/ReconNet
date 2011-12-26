@@ -12,7 +12,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import engine.handler.PetrinetManipulation;
+import engine.handler.petrinet.PetrinetHandler;
 
 public class TestStuff {
 
