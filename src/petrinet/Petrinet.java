@@ -1,13 +1,20 @@
 package petrinet;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//import com.sun.corba.se.spi.legacy.connection.GetEndPointInfoAgainException;
-
-import engine.handler.NodeTypeEnum;
+import petrinetze.impl.MockObjects;
 
 /**
  * @mainpage Hier entsteht die Mainpage. <li>
@@ -107,7 +114,7 @@ public class Petrinet {
 		onEdgeChanged(arc, ActionType.deleted);
 	}
 
-	private Arc getArcById(int id) {
+	public Arc getArcById(int id) {
 		for (Arc arc : getAllArcs()) {
 			if (arc.getId() == id) {
 				return arc;
