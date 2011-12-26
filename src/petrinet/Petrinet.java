@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import petrinetze.impl.MockObjects;
+//import petrinetze.impl.MockObjects;
 
 /**
  * @mainpage Hier entsteht die Mainpage. <li>
