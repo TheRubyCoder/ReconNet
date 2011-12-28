@@ -113,10 +113,11 @@ public class AttributePane {
 			String id = String.valueOf(edge.getId());
 			
 			ArcTableModel arcTableModel = new ArcTableModel(id,weight);
-			TableListener tableListener = new TableListener(1, edge);
+//			TableListener tableListener = new TableListener(PetrinetPane.getInstance().currentPetrinetId, edge);
 			
-			arcTableModel.addTableModelListener(tableListener);
 			table.setModel(arcTableModel);
+//			table.getModel().addTableModelListener(tableListener);
+//			arcTableModel.addTableModelListener(tableListener);
 		} catch (EngineException e) {
 			e.printStackTrace();
 		}
@@ -285,6 +286,7 @@ public class AttributePane {
 		}
 		
 		TableListener(int petrinetId, Arc arc){
+			System.out.println("erstellt");
 			this.petrinetId = petrinetId;
 			this.node = null;
 			this.arc = arc;
@@ -292,6 +294,7 @@ public class AttributePane {
 		
 		@Override
 		public void tableChanged(TableModelEvent e) {
+			System.out.println("changed");
 			int row = e.getFirstRow();
 	        int column = e.getColumn();
 	        TableModel model = (TableModel)e.getSource();
@@ -302,7 +305,7 @@ public class AttributePane {
 	        		try {
 						MainWindow.getPetrinetManipulation().setWeight(petrinetId, arc, Integer.parseInt(data));
 					} catch (NumberFormatException e1) {
-						PopUp.popError("Das gewicht muss eine natürliche Zahl sein.");
+						PopUp.popError("Das Gewicht muss eine natürliche Zahl sein.");
 						e1.printStackTrace();
 					} catch (EngineException e1) {
 						PopUp.popError(e1);

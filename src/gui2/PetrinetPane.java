@@ -9,6 +9,8 @@ import java.awt.geom.Point2D;
 
 import javax.swing.JPanel;
 
+import org.apache.commons.collections15.Transformer;
+
 import petrinet.Arc;
 import petrinet.INode;
 
@@ -20,11 +22,9 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
 import edu.uci.ics.jung.visualization.control.PickingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.ScalingControl;
-import edu.uci.ics.jung.visualization.renderers.EdgeArrowRenderingSupport;
-import edu.uci.ics.jung.visualization.renderers.Renderer;
 import edu.uci.ics.jung.visualization.renderers.Renderer.Vertex;
 import edu.uci.ics.jung.visualization.transform.shape.GraphicsDecorator;
-import engine.EditMode;
+import engine.attribute.ArcAttribute;
 import engine.attribute.TransitionAttribute;
 import engine.handler.NodeTypeEnum;
 import exceptions.EngineException;
@@ -52,7 +52,7 @@ class PetrinetPane {
 
 	/** singleton instance of this pane */
 	private static PetrinetPane instance;
-
+	
 	/** Returns the singleton instance for this pane */
 	public static PetrinetPane getInstance() {
 		return instance;
@@ -225,33 +225,39 @@ class PetrinetPane {
 			Point2D center = layout.transform(node);
 			try {
 				if (MainWindow.getPetrinetManipulation().getNodeType(node) == NodeTypeEnum.Place) {
-//					int greyness = 200;
-//					Color grey = new Color(greyness, greyness, greyness);
-					Color lightBlue = new Color(200,200,250);
-					decorator.setPaint(lightBlue);
-					
+//					PlaceAttribute placeAttribute = MainWindow.getPetrinetManipulation().getPlaceAttribute(PetrinetPane.getInstance().currentPetrinetId, node);
+					//commented because Engine mock throws exception
 					int width = 20;
 					int height = 15;
 					int x = (int) (center.getX() - width / 2);
 					int y = (int) (center.getY() - height / 2);
+					Color lightBlue = new Color(200,200,250);
+					decorator.setPaint(lightBlue);
+//					decorator.setPaint(placeAttribute.getColor()); //commented because Engine mock throws exception
 					decorator.fillOval(x, y, width, height);
+					
+					decorator.setPaint(FONT_COLOR);
+					decorator.drawString(node.getName(), x + width, y + height);
+//					decorator.drawString(placeAttribute.getPname(), x + width, y + height);
+					//commented because Engine mock throws exception
 				} else {
+					TransitionAttribute transitionAttribute = MainWindow.getPetrinetManipulation().getTransitionAttribute(PetrinetPane.getInstance().currentPetrinetId, node);
+					
 					Color blackOrWhite = null;
-					boolean isActivated = MainWindow
-						.getPetrinetManipulation()
-						.getTransitionAttribute(PetrinetPane.getInstance().currentPetrinetId, node)
-						.getIsActivated();
-					if (isActivated) {
+					if (transitionAttribute.getIsActivated()) {
 						blackOrWhite = Color.BLACK;
 					}else{
 						blackOrWhite = Color.LIGHT_GRAY;
 					}
-					decorator.setPaint(blackOrWhite);
 					
 					int size = 20;
 					int x = (int) (center.getX() - size / 2);
 					int y = (int) (center.getY() - size / 2);
+					decorator.setPaint(blackOrWhite);
 					decorator.fillRect(x, y, size, size);
+					
+					decorator.setPaint(FONT_COLOR);
+					decorator.drawString(transitionAttribute.getTname(), x + size, y + size);
 				}
 			} catch (EngineException e) {
 				PopUp.popError(e);
@@ -259,7 +265,26 @@ class PetrinetPane {
 			}
 		}
 	}
-
+	
+	/** Transforming Arcs to Strings. Actually just used for getting the label of an Arc */
+	private static class PetrinetArcLabelTransformer implements Transformer<Arc, String>{
+		@Override
+		public String transform(Arc arc) {
+			int weight = 1;
+			try {
+				ArcAttribute arcAttribute = MainWindow.getPetrinetManipulation().getArcAttribute(PetrinetPane.getInstance().currentPetrinetId, arc);
+				weight = arcAttribute.getWeight();
+			} catch (EngineException e) {
+				e.printStackTrace();
+			}
+			if (weight == 1) {
+				return "";
+			} else {
+				return String.valueOf(weight);
+			}
+		}
+	}
+	
 	/* Static constructor that initiates the singleton */
 	static {
 		instance = new PetrinetPane();
@@ -282,6 +307,8 @@ class PetrinetPane {
 		visualizationViewer.addMouseWheelListener(new PetrinetMouseListener(
 				this));
 		visualizationViewer.getRenderer().setVertexRenderer(new PetrinetRenderer()); //make transitions and places look like transitions and places
+		
+		visualizationViewer.getRenderContext().setEdgeLabelTransformer(new PetrinetArcLabelTransformer());
 	}
 
 	private JPanel getPetrinetPanel() {
