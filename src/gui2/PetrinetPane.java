@@ -2,12 +2,14 @@ package gui2;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
 
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 
 import org.apache.commons.collections15.Transformer;
 
@@ -52,12 +54,12 @@ class PetrinetPane {
 
 	/** singleton instance of this pane */
 	private static PetrinetPane instance;
-	
+
 	/** Returns the singleton instance for this pane */
 	public static PetrinetPane getInstance() {
 		return instance;
 	}
-
+	
 	/** mouse click listener for the drawing panel */
 	private static class PetrinetMouseListener extends
 			PickingGraphMousePlugin<INode, Arc> implements MouseWheelListener {
@@ -78,11 +80,17 @@ class PetrinetPane {
 		private int pressedX = 0;
 		/** Y-coordinate of begin of drag */
 		private int pressedY = 0;
-		
-		/** For defining maximim zoom. Places are not displayed correctly if the user zooms too deep */
+
+		/**
+		 * For defining maximim zoom. Places are not displayed correctly if the
+		 * user zooms too deep
+		 */
 		float currentZoom = 1;
-		
-		/** ID of node that was clicked at beginning of drag. Needed for drawing arcs */
+
+		/**
+		 * ID of node that was clicked at beginning of drag. Needed for drawing
+		 * arcs
+		 */
 		private INode nodeFromDrag = null;
 
 		/** Zoom petrinet on mouse wheel */
@@ -107,6 +115,10 @@ class PetrinetPane {
 		public void mouseClicked(MouseEvent e) {
 			super.mousePressed(e); // mousePressedEvent in class
 									// PickingGraphMousePlugin selects nodes
+			
+			if (e.isMetaDown()) {
+				System.out.println("right clicked");
+			}
 			EditorMode mode = EditorPane.getInstance().getCurrentMode();
 
 			if (mode == EditorMode.PICK) {
@@ -168,7 +180,7 @@ class PetrinetPane {
 					}
 					// dragging in arc mode
 				} else if (editorMode == EditorMode.ARC) {
-					//find out what was clicked on
+					// find out what was clicked on
 					super.mousePressed(e);
 					if (vertex != null) {
 						nodeFromDrag = vertex;
@@ -186,26 +198,28 @@ class PetrinetPane {
 
 			if (!oldPoint.equals(newPoint)) {
 				if (dragMode == DragMode.SCROLL) {
-					/* Scrolling is realized by zooming out of old position and
-					 * zooming in to new position */
+					/*
+					 * Scrolling is realized by zooming out of old position and
+					 * zooming in to new position
+					 */
 					petrinetPane.scaler.scale(petrinetPane.visualizationViewer,
 							0.5f, newPoint);
 					petrinetPane.scaler.scale(petrinetPane.visualizationViewer,
 							2f, oldPoint);
 				} else if (dragMode == DragMode.MOVENODE) {
 					PopUp.popUnderConstruction("Knoten verschieben");
-				} else if (dragMode == DragMode.ARC){
-					//find out what was released on
+				} else if (dragMode == DragMode.ARC) {
+					// find out what was released on
 					super.mousePressed(e);
-					if(vertex!= null){
+					if (vertex != null) {
 						try {
-							MainWindow.getPetrinetManipulation().createArc(petrinetPane.currentPetrinetId, 
-									nodeFromDrag, 
-									vertex);
+							MainWindow.getPetrinetManipulation().createArc(
+									petrinetPane.currentPetrinetId,
+									nodeFromDrag, vertex);
 						} catch (EngineException e1) {
 							e1.printStackTrace();
 						}
-						
+
 					}
 				}
 			}
@@ -213,10 +227,26 @@ class PetrinetPane {
 		}
 	} // end of mouse listener
 	
-	
-	
-	/** Custom renderer that is used from jung to make transitions cornered and places circular */
-	private static class PetrinetRenderer implements Vertex<INode, Arc>{
+	private static class PetrinetPopUpMenu extends JPopupMenu{
+		 static PetrinetPopUpMenu forNode(INode node){
+			 
+			 try {
+				if(MainWindow.getPetrinetManipulation().getNodeType(node) == NodeTypeEnum.Place){
+					 
+				 }
+			} catch (EngineException e) {
+				PopUp.popError(e);
+				e.printStackTrace();
+			}
+			return null;
+		 }
+	}
+
+	/**
+	 * Custom renderer that is used from jung to make transitions cornered and
+	 * places circular
+	 */
+	private static class PetrinetRenderer implements Vertex<INode, Arc> {
 
 		@Override
 		public void paintVertex(RenderContext<INode, Arc> renderContext,
@@ -225,39 +255,48 @@ class PetrinetPane {
 			Point2D center = layout.transform(node);
 			try {
 				if (MainWindow.getPetrinetManipulation().getNodeType(node) == NodeTypeEnum.Place) {
-//					PlaceAttribute placeAttribute = MainWindow.getPetrinetManipulation().getPlaceAttribute(PetrinetPane.getInstance().currentPetrinetId, node);
-					//commented because Engine mock throws exception
+					// PlaceAttribute placeAttribute =
+					// MainWindow.getPetrinetManipulation().getPlaceAttribute(PetrinetPane.getInstance().currentPetrinetId,
+					// node);
+					// commented because Engine mock throws exception
 					int width = 20;
 					int height = 15;
 					int x = (int) (center.getX() - width / 2);
 					int y = (int) (center.getY() - height / 2);
-					Color lightBlue = new Color(200,200,250);
+					Color lightBlue = new Color(200, 200, 250);
 					decorator.setPaint(lightBlue);
-//					decorator.setPaint(placeAttribute.getColor()); //commented because Engine mock throws exception
+					// decorator.setPaint(placeAttribute.getColor());
+					// //commented because Engine mock throws exception
 					decorator.fillOval(x, y, width, height);
-					
+
 					decorator.setPaint(FONT_COLOR);
 					decorator.drawString(node.getName(), x + width, y + height);
-//					decorator.drawString(placeAttribute.getPname(), x + width, y + height);
-					//commented because Engine mock throws exception
+					// decorator.drawString(placeAttribute.getPname(), x +
+					// width, y + height);
+					// commented because Engine mock throws exception
 				} else {
-					TransitionAttribute transitionAttribute = MainWindow.getPetrinetManipulation().getTransitionAttribute(PetrinetPane.getInstance().currentPetrinetId, node);
-					
+					TransitionAttribute transitionAttribute = MainWindow
+							.getPetrinetManipulation()
+							.getTransitionAttribute(
+									PetrinetPane.getInstance().currentPetrinetId,
+									node);
+
 					Color blackOrWhite = null;
 					if (transitionAttribute.getIsActivated()) {
 						blackOrWhite = Color.BLACK;
-					}else{
+					} else {
 						blackOrWhite = Color.LIGHT_GRAY;
 					}
-					
+
 					int size = 20;
 					int x = (int) (center.getX() - size / 2);
 					int y = (int) (center.getY() - size / 2);
 					decorator.setPaint(blackOrWhite);
 					decorator.fillRect(x, y, size, size);
-					
+
 					decorator.setPaint(FONT_COLOR);
-					decorator.drawString(transitionAttribute.getTname(), x + size, y + size);
+					decorator.drawString(transitionAttribute.getTname(), x
+							+ size, y + size);
 				}
 			} catch (EngineException e) {
 				PopUp.popError(e);
@@ -265,14 +304,21 @@ class PetrinetPane {
 			}
 		}
 	}
-	
-	/** Transforming Arcs to Strings. Actually just used for getting the label of an Arc */
-	private static class PetrinetArcLabelTransformer implements Transformer<Arc, String>{
+
+	/**
+	 * Transforming Arcs to Strings. Actually just used for getting the label of
+	 * an Arc
+	 */
+	private static class PetrinetArcLabelTransformer implements
+			Transformer<Arc, String> {
 		@Override
 		public String transform(Arc arc) {
 			int weight = 1;
 			try {
-				ArcAttribute arcAttribute = MainWindow.getPetrinetManipulation().getArcAttribute(PetrinetPane.getInstance().currentPetrinetId, arc);
+				ArcAttribute arcAttribute = MainWindow
+						.getPetrinetManipulation().getArcAttribute(
+								PetrinetPane.getInstance().currentPetrinetId,
+								arc);
 				weight = arcAttribute.getWeight();
 			} catch (EngineException e) {
 				e.printStackTrace();
@@ -284,7 +330,7 @@ class PetrinetPane {
 			}
 		}
 	}
-	
+
 	/* Static constructor that initiates the singleton */
 	static {
 		instance = new PetrinetPane();
@@ -306,9 +352,12 @@ class PetrinetPane {
 		visualizationViewer.addMouseListener(new PetrinetMouseListener(this));
 		visualizationViewer.addMouseWheelListener(new PetrinetMouseListener(
 				this));
-		visualizationViewer.getRenderer().setVertexRenderer(new PetrinetRenderer()); //make transitions and places look like transitions and places
-		
-		visualizationViewer.getRenderContext().setEdgeLabelTransformer(new PetrinetArcLabelTransformer());
+		visualizationViewer.getRenderer().setVertexRenderer(
+				new PetrinetRenderer()); // make transitions and places look
+											// like transitions and places
+
+		visualizationViewer.getRenderContext().setEdgeLabelTransformer(
+				new PetrinetArcLabelTransformer());
 	}
 
 	private JPanel getPetrinetPanel() {
