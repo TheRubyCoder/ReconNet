@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.geom.Point2D;
 
 import javax.swing.JPanel;
 
@@ -12,12 +13,20 @@ import petrinet.Arc;
 import petrinet.INode;
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
+import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
+import edu.uci.ics.jung.visualization.RenderContext;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
 import edu.uci.ics.jung.visualization.control.PickingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.ScalingControl;
+import edu.uci.ics.jung.visualization.renderers.EdgeArrowRenderingSupport;
+import edu.uci.ics.jung.visualization.renderers.Renderer;
+import edu.uci.ics.jung.visualization.renderers.Renderer.Vertex;
+import edu.uci.ics.jung.visualization.transform.shape.GraphicsDecorator;
 import engine.EditMode;
+import engine.attribute.TransitionAttribute;
+import engine.handler.NodeTypeEnum;
 import exceptions.EngineException;
 import gui2.EditorPane.EditorMode;
 
@@ -70,6 +79,9 @@ class PetrinetPane {
 		/** Y-coordinate of begin of drag */
 		private int pressedY = 0;
 		
+		/** For defining maximim zoom. Places are not displayed correctly if the user zooms too deep */
+		float currentZoom = 1;
+		
 		/** ID of node that was clicked at beginning of drag. Needed for drawing arcs */
 		private INode nodeFromDrag = null;
 
@@ -77,12 +89,17 @@ class PetrinetPane {
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e) {
 			Point point = new Point(e.getX(), e.getY());
+			System.out.println(currentZoom);
 			if (e.getWheelRotation() < 0) {
-				petrinetPane.scaler.scale(petrinetPane.visualizationViewer,
-						1.1f, point);
+				if (currentZoom * 1.1f <= 1) {
+					petrinetPane.scaler.scale(petrinetPane.visualizationViewer,
+							1.1f, point);
+					currentZoom *= 1.1f;
+				}
 			} else {
 				petrinetPane.scaler.scale(petrinetPane.visualizationViewer,
 						0.9f, point);
+				currentZoom *= 0.9f;
 			}
 		}
 
@@ -104,14 +121,14 @@ class PetrinetPane {
 				try {
 					if (mode == EditorMode.PLACE) {
 						MainWindow.getPetrinetManipulation().createPlace(
-								PetrinetPane.getInstance().currentPetrinetId,
+								petrinetPane.currentPetrinetId,
 								new Point(e.getX(), e.getY()));
 					} else if (mode == EditorMode.TRANSITION) {
 						MainWindow.getPetrinetManipulation().createTransition(
-								PetrinetPane.getInstance().currentPetrinetId,
+								petrinetPane.currentPetrinetId,
 								new Point(e.getX(), e.getY()));
 					}
-					PetrinetPane.getInstance().petrinetPanel.repaint();
+					petrinetPane.petrinetPanel.repaint();
 				} catch (EngineException e1) {
 					e1.printStackTrace();
 				}
@@ -172,9 +189,9 @@ class PetrinetPane {
 					/* Scrolling is realized by zooming out of old position and
 					 * zooming in to new position */
 					petrinetPane.scaler.scale(petrinetPane.visualizationViewer,
-							2f, oldPoint);
-					petrinetPane.scaler.scale(petrinetPane.visualizationViewer,
 							0.5f, newPoint);
+					petrinetPane.scaler.scale(petrinetPane.visualizationViewer,
+							2f, oldPoint);
 				} else if (dragMode == DragMode.MOVENODE) {
 					PopUp.popUnderConstruction("Knoten verschieben");
 				} else if (dragMode == DragMode.ARC){
@@ -182,7 +199,7 @@ class PetrinetPane {
 					super.mousePressed(e);
 					if(vertex!= null){
 						try {
-							MainWindow.getPetrinetManipulation().createArc(PetrinetPane.getInstance().currentPetrinetId, 
+							MainWindow.getPetrinetManipulation().createArc(petrinetPane.currentPetrinetId, 
 									nodeFromDrag, 
 									vertex);
 						} catch (EngineException e1) {
@@ -193,6 +210,53 @@ class PetrinetPane {
 				}
 			}
 			dragMode = DragMode.NONE;
+		}
+	} // end of mouse listener
+	
+	
+	
+	/** Custom renderer that is used from jung to make transitions cornered and places circular */
+	private static class PetrinetRenderer implements Vertex<INode, Arc>{
+
+		@Override
+		public void paintVertex(RenderContext<INode, Arc> renderContext,
+				Layout<INode, Arc> layout, INode node) {
+			GraphicsDecorator decorator = renderContext.getGraphicsContext();
+			Point2D center = layout.transform(node);
+			try {
+				if (MainWindow.getPetrinetManipulation().getNodeType(node) == NodeTypeEnum.Place) {
+//					int greyness = 200;
+//					Color grey = new Color(greyness, greyness, greyness);
+					Color lightBlue = new Color(200,200,250);
+					decorator.setPaint(lightBlue);
+					
+					int width = 20;
+					int height = 15;
+					int x = (int) (center.getX() - width / 2);
+					int y = (int) (center.getY() - height / 2);
+					decorator.fillOval(x, y, width, height);
+				} else {
+					Color blackOrWhite = null;
+					boolean isActivated = MainWindow
+						.getPetrinetManipulation()
+						.getTransitionAttribute(PetrinetPane.getInstance().currentPetrinetId, node)
+						.getIsActivated();
+					if (isActivated) {
+						blackOrWhite = Color.BLACK;
+					}else{
+						blackOrWhite = Color.LIGHT_GRAY;
+					}
+					decorator.setPaint(blackOrWhite);
+					
+					int size = 20;
+					int x = (int) (center.getX() - size / 2);
+					int y = (int) (center.getY() - size / 2);
+					decorator.fillRect(x, y, size, size);
+				}
+			} catch (EngineException e) {
+				PopUp.popError(e);
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -217,6 +281,7 @@ class PetrinetPane {
 		visualizationViewer.addMouseListener(new PetrinetMouseListener(this));
 		visualizationViewer.addMouseWheelListener(new PetrinetMouseListener(
 				this));
+		visualizationViewer.getRenderer().setVertexRenderer(new PetrinetRenderer()); //make transitions and places look like transitions and places
 	}
 
 	private JPanel getPetrinetPanel() {
