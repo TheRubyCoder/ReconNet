@@ -8,7 +8,6 @@ import java.awt.event.MouseWheelListener;
 
 import javax.swing.JPanel;
 
-
 import petrinet.Arc;
 import petrinet.INode;
 
@@ -18,6 +17,7 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
 import edu.uci.ics.jung.visualization.control.PickingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.ScalingControl;
+import engine.EditMode;
 import exceptions.EngineException;
 import gui2.EditorPane.EditorMode;
 
@@ -52,13 +52,13 @@ class PetrinetPane {
 	/** mouse click listener for the drawing panel */
 	private static class PetrinetMouseListener extends
 			PickingGraphMousePlugin<INode, Arc> implements MouseWheelListener {
-		
-		private static enum DragMode{
-			SCROLL, MOVENODE, NONE
+
+		private static enum DragMode {
+			SCROLL, MOVENODE, ARC, NONE
 		}
 
 		private PetrinetPane petrinetPane;
-		
+
 		private DragMode dragMode = DragMode.NONE;
 
 		PetrinetMouseListener(PetrinetPane petrinetPane) {
@@ -69,12 +69,14 @@ class PetrinetPane {
 		private int pressedX = 0;
 		/** Y-coordinate of begin of drag */
 		private int pressedY = 0;
+		
+		/** ID of node that was clicked at beginning of drag. Needed for drawing arcs */
+		private INode nodeFromDrag = null;
 
 		/** Zoom petrinet on mouse wheel */
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e) {
 			Point point = new Point(e.getX(), e.getY());
-			System.out.println(point);
 			if (e.getWheelRotation() < 0) {
 				petrinetPane.scaler.scale(petrinetPane.visualizationViewer,
 						1.1f, point);
@@ -86,7 +88,8 @@ class PetrinetPane {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			super.mousePressed(e); // mousePressedEvent in class PickingGraphMousePlugin selects nodes
+			super.mousePressed(e); // mousePressedEvent in class
+									// PickingGraphMousePlugin selects nodes
 			EditorMode mode = EditorPane.getInstance().getCurrentMode();
 
 			if (mode == EditorMode.PICK) {
@@ -97,56 +100,96 @@ class PetrinetPane {
 					AttributePane.getInstance().displayNode(vertex);
 					vertex = null;
 				}
-			}
+			} else
+				try {
+					if (mode == EditorMode.PLACE) {
+						MainWindow.getPetrinetManipulation().createPlace(
+								PetrinetPane.getInstance().currentPetrinetId,
+								new Point(e.getX(), e.getY()));
+					} else if (mode == EditorMode.TRANSITION) {
+						MainWindow.getPetrinetManipulation().createTransition(
+								PetrinetPane.getInstance().currentPetrinetId,
+								new Point(e.getX(), e.getY()));
+					}
+					PetrinetPane.getInstance().petrinetPanel.repaint();
+				} catch (EngineException e1) {
+					e1.printStackTrace();
+				}
 		}
-		
+
 		/** Checks if something is clicked without changing selection */
-		private boolean isAnythingClicked(MouseEvent e){
+		private boolean isAnythingClicked(MouseEvent e) {
 			Arc beforeEdge = edge;
 			INode beforeNode = vertex;
 			edge = null;
 			vertex = null;
-			super.mousePressed(e); 
-			
+			super.mousePressed(e);
+
 			boolean result = edge != null || vertex != null;
 			edge = beforeEdge;
 			vertex = beforeNode;
-			
+
 			return result;
 		}
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			if(EditorPane.getInstance().getCurrentMode() == EditorMode.PICK &&
-					dragMode == DragMode.NONE){
+			if (dragMode == DragMode.NONE) {
 				pressedX = e.getX();
 				pressedY = e.getY();
-				//find >out: scrolling or moving? -> is something clicked?
-				if(isAnythingClicked(e)){
-					//something is clicked -> MOVENODE
-					dragMode = DragMode.MOVENODE;
-				}else{
-					//nothing is clicked -> SCROLL
-					dragMode = DragMode.SCROLL;
+				EditorMode editorMode = EditorPane.getInstance()
+						.getCurrentMode();
+				// dragging in pick mode
+				if (editorMode == EditorMode.PICK) {
+					// find >out: scrolling or moving? -> is something clicked?
+					if (isAnythingClicked(e)) {
+						// something is clicked -> MOVENODE
+						dragMode = DragMode.MOVENODE;
+					} else {
+						// nothing is clicked -> SCROLL
+						dragMode = DragMode.SCROLL;
+					}
+					// dragging in arc mode
+				} else if (editorMode == EditorMode.ARC) {
+					//find out what was clicked on
+					super.mousePressed(e);
+					if (vertex != null) {
+						nodeFromDrag = vertex;
+						vertex = null;
+						dragMode = DragMode.ARC;
+					}
 				}
 			}
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			if (EditorPane.getInstance().getCurrentMode() == EditorMode.PICK &&
-					(e.getX() != pressedX || e.getY() != pressedY)) {
-				Point oldPoint = new Point(pressedX, pressedY);
-				Point newPoint = new Point(e.getX(), e.getY());
-				if(dragMode == DragMode.SCROLL){
+			Point oldPoint = new Point(pressedX, pressedY);
+			Point newPoint = new Point(e.getX(), e.getY());
+
+			if (!oldPoint.equals(newPoint)) {
+				if (dragMode == DragMode.SCROLL) {
 					/* Scrolling is realized by zooming out of old position and
 					 * zooming in to new position */
 					petrinetPane.scaler.scale(petrinetPane.visualizationViewer,
 							2f, oldPoint);
 					petrinetPane.scaler.scale(petrinetPane.visualizationViewer,
 							0.5f, newPoint);
-				}else if(dragMode == DragMode.MOVENODE){
+				} else if (dragMode == DragMode.MOVENODE) {
 					PopUp.popUnderConstruction("Knoten verschieben");
+				} else if (dragMode == DragMode.ARC){
+					//find out what was released on
+					super.mousePressed(e);
+					if(vertex!= null){
+						try {
+							MainWindow.getPetrinetManipulation().createArc(PetrinetPane.getInstance().currentPetrinetId, 
+									nodeFromDrag, 
+									vertex);
+						} catch (EngineException e1) {
+							e1.printStackTrace();
+						}
+						
+					}
 				}
 			}
 			dragMode = DragMode.NONE;

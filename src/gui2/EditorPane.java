@@ -93,7 +93,7 @@ class EditorPane {
 
 	/** Initiates the transition radio button with text and tool tip */
 	private JRadioButton initiateRadioTransitionButton() {
-		createTransitionButton = new JRadioButton("Stelle einfügen");
+		createTransitionButton = new JRadioButton("Transition einfügen");
 		createTransitionButton.setToolTipText("In diesem Modus fügen Sie mit einem Klick eine neue Transition hinzu");
 		
 		// the action command is used later on to identify wich button is selected
