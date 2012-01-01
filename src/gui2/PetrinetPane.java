@@ -2,12 +2,16 @@ package gui2;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
 
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
@@ -15,6 +19,8 @@ import org.apache.commons.collections15.Transformer;
 
 import petrinet.Arc;
 import petrinet.INode;
+import petrinet.Place;
+import petrinet.Transition;
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
@@ -27,6 +33,7 @@ import edu.uci.ics.jung.visualization.control.ScalingControl;
 import edu.uci.ics.jung.visualization.renderers.Renderer.Vertex;
 import edu.uci.ics.jung.visualization.transform.shape.GraphicsDecorator;
 import engine.attribute.ArcAttribute;
+import engine.attribute.PlaceAttribute;
 import engine.attribute.TransitionAttribute;
 import engine.handler.NodeTypeEnum;
 import exceptions.EngineException;
@@ -59,7 +66,7 @@ class PetrinetPane {
 	public static PetrinetPane getInstance() {
 		return instance;
 	}
-	
+
 	/** mouse click listener for the drawing panel */
 	private static class PetrinetMouseListener extends
 			PickingGraphMousePlugin<INode, Arc> implements MouseWheelListener {
@@ -97,7 +104,6 @@ class PetrinetPane {
 		@Override
 		public void mouseWheelMoved(MouseWheelEvent e) {
 			Point point = new Point(e.getX(), e.getY());
-			System.out.println(currentZoom);
 			if (e.getWheelRotation() < 0) {
 				if (currentZoom * 1.1f <= 1) {
 					petrinetPane.scaler.scale(petrinetPane.visualizationViewer,
@@ -115,19 +121,24 @@ class PetrinetPane {
 		public void mouseClicked(MouseEvent e) {
 			super.mousePressed(e); // mousePressedEvent in class
 									// PickingGraphMousePlugin selects nodes
-			
-			if (e.isMetaDown()) {
-				System.out.println("right clicked");
-			}
 			EditorMode mode = EditorPane.getInstance().getCurrentMode();
 
 			if (mode == EditorMode.PICK) {
 				if (edge != null) {
 					AttributePane.getInstance().displayEdge(edge);
-					edge = null;
+					if (e.isMetaDown()) {
+						PetrinetPopUpMenu.fromArc(edge).show(
+								PetrinetPane.getInstance().visualizationViewer,
+								e.getX(), e.getY());
+					}
+
 				} else if (vertex != null) {
 					AttributePane.getInstance().displayNode(vertex);
-					vertex = null;
+					if (e.isMetaDown()) {
+						PetrinetPopUpMenu.fromNode(vertex).show(
+								PetrinetPane.getInstance().visualizationViewer,
+								e.getX(), e.getY());
+					}
 				}
 			} else
 				try {
@@ -226,20 +237,107 @@ class PetrinetPane {
 			dragMode = DragMode.NONE;
 		}
 	} // end of mouse listener
-	
-	private static class PetrinetPopUpMenu extends JPopupMenu{
-		 static PetrinetPopUpMenu forNode(INode node){
-			 
-			 try {
-				if(MainWindow.getPetrinetManipulation().getNodeType(node) == NodeTypeEnum.Place){
-					 
-				 }
+
+	private static class PetrinetPopUpMenu extends JPopupMenu {
+
+		private static class MenuListener implements ActionListener {
+
+			private MenuListener() {
+			}
+
+			private Transition transition;
+
+			private Place place;
+
+			private Arc arc;
+
+			private int pId;
+
+			private MenuListener(Transition transition, Place place, Arc arc,
+					int pId) {
+				this.transition = transition;
+				this.place = place;
+				this.arc = arc;
+				this.pId = pId;
+			}
+
+			static MenuListener fromPlace(Place place, int pId) {
+				return new MenuListener(null, place, null, pId);
+			}
+
+			static MenuListener fromArc(Arc arc, int pId) {
+				return new MenuListener(null, null, arc, pId);
+			}
+
+			static MenuListener fromTransition(Transition transition, int pId) {
+				return new MenuListener(transition, null, null, pId);
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				try {
+					if (place != null) {
+						MainWindow.getPetrinetManipulation().deletePlace(pId,
+								place);
+					} else if (transition != null) {
+						MainWindow.getPetrinetManipulation().deleteTransition(
+								pId, transition);
+					} else {
+						MainWindow.getPetrinetManipulation().deleteArc(pId, arc);
+					}
+				} catch (EngineException e1) {
+					PopUp.popUnderConstruction("löschen");
+					e1.printStackTrace();
+				}
+			}
+		}
+
+		private PetrinetPopUpMenu() {
+		}
+
+		static PetrinetPopUpMenu fromNode(INode node) {
+			PetrinetPopUpMenu result = new PetrinetPopUpMenu();
+			int pId = PetrinetPane.getInstance().currentPetrinetId;
+			try {
+				if (MainWindow.getPetrinetManipulation().getNodeType(node) == NodeTypeEnum.Place) {
+					PlaceAttribute placeAttribute = MainWindow
+							.getPetrinetManipulation().getPlaceAttribute(pId,
+									node);
+					JMenuItem jMenuItem = new JMenuItem("Stelle "
+							+ placeAttribute.getPname() + " [" + node.getId()
+							+ "] " + "löschen");
+					jMenuItem.addActionListener(MenuListener
+							.fromPlace((Place) node, pId));
+					result.add(jMenuItem);
+				} else {
+					TransitionAttribute transitionAttribute = MainWindow
+							.getPetrinetManipulation()
+							.getTransitionAttribute(
+									PetrinetPane.getInstance().currentPetrinetId,
+									node);
+					JMenuItem jMenuItem = new JMenuItem("Transition "
+							+ transitionAttribute.getTname() + " ["
+							+ node.getId() + "] " + "löschen");
+					jMenuItem.addActionListener(MenuListener
+							.fromTransition((Transition) node, pId));
+					result.add(jMenuItem);
+				}
 			} catch (EngineException e) {
 				PopUp.popError(e);
 				e.printStackTrace();
 			}
-			return null;
-		 }
+			return result;
+		}
+
+		static PetrinetPopUpMenu fromArc(Arc arc) {
+			PetrinetPopUpMenu result = new PetrinetPopUpMenu();
+			JMenuItem jMenuItem = new JMenuItem("Pfeil [" + arc.getId()
+					+ "] löschen");
+			jMenuItem.addActionListener(MenuListener.fromArc(arc,
+					PetrinetPane.getInstance().currentPetrinetId));
+			result.add(jMenuItem);
+			return result;
+		}
 	}
 
 	/**
