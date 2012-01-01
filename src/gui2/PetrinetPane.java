@@ -491,4 +491,8 @@ class PetrinetPane {
 	public void addTo(JPanel frame) {
 		frame.add(getPetrinetPanel());
 	}
+
+	public void repaint() {
+		visualizationViewer.repaint();
+	}
 }
