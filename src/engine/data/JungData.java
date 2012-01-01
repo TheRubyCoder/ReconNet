@@ -41,8 +41,9 @@ final public class JungData {
 			throw new IllegalArgumentException("layout illegal type");
 		}		
 		
-		this.graph  = graph;
-		this.layout = layout;
+		this.graph       = graph;
+		this.layout      = layout;
+		this.placeColors = new HashMap<Place, Color>();
 	}
 	
 	/**
@@ -88,14 +89,6 @@ final public class JungData {
 		}
 		
 		return attributes;
-	}
-	
-	
-	public Color getPlaceColor(Place place) {
-		checkPlaceInvariant(place);
-		checkContainsNode(place);
-				
-		return null == placeColors.get(place) ? DEFAULT_COLOR_PLACE : placeColors.get(place);
 	}
 
 	/**
@@ -208,8 +201,38 @@ final public class JungData {
 		}
 		
 		for (INode node : nodes) {
-			check(graph.removeVertex(node), "node couldn't be removed");			
+			check(graph.removeVertex(node), "node couldn't be removed");
+			
+			placeColors.remove(node);
 		}
+	}
+
+	
+	/**
+	 * @param  node   place
+	 * @return Color  is DEFAULT_COLOR_PLACE, if no specific color was set
+	 */
+	public Color getPlaceColor(Place place) {
+		checkPlaceInvariant(place);
+		checkContainsNode(place);
+		
+		Color color = placeColors.get(place);
+				
+		return null == color ? DEFAULT_COLOR_PLACE : color;
+	}
+	
+
+	
+	/**
+	 * @param  node   place
+	 * @param  color  new Color
+	 */
+	public void setPlaceColor(Place place, Color color) {
+		checkPlaceInvariant(place);
+		checkContainsNode(place);
+		check(color instanceof Color, "color illegal type");
+				
+		placeColors.put(place, color);
 	}
 	
 	/**

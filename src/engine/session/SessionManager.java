@@ -3,109 +3,179 @@ package engine.session;
 import java.util.HashMap;
 import java.util.Map;
 
+import petrinet.Arc;
+import petrinet.INode;
 import petrinet.Petrinet;
+import transformation.Rule;
+import edu.uci.ics.jung.algorithms.layout.StaticLayout;
+import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import engine.data.JungData;
 import engine.data.PetrinetData;
 import engine.data.RuleData;
 import engine.data.SessionData;
 
-public class SessionManager {
+final public class SessionManager {
+	private static SessionManager     session;
+	private Map<Integer, SessionData> sessiondata;	
+	private int 					  idPetrinetData = 0;
 
-	private static SessionManager session;
-	
-	private Map<Integer, PetrinetData> petrinetdata;
-	private Map<Integer, RuleData> ruledata;
-	private Map<Integer, SessionData> sessiondata;
-	private int idPetrinetData = 0;
-	
-	private SessionManager(){
-		petrinetdata = new HashMap<Integer, PetrinetData>();
-		ruledata = new HashMap<Integer, RuleData>();
-		sessiondata = new HashMap<Integer, SessionData>();
+	private SessionManager() {
+		sessiondata  = new HashMap<Integer, SessionData>();
 	}
-	
-	public static SessionManager getInstance(){
-		if(session == null){
+
+	public static SessionManager getInstance() {
+		if (session == null) {
 			session = new SessionManager();
 		}
-		
+
 		return session;
 	}
-	
+
 	/**
 	 * Gets PetrinetData with the ID.
-	 * @param id from the PetrinetData
-	 * @return the PetrinetData with this id,
-	 * 		   null if the Id is not known
-	 */
-	public PetrinetData getPetrninetData(int id){
-		PetrinetData pd = petrinetdata.get(id);
-		
-		return pd;
-	}
-	
-	/**
 	 * 
+	 * @param  id from the PetrinetData
+	 * 
+	 * @return the PetrinetData with this id, null if the Id is not known
+	 */
+	public PetrinetData getPetrninetData(int id) {
+		SessionData data = sessiondata.get(id);
+		
+		checkPetrinetData(data);
+
+		return (PetrinetData) data;
+	}
+
+	/**
 	 * This method return the RuleData for the Id
 	 * 
-	 * @param id from the RuleData
+	 * @param  id from the RuleData
+	 * 
 	 * @return the RuleData or null if the Id is not valid
 	 */
-	public RuleData getRuleData(int id){
-		RuleData rd = ruledata.get(id);
+	public RuleData getRuleData(int id) {
+		SessionData data = sessiondata.get(id);
 		
-		return rd;
+		checkRuleData(data);
+
+		return (RuleData) data;
 	}
-	
+
 	/**
-	 * 
 	 * @param id
+	 * 
 	 * @return
 	 */
-	public SessionData getSessionData(int id){
-		return null; // TODO: !		
+	public SessionData getSessionData(int id) {
+		SessionData data = sessiondata.get(id);
+		
+		checkSessionData(data);
+
+		return data;
 	}
-	
+
 	/**
 	 * Create a new PetrinetData.
-	 * @param petrinet for the PetrinetData
+	 * 
+	 * @param  empty petrinet for the PetrinetData
+	 * 
 	 * @return the new PetrinetData
 	 */
-	public PetrinetData createPetrinetData(Petrinet petrinet){
-		/*JungData jd = new JungData(petrinet);
+	public PetrinetData createPetrinetData(Petrinet petrinet) {
+		checkEmptyPetrinet(petrinet);
+				
+		PetrinetData data = new PetrinetData(
+			getNextSessionDataId(), 
+			false, 
+			0, 
+			petrinet, 
+			getNewJungData()
+		); 
 		
-		PetrinetData pd = new PetrinetData(idPetrinetData, petrinet, jd);
-		
-		idPetrinetData += 1;
-		*/
-		
-		// TODO createPetrinetData, wie ohne koordinaten aufbauen?
-		throw new UnsupportedOperationException();
-		//return pd;
+		sessiondata.put(data.getId(), data);
+				
+		return data;
 	}
-	
+
 	/**
-	 * 
 	 * It create a new RuleData from all Petrinet (l, k, r).
 	 * 
-	 * @param l id of left Petrinet
-	 * @param k id of middle Petrinet
-	 * @param r id of right Petrinet
-	 * @return the new RuleData
+	 * @param  l id of left Petrinet
+	 * @param  k id of middle Petrinet
+	 * @param  r id of right Petrinet
 	 * 
+	 * @return the new RuleData
 	 */
-	public RuleData createRuleData(PetrinetData l, PetrinetData k, PetrinetData r){
+	public RuleData createRuleData(Rule rule) {
+		checkEmptyRule(rule);
+				
+		RuleData data = new RuleData(
+			getNextSessionDataId(), 
+			rule, 
+			getNewJungData(), 
+			getNewJungData(), 
+			getNewJungData()
+		);
 		
-		// TODO : id for internal map
-		// int id = ..?
-		
-		// TODO : Rule ansich..?
-		
-		// RuleData rd = new RuleData(<Rule>, l, k, r);
-		// return rd;
-		
-		throw new UnsupportedOperationException();
-
+		sessiondata.put(data.getId(), data);
+				
+		return data;
 	}
 	
+	
+	private JungData getNewJungData() {
+		DirectedSparseGraph<INode, Arc> graph = new DirectedSparseGraph<INode, Arc>();
+		
+		return new JungData(
+			graph, 
+			new StaticLayout<INode, Arc>(graph)
+		);
+	}
+	
+	private int getNextSessionDataId() {
+		idPetrinetData++;
+		
+		return idPetrinetData;
+	}
+	
+
+	/**
+	 * throws an exception, if check result is negative.
+	 * 
+	 * @param isValid	if false, exception is thrown	
+	 * @param message	message of exception
+	 */
+	private void check(boolean isValid, String message) {
+		if (!isValid) {
+			throw new IllegalArgumentException(message);
+		}
+	}
+
+
+	public void checkSessionData(SessionData data) {
+		check(data instanceof SessionData, "data not of type SessionData");
+	}
+
+	public void checkPetrinetData(SessionData data) {
+		check(data instanceof PetrinetData, "data not of type PetrinetData");
+	}
+
+
+	public void checkRuleData(SessionData data) {
+		check(data instanceof RuleData, "data not of type RuleData");
+	}
+
+	public void checkEmptyPetrinet(Petrinet petrinet) {
+		check(petrinet instanceof Petrinet, "petrinet not of type Petrinet");
+		check(petrinet.getAllArcs().isEmpty(), "arcs have to be empty");
+		check(petrinet.getAllPlaces().isEmpty(), "arcs have to be empty");
+		check(petrinet.getAllTransitions().isEmpty(), "arcs have to be empty");
+	}
+
+	public void checkEmptyRule(Rule rule) {
+		check(rule instanceof Rule, "rule not of type Rule");
+		checkEmptyPetrinet(rule.getK());
+		checkEmptyPetrinet(rule.getL());
+		checkEmptyPetrinet(rule.getR());
+	}
 }
