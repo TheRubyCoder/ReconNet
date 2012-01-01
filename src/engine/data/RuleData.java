@@ -8,8 +8,7 @@ import transformation.Rule;
  * @author alex (aas772)
  */
 
-final public class RuleData implements SessionData {
-	private int      id;
+final public class RuleData extends SessionDataAbstract {
 	private Rule     rule;
 	private JungData jungDataL;
 	private JungData jungDataK;
@@ -17,17 +16,24 @@ final public class RuleData implements SessionData {
 	
 	private RuleData() {}
 	
-	public RuleData(int id, Rule rule, JungData lJungData, JungData kJungData, JungData rJungData){
-		this.id      = id;
+	public RuleData(int id, Rule rule, JungData lJungData, JungData kJungData, JungData rJungData) {
+		check(id > 0, "id have to be greater than 0");
+		check(rule instanceof Rule, "petrinet not of type Petrinet");
+		check(lJungData instanceof JungData, "lJungData not of type JungData");
+		check(kJungData instanceof JungData, "kJungData not of type JungData");
+		check(rJungData instanceof JungData, "rJungData not of type JungData");
+		
+		checkContaining(rule.getK(), kJungData);
+		checkContaining(rule.getL(), lJungData);
+		checkContaining(rule.getR(), rJungData);
+		
+		check(!(kJungData == lJungData || lJungData == rJungData || kJungData == rJungData), "jungData same instance");
+		
+		this.id        = id;
 		this.rule      = rule;
 		this.jungDataL = lJungData;
 		this.jungDataK = kJungData;
 		this.jungDataR = rJungData;
-	}
-	
-	@Override
-	public int getId() {
-		return id;
 	}
 	
 	/**
@@ -65,6 +71,7 @@ final public class RuleData implements SessionData {
 	public Rule getRule(){
 		return rule;
 	}
+
 
 	@Override
 	public int hashCode() {

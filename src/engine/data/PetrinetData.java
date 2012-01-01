@@ -1,16 +1,20 @@
 package engine.data;
 
+import edu.uci.ics.jung.graph.DirectedGraph;
+import petrinet.Arc;
+import petrinet.INode;
 import petrinet.Petrinet;
+import petrinet.Place;
+import petrinet.Transition;
 
 /**
  * This Class holds all information: Petrinet and JungData with a Id
  */
 
-public class PetrinetData implements SessionData {
+final public class PetrinetData extends SessionDataAbstract {
 	private Petrinet petrinet;
 	private JungData jungData;
 	private boolean  isSimulation;
-	private int      id;
 	private int      parentId;
 
 	private PetrinetData() {}
@@ -24,16 +28,24 @@ public class PetrinetData implements SessionData {
 	 * @param jungData
 	 */
 	public PetrinetData(int id, boolean isSimulation, int parentId, Petrinet petrinet, JungData jungData) {
+		check(id > 0, "id have to be greater than 0");
+		check(parentId >= 0, "id have to be greater or equal 0");
+		check(petrinet instanceof Petrinet, "petrinet not of type Petrinet");
+		check(jungData instanceof JungData, "jungData not of type JungData");
+
+		// isSimulation -> (parentId > 0)
+		check(!isSimulation || parentId > 0, "a simulation net must have a parentId");
+
+		// (parentId > 0) -> isSimulation 
+		check(!(parentId > 0) || isSimulation, "a net with a parentId must be a simulation net");
+		
+		checkContaining(petrinet, jungData);
+		
 		this.id           = id;
 		this.parentId     = parentId;
 		this.petrinet     = petrinet;
 		this.jungData     = jungData;
 		this.isSimulation = isSimulation;
-	}
-
-	@Override
-	public int getId() {
-		return id;
 	}
 	
 	public boolean isSimulation() {

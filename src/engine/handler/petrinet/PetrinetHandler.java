@@ -58,7 +58,7 @@ final public class PetrinetHandler {
 	public Arc createArc(@NotNull int id, @NotNull INode from, @NotNull INode to)
 			throws EngineException {
 
-		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
 
 		// Test: is id valid
 		if (petrinetData == null) {
@@ -133,7 +133,7 @@ final public class PetrinetHandler {
 			throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
-		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
 
 		// Test: is id valid
 		if (petrinetData == null) {
@@ -181,7 +181,7 @@ final public class PetrinetHandler {
 			throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
-		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
 
 		// Test: is id valid
 		if (petrinetData == null) {
@@ -217,7 +217,7 @@ final public class PetrinetHandler {
 			throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
-		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
 
 		// Test: is id valid
 		if (petrinetData == null) {
@@ -257,7 +257,7 @@ final public class PetrinetHandler {
 	private void deleteInternal(@NotNull int id, @NotNull INode node) throws EngineException {
 		
 		// get the Petrinet from the id and SessionManager
-		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
 
 		// Test: is id valid
 		if (petrinetData == null) {
@@ -316,7 +316,7 @@ final public class PetrinetHandler {
 			throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
-		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
 
 		// Test: is id valid
 		if (petrinetData == null) {
@@ -376,7 +376,7 @@ final public class PetrinetHandler {
 			throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
-		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
 
 		// Test: is id valid
 		if (petrinetData == null) {
@@ -464,7 +464,7 @@ final public class PetrinetHandler {
 			@NotNull Point2D relativePosition) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
-		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
 
 		// Test: is id valid
 		if (petrinetData == null) {
@@ -524,7 +524,7 @@ final public class PetrinetHandler {
 			@NotNull int marking) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
-		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
 
 		// Test: is id valid
 		if (petrinetData == null) {
@@ -558,7 +558,7 @@ final public class PetrinetHandler {
 			@NotNull String pname) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
-		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
 
 		// Test: is id valid
 		if (petrinetData == null) {
@@ -592,7 +592,7 @@ final public class PetrinetHandler {
 			@NotNull String tlb) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
-		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
 
 		// Test: is id valid
 		if (petrinetData == null) {
@@ -626,7 +626,7 @@ final public class PetrinetHandler {
 			@NotNull String tname) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
-		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
 
 		// Test: is id valid
 		if (petrinetData == null) {
@@ -660,7 +660,7 @@ final public class PetrinetHandler {
 			throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
-		PetrinetData petrinetData = sessionManager.getPetrninetData(id);
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
 
 		// Test: is id valid
 		if (petrinetData == null) {

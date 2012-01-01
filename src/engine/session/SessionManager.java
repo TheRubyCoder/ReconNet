@@ -38,7 +38,7 @@ final public class SessionManager {
 	 * 
 	 * @return the PetrinetData with this id, null if the Id is not known
 	 */
-	public PetrinetData getPetrninetData(int id) {
+	public PetrinetData getPetrinetData(int id) {
 		SessionData data = sessiondata.get(id);
 		
 		checkPetrinetData(data);
@@ -152,27 +152,27 @@ final public class SessionManager {
 	}
 
 
-	public void checkSessionData(SessionData data) {
+	private void checkSessionData(SessionData data) {
 		check(data instanceof SessionData, "data not of type SessionData");
 	}
 
-	public void checkPetrinetData(SessionData data) {
+	private void checkPetrinetData(SessionData data) {
 		check(data instanceof PetrinetData, "data not of type PetrinetData");
 	}
 
 
-	public void checkRuleData(SessionData data) {
+	private void checkRuleData(SessionData data) {
 		check(data instanceof RuleData, "data not of type RuleData");
 	}
 
-	public void checkEmptyPetrinet(Petrinet petrinet) {
+	private void checkEmptyPetrinet(Petrinet petrinet) {
 		check(petrinet instanceof Petrinet, "petrinet not of type Petrinet");
 		check(petrinet.getAllArcs().isEmpty(), "arcs have to be empty");
 		check(petrinet.getAllPlaces().isEmpty(), "arcs have to be empty");
 		check(petrinet.getAllTransitions().isEmpty(), "arcs have to be empty");
 	}
 
-	public void checkEmptyRule(Rule rule) {
+	private void checkEmptyRule(Rule rule) {
 		check(rule instanceof Rule, "rule not of type Rule");
 		checkEmptyPetrinet(rule.getK());
 		checkEmptyPetrinet(rule.getL());
