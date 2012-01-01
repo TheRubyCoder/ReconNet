@@ -238,8 +238,12 @@ class PetrinetPane {
 		}
 	} // end of mouse listener
 
+	/** Pop up menu that appears when a node or arc is right-clicked. It is used for deleting */
 	private static class PetrinetPopUpMenu extends JPopupMenu {
 
+		/** Listener for clicking on menu items<br>
+		 * Each menu item has its own listener*/
+		/* There are 3 types of listeners as there are 3 types of pop up menus: Node(Place/Transition) and Arc*/
 		private static class MenuListener implements ActionListener {
 
 			private MenuListener() {
@@ -286,7 +290,7 @@ class PetrinetPane {
 						MainWindow.getPetrinetManipulation().deleteArc(pId, arc);
 					}
 				} catch (EngineException e1) {
-					PopUp.popUnderConstruction("löschen");
+					PopUp.popUnderConstruction(e.getActionCommand());
 					e1.printStackTrace();
 				}
 			}
