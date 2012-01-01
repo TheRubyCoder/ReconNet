@@ -21,9 +21,11 @@ import exceptions.EngineException;
 import petrinet.Arc;
 import petrinet.INode;
 import petrinet.IRenew;
+import petrinet.Place;
 import petrinet.RenewCount;
 import petrinet.RenewId;
 import petrinet.RenewMap;
+import petrinet.Transition;
 
 import static gui2.Style.*;
 
@@ -86,12 +88,15 @@ public class AttributePane {
 			NodeTypeEnum type = (NodeTypeEnum) MainWindow
 					.getPetrinetManipulation().getNodeType(node);
 			String id = String.valueOf(node.getId());
+			AbstractPetriTableModel tableModel = null;
 			if (type == NodeTypeEnum.Place) {
 				PlaceAttribute placeAttribute = MainWindow
 						.getPetrinetManipulation().getPlaceAttribute(1, node);
 				String name = placeAttribute.getPname();
 				String mark = String.valueOf(placeAttribute.getMarking());
-				table.setModel(new PlaceTableModel(id, name, mark));
+
+				tableModel = new PlaceTableModel(id, name,
+						mark);
 			} else {
 				TransitionAttribute transitionAttribute = MainWindow
 						.getPetrinetManipulation().getTransitionAttribute(1,
@@ -107,9 +112,12 @@ public class AttributePane {
 				} else if (renew instanceof RenewMap) {
 					renewString = "map: " + renew;
 				}
-				table.setModel(new TransitionTableModel(id, name, tlb,
-						renewString));
+				tableModel = new TransitionTableModel(
+						id, name, tlb, renewString);
 			}
+			tableModel.addTableModelListener(new TableListener(
+					PetrinetPane.getInstance().currentPetrinetId, node));
+			table.setModel(tableModel);
 		} catch (EngineException e) {
 			e.printStackTrace();
 		}
@@ -298,7 +306,6 @@ public class AttributePane {
 		}
 
 		TableListener(int petrinetId, Arc arc) {
-			System.out.println("erstellt");
 			this.petrinetId = petrinetId;
 			this.node = null;
 			this.arc = arc;
@@ -306,7 +313,6 @@ public class AttributePane {
 
 		@Override
 		public void tableChanged(TableModelEvent e) {
-			System.out.println("changed");
 			int row = e.getFirstRow();
 			int column = e.getColumn();
 			TableModel model = (TableModel) e.getSource();
@@ -325,9 +331,32 @@ public class AttributePane {
 						e1.printStackTrace();
 					}
 				}
+			} else if (node != null) {
+				try {
+					if (MainWindow.getPetrinetManipulation().getNodeType(node) == NodeTypeEnum.Place) {
+						Place place = (Place) node;
+						if (attribute.equals("Name")) {
+							MainWindow
+							.getPetrinetManipulation()
+							.setPname(
+									PetrinetPane.getInstance().currentPetrinetId,
+									place, data);
+						}
+
+					} else {
+						Transition transition = (Transition) node;
+						if (attribute.equals("Name")) {
+							MainWindow
+									.getPetrinetManipulation()
+									.setTname(
+											PetrinetPane.getInstance().currentPetrinetId,
+											transition, data);
+						}
+					}
+				} catch (EngineException e1) {
+					e1.printStackTrace();
+				}
 			}
-			System.out.println("Der Wert " + attribute + " wurde auf " + data
-					+ " gesetzt.");
 		}
 
 	}
