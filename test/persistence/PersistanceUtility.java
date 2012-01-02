@@ -18,7 +18,7 @@ import engine.ihandler.IPetrinetPersistence;
 public class PersistanceUtility implements IPersistance {
 
 	@Override
-	public boolean save(String pathAndFilename, Petrinet petrinet,
+	public boolean savePetrinet(String pathAndFilename, Petrinet petrinet,
 			Map<INode, NodeLayoutAttribute> nodeMap) {
 
 		/*		    
@@ -32,7 +32,7 @@ public class PersistanceUtility implements IPersistance {
 	}
 
 	@Override
-	public int load(String pathAndFilename, IPetrinetPersistence handler) {
+	public int loadPetrinet(String pathAndFilename, IPetrinetPersistence handler) {
 		Pnml pnml=new Pnml();
 		JAXBContext context;
 		try {
@@ -60,6 +60,20 @@ public class PersistanceUtility implements IPersistance {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return 0;
+	}
+
+
+	@Override
+	public boolean saveRule(String pathAndFilename, Petrinet petrinet,
+			Map<INode, NodeLayoutAttribute> nodeMap) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int loadRule(String pathAndFilename, IPetrinetPersistence handler) {
+		// TODO Auto-generated method stub
 		return 0;
 	}
 

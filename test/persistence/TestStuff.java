@@ -13,6 +13,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import engine.handler.petrinet.PetrinetHandler;
+import engine.handler.petrinet.PetrinetPersistence;
 
 public class TestStuff {
 
@@ -23,6 +24,8 @@ public class TestStuff {
 	 */
 	public static void main(String[] args) throws FileNotFoundException, JAXBException {
 		Pnml pnml=new Pnml();
+
+		
 		JAXBContext context =  
 	        JAXBContext.newInstance( persistence.Pnml.class , Arc.class, Converter.class, Dimension.class, Graphics.class, InitialMarking.class, Name.class, Net.class,
 	        		Page.class, Place.class, PlaceName.class, Position.class, Transition.class, TransitionLabel.class, TransitionName.class, TransitionRenew.class);

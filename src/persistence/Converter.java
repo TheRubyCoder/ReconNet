@@ -10,14 +10,19 @@ import java.util.Set;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
+import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
+import engine.handler.RuleNet;
+import engine.handler.rule.RuleHandler;
 import engine.ihandler.IPetrinetManipulation;
 import engine.ihandler.IPetrinetPersistence;
+import engine.ihandler.IRulePersistence;
 import exceptions.EngineException;
 
 import petrinet.INode;
 import petrinet.IPetrinet;
 import petrinet.Petrinet;
 import petrinet.PetrinetComponent;
+import transformation.Rule;
 
 public class Converter {
 
@@ -162,6 +167,69 @@ public class Converter {
 			e.printStackTrace();
 			return false;
 		}
+	}
+	
+	public static boolean convertToRule(Pnml pnml, IRulePersistence handler){
+		int id=handler.createRule();
+		
+		
+		
+		return false;
+	}
+	
+	public static Pnml convertRuleToPnml( Rule rule, RuleHandler handler){
+		Pnml pnml=new Pnml();
+		
+		pnml.net = new ArrayList<Net>();
+		Net lNet = new Net();
+		Net kNet = new Net();
+		Net rNet = new Net();
+		lNet.setId(String.valueOf(rule.getL().getId()));
+		
+		
+		
+		//pnml.net.add(xmlnet);
+		
+		
+		return pnml;
+	}
+	
+	private Net createNet(RuleNet petrinet, IRulePersistence handler){
+		Net net=new Net();
+		Page page=new Page();
+		
+	/*	net.setId(String.valueOf(petrinet.getId()));
+		
+		Set arcs=petrinet.getAllArcs();
+		Set<petrinet.Place> places=petrinet.getAllPlaces();
+		Set transis=petrinet.getAllTransitions();
+		
+		//inserting places
+		for(petrinet.Place p:places){
+			Place newPlace=new Place();
+			
+			//name
+			PlaceName name=new PlaceName();
+			name.setText(p.getName());
+			newPlace.setPlaceName(name);
+			
+			//id
+			newPlace.setId(String.valueOf(p.getId()));
+			
+			//Coordinates
+			Graphics graphics=new Graphics();
+			Dimension d=new Dimension();
+			Position pos=new Position();
+			handler.getJungLayout(p.getId(), petrinet);
+			
+			
+			
+			
+		}
+		*/
+		
+		
+		return net;
 	}
 
 }

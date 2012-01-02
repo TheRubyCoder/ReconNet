@@ -12,6 +12,7 @@ import javax.xml.bind.Unmarshaller;
 import org.junit.Test;
 
 import engine.handler.petrinet.PetrinetHandler;
+import engine.handler.petrinet.PetrinetPersistence;
 
 public class PersistanceTest {
 
@@ -36,6 +37,7 @@ public class PersistanceTest {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		// TODO: enable code again if internal API is fully implemented; see engine.session.SessionManager.createPetrinetData(SessionManager.java:80)
 		/*
 		PetrinetManipulation petriManipulation = PetrinetManipulation.getInstance();

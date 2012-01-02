@@ -23,7 +23,7 @@ public interface IPersistance {
 	 * @param nodeMap consists of INode and NodeLayoutAttribute. NodeLayoutAttribute contains a Point2D, Color.
 	 * @return false if something went wrong, else 
 	 */
-	public boolean save(String pathAndFilename, petrinet.Petrinet petrinet, Map<INode, NodeLayoutAttribute> nodeMap);
+	public boolean savePetrinet(String pathAndFilename, petrinet.Petrinet petrinet, Map<INode, NodeLayoutAttribute> nodeMap);
 	
 	/**
 	 * Load an Petrinet.
@@ -31,6 +31,11 @@ public interface IPersistance {
 	 * @param handler A instance of the IPetrinetHandler
 	 * @return Id from Petrinet
 	 */
-	public int load(String pathAndFilename, engine.ihandler.IPetrinetPersistence handler);
+	public int loadPetrinet(String pathAndFilename, engine.ihandler.IPetrinetPersistence handler);
+	
+	
+	public  boolean saveRule(String pathAndFilename, petrinet.Petrinet petrinet, Map<INode, NodeLayoutAttribute> nodeMap);
+	
+	public int loadRule(String pathAndFilename, engine.ihandler.IPetrinetPersistence handler);
 	
 }
