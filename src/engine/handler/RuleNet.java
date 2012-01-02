@@ -1,5 +1,5 @@
 package engine.handler;
 
 public enum RuleNet {
-	// TODO
+	L,K,R
 }
