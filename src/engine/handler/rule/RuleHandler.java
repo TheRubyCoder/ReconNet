@@ -17,9 +17,9 @@ import petrinet.Transition;
 import transformation.Rule;
 import transformation.TransformationComponent;
 
-import com.sun.istack.NotNull;
 
-import data.Rule1Data;
+
+
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
@@ -28,7 +28,6 @@ import engine.attribute.PlaceAttribute;
 import engine.attribute.RuleAttribute;
 import engine.attribute.TransitionAttribute;
 import engine.data.JungData;
-import engine.data.PetrinetData;
 import engine.data.RuleData;
 import engine.handler.NodeTypeEnum;
 import engine.handler.RuleNet;
@@ -287,12 +286,12 @@ final public class RuleHandler {
 		}
 	}
 
-	public void deletePlace(int id, RuleNet net, INode place) {
-
+	public void deletePlace(int id, RuleNet net, INode place) throws EngineException {
+		deleteInternal(id, net, place);
 	}
 
-	public void deleteTransition(int id, RuleNet net, INode transition) {
-
+	public void deleteTransition(int id, RuleNet net, INode transition) throws EngineException {
+		deleteInternal(id, net, transition);
 	}
 
 	private void deleteInternal(int id, RuleNet net, INode node) throws EngineException {
@@ -382,23 +381,19 @@ final public class RuleHandler {
 			exception("RuleManipulation - id of the Rule is wrong");
 		} else {
 			Rule rule = ruleData.getRule();
-			Petrinet petrinet = null;
 			JungData jungData = null;
 
 			if (net.equals(RuleNet.L)) {
 				// Manipulation in L
-				// Get Petrinet and corresponding JungData
-				petrinet = rule.getL();
+				// Get JungData
 				jungData = ruleData.getLJungData();
 			} else if (net.equals(RuleNet.K)) {
 				// Manipulation in K
-				// Get Petrinet and corresponding JungData
-				petrinet = rule.getK();
+				// Get JungData
 				jungData = ruleData.getKJungData();
 			} else if (net.equals(RuleNet.R)) {
 				// Manipulation in R
-				// Get Petrinet and corresponding JungData
-				petrinet = rule.getR();
+				// Get JungData
 				jungData = ruleData.getRJungData();
 			} else {
 				exception("Not given if Manipulation is in L,K or R");
@@ -836,7 +831,7 @@ final public class RuleHandler {
 
 	}
 
-	private void exception(@NotNull String value) throws EngineException {
+	private void exception(String value) throws EngineException {
 		throw new EngineException(value);
 	}
 
