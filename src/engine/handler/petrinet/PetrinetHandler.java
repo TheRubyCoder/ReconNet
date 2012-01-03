@@ -332,6 +332,8 @@ final public class PetrinetHandler {
 			 
 			 AbstractLayout<INode, Arc> layout = jungData.getJungLayout();
 			 			 
+			 System.out.println("petrinethandle::layout: '" + layout.getGraph() + "'");
+			 
 			 return layout;
 
 		}

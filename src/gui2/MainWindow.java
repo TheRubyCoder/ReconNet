@@ -1,8 +1,11 @@
 package gui2;
 
+import static gui2.Style.HEADER_DIMENSION;
+import static gui2.Style.LEFT_PANEL_DIMENSION;
+import static gui2.Style.TOTAL_HEIGHT;
+import static gui2.Style.TOTAL_WIDTH;
+
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.JFrame;
@@ -10,12 +13,8 @@ import javax.swing.JPanel;
 
 import engine.EngineMockup;
 import engine.EngineMockupWithEngine;
-import engine.handler.petrinet.PetrinetManipulation;
 import engine.ihandler.IPetrinetManipulation;
 import exceptions.EngineException;
-
-
-import static gui2.Style.*;
 
 /**
  * Main Window that contains all sub areas

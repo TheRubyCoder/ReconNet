@@ -9,16 +9,10 @@ import petrinet.INode;
 import petrinet.Petrinet;
 import petrinet.Place;
 import petrinet.Transition;
-import transformation.dependency.PetrinetAdapter;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
-import edu.uci.ics.jung.algorithms.layout.StaticLayout;
-import edu.uci.ics.jung.graph.DirectedGraph;
-import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.TransitionAttribute;
-import engine.data.JungData;
-import engine.handler.NodeTypeEnum;
 import engine.handler.petrinet.PetrinetManipulation;
 import engine.ihandler.IPetrinetManipulation;
 import engine.session.SessionManager;
@@ -41,6 +35,8 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 	
 	public void build() throws EngineException {		
 
+		System.out.println("id: " + id);
+		
 		createPlace(id, new Point2D.Double(10, 10));
 		createPlace(id, new Point2D.Double(10, 100));
 		createPlace(id, new Point2D.Double(100, 10));
@@ -52,6 +48,8 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 		createTransition(id, new Point2D.Double(55, 100));
 
 		Petrinet petrinet = SessionManager.getInstance().getPetrinetData(1).getPetrinet();
+		
+		System.out.println("netz: " + petrinet);
 		
 		List<Place> 	 places 	 = new ArrayList<Place>(petrinet.getAllPlaces());
 		List<Transition> transitions = new ArrayList<Transition>(petrinet.getAllTransitions());
@@ -67,6 +65,11 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 		
 		createArc(id, places.get(3),      transitions.get(3));
 		createArc(id, transitions.get(3), places.get(0));
+		
+		Petrinet petrinet2 = SessionManager.getInstance().getPetrinetData(id	).getPetrinet();
+		
+		System.out.println("netz: " + petrinet2);
+		System.out.println(iPetrinetManipulation.getJungLayout(id).getGraph());
 	}
 
 	@Override

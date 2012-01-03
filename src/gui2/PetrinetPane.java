@@ -474,7 +474,7 @@ class PetrinetPane {
 		try {
 			AbstractLayout<INode, Arc> layout = MainWindow.getPetrinetManipulation().getJungLayout(
 					currentPetrinetId);
-			
+
 			return layout;
 		} catch (EngineException e) {
 			e.printStackTrace();
