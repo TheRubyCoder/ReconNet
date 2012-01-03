@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import persistence.Persistence;
 import petrinet.Arc;
 import petrinet.ElementType;
 import petrinet.INode;
@@ -62,7 +63,7 @@ final public class PetrinetHandler {
 
 		// Test: is id valid
 		if (petrinetData == null) {
-			exception("PetrinetHandler[46] - id of the Petrinet is wrong");
+			exception("createArc - id of the Petrinet is wrong");
 
 			return null;
 		} else {
@@ -91,7 +92,7 @@ final public class PetrinetHandler {
 				try {
 					jungData.createArc(arc, fromPlace, toTransition);
 				} catch (IllegalArgumentException e) {
-					exception("PetrinetManipulation - can not create Arc");
+					exception("createArc - can not create Arc");
 				}
 
 				return arc;
@@ -116,12 +117,12 @@ final public class PetrinetHandler {
 				try {
 					jungData.createArc(arc, fromTransition, toPlace);
 				} catch (IllegalArgumentException e) {
-					exception("PetrinetManipulation - can not create Arc");
+					exception("createArc - can not create Arc");
 				}
 
 				return arc;
 			} else {
-				exception("PetrinetManipulation - wrong combi");
+				exception("createArc - wrong combi");
 
 				return null;
 			}
@@ -137,7 +138,7 @@ final public class PetrinetHandler {
 
 		// Test: is id valid
 		if (petrinetData == null) {
-			exception("PetrinetHandler[111] - id of the Petrinet is wrong");
+			exception("createPlace - id of the Petrinet is wrong");
 
 			return null;
 		} else {
@@ -156,7 +157,7 @@ final public class PetrinetHandler {
 			try {
 				jungData.createPlace(newPlace, coordinate);
 			} catch (IllegalArgumentException e) {
-				exception("PetrinetManipulation - can not create Place");
+				exception("createPlace - can not create Place");
 			}
 
 			return newPlace;
@@ -185,7 +186,7 @@ final public class PetrinetHandler {
 
 		// Test: is id valid
 		if (petrinetData == null) {
-			exception("PetrinetHandler[154] - id of the Petrinet is wrong");
+			exception("createTransition - id of the Petrinet is wrong");
 
 			return null;
 		} else {
@@ -205,7 +206,7 @@ final public class PetrinetHandler {
 			try {
 				jungData.createTransition(newTransition, coordinate);
 			} catch (IllegalArgumentException e) {
-				exception("PetrinetManipulation - can not create Transition");
+				exception("createTransition - can not create Transition");
 			}
 
 			return newTransition;
@@ -221,7 +222,7 @@ final public class PetrinetHandler {
 
 		// Test: is id valid
 		if (petrinetData == null) {
-			exception("PetrinetHandler[185] - id of the Petrinet is wrong");
+			exception("deleteArc - id of the Petrinet is wrong");
 		} else {
 
 			Petrinet petrinet = petrinetData.getPetrinet();
@@ -238,7 +239,7 @@ final public class PetrinetHandler {
 			try {
 				jungData.delete(collArc, collINodes);
 			} catch (IllegalArgumentException e) {
-				exception("PetrinetManipulation - can not delete Arc");
+				exception("deleteArc - can not delete Arc");
 			}
 
 		}
@@ -250,18 +251,20 @@ final public class PetrinetHandler {
 		this.deleteInternal(id, place);
 	}
 
-	public void deleteTransition(@NotNull int id, @NotNull INode transition) throws EngineException {
+	public void deleteTransition(@NotNull int id, @NotNull INode transition)
+			throws EngineException {
 		this.deleteInternal(id, transition);
 	}
 
-	private void deleteInternal(@NotNull int id, @NotNull INode node) throws EngineException {
-		
+	private void deleteInternal(@NotNull int id, @NotNull INode node)
+			throws EngineException {
+
 		// get the Petrinet from the id and SessionManager
 		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
 
 		// Test: is id valid
 		if (petrinetData == null) {
-			exception("PetrinetHandler - id of the Petrinet is wrong");
+			exception("deleteInternal - id of the Petrinet is wrong");
 		} else {
 
 			Petrinet petrinet = petrinetData.getPetrinet();
@@ -287,7 +290,7 @@ final public class PetrinetHandler {
 				} else if (type.name().equals(ElementType.TRANSITION)) {
 					collINodes.add(petrinet.getTransitionById(idOfElem));
 				} else {
-					exception("PetrinetHandler - invalid type from id");
+					exception("deleteInternal - invalid type from id");
 				}
 
 			}
@@ -295,7 +298,7 @@ final public class PetrinetHandler {
 			try {
 				jungData.delete(collArc, collINodes);
 			} catch (IllegalArgumentException e) {
-				exception("PetrinetHandler - can not delete Place/Transition");
+				exception("deleteInternal - can not delete Place/Transition");
 			}
 
 		}
@@ -321,16 +324,15 @@ final public class PetrinetHandler {
 		// Test: is id valid
 		if (petrinetData == null) {
 			exception("PetrinetHandler - id of the Petrinet is wrong");
+			return null;
 		} else {
 
-			// Petrinet petrinet = petrinetData.getPetrinet();
-			// JungData jungData = petrinetData.getJungData();
+			 JungData jungData = petrinetData.getJungData();
+			 
+			 return jungData.getJungLayout();
 
 		}
-
-		// TODO: Mathias =)
-
-		return null;
+	
 	}
 
 	public PlaceAttribute getPlaceAttribute(@NotNull int id,
@@ -380,7 +382,7 @@ final public class PetrinetHandler {
 
 		// Test: is id valid
 		if (petrinetData == null) {
-			exception("PetrinetManipulation - id of the Petrinet is wrong");
+			exception("moveGraph - id of the Petrinet is wrong");
 		} else {
 
 			Petrinet petrinet = petrinetData.getPetrinet();
@@ -436,7 +438,7 @@ final public class PetrinetHandler {
 				try {
 					jungData.moveNode(p, point);
 				} catch (IllegalArgumentException e) {
-					exception("PetrinetManipulation - can not move Node");
+					exception("moveGraph - can not move Node");
 				}
 			}
 
@@ -452,7 +454,7 @@ final public class PetrinetHandler {
 				try {
 					jungData.moveNode(t, point);
 				} catch (IllegalArgumentException e) {
-					exception("PetrinetManipulation - can not move Node");
+					exception("moveGraph - can not move Node");
 				}
 			}
 
@@ -468,7 +470,7 @@ final public class PetrinetHandler {
 
 		// Test: is id valid
 		if (petrinetData == null) {
-			exception("PetrinetManipulation - id of the Petrinet is wrong");
+			exception("moveNode - id of the Petrinet is wrong");
 		} else {
 
 			JungData jungData = petrinetData.getJungData();
@@ -494,7 +496,7 @@ final public class PetrinetHandler {
 				try {
 					jungData.moveNode(node, point);
 				} catch (IllegalArgumentException e) {
-					exception("PetrinetManipulation - can not move Node");
+					exception("moveNode - can not move Node");
 				}
 
 			} else {
@@ -504,7 +506,7 @@ final public class PetrinetHandler {
 				try {
 					jungData.moveNode(node, point);
 				} catch (IllegalArgumentException e) {
-					exception("PetrinetManipulation - can not move Node");
+					exception("moveNode - can not move Node");
 				}
 
 			}
@@ -514,9 +516,26 @@ final public class PetrinetHandler {
 	}
 
 	public void save(@NotNull int id, @NotNull String path,
-			@NotNull String filename, @NotNull String format) {
+			@NotNull String filename, @NotNull String format) throws EngineException {
 
-		// TODO: Alex... warte auf das Persistence-Team
+		// get the Petrinet from the id and SessionManager
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
+
+		// Test: is id valid
+		if (petrinetData == null) {
+			exception("save - id of the Petrinet is wrong");
+		} else {
+			
+			Petrinet petrinet = petrinetData.getPetrinet();
+			JungData jungData = petrinetData.getJungData();
+			
+			Map<INode, NodeLayoutAttribute> nodeMap = jungData.getNodeLayoutAttributes();
+			
+			checkNodeLayoutAttribute(nodeMap == null, "save - nodeMap == null");
+			
+			Persistence.savePetrinet(path + "/" + filename, petrinet, nodeMap);
+
+		}
 
 	}
 
@@ -528,7 +547,7 @@ final public class PetrinetHandler {
 
 		// Test: is id valid
 		if (petrinetData == null) {
-			exception("PetrinetManipulation - id of the Petrinet is wrong");
+			exception("setMarking - id of the Petrinet is wrong");
 		} else {
 
 			JungData jungData = petrinetData.getJungData();
@@ -545,7 +564,7 @@ final public class PetrinetHandler {
 					// TODO existiert nimmer
 					// jungData.updatePlace(p);
 				} catch (IllegalArgumentException e) {
-					exception("PetrinetManipulation - can not update Place");
+					exception("setMarking - can not update Place");
 				}
 
 			}
@@ -562,7 +581,7 @@ final public class PetrinetHandler {
 
 		// Test: is id valid
 		if (petrinetData == null) {
-			exception("PetrinetManipulation - id of the Petrinet is wrong");
+			exception("setPname - id of the Petrinet is wrong");
 		} else {
 
 			JungData jungData = petrinetData.getJungData();
@@ -579,7 +598,7 @@ final public class PetrinetHandler {
 					// TODO existiert nimmer
 					// jungData.updatePlace(p);
 				} catch (IllegalArgumentException e) {
-					exception("PetrinetManipulation - can not update Place");
+					exception("setPname - can not update Place");
 				}
 
 			}
@@ -596,7 +615,7 @@ final public class PetrinetHandler {
 
 		// Test: is id valid
 		if (petrinetData == null) {
-			exception("PetrinetManipulation - id of the Petrinet is wrong");
+			exception("setTlb - id of the Petrinet is wrong");
 		} else {
 
 			JungData jungData = petrinetData.getJungData();
@@ -613,7 +632,7 @@ final public class PetrinetHandler {
 					// TODO existiert nimmer
 					// jungData.updateTransition(t);
 				} catch (IllegalArgumentException e) {
-					exception("PetrinetManipulation - can not update Transition");
+					exception("setTlb - can not update Transition");
 				}
 
 			}
@@ -630,7 +649,7 @@ final public class PetrinetHandler {
 
 		// Test: is id valid
 		if (petrinetData == null) {
-			exception("PetrinetManipulation - id of the Petrinet is wrong");
+			exception("setTname - id of the Petrinet is wrong");
 		} else {
 
 			JungData jungData = petrinetData.getJungData();
@@ -647,7 +666,7 @@ final public class PetrinetHandler {
 					// TODO existiert nimmer
 					// jungData.updateTransition(t);
 				} catch (IllegalArgumentException e) {
-					exception("PetrinetManipulation - can not update Transition");
+					exception("setTname - can not update Transition");
 				}
 
 			}
@@ -664,7 +683,7 @@ final public class PetrinetHandler {
 
 		// Test: is id valid
 		if (petrinetData == null) {
-			exception("PetrinetManipulation - id of the Petrinet is wrong");
+			exception("setWeight - id of the Petrinet is wrong");
 		} else {
 
 			JungData jungData = petrinetData.getJungData();
@@ -677,7 +696,7 @@ final public class PetrinetHandler {
 				// TODO existiert nimmer
 				// jungData.updateArc(arc);
 			} catch (IllegalArgumentException e) {
-				exception("PetrinetManipulation - can not update Arc");
+				exception("setWeight - can not update Arc");
 			}
 
 		}
@@ -691,14 +710,20 @@ final public class PetrinetHandler {
 		} else if (node instanceof Transition) {
 			return NodeTypeEnum.Transition;
 		} else {
-			exception("PetrinetManipulation - wrong type");
+			exception("getNodeType - wrong type");
 			return null;
 		}
 
 	}
 
 	private void exception(@NotNull String value) throws EngineException {
-		throw new EngineException(value);
+		throw new EngineException("PetrinetHandler: " + value);
+	}
+	
+	private void checkNodeLayoutAttribute(boolean value, String errorMessage) throws EngineException{
+		if(value){
+			exception(errorMessage);
+		}
 	}
 
 }

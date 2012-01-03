@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
+import persistence.Persistence;
 import petrinet.Arc;
 import petrinet.ElementType;
 import petrinet.INode;
@@ -16,11 +17,6 @@ import petrinet.Place;
 import petrinet.Transition;
 import transformation.Rule;
 import transformation.TransformationComponent;
-
-
-
-
-
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.NodeLayoutAttribute;
@@ -28,6 +24,7 @@ import engine.attribute.PlaceAttribute;
 import engine.attribute.RuleAttribute;
 import engine.attribute.TransitionAttribute;
 import engine.data.JungData;
+import engine.data.PetrinetData;
 import engine.data.RuleData;
 import engine.handler.NodeTypeEnum;
 import engine.handler.RuleNet;
@@ -57,7 +54,7 @@ final public class RuleHandler {
 		RuleData ruleData = sessionManager.getRuleData(id);
 
 		if (ruleData == null) {
-			exception("RuleHandler - id of the Rule is wrong");
+			exception("createArc - id of the Rule is wrong");
 			return null;
 		} else {
 			Rule rule = ruleData.getRule();
@@ -80,7 +77,7 @@ final public class RuleHandler {
 				petrinet = rule.getR();
 				jungData = ruleData.getRJungData();
 			} else {
-				exception("Not given if Manipulation is in L,K or R");
+				exception("createArc - Not given if Manipulation is in L,K or R");
 			}
 			if (this.getNodeType(from).equals(NodeTypeEnum.Place)
 					&& this.getNodeType(to).equals(NodeTypeEnum.Transition)) {
@@ -98,7 +95,7 @@ final public class RuleHandler {
 				try {
 					jungData.createArc(arc, fromPlace, toTransition);
 				} catch (IllegalArgumentException e) {
-					exception("PetrinetManipulation - can not create Arc");
+					exception("createArc - can not create Arc");
 				}
 
 				return arc;
@@ -123,12 +120,12 @@ final public class RuleHandler {
 				try {
 					jungData.createArc(arc, fromTransition, toPlace);
 				} catch (IllegalArgumentException e) {
-					exception("PetrinetManipulation - can not create Arc");
+					exception("createArc - can not create Arc");
 				}
 
 				return arc;
 			} else {
-				exception("RuleManipulation - wrong combi");
+				exception("createArc - wrong combi");
 
 				return null;
 			}
@@ -142,7 +139,7 @@ final public class RuleHandler {
 		RuleData ruleData = sessionManager.getRuleData(id);
 
 		if (ruleData == null) {
-			exception("RuleHandler - id of the Rule is wrong");
+			exception("createPlace - id of the Rule is wrong");
 			return null;
 		} else {
 			Rule rule = ruleData.getRule();
@@ -165,7 +162,7 @@ final public class RuleHandler {
 				petrinet = rule.getR();
 				jungData = ruleData.getRJungData();
 			} else {
-				exception("Not given if Manipulation is in L,K or R");
+				exception("createPlace - Not given if Manipulation is in L,K or R");
 			}
 			// create a new Place
 			Place newPlace = petrinet.createPlace("undefined");
@@ -174,7 +171,7 @@ final public class RuleHandler {
 			try {
 				jungData.createPlace(newPlace, coordinate);
 			} catch (IllegalArgumentException e) {
-				exception("RuleManipulation - can not create Place");
+				exception("createPlace - can not create Place");
 			}
 
 			return newPlace;
@@ -200,7 +197,7 @@ final public class RuleHandler {
 
 		// Test: is id valid
 		if (ruleData == null) {
-			exception("RuleManipulation - id of the Rule is wrong");
+			exception("createTransition - id of the Rule is wrong");
 			return null;
 		} else {
 			Rule rule = ruleData.getRule();
@@ -223,7 +220,7 @@ final public class RuleHandler {
 				petrinet = rule.getR();
 				jungData = ruleData.getRJungData();
 			} else {
-				exception("Not given if Manipulation is in L,K or R");
+				exception("createTransition - Not given if Manipulation is in L,K or R");
 			}
 			// create a new Place
 			Transition newTransition = petrinet.createTransition("undefined");
@@ -232,7 +229,7 @@ final public class RuleHandler {
 			try {
 				jungData.createTransition(newTransition, coordinate);
 			} catch (IllegalArgumentException e) {
-				exception("RuleManipulation - can not create Transition");
+				exception("createTransition - can not create Transition");
 			}
 
 			return newTransition;
@@ -246,7 +243,7 @@ final public class RuleHandler {
 
 		// Test: is id valid
 		if (ruleData == null) {
-			exception("RuleManipulation - id of the Rule is wrong");
+			exception("deleteArc - id of the Rule is wrong");
 		} else {
 			Rule rule = ruleData.getRule();
 			Petrinet petrinet = null;
@@ -268,7 +265,7 @@ final public class RuleHandler {
 				petrinet = rule.getR();
 				jungData = ruleData.getRJungData();
 			} else {
-				exception("Not given if Manipulation is in L,K or R");
+				exception("deleteArc - Not given if Manipulation is in L,K or R");
 			}
 			petrinet.deleteElementById(arc.getId());
 
@@ -281,7 +278,7 @@ final public class RuleHandler {
 			try {
 				jungData.delete(collArc, collINodes);
 			} catch (IllegalArgumentException e) {
-				exception("PetrinetManipulation - can not delete Arc");
+				exception("deleteArc - can not delete Arc");
 			}
 		}
 	}
@@ -301,7 +298,7 @@ final public class RuleHandler {
 
 		// Test: is id valid
 		if (ruleData == null) {
-			exception("RuleManipulation - id of the Rule is wrong");
+			exception("deleteInternal - id of the Rule is wrong");
 		} else {
 			Rule rule = ruleData.getRule();
 			Petrinet petrinet = null;
@@ -323,7 +320,7 @@ final public class RuleHandler {
 				petrinet = rule.getR();
 				jungData = ruleData.getRJungData();
 			} else {
-				exception("Not given if Manipulation is in L,K or R");
+				exception("deleteInternal - Not given if Manipulation is in L,K or R");
 			}
 
 			// all deleted elements, returned by Petrinet
@@ -346,7 +343,7 @@ final public class RuleHandler {
 				} else if (type.name().equals(ElementType.TRANSITION)) {
 					collINodes.add(petrinet.getTransitionById(idOfElem));
 				} else {
-					exception("RuleHandler - invalid type from id");
+					exception("deleteInternal - invalid type from id");
 				}
 
 			}
@@ -354,7 +351,7 @@ final public class RuleHandler {
 			try {
 				jungData.delete(collArc, collINodes);
 			} catch (IllegalArgumentException e) {
-				exception("RuleHandler - can not delete Place/Transition");
+				exception("deleteInternal - can not delete Place/Transition");
 			}
 
 		}
@@ -378,7 +375,7 @@ final public class RuleHandler {
 
 		// Test: is id valid
 		if (ruleData == null) {
-			exception("RuleManipulation - id of the Rule is wrong");
+			exception("getJungLayout - id of the Rule is wrong");
 		} else {
 			Rule rule = ruleData.getRule();
 			JungData jungData = null;
@@ -396,7 +393,7 @@ final public class RuleHandler {
 				// Get JungData
 				jungData = ruleData.getRJungData();
 			} else {
-				exception("Not given if Manipulation is in L,K or R");
+				exception("getJungLayout - Not given if Manipulation is in L,K or R");
 			}
 			return jungData.getJungLayout();
 		}
@@ -422,7 +419,7 @@ final public class RuleHandler {
 			return placeAttribute;
 		}
 
-		exception("RuleManipulation - getPlaceAttribute: the INode value is not a Place");
+		exception("getPlaceAttribute - the INode value is not a Place");
 		return null;
 	}
 
@@ -445,7 +442,7 @@ final public class RuleHandler {
 			return transitionAttribute;
 		}
 
-		exception("RuleManipulation - getPlaceAttribute: the INode value is not a Transition");
+		exception("getPlaceAttribute - the INode value is not a Transition");
 		return null;
 	}
 
@@ -456,7 +453,7 @@ final public class RuleHandler {
 
 		// Test: is id valid
 		if (ruleData == null) {
-			exception("RuleManipulation - id of the rule is wrong");
+			exception("getRuleAttribute - id of the rule is wrong");
 		} else {
 			// get all Id's from L, K, R
 			int lId = ruleData.getRule().getL().getId();
@@ -480,7 +477,7 @@ final public class RuleHandler {
 
 		// Test: is id valid
 		if (ruleData == null) {
-			exception("RuleManipulation - id of the rule is wrong");
+			exception("moveNode - id of the rule is wrong");
 		} else {
 
 			// get all jungdata => l, k, r
@@ -538,7 +535,7 @@ final public class RuleHandler {
 			try {
 				jungData.moveNode(node, point);
 			} catch (IllegalArgumentException e) {
-				exception("RuleManipulation - error: moveNode");
+				exception("moveNodeInternal - error: moveNode");
 			}
 
 		} else {
@@ -548,17 +545,34 @@ final public class RuleHandler {
 			try {
 				jungData.moveNode(node, point);
 			} catch (IllegalArgumentException e) {
-				exception("RuleManipulation - error: moveNode");
+				exception("moveNodeInternal - error: moveNode");
 			}
 
 		}
 
 	}
 
-	public void save(int id, String path, String filename, String format) {
+	public void save(int id, String path, String filename, String format) throws EngineException {
 
-		// TODO: Alex... warte auf das Persistence-Team
+		// get the Petrinet from the id and SessionManager
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
 
+		// Test: is id valid
+		if (petrinetData == null) {
+			exception("save - id of the Petrinet is wrong");
+		} else {
+			
+			Petrinet petrinet = petrinetData.getPetrinet();
+			JungData jungData = petrinetData.getJungData();
+			
+			Map<INode, NodeLayoutAttribute> nodeMap = jungData.getNodeLayoutAttributes();
+			
+			checkNodeLayoutAttribute(nodeMap == null, "save - nodeMap == null");
+			
+			Persistence.saveRule(path + "/" + filename, petrinet, nodeMap);
+
+		}
+		
 	}
 
 	public void setMarking(int id, INode place, int marking)
@@ -569,12 +583,12 @@ final public class RuleHandler {
 
 		// Test: is id valid
 		if (ruleData == null) {
-			exception("RuleManipulation - id of the rule is wrong");
+			exception("setMarking - id of the rule is wrong");
 		} else {
 
-			JungData lJungData = ruleData.getLJungData();
-			JungData kJungData = ruleData.getKJungData();
-			JungData rJungData = ruleData.getRJungData();
+//			JungData lJungData = ruleData.getLJungData();
+//			JungData kJungData = ruleData.getKJungData();
+//			JungData rJungData = ruleData.getRJungData();
 
 			if (this.getNodeType(place).equals(NodeTypeEnum.Place)) {
 				// cast object
@@ -583,6 +597,7 @@ final public class RuleHandler {
 				// set new marking
 				p.setMark(marking);
 
+				/*// TODO: kill?
 				// call Jung for l
 				try {
 					// TODO existiert nimmer
@@ -611,6 +626,7 @@ final public class RuleHandler {
 				} catch (IllegalArgumentException e) {
 					exception("RuleManipulation - error: setMarking in r");
 				}
+				*/
 
 			}
 
@@ -626,12 +642,12 @@ final public class RuleHandler {
 
 		// Test: is id valid
 		if (ruleData == null) {
-			exception("RuleManipulation - id of the rule is wrong");
+			exception("setPname - id of the rule is wrong");
 		} else {
 
-			JungData lJungData = ruleData.getLJungData();
-			JungData kJungData = ruleData.getKJungData();
-			JungData rJungData = ruleData.getRJungData();
+//			JungData lJungData = ruleData.getLJungData();
+//			JungData kJungData = ruleData.getKJungData();
+//			JungData rJungData = ruleData.getRJungData();
 
 			if (this.getNodeType(place).equals(NodeTypeEnum.Place)) {
 				// cast object
@@ -640,6 +656,7 @@ final public class RuleHandler {
 				// set new Pname
 				p.setName(pname);
 
+				/*// TODO: kill?
 				// call Jung for l
 				try {
 					// TODO existiert nimmer
@@ -663,6 +680,7 @@ final public class RuleHandler {
 				} catch (IllegalArgumentException e) {
 					exception("RuleManipulation - error: setPname in r");
 				}
+				*/
 
 			}
 
@@ -678,12 +696,12 @@ final public class RuleHandler {
 
 		// Test: is id valid
 		if (ruleData == null) {
-			exception("RuleManipulation - id of the rule is wrong");
+			exception("setTlb - id of the rule is wrong");
 		} else {
 
-			JungData lJungData = ruleData.getLJungData();
-			JungData kJungData = ruleData.getKJungData();
-			JungData rJungData = ruleData.getRJungData();
+//			JungData lJungData = ruleData.getLJungData();
+//			JungData kJungData = ruleData.getKJungData();
+//			JungData rJungData = ruleData.getRJungData();
 
 			if (this.getNodeType(transition).equals(NodeTypeEnum.Transition)) {
 				// cast object
@@ -692,12 +710,13 @@ final public class RuleHandler {
 				// set new Tlb
 				t.setTlb(tlb);
 
+				/*// TODO: kill?
 				// call Jung for l
 				try {
 					// TODO existiert nimmer
 					// lJungData.updateTransition(t);
 				} catch (IllegalArgumentException e) {
-					exception("RuleManipulation - error: setTlb in l");
+					exception("setTlb - error in l");
 				}
 
 				// call Jung for k
@@ -705,7 +724,7 @@ final public class RuleHandler {
 					// TODO existiert nimmer
 					// kJungData.updateTransition(t);
 				} catch (IllegalArgumentException e) {
-					exception("RuleManipulation - error: setTlb in k");
+					exception("setTlb - error in k");
 				}
 
 				// call Jung for r
@@ -713,8 +732,9 @@ final public class RuleHandler {
 					// TODO existiert nimmer
 					// rJungData.updateTransition(t);
 				} catch (IllegalArgumentException e) {
-					exception("RuleManipulation - error: setTlb in r");
+					exception("setTlb - error in r");
 				}
+				*/
 
 			}
 
@@ -730,12 +750,12 @@ final public class RuleHandler {
 
 		// Test: is id valid
 		if (ruleData == null) {
-			exception("RuleManipulation - id of the rule is wrong");
+			exception("setTname - id of the rule is wrong");
 		} else {
 
-			JungData lJungData = ruleData.getLJungData();
-			JungData kJungData = ruleData.getKJungData();
-			JungData rJungData = ruleData.getRJungData();
+//			JungData lJungData = ruleData.getLJungData();
+//			JungData kJungData = ruleData.getKJungData();
+//			JungData rJungData = ruleData.getRJungData();
 
 			if (this.getNodeType(transition).equals(NodeTypeEnum.Transition)) {
 				// cast object
@@ -744,12 +764,13 @@ final public class RuleHandler {
 				// set new Tname
 				t.setName(tname);
 
+				/*// TODO: kill?
 				// call Jung for l
 				try {
 					// TODO existiert nimmer
 					// lJungData.updateTransition(t);
 				} catch (IllegalArgumentException e) {
-					exception("RuleManipulation - error: setTname in l");
+					exception("setTname - error in l");
 				}
 
 				// call Jung for k
@@ -757,7 +778,7 @@ final public class RuleHandler {
 					// TODO existiert nimmer
 					// kJungData.updateTransition(t);
 				} catch (IllegalArgumentException e) {
-					exception("RuleManipulation - error: setTname in k");
+					exception("setTname - error in k");
 				}
 
 				// call Jung for r
@@ -765,8 +786,9 @@ final public class RuleHandler {
 					// TODO existiert nimmer
 					// rJungData.updateTransition(t);
 				} catch (IllegalArgumentException e) {
-					exception("RuleManipulation - error: setTname in r");
+					exception("setTname - error in r");
 				}
+				*/
 
 			}
 
@@ -781,22 +803,23 @@ final public class RuleHandler {
 
 		// Test: is id valid
 		if (ruleData == null) {
-			exception("RuleManipulation - id of the Rule is wrong");
+			exception("setWeight - id of the Rule is wrong");
 		} else {
 
-			JungData lJungData = ruleData.getLJungData();
-			JungData kJungData = ruleData.getKJungData();
-			JungData rJungData = ruleData.getRJungData();
+//			JungData lJungData = ruleData.getLJungData();
+//			JungData kJungData = ruleData.getKJungData();
+//			JungData rJungData = ruleData.getRJungData();
 
 			// set new weight
 			arc.setMark(weight);
 
+			/*// TODO: kill?
 			// call JungModification for l
 			try {
 				// TODO existiert nimmer
 				// lJungData.updateArc(arc);
 			} catch (IllegalArgumentException e) {
-				exception("RuleManipulation - error: setWeight in l");
+				exception("setWeight - error in l");
 			}
 
 			// call JungModification for k
@@ -804,7 +827,7 @@ final public class RuleHandler {
 				// TODO existiert nimmer
 				// kJungData.updateArc(arc);
 			} catch (IllegalArgumentException e) {
-				exception("RuleManipulation - error: setWeight in k");
+				exception("setWeight - error in k");
 			}
 
 			// call JungModification for r
@@ -812,8 +835,9 @@ final public class RuleHandler {
 				// TODO existiert nimmer
 				// rJungData.updateArc(arc);
 			} catch (IllegalArgumentException e) {
-				exception("RuleManipulation - error: setWeight in r");
+				exception("setWeight - error in r");
 			}
+			*/
 
 		}
 
@@ -832,7 +856,13 @@ final public class RuleHandler {
 	}
 
 	private void exception(String value) throws EngineException {
-		throw new EngineException(value);
+		throw new EngineException("RuleHandler: " + value);
 	}
+	
+	private void checkNodeLayoutAttribute(boolean value, String errorMessage) throws EngineException{
+		if(value){
+			exception(errorMessage);
+		}
+	}	
 
 }
