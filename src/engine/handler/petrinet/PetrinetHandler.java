@@ -166,6 +166,7 @@ final public class PetrinetHandler {
 	}
 
 	public int createPetrinet() {
+		
 		// new Petrinet
 		Petrinet petrinet = PetrinetComponent.getPetrinet().createPetrinet();
 
@@ -174,7 +175,7 @@ final public class PetrinetHandler {
 
 		// get the Id
 		int idPetrinet = petrinetData.getId();
-
+		
 		return idPetrinet;
 	}
 
@@ -329,7 +330,9 @@ final public class PetrinetHandler {
 
 			 JungData jungData = petrinetData.getJungData();
 			 
-			 return jungData.getJungLayout();
+			 AbstractLayout<INode, Arc> layout = jungData.getJungLayout();
+			 			 
+			 return layout;
 
 		}
 	

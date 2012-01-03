@@ -1,12 +1,14 @@
 package gui2;
 
+import static gui2.Style.FONT_COLOR;
+import static gui2.Style.PETRINET_BORDER;
+import static gui2.Style.PETRINET_PANE_LAYOUT;
+
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Point2D;
@@ -21,7 +23,6 @@ import petrinet.Arc;
 import petrinet.INode;
 import petrinet.Place;
 import petrinet.Transition;
-
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
@@ -38,8 +39,6 @@ import engine.attribute.TransitionAttribute;
 import engine.handler.NodeTypeEnum;
 import exceptions.EngineException;
 import gui2.EditorPane.EditorMode;
-
-import static gui2.Style.*;
 
 /** Pane for displaying petrinets */
 class PetrinetPane {
@@ -64,7 +63,7 @@ class PetrinetPane {
 
 	/** Returns the singleton instance for this pane */
 	public static PetrinetPane getInstance() {
-		return instance;
+		return instance;		
 	}
 
 	/** mouse click listener for the drawing panel */
@@ -473,8 +472,10 @@ class PetrinetPane {
 	 */
 	private AbstractLayout<INode, Arc> getCurrentLayout() {
 		try {
-			return MainWindow.getPetrinetManipulation().getJungLayout(
+			AbstractLayout<INode, Arc> layout = MainWindow.getPetrinetManipulation().getJungLayout(
 					currentPetrinetId);
+			
+			return layout;
 		} catch (EngineException e) {
 			e.printStackTrace();
 		}
@@ -484,7 +485,7 @@ class PetrinetPane {
 	private VisualizationViewer<INode, Arc> initializeVisualizationViever() {
 		currentPetrinetId = MainWindow.getPetrinetManipulation()
 				.createPetrinet();
-
+		
 		VisualizationViewer<INode, Arc> visuServer = new VisualizationViewer<INode, Arc>(
 				getCurrentLayout());
 

@@ -59,7 +59,9 @@ class MainWindow {
 	}
 	
 	public static IPetrinetManipulation getPetrinetManipulation(){
-		return manipulation;
+//		return manipulation;
+		
+		return engineMockupWithEngine;
 	}
 	
 	/** Private Constructor that configures the main window */
@@ -78,6 +80,7 @@ class MainWindow {
 			engineMockupWithEngine.build();
 			
 		} catch (EngineException e) {
+			System.out.println("exception(mainwindow): " + e);
 			e.printStackTrace();
 		}
 		

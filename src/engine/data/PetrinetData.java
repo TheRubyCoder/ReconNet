@@ -1,11 +1,6 @@
 package engine.data;
 
-import edu.uci.ics.jung.graph.DirectedGraph;
-import petrinet.Arc;
-import petrinet.INode;
 import petrinet.Petrinet;
-import petrinet.Place;
-import petrinet.Transition;
 
 /**
  * This Class holds all information: Petrinet and JungData with a Id
