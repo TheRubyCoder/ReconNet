@@ -3,7 +3,9 @@ package engine;
 import javax.swing.JPanel;
 
 import petrinet.Petrinet;
+import transformation.Rule;
 import engine.dependency.PetrinetAdapter;
+import engine.dependency.TransformationAdapter;
 import engine.handler.petrinet.PetrinetManipulation;
 import engine.handler.simulation.Simulation;
 import engine.ihandler.IPetrinetManipulation;
@@ -49,9 +51,9 @@ public class EngineComponent implements ILayoutData {
 
 
 //	@Override
-//	public Rule createRule() {
-//		return TransformationAdapter.createRule();
-//	}
+	public Rule createRule() {
+		return TransformationAdapter.createRule();
+	}
 
 
 //	@Override

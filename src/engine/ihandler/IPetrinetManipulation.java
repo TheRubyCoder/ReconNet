@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 
 import petrinet.Arc;
 import petrinet.INode;
+import transformation.Rule;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
@@ -223,4 +224,5 @@ public interface IPetrinetManipulation {
 	 * @throws EngineException 
 	 */
 	public Enum getNodeType(INode node) throws EngineException;
+	
 }

@@ -4,23 +4,24 @@ package gui.dependency;
 import petrinet.Petrinet;
 import transformation.Rule;
 import transformation.Transformation;
-import engine.Engine;
 import engine.EngineComponent;
+import engine.dependency.PetrinetAdapter;
+import engine.dependency.TransformationAdapter;
 
 public class PetrinetManipulationAdapter {
 
 	private PetrinetManipulationAdapter() {}
 	
 	public static Petrinet createPetrinet() {
-		return engine.EngineComponent.getPetrinetManipulation().createPetrinet();
+		return PetrinetAdapter.createPetrinet();
 	}
 	
 	public static Rule createRule(){
-		return EngineComponent.getPetrinetManipulation().createRule();
+		return TransformationAdapter.createRule();
 	}
 	
 	public static Transformation transform(Petrinet petrinet, Rule rule){
-		return EngineComponent.getPetrinetManipulation().transform(petrinet, rule);
+		return TransformationAdapter.transform(petrinet, rule);
 	}
 	
 }
