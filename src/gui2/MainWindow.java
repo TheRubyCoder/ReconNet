@@ -9,6 +9,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import engine.EngineMockup;
+import engine.EngineMockupWithEngine;
+import engine.handler.petrinet.PetrinetManipulation;
 import engine.ihandler.IPetrinetManipulation;
 import exceptions.EngineException;
 
@@ -32,8 +34,14 @@ class MainWindow {
 	/** The Panel of the center*/
 	JPanel centerPanel;
 	
+	// ############################################
+	
 	/** PetrinetManipulation aspect of engine */
 	private static EngineMockup manipulation;
+
+	private static EngineMockupWithEngine engineMockupWithEngine;
+	
+	// ############################################
 	
 	/** singleton instance */
 	private static MainWindow instance;
@@ -56,12 +64,24 @@ class MainWindow {
 	
 	/** Private Constructor that configures the main window */
 	private MainWindow() {
-		manipulation = new EngineMockup();
+		
+		// ############################################
+		
+//		manipulation = new EngineMockup();
+		
+		engineMockupWithEngine = new EngineMockupWithEngine();
+		
 		try {
-			manipulation.build();
+			
+//			manipulation.build();
+			
+			engineMockupWithEngine.build();
+			
 		} catch (EngineException e) {
 			e.printStackTrace();
 		}
+		
+		// ############################################
 		
 		initializeMainFrame();
 		addEditorPane();
