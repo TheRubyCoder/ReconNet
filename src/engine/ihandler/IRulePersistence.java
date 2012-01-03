@@ -12,6 +12,7 @@ import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.RuleAttribute;
 import engine.attribute.TransitionAttribute;
+import engine.handler.NodeTypeEnum;
 import engine.handler.RuleNet;
 import exceptions.EngineException;
 
@@ -37,7 +38,7 @@ public interface IRulePersistence {
 	 * @return the new Arc
 	 * 
 	 */
-	public Arc createArc(@NotNull int id, @NotNull INode from, @NotNull INode to);
+	public Arc createArc(@NotNull int id,RuleNet net, @NotNull INode from, @NotNull INode to) throws EngineException ;
 	
 	/**
 	 * 
@@ -48,7 +49,7 @@ public interface IRulePersistence {
 	 * @return the new Place
 	 * 
 	 */
-	public INode createPlace(@NotNull int id, @NotNull RuleNet net, @NotNull Point2D coordinate);
+	public INode createPlace(@NotNull int id, @NotNull RuleNet net, @NotNull Point2D coordinate) throws EngineException ;
 	
 	/**
 	 * 
@@ -57,7 +58,7 @@ public interface IRulePersistence {
 	 * @return ID of the created Rule
 	 * 
 	 */
-	public int createRule();
+	public int createRule() throws EngineException ;
 	
 	/**
 	 * 
@@ -78,7 +79,7 @@ public interface IRulePersistence {
 	 * @param arc which attributes are wanted
 	 * @return ArcAttribute
 	 */
-	public ArcAttribute getArcAttribute(@NotNull int id, @NotNull Arc arc); // TODO IArc gibt es nicht?
+	public ArcAttribute getArcAttribute(@NotNull int id, @NotNull Arc arc) throws EngineException ; // TODO IArc gibt es nicht?
 	
 	/**
 	 * Gets the JungLayout from the Rule
@@ -86,7 +87,7 @@ public interface IRulePersistence {
 	 * @param id ID of the Rule
 	 * @return AbstractLayout
 	 */
-	public AbstractLayout<INode, Arc> getJungLayout(@NotNull int id, @NotNull RuleNet net); // TODO: AbstractLayout<INode, Arc> richtig?
+	public AbstractLayout<INode, Arc> getJungLayout(@NotNull int id, @NotNull RuleNet net) throws EngineException ; // TODO: AbstractLayout<INode, Arc> richtig?
 	
 	/**
 	 * Gets the Attributes from a Place
@@ -172,6 +173,6 @@ public interface IRulePersistence {
 	 * @param node to check
 	 * @return Enum composed of Place, Transition
 	 */
-	public Enum<?> getNodeType(@NotNull INode node);
+	public NodeTypeEnum getNodeType(@NotNull INode node);
 	
 }
