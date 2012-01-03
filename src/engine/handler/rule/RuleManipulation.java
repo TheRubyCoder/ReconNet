@@ -205,7 +205,7 @@ public class RuleManipulation implements IRuleManipulation {
 	}
 
 	@Override
-	public void save(int id, String path, String filename, String format) {
+	public void save(int id, String path, String filename, String format)  throws EngineException {
 		
 		ruleManipulationBackend.save(id, path, filename, format);
 		

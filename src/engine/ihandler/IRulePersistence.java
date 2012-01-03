@@ -58,7 +58,7 @@ public interface IRulePersistence {
 	 * @return ID of the created Rule
 	 * 
 	 */
-	public int createRule() throws EngineException ;
+	public int createRule();
 	
 	/**
 	 * 

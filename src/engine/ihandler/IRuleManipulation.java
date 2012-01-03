@@ -163,7 +163,7 @@ public interface IRuleManipulation {
 	 * @param filename name for the Rule
 	 * @param format which the Rule should be saved. (PNML the only option till now)
 	 */
-	public void save(@NotNull int id, @NotNull String path, @NotNull String filename, @NotNull String format); // TODO: String format zu => Format format
+	public void save(@NotNull int id, @NotNull String path, @NotNull String filename, @NotNull String format) throws EngineException; // TODO: String format zu => Format format
 	
 	/**
 	 * Sets the Marking of a Place.
