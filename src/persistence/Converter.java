@@ -18,6 +18,7 @@ import engine.ihandler.IPetrinetPersistence;
 import engine.ihandler.IRulePersistence;
 import exceptions.EngineException;
 
+
 import petrinet.INode;
 import petrinet.IPetrinet;
 import petrinet.Petrinet;
@@ -63,6 +64,7 @@ public class Converter {
 		Set<petrinet.Arc> arcs = petrinet.getAllArcs();
 		List<Arc> newArcs = new ArrayList<Arc>();
 		for (petrinet.Arc arc : arcs) {
+			
 			Arc newArc = new Arc();
 			Place endPlace = null;
 			for (Place p : places) {
@@ -71,6 +73,7 @@ public class Converter {
 					break;
 				}
 			}
+			
 			newArc.setTarget(endPlace.getId());
 
 			Place startPlace = null;
@@ -177,33 +180,39 @@ public class Converter {
 		return false;
 	}
 	
-	public static Pnml convertRuleToPnml( Rule rule, RuleHandler handler){
+	public static Pnml convertRuleToPnml ( Rule rule, RuleHandler handler){
 		Pnml pnml=new Pnml();
 		
 		pnml.net = new ArrayList<Net>();
-		Net lNet = new Net();
-		Net kNet = new Net();
-		Net rNet = new Net();
-		lNet.setId(String.valueOf(rule.getL().getId()));
+		Net lNet = createNet(rule.getL(), handler, RuleNet.L);
+		Net kNet = createNet(rule.getK(), handler, RuleNet.K);
+		Net rNet = createNet(rule.getR(), handler, RuleNet.R);
 		
-		
-		
-		//pnml.net.add(xmlnet);
+		List<Net>nets=new ArrayList<Net>();
+		pnml.setNet(nets);
 		
 		
 		return pnml;
 	}
 	
-	private Net createNet(RuleNet petrinet, IRulePersistence handler){
+	private static Net createNet(Petrinet petrinet, RuleHandler handler, RuleNet type) {
 		Net net=new Net();
 		Page page=new Page();
+		net.setId(String.valueOf(petrinet.getId()));
+		net.setNettype(type.name());
+	
+	
 		
-	/*	net.setId(String.valueOf(petrinet.getId()));
-		
-		Set arcs=petrinet.getAllArcs();
+		Set<petrinet.Arc> arcs=petrinet.getAllArcs();
 		Set<petrinet.Place> places=petrinet.getAllPlaces();
-		Set transis=petrinet.getAllTransitions();
+		Set<petrinet.Transition> transis=petrinet.getAllTransitions();
 		
+		List<Arc> listArcs= new ArrayList<Arc>();
+		List<Place> listPlace=  new ArrayList<Place>();
+		List<Transition> listTrans= new ArrayList<Transition>();
+		
+		
+		try{
 		//inserting places
 		for(petrinet.Place p:places){
 			Place newPlace=new Place();
@@ -220,16 +229,131 @@ public class Converter {
 			Graphics graphics=new Graphics();
 			Dimension d=new Dimension();
 			Position pos=new Position();
-			handler.getJungLayout(p.getId(), petrinet);
+			AbstractLayout<INode, petrinet.Arc> layout = handler.getJungLayout(p.getId(), type);
 			
 			
+			pos.setX(String.valueOf(layout.getX(p)));
+			pos.setY(String.valueOf(layout.getY(p)));
 			
+			d.setX(String.valueOf(layout.getSize().getWidth()));
+			d.setY(String.valueOf(layout.getSize().getHeight()));
+			
+			List<Dimension> dimensions=new ArrayList<Dimension>();
+			dimensions.add(d);
+			graphics.setDimension(dimensions);
+			
+			List<Position> positions=new ArrayList<Position>();
+			positions.add(pos);
+			graphics.setPosition(positions);
+	
+			newPlace.setGraphics(graphics);
+			
+			InitialMarking initM=new InitialMarking();
+			initM.setText(String.valueOf(p.getMark()));
+			
+			listPlace.add(newPlace);
 			
 		}
-		*/
+		
+		//inserting Transitions
+		for(petrinet.Transition t:transis){
+			Transition transi=new Transition();
+			transi.setId(String.valueOf(t.getId()));
+			
+			TransitionName name=new TransitionName();
+			name.setText(t.getName());
+			transi.setTransitionName(name);
+			
+			//Coordinates
+			Graphics graphics=new Graphics();
+			Dimension d=new Dimension();
+			Position pos=new Position();
+			AbstractLayout<INode, petrinet.Arc> layout = handler.getJungLayout(t.getId(), type);
+			
+	
+			pos.setX(String.valueOf(layout.getX(t)));
+			pos.setY(String.valueOf(layout.getY(t)));
+			
+			d.setX(String.valueOf(layout.getSize().getWidth()));
+			d.setY(String.valueOf(layout.getSize().getHeight()));
+			
+			List<Dimension> dimensions=new ArrayList<Dimension>();
+			dimensions.add(d);
+			graphics.setDimension(dimensions);
+			
+			List<Position> positions=new ArrayList<Position>();
+			positions.add(pos);
+			graphics.setPosition(positions);
+			
+			transi.setGraphics(graphics);
+			
+			
+			//Transitionlabel
+			TransitionLabel label=new TransitionLabel();
+			label.setText(t.getTlb());
+			transi.setTransitionLabel(label);
+			
+			TransitionRenew rnw=new TransitionRenew();
+			rnw.setText(t.getRnw().renew(label.getText()));
+			
+			transi.setTransitionRenew(rnw);
+			
+			listTrans.add(transi);
+		}
+		
+		//inserting arcs
+		for(petrinet.Arc a:arcs){
+			Arc arc=new Arc();
+			arc.setId(String.valueOf(a.getId()));
+			
+			
+			//Coordinates
+			Graphics graphics=new Graphics();
+			Dimension d=new Dimension();
+			Position pos=new Position();
+			AbstractLayout<INode, petrinet.Arc> layout = handler.getJungLayout(a.getId(), type);
+			
+	
+			pos.setX(String.valueOf(layout.getX(a)));
+			pos.setY(String.valueOf(layout.getY(a)));
+			
+			d.setX(String.valueOf(layout.getSize().getWidth()));
+			d.setY(String.valueOf(layout.getSize().getHeight()));
+			
+			List<Dimension> dimensions=new ArrayList<Dimension>();
+			dimensions.add(d);
+			graphics.setDimension(dimensions);
+			
+			List<Position> positions=new ArrayList<Position>();
+			positions.add(pos);
+			graphics.setPosition(positions);
+			
+			arc.setGraphics(graphics);
+			
+			//inscripten = name!
+			Inscription i=new Inscription();
+			i.setText(a.getName());
+			arc.setInscription(i);
+			
+			//source and target
+			arc.setSource(String.valueOf(a.getStart().getId()));
+			arc.setTarget(String.valueOf(a.getEnd().getId()));
+			
+			listArcs.add(arc);
+		}
+		
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		page.setArc(listArcs);
+		page.setPlace(listPlace);
+		page.setTransition(listTrans);
+		
 		
 		
 		return net;
 	}
+
+	
 
 }
