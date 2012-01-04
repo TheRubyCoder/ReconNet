@@ -165,9 +165,9 @@ class Style {
 	
 	public static final int PLACE_WIDTH = 50;
 	
-	public static final int PLACE_HEIGHT = 35;
+	public static final int PLACE_HEIGHT = (int)(PLACE_WIDTH / 1.5d);
 	
-	public static final int TRANSITION_SIZE = 20;
+	public static final int TRANSITION_SIZE = PLACE_HEIGHT;
 	
 	/* ************************************* 
 	 * petrinet file pane

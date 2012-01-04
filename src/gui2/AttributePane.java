@@ -9,10 +9,8 @@ import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.TransitionAttribute;
 import engine.handler.NodeTypeEnum;
@@ -342,15 +340,15 @@ public class AttributePane {
 									.setPname(
 											PetrinetPane.getInstance().currentPetrinetId,
 											place, data);
-						}else if (attribute.equals("Markierung")) {
+						} else if (attribute.equals("Markierung")) {
 							try {
 								int marking = Integer.parseInt(data);
 								MainWindow
-								.getPetrinetManipulation()
-								.setMarking(
-										PetrinetPane.getInstance().currentPetrinetId, 
-										place, marking);
-							} catch (NumberFormatException nfe){
+										.getPetrinetManipulation()
+										.setMarking(
+												PetrinetPane.getInstance().currentPetrinetId,
+												place, marking);
+							} catch (NumberFormatException nfe) {
 								PopUp.popError("Die Markierung muss eine natürliche Zahl sein.");
 							}
 						}
@@ -364,6 +362,13 @@ public class AttributePane {
 									.setTname(
 											PetrinetPane.getInstance().currentPetrinetId,
 											transition, data);
+						} else if (attribute.equals("Label")) {
+							MainWindow
+									.getPetrinetManipulation()
+									.setTlb(PetrinetPane.getInstance().currentPetrinetId,
+											transition, data);
+						} else if (attribute.equals("Renew")) {
+							//engine needs setRenew
 						}
 					}
 				} catch (EngineException e1) {

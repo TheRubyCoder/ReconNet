@@ -312,6 +312,7 @@ class PetrinetPane {
 					} else {
 						MainWindow.getPetrinetManipulation()
 								.deleteArc(pId, arc);
+						PetrinetPane.getInstance().repaint();
 					}
 				} catch (EngineException e1) {
 					PopUp.popUnderConstruction(e.getActionCommand());
@@ -396,6 +397,10 @@ class PetrinetPane {
 					// TODO let user set color
 					decorator.fillOval(x, y, width, height);
 
+					// draw frame
+					decorator.setPaint(NODE_BORDER_COLOR);
+					decorator.drawOval(x, y, width, height);
+
 					// write name
 					decorator.setPaint(FONT_COLOR);
 					decorator.drawString(placeAttribute.getPname(), x + width,
@@ -415,10 +420,6 @@ class PetrinetPane {
 						decorator.drawString(String.valueOf(marking), x + width
 								/ 3, y + (int) (height / 1.5));
 					}
-
-					// draw frame
-					decorator.setPaint(NODE_BORDER_COLOR);
-					decorator.drawOval(x, y, width, height);
 				} else {
 					TransitionAttribute transitionAttribute = MainWindow
 							.getPetrinetManipulation()
@@ -427,13 +428,13 @@ class PetrinetPane {
 									node);
 
 					Color blackOrWhite = null;
-					System.out.println(transitionAttribute.getIsActivated());
 					if (transitionAttribute.getIsActivated()) {
 						blackOrWhite = Color.BLACK;
 					} else {
 						blackOrWhite = Color.LIGHT_GRAY;
 					}
 
+					//draw rect
 					int size = TRANSITION_SIZE;
 					int x = (int) (center.getX() - size / 2);
 					int y = (int) (center.getY() - size / 2);
@@ -448,6 +449,14 @@ class PetrinetPane {
 					decorator.setPaint(FONT_COLOR);
 					decorator.drawString(transitionAttribute.getTname(), x
 							+ size + 2, y + size);
+					
+					//draw label
+					if (transitionAttribute.getIsActivated()) {
+						decorator.setPaint(Color.LIGHT_GRAY);
+					} else {
+						decorator.setPaint(Color.DARK_GRAY);
+					}
+					decorator.drawString(transitionAttribute.getTLB(),x + size / 3 ,y + size / 1.5f);
 				}
 			} catch (EngineException e) {
 				PopUp.popError(e);
