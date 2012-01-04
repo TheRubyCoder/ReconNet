@@ -11,9 +11,11 @@ import javax.xml.bind.Unmarshaller;
 
 import petrinet.INode;
 import petrinet.Petrinet;
+import transformation.Rule;
 import engine.attribute.NodeLayoutAttribute;
 import engine.ihandler.IPetrinetManipulation;
 import engine.ihandler.IPetrinetPersistence;
+import engine.ihandler.IRulePersistence;
 
 public class PersistanceUtility implements IPersistance {
 
@@ -32,7 +34,7 @@ public class PersistanceUtility implements IPersistance {
 	}
 
 	@Override
-	public int loadPetrinet(String pathAndFilename, IPetrinetPersistence handler) {
+	public int loadPetrinet(String pathAndFilename, IPetrinetPersistence handler, int petrinetID) {
 		Pnml pnml=new Pnml();
 		JAXBContext context;
 		try {
@@ -65,14 +67,14 @@ public class PersistanceUtility implements IPersistance {
 
 
 	@Override
-	public boolean saveRule(String pathAndFilename, Petrinet petrinet,
+	public boolean saveRule(String pathAndFilename, Rule petrinet,
 			Map<INode, NodeLayoutAttribute> nodeMap) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public int loadRule(String pathAndFilename, IPetrinetPersistence handler) {
+	public int loadRule(String pathAndFilename, IRulePersistence handler, int ruleID) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
