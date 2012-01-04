@@ -849,6 +849,10 @@ final public class RuleHandler {
 		}
 
 	}
+	
+	public void setRnw(int id, String rnw) {
+		// TODO
+	}
 
 	public NodeTypeEnum getNodeType(INode node) {
 

@@ -212,6 +212,11 @@ public class RuleManipulation implements IRuleManipulation {
 	}
 	
 	@Override
+	public void setRnw(int id, String rnw) {
+		// TODO
+	}
+	
+	@Override
 	public int load(String path, String filename) {
 
 		return ruleManipulationBackend.load(path, filename);

@@ -33,7 +33,8 @@ import exceptions.EngineException;
 
 /**
  * 
- * This is the implementation of all methods for the Petrinet by engine.
+ * This is the implementation of all methods for 
+ * the Petrinet by engine.
  * 
  * @author alex (aas772)
  * 
@@ -561,7 +562,7 @@ final public class PetrinetHandler {
 			exception("setMarking - id of the Petrinet is wrong");
 		} else {
 
-			JungData jungData = petrinetData.getJungData();
+//			JungData jungData = petrinetData.getJungData();
 
 			if (this.getNodeType(place).equals(NodeTypeEnum.Place)) {
 				// cast object
@@ -571,12 +572,12 @@ final public class PetrinetHandler {
 				p.setMark(marking);
 
 				// call Jung
-				try {
-					// TODO existiert nimmer
-					// jungData.updatePlace(p);
-				} catch (IllegalArgumentException e) {
-					exception("setMarking - can not update Place");
-				}
+//				try {
+//					// TODO existiert nimmer
+//					// jungData.updatePlace(p);
+//				} catch (IllegalArgumentException e) {
+//					exception("setMarking - can not update Place");
+//				}
 
 			}
 
@@ -595,7 +596,7 @@ final public class PetrinetHandler {
 			exception("setPname - id of the Petrinet is wrong");
 		} else {
 
-			JungData jungData = petrinetData.getJungData();
+//			JungData jungData = petrinetData.getJungData();
 
 			if (this.getNodeType(place).equals(NodeTypeEnum.Place)) {
 				// cast object
@@ -605,12 +606,12 @@ final public class PetrinetHandler {
 				p.setName(pname);
 
 				// call Jung
-				try {
-					// TODO existiert nimmer
-					// jungData.updatePlace(p);
-				} catch (IllegalArgumentException e) {
-					exception("setPname - can not update Place");
-				}
+//				try {
+//					// TODO existiert nimmer
+//					// jungData.updatePlace(p);
+//				} catch (IllegalArgumentException e) {
+//					exception("setPname - can not update Place");
+//				}
 
 			}
 
@@ -629,7 +630,7 @@ final public class PetrinetHandler {
 			exception("setTlb - id of the Petrinet is wrong");
 		} else {
 
-			JungData jungData = petrinetData.getJungData();
+//			JungData jungData = petrinetData.getJungData();
 
 			if (this.getNodeType(transition).equals(NodeTypeEnum.Transition)) {
 				// cast object
@@ -639,12 +640,12 @@ final public class PetrinetHandler {
 				t.setTlb(tlb);
 
 				// call Jung
-				try {
-					// TODO existiert nimmer
-					// jungData.updateTransition(t);
-				} catch (IllegalArgumentException e) {
-					exception("setTlb - can not update Transition");
-				}
+//				try {
+//					// TODO existiert nimmer
+//					// jungData.updateTransition(t);
+//				} catch (IllegalArgumentException e) {
+//					exception("setTlb - can not update Transition");
+//				}
 
 			}
 
@@ -663,7 +664,7 @@ final public class PetrinetHandler {
 			exception("setTname - id of the Petrinet is wrong");
 		} else {
 
-			JungData jungData = petrinetData.getJungData();
+//			JungData jungData = petrinetData.getJungData();
 
 			if (this.getNodeType(transition).equals(NodeTypeEnum.Transition)) {
 				// cast object
@@ -673,12 +674,12 @@ final public class PetrinetHandler {
 				t.setName(tname);
 
 				// call Jung
-				try {
-					// TODO existiert nimmer
-					// jungData.updateTransition(t);
-				} catch (IllegalArgumentException e) {
-					exception("setTname - can not update Transition");
-				}
+//				try {
+//					// TODO existiert nimmer
+//					// jungData.updateTransition(t);
+//				} catch (IllegalArgumentException e) {
+//					exception("setTname - can not update Transition");
+//				}
 
 			}
 
@@ -697,21 +698,25 @@ final public class PetrinetHandler {
 			exception("setWeight - id of the Petrinet is wrong");
 		} else {
 
-			JungData jungData = petrinetData.getJungData();
+//			JungData jungData = petrinetData.getJungData();
 
 			// set new weight
 			arc.setMark(weight);
 
 			// call Jung
-			try {
-				// TODO existiert nimmer
-				// jungData.updateArc(arc);
-			} catch (IllegalArgumentException e) {
-				exception("setWeight - can not update Arc");
-			}
+//			try {
+//				 TODO existiert nimmer
+//				 jungData.updateArc(arc);
+//			} catch (IllegalArgumentException e) {
+//				exception("setWeight - can not update Arc");
+//			}
 
 		}
 
+	}
+	
+	public void setRnw(int id, String rnw) {
+		// TODO
 	}
 
 	public Enum<?> getNodeType(@NotNull INode node) throws EngineException {

@@ -183,6 +183,11 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	}
 
 	@Override
+	public void setRnw(int id, String rnw) {
+		// TODO
+	}
+	
+	@Override
 	public Enum getNodeType(INode node) throws EngineException {
 
 		Enum<?> nodeType = petrinetManipulationBackend.getNodeType(node);

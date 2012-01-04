@@ -229,6 +229,16 @@ public interface IPetrinetManipulation {
 	public void setWeight(int id, Arc arc, int weight) throws EngineException;
 	
 	/**
+	 * 
+	 * Sets a Strings as RNW.
+	 * 
+	 * @param id ID of the Petrinet
+	 * @param rnw String as RNW
+	 * 
+	 */
+	public void setRnw(int id, String rnw);
+	
+	/**
 	 * Returns the type of the Object.
 	 * @param node to check
 	 * @return Enum composed of Place, Transition

@@ -229,6 +229,11 @@ public class EngineMockupForPersistence implements IPetrinetManipulation {
 		iPetrinetManipulation.setWeight(id, arc, weight);
 		
 	}
+	
+	@Override
+	public void setRnw(int id, String rnw) {
+		// TODO
+	}
 
 	@Override
 	public Enum getNodeType(INode node) throws EngineException {

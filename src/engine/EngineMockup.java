@@ -245,6 +245,11 @@ public class EngineMockup implements IPetrinetManipulation {
 		}
 		
 	}
+	
+	@Override
+	public void setRnw(int id, String rnw) {
+		// TODO
+	}
 
 	@Override
 	public NodeTypeEnum getNodeType(INode node) throws EngineException {
