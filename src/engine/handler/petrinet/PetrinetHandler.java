@@ -16,6 +16,9 @@ import petrinet.IRenew;
 import petrinet.Petrinet;
 import petrinet.PetrinetComponent;
 import petrinet.Place;
+import petrinet.RenewCount;
+import petrinet.RenewId;
+import petrinet.Renews;
 import petrinet.Transition;
 
 import com.sun.istack.NotNull;
@@ -715,11 +718,43 @@ final public class PetrinetHandler {
 
 	}
 	
-	public void setRnw(int id, String rnw) {
-		// TODO
+	public void setRnw(int id, INode transition, Renews renews) throws EngineException {
+
+		// get the Petrinet from the id and SessionManager
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
+
+		// Test: is id valid
+		if (petrinetData == null) {
+			exception("setRnw - id of the Petrinet is wrong");
+		} else {
+
+			Transition t = (Transition) transition;
+			
+			IRenew rnw;
+			
+			if(renews.equals(Renews.COUNT)){
+				
+				rnw = new RenewCount();
+				t.setRnw(rnw);
+				
+			} else if(renews.equals(Renews.IDENTITY)){
+				
+				rnw = new RenewId();
+				t.setRnw(rnw);
+				
+			} else if(false){
+
+				// Todo: map
+				
+			} else {
+				exception("setRnw - renews is not correct");
+			}
+
+		}
+		
 	}
 
-	public Enum<?> getNodeType(@NotNull INode node) throws EngineException {
+	public NodeTypeEnum getNodeType(@NotNull INode node) throws EngineException {
 
 		if (node instanceof Place) {
 			return NodeTypeEnum.Place;

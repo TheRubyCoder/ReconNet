@@ -4,10 +4,12 @@ import java.awt.geom.Point2D;
 
 import petrinet.Arc;
 import petrinet.INode;
+import petrinet.Renews;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.TransitionAttribute;
+import engine.handler.NodeTypeEnum;
 import engine.ihandler.IPetrinetManipulation;
 import exceptions.EngineException;
 
@@ -183,14 +185,14 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	}
 
 	@Override
-	public void setRnw(int id, String rnw) {
-		// TODO
+	public void setRnw(int id, INode transition, Renews renews) throws EngineException {
+		petrinetManipulationBackend.setRnw(id, transition, renews);
 	}
 	
 	@Override
-	public Enum getNodeType(INode node) throws EngineException {
+	public NodeTypeEnum getNodeType(INode node) throws EngineException {
 
-		Enum<?> nodeType = petrinetManipulationBackend.getNodeType(node);
+		NodeTypeEnum nodeType = petrinetManipulationBackend.getNodeType(node);
 		
 		return nodeType;
 		

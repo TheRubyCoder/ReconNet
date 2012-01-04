@@ -14,6 +14,7 @@ import petrinet.INode;
 import petrinet.IRenew;
 import petrinet.Petrinet;
 import petrinet.Place;
+import petrinet.Renews;
 import petrinet.Transition;
 import transformation.Rule;
 import transformation.TransformationComponent;
@@ -850,7 +851,7 @@ final public class RuleHandler {
 
 	}
 	
-	public void setRnw(int id, String rnw) {
+	public void setRnw(int id, INode transition, Renews renews) {
 		// TODO
 	}
 

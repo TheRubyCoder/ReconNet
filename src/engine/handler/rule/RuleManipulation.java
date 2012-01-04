@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 
 import petrinet.Arc;
 import petrinet.INode;
+import petrinet.Renews;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
@@ -212,8 +213,10 @@ public class RuleManipulation implements IRuleManipulation {
 	}
 	
 	@Override
-	public void setRnw(int id, String rnw) {
-		// TODO
+	public void setRnw(int id, INode transition, Renews renews) {
+		
+		ruleManipulationBackend.setRnw(id, transition, renews);
+		
 	}
 	
 	@Override

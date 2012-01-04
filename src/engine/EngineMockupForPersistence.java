@@ -8,11 +8,13 @@ import petrinet.Arc;
 import petrinet.INode;
 import petrinet.Petrinet;
 import petrinet.Place;
+import petrinet.Renews;
 import petrinet.Transition;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.TransitionAttribute;
+import engine.handler.NodeTypeEnum;
 import engine.handler.petrinet.PetrinetManipulation;
 import engine.ihandler.IPetrinetManipulation;
 import engine.session.SessionManager;
@@ -231,12 +233,14 @@ public class EngineMockupForPersistence implements IPetrinetManipulation {
 	}
 	
 	@Override
-	public void setRnw(int id, String rnw) {
-		// TODO
+	public void setRnw(int id, INode transition, Renews renews) throws EngineException {
+		
+		iPetrinetManipulation.setRnw(id, transition, renews);
+		
 	}
 
 	@Override
-	public Enum getNodeType(INode node) throws EngineException {
+	public NodeTypeEnum getNodeType(INode node) throws EngineException {
 		
 		return iPetrinetManipulation.getNodeType(node);
 		

@@ -4,11 +4,12 @@ import java.awt.geom.Point2D;
 
 import petrinet.Arc;
 import petrinet.INode;
-import transformation.Rule;
+import petrinet.Renews;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.TransitionAttribute;
+import engine.handler.NodeTypeEnum;
 import exceptions.EngineException;
 
 /**
@@ -234,9 +235,10 @@ public interface IPetrinetManipulation {
 	 * 
 	 * @param id ID of the Petrinet
 	 * @param rnw String as RNW
+	 * @throws EngineException 
 	 * 
 	 */
-	public void setRnw(int id, String rnw);
+	public void setRnw(int id, INode transition, Renews renews) throws EngineException;
 	
 	/**
 	 * Returns the type of the Object.
@@ -244,6 +246,6 @@ public interface IPetrinetManipulation {
 	 * @return Enum composed of Place, Transition
 	 * @throws EngineException 
 	 */
-	public Enum getNodeType(INode node) throws EngineException;
+	public NodeTypeEnum getNodeType(INode node) throws EngineException;
 	
 }
