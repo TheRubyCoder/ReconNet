@@ -44,9 +44,7 @@ public class Converter {
 		page.setPlace(places);
 		for (petrinet.Place place : set) {
 			Place newPlace = new Place();
-			System.out.println("place id: " + place.getId());
 			newPlace.setId(String.valueOf(place.getId()));
-			System.out.println();
 			PlaceName placeName = new PlaceName();
 			placeName.setText(place.getName());
 			newPlace.setPlaceName(placeName);
@@ -61,7 +59,6 @@ public class Converter {
 			List<Position> positionList = new ArrayList<Position>();
 			positionList.add(position);
 			location.setPosition(positionList);
-			System.out.println("newPlace id: " + newPlace.getId());
 			places.add(newPlace);
 
 		}
@@ -112,7 +109,6 @@ public class Converter {
 		Set<petrinet.Arc> arcs = petrinet.getAllArcs();
 		List<Arc> newArcs = new ArrayList<Arc>();
 		for (petrinet.Arc arc : arcs) {
-			System.out.println("Arc: " + arc.getStart().getId() + " -> " + arc.getEnd().getId() );
 			Arc newArc = new Arc();
 			String arcEnd = null;
 			
