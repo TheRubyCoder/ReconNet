@@ -23,6 +23,7 @@ public class PersistanceUtility implements IPersistence {
 	public boolean savePetrinet(String pathAndFilename, Petrinet petrinet,
 			Map<INode, NodeLayoutAttribute> nodeMap) {
 
+		return Persistence.savePetrinet(pathAndFilename, petrinet, nodeMap);
 		/*		    
 	    Pnml pnml2=Converter.convertToPnml(petrinet, layoutMap);
 	    Marshaller ma=context.createMarshaller();
@@ -30,12 +31,13 @@ public class PersistanceUtility implements IPersistence {
 	    ma.marshal(pnml2, f);
 	    System.out.print("file:"+f);*/
 		
-		return false;
+		//return false;
 	}
 
 	@Override
-	public int loadPetrinet(String pathAndFilename, IPetrinetPersistence handler, int petrinetID) {
-		Pnml pnml=new Pnml();
+	public int loadPetrinet(String pathAndFilename, IPetrinetPersistence handler) {
+		return Persistence.loadPetrinet(pathAndFilename, handler);
+		/*Pnml pnml=new Pnml();
 		JAXBContext context;
 		try {
 			context = JAXBContext.newInstance( persistence.Pnml.class , Arc.class, Converter.class, Dimension.class, Graphics.class, InitialMarking.class, Name.class, Net.class,
@@ -47,7 +49,7 @@ public class PersistanceUtility implements IPersistence {
 		    pnml=(Pnml)m.unmarshal(new File(pathAndFilename));
 		    
 		    boolean success = Converter.convertToPetrinet(pnml, handler);
-			/*
+			
 		    System.out.println(petrinet.getAllArcs());
 		    System.out.println("got here");
 		    Map<String, String[]> layoutMap=new HashMap<String, String[]>();
@@ -57,12 +59,12 @@ public class PersistanceUtility implements IPersistence {
 		    	String[] pos=new String[]{String.valueOf(i),String.valueOf(i)};
 		    	layoutMap.put(String.valueOf(p.getId()), pos);
 		    	i++;
-		    }*/
+		    }
 		    return success ? 1 : 0;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return 0;
+		return 0;*/
 	}
 
 
@@ -74,7 +76,7 @@ public class PersistanceUtility implements IPersistence {
 	}
 
 	@Override
-	public int loadRule(String pathAndFilename, IRulePersistence handler, int ruleID) {
+	public int loadRule(String pathAndFilename, IRulePersistence handler) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

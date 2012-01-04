@@ -102,9 +102,7 @@ public class Converter {
 	}
 
 	/** works */
-	// TODO: use ID of existing petrinet
-	static public boolean convertToPetrinet(Pnml pnml,
-			IPetrinetPersistence handler) {
+	static public int convertToPetrinet(Pnml pnml, IPetrinetPersistence handler) {
 		try {
 			// create petrinet
 			int petrinetID = handler.createPetrinet();
@@ -165,10 +163,10 @@ public class Converter {
 				 * arcs.put(arc.id, arc2);
 				 */
 			}
-			return true;
+			return petrinetID;
 		} catch (EngineException e) {
 			e.printStackTrace();
-			return false;
+			return -1;
 		}
 	}
 	

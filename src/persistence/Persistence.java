@@ -63,9 +63,8 @@ public class Persistence /* implements IPersistance*/{
 	}
 
 
-	public static  boolean loadPetrinet(String pathAndFilename, IPetrinetPersistence handler) {
+	public static int loadPetrinet(String pathAndFilename, IPetrinetPersistence handler) {
 		Pnml pnml=new Pnml();
-		boolean success=false;
 		try {
 		    Unmarshaller m = context.createUnmarshaller();
 		    
@@ -73,13 +72,13 @@ public class Persistence /* implements IPersistance*/{
 	
 		    pnml=(Pnml)m.unmarshal(new File(pathAndFilename));
 		    
-		success=Converter.convertToPetrinet(pnml, handler);
+		    return Converter.convertToPetrinet(pnml, handler);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		return success;
+		return -1;
 	}
 
 

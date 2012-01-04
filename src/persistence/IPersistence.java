@@ -30,10 +30,9 @@ public interface IPersistence {
 	 * Load an Petrinet.
 	 * @param pathAndFilename The file to load. Consists of path and filename.
 	 * @param handler an instance of the IPetrinetPersistence.
-	 * @param petrinetID the ID of an existing petrinet to create the net in. 
 	 * @return Id from Petrinet
 	 */
-	public int loadPetrinet(String pathAndFilename, engine.ihandler.IPetrinetPersistence handler, int petrinetID);
+	public int loadPetrinet(String pathAndFilename, engine.ihandler.IPetrinetPersistence handler);
 	
 	/**
 	 * Saves the Rule to a File.
@@ -48,9 +47,8 @@ public interface IPersistence {
 	 * Load a Rule.
 	 * @param pathAndFilename The file to load. Consists of path and filename.
 	 * @param handler an instance of IRulePersistence.
-	 * @param ruleID the ID of an existing rule to create the rule data in.
 	 * @return Id from Rule
 	 */
-	public int loadRule(String pathAndFilename, engine.ihandler.IRulePersistence handler, int ruleID);
+	public int loadRule(String pathAndFilename, engine.ihandler.IRulePersistence handler);
 	
 }
