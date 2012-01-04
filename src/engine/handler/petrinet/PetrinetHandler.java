@@ -366,7 +366,7 @@ final public class PetrinetHandler {
 			String tlb = t.getTlb();
 			String tname = t.getName();
 			IRenew rnw = t.getRnw();
-			boolean isActivated = false;
+			boolean isActivated = t.isActivated();
 
 			TransitionAttribute transitionAttribute = new TransitionAttribute(
 					tlb, tname, rnw, isActivated);
