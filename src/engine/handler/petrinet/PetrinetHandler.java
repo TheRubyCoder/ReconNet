@@ -536,7 +536,7 @@ final public class PetrinetHandler {
 			
 			checkNodeLayoutAttribute(nodeMap == null, "save - nodeMap == null");
 			
-			Persistence.savePetrinet(path + "/" + filename, petrinet, nodeMap);
+			Persistence.savePetrinet(path + "/" + filename + "." + format, petrinet, nodeMap);
 
 		}
 

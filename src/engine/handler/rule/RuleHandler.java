@@ -570,7 +570,7 @@ final public class RuleHandler {
 			
 			checkNodeLayoutAttribute(nodeMap == null, "save - nodeMap == null");
 			
-			Persistence.saveRule(path + "/" + filename, petrinet, nodeMap);
+			Persistence.saveRule(path + "/" + filename + "." + format, petrinet, nodeMap);
 
 		}
 		
