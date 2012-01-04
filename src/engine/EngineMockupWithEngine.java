@@ -175,8 +175,7 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 	}
 	
 	@Override
-	public int load(String path, String filename) throws EngineException {
-		throw new EngineException("unsupported");	
+	public int load(String path, String filename) {
 		return 1;
 	}
 
