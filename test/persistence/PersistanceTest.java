@@ -11,8 +11,10 @@ import javax.xml.bind.Unmarshaller;
 
 import org.junit.Test;
 
+import engine.EngineMockupForPersistence;
 import engine.handler.petrinet.PetrinetHandler;
 import engine.handler.petrinet.PetrinetPersistence;
+import exceptions.EngineException;
 
 public class PersistanceTest {
 
@@ -59,6 +61,21 @@ public class PersistanceTest {
 		petrinet.Transition transition = petrinet.getAllTransitions().iterator().next();
 		assertEquals("mytrans", transition.getName());*/
 		
+	}
+	
+	@Test
+	public void testSavePetrinet() {
+		EngineMockupForPersistence mockup = new EngineMockupForPersistence();
+		
+		try {
+			int pid = mockup.build();
+			mockup.saveTest(pid, "/tmp", "petrinet_save_test", "pnml");
+			
+		} catch (EngineException e) {
+			e.printStackTrace();
+		}
+		
+		assertTrue(new File("/tmp/petrinet_save_test.pnml").exists());
 	}
 
 }

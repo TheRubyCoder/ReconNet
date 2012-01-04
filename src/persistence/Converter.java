@@ -38,10 +38,13 @@ public class Converter {
 		pnml.net.add(xmlnet);
 
 		Page page = new Page();
+		xmlnet.setPage(page);
 		Set<petrinet.Place> set = petrinet.getAllPlaces();
 		List<Place> places = new ArrayList<Place>();
+		page.setPlace(places);
 		for (petrinet.Place place : set) {
 			Place newPlace = new Place();
+			System.out.println("place id: " + place.getId());
 			newPlace.setId(String.valueOf(place.getId()));
 			System.out.println();
 			PlaceName placeName = new PlaceName();
@@ -58,33 +61,99 @@ public class Converter {
 			List<Position> positionList = new ArrayList<Position>();
 			positionList.add(position);
 			location.setPosition(positionList);
+			System.out.println("newPlace id: " + newPlace.getId());
 			places.add(newPlace);
 
 		}
-
+		
+		Set<petrinet.Transition> transis=petrinet.getAllTransitions();
+		List<Transition> Tlist=new ArrayList<Transition>();
+		for(petrinet.Transition t:transis){
+			Transition transi=new Transition();
+			transi.setId(String.valueOf(t.getId()));
+			
+			TransitionName name=new TransitionName();
+			name.setText(t.getName());
+			transi.setTransitionName(name);
+			
+			//Coordinates
+			Graphics graphics=new Graphics();
+			Dimension d=new Dimension();
+			Position pos=new Position();
+		//	AbstractLayout<INode, petrinet.Arc> layout = handler.getJungLayout(t.getId(), type);
+			
+			//Todo Positionstuff
+			//pos.setX(String.valueOf(layout.get(t).getCoordinate().getX()));
+			//pos.setY(String.valueOf(map.get(t).getCoordinate().getY()));
+			
+		
+			
+			List<Position> positions=new ArrayList<Position>();
+			positions.add(pos);
+			graphics.setPosition(positions);
+			
+			transi.setGraphics(graphics);
+			
+			
+			//Transitionlabel
+			TransitionLabel label=new TransitionLabel();
+			label.setText(t.getTlb());
+			transi.setTransitionLabel(label);
+			
+			TransitionRenew rnw=new TransitionRenew();
+			rnw.setText(t.getRnw().renew(label.getText()));
+			
+			transi.setTransitionRenew(rnw);
+			
+			Tlist.add(transi);
+		}
+		pnml.getNet().get(0).page.setTransition(Tlist);
+		
 		Set<petrinet.Arc> arcs = petrinet.getAllArcs();
 		List<Arc> newArcs = new ArrayList<Arc>();
 		for (petrinet.Arc arc : arcs) {
-			
+			System.out.println("Arc: " + arc.getStart().getId() + " -> " + arc.getEnd().getId() );
 			Arc newArc = new Arc();
-			Place endPlace = null;
+			String arcEnd = null;
+			
 			for (Place p : places) {
 				if (p.getId().equals(String.valueOf(arc.getEnd().getId()))) {
-					endPlace = p;
+					arcEnd = p.getId();
 					break;
 				}
 			}
 			
-			newArc.setTarget(endPlace.getId());
+			if (arcEnd == null) {
+				for (Transition t : Tlist) {
+					if (t.getId().equals(String.valueOf(arc.getEnd().getId()))) {
+						arcEnd = t.getId();
+						break;
+					}
+				}
+			}
+			
+			
+			newArc.setTarget(arcEnd);
 
-			Place startPlace = null;
+			String arcStart = null;
+			
 			for (Place p : places) {
-				if (p.getId().equals(String.valueOf(arc.getStart().getId()))) {
-					startPlace = p;
+				if (p.getId().equals(String.valueOf(arc.getEnd().getId()))) {
+					arcStart = p.getId();
 					break;
 				}
 			}
-			newArc.setSource(startPlace.getId());
+			
+			if (arcStart == null) {
+				for (Transition t : Tlist) {
+					if (t.getId().equals(String.valueOf(arc.getEnd().getId()))) {
+						arcStart = t.getId();
+						break;
+					}
+				}
+			}
+			
+			newArc.setSource(arcStart);
 
 			Inscription i = new Inscription();
 			i.setText(arc.getName());

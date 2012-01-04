@@ -55,7 +55,7 @@ public class Persistence /* implements IPersistance*/{
 		    fw.flush();
 		    fw.close();
 		
-		
+		    return true;
 		}catch(Exception e){
 			e.printStackTrace();
 		}
