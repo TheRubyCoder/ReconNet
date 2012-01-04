@@ -173,6 +173,7 @@ class PetrinetPane {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
+			super.mousePressed(e);
 			if (dragMode == DragMode.NONE) {
 				pressedX = e.getX();
 				pressedY = e.getY();
@@ -180,10 +181,11 @@ class PetrinetPane {
 						.getCurrentMode();
 				// dragging in pick mode
 				if (editorMode == EditorMode.PICK) {
-					// find >out: scrolling or moving? -> is something clicked?
-					if (isAnythingClicked(e)) {
+					// find out: scrolling or moving? -> is something clicked?
+					if (vertex != null){
 						// something is clicked -> MOVENODE
 						dragMode = DragMode.MOVENODE;
+						nodeFromDrag = vertex;
 					} else {
 						// nothing is clicked -> SCROLL
 						dragMode = DragMode.SCROLL;
@@ -217,7 +219,16 @@ class PetrinetPane {
 					petrinetPane.scaler.scale(petrinetPane.visualizationViewer,
 							2f, oldPoint);
 				} else if (dragMode == DragMode.MOVENODE) {
-					PopUp.popUnderConstruction("Knoten verschieben");
+					try {
+						MainWindow.getPetrinetManipulation().moveNode(
+								PetrinetPane.getInstance().currentPetrinetId, 
+								nodeFromDrag, 
+								new Point((int)(newPoint.getX() - oldPoint.getX()),(int)(newPoint.getY() - oldPoint.getY())));
+						PetrinetPane.getInstance().repaint();
+					} catch (EngineException e1) {
+						PopUp.popError("Dahin können sie nicht verschieben");
+						e1.printStackTrace();
+					}
 				} else if (dragMode == DragMode.ARC) {
 					// find out what was released on
 					super.mousePressed(e);
@@ -234,6 +245,7 @@ class PetrinetPane {
 				}
 			}
 			dragMode = DragMode.NONE;
+			nodeFromDrag = null;
 		}
 	} // end of mouse listener
 
