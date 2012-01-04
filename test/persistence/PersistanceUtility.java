@@ -17,7 +17,7 @@ import engine.ihandler.IPetrinetManipulation;
 import engine.ihandler.IPetrinetPersistence;
 import engine.ihandler.IRulePersistence;
 
-public class PersistanceUtility implements IPersistance {
+public class PersistanceUtility implements IPersistence {
 
 	@Override
 	public boolean savePetrinet(String pathAndFilename, Petrinet petrinet,

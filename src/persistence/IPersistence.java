@@ -15,7 +15,7 @@ import engine.attribute.NodeLayoutAttribute;
  * @author alex
  *
  */
-public interface IPersistance {
+public interface IPersistence {
 	
 	/**
 	 * Saves the Petrinet to a File.
