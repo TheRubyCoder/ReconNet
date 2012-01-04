@@ -28,6 +28,7 @@ import engine.data.PetrinetData;
 import engine.data.RuleData;
 import engine.handler.NodeTypeEnum;
 import engine.handler.RuleNet;
+import engine.handler.petrinet.PetrinetPersistence;
 import engine.session.SessionManager;
 import exceptions.EngineException;
 
@@ -572,6 +573,12 @@ final public class RuleHandler {
 			Persistence.saveRule(path + "/" + filename, petrinet, nodeMap);
 
 		}
+		
+	}
+	
+	public int load(String path, String filename){
+		
+		return Persistence.loadRule(path + "/" + filename, PetrinetPersistence.getInstance());
 		
 	}
 

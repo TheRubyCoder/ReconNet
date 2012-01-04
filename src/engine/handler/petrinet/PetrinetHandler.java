@@ -331,9 +331,7 @@ final public class PetrinetHandler {
 			 JungData jungData = petrinetData.getJungData();
 			 
 			 AbstractLayout<INode, Arc> layout = jungData.getJungLayout();
-			 			 
-			 System.out.println("petrinethandle::layout: '" + layout.getGraph() + "'");
-			 
+
 			 return layout;
 
 		}
@@ -542,6 +540,14 @@ final public class PetrinetHandler {
 
 		}
 
+	}
+	
+	public int load(@NotNull String path, @NotNull String filename){
+		
+		int id = Persistence.loadPetrinet(path + "/" + filename, PetrinetPersistence.getInstance());
+		
+		return id;
+		
 	}
 
 	public void setMarking(@NotNull int id, @NotNull INode place,

@@ -166,6 +166,17 @@ public interface IRuleManipulation {
 	public void save(@NotNull int id, @NotNull String path, @NotNull String filename, @NotNull String format) throws EngineException; // TODO: String format zu => Format format
 	
 	/**
+	 * 
+	 * Load a Rule.
+	 * 
+	 * @param path where can we find the Rule
+	 * @param filename name of the Rule
+	 * @return the Id of the Rule
+	 * 
+	 */
+	public int load(@NotNull String path, @NotNull String filename); 
+	
+	/**
 	 * Sets the Marking of a Place.
 	 * 
 	 * @param id ID of the Rule

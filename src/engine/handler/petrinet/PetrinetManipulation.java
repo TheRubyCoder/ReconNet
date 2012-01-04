@@ -147,6 +147,11 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 			throws EngineException {
 		petrinetManipulationBackend.save(id, path, filename, format);
 	}
+	
+	@Override
+	public int load(String path, String filename) {
+		return petrinetManipulationBackend.load(path, filename);
+	}
 
 	@Override
 	public void setMarking(int id, INode place, int marking)

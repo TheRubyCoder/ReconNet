@@ -34,8 +34,6 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 	}
 	
 	public void build() throws EngineException {		
-
-		System.out.println("id: " + id);
 		
 		createPlace(id, new Point2D.Double(10, 10));
 		createPlace(id, new Point2D.Double(10, 100));
@@ -48,9 +46,7 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 		createTransition(id, new Point2D.Double(55, 100));
 
 		Petrinet petrinet = SessionManager.getInstance().getPetrinetData(1).getPetrinet();
-		
-		System.out.println("netz: " + petrinet);
-		
+
 		List<Place> 	 places 	 = new ArrayList<Place>(petrinet.getAllPlaces());
 		List<Transition> transitions = new ArrayList<Transition>(petrinet.getAllTransitions());
 		
@@ -68,8 +64,6 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 		
 		Petrinet petrinet2 = SessionManager.getInstance().getPetrinetData(id	).getPetrinet();
 		
-		System.out.println("netz: " + petrinet2);
-		System.out.println(iPetrinetManipulation.getJungLayout(id).getGraph());
 	}
 
 	@Override
@@ -89,6 +83,7 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 	@Override
 	public int createPetrinet() {
 	
+		// transform to comment to see the graph above
 		id = iPetrinetManipulation.createPetrinet();
 		
 		return id;

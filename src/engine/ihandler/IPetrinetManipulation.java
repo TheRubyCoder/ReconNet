@@ -168,6 +168,17 @@ public interface IPetrinetManipulation {
 	public void save(int id, String path, String filename, String format) throws EngineException; // TODO: String format zu => Format format
 	
 	/**
+	 * 
+	 * Load a Petrinet.
+	 * 
+	 * @param path where is this Petrinet
+	 * @param filename name for the Petrinet
+	 * @return the id of the Petrinet
+	 * 
+	 */
+	public int load(String path, String filename);
+	
+	/**
 	 * Sets the Marking of a Place.
 	 * 
 	 * @param id ID of the Petrinet

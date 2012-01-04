@@ -210,5 +210,12 @@ public class RuleManipulation implements IRuleManipulation {
 		ruleManipulationBackend.save(id, path, filename, format);
 		
 	}
+	
+	@Override
+	public int load(String path, String filename) {
+
+		return ruleManipulationBackend.load(path, filename);
+		
+	}
 
 }
