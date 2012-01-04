@@ -11,6 +11,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
+import engine.attribute.NodeLayoutAttribute;
 import engine.handler.RuleNet;
 import engine.handler.rule.RuleHandler;
 import engine.ihandler.IPetrinetManipulation;
@@ -170,21 +171,40 @@ public class Converter {
 		}
 	}
 	
-	public static boolean convertToRule(Pnml pnml, IRulePersistence handler){
+	public static boolean convertToRule(Pnml pnml, IRulePersistence handler) {
 		int id=handler.createRule();
 		
+		
+		//Todo: make nettype independent from position in rnml-file
+		Net lNet= pnml.getNet().get(0);
+		Net kNet=pnml.getNet().get(1);
+		Net rNet=pnml.getNet().get(2);
+		
+		List<Place> lPlaces=lNet.getPage().getPlace();
+		List<Transition> lTransis=lNet.getPage().getTransition();
+		List<Arc> lArcs=lNet.getPage().getArc();
+		
+		List<Place> kPlaces=kNet.getPage().getPlace();
+		List<Transition> kTransis=kNet.getPage().getTransition();
+		List<Arc> kArcs=kNet.getPage().getArc();
+		
+		List<Place> rPlaces=rNet.getPage().getPlace();
+		List<Transition> rTransis=rNet.getPage().getTransition();
+		List<Arc> rArcs=rNet.getPage().getArc();
+		
+		//INode node= handler.createPlace(id, RuleNet.L, null);
 		
 		
 		return false;
 	}
 	
-	public static Pnml convertRuleToPnml ( Rule rule, RuleHandler handler){
+	public static Pnml convertRuleToPnml ( Rule rule, Map<INode, NodeLayoutAttribute> map){
 		Pnml pnml=new Pnml();
 		
 		pnml.net = new ArrayList<Net>();
-		Net lNet = createNet(rule.getL(), handler, RuleNet.L);
-		Net kNet = createNet(rule.getK(), handler, RuleNet.K);
-		Net rNet = createNet(rule.getR(), handler, RuleNet.R);
+		Net lNet = createNet(rule.getL(), map, RuleNet.L);
+		Net kNet = createNet(rule.getK(), map, RuleNet.K);
+		Net rNet = createNet(rule.getR(), map, RuleNet.R);
 		
 		List<Net>nets=new ArrayList<Net>();
 		pnml.setNet(nets);
@@ -193,7 +213,7 @@ public class Converter {
 		return pnml;
 	}
 	
-	private static Net createNet(Petrinet petrinet, RuleHandler handler, RuleNet type) {
+	private static Net createNet(Petrinet petrinet, Map<INode, NodeLayoutAttribute> map, RuleNet type) {
 		Net net=new Net();
 		Page page=new Page();
 		net.setId(String.valueOf(petrinet.getId()));
@@ -225,20 +245,11 @@ public class Converter {
 			
 			//Coordinates
 			Graphics graphics=new Graphics();
-			Dimension d=new Dimension();
 			Position pos=new Position();
-			AbstractLayout<INode, petrinet.Arc> layout = handler.getJungLayout(p.getId(), type);
 			
-			
-			pos.setX(String.valueOf(layout.getX(p)));
-			pos.setY(String.valueOf(layout.getY(p)));
-			
-			d.setX(String.valueOf(layout.getSize().getWidth()));
-			d.setY(String.valueOf(layout.getSize().getHeight()));
-			
-			List<Dimension> dimensions=new ArrayList<Dimension>();
-			dimensions.add(d);
-			graphics.setDimension(dimensions);
+			pos.setX(String.valueOf(map.get(p).getCoordinate().getX()));
+			pos.setY(String.valueOf(map.get(p).getCoordinate().getY()));
+	
 			
 			List<Position> positions=new ArrayList<Position>();
 			positions.add(pos);
@@ -266,18 +277,13 @@ public class Converter {
 			Graphics graphics=new Graphics();
 			Dimension d=new Dimension();
 			Position pos=new Position();
-			AbstractLayout<INode, petrinet.Arc> layout = handler.getJungLayout(t.getId(), type);
+		//	AbstractLayout<INode, petrinet.Arc> layout = handler.getJungLayout(t.getId(), type);
 			
 	
-			pos.setX(String.valueOf(layout.getX(t)));
-			pos.setY(String.valueOf(layout.getY(t)));
+			pos.setX(String.valueOf(map.get(t).getCoordinate().getX()));
+			pos.setY(String.valueOf(map.get(t).getCoordinate().getY()));
 			
-			d.setX(String.valueOf(layout.getSize().getWidth()));
-			d.setY(String.valueOf(layout.getSize().getHeight()));
-			
-			List<Dimension> dimensions=new ArrayList<Dimension>();
-			dimensions.add(d);
-			graphics.setDimension(dimensions);
+		
 			
 			List<Position> positions=new ArrayList<Position>();
 			positions.add(pos);
@@ -309,14 +315,6 @@ public class Converter {
 			Graphics graphics=new Graphics();
 			Dimension d=new Dimension();
 			Position pos=new Position();
-			AbstractLayout<INode, petrinet.Arc> layout = handler.getJungLayout(a.getId(), type);
-			
-	
-			pos.setX(String.valueOf(layout.getX(a)));
-			pos.setY(String.valueOf(layout.getY(a)));
-			
-			d.setX(String.valueOf(layout.getSize().getWidth()));
-			d.setY(String.valueOf(layout.getSize().getHeight()));
 			
 			List<Dimension> dimensions=new ArrayList<Dimension>();
 			dimensions.add(d);
