@@ -188,6 +188,12 @@ public class EngineMockup implements IPetrinetManipulation {
 		throw new EngineException("unsupported");	
 		
 	}
+	
+	@Override
+	public int load(String path, String filename) throws EngineException {
+		throw new EngineException("unsupported");	
+		return 1;
+	}
 
 	@Override
 	public void setMarking(int id, INode place, int marking)
