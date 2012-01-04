@@ -312,8 +312,8 @@ class PetrinetPane {
 					} else {
 						MainWindow.getPetrinetManipulation()
 								.deleteArc(pId, arc);
-						PetrinetPane.getInstance().repaint();
 					}
+					PetrinetPane.getInstance().repaint();
 				} catch (EngineException e1) {
 					PopUp.popUnderConstruction(e.getActionCommand());
 					e1.printStackTrace();
