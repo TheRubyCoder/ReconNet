@@ -161,6 +161,14 @@ class Style {
 	
 	public static final Color FONT_COLOR = Color.DARK_GRAY;
 	
+	public static final Color NODE_BORDER_COLOR = Color.DARK_GRAY;
+	
+	public static final int PLACE_WIDTH = 50;
+	
+	public static final int PLACE_HEIGHT = 35;
+	
+	public static final int TRANSITION_SIZE = 20;
+	
 	/* ************************************* 
 	 * petrinet file pane
 	 * *************************************/

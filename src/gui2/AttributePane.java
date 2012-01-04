@@ -95,8 +95,7 @@ public class AttributePane {
 				String name = placeAttribute.getPname();
 				String mark = String.valueOf(placeAttribute.getMarking());
 
-				tableModel = new PlaceTableModel(id, name,
-						mark);
+				tableModel = new PlaceTableModel(id, name, mark);
 			} else {
 				TransitionAttribute transitionAttribute = MainWindow
 						.getPetrinetManipulation().getTransitionAttribute(1,
@@ -112,11 +111,11 @@ public class AttributePane {
 				} else if (renew instanceof RenewMap) {
 					renewString = "map: " + renew;
 				}
-				tableModel = new TransitionTableModel(
-						id, name, tlb, renewString);
+				tableModel = new TransitionTableModel(id, name, tlb,
+						renewString);
 			}
-			tableModel.addTableModelListener(new TableListener(
-					PetrinetPane.getInstance().currentPetrinetId, node));
+			tableModel.addTableModelListener(new TableListener(PetrinetPane
+					.getInstance().currentPetrinetId, node));
 			table.setModel(tableModel);
 		} catch (EngineException e) {
 			e.printStackTrace();
@@ -318,6 +317,7 @@ public class AttributePane {
 			TableModel model = (TableModel) e.getSource();
 			String data = (String) model.getValueAt(row, column);
 			String attribute = (String) model.getValueAt(row, column - 1);
+			/* ARC */
 			if (arc != null) {
 				if (attribute.equals("Gewicht")) {
 					try {
@@ -333,16 +333,29 @@ public class AttributePane {
 				}
 			} else if (node != null) {
 				try {
+					/* PLACE */
 					if (MainWindow.getPetrinetManipulation().getNodeType(node) == NodeTypeEnum.Place) {
 						Place place = (Place) node;
 						if (attribute.equals("Name")) {
 							MainWindow
-							.getPetrinetManipulation()
-							.setPname(
-									PetrinetPane.getInstance().currentPetrinetId,
-									place, data);
+									.getPetrinetManipulation()
+									.setPname(
+											PetrinetPane.getInstance().currentPetrinetId,
+											place, data);
+						}else if (attribute.equals("Markierung")) {
+							try {
+								int marking = Integer.parseInt(data);
+								MainWindow
+								.getPetrinetManipulation()
+								.setMarking(
+										PetrinetPane.getInstance().currentPetrinetId, 
+										place, marking);
+							} catch (NumberFormatException nfe){
+								PopUp.popError("Die Markierung muss eine natürliche Zahl sein.");
+							}
 						}
 
+						/* TRANSITION */
 					} else {
 						Transition transition = (Transition) node;
 						if (attribute.equals("Name")) {
