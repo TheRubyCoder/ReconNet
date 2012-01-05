@@ -121,7 +121,7 @@ class Style {
 	
 	public static final Point SIMULATION_PANE_SLIDER_LOCATION =
 		new Point(INSET_LEFT + (BUTTON_WIDTH + SPACING_BUTTONS) * 2, 
-				0 + INSET_TOP );
+				0 + INSET_TOP + BUTTON_HEIGHT + SPACING_BUTTONS );
 	
 	public static final Dimension SIMULATION_PANE_SLIDER_SIZE =
 		new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT * 2 + SPACING_BUTTONS);
