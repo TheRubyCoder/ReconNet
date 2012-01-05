@@ -13,7 +13,9 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeListener;
 
+import javax.swing.Action;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -267,9 +269,9 @@ class PetrinetPane {
 		 * There are 3 types of listeners as there are 3 types of pop up menus:
 		 * Node(Place/Transition) and Arc
 		 */
-		private static class MenuListener implements ActionListener {
+		private static class DeleteListener implements ActionListener {
 
-			private MenuListener() {
+			private DeleteListener() {
 			}
 
 			private Transition transition;
@@ -280,7 +282,7 @@ class PetrinetPane {
 
 			private int pId;
 
-			private MenuListener(Transition transition, Place place, Arc arc,
+			private DeleteListener(Transition transition, Place place, Arc arc,
 					int pId) {
 				this.transition = transition;
 				this.place = place;
@@ -288,16 +290,16 @@ class PetrinetPane {
 				this.pId = pId;
 			}
 
-			static MenuListener fromPlace(Place place, int pId) {
-				return new MenuListener(null, place, null, pId);
+			static DeleteListener fromPlace(Place place, int pId) {
+				return new DeleteListener(null, place, null, pId);
 			}
 
-			static MenuListener fromArc(Arc arc, int pId) {
-				return new MenuListener(null, null, arc, pId);
+			static DeleteListener fromArc(Arc arc, int pId) {
+				return new DeleteListener(null, null, arc, pId);
 			}
 
-			static MenuListener fromTransition(Transition transition, int pId) {
-				return new MenuListener(transition, null, null, pId);
+			static DeleteListener fromTransition(Transition transition, int pId) {
+				return new DeleteListener(transition, null, null, pId);
 			}
 
 			@Override
@@ -320,6 +322,27 @@ class PetrinetPane {
 				}
 			}
 		}
+		
+		/** Listener for clicks on color fields in context menus of places */
+		private static class ChangeColorListener implements ActionListener {
+
+			private Color color;
+			
+			private INode place;
+			
+			
+			private ChangeColorListener(Color color, INode place){
+				this.color = color;
+				this.place = place;
+			}
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO call engine
+//				MainWindow.getPetrinetManipulation().set
+			}
+			
+		}
 
 		private PetrinetPopUpMenu() {
 		}
@@ -332,12 +355,21 @@ class PetrinetPane {
 					PlaceAttribute placeAttribute = MainWindow
 							.getPetrinetManipulation().getPlaceAttribute(pId,
 									node);
-					JMenuItem jMenuItem = new JMenuItem("Stelle "
+					
+					//Delete
+					JMenuItem delete = new JMenuItem("Stelle "
 							+ placeAttribute.getPname() + " [" + node.getId()
 							+ "] " + "löschen");
-					jMenuItem.addActionListener(MenuListener.fromPlace(
+					delete.addActionListener(DeleteListener.fromPlace(
 							(Place) node, pId));
-					result.add(jMenuItem);
+					result.add(delete);
+					
+					//Color blue
+					JMenuItem blue = new JMenuItem("Blau");
+					blue.setBackground(Color.BLUE);
+					blue.addActionListener(new ChangeColorListener(Color.BLUE, node));
+					result.add(blue);
+					
 				} else {
 					TransitionAttribute transitionAttribute = MainWindow
 							.getPetrinetManipulation()
@@ -347,7 +379,7 @@ class PetrinetPane {
 					JMenuItem jMenuItem = new JMenuItem("Transition "
 							+ transitionAttribute.getTname() + " ["
 							+ node.getId() + "] " + "löschen");
-					jMenuItem.addActionListener(MenuListener.fromTransition(
+					jMenuItem.addActionListener(DeleteListener.fromTransition(
 							(Transition) node, pId));
 					result.add(jMenuItem);
 				}
@@ -362,7 +394,7 @@ class PetrinetPane {
 			PetrinetPopUpMenu result = new PetrinetPopUpMenu();
 			JMenuItem jMenuItem = new JMenuItem("Pfeil [" + arc.getId()
 					+ "] löschen");
-			jMenuItem.addActionListener(MenuListener.fromArc(arc,
+			jMenuItem.addActionListener(DeleteListener.fromArc(arc,
 					PetrinetPane.getInstance().currentPetrinetId));
 			result.add(jMenuItem);
 			return result;
@@ -393,7 +425,7 @@ class PetrinetPane {
 					int y = (int) (center.getY() - height / 2);
 					Color lightBlue = new Color(200, 200, 250);
 					decorator.setPaint(lightBlue);
-					// decorator.setPaint(placeAttribute.getColor());
+//					 decorator.setPaint(placeAttribute.getColor());
 					// TODO let user set color
 					decorator.fillOval(x, y, width, height);
 
