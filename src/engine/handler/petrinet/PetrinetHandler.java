@@ -163,7 +163,9 @@ final public class PetrinetHandler {
 			} catch (IllegalArgumentException e) {
 				exception("createPlace - can not create Place");
 			}
-
+			
+			System.out.println(petrinetData.getPetrinet().getAllGraphElement().getAllNodes());
+			
 			return newPlace;
 		}
 
@@ -279,6 +281,8 @@ final public class PetrinetHandler {
 			Collection<Integer> allDelElemFromPetrinet = petrinet
 					.deleteElementById(node.getId());
 
+			System.out.println("all del elem: ");
+			
 			Iterator<Integer> iter = allDelElemFromPetrinet.iterator();
 			Collection<Arc> collArc = new HashSet<Arc>();
 			Collection<INode> collINodes = new HashSet<INode>();
@@ -289,11 +293,17 @@ final public class PetrinetHandler {
 
 				// test type of Element
 				if (type.name().equals(ElementType.ARC)) {
-					collArc.add(petrinet.getArcById(idOfElem));
+					Arc a = petrinet.getArcById(idOfElem);
+					if(a == null) exception("deleteInternal - arc is null");
+					collArc.add(a);
 				} else if (type.name().equals(ElementType.PLACE)) {
-					collINodes.add(petrinet.getPlaceById(idOfElem));
+					Place p = petrinet.getPlaceById(idOfElem);
+					if(p == null) exception("deleteInternal - place is null");
+					collINodes.add(p);
 				} else if (type.name().equals(ElementType.TRANSITION)) {
-					collINodes.add(petrinet.getTransitionById(idOfElem));
+					Transition t = petrinet.getTransitionById(idOfElem);
+					if(t == null) exception("deleteInternal - transition is null");
+					collINodes.add(t);
 				} else {
 					exception("deleteInternal - invalid type from id");
 				}
@@ -565,22 +575,12 @@ final public class PetrinetHandler {
 			exception("setMarking - id of the Petrinet is wrong");
 		} else {
 
-//			JungData jungData = petrinetData.getJungData();
-
 			if (this.getNodeType(place).equals(NodeTypeEnum.Place)) {
 				// cast object
 				Place p = (Place) place;
 
 				// set new marking
 				p.setMark(marking);
-
-				// call Jung
-//				try {
-//					// TODO existiert nimmer
-//					// jungData.updatePlace(p);
-//				} catch (IllegalArgumentException e) {
-//					exception("setMarking - can not update Place");
-//				}
 
 			}
 
@@ -599,22 +599,12 @@ final public class PetrinetHandler {
 			exception("setPname - id of the Petrinet is wrong");
 		} else {
 
-//			JungData jungData = petrinetData.getJungData();
-
 			if (this.getNodeType(place).equals(NodeTypeEnum.Place)) {
 				// cast object
 				Place p = (Place) place;
 
 				// set new Pname
 				p.setName(pname);
-
-				// call Jung
-//				try {
-//					// TODO existiert nimmer
-//					// jungData.updatePlace(p);
-//				} catch (IllegalArgumentException e) {
-//					exception("setPname - can not update Place");
-//				}
 
 			}
 
@@ -633,22 +623,12 @@ final public class PetrinetHandler {
 			exception("setTlb - id of the Petrinet is wrong");
 		} else {
 
-//			JungData jungData = petrinetData.getJungData();
-
 			if (this.getNodeType(transition).equals(NodeTypeEnum.Transition)) {
 				// cast object
 				Transition t = (Transition) transition;
 
 				// set new Tlb
 				t.setTlb(tlb);
-
-				// call Jung
-//				try {
-//					// TODO existiert nimmer
-//					// jungData.updateTransition(t);
-//				} catch (IllegalArgumentException e) {
-//					exception("setTlb - can not update Transition");
-//				}
 
 			}
 
@@ -667,22 +647,12 @@ final public class PetrinetHandler {
 			exception("setTname - id of the Petrinet is wrong");
 		} else {
 
-//			JungData jungData = petrinetData.getJungData();
-
 			if (this.getNodeType(transition).equals(NodeTypeEnum.Transition)) {
 				// cast object
 				Transition t = (Transition) transition;
 
 				// set new Tname
 				t.setName(tname);
-
-				// call Jung
-//				try {
-//					// TODO existiert nimmer
-//					// jungData.updateTransition(t);
-//				} catch (IllegalArgumentException e) {
-//					exception("setTname - can not update Transition");
-//				}
 
 			}
 
@@ -701,18 +671,8 @@ final public class PetrinetHandler {
 			exception("setWeight - id of the Petrinet is wrong");
 		} else {
 
-//			JungData jungData = petrinetData.getJungData();
-
 			// set new weight
 			arc.setMark(weight);
-
-			// call Jung
-//			try {
-//				 TODO existiert nimmer
-//				 jungData.updateArc(arc);
-//			} catch (IllegalArgumentException e) {
-//				exception("setWeight - can not update Arc");
-//			}
 
 		}
 
@@ -753,7 +713,12 @@ final public class PetrinetHandler {
 		}
 		
 	}
-
+	
+	public void setPlaceColor(int id, INode place, Color color) {
+		
+		
+	}
+	
 	public NodeTypeEnum getNodeType(@NotNull INode node) throws EngineException {
 
 		if (node instanceof Place) {

@@ -1,9 +1,11 @@
 package engine.ihandler;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 
 import petrinet.Arc;
 import petrinet.INode;
+import petrinet.Renews;
 
 import com.sun.istack.NotNull;
 
@@ -167,6 +169,27 @@ public interface IRulePersistence {
 	 * @throws EngineException 
 	 */
 	public void setWeight(@NotNull int id, @NotNull Arc arc, @NotNull int weight) throws EngineException;
+	
+	/**
+	 * 
+	 * Sets a Strings as RNW.
+	 * 
+	 * @param id ID of the Petrinet
+	 * @param rnw String as RNW
+	 * 
+	 */
+	public void setRnw(int id, INode transition, Renews renews);
+
+	/**
+	 * 
+	 * Set Color of a Place.
+	 * 
+	 * @param id ID of the Petrinet
+	 * @param place which should modify
+	 * @param color new Color
+	 * 
+	 */
+	public void setPlaceColor(int id, INode place, Color color);
 
 	/**
 	 * Returns the type of the Object.

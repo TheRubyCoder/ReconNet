@@ -1,5 +1,6 @@
 package engine.handler.petrinet;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 
 import petrinet.Arc;
@@ -195,6 +196,13 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 		NodeTypeEnum nodeType = petrinetManipulationBackend.getNodeType(node);
 		
 		return nodeType;
+		
+	}
+
+	@Override
+	public void setPlaceColor(int id, INode place, Color color) {
+
+		petrinetManipulationBackend.setPlaceColor(id, place, color);
 		
 	}
 

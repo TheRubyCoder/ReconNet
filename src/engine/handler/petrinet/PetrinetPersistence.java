@@ -1,10 +1,12 @@
 package engine.handler.petrinet;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 
 import petrinet.Arc;
 import petrinet.INode;
 import petrinet.Place;
+import petrinet.Renews;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
@@ -170,6 +172,21 @@ public class PetrinetPersistence implements IPetrinetPersistence {
 		Enum<?> nodeType = petrinetManipulationBackend.getNodeType(node);
 		
 		return nodeType;
+	}
+
+	@Override
+	public void setRnw(int id, INode transition, Renews renews)
+			throws EngineException {
+
+		petrinetManipulationBackend.setRnw(id, transition, renews);
+		
+	}
+
+	@Override
+	public void setPlaceColor(int id, INode place, Color color) {
+
+		petrinetManipulationBackend.setPlaceColor(id, place, color);
+	
 	}
 
 }

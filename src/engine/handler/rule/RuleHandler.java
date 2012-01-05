@@ -855,6 +855,10 @@ final public class RuleHandler {
 		// TODO
 	}
 
+	public void setPlaceColor(int id, INode place, Color color) {
+		// TODO
+	}
+	
 	public NodeTypeEnum getNodeType(INode node) {
 
 		if (node instanceof Place) {

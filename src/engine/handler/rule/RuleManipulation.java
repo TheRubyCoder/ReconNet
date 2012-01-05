@@ -1,5 +1,6 @@
 package engine.handler.rule;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 
 import petrinet.Arc;
@@ -223,6 +224,13 @@ public class RuleManipulation implements IRuleManipulation {
 	public int load(String path, String filename) {
 
 		return ruleManipulationBackend.load(path, filename);
+		
+	}
+
+	@Override
+	public void setPlaceColor(int id, INode place, Color color) {
+
+		ruleManipulationBackend.setPlaceColor(id, place, color);
 		
 	}
 

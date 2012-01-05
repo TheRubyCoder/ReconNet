@@ -1,5 +1,6 @@
 package engine;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -266,4 +267,7 @@ public class EngineMockup implements IPetrinetManipulation {
 			throw new EngineException("");
 		}
 	}
+
+	@Override
+	public void setPlaceColor(int id, INode place, Color color) {}
 }

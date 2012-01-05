@@ -1,5 +1,6 @@
 package engine.ihandler;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 
 import petrinet.Arc;
@@ -236,6 +237,17 @@ public interface IRuleManipulation {
 	 * 
 	 */
 	public void setRnw(int id, INode transition, Renews renews);
+
+	/**
+	 * 
+	 * Set Color of a Place.
+	 * 
+	 * @param id ID of the Petrinet
+	 * @param place which should modify
+	 * @param color new Color
+	 * 
+	 */
+	public void setPlaceColor(int id, INode place, Color color);
 	
 	/**
 	 * Returns the type of the Object.

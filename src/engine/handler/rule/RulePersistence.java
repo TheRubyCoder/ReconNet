@@ -1,9 +1,11 @@
 package engine.handler.rule;
 
+import java.awt.Color;
 import java.awt.geom.Point2D;
 
 import petrinet.Arc;
 import petrinet.INode;
+import petrinet.Renews;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
@@ -161,6 +163,20 @@ public class RulePersistence implements IRulePersistence {
 		NodeTypeEnum type = ruleManipulationBackend.getNodeType(node);
 		
 		return type;
+		
+	}
+
+	@Override
+	public void setRnw(int id, INode transition, Renews renews) {
+
+		ruleManipulationBackend.setRnw(id, transition, renews);
+	
+	}
+
+	@Override
+	public void setPlaceColor(int id, INode place, Color color) {
+
+		ruleManipulationBackend.setPlaceColor(id, place, color);
 		
 	}
 
