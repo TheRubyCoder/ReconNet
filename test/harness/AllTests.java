@@ -13,6 +13,7 @@ import org.junit.runners.Suite;
     engine.data.JungDataTest.class,
     engine.data.PetrinetDataTest.class,
     engine.data.RuleDataTest.class,
-    engine.session.SessionManagerTest.class
+    engine.session.SessionManagerTest.class,
+    engine.handler.PetrinetHandlerTest.class
 })
 public class AllTests {}
