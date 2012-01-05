@@ -268,7 +268,7 @@ final public class PetrinetHandler {
 
 		// get the Petrinet from the id and SessionManager
 		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
-
+		
 		// Test: is id valid
 		if (petrinetData == null) {
 			exception("deleteInternal - id of the Petrinet is wrong");
@@ -279,33 +279,34 @@ final public class PetrinetHandler {
 
 			// all deleted elements, returned by Petrinet
 			Collection<Integer> allDelElemFromPetrinet = petrinet
-					.deleteElementById(node.getId());
+					.giveAllDeleteElem(node.getId());
 
-			System.out.println("all del elem: ");
+			if(allDelElemFromPetrinet.size() == 0) exception("deleteInternal - no items in delColl?!");
 			
 			Iterator<Integer> iter = allDelElemFromPetrinet.iterator();
 			Collection<Arc> collArc = new HashSet<Arc>();
 			Collection<INode> collINodes = new HashSet<INode>();
 
 			while (iter.hasNext()) {
+				
 				int idOfElem = iter.next();
 				ElementType type = petrinet.getNodeType(idOfElem);
 
 				// test type of Element
-				if (type.name().equals(ElementType.ARC)) {
+				if (type.equals(ElementType.ARC)) {
 					Arc a = petrinet.getArcById(idOfElem);
 					if(a == null) exception("deleteInternal - arc is null");
 					collArc.add(a);
-				} else if (type.name().equals(ElementType.PLACE)) {
+				} else if (type.equals(ElementType.PLACE)) {
 					Place p = petrinet.getPlaceById(idOfElem);
 					if(p == null) exception("deleteInternal - place is null");
 					collINodes.add(p);
-				} else if (type.name().equals(ElementType.TRANSITION)) {
+				} else if (type.equals(ElementType.TRANSITION)) {
 					Transition t = petrinet.getTransitionById(idOfElem);
 					if(t == null) exception("deleteInternal - transition is null");
 					collINodes.add(t);
 				} else {
-					exception("deleteInternal - invalid type from id");
+					exception("deleteInternal - invalid type from id: " + idOfElem + ", type: " + type.toString());
 				}
 
 			}
@@ -316,6 +317,9 @@ final public class PetrinetHandler {
 				exception("deleteInternal - can not delete Place/Transition");
 			}
 
+			// know kill all
+			petrinet.deleteElementById(node.getId());
+			
 		}
 
 	}
@@ -346,6 +350,8 @@ final public class PetrinetHandler {
 			 
 			 AbstractLayout<INode, Arc> layout = jungData.getJungLayout();
 
+			 System.out.println("layout: " + layout.getGraph());
+			 
 			 return layout;
 
 		}
@@ -716,6 +722,7 @@ final public class PetrinetHandler {
 	
 	public void setPlaceColor(int id, INode place, Color color) {
 		
+		// TODO: nice to have!
 		
 	}
 	

@@ -67,7 +67,7 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 		createArc(id, places.get(3),      transitions.get(3));
 		createArc(id, transitions.get(3), places.get(0));
 		
-		Petrinet petrinet2 = SessionManager.getInstance().getPetrinetData(id	).getPetrinet();
+//		Petrinet petrinet2 = SessionManager.getInstance().getPetrinetData(id).getPetrinet();
 		
 	}
 
@@ -89,7 +89,7 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 	public int createPetrinet() {
 	
 		// transform to comment to see the graph above
-		id = iPetrinetManipulation.createPetrinet();
+//		id = iPetrinetManipulation.createPetrinet();
 		
 		return id;
 	}

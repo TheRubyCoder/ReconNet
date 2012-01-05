@@ -180,6 +180,48 @@ public class Petrinet {
 		return result;
 	}
 
+	/**
+	 * This method is for the engine!
+	 * @param id of the elem
+	 * @return Collection of all Item
+	 */
+	public Collection<Integer> giveAllDeleteElem(int id) {
+		List<Integer> result = new ArrayList<Integer>();
+		if (getNodeType(id) == ElementType.ARC) {
+			result.add(id);
+			Arc arc = getArcById(id);
+
+		} else if (getNodeType(id) == ElementType.PLACE) {
+			Place place = getPlaceById(id);
+			
+			Collection<Arc> copyOfStartArcs = new ArrayList<Arc>(place.getStartArcs());
+			Collection<Arc> copyOfEndArcs = new ArrayList<Arc>(place.getEndArcs());
+			for (Arc arc : copyOfStartArcs) {
+				result.addAll(giveAllDeleteElem(arc.getId()));
+			}
+			for (Arc arc : copyOfEndArcs) {
+				result.addAll(giveAllDeleteElem(arc.getId()));
+			}
+
+			result.add(place.getId());
+		} else if (getNodeType(id) == ElementType.TRANSITION) {
+			Transition transition = getTransitionById(id);
+			result.add(transition.getId());
+			Collection<Arc> copyOfStartArcs = new ArrayList<Arc>(transition.getStartArcs());
+			Collection<Arc> copyOfEndArcs = new ArrayList<Arc>(transition.getEndArcs());
+			for (Arc arc : copyOfStartArcs) {
+				result.addAll(giveAllDeleteElem(arc.getId()));
+			}
+			for (Arc arc : copyOfEndArcs) {
+				result.addAll(giveAllDeleteElem(arc.getId()));
+			}
+
+		}
+
+		return result;
+	}
+
+	
 	public Transition createTransition(String name, IRenew rnw) {
 		Transition t = new Transition(UUID.gettID(), rnw, this);
 		t.setName(name);
