@@ -3,6 +3,7 @@ package gui2;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -94,7 +95,8 @@ class EditorPane {
 	/** Initiates the transition radio button with text and tool tip */
 	private JRadioButton initiateRadioTransitionButton() {
 		createTransitionButton = new JRadioButton("Transition einfügen");
-		createTransitionButton.setToolTipText("In diesem Modus fügen Sie mit einem Klick eine neue Transition hinzu");
+		createTransitionButton.setMnemonic(KeyEvent.VK_4);
+		createTransitionButton.setToolTipText("(Alt+4) In diesem Modus fügen Sie mit einem Klick eine neue Transition hinzu");
 		
 		// the action command is used later on to identify wich button is selected
 		createTransitionButton.setActionCommand("transition");
@@ -106,7 +108,8 @@ class EditorPane {
 	/** Initiates the place radio button with text and tool tip */
 	private JRadioButton initiateRadioPlaceButton() {
 		createPlaceButton = new JRadioButton("Stelle einfügen");
-		createPlaceButton.setToolTipText("In diesem Modus fügen Sie mit einem Klick eine neue Stelle hinzu");
+		createPlaceButton.setMnemonic(KeyEvent.VK_3);
+		createPlaceButton.setToolTipText("(Alt+3) In diesem Modus fügen Sie mit einem Klick eine neue Stelle hinzu");
 		
 		// the action command is used later on to identify wich button is selected
 		createPlaceButton.setActionCommand("place");
@@ -118,7 +121,8 @@ class EditorPane {
 	/** Initiates the arc radio button with text and tool tip */
 	private JRadioButton initiateRadioArcButton() {
 		createArcButton = new JRadioButton("Kante einfügen");
-		createArcButton.setToolTipText("In diesem Modus fügen Sie mit einem Klick eine neue Kante hinzu");
+		createArcButton.setMnemonic(KeyEvent.VK_2);
+		createArcButton.setToolTipText("(Alt+2) In diesem Modus fügen Sie mit einem Klick eine neue Kante hinzu");
 		
 		// the action command is used later on to identify wich button is selected
 		createArcButton.setActionCommand("arc");
@@ -131,8 +135,9 @@ class EditorPane {
 	/** Initiates the pick radio button with text and tool tip */
 	private JRadioButton initiateRadioPickButton(){
 		pickButton = new JRadioButton("Auswählen");
+		pickButton.setMnemonic(KeyEvent.VK_1);
 		pickButton.setSelected(true);
-		pickButton.setToolTipText("Editieren und verschieben Sie Stellen und Transitionen " +
+		pickButton.setToolTipText("(Alt+1) Editieren und verschieben Sie Stellen und Transitionen " +
 				"indem sie auf sei klicken. Mit drag & drop auf eine weiße Stelle verschieben " +
 				"sie das ganze Petrinetze");
 		

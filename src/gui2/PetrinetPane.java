@@ -2,11 +2,14 @@ package gui2;
 
 import static gui2.Style.*;
 
+import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.Robot;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
@@ -125,6 +128,11 @@ class PetrinetPane {
 									// PickingGraphMousePlugin selects nodes
 			EditorMode mode = EditorPane.getInstance().getCurrentMode();
 
+			
+			//left-click PICK : display clicked node
+			//right-click: display pop-up-menu
+			//left-click PLACE: create place at position
+			//left-click TRANSITION: etc...
 			if (mode == EditorMode.PICK) {
 				if (edge != null) {
 					AttributePane.getInstance().displayEdge(edge);
@@ -322,29 +330,40 @@ class PetrinetPane {
 				}
 			}
 		}
-		
+
 		/** Listener for clicks on color fields in context menus of places */
 		private static class ChangeColorListener implements ActionListener {
 
 			private Color color;
-			
+
 			private INode place;
-			
-			
-			private ChangeColorListener(Color color, INode place){
+
+			private ChangeColorListener(Color color, INode place) {
 				this.color = color;
 				this.place = place;
 			}
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				//TODO call engine
-//				MainWindow.getPetrinetManipulation().set
+				System.out.println(color);
+				MainWindow.getPetrinetManipulation().setPlaceColor(
+						PetrinetPane.getInstance().currentPetrinetId, place,
+						color);
+				PetrinetPane.getInstance().repaint();
 			}
-			
+
 		}
 
 		private PetrinetPopUpMenu() {
+		}
+
+		/** Adds a new item to the menu for changing the color of a node */
+		static private void addColorToPopUpMenu(PetrinetPopUpMenu menu,
+				String description, Color color, INode node) {
+			JMenuItem item = new JMenuItem(description);
+			item.setBackground(color);
+			item.addActionListener(new ChangeColorListener(color, node));
+			menu.add(item);
 		}
 
 		static PetrinetPopUpMenu fromNode(INode node) {
@@ -355,21 +374,29 @@ class PetrinetPane {
 					PlaceAttribute placeAttribute = MainWindow
 							.getPetrinetManipulation().getPlaceAttribute(pId,
 									node);
-					
-					//Delete
+
+					// Delete
 					JMenuItem delete = new JMenuItem("Stelle "
 							+ placeAttribute.getPname() + " [" + node.getId()
 							+ "] " + "löschen");
 					delete.addActionListener(DeleteListener.fromPlace(
 							(Place) node, pId));
 					result.add(delete);
-					
-					//Color blue
-					JMenuItem blue = new JMenuItem("Blau");
-					blue.setBackground(Color.BLUE);
-					blue.addActionListener(new ChangeColorListener(Color.BLUE, node));
-					result.add(blue);
-					
+
+					// Color blue
+					addColorToPopUpMenu(result, "Blau", Color.BLUE, node);
+
+					// Color light blue
+					addColorToPopUpMenu(result, "Hellblau", new Color(200, 200,
+							250), node);
+
+					// Color red
+					addColorToPopUpMenu(result, "Rot", Color.RED, node);
+
+					// Light red
+					addColorToPopUpMenu(result, "HellRot", new Color(250, 200,
+							200), node);
+
 				} else {
 					TransitionAttribute transitionAttribute = MainWindow
 							.getPetrinetManipulation()
@@ -424,8 +451,8 @@ class PetrinetPane {
 					int x = (int) (center.getX() - width / 2);
 					int y = (int) (center.getY() - height / 2);
 					Color lightBlue = new Color(200, 200, 250);
-					decorator.setPaint(lightBlue);
-//					 decorator.setPaint(placeAttribute.getColor());
+					// decorator.setPaint(lightBlue);
+					decorator.setPaint(placeAttribute.getColor());
 					// TODO let user set color
 					decorator.fillOval(x, y, width, height);
 
@@ -466,7 +493,7 @@ class PetrinetPane {
 						blackOrWhite = Color.LIGHT_GRAY;
 					}
 
-					//draw rect
+					// draw rect
 					int size = TRANSITION_SIZE;
 					int x = (int) (center.getX() - size / 2);
 					int y = (int) (center.getY() - size / 2);
@@ -477,18 +504,19 @@ class PetrinetPane {
 					decorator.setPaint(NODE_BORDER_COLOR);
 					decorator.drawRect(x, y, size, size);
 
-					//draw name
+					// draw name
 					decorator.setPaint(FONT_COLOR);
 					decorator.drawString(transitionAttribute.getTname(), x
 							+ size + 2, y + size);
-					
-					//draw label
+
+					// draw label
 					if (transitionAttribute.getIsActivated()) {
 						decorator.setPaint(Color.LIGHT_GRAY);
 					} else {
 						decorator.setPaint(Color.DARK_GRAY);
 					}
-					decorator.drawString(transitionAttribute.getTLB(),x + size / 3 ,y + size / 1.5f);
+					decorator.drawString(transitionAttribute.getTLB(), x + size
+							/ 3, y + size / 1.5f);
 				}
 			} catch (EngineException e) {
 				PopUp.popError(e);
@@ -523,7 +551,10 @@ class PetrinetPane {
 		}
 	}
 
-	/** This is for defining the nodes' shapes so the arrows properly connects to them */
+	/**
+	 * This is for defining the nodes' shapes so the arrows properly connects to
+	 * them
+	 */
 	private static class PetrinetNodeShapeTransformer implements
 			Transformer<INode, Shape> {
 
@@ -531,9 +562,12 @@ class PetrinetPane {
 		public Shape transform(INode node) {
 			try {
 				if (MainWindow.getPetrinetManipulation().getNodeType(node) == NodeTypeEnum.Place) {
-					return new Ellipse2D.Double( - PLACE_WIDTH / 2, - PLACE_HEIGHT / 2,PLACE_WIDTH,PLACE_HEIGHT);
+					return new Ellipse2D.Double(-PLACE_WIDTH / 2,
+							-PLACE_HEIGHT / 2, PLACE_WIDTH, PLACE_HEIGHT);
 				} else {
-					return new Rectangle2D.Double(- TRANSITION_SIZE / 2, - TRANSITION_SIZE / 2, TRANSITION_SIZE, TRANSITION_SIZE);
+					return new Rectangle2D.Double(-TRANSITION_SIZE / 2,
+							-TRANSITION_SIZE / 2, TRANSITION_SIZE,
+							TRANSITION_SIZE);
 				}
 			} catch (EngineException e) {
 				e.printStackTrace();
