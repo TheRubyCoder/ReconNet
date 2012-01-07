@@ -1,24 +1,25 @@
 package gui2;
 
-import static gui2.Style.*;
+import static gui2.Style.FONT_COLOR;
+import static gui2.Style.NODE_BORDER_COLOR;
+import static gui2.Style.PETRINET_BORDER;
+import static gui2.Style.PETRINET_PANE_LAYOUT;
+import static gui2.Style.PLACE_HEIGHT;
+import static gui2.Style.PLACE_WIDTH;
+import static gui2.Style.TRANSITION_SIZE;
 
-import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Point;
-import java.awt.Robot;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.beans.PropertyChangeListener;
 
-import javax.swing.Action;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
