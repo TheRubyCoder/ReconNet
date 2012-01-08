@@ -176,7 +176,9 @@ class SimulationPane {
 		simulationButton.setIcon(SIMULATION_START_ICON);
 		simulationButton.setDisabledIcon(SIMULATION_START_ICON_DISABLE);
 		simulationButton.setPressedIcon(SIMULATION_START_ICON_PRESSED);
-
+		simulationButton.setText("start Simulation");
+		simulationButton.setIconTextGap(10);
+		
 		simulationButton
 				.setToolTipText("startet eine Endlossimulation, bis diese pausiert wird.");
 		simulationButton.setRolloverEnabled(true);
@@ -186,6 +188,7 @@ class SimulationPane {
 	void setSimulationButtonPause() {
 		simulationButton.setIcon(SIMULATION_PAUSE_ICON);
 		simulationButton.setPressedIcon(SIMULATION_PAUSE_ICON_PRESSED);
+		simulationButton.setText("stop Simulation");
 
 		simulationButton.setToolTipText("laufende Endlossimulation pausieren.");
 		simulationButton.setRolloverEnabled(true);
@@ -293,6 +296,7 @@ class SimulationPane {
 		AttributePane.getInstance().setTableDisable();
 		FilePane.getPetrinetFilePane().setHoleButtonsDisable();
 		FilePane.getRuleFilePane().setHoleButtonsDisable();
+//		PetrinetPane.getInstance().setPanelDisable();
 	}
 
 	/** Sets the other panels disable, so the simualion can running */

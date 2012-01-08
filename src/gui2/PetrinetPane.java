@@ -72,6 +72,11 @@ class PetrinetPane {
 	public static PetrinetPane getInstance() {
 		return instance;
 	}
+	
+//	public void setPanelDisable(){
+//		petrinetPanel.setEnabled(false);
+//		scrollPanel.setEnabled(false);
+//	}
 
 	/** mouse click listener for the drawing panel */
 	private static class PetrinetMouseListener extends
