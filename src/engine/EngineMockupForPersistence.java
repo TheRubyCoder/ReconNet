@@ -248,7 +248,7 @@ public class EngineMockupForPersistence implements IPetrinetManipulation {
 	}
 
 	@Override
-	public void setPlaceColor(int id, INode place, Color color) {
+	public void setPlaceColor(int id, INode place, Color color) throws EngineException {
 		
 		iPetrinetManipulation.setPlaceColor(id, place, color);
 		
