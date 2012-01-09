@@ -73,15 +73,22 @@ class PetrinetPane {
 	public void displayPetrinet(int petrinetId, String title) {
 		setBorderTitle(title);
 		try {
+			Layout<INode, Arc> layout = EngineAdapter.getPetrinetManipulation()
+					.getJungLayout(petrinetId);
 			if (petrinetViewer != null) {
 				petrinetViewer.removeFrom(petrinetPanel);
 			}
-			Layout<INode, Arc> layout = EngineAdapter.getPetrinetManipulation()
-					.getJungLayout(petrinetId);
 			petrinetViewer = new PetrinetViewer(layout, petrinetId, null);
 			petrinetViewer.addTo(petrinetPanel);
 			MainWindow.getInstance().repaint();
 		} catch (EngineException e) {
 		}
+	}
+
+	public void emptyDisplay() {
+		if (petrinetViewer != null) {
+			petrinetViewer.removeFrom(petrinetPanel);
+		}
+		petrinetPanel.setBorder(PETRINET_BORDER);
 	}
 }

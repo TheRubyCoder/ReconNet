@@ -79,7 +79,8 @@ class FilePane {
 						.getSelectedValue();
 				int pId = FilePane.getPetrinetFilePane().getIdFrom(
 						selectedValue);
-				PetrinetPane.getInstance().displayPetrinet(pId,"Petrinetz: " + selectedValue);
+				PetrinetPane.getInstance().displayPetrinet(pId,
+						"Petrinetz: " + selectedValue);
 			}
 		}
 	}
@@ -153,6 +154,7 @@ class FilePane {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			FilePane.getPetrinetFilePane().deleteSelectedItem();
+			PetrinetPane.getInstance().emptyDisplay();
 		}
 	}
 
@@ -249,6 +251,8 @@ class FilePane {
 			ActionListener newListener, ActionListener loadListener,
 			ActionListener saveListener, ActionListener saveAsListener,
 			ActionListener deleteListener) {
+		listItemToPId = initiateListItemToPid();
+
 		newButton = initiateNewButton(type, newListener);
 		saveButton = initiateSaveButton(type, saveListener);
 		loadButton = initiateLoadButton(type, loadListener);
@@ -257,7 +261,6 @@ class FilePane {
 		buttonContainer = initiateButtonContainer(newButton, saveButton,
 				loadButton, saveAsButton, deleteButton);
 		list = initiateList();
-		listItemToPId = initiateListItemToPid();
 		treeAndButtonContainerWithBorder = initiateTreeAndButtonContainerWithBorder(
 				list, buttonContainer, typePlural);
 	}
@@ -450,7 +453,12 @@ class FilePane {
 	}
 
 	int getIdFrom(Object listItem) {
-		return listItemToPId.get(listItem);
+		Integer integer = listItemToPId.get(listItem);
+		if (integer != null) {
+			return integer;
+		} else {
+			return -1;
+		}
 	}
 
 	/** disable hole buttons and tree */
@@ -503,10 +511,20 @@ class FilePane {
 				treeAndButtonContainerWithBorder, "Wollen sie " + selectedValue
 						+ " wirklich löschen?", "Petrinetz löschen?",
 				JOptionPane.YES_NO_OPTION);
-
 		if (confirmDialog == 0) {
-			return listModel.removeElement(selectedValue) && 
-				listItemToPId.remove(selectedValue) != null;
+
+			// Remove item from list without listeners! they acticate on
+			// deleting thus leading to inconsistent states: nullpointers
+			ListSelectionListener petrinetListSelectionListener = list
+					.getListSelectionListeners()[0];
+			list.removeListSelectionListener(petrinetListSelectionListener);
+
+			boolean success = listModel.removeElement(selectedValue)
+					&& listItemToPId.remove(selectedValue) != null;
+
+			// After removing add the listener again
+			list.addListSelectionListener(petrinetListSelectionListener);
+			return success;
 		} else {
 			return false;
 		}
