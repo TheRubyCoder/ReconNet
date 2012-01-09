@@ -31,7 +31,7 @@ public class EngineMockupForPersistence implements IPetrinetManipulation {
 		iPetrinetManipulation = PetrinetManipulation.getInstance();
 		
 		id = iPetrinetManipulation.createPetrinet();
-
+		System.out.println("Petrinet ID: " + id);
 	}
 	
 	public int build() throws EngineException {		
@@ -46,7 +46,7 @@ public class EngineMockupForPersistence implements IPetrinetManipulation {
 		createTransition(id, new Point2D.Double(100, 55));
 		createTransition(id, new Point2D.Double(55, 100));
 
-		Petrinet petrinet = SessionManager.getInstance().getPetrinetData(1).getPetrinet();
+		Petrinet petrinet = SessionManager.getInstance().getPetrinetData(id).getPetrinet();
 
 		List<Place> 	 places 	 = new ArrayList<Place>(petrinet.getAllPlaces());
 		List<Transition> transitions = new ArrayList<Transition>(petrinet.getAllTransitions());
