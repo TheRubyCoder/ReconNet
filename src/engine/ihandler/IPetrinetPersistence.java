@@ -172,9 +172,10 @@ public interface IPetrinetPersistence {
 	 * @param id ID of the Petrinet
 	 * @param place which should modify
 	 * @param color new Color
+	 * @throws EngineException 
 	 * 
 	 */
-	public void setPlaceColor(int id, INode place, Color color);
+	public void setPlaceColor(int id, INode place, Color color) throws EngineException;
 	
 	/**
 	 * Returns the type of the Object.

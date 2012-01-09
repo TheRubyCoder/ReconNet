@@ -5,8 +5,6 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.NodeType;
-
 import petrinet.Arc;
 import petrinet.INode;
 import petrinet.Petrinet;

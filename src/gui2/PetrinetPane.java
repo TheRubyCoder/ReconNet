@@ -352,9 +352,14 @@ class PetrinetPane {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println(color);
-				MainWindow.getPetrinetManipulation().setPlaceColor(
-						PetrinetPane.getInstance().currentPetrinetId, place,
-						color);
+				try {
+					MainWindow.getPetrinetManipulation().setPlaceColor(
+							PetrinetPane.getInstance().currentPetrinetId, place,
+							color);
+				} catch (EngineException e1) {
+					PopUp.popError(e1);
+					e1.printStackTrace();
+				}
 				PetrinetPane.getInstance().repaint();
 			}
 

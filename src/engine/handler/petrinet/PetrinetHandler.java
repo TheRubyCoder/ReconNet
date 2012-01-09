@@ -36,8 +36,7 @@ import exceptions.EngineException;
 
 /**
  * 
- * This is the implementation of all methods for 
- * the Petrinet by engine.
+ * This is the implementation of all methods for the Petrinet by engine.
  * 
  * @author alex (aas772)
  * 
@@ -163,16 +162,17 @@ final public class PetrinetHandler {
 			} catch (IllegalArgumentException e) {
 				exception("createPlace - can not create Place");
 			}
-			
-			System.out.println(petrinetData.getPetrinet().getAllGraphElement().getAllNodes());
-			
+
+			System.out.println(petrinetData.getPetrinet().getAllGraphElement()
+					.getAllNodes());
+
 			return newPlace;
 		}
 
 	}
 
 	public int createPetrinet() {
-		
+
 		// new Petrinet
 		Petrinet petrinet = PetrinetComponent.getPetrinet().createPetrinet();
 
@@ -181,7 +181,7 @@ final public class PetrinetHandler {
 
 		// get the Id
 		int idPetrinet = petrinetData.getId();
-		
+
 		return idPetrinet;
 	}
 
@@ -268,7 +268,7 @@ final public class PetrinetHandler {
 
 		// get the Petrinet from the id and SessionManager
 		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
-		
+
 		// Test: is id valid
 		if (petrinetData == null) {
 			exception("deleteInternal - id of the Petrinet is wrong");
@@ -281,32 +281,37 @@ final public class PetrinetHandler {
 			Collection<Integer> allDelElemFromPetrinet = petrinet
 					.giveAllDeleteElem(node.getId());
 
-			if(allDelElemFromPetrinet.size() == 0) exception("deleteInternal - no items in delColl?!");
-			
+			if (allDelElemFromPetrinet.size() == 0)
+				exception("deleteInternal - no items in delColl?!");
+
 			Iterator<Integer> iter = allDelElemFromPetrinet.iterator();
 			Collection<Arc> collArc = new HashSet<Arc>();
 			Collection<INode> collINodes = new HashSet<INode>();
 
 			while (iter.hasNext()) {
-				
+
 				int idOfElem = iter.next();
 				ElementType type = petrinet.getNodeType(idOfElem);
 
 				// test type of Element
 				if (type.equals(ElementType.ARC)) {
 					Arc a = petrinet.getArcById(idOfElem);
-					if(a == null) exception("deleteInternal - arc is null");
+					if (a == null)
+						exception("deleteInternal - arc is null");
 					collArc.add(a);
 				} else if (type.equals(ElementType.PLACE)) {
 					Place p = petrinet.getPlaceById(idOfElem);
-					if(p == null) exception("deleteInternal - place is null");
+					if (p == null)
+						exception("deleteInternal - place is null");
 					collINodes.add(p);
 				} else if (type.equals(ElementType.TRANSITION)) {
 					Transition t = petrinet.getTransitionById(idOfElem);
-					if(t == null) exception("deleteInternal - transition is null");
+					if (t == null)
+						exception("deleteInternal - transition is null");
 					collINodes.add(t);
 				} else {
-					exception("deleteInternal - invalid type from id: " + idOfElem + ", type: " + type.toString());
+					exception("deleteInternal - invalid type from id: "
+							+ idOfElem + ", type: " + type.toString());
 				}
 
 			}
@@ -319,7 +324,7 @@ final public class PetrinetHandler {
 
 			// know kill all
 			petrinet.deleteElementById(node.getId());
-			
+
 		}
 
 	}
@@ -346,32 +351,45 @@ final public class PetrinetHandler {
 			return null;
 		} else {
 
-			 JungData jungData = petrinetData.getJungData();
-			 
-			 AbstractLayout<INode, Arc> layout = jungData.getJungLayout();
+			JungData jungData = petrinetData.getJungData();
 
-			 System.out.println("layout: " + layout.getGraph());
-			 
-			 return layout;
+			AbstractLayout<INode, Arc> layout = jungData.getJungLayout();
+
+			System.out.println("layout: " + layout.getGraph());
+
+			return layout;
 
 		}
-	
+
 	}
 
 	public PlaceAttribute getPlaceAttribute(@NotNull int id,
 			@NotNull INode place) throws EngineException {
 
-		if (this.getNodeType(place).equals(NodeTypeEnum.Place)) {
-			Place p = (Place) place;
+		// get the Petrinet from the id and SessionManager
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
 
-			int marking = p.getMark();
-			String pname = p.getName();
-			Color color = Color.gray;
+		// Test: is id valid
+		if (petrinetData == null) {
+			exception("PetrinetHandler - id of the Petrinet is wrong");
+			return null;
+		} else {
 
-			PlaceAttribute placeAttribute = new PlaceAttribute(marking, pname,
-					color);
+			JungData jungData = petrinetData.getJungData();
 
-			return placeAttribute;
+			if (this.getNodeType(place).equals(NodeTypeEnum.Place)) {
+				Place p = (Place) place;
+
+				int marking = p.getMark();
+				String pname = p.getName();
+				Color color = jungData.getPlaceColor(p);
+
+				PlaceAttribute placeAttribute = new PlaceAttribute(marking,
+						pname, color);
+
+				return placeAttribute;
+			}
+
 		}
 
 		return null;
@@ -539,7 +557,8 @@ final public class PetrinetHandler {
 	}
 
 	public void save(@NotNull int id, @NotNull String path,
-			@NotNull String filename, @NotNull String format) throws EngineException {
+			@NotNull String filename, @NotNull String format)
+			throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
 		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
@@ -548,26 +567,29 @@ final public class PetrinetHandler {
 		if (petrinetData == null) {
 			exception("save - id of the Petrinet is wrong");
 		} else {
-			
+
 			Petrinet petrinet = petrinetData.getPetrinet();
 			JungData jungData = petrinetData.getJungData();
-			
-			Map<INode, NodeLayoutAttribute> nodeMap = jungData.getNodeLayoutAttributes();
-			
+
+			Map<INode, NodeLayoutAttribute> nodeMap = jungData
+					.getNodeLayoutAttributes();
+
 			checkNodeLayoutAttribute(nodeMap == null, "save - nodeMap == null");
-			
-			Persistence.savePetrinet(path + "/" + filename + "." + format, petrinet, nodeMap);
+
+			Persistence.savePetrinet(path + "/" + filename + "." + format,
+					petrinet, nodeMap);
 
 		}
 
 	}
-	
-	public int load(@NotNull String path, @NotNull String filename){
-		
-		int id = Persistence.loadPetrinet(path + "/" + filename, PetrinetPersistence.getInstance());
-		
+
+	public int load(@NotNull String path, @NotNull String filename) {
+
+		int id = Persistence.loadPetrinet(path + "/" + filename,
+				PetrinetPersistence.getInstance());
+
 		return id;
-		
+
 	}
 
 	public void setMarking(@NotNull int id, @NotNull INode place,
@@ -683,8 +705,9 @@ final public class PetrinetHandler {
 		}
 
 	}
-	
-	public void setRnw(int id, INode transition, Renews renews) throws EngineException {
+
+	public void setRnw(int id, INode transition, Renews renews)
+			throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
 		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
@@ -695,37 +718,56 @@ final public class PetrinetHandler {
 		} else {
 
 			Transition t = (Transition) transition;
-			
+
 			IRenew rnw;
-			
-			if(renews.equals(Renews.COUNT)){
-				
+
+			if (renews.equals(Renews.COUNT)) {
+
 				rnw = new RenewCount();
 				t.setRnw(rnw);
-				
-			} else if(renews.equals(Renews.IDENTITY)){
-				
+
+			} else if (renews.equals(Renews.IDENTITY)) {
+
 				rnw = new RenewId();
 				t.setRnw(rnw);
-				
-			} else if(false){
+
+			} else if (false) {
 
 				// Todo: map
-				
+
 			} else {
 				exception("setRnw - renews is not correct");
 			}
 
 		}
-		
+
 	}
-	
-	public void setPlaceColor(int id, INode place, Color color) {
-		
-		// TODO: nice to have!
-		
+
+	public void setPlaceColor(int id, INode place, Color color)
+			throws EngineException {
+
+		// get the Petrinet from the id and SessionManager
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
+
+		// Test: is id valid
+		if (petrinetData == null) {
+			exception("setPlaceColor - id of the Petrinet is wrong");
+		} else {
+
+			JungData jungData = petrinetData.getJungData();
+
+			jungData.setPlaceColor((Place) place, color);
+
+			// PetrinetData petrinetDataNew =
+			// sessionManager.getPetrinetData(id);
+			// JungData jungDataNew = petrinetDataNew.getJungData();
+			//
+			// System.out.println(jungDataNew.getJungGraph());
+			//
+		}
+
 	}
-	
+
 	public NodeTypeEnum getNodeType(@NotNull INode node) throws EngineException {
 
 		if (node instanceof Place) {
@@ -742,9 +784,10 @@ final public class PetrinetHandler {
 	private void exception(@NotNull String value) throws EngineException {
 		throw new EngineException("PetrinetHandler: " + value);
 	}
-	
-	private void checkNodeLayoutAttribute(boolean value, String errorMessage) throws EngineException{
-		if(value){
+
+	private void checkNodeLayoutAttribute(boolean value, String errorMessage)
+			throws EngineException {
+		if (value) {
 			exception(errorMessage);
 		}
 	}
