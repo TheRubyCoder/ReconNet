@@ -18,13 +18,13 @@ public class Page {
 	Name name;
 
 	
-	List<Place> place;
+	List<Place> place = new ArrayList<Place>();
 	
 
-	List<Transition> transition;
+	List<Transition> transition = new ArrayList<Transition>();
 	
 	
-	List<Arc> arc;
+	List<Arc> arc = new ArrayList<Arc>();
 
 	@XmlAttribute
 	public String getId() {

@@ -59,6 +59,7 @@ public class Converter {
 			List<Position> positionList = new ArrayList<Position>();
 			positionList.add(position);
 			location.setPosition(positionList);
+			newPlace.setGraphics(location);
 			places.add(newPlace);
 
 		}
@@ -77,6 +78,8 @@ public class Converter {
 			Graphics graphics=new Graphics();
 			Dimension d=new Dimension();
 			Position pos=new Position();
+			pos.setX(layout.get(transi.getId())[0]);
+			pos.setY(layout.get(transi.getId())[1]);
 		//	AbstractLayout<INode, petrinet.Arc> layout = handler.getJungLayout(t.getId(), type);
 			
 			//Todo Positionstuff
@@ -181,8 +184,13 @@ public class Converter {
 
 			// create places
 			for (Place place : pnml.getNet().get(0).page.place) {
-				INode realPlace = handler.createPlace(petrinetID,
+				INode realPlace;
+				if (place.getGraphics() != null && !place.getGraphics().getPosition().isEmpty()) {
+					realPlace = handler.createPlace(petrinetID,
 						positionToPoint2D(place.getGraphics().getPosition()));
+				} else {
+					realPlace = handler.createPlace(petrinetID, new Point2D.Double(Math.random() * 10, Math.random() * 10));
+				}
 				handler.setPname(petrinetID, realPlace, place.getPlaceName()
 						.getText());
 				handler.setMarking(petrinetID, realPlace,
@@ -192,8 +200,15 @@ public class Converter {
 
 			// create transitions
 			for (Transition trans : pnml.getNet().get(0).getPage().getTransition()) {
-				INode realTransition = handler.createTransition(petrinetID,
+				INode realTransition;
+				if (trans.getGraphics() != null && !trans.getGraphics().getPosition().isEmpty()) {
+					System.out.println(trans.getTransitionName().getText());
+					System.out.println(trans.getGraphics().getPosition().size());
+					realTransition = handler.createTransition(petrinetID,
 						positionToPoint2D(trans.getGraphics().getPosition()));
+				} else {
+					realTransition = handler.createTransition(petrinetID, new Point2D.Double(Math.random() * 100, Math.random() * 100));
+				}
 
 				handler.setTname(petrinetID, realTransition, trans.getTransitionName().getText());
 				handler.setTlb(petrinetID, realTransition, trans.getTransitionLabel().getText());
