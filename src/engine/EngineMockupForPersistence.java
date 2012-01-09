@@ -69,6 +69,10 @@ public class EngineMockupForPersistence implements IPetrinetManipulation {
 		
 	}
 	
+	public Petrinet getPetrinet(int id) {
+		return SessionManager.getInstance().getPetrinetData(id).getPetrinet();
+	}
+	
 	public void saveTest(int id, String path, String filename, String format) throws EngineException{
 		
 		this.save(id, path, filename, format);
