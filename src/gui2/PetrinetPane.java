@@ -3,6 +3,7 @@ package gui2;
 import static gui2.Style.PETRINET_BORDER;
 import static gui2.Style.PETRINET_PANE_LAYOUT;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
 import petrinet.Arc;
@@ -17,7 +18,6 @@ class PetrinetPane {
 	/** Internal JPanel for gui-layouting the petrinet */
 	private JPanel petrinetPanel;
 
-
 	private PetrinetViewer petrinetViewer;
 
 	/** singleton instance of this pane */
@@ -27,7 +27,7 @@ class PetrinetPane {
 	public static PetrinetPane getInstance() {
 		return instance;
 	}
-	
+
 	/* Static constructor that initiates the singleton */
 	static {
 		instance = new PetrinetPane();
@@ -38,10 +38,15 @@ class PetrinetPane {
 		petrinetPanel = new JPanel();
 		petrinetPanel.setLayout(PETRINET_PANE_LAYOUT);
 		petrinetPanel.setBorder(PETRINET_BORDER);
-		
-		petrinetViewer = PetrinetViewer.getDefaultViewer(null);
-		petrinetViewer.addTo(petrinetPanel);
-		
+
+		// petrinetViewer = PetrinetViewer.getDefaultViewer(null);
+		// petrinetViewer.addTo(petrinetPanel);
+
+	}
+
+	private void setBorderTitle(String title) {
+		petrinetPanel.setBorder(BorderFactory.createTitledBorder(
+				BorderFactory.createEtchedBorder(), title));
 	}
 
 	private JPanel getPetrinetPanel() {
@@ -56,18 +61,27 @@ class PetrinetPane {
 	public void repaint() {
 		petrinetViewer.repaint();
 	}
-	
-	public int getCurrentPetrinetId(){
+
+	public int getCurrentPetrinetId() {
 		return petrinetViewer.getCurrentPetrinetId();
 	}
-	
-	public void displayPetrinet(int petrinetId){
-		try{
-			Layout<INode,Arc> layout = EngineAdapter.getPetrinetManipulation().getJungLayout(petrinetId);
-			petrinetPanel.remove(petrinetViewer);
+
+	/**
+	 * Replaces the current PetrinetViewer so the new Petrinet is displayed. All
+	 * Listeners are attacked to the new Petrinet
+	 */
+	public void displayPetrinet(int petrinetId, String title) {
+		setBorderTitle(title);
+		try {
+			if (petrinetViewer != null) {
+				petrinetViewer.removeFrom(petrinetPanel);
+			}
+			Layout<INode, Arc> layout = EngineAdapter.getPetrinetManipulation()
+					.getJungLayout(petrinetId);
 			petrinetViewer = new PetrinetViewer(layout, petrinetId, null);
 			petrinetViewer.addTo(petrinetPanel);
-		}catch (EngineException e) {
+			MainWindow.getInstance().repaint();
+		} catch (EngineException e) {
 		}
 	}
 }

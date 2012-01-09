@@ -86,15 +86,16 @@ public class AttributePane {
 			AbstractPetriTableModel tableModel = null;
 			if (type == NodeTypeEnum.Place) {
 				PlaceAttribute placeAttribute = EngineAdapter
-						.getPetrinetManipulation().getPlaceAttribute(1, node);
+						.getPetrinetManipulation().getPlaceAttribute(
+								petrinetViewer.getCurrentPetrinetId(), node);
 				String name = placeAttribute.getPname();
 				String mark = String.valueOf(placeAttribute.getMarking());
 
 				tableModel = new PlaceTableModel(id, name, mark);
 			} else {
 				TransitionAttribute transitionAttribute = EngineAdapter
-						.getPetrinetManipulation().getTransitionAttribute(1,
-								node);
+						.getPetrinetManipulation().getTransitionAttribute(
+								petrinetViewer.getCurrentPetrinetId(), node);
 				String name = transitionAttribute.getTname();
 				String tlb = transitionAttribute.getTLB();
 				IRenew renew = transitionAttribute.getRNW();
@@ -119,8 +120,10 @@ public class AttributePane {
 
 	void displayEdge(Arc edge, PetrinetViewer petrinetViewer) {
 		try {
-			String weight = String.valueOf(MainWindow.getPetrinetManipulation()
-					.getArcAttribute(1, edge).getWeight());
+			String weight = String.valueOf(MainWindow
+					.getPetrinetManipulation()
+					.getArcAttribute(petrinetViewer.getCurrentPetrinetId(),
+							edge).getWeight());
 			String id = String.valueOf(edge.getId());
 
 			ArcTableModel arcTableModel = new ArcTableModel(id, weight);

@@ -64,6 +64,10 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	 * an N petrinet
 	 */
 	private RuleNet ruleNet;
+	
+	
+	/** Wrapper for making scrolling possible */
+	private GraphZoomScrollPane graphZoomScrollPane;
 
 	/**
 	 * For defining maximim zoom. Places are not displayed correctly if the user
@@ -71,19 +75,19 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	 */
 	float currentZoom = 1;
 
-	public static PetrinetViewer getDefaultViewer(RuleNet rulenet) {
-		int petrinetId = EngineAdapter.getPetrinetManipulation()
-				.createPetrinet();
-		try {
-			Layout<INode, Arc> layout = EngineAdapter.getPetrinetManipulation()
-					.getJungLayout(petrinetId);
-			return new PetrinetViewer(layout, petrinetId, rulenet);
-		} catch (EngineException e) {
-			PopUp.popError(e);
-			e.printStackTrace();
-			return null;
-		}
-	}
+//	public static PetrinetViewer getDefaultViewer(RuleNet rulenet) {
+//		int petrinetId = EngineAdapter.getPetrinetManipulation()
+//				.createPetrinet();
+//		try {
+//			Layout<INode, Arc> layout = EngineAdapter.getPetrinetManipulation()
+//					.getJungLayout(petrinetId);
+//			return new PetrinetViewer(layout, petrinetId, rulenet);
+//		} catch (EngineException e) {
+//			PopUp.popError(e);
+//			e.printStackTrace();
+//			return null;
+//		}
+//	}
 
 	/**
 	 * Initiates a new petrinet viewer with a petrinet. Rulenet == null if the
@@ -107,7 +111,12 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	}
 
 	void addTo(JPanel component) {
-		component.add(new GraphZoomScrollPane(this));
+		graphZoomScrollPane = new GraphZoomScrollPane(this);
+		component.add(graphZoomScrollPane);
+	}
+	
+	public void removeFrom(JPanel frame){
+		frame.remove(graphZoomScrollPane);
 	}
 
 	int getCurrentPetrinetId() {
@@ -248,6 +257,16 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		// TODO Auto-generated method stub
 
 	}
+	
+	public void setPlaceColor(INode place, Color color) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void createTransition(Point point) {
+		// TODO Auto-generated method stub
+
+	}
 
 	/**
 	 * Pop up menu that appears when a node or arc is right-clicked. It is used
@@ -308,7 +327,6 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 				} else {
 					petrinetViewer.deleteArc(arc);
 				}
-				PetrinetPane.getInstance().repaint();
 			}
 		}
 
@@ -333,24 +351,12 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				System.out.println(color);
-				try {
-					EngineAdapter.getPetrinetManipulation()
-							.setPlaceColor(
-									petrinetViewer.getCurrentPetrinetId(),
-									place, color);
-				} catch (EngineException e1) {
-					PopUp.popError(e1);
-					e1.printStackTrace();
-				}
-				PetrinetPane.getInstance().repaint();
+				petrinetViewer.setPlaceColor(place, color);
 			}
 
 		}
 
-		PetrinetViewer petrinetViewer;
-
 		private PetrinetPopUpMenu(PetrinetViewer petrinetViewer) {
-			this.petrinetViewer = petrinetViewer;
 		}
 
 		/** Adds a new item to the menu for changing the color of a node */
@@ -395,7 +401,7 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 							200), node);
 
 				} else {
-					TransitionAttribute transitionAttribute = MainWindow
+					TransitionAttribute transitionAttribute = EngineAdapter
 							.getPetrinetManipulation().getTransitionAttribute(
 									petrinetViewer.currentPetrinetId, node);
 					JMenuItem jMenuItem = new JMenuItem("Transition "
@@ -445,12 +451,6 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		private int pressedY = 0;
 
 		/**
-		 * For defining maximim zoom. Places are not displayed correctly if the
-		 * user zooms too deep
-		 */
-		float currentZoom = 1;
-
-		/**
 		 * ID of node that was clicked at beginning of drag. Needed for drawing
 		 * arcs
 		 */
@@ -491,35 +491,11 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 								.show(petrinetViewer, e.getX(), e.getY());
 					}
 				}
-			} else
-				try {
-					if (mode == EditorMode.PLACE) {
-						petrinetViewer
-								.createPlace(new Point(e.getX(), e.getY()));
-					} else if (mode == EditorMode.TRANSITION) {
-						MainWindow.getPetrinetManipulation().createTransition(
-								petrinetViewer.getCurrentPetrinetId(),
-								new Point(e.getX(), e.getY()));
-					}
-					petrinetViewer.repaint();
-				} catch (EngineException e1) {
-					e1.printStackTrace();
-				}
-		}
-
-		/** Checks if something is clicked without changing selection */
-		private boolean isAnythingClicked(MouseEvent e) {
-			Arc beforeEdge = edge;
-			INode beforeNode = vertex;
-			edge = null;
-			vertex = null;
-			super.mousePressed(e);
-
-			boolean result = edge != null || vertex != null;
-			edge = beforeEdge;
-			vertex = beforeNode;
-
-			return result;
+			} else if (mode == EditorMode.PLACE) {
+				petrinetViewer.createPlace(new Point(e.getX(), e.getY()));
+			} else if (mode == EditorMode.TRANSITION) {
+				petrinetViewer.createTransition(new Point(e.getX(), e.getY()));
+			}
 		}
 
 		@Override

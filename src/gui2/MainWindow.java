@@ -7,6 +7,7 @@ import static gui2.Style.TOTAL_WIDTH;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.Rectangle;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -161,6 +162,12 @@ class MainWindow {
 		mainFrame.pack();
 		mainFrame.setBounds(0, 0, TOTAL_WIDTH, TOTAL_HEIGHT);
 		mainFrame.setVisible(true);
+	}
+
+	public void repaint() {
+		Rectangle oldBounds = mainFrame.getBounds();
+		mainFrame.pack(); //resets bounds
+		mainFrame.setBounds(oldBounds);
 	}
 
 }
