@@ -337,7 +337,7 @@ class SimulationPane {
 			// PetrinetPane.getInstance().currentPetrinetId);
 			try {
 				EngineAdapter.getSimulation().fire(
-						PetrinetPane.getInstance().currentPetrinetId, 1);
+						PetrinetPane.getInstance().getCurrentPetrinetId(), 1);
 				PetrinetPane.getInstance().repaint();
 			} catch (EngineException e1) {
 				PopUp.popError(e1);
@@ -354,7 +354,7 @@ class SimulationPane {
 			System.out.println(SimulationPane.getInstance().getK());
 			try {
 				EngineAdapter.getSimulation().fire(
-						PetrinetPane.getInstance().currentPetrinetId,
+						PetrinetPane.getInstance().getCurrentPetrinetId(),
 						SimulationPane.getInstance().getK());
 				PetrinetPane.getInstance().repaint();
 			} catch (NumberFormatException e1) {

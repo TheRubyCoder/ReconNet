@@ -49,9 +49,6 @@ public class AttributePane {
 	/** Panel for the Attributes */
 	private JPanel attributePane;
 
-	/** Id of the node that is currently shown */
-	private int currentNodeId;
-
 	/** Private Constructor that configures the pane */
 	private AttributePane() {
 		table = initiateTable();
@@ -81,21 +78,21 @@ public class AttributePane {
 		return table;
 	}
 
-	void displayNode(INode node) {
+	void displayNode(INode node, PetrinetViewer petrinetViewer) {
 		try {
-			NodeTypeEnum type = (NodeTypeEnum) MainWindow
+			NodeTypeEnum type = (NodeTypeEnum) EngineAdapter
 					.getPetrinetManipulation().getNodeType(node);
 			String id = String.valueOf(node.getId());
 			AbstractPetriTableModel tableModel = null;
 			if (type == NodeTypeEnum.Place) {
-				PlaceAttribute placeAttribute = MainWindow
+				PlaceAttribute placeAttribute = EngineAdapter
 						.getPetrinetManipulation().getPlaceAttribute(1, node);
 				String name = placeAttribute.getPname();
 				String mark = String.valueOf(placeAttribute.getMarking());
 
 				tableModel = new PlaceTableModel(id, name, mark);
 			} else {
-				TransitionAttribute transitionAttribute = MainWindow
+				TransitionAttribute transitionAttribute = EngineAdapter
 						.getPetrinetManipulation().getTransitionAttribute(1,
 								node);
 				String name = transitionAttribute.getTname();
@@ -112,23 +109,23 @@ public class AttributePane {
 				tableModel = new TransitionTableModel(id, name, tlb,
 						renewString);
 			}
-			tableModel.addTableModelListener(new TableListener(PetrinetPane
-					.getInstance().currentPetrinetId, node));
+			tableModel.addTableModelListener(new TableListener(petrinetViewer,
+					node));
 			table.setModel(tableModel);
 		} catch (EngineException e) {
 			e.printStackTrace();
 		}
 	}
 
-	void displayEdge(Arc edge) {
+	void displayEdge(Arc edge, PetrinetViewer petrinetViewer) {
 		try {
 			String weight = String.valueOf(MainWindow.getPetrinetManipulation()
 					.getArcAttribute(1, edge).getWeight());
 			String id = String.valueOf(edge.getId());
 
 			ArcTableModel arcTableModel = new ArcTableModel(id, weight);
-			TableListener tableListener = new TableListener(
-					PetrinetPane.getInstance().currentPetrinetId, edge);
+			TableListener tableListener = new TableListener(petrinetViewer,
+					edge);
 			arcTableModel.addTableModelListener(tableListener);
 
 			table.setModel(arcTableModel);
@@ -290,20 +287,20 @@ public class AttributePane {
 	/** Class for Tablelistener to make Userchanges possible */
 	private static class TableListener implements TableModelListener {
 
-		private int petrinetId;
+		private PetrinetViewer petrinetViewer;
 
 		private INode node;
 
 		private Arc arc;
 
-		TableListener(int petrinetId, INode node) {
-			this.petrinetId = petrinetId;
+		TableListener(PetrinetViewer petrinetViewer, INode node) {
+			this.petrinetViewer = petrinetViewer;
 			this.node = node;
 			this.arc = null;
 		}
 
-		TableListener(int petrinetId, Arc arc) {
-			this.petrinetId = petrinetId;
+		TableListener(PetrinetViewer petrinetViewer, Arc arc) {
+			this.petrinetViewer = petrinetViewer;
 			this.node = null;
 			this.arc = arc;
 		}
@@ -319,13 +316,11 @@ public class AttributePane {
 			if (arc != null) {
 				if (attribute.equals("Gewicht")) {
 					try {
-						MainWindow.getPetrinetManipulation().setWeight(
-								petrinetId, arc, Integer.parseInt(data));
+						petrinetViewer.setWeight(arc, Integer.parseInt(data));
+						// MainWindow.getPetrinetManipulation().setWeight(
+						// petrinetId, arc, Integer.parseInt(data));
 					} catch (NumberFormatException e1) {
 						PopUp.popError("Das Gewicht muss eine natürliche Zahl sein.");
-						e1.printStackTrace();
-					} catch (EngineException e1) {
-						PopUp.popError(e1);
 						e1.printStackTrace();
 					}
 				}
@@ -335,19 +330,16 @@ public class AttributePane {
 					if (MainWindow.getPetrinetManipulation().getNodeType(node) == NodeTypeEnum.Place) {
 						Place place = (Place) node;
 						if (attribute.equals("Name")) {
-							MainWindow
-									.getPetrinetManipulation()
-									.setPname(
-											PetrinetPane.getInstance().currentPetrinetId,
-											place, data);
+							petrinetViewer.setPname(place, data);
 						} else if (attribute.equals("Markierung")) {
 							try {
 								int marking = Integer.parseInt(data);
-								MainWindow
-										.getPetrinetManipulation()
-										.setMarking(
-												PetrinetPane.getInstance().currentPetrinetId,
-												place, marking);
+								petrinetViewer.setMarking(place, marking);
+								// MainWindow
+								// .getPetrinetManipulation()
+								// .setMarking(
+								// petrinetViewer.getCurrentPetrinetId(),
+								// place, marking);
 							} catch (NumberFormatException nfe) {
 								PopUp.popError("Die Markierung muss eine natürliche Zahl sein.");
 							}
@@ -357,18 +349,20 @@ public class AttributePane {
 					} else {
 						Transition transition = (Transition) node;
 						if (attribute.equals("Name")) {
-							MainWindow
-									.getPetrinetManipulation()
-									.setTname(
-											PetrinetPane.getInstance().currentPetrinetId,
-											transition, data);
+							petrinetViewer.setTname(transition, data);
+							// MainWindow
+							// .getPetrinetManipulation()
+							// .setTname(
+							// petrinetViewer.getCurrentPetrinetId(),
+							// transition, data);
 						} else if (attribute.equals("Label")) {
-							MainWindow
-									.getPetrinetManipulation()
-									.setTlb(PetrinetPane.getInstance().currentPetrinetId,
-											transition, data);
+							petrinetViewer.setTlb(transition, data);
+							// MainWindow
+							// .getPetrinetManipulation()
+							// .setTlb(petrinetViewer.getCurrentPetrinetId(),
+							// transition, data);
 						} else if (attribute.equals("Renew")) {
-							//engine needs setRenew
+							// engine needs setRenew
 						}
 					}
 				} catch (EngineException e1) {

@@ -1,424 +1,745 @@
-//package gui2;
-//
-//import java.awt.Color;
-//import java.awt.Point;
-//import java.awt.event.ActionEvent;
-//import java.awt.event.ActionListener;
-//import java.awt.event.MouseEvent;
-//import java.awt.event.MouseWheelEvent;
-//import java.awt.event.MouseWheelListener;
-//
-//import javax.swing.JMenuItem;
-//import javax.swing.JPopupMenu;
-//
-//import petrinet.Arc;
-//import petrinet.INode;
-//import petrinet.Place;
-//import petrinet.Transition;
-//import edu.uci.ics.jung.algorithms.layout.Layout;
-//import edu.uci.ics.jung.visualization.VisualizationViewer;
-//import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
-//import edu.uci.ics.jung.visualization.control.PickingGraphMousePlugin;
-//import edu.uci.ics.jung.visualization.control.ScalingControl;
-//import engine.attribute.PlaceAttribute;
-//import engine.attribute.TransitionAttribute;
-//import engine.handler.NodeTypeEnum;
-//import exceptions.EngineException;
-//import gui2.EditorPane.EditorMode;
-//
-//@SuppressWarnings("serial")
-//abstract class PetrinetViewer extends VisualizationViewer<INode, Arc> {
-//
-//	/** ID of currently displayed petrinet */
-//	private int currentPetrinetId = -1;
-//
-//	/** For zooming */
-//	private ScalingControl scaler;
-//
-//	/**
-//	 * For defining maximim zoom. Places are not displayed correctly if the user
-//	 * zooms too deep
-//	 */
-//	float currentZoom = 1;
-//
-//	PetrinetViewer(Layout<INode, Arc> layout) {
-//		super(layout);
-//		scaler = new CrossoverScalingControl();
-//	}
-//
-//	int getCurrentPetrinetId() {
-//		return currentPetrinetId;
-//	}
-//
-//	void displayPetrinet(int pId) {
-//
-//	}
-//
-//	void scale(float factor, Point point) {
-//		if (currentZoom * factor <= 1) {
-//			scaler.scale(this, factor, point);
-//			currentZoom *= factor;
-//		}
-//	}
-//
-//	abstract void moveNode(int pId, INode node, Point relativePosition);
-//
-//	abstract void createArc(int pId, INode start, INode end);
-//
-//	abstract void deletePlace(int pId, Place place);
-//
-//	abstract void deleteTransition(int pId, Transition transition);
-//
-//	abstract void deleteArc(int pId, Arc arc);
-//	
-//	abstract void createPlace(int currentPetrinetId2, Point point);
-//
-//	/**
-//	 * Pop up menu that appears when a node or arc is right-clicked. It is used
-//	 * for deleting
-//	 */
-//	private static class PetrinetPopUpMenu extends JPopupMenu {
-//
-//		/**
-//		 * Listener for clicking on menu items<br>
-//		 * Each menu item has its own listener
-//		 */
-//		/*
-//		 * There are 3 types of listeners as there are 3 types of pop up menus:
-//		 * Node(Place/Transition) and Arc
-//		 */
-//		private static class DeleteListener implements ActionListener {
-//
-//			private DeleteListener() {
-//			}
-//
-//			private Transition transition;
-//
-//			private Place place;
-//
-//			private Arc arc;
-//
-//			private int pId;
-//
-//			private PetrinetViewer petrinetViewer;
-//
-//			private DeleteListener(Transition transition, Place place, Arc arc,
-//					int pId, PetrinetViewer petrinetViewer) {
-//				this.transition = transition;
-//				this.place = place;
-//				this.arc = arc;
-//				this.pId = pId;
-//				this.petrinetViewer = petrinetViewer;
-//			}
-//
-//			static DeleteListener fromPlace(Place place, int pId,
-//					PetrinetViewer petrinetViewer) {
-//				return new DeleteListener(null, place, null, pId,
-//						petrinetViewer);
-//			}
-//
-//			static DeleteListener fromArc(Arc arc, int pId,
-//					PetrinetViewer petrinetViewer) {
-//				return new DeleteListener(null, null, arc, pId, petrinetViewer);
-//			}
-//
-//			static DeleteListener fromTransition(Transition transition,
-//					int pId, PetrinetViewer petrinetViewer) {
-//				return new DeleteListener(transition, null, null, pId,
-//						petrinetViewer);
-//			}
-//
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				if (place != null) {
-//					petrinetViewer.deletePlace(pId, place);
-//				} else if (transition != null) {
-//					petrinetViewer.deleteTransition(pId, transition);
-//				} else {
-//					petrinetViewer.deleteArc(pId, arc);
-//				}
-//				PetrinetPane.getInstance().repaint();
-//			}
-//		}
-//
-//		/** Listener for clicks on color fields in context menus of places */
-//		private static class ChangeColorListener implements ActionListener {
-//
-//			private Color color;
-//
-//			private INode place;
-//
-//			private ChangeColorListener(Color color, INode place) {
-//				this.color = color;
-//				this.place = place;
-//			}
-//
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				System.out.println(color);
-//				MainWindow.getPetrinetManipulation().setPlaceColor(
-//						PetrinetPane.getInstance().currentPetrinetId, place,
-//						color);
-//				PetrinetPane.getInstance().repaint();
-//			}
-//
-//		}
-//
-//		PetrinetViewer petrinetViewer;
-//
-//		private PetrinetPopUpMenu(PetrinetViewer petrinetViewer) {
-//			this.petrinetViewer = petrinetViewer;
-//		}
-//
-//		/** Adds a new item to the menu for changing the color of a node */
-//		static private void addColorToPopUpMenu(PetrinetPopUpMenu menu,
-//				String description, Color color, INode node) {
-//			JMenuItem item = new JMenuItem(description);
-//			item.setBackground(color);
-//			item.addActionListener(new ChangeColorListener(color, node));
-//			menu.add(item);
-//		}
-//
-//		static PetrinetPopUpMenu fromNode(INode node,
-//				PetrinetViewer petrinetViewer) {
-//			PetrinetPopUpMenu result = new PetrinetPopUpMenu(petrinetViewer);
-//			int pId = petrinetViewer.getCurrentPetrinetId();
-//			try {
-//				if (MainWindow.getPetrinetManipulation().getNodeType(node) == NodeTypeEnum.Place) {
-//					PlaceAttribute placeAttribute = MainWindow
-//							.getPetrinetManipulation().getPlaceAttribute(pId,
-//									node);
-//
-//					// Delete
-//					JMenuItem delete = new JMenuItem("Stelle "
-//							+ placeAttribute.getPname() + " [" + node.getId()
-//							+ "] " + "löschen");
-//					delete.addActionListener(DeleteListener.fromPlace(
-//							(Place) node, pId, petrinetViewer));
-//					result.add(delete);
-//
-//					// Color blue
-//					addColorToPopUpMenu(result, "Blau", Color.BLUE, node);
-//
-//					// Color light blue
-//					addColorToPopUpMenu(result, "Hellblau", new Color(200, 200,
-//							250), node);
-//
-//					// Color red
-//					addColorToPopUpMenu(result, "Rot", Color.RED, node);
-//
-//					// Light red
-//					addColorToPopUpMenu(result, "HellRot", new Color(250, 200,
-//							200), node);
-//
-//				} else {
-//					TransitionAttribute transitionAttribute = MainWindow
-//							.getPetrinetManipulation().getTransitionAttribute(
-//									petrinetViewer.currentPetrinetId, node);
-//					JMenuItem jMenuItem = new JMenuItem("Transition "
-//							+ transitionAttribute.getTname() + " ["
-//							+ node.getId() + "] " + "löschen");
-//					jMenuItem.addActionListener(DeleteListener.fromTransition(
-//							(Transition) node, pId, petrinetViewer));
-//					result.add(jMenuItem);
-//				}
-//			} catch (EngineException e) {
-//				PopUp.popError(e);
-//				e.printStackTrace();
-//			}
-//			return result;
-//		}
-//
-//		static PetrinetPopUpMenu fromArc(Arc arc, PetrinetViewer petrinetViewer) {
-//			PetrinetPopUpMenu result = new PetrinetPopUpMenu(petrinetViewer);
-//			JMenuItem jMenuItem = new JMenuItem("Pfeil [" + arc.getId()
-//					+ "] löschen");
-//			jMenuItem.addActionListener(DeleteListener.fromArc(arc,
-//					PetrinetPane.getInstance().currentPetrinetId,
-//					petrinetViewer));
-//			result.add(jMenuItem);
-//			return result;
-//		}
-//	}
-//
-//	/** mouse click listener for the drawing panel */
-//	private static class PetrinetMouseListener extends
-//			PickingGraphMousePlugin<INode, Arc> implements MouseWheelListener {
-//
-//		private static enum DragMode {
-//			SCROLL, MOVENODE, ARC, NONE
-//		}
-//
-//		private PetrinetViewer petrinetViewer;
-//
-//		private DragMode dragMode = DragMode.NONE;
-//
-//		PetrinetMouseListener(PetrinetViewer petrinetViewer) {
-//			this.petrinetViewer = petrinetViewer;
-//		}
-//
-//		/** X-coordinate of begin of drag */
-//		private int pressedX = 0;
-//		/** Y-coordinate of begin of drag */
-//		private int pressedY = 0;
-//
-//		/**
-//		 * For defining maximim zoom. Places are not displayed correctly if the
-//		 * user zooms too deep
-//		 */
-//		float currentZoom = 1;
-//
-//		/**
-//		 * ID of node that was clicked at beginning of drag. Needed for drawing
-//		 * arcs
-//		 */
-//		private INode nodeFromDrag = null;
-//
-//		/** Zoom petrinet on mouse wheel */
-//		@Override
-//		public void mouseWheelMoved(MouseWheelEvent e) {
-//			Point point = new Point(e.getX(), e.getY());
-//			float factor = e.getWheelRotation() < 0 ? 1.1f : 0.9f;
-//			petrinetViewer.scale(factor, point);
-//		}
-//
-//		@Override
-//		public void mouseClicked(MouseEvent e) {
-//			super.mousePressed(e); // mousePressedEvent in class
-//									// PickingGraphMousePlugin selects nodes
-//			EditorMode mode = EditorPane.getInstance().getCurrentMode();
-//
-//			// left-click PICK : display clicked node
-//			// right-click: display pop-up-menu
-//			// left-click PLACE: create place at position
-//			// left-click TRANSITION: etc...
-//			if (mode == EditorMode.PICK) {
-//				if (edge != null) {
-//					AttributePane.getInstance().displayEdge(edge);
-//					if (e.isMetaDown()) {
-//						PetrinetPopUpMenu.fromArc(edge,petrinetViewer).show(
-//								petrinetViewer,
-//								e.getX(), e.getY());
-//					}
-//
-//				} else if (vertex != null) {
-//					AttributePane.getInstance().displayNode(vertex);
-//					if (e.isMetaDown()) {
-//						PetrinetPopUpMenu.fromNode(vertex,petrinetViewer).show(
-//								petrinetViewer,
-//								e.getX(), e.getY());
-//					}
-//				}
-//			} else
-//				try {
-//					if (mode == EditorMode.PLACE) {
-//						petrinetViewer.createPlace(
-//								petrinetViewer.getCurrentPetrinetId(),
-//								new Point(e.getX(), e.getY()));
-//					} else if (mode == EditorMode.TRANSITION) {
-//						MainWindow.getPetrinetManipulation().createTransition(
-//								petrinetPane.currentPetrinetId,
-//								new Point(e.getX(), e.getY()));
-//					}
-//					petrinetPane.petrinetPanel.repaint();
-//				} catch (EngineException e1) {
-//					e1.printStackTrace();
-//				}
-//		}
-//
-//		/** Checks if something is clicked without changing selection */
-//		private boolean isAnythingClicked(MouseEvent e) {
-//			Arc beforeEdge = edge;
-//			INode beforeNode = vertex;
-//			edge = null;
-//			vertex = null;
-//			super.mousePressed(e);
-//
-//			boolean result = edge != null || vertex != null;
-//			edge = beforeEdge;
-//			vertex = beforeNode;
-//
-//			return result;
-//		}
-//
-//		@Override
-//		public void mousePressed(MouseEvent e) {
-//			super.mousePressed(e);
-//			if (dragMode == DragMode.NONE) {
-//				pressedX = e.getX();
-//				pressedY = e.getY();
-//				EditorMode editorMode = EditorPane.getInstance()
-//						.getCurrentMode();
-//				// dragging in pick mode
-//				if (editorMode == EditorMode.PICK) {
-//					// find out: scrolling or moving? -> is something clicked?
-//					if (vertex != null) {
-//						// something is clicked -> MOVENODE
-//						dragMode = DragMode.MOVENODE;
-//						nodeFromDrag = vertex;
-//					} else {
-//						// nothing is clicked -> SCROLL
-//						dragMode = DragMode.SCROLL;
-//					}
-//					// dragging in arc mode
-//				} else if (editorMode == EditorMode.ARC) {
-//					// find out what was clicked on
-//					super.mousePressed(e);
-//					if (vertex != null) {
-//						nodeFromDrag = vertex;
-//						vertex = null;
-//						dragMode = DragMode.ARC;
-//					}
-//				}
-//			}
-//		}
-//
-//		@Override
-//		public void mouseReleased(MouseEvent e) {
-//			Point oldPoint = new Point(pressedX, pressedY);
-//			Point newPoint = new Point(e.getX(), e.getY());
-//
-//			if (!oldPoint.equals(newPoint)) {
-//				if (dragMode == DragMode.SCROLL) {
-//					/*
-//					 * Scrolling is realized by zooming out of old position and
-//					 * zooming in to new position
-//					 */
-//					petrinetPane.scaler.scale(petrinetPane.visualizationViewer,
-//							0.5f, newPoint);
-//					petrinetPane.scaler.scale(petrinetPane.visualizationViewer,
-//							2f, oldPoint);
-//				} else if (dragMode == DragMode.MOVENODE) {
-//					try {
-//						MainWindow.getPetrinetManipulation().moveNode(
-//								PetrinetPane.getInstance().currentPetrinetId,
-//								nodeFromDrag,
-//								new Point((int) (newPoint.getX() - oldPoint
-//										.getX()),
-//										(int) (newPoint.getY() - oldPoint
-//												.getY())));
-//						PetrinetPane.getInstance().repaint();
-//					} catch (EngineException e1) {
-//						PopUp.popError("Dahin können sie nicht verschieben");
-//						e1.printStackTrace();
-//					}
-//				} else if (dragMode == DragMode.ARC) {
-//					// find out what was released on
-//					super.mousePressed(e);
-//					if (vertex != null) {
-//						try {
-//							MainWindow.getPetrinetManipulation().createArc(
-//									petrinetPane.currentPetrinetId,
-//									nodeFromDrag, vertex);
-//						} catch (EngineException e1) {
-//							e1.printStackTrace();
-//						}
-//
-//					}
-//				}
-//			}
-//			dragMode = DragMode.NONE;
-//			nodeFromDrag = null;
-//		}
-//	} // end of mouse listener
-//}
+package gui2;
+
+import static gui2.Style.FONT_COLOR;
+import static gui2.Style.NODE_BORDER_COLOR;
+import static gui2.Style.PLACE_HEIGHT;
+import static gui2.Style.PLACE_WIDTH;
+import static gui2.Style.TRANSITION_SIZE;
+
+import java.awt.Color;
+import java.awt.Point;
+import java.awt.Shape;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+
+import org.apache.commons.collections15.Transformer;
+
+import petrinet.Arc;
+import petrinet.INode;
+import petrinet.Place;
+import petrinet.Transition;
+import edu.uci.ics.jung.algorithms.layout.Layout;
+import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
+import edu.uci.ics.jung.visualization.RenderContext;
+import edu.uci.ics.jung.visualization.VisualizationViewer;
+import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
+import edu.uci.ics.jung.visualization.control.PickingGraphMousePlugin;
+import edu.uci.ics.jung.visualization.control.ScalingControl;
+import edu.uci.ics.jung.visualization.renderers.Renderer.Vertex;
+import edu.uci.ics.jung.visualization.transform.shape.GraphicsDecorator;
+import engine.attribute.ArcAttribute;
+import engine.attribute.PlaceAttribute;
+import engine.attribute.TransitionAttribute;
+import engine.handler.NodeTypeEnum;
+import engine.handler.RuleNet;
+import exceptions.EngineException;
+import gui2.EditorPane.EditorMode;
+
+/**
+ * A special jung visualization viewer for displaying and editing petrinets Some
+ * methods are abstract as they behave different depending on whether the
+ * petrinet is part of a rule or not (different method calls to engine)
+ */
+@SuppressWarnings("serial")
+class PetrinetViewer extends VisualizationViewer<INode, Arc> {
+
+	/** ID of currently displayed petrinet */
+	private int currentPetrinetId = -1;
+
+	/** For zooming */
+	private ScalingControl scaler;
+
+	/**
+	 * Defines whether the viewer displays a L, K or R net. Null if it displays
+	 * an N petrinet
+	 */
+	private RuleNet ruleNet;
+
+	/**
+	 * For defining maximim zoom. Places are not displayed correctly if the user
+	 * zooms too deep
+	 */
+	float currentZoom = 1;
+
+	public static PetrinetViewer getDefaultViewer(RuleNet rulenet) {
+		int petrinetId = EngineAdapter.getPetrinetManipulation()
+				.createPetrinet();
+		try {
+			Layout<INode, Arc> layout = EngineAdapter.getPetrinetManipulation()
+					.getJungLayout(petrinetId);
+			return new PetrinetViewer(layout, petrinetId, rulenet);
+		} catch (EngineException e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * Initiates a new petrinet viewer with a petrinet. Rulenet == null if the
+	 * viewer displays the N petrinet
+	 */
+	PetrinetViewer(Layout<INode, Arc> layout, int petrinetId, RuleNet ruleNet) {
+		super(layout);
+		this.ruleNet = ruleNet;
+		this.currentPetrinetId = petrinetId;
+
+		scaler = new CrossoverScalingControl();
+		setBackground(Color.WHITE);
+
+		addMouseListener(new PetrinetMouseListener(this));
+		addMouseWheelListener(new PetrinetMouseListener(this));
+		getRenderer().setVertexRenderer(new PetrinetRenderer(this));
+		getRenderContext().setEdgeLabelTransformer(
+				new PetrinetArcLabelTransformer(this));
+		getRenderContext().setVertexShapeTransformer(
+				new PetrinetNodeShapeTransformer());
+	}
+
+	void addTo(JPanel component) {
+		component.add(new GraphZoomScrollPane(this));
+	}
+
+	int getCurrentPetrinetId() {
+		return currentPetrinetId;
+	}
+
+	boolean isR() {
+		return ruleNet == RuleNet.R;
+	}
+
+	boolean isK() {
+		return ruleNet == RuleNet.K;
+	}
+
+	boolean isL() {
+		return ruleNet == RuleNet.L;
+	}
+
+	boolean isN() {
+		return ruleNet == null;
+	}
+
+	RuleNet getRuleNet() {
+		return ruleNet;
+	}
+
+	void scale(float factor, Point point) {
+		if (currentZoom * factor <= 1) {
+			scaler.scale(this, factor, point);
+			currentZoom *= factor;
+		}
+	}
+
+	void moveNode(INode node, Point relativePosition) {
+		try {
+			if (isN()) {
+				EngineAdapter.getPetrinetManipulation().moveNode(
+						getCurrentPetrinetId(), node, relativePosition);
+			} else {
+				EngineAdapter.getRuleManipulation().moveNode(
+						getCurrentPetrinetId(), node, relativePosition);
+			}
+			repaint();
+		} catch (Exception e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
+	}
+
+	void createArc(INode start, INode end) {
+
+	}
+
+	void deletePlace(Place place) {
+		try {
+			if (isN()) {
+				EngineAdapter.getPetrinetManipulation().deletePlace(
+						getCurrentPetrinetId(), place);
+			} else {
+				EngineAdapter.getRuleManipulation().deletePlace(
+						getCurrentPetrinetId(), getRuleNet(), place);
+			}
+			repaint();
+		} catch (Exception e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
+	}
+
+	void deleteTransition(Transition transition) {
+
+	}
+
+	void deleteArc(Arc arc) {
+
+	}
+
+	void createPlace(Point point) {
+		try {
+			if (isN()) {
+				EngineAdapter.getPetrinetManipulation().createPlace(
+						getCurrentPetrinetId(), point);
+			} else {
+				EngineAdapter.getRuleManipulation().createPlace(
+						getCurrentPetrinetId(), getRuleNet(), point);
+			}
+			repaint();
+		} catch (Exception e) {
+			PopUp.popError(e);
+		}
+	}
+
+	public void setPname(Place place, String data) {
+		try {
+			if (isN()) {
+				EngineAdapter.getPetrinetManipulation().setPname(
+						getCurrentPetrinetId(), place, data);
+			} else {
+				EngineAdapter.getRuleManipulation().setPname(
+						getCurrentPetrinetId(), place, data);
+			}
+			repaint();
+		} catch (EngineException e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
+
+	}
+
+	public void setMarking(Place place, int marking) {
+		try {
+			if (isN()) {
+				EngineAdapter.getPetrinetManipulation().setMarking(
+						getCurrentPetrinetId(), place, marking);
+			} else {
+				EngineAdapter.getRuleManipulation().setMarking(
+						getCurrentPetrinetId(), place, marking);
+			}
+			repaint();
+		} catch (EngineException e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
+
+	}
+
+	public void setTname(Transition transition, String data) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void setTlb(Transition transition, String data) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void setWeight(Arc arc, int parseInt) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
+	 * Pop up menu that appears when a node or arc is right-clicked. It is used
+	 * for deleting
+	 */
+	private static class PetrinetPopUpMenu extends JPopupMenu {
+
+		/**
+		 * Listener for clicking on menu items<br>
+		 * Each menu item has its own listener
+		 */
+		/*
+		 * There are 3 types of listeners as there are 3 types of pop up menus:
+		 * Node(Place/Transition) and Arc
+		 */
+		private static class DeleteListener implements ActionListener {
+
+			private DeleteListener() {
+			}
+
+			private Transition transition;
+
+			private Place place;
+
+			private Arc arc;
+
+			private PetrinetViewer petrinetViewer;
+
+			private DeleteListener(Transition transition, Place place, Arc arc,
+					PetrinetViewer petrinetViewer) {
+				this.transition = transition;
+				this.place = place;
+				this.arc = arc;
+				this.petrinetViewer = petrinetViewer;
+			}
+
+			static DeleteListener fromPlace(Place place,
+					PetrinetViewer petrinetViewer) {
+				return new DeleteListener(null, place, null, petrinetViewer);
+			}
+
+			static DeleteListener fromArc(Arc arc, PetrinetViewer petrinetViewer) {
+				return new DeleteListener(null, null, arc, petrinetViewer);
+			}
+
+			static DeleteListener fromTransition(Transition transition,
+					PetrinetViewer petrinetViewer) {
+				return new DeleteListener(transition, null, null,
+						petrinetViewer);
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (place != null) {
+					petrinetViewer.deletePlace(place);
+				} else if (transition != null) {
+					petrinetViewer.deleteTransition(transition);
+				} else {
+					petrinetViewer.deleteArc(arc);
+				}
+				PetrinetPane.getInstance().repaint();
+			}
+		}
+
+		/** Listener for clicks on color fields in context menus of places */
+		private static class ChangeColorListener implements ActionListener {
+
+			private PetrinetViewer petrinetViewer;
+
+			public ChangeColorListener(PetrinetViewer petrinetViewer) {
+				this.petrinetViewer = petrinetViewer;
+			}
+
+			private Color color;
+
+			private INode place;
+
+			private ChangeColorListener(Color color, INode place) {
+				this.color = color;
+				this.place = place;
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println(color);
+				try {
+					EngineAdapter.getPetrinetManipulation()
+							.setPlaceColor(
+									petrinetViewer.getCurrentPetrinetId(),
+									place, color);
+				} catch (EngineException e1) {
+					PopUp.popError(e1);
+					e1.printStackTrace();
+				}
+				PetrinetPane.getInstance().repaint();
+			}
+
+		}
+
+		PetrinetViewer petrinetViewer;
+
+		private PetrinetPopUpMenu(PetrinetViewer petrinetViewer) {
+			this.petrinetViewer = petrinetViewer;
+		}
+
+		/** Adds a new item to the menu for changing the color of a node */
+		static private void addColorToPopUpMenu(PetrinetPopUpMenu menu,
+				String description, Color color, INode node) {
+			JMenuItem item = new JMenuItem(description);
+			item.setBackground(color);
+			item.addActionListener(new ChangeColorListener(color, node));
+			menu.add(item);
+		}
+
+		static PetrinetPopUpMenu fromNode(INode node,
+				PetrinetViewer petrinetViewer) {
+			PetrinetPopUpMenu result = new PetrinetPopUpMenu(petrinetViewer);
+			int pId = petrinetViewer.getCurrentPetrinetId();
+			try {
+				if (MainWindow.getPetrinetManipulation().getNodeType(node) == NodeTypeEnum.Place) {
+					PlaceAttribute placeAttribute = MainWindow
+							.getPetrinetManipulation().getPlaceAttribute(pId,
+									node);
+
+					// Delete
+					JMenuItem delete = new JMenuItem("Stelle "
+							+ placeAttribute.getPname() + " [" + node.getId()
+							+ "] " + "löschen");
+					delete.addActionListener(DeleteListener.fromPlace(
+							(Place) node, petrinetViewer));
+					result.add(delete);
+
+					// Color blue
+					addColorToPopUpMenu(result, "Blau", Color.BLUE, node);
+
+					// Color light blue
+					addColorToPopUpMenu(result, "Hellblau", new Color(200, 200,
+							250), node);
+
+					// Color red
+					addColorToPopUpMenu(result, "Rot", Color.RED, node);
+
+					// Light red
+					addColorToPopUpMenu(result, "HellRot", new Color(250, 200,
+							200), node);
+
+				} else {
+					TransitionAttribute transitionAttribute = MainWindow
+							.getPetrinetManipulation().getTransitionAttribute(
+									petrinetViewer.currentPetrinetId, node);
+					JMenuItem jMenuItem = new JMenuItem("Transition "
+							+ transitionAttribute.getTname() + " ["
+							+ node.getId() + "] " + "löschen");
+					jMenuItem.addActionListener(DeleteListener.fromTransition(
+							(Transition) node, petrinetViewer));
+					result.add(jMenuItem);
+				}
+			} catch (EngineException e) {
+				PopUp.popError(e);
+				e.printStackTrace();
+			}
+			return result;
+		}
+
+		static PetrinetPopUpMenu fromArc(Arc arc, PetrinetViewer petrinetViewer) {
+			PetrinetPopUpMenu result = new PetrinetPopUpMenu(petrinetViewer);
+			JMenuItem jMenuItem = new JMenuItem("Pfeil [" + arc.getId()
+					+ "] löschen");
+			jMenuItem.addActionListener(DeleteListener.fromArc(arc,
+					petrinetViewer));
+			result.add(jMenuItem);
+			return result;
+		}
+	}
+
+	/** mouse click listener for the drawing panel */
+	private static class PetrinetMouseListener extends
+			PickingGraphMousePlugin<INode, Arc> implements MouseWheelListener {
+
+		private static enum DragMode {
+			SCROLL, MOVENODE, ARC, NONE
+		}
+
+		private PetrinetViewer petrinetViewer;
+
+		private DragMode dragMode = DragMode.NONE;
+
+		PetrinetMouseListener(PetrinetViewer petrinetViewer) {
+			this.petrinetViewer = petrinetViewer;
+		}
+
+		/** X-coordinate of begin of drag */
+		private int pressedX = 0;
+		/** Y-coordinate of begin of drag */
+		private int pressedY = 0;
+
+		/**
+		 * For defining maximim zoom. Places are not displayed correctly if the
+		 * user zooms too deep
+		 */
+		float currentZoom = 1;
+
+		/**
+		 * ID of node that was clicked at beginning of drag. Needed for drawing
+		 * arcs
+		 */
+		private INode nodeFromDrag = null;
+
+		/** Zoom petrinet on mouse wheel */
+		@Override
+		public void mouseWheelMoved(MouseWheelEvent e) {
+			Point point = new Point(e.getX(), e.getY());
+			float factor = e.getWheelRotation() < 0 ? 1.1f : 0.9f;
+			petrinetViewer.scale(factor, point);
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			super.mousePressed(e); // mousePressedEvent in class
+									// PickingGraphMousePlugin selects nodes
+			EditorMode mode = EditorPane.getInstance().getCurrentMode();
+
+			// left-click PICK : display clicked node
+			// right-click: display pop-up-menu
+			// left-click PLACE: create place at position
+			// left-click TRANSITION: etc...
+			if (mode == EditorMode.PICK) {
+				if (edge != null) {
+					AttributePane.getInstance().displayEdge(edge,
+							petrinetViewer);
+					if (e.isMetaDown()) {
+						PetrinetPopUpMenu.fromArc(edge, petrinetViewer).show(
+								petrinetViewer, e.getX(), e.getY());
+					}
+
+				} else if (vertex != null) {
+					AttributePane.getInstance().displayNode(vertex,
+							petrinetViewer);
+					if (e.isMetaDown()) {
+						PetrinetPopUpMenu.fromNode(vertex, petrinetViewer)
+								.show(petrinetViewer, e.getX(), e.getY());
+					}
+				}
+			} else
+				try {
+					if (mode == EditorMode.PLACE) {
+						petrinetViewer
+								.createPlace(new Point(e.getX(), e.getY()));
+					} else if (mode == EditorMode.TRANSITION) {
+						MainWindow.getPetrinetManipulation().createTransition(
+								petrinetViewer.getCurrentPetrinetId(),
+								new Point(e.getX(), e.getY()));
+					}
+					petrinetViewer.repaint();
+				} catch (EngineException e1) {
+					e1.printStackTrace();
+				}
+		}
+
+		/** Checks if something is clicked without changing selection */
+		private boolean isAnythingClicked(MouseEvent e) {
+			Arc beforeEdge = edge;
+			INode beforeNode = vertex;
+			edge = null;
+			vertex = null;
+			super.mousePressed(e);
+
+			boolean result = edge != null || vertex != null;
+			edge = beforeEdge;
+			vertex = beforeNode;
+
+			return result;
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			super.mousePressed(e);
+			if (dragMode == DragMode.NONE) {
+				pressedX = e.getX();
+				pressedY = e.getY();
+				EditorMode editorMode = EditorPane.getInstance()
+						.getCurrentMode();
+				// dragging in pick mode
+				if (editorMode == EditorMode.PICK) {
+					// find out: scrolling or moving? -> is something clicked?
+					if (vertex != null) {
+						// something is clicked -> MOVENODE
+						dragMode = DragMode.MOVENODE;
+						nodeFromDrag = vertex;
+					} else {
+						// nothing is clicked -> SCROLL
+						dragMode = DragMode.SCROLL;
+					}
+					// dragging in arc mode
+				} else if (editorMode == EditorMode.ARC) {
+					// find out what was clicked on
+					super.mousePressed(e);
+					if (vertex != null) {
+						nodeFromDrag = vertex;
+						vertex = null;
+						dragMode = DragMode.ARC;
+					}
+				}
+			}
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			Point oldPoint = new Point(pressedX, pressedY);
+			Point newPoint = new Point(e.getX(), e.getY());
+
+			if (!oldPoint.equals(newPoint)) {
+				if (dragMode == DragMode.SCROLL) {
+					/*
+					 * Scrolling is realized by zooming out of old position and
+					 * zooming in to new position
+					 */
+					petrinetViewer.scale(0.5f, newPoint);
+					petrinetViewer.scale(2f, oldPoint);
+				} else if (dragMode == DragMode.MOVENODE) {
+					petrinetViewer.moveNode(nodeFromDrag, new Point(
+							(int) (newPoint.getX() - oldPoint.getX()),
+							(int) (newPoint.getY() - oldPoint.getY())));
+					petrinetViewer.repaint();
+				} else if (dragMode == DragMode.ARC) {
+					// find out what was released on
+					super.mousePressed(e);
+					if (vertex != null) {
+						petrinetViewer.createArc(nodeFromDrag, vertex);
+					}
+				}
+			}
+			dragMode = DragMode.NONE;
+			nodeFromDrag = null;
+		}
+	} // end of mouse listener
+
+	/**
+	 * Custom renderer that is used from jung to make transitions cornered and
+	 * places circular
+	 */
+	private static class PetrinetRenderer implements Vertex<INode, Arc> {
+
+		private PetrinetViewer petrinetViewer;
+
+		PetrinetRenderer(PetrinetViewer petrinetViewer) {
+			this.petrinetViewer = petrinetViewer;
+		}
+
+		@Override
+		public void paintVertex(RenderContext<INode, Arc> renderContext,
+				Layout<INode, Arc> layout, INode node) {
+			GraphicsDecorator decorator = renderContext.getGraphicsContext();
+			Point2D center = layout.transform(node);
+			try {
+				if (EngineAdapter.getPetrinetManipulation().getNodeType(node) == NodeTypeEnum.Place) {
+					PlaceAttribute placeAttribute = EngineAdapter
+							.getPetrinetManipulation()
+							.getPlaceAttribute(
+									petrinetViewer.getCurrentPetrinetId(), node);
+					int width = PLACE_WIDTH;
+					int height = PLACE_HEIGHT;
+					int x = (int) (center.getX() - width / 2);
+					int y = (int) (center.getY() - height / 2);
+					// Color lightBlue = new Color(200, 200, 250);
+					// decorator.setPaint(lightBlue);
+					decorator.setPaint(placeAttribute.getColor());
+					decorator.fillOval(x, y, width, height);
+
+					// draw frame
+					decorator.setPaint(NODE_BORDER_COLOR);
+					decorator.drawOval(x, y, width, height);
+
+					// write name
+					decorator.setPaint(FONT_COLOR);
+					decorator.drawString(placeAttribute.getPname(), x + width,
+							y + height);
+
+					// display marking
+					int marking = placeAttribute.getMarking();
+					if (marking == 0) {
+						// view nothing (empty place)
+					} else if (marking == 1) {
+						// view black dot within place
+						decorator.setPaint(Color.BLACK);
+						decorator.fillOval(x + width / 4, y + height / 4,
+								height / 2, height / 2);
+					} else {
+						// draw number within place
+						decorator.drawString(String.valueOf(marking), x + width
+								/ 3, y + (int) (height / 1.5));
+					}
+				} else {
+					TransitionAttribute transitionAttribute = EngineAdapter
+							.getPetrinetManipulation()
+							.getTransitionAttribute(
+									petrinetViewer.getCurrentPetrinetId(), node);
+
+					Color blackOrWhite = null;
+					if (transitionAttribute.getIsActivated()) {
+						blackOrWhite = Color.BLACK;
+					} else {
+						blackOrWhite = Color.LIGHT_GRAY;
+					}
+
+					// draw rect
+					int size = TRANSITION_SIZE;
+					int x = (int) (center.getX() - size / 2);
+					int y = (int) (center.getY() - size / 2);
+					decorator.setPaint(blackOrWhite);
+					decorator.fillRect(x, y, size, size);
+
+					// draw frame
+					decorator.setPaint(NODE_BORDER_COLOR);
+					decorator.drawRect(x, y, size, size);
+
+					// draw name
+					decorator.setPaint(FONT_COLOR);
+					decorator.drawString(transitionAttribute.getTname(), x
+							+ size + 2, y + size);
+
+					// draw label
+					if (transitionAttribute.getIsActivated()) {
+						decorator.setPaint(Color.LIGHT_GRAY);
+					} else {
+						decorator.setPaint(Color.DARK_GRAY);
+					}
+					decorator.drawString(transitionAttribute.getTLB(), x + size
+							/ 3, y + size / 1.5f);
+				}
+			} catch (EngineException e) {
+				PopUp.popError(e);
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * Transforming Arcs to Strings. Actually just used for getting the label of
+	 * an Arc
+	 */
+	private static class PetrinetArcLabelTransformer implements
+			Transformer<Arc, String> {
+
+		private PetrinetViewer petrinetViewer;
+
+		PetrinetArcLabelTransformer(PetrinetViewer petrinetViewer) {
+			this.petrinetViewer = petrinetViewer;
+		}
+
+		@Override
+		public String transform(Arc arc) {
+			int weight = 1;
+			try {
+				ArcAttribute arcAttribute = EngineAdapter
+						.getPetrinetManipulation().getArcAttribute(
+								petrinetViewer.getCurrentPetrinetId(), arc);
+				weight = arcAttribute.getWeight();
+			} catch (EngineException e) {
+				e.printStackTrace();
+			}
+			if (weight == 1) {
+				return "";
+			} else {
+				return String.valueOf(weight);
+			}
+		}
+	}
+
+	/**
+	 * This is for defining the nodes' shapes so the arrows properly connects to
+	 * them
+	 */
+	private static class PetrinetNodeShapeTransformer implements
+			Transformer<INode, Shape> {
+
+		@Override
+		public Shape transform(INode node) {
+			try {
+				if (EngineAdapter.getPetrinetManipulation().getNodeType(node) == NodeTypeEnum.Place) {
+					return new Ellipse2D.Double(-PLACE_WIDTH / 2,
+							-PLACE_HEIGHT / 2, PLACE_WIDTH, PLACE_HEIGHT);
+				} else {
+					return new Rectangle2D.Double(-TRANSITION_SIZE / 2,
+							-TRANSITION_SIZE / 2, TRANSITION_SIZE,
+							TRANSITION_SIZE);
+				}
+			} catch (EngineException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+	}
+}
