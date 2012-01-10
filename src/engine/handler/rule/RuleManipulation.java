@@ -214,7 +214,7 @@ public class RuleManipulation implements IRuleManipulation {
 	}
 	
 	@Override
-	public void setRnw(int id, INode transition, Renews renews) {
+	public void setRnw(int id, INode transition, Renews renews) throws EngineException{
 		
 		ruleManipulationBackend.setRnw(id, transition, renews);
 		
@@ -228,7 +228,7 @@ public class RuleManipulation implements IRuleManipulation {
 	}
 
 	@Override
-	public void setPlaceColor(int id, INode place, Color color) {
+	public void setPlaceColor(int id, INode place, Color color) throws EngineException{
 
 		ruleManipulationBackend.setPlaceColor(id, place, color);
 		

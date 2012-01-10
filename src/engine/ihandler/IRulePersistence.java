@@ -178,7 +178,7 @@ public interface IRulePersistence {
 	 * @param rnw String as RNW
 	 * 
 	 */
-	public void setRnw(int id, INode transition, Renews renews);
+	public void setRnw(int id, INode transition, Renews renews) throws EngineException;
 
 	/**
 	 * 
@@ -189,7 +189,7 @@ public interface IRulePersistence {
 	 * @param color new Color
 	 * 
 	 */
-	public void setPlaceColor(int id, INode place, Color color);
+	public void setPlaceColor(int id, INode place, Color color) throws EngineException;
 
 	/**
 	 * Returns the type of the Object.
