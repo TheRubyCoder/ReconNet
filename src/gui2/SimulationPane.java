@@ -101,7 +101,8 @@ class SimulationPane {
 		simulationModePicker = initiateModePicker();
 
 		simulationTimer = initiateSimulationTimer();
-
+		
+		setSimulationPaneDisable();
 	}
 
 	private Map<Integer, Integer> initiateSpeedToDelay() {
@@ -327,9 +328,30 @@ class SimulationPane {
 		FilePane.getRuleFilePane().setHoleButtonsEnable();
 	}
 	
-	void showNoPetrinetChoseWarning(){
-		JOptionPane.showMessageDialog(null, "Kein Petrinetz gewählt.\n Bitte Petrinetz auswählen.",
-				"Warnung: keine Petrinetz gewählt", JOptionPane.WARNING_MESSAGE);
+	/**
+	 * set all Buttons in Simulationpane disable
+	 */
+	void setSimulationPaneDisable(){
+		oneStepButton.setEnabled(false);
+		kStepsButton.setEnabled(false);
+		kStepsSpinner.setEnabled(false);
+		simulationModePicker.setEnabled(false);
+		simulationButton.setEnabled(false);
+		transformButton.setEnabled(false);
+		transformSpeedSlider.setEnabled(false);
+	}
+	
+	/**
+	 * set all Buttons in Simulationpane enable
+	 */
+	void setSimulationPaneEnable(){
+		oneStepButton.setEnabled(true);
+		kStepsButton.setEnabled(true);
+		kStepsSpinner.setEnabled(true);
+		simulationModePicker.setEnabled(true);
+		simulationButton.setEnabled(true);
+		transformButton.setEnabled(true);
+		transformSpeedSlider.setEnabled(true);
 	}
 
 	private class SimulateButtonListener implements ActionListener {

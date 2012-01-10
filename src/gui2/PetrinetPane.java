@@ -81,6 +81,7 @@ class PetrinetPane {
 			petrinetViewer = new PetrinetViewer(layout, petrinetId, null);
 			petrinetViewer.addTo(petrinetPanel);
 			MainWindow.getInstance().repaint();
+			SimulationPane.getInstance().setSimulationPaneEnable();
 		} catch (EngineException e) {
 		}
 	}
@@ -88,6 +89,7 @@ class PetrinetPane {
 	public void displayEmpty() {
 		if (petrinetViewer != null) {
 			petrinetViewer.removeFrom(petrinetPanel);
+			SimulationPane.getInstance().setSimulationPaneDisable();
 		}
 		petrinetPanel.setBorder(PETRINET_BORDER);
 	}
