@@ -58,7 +58,7 @@ public class Converter {
 			c.setR(layout.get(newPlace.getId())[2]);
 			c.setG(layout.get(newPlace.getId())[3]);
 			c.setB(layout.get(newPlace.getId())[4]);
-			
+			location.setColor(c);
 			
 			List<Position> positionList = new ArrayList<Position>();
 			positionList.add(position);
@@ -193,6 +193,10 @@ public class Converter {
 				if (place.getGraphics() != null && !place.getGraphics().getPosition().isEmpty()) {
 					realPlace = handler.createPlace(petrinetID,
 							positionToPoint2D(place.getGraphics().getPosition()));
+					handler.setPlaceColor(petrinetID, realPlace, new java.awt.Color(
+							Integer.parseInt(place.getGraphics().getColor().getR()),
+							Integer.parseInt(place.getGraphics().getColor().getG()),
+							Integer.parseInt(place.getGraphics().getColor().getB() )));
 				} else {
 					realPlace = handler.createPlace(petrinetID, new Point2D.Double(Math.random() * 10, Math.random() * 10));
 				}

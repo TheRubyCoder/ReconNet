@@ -49,9 +49,10 @@ public class PersistanceTest {
 
 			pnml = (Pnml) m
 					.unmarshal(new File("test/persistence/example.pnml"));
-
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+			fail();
 		}
 		
 		// TODO: enable code again if internal API is fully implemented; see engine.session.SessionManager.createPetrinetData(SessionManager.java:80)
@@ -146,16 +147,10 @@ public class PersistanceTest {
 			Petrinet saved = mockup.getPetrinet(pid);
 			
 			mockup.saveTest(pid, "/tmp", "petrinet_saveload_test", "pnml");
-
 			int loaded_pid = mockup.load("/tmp", "petrinet_saveload_test.pnml");
-			
 			Petrinet loaded = mockup.getPetrinet(loaded_pid);
 			AbstractLayout layout = mockup.getJungLayout(loaded_pid);
-			for(petrinet.Place p :loaded.getAllPlaces()) {
-				System.out.println("X: " + layout.getX(p));
-				System.out.println("Y: " + layout.getY(p));
-			}
-			assertTrue(petrinetEqualsBasedOnLayout(saved, mockup.getJungLayout(pid), loaded, mockup.getJungLayout(loaded_pid)));
+			assertTrue(petrinetEqualsBasedOnLayout(mockup, saved, pid, mockup.getJungLayout(pid), loaded, loaded_pid, mockup.getJungLayout(loaded_pid)));
 			
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -163,7 +158,7 @@ public class PersistanceTest {
 		}
 	}
 
-	public static boolean petrinetEqualsBasedOnLayout(petrinet.Petrinet net1, AbstractLayout layout1, petrinet.Petrinet net2, AbstractLayout layout2) {
+	public static boolean petrinetEqualsBasedOnLayout(EngineMockupForPersistence mockup, petrinet.Petrinet net1, int net1_pid, AbstractLayout layout1, petrinet.Petrinet net2, int net2_pid, AbstractLayout layout2) throws EngineException {
 		Map<Point2D, petrinet.Place> pos2place = new HashMap<Point2D, petrinet.Place>();
 		Map<Point2D, petrinet.Transition> pos2trans = new HashMap<Point2D, petrinet.Transition>();
 		
@@ -186,6 +181,12 @@ public class PersistanceTest {
 				
 				if (!net1Place.getName().equals(p.getName())) return false;
 				if (net1Place.getMark() != p.getMark()) return false;
+				
+				java.awt.Color net1PlaceColor = mockup.getPlaceAttribute(net1_pid, net1Place).getColor();
+				java.awt.Color net2PlaceColor = mockup.getPlaceAttribute(net2_pid, p).getColor();
+				if (!net1PlaceColor.equals(net2PlaceColor)) {
+					return false;
+				}
 			} else {
 				return false;
 			}
