@@ -64,8 +64,7 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	 * an N petrinet
 	 */
 	private RuleNet ruleNet;
-	
-	
+
 	/** Wrapper for making scrolling possible */
 	private GraphZoomScrollPane graphZoomScrollPane;
 
@@ -74,20 +73,6 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	 * zooms too deep
 	 */
 	float currentZoom = 1;
-
-//	public static PetrinetViewer getDefaultViewer(RuleNet rulenet) {
-//		int petrinetId = EngineAdapter.getPetrinetManipulation()
-//				.createPetrinet();
-//		try {
-//			Layout<INode, Arc> layout = EngineAdapter.getPetrinetManipulation()
-//					.getJungLayout(petrinetId);
-//			return new PetrinetViewer(layout, petrinetId, rulenet);
-//		} catch (EngineException e) {
-//			PopUp.popError(e);
-//			e.printStackTrace();
-//			return null;
-//		}
-//	}
 
 	/**
 	 * Initiates a new petrinet viewer with a petrinet. Rulenet == null if the
@@ -114,8 +99,8 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		graphZoomScrollPane = new GraphZoomScrollPane(this);
 		component.add(graphZoomScrollPane);
 	}
-	
-	public void removeFrom(JPanel frame){
+
+	public void removeFrom(JPanel frame) {
 		frame.remove(graphZoomScrollPane);
 	}
 
@@ -167,7 +152,50 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	}
 
 	void createArc(INode start, INode end) {
+		try {
+			if (isN()) {
+				EngineAdapter.getPetrinetManipulation().createArc(
+						getCurrentPetrinetId(), start, end);
+			} else {
+				EngineAdapter.getRuleManipulation().createArc(
+						getCurrentPetrinetId(), getRuleNet(), start, end);
+			}
+			repaint();
+		} catch (Exception e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
+	}
 
+	public void createTransition(Point point) {
+		try {
+			if (isN()) {
+				EngineAdapter.getPetrinetManipulation().createTransition(
+						getCurrentPetrinetId(), point);
+			} else {
+				EngineAdapter.getRuleManipulation().createTransition(
+						getCurrentPetrinetId(), getRuleNet(), point);
+			}
+			repaint();
+		} catch (Exception e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
+	}
+
+	void createPlace(Point point) {
+		try {
+			if (isN()) {
+				EngineAdapter.getPetrinetManipulation().createPlace(
+						getCurrentPetrinetId(), point);
+			} else {
+				EngineAdapter.getRuleManipulation().createPlace(
+						getCurrentPetrinetId(), getRuleNet(), point);
+			}
+			repaint();
+		} catch (Exception e) {
+			PopUp.popError(e);
+		}
 	}
 
 	void deletePlace(Place place) {
@@ -187,25 +215,34 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	}
 
 	void deleteTransition(Transition transition) {
-
-	}
-
-	void deleteArc(Arc arc) {
-
-	}
-
-	void createPlace(Point point) {
 		try {
 			if (isN()) {
-				EngineAdapter.getPetrinetManipulation().createPlace(
-						getCurrentPetrinetId(), point);
+				EngineAdapter.getPetrinetManipulation().deleteTransition(
+						getCurrentPetrinetId(), transition);
 			} else {
-				EngineAdapter.getRuleManipulation().createPlace(
-						getCurrentPetrinetId(), getRuleNet(), point);
+				EngineAdapter.getRuleManipulation().deleteTransition(
+						getCurrentPetrinetId(), getRuleNet(), transition);
 			}
 			repaint();
 		} catch (Exception e) {
 			PopUp.popError(e);
+			e.printStackTrace();
+		}
+	}
+
+	void deleteArc(Arc arc) {
+		try {
+			if (isN()) {
+				EngineAdapter.getPetrinetManipulation().deleteArc(
+						getCurrentPetrinetId(), arc);
+			} else {
+				EngineAdapter.getRuleManipulation().deleteArc(
+						getCurrentPetrinetId(), getRuleNet(), arc);
+			}
+			repaint();
+		} catch (Exception e) {
+			PopUp.popError(e);
+			e.printStackTrace();
 		}
 	}
 
@@ -244,28 +281,67 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	}
 
 	public void setTname(Transition transition, String data) {
-		// TODO Auto-generated method stub
-
+		try {
+			if (isN()) {
+				EngineAdapter.getPetrinetManipulation().setTname(
+						getCurrentPetrinetId(), transition, data);
+			} else {
+				EngineAdapter.getRuleManipulation().setTname(
+						getCurrentPetrinetId(), transition, data);
+			}
+			repaint();
+		} catch (Exception e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
 	}
 
 	public void setTlb(Transition transition, String data) {
-		// TODO Auto-generated method stub
-
+		try {
+			if (isN()) {
+				EngineAdapter.getPetrinetManipulation().setTlb(
+						getCurrentPetrinetId(), transition, data);
+			} else {
+				EngineAdapter.getRuleManipulation().setTlb(
+						getCurrentPetrinetId(), transition, data);
+			}
+			repaint();
+		} catch (Exception e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
 	}
 
-	public void setWeight(Arc arc, int parseInt) {
-		// TODO Auto-generated method stub
-
+	public void setWeight(Arc arc, int weight) {
+		try {
+			if (isN()) {
+				EngineAdapter.getPetrinetManipulation().setWeight(
+						getCurrentPetrinetId(), arc, weight);
+			} else {
+				EngineAdapter.getRuleManipulation().setWeight(
+						getCurrentPetrinetId(), arc, weight);
+			}
+			repaint();
+		} catch (Exception e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
 	}
-	
+
 	public void setPlaceColor(INode place, Color color) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void createTransition(Point point) {
-		// TODO Auto-generated method stub
-
+		try {
+			if (isN()) {
+				EngineAdapter.getPetrinetManipulation().setPlaceColor(
+						getCurrentPetrinetId(), place, color);
+			} else {
+				EngineAdapter.getRuleManipulation().setPlaceColor(
+						getCurrentPetrinetId(), place, color);
+			}
+			repaint();
+		} catch (Exception e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
 	}
 
 	/**
