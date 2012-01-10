@@ -23,7 +23,7 @@
           <dimension x="40.0" y="40.0"/>
         </graphics>
         <transitionName>
-           <text>mytrans</text>
+           <text>mytrans 2</text>
         </transitionName>
         <transitionLabel>
            <text>red</text>
@@ -66,7 +66,7 @@
           <dimension x="40.0" y="40.0"/>
         </graphics>
         <transitionName>
-           <text>mytrans</text>
+           <text>mytrans 2</text>
         </transitionName>
         <transitionLabel>
            <text>red</text>
@@ -75,6 +75,30 @@
            <text>colors</text>
         </transitionRenew>
       </transition>
+       <transition id="4">
+        <graphics>
+          <position x="1330" y="1330"/>
+          <dimension x="40.0" y="40.0"/>
+        </graphics>
+        <transitionName>
+           <text>mytrans 4</text>
+        </transitionName>
+        <transitionLabel>
+           <text>red</text>
+        </transitionLabel>
+        <transitionRenew>
+           <text>colors</text>
+        </transitionRenew>
+      </transition>
+      <arc id="5" source="4" target="6">
+        <graphics>
+          <position x="30.0" y="5.0"/>
+          <position x="60.0" y="5.0"/>
+        </graphics>
+        <inscription>
+          <text>2</text>
+        </inscription>
+      </arc>
       <arc id="3" source="1" target="2">
         <graphics>
           <position x="30.0" y="5.0"/>
@@ -120,7 +144,7 @@
           <dimension x="40.0" y="40.0"/>
         </graphics>
         <transitionName>
-           <text>mytrans</text>
+           <text>mytrans 4</text>
         </transitionName>
         <transitionLabel>
            <text>red</text>
@@ -135,7 +159,7 @@
           <dimension x="40.0" y="40.0"/>
         </graphics>
         <transitionName>
-           <text>mytrans</text>
+           <text>mytrans 2</text>
         </transitionName>
         <transitionLabel>
            <text>red</text>
