@@ -63,7 +63,7 @@ class PetrinetPane {
 	}
 
 	public int getCurrentPetrinetId() {
-		return petrinetViewer.getCurrentPetrinetId();
+		return petrinetViewer.getCurrentId();
 	}
 
 	/**

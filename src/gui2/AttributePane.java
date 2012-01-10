@@ -85,17 +85,15 @@ public class AttributePane {
 			String id = String.valueOf(node.getId());
 			AbstractPetriTableModel tableModel = null;
 			if (type == NodeTypeEnum.Place) {
-				PlaceAttribute placeAttribute = EngineAdapter
-						.getPetrinetManipulation().getPlaceAttribute(
-								petrinetViewer.getCurrentPetrinetId(), node);
+				PlaceAttribute placeAttribute = petrinetViewer
+						.getPlaceAttribute((Place) node);
 				String name = placeAttribute.getPname();
 				String mark = String.valueOf(placeAttribute.getMarking());
 
 				tableModel = new PlaceTableModel(id, name, mark);
 			} else {
-				TransitionAttribute transitionAttribute = EngineAdapter
-						.getPetrinetManipulation().getTransitionAttribute(
-								petrinetViewer.getCurrentPetrinetId(), node);
+				TransitionAttribute transitionAttribute = petrinetViewer
+						.getTransitionAttribute((Transition) node);
 				String name = transitionAttribute.getTname();
 				String tlb = transitionAttribute.getTLB();
 				IRenew renew = transitionAttribute.getRNW();
@@ -119,24 +117,16 @@ public class AttributePane {
 	}
 
 	void displayEdge(Arc edge, PetrinetViewer petrinetViewer) {
-		try {
-			String weight = String.valueOf(MainWindow
-					.getPetrinetManipulation()
-					.getArcAttribute(petrinetViewer.getCurrentPetrinetId(),
-							edge).getWeight());
-			String id = String.valueOf(edge.getId());
+		String weight = String.valueOf(petrinetViewer.getArcAttribute(edge)
+				.getWeight());
+		String id = String.valueOf(edge.getId());
 
-			ArcTableModel arcTableModel = new ArcTableModel(id, weight);
-			TableListener tableListener = new TableListener(petrinetViewer,
-					edge);
-			arcTableModel.addTableModelListener(tableListener);
+		ArcTableModel arcTableModel = new ArcTableModel(id, weight);
+		TableListener tableListener = new TableListener(petrinetViewer, edge);
+		arcTableModel.addTableModelListener(tableListener);
 
-			table.setModel(arcTableModel);
-			// table.getModel().addTableModelListener(tableListener);
-		} catch (EngineException e) {
-			e.printStackTrace();
-		}
-
+		table.setModel(arcTableModel);
+		// table.getModel().addTableModelListener(tableListener);
 	}
 
 	/**
@@ -212,7 +202,6 @@ public class AttributePane {
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 			getData()[rowIndex][columnIndex] = (String) aValue;
 			fireTableCellUpdated(rowIndex, columnIndex);
-			PetrinetPane.getInstance().repaint();
 		}
 
 	}
@@ -328,50 +317,33 @@ public class AttributePane {
 					}
 				}
 			} else if (node != null) {
-				try {
-					/* PLACE */
-					if (MainWindow.getPetrinetManipulation().getNodeType(node) == NodeTypeEnum.Place) {
-						Place place = (Place) node;
-						if (attribute.equals("Name")) {
-							petrinetViewer.setPname(place, data);
-						} else if (attribute.equals("Markierung")) {
-							try {
-								int marking = Integer.parseInt(data);
-								petrinetViewer.setMarking(place, marking);
-								// MainWindow
-								// .getPetrinetManipulation()
-								// .setMarking(
-								// petrinetViewer.getCurrentPetrinetId(),
-								// place, marking);
-							} catch (NumberFormatException nfe) {
-								PopUp.popError("Die Markierung muss eine natürliche Zahl sein.");
-							}
-						}
-
-						/* TRANSITION */
-					} else {
-						Transition transition = (Transition) node;
-						if (attribute.equals("Name")) {
-							petrinetViewer.setTname(transition, data);
-							// MainWindow
-							// .getPetrinetManipulation()
-							// .setTname(
-							// petrinetViewer.getCurrentPetrinetId(),
-							// transition, data);
-						} else if (attribute.equals("Label")) {
-							petrinetViewer.setTlb(transition, data);
-							// MainWindow
-							// .getPetrinetManipulation()
-							// .setTlb(petrinetViewer.getCurrentPetrinetId(),
-							// transition, data);
-						} else if (attribute.equals("Renew")) {
-							// engine needs setRenew
+				/* PLACE */
+				if (petrinetViewer.isNodePlace(node)) {
+					Place place = (Place) node;
+					if (attribute.equals("Name")) {
+						petrinetViewer.setPname(place, data);
+					} else if (attribute.equals("Markierung")) {
+						try {
+							int marking = Integer.parseInt(data);
+							petrinetViewer.setMarking(place, marking);
+						} catch (NumberFormatException nfe) {
+							PopUp.popError("Die Markierung muss eine natürliche Zahl sein.");
 						}
 					}
-				} catch (EngineException e1) {
-					e1.printStackTrace();
+
+					/* TRANSITION */
+				} else {
+					Transition transition = (Transition) node;
+					if (attribute.equals("Name")) {
+						petrinetViewer.setTname(transition, data);
+					} else if (attribute.equals("Label")) {
+						petrinetViewer.setTlb(transition, data);
+					} else if (attribute.equals("Renew")) {
+						// engine needs setRenew
+					}
 				}
 			}
+			petrinetViewer.smartRepaint();
 		}
 
 	}

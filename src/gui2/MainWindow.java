@@ -62,6 +62,7 @@ class MainWindow {
 		addAttributePane();
 		addSimulationPane();
 		addPetrinetPane();
+		addRulePane();
 		addFilePanes();
 		show();
 	}
@@ -145,6 +146,11 @@ class MainWindow {
 	private void addPetrinetPane() {
 		PetrinetPane.getInstance().addTo(centerPanel);
 	}
+	
+	/** Adds the Rulepane to the center pane*/
+	private void addRulePane() {
+		RulePane.getInstance().addTo(centerPanel);
+	}
 
 	/** Add the Filepanes to the Leftpane */
 	private void addFilePanes() {
@@ -164,6 +170,7 @@ class MainWindow {
 		mainFrame.setVisible(true);
 	}
 
+	/** Repaints whole gui */
 	public void repaint() {
 		Rectangle oldBounds = mainFrame.getBounds();
 		mainFrame.pack(); //resets bounds

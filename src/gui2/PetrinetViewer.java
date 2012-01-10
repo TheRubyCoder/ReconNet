@@ -53,8 +53,12 @@ import gui2.EditorPane.EditorMode;
 @SuppressWarnings("serial")
 class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 
-	/** ID of currently displayed petrinet */
-	private int currentPetrinetId = -1;
+	/**
+	 * ID of currently displayed petrinet or rule. If RuleNet is set (L,K or R)
+	 * this is the rule Id. If RuleNet is not set (null) this id is the ID of
+	 * the petrinet
+	 */
+	private int currentId = -1;
 
 	/** For zooming */
 	private ScalingControl scaler;
@@ -78,10 +82,11 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	 * Initiates a new petrinet viewer with a petrinet. Rulenet == null if the
 	 * viewer displays the N petrinet
 	 */
-	PetrinetViewer(Layout<INode, Arc> layout, int petrinetId, RuleNet ruleNet) {
+	PetrinetViewer(Layout<INode, Arc> layout, int petrinetOrRuleId,
+			RuleNet ruleNet) {
 		super(layout);
 		this.ruleNet = ruleNet;
-		this.currentPetrinetId = petrinetId;
+		this.currentId = petrinetOrRuleId;
 
 		scaler = new CrossoverScalingControl();
 		setBackground(Color.WHITE);
@@ -92,7 +97,7 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		getRenderContext().setEdgeLabelTransformer(
 				new PetrinetArcLabelTransformer(this));
 		getRenderContext().setVertexShapeTransformer(
-				new PetrinetNodeShapeTransformer());
+				new PetrinetNodeShapeTransformer(this));
 	}
 
 	void addTo(JPanel component) {
@@ -104,8 +109,42 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		frame.remove(graphZoomScrollPane);
 	}
 
-	int getCurrentPetrinetId() {
-		return currentPetrinetId;
+	void smartRepaint() {
+		if (isN()) {
+			super.repaint();
+		} else {
+			RulePane.getInstance().repaint();
+		}
+	}
+
+	int getCurrentId() {
+		return currentId;
+	}
+
+	/**
+	 * Returns <tt>true</tt> if the current Id is the id of a petrinet
+	 * (N-Petrinet)
+	 * 
+	 * @see PetrinetViewer#isL()
+	 * @see PetrinetViewer#isK()
+	 * @see PetrinetViewer#isR()
+	 * @see PetrinetViewer#isN()
+	 */
+	boolean isIdPetrinetId() {
+		return isN();
+	}
+
+	/**
+	 * Returns <tt>true</tt> if the current Id is the id of a petrinet within a
+	 * rule (L, K or R -Petrinet)
+	 * 
+	 * @see PetrinetViewer#isL()
+	 * @see PetrinetViewer#isK()
+	 * @see PetrinetViewer#isR()
+	 * @see PetrinetViewer#isN()
+	 */
+	boolean isIdRuleId() {
+		return !isIdPetrinetId();
 	}
 
 	boolean isR() {
@@ -135,16 +174,83 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 	}
 
+	PlaceAttribute getPlaceAttribute(Place place) {
+		PlaceAttribute placeAttribute = null;
+		try {
+			if (isN()) {
+				placeAttribute = EngineAdapter.getPetrinetManipulation()
+						.getPlaceAttribute(getCurrentId(), place);
+			} else {
+				placeAttribute = EngineAdapter.getRuleManipulation()
+						.getPlaceAttribute(getCurrentId(), place);
+			}
+		} catch (Exception e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
+		return placeAttribute;
+	}
+
+	TransitionAttribute getTransitionAttribute(Transition transition) {
+		TransitionAttribute transitionAttribute = null;
+		try {
+			if (isN()) {
+				transitionAttribute = EngineAdapter.getPetrinetManipulation()
+						.getTransitionAttribute(getCurrentId(), transition);
+			} else {
+				transitionAttribute = EngineAdapter.getRuleManipulation()
+						.getTransitionAttribute(getCurrentId(), transition);
+			}
+		} catch (Exception e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
+		return transitionAttribute;
+	}
+
+	ArcAttribute getArcAttribute(Arc arc) {
+		ArcAttribute arcAttribute = null;
+		try {
+			if (isN()) {
+				arcAttribute = EngineAdapter.getPetrinetManipulation()
+						.getArcAttribute(getCurrentId(), arc);
+			} else {
+				arcAttribute = EngineAdapter.getRuleManipulation()
+						.getArcAttribute(getCurrentId(), arc);
+			}
+		} catch (Exception e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
+		return arcAttribute;
+	}
+
+	boolean isNodePlace(INode node) {
+		NodeTypeEnum result = null;
+		try {
+			if (isN()) {
+				result = EngineAdapter.getPetrinetManipulation().getNodeType(
+						node);
+			} else {
+				result = EngineAdapter.getRuleManipulation().getNodeType(node);
+			}
+		} catch (EngineException e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
+		return result == NodeTypeEnum.Place;
+	}
+
 	void moveNode(INode node, Point relativePosition) {
 		try {
 			if (isN()) {
 				EngineAdapter.getPetrinetManipulation().moveNode(
-						getCurrentPetrinetId(), node, relativePosition);
+						getCurrentId(), node, relativePosition);
 			} else {
-				EngineAdapter.getRuleManipulation().moveNode(
-						getCurrentPetrinetId(), node, relativePosition);
+				EngineAdapter.getRuleManipulation().moveNode(getCurrentId(),
+						node, relativePosition);
 			}
-			repaint();
+			smartRepaint();
 		} catch (Exception e) {
 			PopUp.popError(e);
 			e.printStackTrace();
@@ -155,12 +261,12 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		try {
 			if (isN()) {
 				EngineAdapter.getPetrinetManipulation().createArc(
-						getCurrentPetrinetId(), start, end);
+						getCurrentId(), start, end);
 			} else {
-				EngineAdapter.getRuleManipulation().createArc(
-						getCurrentPetrinetId(), getRuleNet(), start, end);
+				EngineAdapter.getRuleManipulation().createArc(getCurrentId(),
+						getRuleNet(), start, end);
 			}
-			repaint();
+			smartRepaint();
 		} catch (Exception e) {
 			PopUp.popError(e);
 			e.printStackTrace();
@@ -171,12 +277,12 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		try {
 			if (isN()) {
 				EngineAdapter.getPetrinetManipulation().createTransition(
-						getCurrentPetrinetId(), point);
+						getCurrentId(), point);
 			} else {
 				EngineAdapter.getRuleManipulation().createTransition(
-						getCurrentPetrinetId(), getRuleNet(), point);
+						getCurrentId(), getRuleNet(), point);
 			}
-			repaint();
+			smartRepaint();
 		} catch (Exception e) {
 			PopUp.popError(e);
 			e.printStackTrace();
@@ -187,12 +293,12 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		try {
 			if (isN()) {
 				EngineAdapter.getPetrinetManipulation().createPlace(
-						getCurrentPetrinetId(), point);
+						getCurrentId(), point);
 			} else {
-				EngineAdapter.getRuleManipulation().createPlace(
-						getCurrentPetrinetId(), getRuleNet(), point);
+				EngineAdapter.getRuleManipulation().createPlace(getCurrentId(),
+						getRuleNet(), point);
 			}
-			repaint();
+			smartRepaint();
 		} catch (Exception e) {
 			PopUp.popError(e);
 		}
@@ -202,12 +308,12 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		try {
 			if (isN()) {
 				EngineAdapter.getPetrinetManipulation().deletePlace(
-						getCurrentPetrinetId(), place);
+						getCurrentId(), place);
 			} else {
-				EngineAdapter.getRuleManipulation().deletePlace(
-						getCurrentPetrinetId(), getRuleNet(), place);
+				EngineAdapter.getRuleManipulation().deletePlace(getCurrentId(),
+						getRuleNet(), place);
 			}
-			repaint();
+			smartRepaint();
 		} catch (Exception e) {
 			PopUp.popError(e);
 			e.printStackTrace();
@@ -218,12 +324,12 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		try {
 			if (isN()) {
 				EngineAdapter.getPetrinetManipulation().deleteTransition(
-						getCurrentPetrinetId(), transition);
+						getCurrentId(), transition);
 			} else {
 				EngineAdapter.getRuleManipulation().deleteTransition(
-						getCurrentPetrinetId(), getRuleNet(), transition);
+						getCurrentId(), getRuleNet(), transition);
 			}
-			repaint();
+			smartRepaint();
 		} catch (Exception e) {
 			PopUp.popError(e);
 			e.printStackTrace();
@@ -234,12 +340,12 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		try {
 			if (isN()) {
 				EngineAdapter.getPetrinetManipulation().deleteArc(
-						getCurrentPetrinetId(), arc);
+						getCurrentId(), arc);
 			} else {
-				EngineAdapter.getRuleManipulation().deleteArc(
-						getCurrentPetrinetId(), getRuleNet(), arc);
+				EngineAdapter.getRuleManipulation().deleteArc(getCurrentId(),
+						getRuleNet(), arc);
 			}
-			repaint();
+			smartRepaint();
 		} catch (Exception e) {
 			PopUp.popError(e);
 			e.printStackTrace();
@@ -250,12 +356,12 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		try {
 			if (isN()) {
 				EngineAdapter.getPetrinetManipulation().setPname(
-						getCurrentPetrinetId(), place, data);
+						getCurrentId(), place, data);
 			} else {
-				EngineAdapter.getRuleManipulation().setPname(
-						getCurrentPetrinetId(), place, data);
+				EngineAdapter.getRuleManipulation().setPname(getCurrentId(),
+						place, data);
 			}
-			repaint();
+			smartRepaint();
 		} catch (EngineException e) {
 			PopUp.popError(e);
 			e.printStackTrace();
@@ -267,12 +373,12 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		try {
 			if (isN()) {
 				EngineAdapter.getPetrinetManipulation().setMarking(
-						getCurrentPetrinetId(), place, marking);
+						getCurrentId(), place, marking);
 			} else {
-				EngineAdapter.getRuleManipulation().setMarking(
-						getCurrentPetrinetId(), place, marking);
+				EngineAdapter.getRuleManipulation().setMarking(getCurrentId(),
+						place, marking);
 			}
-			repaint();
+			smartRepaint();
 		} catch (EngineException e) {
 			PopUp.popError(e);
 			e.printStackTrace();
@@ -284,12 +390,12 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		try {
 			if (isN()) {
 				EngineAdapter.getPetrinetManipulation().setTname(
-						getCurrentPetrinetId(), transition, data);
+						getCurrentId(), transition, data);
 			} else {
-				EngineAdapter.getRuleManipulation().setTname(
-						getCurrentPetrinetId(), transition, data);
+				EngineAdapter.getRuleManipulation().setTname(getCurrentId(),
+						transition, data);
 			}
-			repaint();
+			smartRepaint();
 		} catch (Exception e) {
 			PopUp.popError(e);
 			e.printStackTrace();
@@ -299,13 +405,13 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	public void setTlb(Transition transition, String data) {
 		try {
 			if (isN()) {
-				EngineAdapter.getPetrinetManipulation().setTlb(
-						getCurrentPetrinetId(), transition, data);
+				EngineAdapter.getPetrinetManipulation().setTlb(getCurrentId(),
+						transition, data);
 			} else {
-				EngineAdapter.getRuleManipulation().setTlb(
-						getCurrentPetrinetId(), transition, data);
+				EngineAdapter.getRuleManipulation().setTlb(getCurrentId(),
+						transition, data);
 			}
-			repaint();
+			smartRepaint();
 		} catch (Exception e) {
 			PopUp.popError(e);
 			e.printStackTrace();
@@ -316,12 +422,12 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		try {
 			if (isN()) {
 				EngineAdapter.getPetrinetManipulation().setWeight(
-						getCurrentPetrinetId(), arc, weight);
+						getCurrentId(), arc, weight);
 			} else {
-				EngineAdapter.getRuleManipulation().setWeight(
-						getCurrentPetrinetId(), arc, weight);
+				EngineAdapter.getRuleManipulation().setWeight(getCurrentId(),
+						arc, weight);
 			}
-			repaint();
+			smartRepaint();
 		} catch (Exception e) {
 			PopUp.popError(e);
 			e.printStackTrace();
@@ -332,12 +438,12 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		try {
 			if (isN()) {
 				EngineAdapter.getPetrinetManipulation().setPlaceColor(
-						getCurrentPetrinetId(), place, color);
+						getCurrentId(), place, color);
 			} else {
 				EngineAdapter.getRuleManipulation().setPlaceColor(
-						getCurrentPetrinetId(), place, color);
+						getCurrentId(), place, color);
 			}
-			repaint();
+			smartRepaint();
 		} catch (Exception e) {
 			PopUp.popError(e);
 			e.printStackTrace();
@@ -447,49 +553,40 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		static PetrinetPopUpMenu fromNode(INode node,
 				PetrinetViewer petrinetViewer) {
 			PetrinetPopUpMenu result = new PetrinetPopUpMenu(petrinetViewer);
-			int pId = petrinetViewer.getCurrentPetrinetId();
-			try {
-				if (MainWindow.getPetrinetManipulation().getNodeType(node) == NodeTypeEnum.Place) {
-					PlaceAttribute placeAttribute = MainWindow
-							.getPetrinetManipulation().getPlaceAttribute(pId,
-									node);
+			if (petrinetViewer.isNodePlace(node)) {
+				PlaceAttribute placeAttribute = petrinetViewer
+						.getPlaceAttribute((Place) node);
+				// Delete
+				JMenuItem delete = new JMenuItem("Stelle "
+						+ placeAttribute.getPname() + " [" + node.getId()
+						+ "] " + "löschen");
+				delete.addActionListener(DeleteListener.fromPlace((Place) node,
+						petrinetViewer));
+				result.add(delete);
 
-					// Delete
-					JMenuItem delete = new JMenuItem("Stelle "
-							+ placeAttribute.getPname() + " [" + node.getId()
-							+ "] " + "löschen");
-					delete.addActionListener(DeleteListener.fromPlace(
-							(Place) node, petrinetViewer));
-					result.add(delete);
+				// Color blue
+				addColorToPopUpMenu(result, "Blau", Color.BLUE, node);
 
-					// Color blue
-					addColorToPopUpMenu(result, "Blau", Color.BLUE, node);
+				// Color light blue
+				addColorToPopUpMenu(result, "Hellblau",
+						new Color(200, 200, 250), node);
 
-					// Color light blue
-					addColorToPopUpMenu(result, "Hellblau", new Color(200, 200,
-							250), node);
+				// Color red
+				addColorToPopUpMenu(result, "Rot", Color.RED, node);
 
-					// Color red
-					addColorToPopUpMenu(result, "Rot", Color.RED, node);
+				// Light red
+				addColorToPopUpMenu(result, "HellRot",
+						new Color(250, 200, 200), node);
 
-					// Light red
-					addColorToPopUpMenu(result, "HellRot", new Color(250, 200,
-							200), node);
-
-				} else {
-					TransitionAttribute transitionAttribute = EngineAdapter
-							.getPetrinetManipulation().getTransitionAttribute(
-									petrinetViewer.currentPetrinetId, node);
-					JMenuItem jMenuItem = new JMenuItem("Transition "
-							+ transitionAttribute.getTname() + " ["
-							+ node.getId() + "] " + "löschen");
-					jMenuItem.addActionListener(DeleteListener.fromTransition(
-							(Transition) node, petrinetViewer));
-					result.add(jMenuItem);
-				}
-			} catch (EngineException e) {
-				PopUp.popError(e);
-				e.printStackTrace();
+			} else {
+				TransitionAttribute transitionAttribute = petrinetViewer
+						.getTransitionAttribute((Transition) node);
+				JMenuItem jMenuItem = new JMenuItem("Transition "
+						+ transitionAttribute.getTname() + " [" + node.getId()
+						+ "] " + "löschen");
+				jMenuItem.addActionListener(DeleteListener.fromTransition(
+						(Transition) node, petrinetViewer));
+				result.add(jMenuItem);
 			}
 			return result;
 		}
@@ -654,85 +751,75 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 				Layout<INode, Arc> layout, INode node) {
 			GraphicsDecorator decorator = renderContext.getGraphicsContext();
 			Point2D center = layout.transform(node);
-			try {
-				if (EngineAdapter.getPetrinetManipulation().getNodeType(node) == NodeTypeEnum.Place) {
-					PlaceAttribute placeAttribute = EngineAdapter
-							.getPetrinetManipulation()
-							.getPlaceAttribute(
-									petrinetViewer.getCurrentPetrinetId(), node);
-					int width = PLACE_WIDTH;
-					int height = PLACE_HEIGHT;
-					int x = (int) (center.getX() - width / 2);
-					int y = (int) (center.getY() - height / 2);
-					// Color lightBlue = new Color(200, 200, 250);
-					// decorator.setPaint(lightBlue);
-					decorator.setPaint(placeAttribute.getColor());
-					decorator.fillOval(x, y, width, height);
+			if (petrinetViewer.isNodePlace(node)) {
+				PlaceAttribute placeAttribute = petrinetViewer
+						.getPlaceAttribute((Place) node);
+				int width = PLACE_WIDTH;
+				int height = PLACE_HEIGHT;
+				int x = (int) (center.getX() - width / 2);
+				int y = (int) (center.getY() - height / 2);
+				// Color lightBlue = new Color(200, 200, 250);
+				// decorator.setPaint(lightBlue);
+				decorator.setPaint(placeAttribute.getColor());
+				decorator.fillOval(x, y, width, height);
 
-					// draw frame
-					decorator.setPaint(NODE_BORDER_COLOR);
-					decorator.drawOval(x, y, width, height);
+				// draw frame
+				decorator.setPaint(NODE_BORDER_COLOR);
+				decorator.drawOval(x, y, width, height);
 
-					// write name
-					decorator.setPaint(FONT_COLOR);
-					decorator.drawString(placeAttribute.getPname(), x + width,
-							y + height);
+				// write name
+				decorator.setPaint(FONT_COLOR);
+				decorator.drawString(placeAttribute.getPname(), x + width, y
+						+ height);
 
-					// display marking
-					int marking = placeAttribute.getMarking();
-					if (marking == 0) {
-						// view nothing (empty place)
-					} else if (marking == 1) {
-						// view black dot within place
-						decorator.setPaint(Color.BLACK);
-						decorator.fillOval(x + width / 4, y + height / 4,
-								height / 2, height / 2);
-					} else {
-						// draw number within place
-						decorator.drawString(String.valueOf(marking), x + width
-								/ 3, y + (int) (height / 1.5));
-					}
+				// display marking
+				int marking = placeAttribute.getMarking();
+				if (marking == 0) {
+					// view nothing (empty place)
+				} else if (marking == 1) {
+					// view black dot within place
+					decorator.setPaint(Color.BLACK);
+					decorator.fillOval(x + width / 4, y + height / 4,
+							height / 2, height / 2);
 				} else {
-					TransitionAttribute transitionAttribute = EngineAdapter
-							.getPetrinetManipulation()
-							.getTransitionAttribute(
-									petrinetViewer.getCurrentPetrinetId(), node);
-
-					Color blackOrWhite = null;
-					if (transitionAttribute.getIsActivated()) {
-						blackOrWhite = Color.BLACK;
-					} else {
-						blackOrWhite = Color.LIGHT_GRAY;
-					}
-
-					// draw rect
-					int size = TRANSITION_SIZE;
-					int x = (int) (center.getX() - size / 2);
-					int y = (int) (center.getY() - size / 2);
-					decorator.setPaint(blackOrWhite);
-					decorator.fillRect(x, y, size, size);
-
-					// draw frame
-					decorator.setPaint(NODE_BORDER_COLOR);
-					decorator.drawRect(x, y, size, size);
-
-					// draw name
-					decorator.setPaint(FONT_COLOR);
-					decorator.drawString(transitionAttribute.getTname(), x
-							+ size + 2, y + size);
-
-					// draw label
-					if (transitionAttribute.getIsActivated()) {
-						decorator.setPaint(Color.LIGHT_GRAY);
-					} else {
-						decorator.setPaint(Color.DARK_GRAY);
-					}
-					decorator.drawString(transitionAttribute.getTLB(), x + size
-							/ 3, y + size / 1.5f);
+					// draw number within place
+					decorator.drawString(String.valueOf(marking),
+							x + width / 3, y + (int) (height / 1.5));
 				}
-			} catch (EngineException e) {
-				PopUp.popError(e);
-				e.printStackTrace();
+			} else {
+				TransitionAttribute transitionAttribute = petrinetViewer
+						.getTransitionAttribute((Transition) node);
+				Color blackOrWhite = null;
+				if (transitionAttribute.getIsActivated()) {
+					blackOrWhite = Color.BLACK;
+				} else {
+					blackOrWhite = Color.LIGHT_GRAY;
+				}
+
+				// draw rect
+				int size = TRANSITION_SIZE;
+				int x = (int) (center.getX() - size / 2);
+				int y = (int) (center.getY() - size / 2);
+				decorator.setPaint(blackOrWhite);
+				decorator.fillRect(x, y, size, size);
+
+				// draw frame
+				decorator.setPaint(NODE_BORDER_COLOR);
+				decorator.drawRect(x, y, size, size);
+
+				// draw name
+				decorator.setPaint(FONT_COLOR);
+				decorator.drawString(transitionAttribute.getTname(), x + size
+						+ 2, y + size);
+
+				// draw label
+				if (transitionAttribute.getIsActivated()) {
+					decorator.setPaint(Color.LIGHT_GRAY);
+				} else {
+					decorator.setPaint(Color.DARK_GRAY);
+				}
+				decorator.drawString(transitionAttribute.getTLB(),
+						x + size / 3, y + size / 1.5f);
 			}
 		}
 	}
@@ -753,14 +840,8 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		@Override
 		public String transform(Arc arc) {
 			int weight = 1;
-			try {
-				ArcAttribute arcAttribute = EngineAdapter
-						.getPetrinetManipulation().getArcAttribute(
-								petrinetViewer.getCurrentPetrinetId(), arc);
-				weight = arcAttribute.getWeight();
-			} catch (EngineException e) {
-				e.printStackTrace();
-			}
+			ArcAttribute arcAttribute = petrinetViewer.getArcAttribute(arc);
+			weight = arcAttribute.getWeight();
 			if (weight == 1) {
 				return "";
 			} else {
@@ -776,21 +857,21 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	private static class PetrinetNodeShapeTransformer implements
 			Transformer<INode, Shape> {
 
+		PetrinetViewer petrinetViewer;
+
+		PetrinetNodeShapeTransformer(PetrinetViewer petrinetViewer) {
+			this.petrinetViewer = petrinetViewer;
+		}
+
 		@Override
 		public Shape transform(INode node) {
-			try {
-				if (EngineAdapter.getPetrinetManipulation().getNodeType(node) == NodeTypeEnum.Place) {
-					return new Ellipse2D.Double(-PLACE_WIDTH / 2,
-							-PLACE_HEIGHT / 2, PLACE_WIDTH, PLACE_HEIGHT);
-				} else {
-					return new Rectangle2D.Double(-TRANSITION_SIZE / 2,
-							-TRANSITION_SIZE / 2, TRANSITION_SIZE,
-							TRANSITION_SIZE);
-				}
-			} catch (EngineException e) {
-				e.printStackTrace();
+			if (petrinetViewer.isNodePlace(node)) {
+				return new Ellipse2D.Double(-PLACE_WIDTH / 2,
+						-PLACE_HEIGHT / 2, PLACE_WIDTH, PLACE_HEIGHT);
+			} else {
+				return new Rectangle2D.Double(-TRANSITION_SIZE / 2,
+						-TRANSITION_SIZE / 2, TRANSITION_SIZE, TRANSITION_SIZE);
 			}
-			return null;
 		}
 
 	}
