@@ -7,8 +7,8 @@
       </name>
       <place id="1">
         <graphics>
-          <position x="39.5" y="44.5"/>
-          <dimension x="40.0" y="40.0"/>
+          <position x="0" y="0"/>
+          <dimension x="400.0" y="400.0"/>
         </graphics>
         <placeName>
           <text>myplace</text>
@@ -19,7 +19,7 @@
       </place>
       <transition id="2">
         <graphics>
-          <position x="139.5" y="44.5"/>
+          <position x="11" y="11"/>
           <dimension x="40.0" y="40.0"/>
         </graphics>
         <transitionName>
@@ -50,7 +50,7 @@
       </name>
       <place id="1">
         <graphics>
-          <position x="39.5" y="44.5"/>
+          <position x="10.5" y="10.5"/>
           <dimension x="40.0" y="40.0"/>
         </graphics>
         <placeName>
@@ -62,7 +62,7 @@
       </place>
       <transition id="2">
         <graphics>
-          <position x="139.5" y="44.5"/>
+          <position x="50.5" y="50.5"/>
           <dimension x="40.0" y="40.0"/>
         </graphics>
         <transitionName>
@@ -92,7 +92,7 @@
       </name>
       <place id="1">
         <graphics>
-          <position x="39.5" y="44.5"/>
+          <position x="200" y="200"/>
           <dimension x="40.0" y="40.0"/>
         </graphics>
         <placeName>
@@ -104,7 +104,7 @@
       </place>
       <place id="6">
         <graphics>
-          <position x="39.5" y="44.5"/>
+          <position x="510" y="510"/>
           <dimension x="40.0" y="40.0"/>
         </graphics>
         <placeName>
@@ -116,7 +116,7 @@
       </place>
        <transition id="4">
         <graphics>
-          <position x="139.5" y="44.5"/>
+          <position x="1330" y="1330"/>
           <dimension x="40.0" y="40.0"/>
         </graphics>
         <transitionName>
@@ -131,7 +131,7 @@
       </transition>
       <transition id="2">
         <graphics>
-          <position x="139.5" y="44.5"/>
+          <position x="244" y="244"/>
           <dimension x="40.0" y="40.0"/>
         </graphics>
         <transitionName>

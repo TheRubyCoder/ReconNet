@@ -904,7 +904,7 @@ final public class RuleHandler {
 	
 	public int load(String path, String filename){
 		
-		return Persistence.loadRule(path + "/" + filename, PetrinetPersistence.getInstance());
+		return Persistence.loadRule(path + "/" + filename, RulePersistence.getInstance());
 		
 	}
 

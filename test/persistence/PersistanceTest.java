@@ -12,6 +12,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import petrinet.INode;
@@ -22,10 +23,14 @@ import engine.EngineMockupForPersistence;
 import engine.attribute.NodeLayoutAttribute;
 import engine.handler.petrinet.PetrinetHandler;
 import engine.handler.petrinet.PetrinetPersistence;
+import engine.handler.rule.RuleHandler;
+import engine.handler.rule.RulePersistence;
+import engine.ihandler.IRulePersistence;
 import exceptions.EngineException;
 
 public class PersistanceTest {
 	
+	@Ignore
 	@Test
 	public void testExamplePNMLParsing() {
 		Pnml pnml = new Pnml();
@@ -71,6 +76,7 @@ public class PersistanceTest {
 		
 	}
 	
+	@Ignore
 	@Test
 	public void testSavePetrinet() {
 		EngineMockupForPersistence mockup = new EngineMockupForPersistence();
@@ -86,7 +92,16 @@ public class PersistanceTest {
 		assertTrue(new File("/tmp/petrinet_save_test.pnml").exists());
 	}
 	
+	@Test
+	public void testLoadRule() {
+		IRulePersistence rulePersistence=RulePersistence.getInstance();
+		
+		int id=Persistence.loadRule("test/persistence/exampleRule.rnml", rulePersistence);
+		assert(id>-1);
+		
+	}
 	
+	@Ignore
 	@Test
 	public void testPetrinetSaveLoadEquality() {
 		EngineMockupForPersistence mockup = new EngineMockupForPersistence();

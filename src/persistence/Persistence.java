@@ -15,6 +15,7 @@ import petrinet.INode;
 import petrinet.Petrinet;
 import engine.attribute.NodeLayoutAttribute;
 import engine.ihandler.IPetrinetPersistence;
+import engine.ihandler.IRulePersistence;
 
 public class Persistence /* implements IPersistance*/{
 	static{
@@ -108,9 +109,24 @@ public class Persistence /* implements IPersistance*/{
 	}
 
 
-	public static int loadRule(String pathAndFilename, IPetrinetPersistence handler) {
-		// TODO Auto-generated method stub
+	public static int loadRule(String pathAndFilename, IRulePersistence handler) {
+		Pnml pnml;
+		try {
+		    Unmarshaller m = context.createUnmarshaller();
+		    
+		    m.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
+	
+		    pnml=(Pnml)m.unmarshal(new File(pathAndFilename));
+		    
+		    return Converter.convertToRule(pnml, handler);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return 0;
 	}
+	
+	
 	
 }
