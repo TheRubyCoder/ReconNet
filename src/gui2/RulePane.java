@@ -114,6 +114,7 @@ class RulePane {
 			lViewer.removeFrom(lBorderPanel);
 			kViewer.removeFrom(kBorderPanel);
 			rViewer.removeFrom(rBorderPanel);
+			MainWindow.getInstance().repaint();
 		}
 	}
 

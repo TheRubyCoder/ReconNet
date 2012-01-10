@@ -50,14 +50,8 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.ListModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
 
 import exceptions.EngineException;
 
@@ -75,8 +69,7 @@ class FilePane {
 	private static class NewPetrinetListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String nameOfPetrinet = FilePane.getPetrinetFilePane().insertData(
-					"Petrinetz");
+			FilePane.getPetrinetFilePane().insertData("Petrinetz");
 		}
 	}
 
@@ -160,7 +153,7 @@ class FilePane {
 	private static class NewRuleListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String nameOfRule = FilePane.getRuleFilePane().insertData("Regel");
+			FilePane.getRuleFilePane().insertData("Regel");
 		}
 	}
 
@@ -196,7 +189,7 @@ class FilePane {
 			File filepath = FilePane.getRuleFilePane()
 					.choseFileForSaveAsAndRememberpath("Regel");
 			if (filepath != null) {
-				FilePane.getPetrinetFilePane().saveRuleOnFilesystem(filepath);
+				FilePane.getRuleFilePane().saveRuleOnFilesystem(filepath);
 			}
 		}
 	}
@@ -205,7 +198,9 @@ class FilePane {
 	private static class DeleteRuleListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("delete rule pressed");
+			if (!FilePane.getRuleFilePane().deleteSelectedItem()) {
+				RulePane.getInstance().displayEmpty();
+			}
 		}
 	}
 
@@ -703,8 +698,6 @@ class FilePane {
 	public void savePetrinetOnFilesystem(File path) {
 		int id = getIdFromSelectedItem();
 		try {
-			System.out.println("parent: " + path.getParent());
-			System.out.println("Name: " + path.getName());
 			EngineAdapter.getPetrinetManipulation().save(id, path.getParent(),
 					extractListEntryNameFromFilePath(path),
 					FILE_EXTENSION_WITHOUT_DOT);
@@ -716,7 +709,15 @@ class FilePane {
 
 	public void saveRuleOnFilesystem(File path) {
 		int id = getIdFromSelectedItem();
-		PopUp.popUnderConstruction("SaveRuleOnFilesystem in Filepane");
+		try {
+			EngineAdapter.getRuleManipulation().save(id, path.getParent(),
+					extractListEntryNameFromFilePath(path),
+					FILE_EXTENSION_WITHOUT_DOT);
+		} catch (EngineException e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
+//		PopUp.popUnderConstruction("SaveRuleOnFilesystem in Filepane");
 	}
 
 	public void loadPetrinet(File path) {

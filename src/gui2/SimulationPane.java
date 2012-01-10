@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
@@ -325,6 +326,11 @@ class SimulationPane {
 		FilePane.getPetrinetFilePane().setHoleButtonsEnable();
 		FilePane.getRuleFilePane().setHoleButtonsEnable();
 	}
+	
+	void showNoPetrinetChoseWarning(){
+		JOptionPane.showMessageDialog(null, "Kein Petrinetz gewählt.\n Bitte Petrinetz auswählen.",
+				"Warnung: keine Petrinetz gewählt", JOptionPane.WARNING_MESSAGE);
+	}
 
 	private class SimulateButtonListener implements ActionListener {
 
@@ -349,7 +355,9 @@ class SimulationPane {
 			// int simulationSessionId = EngineAdapter.getSimulation()
 			// .createSimulationSession(
 			// PetrinetPane.getInstance().currentPetrinetId);
+
 			try {
+
 				if (getMode() == SimulationMode.TOKENS) {
 					EngineAdapter.getSimulation().fire(
 							PetrinetPane.getInstance().getCurrentPetrinetId(),
@@ -366,9 +374,11 @@ class SimulationPane {
 									.getIdsFromSelectedListItems(), 1);
 				}
 				PetrinetPane.getInstance().repaint();
+
 			} catch (EngineException e1) {
 				PopUp.popError(e1);
 				e1.printStackTrace();
+
 			}
 
 		}
