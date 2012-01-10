@@ -21,7 +21,7 @@ public class Persistence /* implements IPersistance*/{
 	static{
 		try{
 			context=JAXBContext.newInstance( persistence.Pnml.class , Arc.class, Converter.class, Dimension.class, Graphics.class, InitialMarking.class, Name.class, Net.class,
-					Page.class, Place.class, PlaceName.class, Position.class, Transition.class, TransitionLabel.class, TransitionName.class, TransitionRenew.class);
+					Page.class, Place.class, PlaceName.class, Position.class, Transition.class, TransitionLabel.class, TransitionName.class, TransitionRenew.class,Color.class);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -35,7 +35,8 @@ public class Persistence /* implements IPersistance*/{
 		Map<String , String[]> coordinates=new HashMap<String, String[]>();
 	
 		for(Entry<INode, NodeLayoutAttribute> e:nodeMap.entrySet()){
-			String[] coords={String.valueOf(e.getValue().getCoordinate().getX()),String.valueOf(e.getValue().getCoordinate().getY())};
+			String[] coords={String.valueOf(e.getValue().getCoordinate().getX()),String.valueOf(e.getValue().getCoordinate().getY()),
+					String.valueOf(e.getValue().getColor().getRed()),String.valueOf(e.getValue().getColor().getGreen()), String.valueOf(e.getValue().getColor().getBlue()) };
 			coordinates.put(String.valueOf(e.getKey().getId()), coords);
 		}
 		

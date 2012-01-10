@@ -21,6 +21,7 @@ import petrinet.Petrinet;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.EngineMockupForPersistence;
 import engine.attribute.NodeLayoutAttribute;
+import engine.handler.RuleNet;
 import engine.handler.petrinet.PetrinetHandler;
 import engine.handler.petrinet.PetrinetPersistence;
 import engine.handler.rule.RuleHandler;
@@ -30,7 +31,7 @@ import exceptions.EngineException;
 
 public class PersistanceTest {
 	
-	@Ignore
+
 	@Test
 	public void testExamplePNMLParsing() {
 		Pnml pnml = new Pnml();
@@ -76,7 +77,7 @@ public class PersistanceTest {
 		
 	}
 	
-	@Ignore
+	
 	@Test
 	public void testSavePetrinet() {
 		EngineMockupForPersistence mockup = new EngineMockupForPersistence();
@@ -88,7 +89,7 @@ public class PersistanceTest {
 		} catch (EngineException e) {
 			e.printStackTrace();
 		}
-		
+	
 		assertTrue(new File("/tmp/petrinet_save_test.pnml").exists());
 	}
 	
@@ -101,7 +102,39 @@ public class PersistanceTest {
 		
 	}
 	
+	@Test
 	@Ignore
+	public void testSaveRule() throws EngineException{
+		RuleHandler handler = RuleHandler.getInstance();
+		
+	//	try {
+			
+			int id=handler.createRule();
+			INode place1=handler.createPlace(id, RuleNet.K, new Point2D.Double(10,10));
+			INode place3=handler.createPlace(id, RuleNet.R, new Point2D.Double(10,1000));
+			
+	
+			System.out.println("size:"+handler.getJungLayout(id, RuleNet.K).getGraph().getVertices().size());
+			
+			handler.setPlaceColor(id, place1, new java.awt.Color(255,0,0));
+			handler.setPlaceColor(id, place3, new java.awt.Color(0,255,0));
+			
+			INode trans2=handler.createTransition(id, RuleNet.R, new Point2D.Double(10,500));
+			
+			handler.createArc(id, RuleNet.R, place1, trans2);
+			handler.createArc(id, RuleNet.R, trans2, place3);
+			
+			
+			handler.save(id, "test", "rule_save_test", "pnml");
+			
+	/*	} catch (EngineException e) {
+			e.printStackTrace();
+		}*/
+	
+		assertTrue(new File("test/rule_save_test.pnml").exists());
+	}
+	
+
 	@Test
 	public void testPetrinetSaveLoadEquality() {
 		EngineMockupForPersistence mockup = new EngineMockupForPersistence();

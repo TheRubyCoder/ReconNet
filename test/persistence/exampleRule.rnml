@@ -50,6 +50,7 @@
       </name>
       <place id="1">
         <graphics>
+          <color r="255" g="0" b="0"/>
           <position x="10.5" y="10.5"/>
           <dimension x="40.0" y="40.0"/>
         </graphics>

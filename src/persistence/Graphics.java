@@ -7,10 +7,13 @@ import javax.xml.bind.annotation.XmlElements;
 
 public class Graphics {
 
+	Color color;
 	
 	List<Position> position;
 	
 	List<Dimension> dimension;
+	
+	
 	
 	@XmlElements(value = { @XmlElement })
 	public List<Position> getPosition() {
@@ -26,5 +29,13 @@ public class Graphics {
 	}
 	public void setDimension(List<Dimension> dimension) {
 		this.dimension = dimension;
+	}
+	
+	@XmlElement
+	public Color getColor() {
+		return color;
+	}
+	public void setColor(Color color) {
+		this.color = color;
 	}
 }

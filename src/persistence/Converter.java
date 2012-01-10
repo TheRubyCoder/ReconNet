@@ -19,6 +19,7 @@ import exceptions.EngineException;
 
 import petrinet.INode;
 import petrinet.Petrinet;
+import sun.awt.resources.awt;
 import transformation.Rule;
 /**
  * This class provides converting methods which are used by persistence class to convert from and to JAXB-classes.
@@ -53,7 +54,12 @@ public class Converter {
 			Position position = new Position();
 			position.setX(layout.get(newPlace.getId())[0]);
 			position.setY(layout.get(newPlace.getId())[1]);
-
+			Color c=new Color();
+			c.setR(layout.get(newPlace.getId())[2]);
+			c.setG(layout.get(newPlace.getId())[3]);
+			c.setB(layout.get(newPlace.getId())[4]);
+			
+			
 			List<Position> positionList = new ArrayList<Position>();
 			positionList.add(position);
 			location.setPosition(positionList);
@@ -299,6 +305,12 @@ public class Converter {
 				for(Place p:(List<Place>)arrayWithPlaceLists[i]){
 					INode node= handler.createPlace(id, rulenet, positionToPoint2D(p.getGraphics().getPosition()));
 					node.setName(p.getPlaceName().getText());
+					java.awt.Color c=new java.awt.Color(255,255,255);
+					if(p.graphics.getColor()!=null){
+					c=new java.awt.Color(Integer.parseInt(p.getGraphics().getColor().getR()),Integer.parseInt(p.getGraphics().getColor().getG()), Integer.parseInt(p.getGraphics().getColor().getB() ));
+						if(test)System.out.println("found color: "+c);
+					}
+					handler.setPlaceColor(id, node, c);
 					idToINode.put(p.getId(), node);
 					
 					if(rulenet==RuleNet.K){
@@ -413,7 +425,7 @@ public class Converter {
 				PlaceName name=new PlaceName();
 				name.setText(p.getName());
 				newPlace.setPlaceName(name);
-
+				
 				//id
 				newPlace.setId(String.valueOf(p.getId()));
 
@@ -423,8 +435,13 @@ public class Converter {
 
 				pos.setX(String.valueOf(map.get(p).getCoordinate().getX()));
 				pos.setY(String.valueOf(map.get(p).getCoordinate().getY()));
-
-
+				
+				Color c=new Color();
+				c.setR(String.valueOf(map.get(newPlace.getId()).getColor().getRed()));
+				c.setG(String.valueOf(map.get(newPlace.getId()).getColor().getGreen()));
+				c.setB(String.valueOf(map.get(newPlace.getId()).getColor().getBlue()));
+				
+				
 				List<Position> positions=new ArrayList<Position>();
 				positions.add(pos);
 				graphics.setPosition(positions);
