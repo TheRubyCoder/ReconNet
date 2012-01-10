@@ -63,6 +63,12 @@ public class EngineMockupForPersistence implements IPetrinetManipulation {
 		createArc(id, places.get(3),      transitions.get(3));
 		createArc(id, transitions.get(3), places.get(0));
 		
+		for (Place p :places) {
+			iPetrinetManipulation.setPlaceColor(id, p, new Color((int)(Math.random() * 255), 
+																	(int)(Math.random() * 255), 
+																	(int)(Math.random() * 255)));
+		}
+		
 		SessionManager.getInstance().getPetrinetData(id	).getPetrinet();
 		
 		return id;
