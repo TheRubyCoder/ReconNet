@@ -184,9 +184,9 @@ public class PersistanceTest {
 				
 				java.awt.Color net1PlaceColor = mockup.getPlaceAttribute(net1_pid, net1Place).getColor();
 				java.awt.Color net2PlaceColor = mockup.getPlaceAttribute(net2_pid, p).getColor();
-				if (!net1PlaceColor.equals(net2PlaceColor)) {
-					return false;
-				}
+				if (!net1PlaceColor.equals(net2PlaceColor)) return false;
+				if (!mockup.getPlaceAttribute(net1_pid, net1Place).getPname().equals(mockup.getPlaceAttribute(net2_pid, p).getPname())) return false;
+				if (mockup.getPlaceAttribute(net1_pid, net1Place).getMarking() != (mockup.getPlaceAttribute(net2_pid, p).getMarking())) return false;
 			} else {
 				return false;
 			}

@@ -51,6 +51,9 @@ public class EngineMockupForPersistence implements IPetrinetManipulation {
 		List<Place> 	 places 	 = new ArrayList<Place>(petrinet.getAllPlaces());
 		List<Transition> transitions = new ArrayList<Transition>(petrinet.getAllTransitions());
 		
+		iPetrinetManipulation.setMarking(id, places.get(0), 2);
+		iPetrinetManipulation.setPname(id, places.get(1), "Hello hello");
+		
 		createArc(id, places.get(0),      transitions.get(0));
 		createArc(id, transitions.get(0), places.get(1));
 		
