@@ -9,6 +9,10 @@ Known bugs:
 
 - Cannot change place name in R
 
+- Arcs are not safed
+
+- Weird behavior when loading one file twice
+
 
 
 stellen und transitionen löschen

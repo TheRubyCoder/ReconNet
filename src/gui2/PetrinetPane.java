@@ -85,7 +85,7 @@ class PetrinetPane {
 		}
 	}
 
-	public void emptyDisplay() {
+	public void displayEmpty() {
 		if (petrinetViewer != null) {
 			petrinetViewer.removeFrom(petrinetPanel);
 		}

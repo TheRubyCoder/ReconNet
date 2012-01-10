@@ -1,24 +1,33 @@
 package gui2;
 
+import static gui2.Style.RULE_PANEL_LAYOUT;
+import static gui2.Style.RULE_PANE_BORDER_K;
+import static gui2.Style.RULE_PANE_BORDER_L;
+import static gui2.Style.RULE_PANE_BORDER_R;
+
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Point;
 
 import javax.swing.JPanel;
 
 import petrinet.Arc;
 import petrinet.INode;
-
-import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import engine.handler.RuleNet;
 import exceptions.EngineException;
-
-import static gui2.Style.*;
 
 /** Pane for displaying rules */
 class RulePane {
 	
 	/** Internal JPanel for gui-layouting the petrinet */
 	private JPanel rulePanel;
+	
+	private JPanel lBorderPanel;
+	
+	private JPanel kBorderPanel;
+	
+	private JPanel rBorderPanel;
 	
 	private PetrinetViewer lViewer;
 	
@@ -30,19 +39,38 @@ class RulePane {
 	private RulePane() {
 		rulePanel = new JPanel();
 		rulePanel.setLayout(RULE_PANEL_LAYOUT);
-		rulePanel.setBorder(RULE_PANE_BORDER);
+		
+		lBorderPanel = new JPanel();
+		kBorderPanel = new JPanel();
+		rBorderPanel = new JPanel();
+		
+		rulePanel.add(lBorderPanel);
+		rulePanel.add(kBorderPanel);
+		rulePanel.add(rBorderPanel);
+		
+		lBorderPanel.setBorder(RULE_PANE_BORDER_L);
+		lBorderPanel.setLayout(new GridLayout(1, 1));
+		
+		kBorderPanel.setBorder(RULE_PANE_BORDER_K);
+		kBorderPanel.setLayout(new GridLayout(1, 1));
+		
+		rBorderPanel.setBorder(RULE_PANE_BORDER_R);
+		rBorderPanel.setLayout(new GridLayout(1, 1));
 		
 		dirtyTest();
+//		displayRule(EngineAdapter.getRuleManipulation().createRule());
 	}
+	
+	
 	
 	private void dirtyTest() {
 		int ruleId = EngineAdapter.getRuleManipulation().createRule();
-//		try{
-//			EngineAdapter.getRuleManipulation().createPlace(ruleId, RuleNet.L, new Point(10,10));
-//		}catch(EngineException e){
-//			PopUp.popError(e);
-//			e.printStackTrace();
-//		}
+		try{
+			EngineAdapter.getRuleManipulation().createPlace(ruleId, RuleNet.L, new Point(10,10));
+		}catch(EngineException e){
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
 		try {
 			Layout<INode, Arc> lLayout = EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.L);
 			Layout<INode, Arc> kLayout = EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.K);
@@ -52,13 +80,10 @@ class RulePane {
 			kViewer = new PetrinetViewer(kLayout, ruleId, RuleNet.K);
 			rViewer = new PetrinetViewer(rLayout, ruleId, RuleNet.R);
 			
-			lViewer.setBorder(RULE_PANE_BORDER_L);
-			kViewer.setBorder(RULE_PANE_BORDER_K);
-			rViewer.setBorder(RULE_PANE_BORDER_R);
+			lViewer.addTo(lBorderPanel);
+			kViewer.addTo(kBorderPanel);
+			rViewer.addTo(rBorderPanel);
 			
-			rulePanel.add(lViewer);
-			rulePanel.add(kViewer);
-			rulePanel.add(rViewer);
 		} catch (EngineException e) {
 			PopUp.popError(e);
 			e.printStackTrace();
@@ -75,10 +100,6 @@ class RulePane {
 		return instance;
 	}
 	
-	void displayRule(int rId){
-		
-	}
-	
 	/** Adds the rule pane to the given JPanel (frame) */
 	void addTo(JPanel frame) {
 		frame.add(rulePanel);
@@ -88,6 +109,43 @@ class RulePane {
 		lViewer.repaint();
 		kViewer.repaint();
 		rViewer.repaint();
+	}
+	
+	/**
+	 * Replaces the current PetrinetViewers so the new rule is displayed.
+	 */
+	public void displayRule(int ruleId) {
+		try {
+			Layout<INode, Arc> lLayout = EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.L);
+			Layout<INode, Arc> kLayout = EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.K);
+			Layout<INode, Arc> rLayout = EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.R);
+			if (lViewer != null) {
+				lViewer.removeFrom(lBorderPanel);
+				kViewer.removeFrom(kBorderPanel);
+				rViewer.removeFrom(rBorderPanel);
+			}
+			lViewer = new PetrinetViewer(lLayout, ruleId, RuleNet.L);
+			kViewer = new PetrinetViewer(kLayout, ruleId, RuleNet.K);
+			rViewer = new PetrinetViewer(rLayout, ruleId, RuleNet.R);
+			
+			
+			lViewer.addTo(lBorderPanel);
+			kViewer.addTo(kBorderPanel);
+			rViewer.addTo(rBorderPanel);
+			
+			MainWindow.getInstance().repaint();
+		} catch (EngineException e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
+	}
+
+	public void displayEmpty() {
+		if (lViewer != null) {
+			lViewer.removeFrom(lBorderPanel);
+			kViewer.removeFrom(kBorderPanel);
+			rViewer.removeFrom(rBorderPanel);
+		}
 	}
 
 }
