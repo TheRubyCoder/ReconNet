@@ -663,11 +663,11 @@ final public class RuleHandler {
 				ElementType type = petrinet.getNodeType(idOfElem);
 
 				// test type of Element
-				if (type.equals(ElementType.ARC)) {
+				if (type == ElementType.ARC) {
 					collArc.add(petrinet.getArcById(idOfElem));
-				} else if (type.equals(ElementType.PLACE)) {
+				} else if (type == ElementType.PLACE) {
 					collINodes.add(petrinet.getPlaceById(idOfElem));
-				} else if (type.equals(ElementType.TRANSITION)) {
+				} else if (type == ElementType.TRANSITION) {
 					collINodes.add(petrinet.getTransitionById(idOfElem));
 				} else {
 					exception("deleteInternal - invalid type from id");
