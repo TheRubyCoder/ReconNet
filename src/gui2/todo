@@ -13,6 +13,8 @@ Known bugs:
 
 - Weird behavior when loading one file twice
 
+- Engine just manipulates petrinet on tranformations, not the respective layout
+
 
 
 stellen und transitionen löschen

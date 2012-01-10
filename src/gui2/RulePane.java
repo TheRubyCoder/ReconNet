@@ -57,39 +57,8 @@ class RulePane {
 		rBorderPanel.setBorder(RULE_PANE_BORDER_R);
 		rBorderPanel.setLayout(new GridLayout(1, 1));
 		
-		dirtyTest();
-//		displayRule(EngineAdapter.getRuleManipulation().createRule());
 	}
 	
-	
-	
-	private void dirtyTest() {
-		int ruleId = EngineAdapter.getRuleManipulation().createRule();
-		try{
-			EngineAdapter.getRuleManipulation().createPlace(ruleId, RuleNet.L, new Point(10,10));
-		}catch(EngineException e){
-			PopUp.popError(e);
-			e.printStackTrace();
-		}
-		try {
-			Layout<INode, Arc> lLayout = EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.L);
-			Layout<INode, Arc> kLayout = EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.K);
-			Layout<INode, Arc> rLayout = EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.R);
-
-			lViewer = new PetrinetViewer(lLayout, ruleId, RuleNet.L);
-			kViewer = new PetrinetViewer(kLayout, ruleId, RuleNet.K);
-			rViewer = new PetrinetViewer(rLayout, ruleId, RuleNet.R);
-			
-			lViewer.addTo(lBorderPanel);
-			kViewer.addTo(kBorderPanel);
-			rViewer.addTo(rBorderPanel);
-			
-		} catch (EngineException e) {
-			PopUp.popError(e);
-			e.printStackTrace();
-		}
-	}
-
 	private static RulePane instance;
 	
 	static{

@@ -61,9 +61,12 @@ class SimulationPane {
 
 	/** Timer for autorunning simulation at certain speed */
 	private Timer simulationTimer;
-	
-	/** Translate abstract speed (1 to 10) to concrete delay in milliseconds between simulation steps */
-	private Map<Integer,Integer> speedToDelay;
+
+	/**
+	 * Translate abstract speed (1 to 10) to concrete delay in milliseconds
+	 * between simulation steps
+	 */
+	private Map<Integer, Integer> speedToDelay;
 
 	static {
 		instance = new SimulationPane();
@@ -79,7 +82,7 @@ class SimulationPane {
 		simulationPane.setMinimumSize(SIMULATION_PANE_DIMENSION);
 
 		simulationPane.setBorder(SIMULATION_PANE_BORDER);
-		
+
 		speedToDelay = initiateSpeedToDelay();
 
 		oneStepButton = initiateOneStepButton();
@@ -101,7 +104,7 @@ class SimulationPane {
 	}
 
 	private Map<Integer, Integer> initiateSpeedToDelay() {
-		Map<Integer,Integer> result = new HashMap<Integer, Integer>();
+		Map<Integer, Integer> result = new HashMap<Integer, Integer>();
 		result.put(1, 2000);
 		result.put(2, 1000);
 		result.put(3, 500);
@@ -116,7 +119,8 @@ class SimulationPane {
 	}
 
 	private Timer initiateSimulationTimer() {
-		Timer timer = new Timer(getCurrentDelayInMillis(), new OneStepListener());
+		Timer timer = new Timer(getCurrentDelayInMillis(),
+				new OneStepListener());
 		timer.setRepeats(true);
 		timer.stop();
 		return timer;
@@ -164,7 +168,7 @@ class SimulationPane {
 		slider.setMajorTickSpacing(1);
 		slider.setPaintTicks(true);
 		slider.setPaintLabels(true);
-		
+
 		slider.addChangeListener(new SpeedSliderListener());
 		getSimulationPane().add(slider);
 
@@ -178,7 +182,7 @@ class SimulationPane {
 		simulationButton.setPressedIcon(SIMULATION_START_ICON_PRESSED);
 		simulationButton.setText("start Simulation");
 		simulationButton.setIconTextGap(10);
-		
+
 		simulationButton
 				.setToolTipText("startet eine Endlossimulation, bis diese pausiert wird.");
 		simulationButton.setRolloverEnabled(true);
@@ -229,6 +233,7 @@ class SimulationPane {
 		JButton button = new JButton("Transformieren");
 		button.setLocation(SIMULATION_PANE_BUTTON_TRANSFORM_LOCATION);
 		button.setSize(SIMULATION_PANE_BUTTON_TRANSFORM_SIZE);
+		button.addActionListener(new TransformButtonListener());
 		simulationPane.add(button);
 		return button;
 	}
@@ -275,14 +280,23 @@ class SimulationPane {
 	int getK() {
 		return Integer.valueOf(kStepsSpinner.getModel().getValue().toString());
 	}
-	
 
 	int getSpeed() {
 		return transformSpeedSlider.getModel().getValue();
 	}
-	
-	int getCurrentDelayInMillis(){
+
+	int getCurrentDelayInMillis() {
 		return speedToDelay.get(getSpeed());
+	}
+
+	SimulationMode getMode() {
+		if (simulationModePicker.getSelectedItem().equals("Nur Tokenspiel")) {
+			return SimulationMode.TOKENS;
+		} else if (simulationModePicker.getSelectedItem().equals("Nur Regeln")) {
+			return SimulationMode.RULES;
+		} else {
+			return SimulationMode.TOKENS_AND_RULES;
+		}
 	}
 
 	/** Sets the other panels disable, so the simualion can running */
@@ -296,7 +310,7 @@ class SimulationPane {
 		AttributePane.getInstance().setTableDisable();
 		FilePane.getPetrinetFilePane().setHoleButtonsDisable();
 		FilePane.getRuleFilePane().setHoleButtonsDisable();
-//		PetrinetPane.getInstance().setPanelDisable();
+		// PetrinetPane.getInstance().setPanelDisable();
 	}
 
 	/** Sets the other panels disable, so the simualion can running */
@@ -336,8 +350,21 @@ class SimulationPane {
 			// .createSimulationSession(
 			// PetrinetPane.getInstance().currentPetrinetId);
 			try {
-				EngineAdapter.getSimulation().fire(
-						PetrinetPane.getInstance().getCurrentPetrinetId(), 1);
+				if (getMode() == SimulationMode.TOKENS) {
+					EngineAdapter.getSimulation().fire(
+							PetrinetPane.getInstance().getCurrentPetrinetId(),
+							1);
+				} else if (getMode() == SimulationMode.RULES) {
+					EngineAdapter.getSimulation().transform(
+							PetrinetPane.getInstance().getCurrentPetrinetId(),
+							FilePane.getRuleFilePane()
+									.getIdsFromSelectedListItems(), 1);
+				} else {
+					EngineAdapter.getSimulation().fireOrTransform(
+							PetrinetPane.getInstance().getCurrentPetrinetId(),
+							FilePane.getRuleFilePane()
+									.getIdsFromSelectedListItems(), 1);
+				}
 				PetrinetPane.getInstance().repaint();
 			} catch (EngineException e1) {
 				PopUp.popError(e1);
@@ -351,11 +378,23 @@ class SimulationPane {
 	private class KStepsListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println(SimulationPane.getInstance().getK());
+			int  k = SimulationPane.getInstance().getK();
 			try {
-				EngineAdapter.getSimulation().fire(
-						PetrinetPane.getInstance().getCurrentPetrinetId(),
-						SimulationPane.getInstance().getK());
+				if (getMode() == SimulationMode.TOKENS) {
+					EngineAdapter.getSimulation().fire(
+							PetrinetPane.getInstance().getCurrentPetrinetId(),
+							k);
+				} else if (getMode() == SimulationMode.RULES) {
+					EngineAdapter.getSimulation().transform(
+							PetrinetPane.getInstance().getCurrentPetrinetId(),
+							FilePane.getRuleFilePane()
+									.getIdsFromSelectedListItems(), k);
+				} else {
+					EngineAdapter.getSimulation().fireOrTransform(
+							PetrinetPane.getInstance().getCurrentPetrinetId(),
+							FilePane.getRuleFilePane()
+									.getIdsFromSelectedListItems(), k);
+				}
 				PetrinetPane.getInstance().repaint();
 			} catch (NumberFormatException e1) {
 				// cannot be thrown
@@ -367,12 +406,33 @@ class SimulationPane {
 		}
 	}
 	
+	private class TransformButtonListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				EngineAdapter.getSimulation().transform(
+						PetrinetPane.getInstance().getCurrentPetrinetId(),
+						FilePane.getRuleFilePane()
+								.getIdsFromSelectedListItems(), 1);
+			} catch (EngineException e1) {
+				PopUp.popError(e1);
+				e1.printStackTrace();
+			}
+		}
+		
+	}
+
 	private class SpeedSliderListener implements ChangeListener {
 
 		@Override
 		public void stateChanged(ChangeEvent e) {
-			simulationTimer.setDelay(getCurrentDelayInMillis());			
+			simulationTimer.setDelay(getCurrentDelayInMillis());
 		}
+	}
+
+	private enum SimulationMode {
+		TOKENS, RULES, TOKENS_AND_RULES
 	}
 
 }

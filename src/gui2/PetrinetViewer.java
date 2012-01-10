@@ -517,15 +517,12 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 
 			private PetrinetViewer petrinetViewer;
 
-			public ChangeColorListener(PetrinetViewer petrinetViewer) {
-				this.petrinetViewer = petrinetViewer;
-			}
-
 			private Color color;
 
 			private INode place;
 
-			private ChangeColorListener(Color color, INode place) {
+			private ChangeColorListener(Color color, INode place, PetrinetViewer petrinetViewer) {
+				this.petrinetViewer = petrinetViewer;
 				this.color = color;
 				this.place = place;
 			}
@@ -543,10 +540,10 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 
 		/** Adds a new item to the menu for changing the color of a node */
 		static private void addColorToPopUpMenu(PetrinetPopUpMenu menu,
-				String description, Color color, INode node) {
+				String description, Color color, INode node, PetrinetViewer petrinetViewer) {
 			JMenuItem item = new JMenuItem(description);
 			item.setBackground(color);
-			item.addActionListener(new ChangeColorListener(color, node));
+			item.addActionListener(new ChangeColorListener(color, node, petrinetViewer));
 			menu.add(item);
 		}
 
@@ -565,18 +562,18 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 				result.add(delete);
 
 				// Color blue
-				addColorToPopUpMenu(result, "Blau", Color.BLUE, node);
+				addColorToPopUpMenu(result, "Blau", Color.BLUE, node, petrinetViewer);
 
 				// Color light blue
 				addColorToPopUpMenu(result, "Hellblau",
-						new Color(200, 200, 250), node);
+						new Color(200, 200, 250), node, petrinetViewer);
 
 				// Color red
-				addColorToPopUpMenu(result, "Rot", Color.RED, node);
+				addColorToPopUpMenu(result, "Rot", Color.RED, node, petrinetViewer);
 
 				// Light red
 				addColorToPopUpMenu(result, "HellRot",
-						new Color(250, 200, 200), node);
+						new Color(250, 200, 200), node, petrinetViewer);
 
 			} else {
 				TransitionAttribute transitionAttribute = petrinetViewer
