@@ -1,6 +1,8 @@
 package gui2;
 
+import engine.ihandler.IPetrinetPersistence;
 import engine.handler.petrinet.PetrinetManipulation;
+import engine.handler.petrinet.PetrinetPersistence;
 import engine.handler.rule.RuleManipulation;
 import engine.handler.simulation.Simulation;
 import engine.ihandler.IPetrinetManipulation;
@@ -21,6 +23,10 @@ public class EngineAdapter {
 	
 	public static IRuleManipulation getRuleManipulation(){
 		return RuleManipulation.getInstance();
+	}
+	
+	public static IPetrinetPersistence getPetrinetPersistence(){
+		return PetrinetPersistence.getInstance(); 
 	}
 
 }

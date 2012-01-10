@@ -35,12 +35,14 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -105,7 +107,10 @@ class FilePane {
 	private static class SaveAsPetrinetListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("save as petrinet pressed");
+			File filepath = FilePane.getPetrinetFilePane().choseFileForSaveAsAndRememberpath("Petrinetz");
+			if(filepath != null){
+				FilePane.getPetrinetFilePane().savePetrinetOnFilesystem(filepath);
+			}
 		}
 	}
 
@@ -137,7 +142,10 @@ class FilePane {
 	private static class SaveAsRuleListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("save as rule pressed");
+			File filepath = FilePane.getRuleFilePane().choseFileForSaveAsAndRememberpath("Petrinetz");
+			if(filepath != null){
+				FilePane.getPetrinetFilePane().saveRuleOnFilesystem(filepath);
+			}
 		}
 	}
 
@@ -185,6 +193,7 @@ class FilePane {
 		return petrinetFilePane;
 	}
 
+
 	/** Returns the only instance of a rule file panel */
 	public static FilePane getRuleFilePane() {
 		return ruleFilePane;
@@ -222,6 +231,9 @@ class FilePane {
 
 	/** To remember what list entry refers to wich petrinet */
 	private Map<Object, Integer> listItemToPId;
+	
+	/** To remember waht list entry refers to which filepath*/
+	private Map<Integer, File> listItemToFilepath;
 
 	// private DefaultMutableTreeNode root;
 
@@ -252,6 +264,7 @@ class FilePane {
 			ActionListener saveListener, ActionListener saveAsListener,
 			ActionListener deleteListener) {
 		listItemToPId = initiateListItemToPid();
+		listItemToFilepath = iniateListItemToFilepath();
 
 		newButton = initiateNewButton(type, newListener);
 		saveButton = initiateSaveButton(type, saveListener);
@@ -267,6 +280,10 @@ class FilePane {
 
 	private Map<Object, Integer> initiateListItemToPid() {
 		return new HashMap<Object, Integer>();
+	}
+	
+	private Map<Integer, File> iniateListItemToFilepath(){
+		return new HashMap<Integer, File>();
 	}
 
 	private JList initiateList() {
@@ -482,7 +499,7 @@ class FilePane {
 	}
 
 	/**
-	 * write user data into tree
+	 * write user data into list
 	 * 
 	 * @param type
 	 *            of panel
@@ -529,5 +546,74 @@ class FilePane {
 			return false;
 		}
 	}
+	
+	/**
+	 * Open filechooser and do all the save as logic
+	 * @param type type of the Saveing Object. (Petrinet or Rule)
+	 * @return File with the Filepath
+	 */
+	public File choseFileForSaveAsAndRememberpath(String type) {
+		if(!isItemSelected()){
+			JOptionPane.showMessageDialog(null, "Keine Auswahl in der Liste getroffen. \n Bitte eine Auswahl in der Liste vornehmen.", "keine Auswahl",JOptionPane.INFORMATION_MESSAGE);
+		}else{
+			final JFileChooser fileChooser =  new JFileChooser();
+			fileChooser.setDialogTitle(type + " speichern unter...");
+			int returnVal = fileChooser.showSaveDialog(fileChooser);
+			
+			if(returnVal == JFileChooser.APPROVE_OPTION){
+				
+				File text = null;
+				String path = fileChooser.getSelectedFile().getPath();
+				
+				if(!path.toLowerCase().endsWith(".txt")){
+					path = path + ".txt";
+				}
+				text = new File(path);	
+				rememberFilePath(text);
+				
+				return text;
+			}
+		}
+		return null;
+	}
+	
+	public void savePetrinetOnFilesystem(File path){
+		Object selectedValue = list.getSelectedValue();
+		int id = getIdFrom(selectedValue);
+		
+		//TODO: Change aufruf
+		PopUp.popUnderConstruction("SavePetrinetOnFilesystem in Filepane");
+	}
+	
+	public void saveRuleOnFilesystem(File path){
+		Object selectedValue = list.getSelectedValue();
+		int id = getIdFrom(selectedValue);
+		
+		//TODO: Change aufruf
+		PopUp.popUnderConstruction("SaveRuleOnFilesystem in Filepane");
+	}
+	
+	public void save(){
+		
+	}
+
+
+	private boolean isItemSelected() {
+		Object selectedValue = list.getSelectedValue();
+		int id = getIdFrom(selectedValue);
+		if(id == -1){
+			return false;
+		}else{
+			return true;
+		}
+	}
+
+
+	private void rememberFilePath(File path) {
+		Object selectedValue = list.getSelectedValue();
+		int id = getIdFrom(selectedValue);
+		listItemToFilepath.put(id, path);
+	}
+
 
 }
