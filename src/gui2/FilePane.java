@@ -153,7 +153,7 @@ class FilePane {
 	private static class DeleteRuleListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("delte rule pressed");
+			System.out.println("delete rule pressed");
 		}
 	}
 
