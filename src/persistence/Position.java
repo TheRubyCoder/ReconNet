@@ -26,4 +26,8 @@ public class Position {
 	public void setY(String y) {
 		this.y = y;
 	}
+	
+	public String toString() {
+		return "Position(" + x + ", " + y + ")";
+	}
 }

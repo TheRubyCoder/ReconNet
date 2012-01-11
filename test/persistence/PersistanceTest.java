@@ -177,7 +177,6 @@ public class PersistanceTest {
 		// test that all places and transitions of net2 are at the same locations in net1
 		for (petrinet.Place p :net1.getAllPlaces()) {
 			Point2D pos = new Point2D.Double(layout1.getX(p), layout1.getY(p));
-			
 			if (pos2place.containsKey(pos)) {
 				petrinet.Place net2Place = pos2place.get(pos);
 				
@@ -196,7 +195,6 @@ public class PersistanceTest {
 		
 		for (petrinet.Transition t :net1.getAllTransitions()) {
 			Point2D pos = new Point2D.Double(layout1.getX(t), layout1.getY(t));
-			
 			if (pos2trans.containsKey(pos)) {
 				petrinet.Transition net2Transition = pos2trans.get(pos);
 				
@@ -206,37 +204,26 @@ public class PersistanceTest {
 				return false;
 			}
 		}
-		/*
-		for (Point2D p2d : pos2place.keySet()) {
-			System.out.println("place in net2 at " + p2d);
-		}
 		
-		for (Point2D p2d : pos2trans.keySet()) {
-			System.out.println("trans in net2 at " + p2d);
-		}*/
-		
-		//System.out.println("ARCS net1: " + net1.getAllArcs());
-
-		//System.out.println("ARCS net2: " + net2.getAllArcs());
-		
-		/*
-		for (petrinet.Arc a:net1.getAllArcs()) {
-			Point2D startA = new Point2D.Double(layout1.getX(a.getStart()), layout1.getX(a.getStart()));
-			Point2D endA = new Point2D.Double(layout1.getX(a.getEnd()), layout1.getY(a.getEnd()));
+		// test the arcs
+		for (petrinet.Arc arcIn1 :net1.getAllArcs()) {
+			Point2D startA = new Point2D.Double(layout1.getX(arcIn1.getStart()), layout1.getX(arcIn1.getStart()));
+			Point2D endA = new Point2D.Double(layout1.getX(arcIn1.getEnd()), layout1.getX(arcIn1.getEnd()));
 			
-			System.out.println("start: " + startA + " end: " + endA);
-			System.out.println(pos2place.get(startA));
-			System.out.println(pos2place.get(endA));
-			System.out.println(pos2trans.get(startA));
-			System.out.println(pos2trans.get(endA));
-			
-			if (!(pos2place.containsKey(startA) && pos2trans.containsKey(endA)) ||
-					pos2trans.containsKey(startA) && pos2place.containsKey(endA)) {
-				System.out.println("ARC: " + a);
-				System.out.println("arc not found");
+			boolean found = false;
+			for (petrinet.Arc arcIn2 :net2.getAllArcs()) {
+				Point2D startB = new Point2D.Double(layout2.getX(arcIn2.getStart()), layout2.getX(arcIn2.getStart()));
+				Point2D endB = new Point2D.Double(layout2.getX(arcIn2.getEnd()), layout2.getX(arcIn2.getEnd()));
+				
+				if (startA.equals(startB) && endA.equals(endB)) {
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
 				return false;
 			}
-		}*/
+		}
 		
 		return true;
 	}
