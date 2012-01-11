@@ -92,7 +92,8 @@ class FilePane {
 		}
 	}
 
-	private static class RuleListSelectionListener implements ListSelectionListener {
+	private static class RuleListSelectionListener implements
+			ListSelectionListener {
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
 			if (!e.getValueIsAdjusting()) {
@@ -198,7 +199,8 @@ class FilePane {
 	private static class DeleteRuleListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (!FilePane.getRuleFilePane().deleteSelectedItem()) {
+			int id = FilePane.getRuleFilePane().deleteSelectedItem();
+			if (id != -1) {
 				RulePane.getInstance().displayEmpty();
 			}
 		}
@@ -208,8 +210,15 @@ class FilePane {
 	private static class DeletePetrinetListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (!FilePane.getPetrinetFilePane().deleteSelectedItem()) {
+			int id = FilePane.getPetrinetFilePane().deleteSelectedItem();
+			if (id != -1) {
 				PetrinetPane.getInstance().displayEmpty();
+				try {
+					EngineAdapter.getPetrinetManipulation().closePetrinet(id);
+				} catch (EngineException e1) {
+					PopUp.popError(e1);
+					e1.printStackTrace();
+				}
 			}
 		}
 	}
@@ -433,7 +442,8 @@ class FilePane {
 		button.setPressedIcon(DELETE_PETRINET_PRESSED_ICON);
 		button.setDisabledIcon(DELETE_PETRINET_DISABLED_ICON);
 
-		button.setToolTipText(type + " löschen oder aus Dateisystem entfernen.");
+		button.setToolTipText(type
+				+ " aus der Liste entfernen. Wird nicht aus Filesystem gelöscht.");
 		button.setRolloverEnabled(true);
 
 		button.addActionListener(deleteListener);
@@ -580,6 +590,7 @@ class FilePane {
 				id = EngineAdapter.getRuleManipulation().createRule();
 			}
 			listItemToPId.put(input, id);
+			list.setSelectedIndex(0);
 			return input;
 		}
 		return null;
@@ -588,15 +599,15 @@ class FilePane {
 	/**
 	 * Returns true if display should stay same, false if display shall be empty
 	 */
-	boolean deleteSelectedItem() {
+	int deleteSelectedItem() {
 		Object selectedValue = list.getSelectedValue();
+		int id = getIdFromSelectedItem();
 		if (selectedValue != null) {
 			int confirmDialog = JOptionPane.showConfirmDialog(
 					treeAndButtonContainerWithBorder, "Wollen sie "
 							+ selectedValue + " wirklich löschen?",
 					"Petrinetz löschen?", JOptionPane.YES_NO_OPTION);
 			if (confirmDialog == 0) {
-
 				// Remove item from list without listeners! they acticate on
 				// deleting thus leading to inconsistent states: nullpointers
 				ListSelectionListener petrinetListSelectionListener = list
@@ -608,12 +619,16 @@ class FilePane {
 
 				// After removing add the listener again
 				list.addListSelectionListener(petrinetListSelectionListener);
-				return !success;
+				if (success) {
+					return id;
+				} else {
+					return -1;
+				}
 			} else {
-				return true;
+				return -1;
 			}
 		} else {
-			return false;
+			return -1;
 		}
 	}
 
@@ -717,7 +732,7 @@ class FilePane {
 			PopUp.popError(e);
 			e.printStackTrace();
 		}
-//		PopUp.popUnderConstruction("SaveRuleOnFilesystem in Filepane");
+		// PopUp.popUnderConstruction("SaveRuleOnFilesystem in Filepane");
 	}
 
 	public void loadPetrinet(File path) {
@@ -782,8 +797,8 @@ class FilePane {
 		int id = getIdFromSelectedItem();
 		listIdToFilepath.put(id, path);
 	}
-	
-	public Collection<Integer> getIdsFromSelectedListItems(){
+
+	public Collection<Integer> getIdsFromSelectedListItems() {
 		Collection<Integer> result = new HashSet<Integer>();
 		for (Object value : list.getSelectedValues()) {
 			result.add(listItemToPId.get(value));
