@@ -651,7 +651,7 @@ final public class RuleHandler {
 
 			// all deleted elements, returned by Petrinet
 			Collection<Integer> allDelElemFromPetrinet = petrinet
-					.deleteElementById(node.getId());
+					.giveAllDeleteElem(node.getId());
 
 			Iterator<Integer> iter = allDelElemFromPetrinet.iterator();
 			Collection<Arc> collArc = new HashSet<Arc>();
@@ -680,6 +680,9 @@ final public class RuleHandler {
 				exception("deleteInternal - can not delete Place/Transition");
 			}
 
+			// all deleted elements, returned by Petrinet
+			petrinet.deleteElementById(node.getId());
+			
 		}
 
 	}
