@@ -577,6 +577,10 @@ class FilePane {
 	String insertData(String type) {
 		String input = JOptionPane.showInputDialog("Bitte Name für " + type
 				+ " eingeben.", "neue(s) " + type);
+		while(listItemToPId.keySet().contains(input)){
+			input = JOptionPane.showInputDialog("Name für " + type
+					+ " bereits vergeben. Bitte geben sie einen anderen ein.", "neue(s) " + type);
+		}
 		if (input != null) {
 			// Add item to list without listeners! they acticate on
 			// inserting thus leading to inconsistent states: nullpointers
@@ -763,8 +767,16 @@ class FilePane {
 	}
 
 	String extractListEntryNameFromFilePath(File path) {
-		return path.getName().split(FILE_EXTENSION)[0];
-		// return path.getAbsolutePath().split("/")[0];
+		String initial = path.getName().split(FILE_EXTENSION)[0];
+		String number = "";
+		while(listItemToPId.keySet().contains(initial+number)){
+			if (number.equals("")) {
+				number = "(1)";
+			} else {
+				number = "("+(Integer.parseInt(String.valueOf(number.charAt(1)))+1)+")";
+			}
+		}
+		return initial+number;
 	}
 
 	public void loadRule(File path) {
