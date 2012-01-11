@@ -26,6 +26,7 @@ import engine.handler.RuleNet;
 import engine.handler.petrinet.PetrinetHandler;
 import engine.handler.petrinet.PetrinetPersistence;
 import engine.handler.rule.RuleHandler;
+import engine.handler.rule.RuleManipulation;
 import engine.handler.rule.RulePersistence;
 import engine.ihandler.IRulePersistence;
 import exceptions.EngineException;
@@ -107,7 +108,8 @@ public class PersistanceTest {
 	
 	@Test
 	public void testSaveRule() throws EngineException{
-		RuleHandler handler = RuleHandler.getInstance();
+		RulePersistence handler = RulePersistence.getInstance();
+		RuleManipulation handlerSave = RuleManipulation.getInstance();
 		
 	//	try {
 			
@@ -127,7 +129,7 @@ public class PersistanceTest {
 			handler.createArc(id, RuleNet.R, trans2, place3);
 			
 			
-			handler.save(id, "test", "rule_save_test", "pnml");
+			handlerSave.save(id, "test", "rule_save_test", "pnml");
 			
 	/*	} catch (EngineException e) {
 			e.printStackTrace();
