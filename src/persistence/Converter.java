@@ -137,7 +137,7 @@ public class Converter {
 
 
 			newArc.setTarget(arcEnd);
-
+			
 			String arcStart = null;
 
 			for (Place p : places) {
@@ -163,9 +163,9 @@ public class Converter {
 			newArc.setInscription(i);
 
 			newArc.setId(String.valueOf(arc.getId()));
-
+			newArcs.add(newArc);
 		}
-
+		pnml.getNet().get(0).getPage().setArc(newArcs);
 		return pnml;
 	}
 
