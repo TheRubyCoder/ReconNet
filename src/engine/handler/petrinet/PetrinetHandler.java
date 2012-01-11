@@ -183,6 +183,7 @@ final public class PetrinetHandler {
 		int idPetrinet = petrinetData.getId();
 
 		return idPetrinet;
+		
 	}
 
 	public INode createTransition(@NotNull int id, @NotNull Point2D coordinate)

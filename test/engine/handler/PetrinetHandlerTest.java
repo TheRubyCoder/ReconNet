@@ -5,15 +5,41 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import engine.handler.petrinet.PetrinetManipulation;
+import engine.ihandler.IPetrinetManipulation;
+
 public class PetrinetHandlerTest {
+	
+	private static IPetrinetManipulation petrinetManipulation;
+	
+	// ids from all Petrinet
+	private static int idPetrinet1 = -1;
+	private int idPetrinet2 = -1;
+	private int idPetrinet3 = -1;
+	private int idPetrinet4 = -1;
+	private int idPetrinet5 = -1;
 
 	@Before
 	public void setUp() throws Exception {
+		
+		petrinetManipulation = PetrinetManipulation.getInstance();
+		
 	}
 
 	@Test
-	public void testCreateArc() {
-		assertTrue(true);
+	public void testCreatePetrinet() {
+		
+		idPetrinet1 = petrinetManipulation.createPetrinet();
+		assertTrue(idPetrinet1 != -1);
+		idPetrinet2 = petrinetManipulation.createPetrinet();
+		assertTrue(idPetrinet2 != -1);
+		idPetrinet3 = petrinetManipulation.createPetrinet();
+		assertTrue(idPetrinet3 != -1);
+		idPetrinet4 = petrinetManipulation.createPetrinet();
+		assertTrue(idPetrinet4 != -1);
+		idPetrinet5 = petrinetManipulation.createPetrinet();
+		assertTrue(idPetrinet5 != -1);
+		
 	}
 
 	@Test
@@ -22,15 +48,15 @@ public class PetrinetHandlerTest {
 	}
 
 	@Test
-	public void testCreatePetrinet() {
-		assertTrue(true);
-	}
-
-	@Test
 	public void testCreateTransition() {
 		assertTrue(true);
 	}
 
+	@Test
+	public void testCreateArc() {
+		assertTrue(true);
+	}
+	
 	@Test
 	public void testDeleteArc() {
 		assertTrue(true);
