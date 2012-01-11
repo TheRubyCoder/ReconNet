@@ -148,25 +148,34 @@ final public class PetrinetHandler {
 			Petrinet petrinet = petrinetData.getPetrinet();
 			JungData jungData = petrinetData.getJungData();
 
-			// create a new Place
-			Place newPlace = petrinet.createPlace("undefined");
+			if (jungData.isCreatePossibleAt(coordinate)) {
 
-			// ***************************
-			// TODO: ChangedPetrinetResult
-			// discuss: what to do
-			// ***************************
+				// create a new Place
+				Place newPlace = petrinet.createPlace("undefined");
 
-			// call JungModificator
-			try {
-				jungData.createPlace(newPlace, coordinate);
-			} catch (IllegalArgumentException e) {
+				// ***************************
+				// TODO: ChangedPetrinetResult
+				// discuss: what to do
+				// ***************************
+
+				// call JungModificator
+				try {
+					jungData.createPlace(newPlace, coordinate);
+				} catch (IllegalArgumentException e) {
+					exception("createPlace - can not create Place");
+				}
+
+				System.out.println(petrinetData.getPetrinet()
+						.getAllGraphElement().getAllNodes());
+
+				return newPlace;
+
+			} else {
+
 				exception("createPlace - can not create Place");
+				return null;
+
 			}
-
-			System.out.println(petrinetData.getPetrinet().getAllGraphElement()
-					.getAllNodes());
-
-			return newPlace;
 		}
 
 	}
@@ -183,7 +192,7 @@ final public class PetrinetHandler {
 		int idPetrinet = petrinetData.getId();
 
 		return idPetrinet;
-		
+
 	}
 
 	public INode createTransition(@NotNull int id, @NotNull Point2D coordinate)
@@ -202,22 +211,33 @@ final public class PetrinetHandler {
 			Petrinet petrinet = petrinetData.getPetrinet();
 			JungData jungData = petrinetData.getJungData();
 
-			// create a new Place
-			Transition newTransition = petrinet.createTransition("undefined");
+			if (jungData.isCreatePossibleAt(coordinate)) {
 
-			// ***************************
-			// TODO: ChangedPetrinetResult
-			// discuss: what to do
-			// ***************************
+				// create a new Place
+				Transition newTransition = petrinet
+						.createTransition("undefined");
 
-			// call JungModificator
-			try {
-				jungData.createTransition(newTransition, coordinate);
-			} catch (IllegalArgumentException e) {
+				// ***************************
+				// TODO: ChangedPetrinetResult
+				// discuss: what to do
+				// ***************************
+
+				// call JungModificator
+				try {
+					jungData.createTransition(newTransition, coordinate);
+				} catch (IllegalArgumentException e) {
+					exception("createTransition - can not create Transition");
+				}
+
+				return newTransition;
+
+			} else {
+				
 				exception("createTransition - can not create Transition");
-			}
+				return null;
 
-			return newTransition;
+			}
+			
 		}
 
 	}
@@ -770,7 +790,7 @@ final public class PetrinetHandler {
 	}
 
 	public void closePetrinet(int id) throws EngineException {
-		
+
 		// get the Petrinet from the id and SessionManager
 		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
 
@@ -779,14 +799,14 @@ final public class PetrinetHandler {
 			exception("closePetrinet - id of the Petrinet is wrong");
 		} else {
 
-			if(!sessionManager.closeSessionData(id)){
+			if (!sessionManager.closeSessionData(id)) {
 				exception("closePetrinet - can not remove PetrinetData");
 			}
-			
+
 		}
-		
+
 	}
-	
+
 	public NodeTypeEnum getNodeType(@NotNull INode node) throws EngineException {
 
 		if (node instanceof Place) {

@@ -5,6 +5,7 @@ import java.awt.geom.Point2D;
 
 import petrinet.Arc;
 import petrinet.INode;
+import petrinet.Place;
 import petrinet.Renews;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
@@ -50,6 +51,7 @@ public interface IPetrinetManipulation {
 	 * 
 	 * @param id ID of the Petrinet
 	 * @param coordinate Point where the Place will be created
+	 * @return 
 	 * @throws EngineException 
 	 * 
 	 */

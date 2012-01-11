@@ -44,7 +44,8 @@ final public class RuleHandler {
 		sessionManager = SessionManager.getInstance();
 	}
 
-	public static RuleHandler getInstance() {
+	// TODO Protected
+	protected static RuleHandler getInstance() {
 		if (ruleManipulation == null) {
 			ruleManipulation = new RuleHandler();
 		}
