@@ -27,7 +27,6 @@ import engine.attribute.PlaceAttribute;
 import engine.attribute.RuleAttribute;
 import engine.attribute.TransitionAttribute;
 import engine.data.JungData;
-import engine.data.PetrinetData;
 import engine.data.RuleData;
 import engine.handler.NodeTypeEnum;
 import engine.handler.RuleNet;
@@ -882,21 +881,29 @@ final public class RuleHandler {
 	public void save(int id, String path, String filename, String format) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
-		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
+		RuleData ruleData = sessionManager.getRuleData(id);
 
 		// Test: is id valid
-		if (petrinetData == null) {
+		if (ruleData == null) {
 			exception("save - id of the Petrinet is wrong");
 		} else {
 			
-			Petrinet petrinet = petrinetData.getPetrinet();
-			JungData jungData = petrinetData.getJungData();
+			Rule rule = ruleData.getRule();
 			
-			Map<INode, NodeLayoutAttribute> nodeMap = jungData.getNodeLayoutAttributes();
+//			Petrinet petrinet = ruleData.getPetrinet();
+			JungData jungDataL = ruleData.getLJungData();
+			JungData jungDataK = ruleData.getKJungData();
+			JungData jungDataR = ruleData.getRJungData();
 			
-			checkNodeLayoutAttribute(nodeMap == null, "save - nodeMap == null");
+			Map<INode, NodeLayoutAttribute> nodeMapL = jungDataL.getNodeLayoutAttributes();
+			Map<INode, NodeLayoutAttribute> nodeMapK = jungDataK.getNodeLayoutAttributes();
+			Map<INode, NodeLayoutAttribute> nodeMapR = jungDataR.getNodeLayoutAttributes();
 			
-			Persistence.saveRule(path + "/" + filename + "." + format, petrinet, nodeMap);
+			checkNodeLayoutAttribute(nodeMapL == null, "save - nodeMapL == null");
+			checkNodeLayoutAttribute(nodeMapK == null, "save - nodeMapK == null");
+			checkNodeLayoutAttribute(nodeMapR == null, "save - nodeMapR == null");
+			
+			Persistence.saveRule(path + "/" + filename + "." + format, rule, nodeMapL, nodeMapK, nodeMapR);
 
 		}
 		

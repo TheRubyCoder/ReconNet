@@ -7,12 +7,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import petrinet.INode;
 import petrinet.Petrinet;
+import transformation.Rule;
 import engine.attribute.NodeLayoutAttribute;
 import engine.ihandler.IPetrinetPersistence;
 import engine.ihandler.IRulePersistence;
@@ -84,27 +84,27 @@ public class Persistence /* implements IPersistance*/{
 	}
 
 
-	public static  boolean saveRule(String pathAndFilename, Petrinet petrinet,
-			Map<INode, NodeLayoutAttribute> nodeMap) {
+	public static  boolean saveRule(String pathAndFilename, Rule rule,
+			Map<INode, NodeLayoutAttribute> nodeMapL, Map<INode, NodeLayoutAttribute> nodeMapK, Map<INode, NodeLayoutAttribute> nodeMapR) {
 		boolean success=false;
 		
-		Map<String , String[]> coordinates=new HashMap<String, String[]>();
-		
-		for(Entry<INode, NodeLayoutAttribute> e:nodeMap.entrySet()){
-			String[] coords={String.valueOf(e.getValue().getCoordinate().getX()),String.valueOf(e.getValue().getCoordinate().getY())};
-			coordinates.put(String.valueOf(e.getKey().getId()), coords);
-		}
-		
-		try {
-			Marshaller m = context.createMarshaller();
-			Pnml pnml=Converter.convertToPnml(petrinet, coordinates);
-			
-			
-			
-		} catch (JAXBException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+//		Map<String , String[]> coordinates=new HashMap<String, String[]>();
+//		
+//		for(Entry<INode, NodeLayoutAttribute> e:nodeMap.entrySet()){
+//			String[] coords={String.valueOf(e.getValue().getCoordinate().getX()),String.valueOf(e.getValue().getCoordinate().getY())};
+//			coordinates.put(String.valueOf(e.getKey().getId()), coords);
+//		}
+//		
+//		try {
+//			Marshaller m = context.createMarshaller();
+//			Pnml pnml=Converter.convertToPnml(petrinet, coordinates);
+//			
+//			
+//			
+//		} catch (JAXBException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
 		
 		return success;
 	}
