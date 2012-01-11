@@ -1,15 +1,24 @@
 package engine.handler.simulation;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
+import petrinet.Arc;
+import petrinet.INode;
 import petrinet.Petrinet;
+import petrinet.Place;
+import petrinet.Transition;
 import transformation.ITransformation;
 import transformation.Rule;
 import transformation.Transformation;
 import transformation.TransformationComponent;
+import engine.attribute.NodeLayoutAttribute;
+import engine.data.JungData;
 import engine.data.PetrinetData;
 import engine.data.RuleData;
 import engine.ihandler.ISimulation;
@@ -76,8 +85,9 @@ public class Simulation implements ISimulation {
 	}
 
 	private Random random = new Random();
+	public static final int   DISTANCE = 100;
 
-	@Override
+	//@Override
 	public void transform(int id, Collection<Integer> ruleIDs, int n)
 			throws EngineException {
 
@@ -89,31 +99,115 @@ public class Simulation implements ISimulation {
 
 		} else {
 			Petrinet petrinet = petrinetData.getPetrinet();
-			List<Integer> pickedRules = new ArrayList<Integer>();
-			pickedRules.addAll(ruleIDs);
+			JungData jungData = petrinetData.getJungData();
 
 			for (int i = 0; i < n; i++) {
-				// Getting a random Rule from pickedRules
-				int randomRule = random.nextInt(pickedRules.size());
+				// Everytime one Rule matched, all other Rules will be checked
+				// again
+				List<Integer> pickedRules = new ArrayList<Integer>();
+				pickedRules.addAll(ruleIDs);
+				Transformation transformation = null;
+				// While the random picked rule is not matching, the temporaly
+				// picked one is removed from the List of Rules and another Rule
+				// from this List is picked
+				while (transformation == null) {
+					// Getting a random Rule from pickedRules
+					int randomRule = random.nextInt(pickedRules.size());
 
-				RuleData ruleData = sessionManager.getRuleData(pickedRules
-						.get(randomRule));
-				Rule rule = ruleData.getRule();
+					RuleData ruleData = sessionManager.getRuleData(pickedRules
+							.get(randomRule));
+					Rule rule = ruleData.getRule();
 
-				Transformation transformation = transformationComponent
-						.transform(petrinet, rule);
+					//TODO the shit seems to happen when there is a transition in L!!!! fix and remove try catch block
+					try {
+						transformation = transformationComponent.transform(
+								petrinet, rule);
+					} catch (Exception e) {
+						// Some weird crap happens i often get a
+						// IndexOutofBoundsException, but the Result should be
+						// null, if there's no morphism found
+						
+						System.out.println("------------------------------");
+						e.printStackTrace();
+						System.out.println("------------------------------");
 
-				// if result of transformation != null the petrinet changed so
-				// we have to do the next transform step with the changed
-				// petrinet
-				if (transformation != null) {
-					petrinet = transformation.getPetrinet();
+					}
+					// if result of transformation != null the petrinet changed
+					// so
+					// we have to do the next transform step with the changed
+					// petrinet
+					if (transformation != null) {
+						petrinet = transformation.getPetrinet();
+						Set<INode> addedNodes = transformation.getAddedNodes();
+						Set<INode> deletedNodes = transformation
+								.getDeletedNodes();
+						Set<Arc> addedArcs = transformation.getAddedArcs();
+						Set<Arc> deletedArcs = transformation.getDeletedArcs();
+
+						// step 1 alles durchgehen größtes x suchen
+						Map<INode, NodeLayoutAttribute> layoutMap = jungData
+								.getNodeLayoutAttributes();
+
+						double biggestX = 0;
+
+						Collection<NodeLayoutAttribute> entrySet = layoutMap
+								.values();
+
+						for (NodeLayoutAttribute bla : entrySet) {
+							double x = bla.getCoordinate().getX();
+
+							if (x > biggestX)
+								biggestX = x;
+
+						}
+
+						jungData.delete(deletedArcs, deletedNodes);
+						// TODO eventuell bessere Werte für Punkte suchen
+						// X Werte des Punktes werden alle biggestX + DISTANCE
+						// gesetzt
+						// Y Werte werden in DISTANCE Schritten nach oben
+						// gesetzt
+						int count = 0;
+						for (INode elem : addedNodes) {
+							count++;
+							if (elem instanceof Place) {
+								jungData.createPlace((Place) elem,
+										new Point2D.Double(biggestX + DISTANCE,
+												count * DISTANCE));
+							} else {
+								jungData.createTransition((Transition) elem,
+										new Point2D.Double(biggestX + DISTANCE,
+												count * DISTANCE));
+							}
+						}
+						for (Arc arc : addedArcs) {
+							INode start = arc.getStart();
+							INode end = arc.getEnd();
+							if (start instanceof Place
+									&& end instanceof Transition) {
+								jungData.createArc(arc, (Place) start,
+										(Transition) end);
+							} else {
+								jungData.createArc(arc, (Transition) start,
+										(Place) end);
+							}
+						}
+
+					} else {
+						// This Rule did not match so it's removed from the
+						// rules
+						pickedRules.remove(randomRule);
+						if (pickedRules.size() == 0) {
+							exception("No Rule is matching");
+						}
+					}
 				}
-
 			}
 		}
 	}
+	
 
+	
 	@Override
 	public void fireOrTransform(int id, Collection<Integer> ruleIDs, int n)
 			throws EngineException {

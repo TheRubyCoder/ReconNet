@@ -8,6 +8,7 @@ import petrinet.Place;
 import petrinet.Transition;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 import exceptions.GeneralPetrinetException;
@@ -19,7 +20,12 @@ public class Transformation{
 	
 	private final Petrinet petrinet;
 	private final Morphism morphism;
-	private final Rule rule; 
+	private final Rule rule;
+	//New for Engine
+	private Set<INode> addedNodes = null;
+	private Set<INode> deletedNodes = null;
+	private Set<Arc> addedArcs = null;
+	private Set<Arc> deletedArcs = null;
 	
 	/**	
 	 * Constructor for the class Transformation
@@ -98,6 +104,10 @@ public class Transformation{
 	 * @return the Transformation that was used (<tt>this</tt>)
 	 */
 	Transformation transform() {
+		addedNodes = new HashSet<INode>();
+		deletedNodes = new HashSet<INode>();
+		addedArcs = new HashSet<Arc>();
+		deletedArcs = new HashSet<Arc>();
 		Petrinet K = rule.getK();
 		Set<INode> KNode = K.getAllGraphElement().getAllNodes();
 		Set<Arc> KArc = K.getAllArcs();		
@@ -106,11 +116,13 @@ public class Transformation{
 			if(rule.fromKtoL(i) == null) { // If K not in L do,.....
 				if(i instanceof Place){   
 					Place n = petrinet.createPlace(i.getName());
+					addedNodes.add(n);
 					morphism.getPlacesMorphism().put((Place)i, n);
 				}
 				else{
 					IRenew rnw = ((Transition) i).getRnw();
 					Transition n = petrinet.createTransition(i.getName(),rnw);
+					addedNodes.add(n);
 					morphism.getTransitionsMorphism().put((Transition)i, n);
 				}
 			}
@@ -129,10 +141,12 @@ public class Transformation{
 			if(rule.fromKtoL(a) == null) {
 				if(a.getStart() instanceof Place){
 					Arc n = petrinet.createArc(a.getName(),morphism.getPlaceMorphism((Place)a.getStart()),morphism.getTransitionMorphism((Transition)a.getEnd()));
+					addedArcs.add(n);
 					morphism.getEdgesMorphism().put(a, n);
 				}
 				else{
 					Arc n = petrinet.createArc(a.getName(),morphism.getTransitionMorphism((Transition)a.getStart()),morphism.getPlaceMorphism((Place)a.getEnd()));
+					addedArcs.add(n);
 					morphism.getEdgesMorphism().put(a, n);
 				}	
 			}
@@ -146,19 +160,54 @@ public class Transformation{
 		{
 			if (rule.fromKtoR(i) == null) { 
 				if(i instanceof Place){
+					deletedNodes.add(morphism.getPlaceMorphism((Place)i));
 					petrinet.deletePlaceById(morphism.getPlaceMorphism((Place)i).getId());
 				}
 				else {
+					deletedNodes.add(i);
 					petrinet.deleteTransitionByID(morphism.getTransitionMorphism((Transition)i).getId());
 				}
 			}
 		}
 		for (Arc i : KArc){ // Delete K - R Arcs
 			if (rule.fromKtoR(i) == null) {
+				deletedArcs.add(i);
 				petrinet.deleteArcByID(morphism.getArcMorphism(i).getId());
 			}			
 		}
 		return this;
+	}
+	
+	public Set<INode> getAddedNodes(){
+		if (addedNodes == null) {
+			return new HashSet<INode>();
+		} else {
+			return addedNodes;
+		}
+	}
+	
+	public Set<INode> getDeletedNodes(){
+		if (deletedNodes == null) {
+			return new HashSet<INode>();
+		} else {
+			return deletedNodes;
+		}
+	}
+	
+	public Set<Arc> getAddedArcs(){
+		if (addedArcs == null) {
+			return new HashSet<Arc>();
+		} else {
+			return addedArcs;
+		}
+	}
+	
+	public Set<Arc> getDeletedArcs(){
+		if (deletedArcs == null) {
+			return new HashSet<Arc>();
+		} else {
+			return deletedArcs;
+		}
 	}
 
 }

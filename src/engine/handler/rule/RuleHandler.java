@@ -54,6 +54,8 @@ final public class RuleHandler {
 	}
 
 	// Really Ugly Method
+	// Wirft Exception wenn Arc in K hinzugefügt wird, Start und Endknoten jedoch in L oder R nicht existieren
+	// Problem liegt in -->transformation.Rule$Listener.kEdgeChanged<--
 	public Arc createArc(int id, RuleNet net, INode from, INode to)
 			throws EngineException {
 
