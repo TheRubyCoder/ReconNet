@@ -1,7 +1,10 @@
 package engine.handler;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.awt.Point;
 import java.awt.geom.Point2D;
 
 import org.junit.Before;
@@ -46,15 +49,15 @@ public class PetrinetHandlerTest {
 
 		petrinetHandler = PetrinetPersistence.getInstance();
 		
-		pointPlace1 = new Point2D.Double(10., 10.);
-		pointPlace2 = new Point2D.Double(90., 10.);
-		pointPlace3 = new Point2D.Double(10., 90.);
-		pointPlace4 = new Point2D.Double(90., 90.);
+		pointPlace1 = new Point(10, 10);
+		pointPlace2 = new Point(90, 10);
+		pointPlace3 = new Point(10, 90);
+		pointPlace4 = new Point(90, 90);
 
-		pointTransition1 = new Point2D.Double(45., 10.);
-		pointTransition2 = new Point2D.Double(90., 45.);
-		pointTransition3 = new Point2D.Double(10., 45.);
-		pointTransition4 = new Point2D.Double(45., 90.);
+		pointTransition1 = new Point(45, 10);
+		pointTransition2 = new Point(90, 45);
+		pointTransition3 = new Point(10, 45);
+		pointTransition4 = new Point(45, 90);
 		
 	}
 
@@ -69,8 +72,11 @@ public class PetrinetHandlerTest {
 	@Test
 	public void testCreatePlace() {
 
+		idPetrinet = petrinetHandler.createPetrinet();
+		if(idPetrinet == -1) fail("testCreatePlace: idPetrinet == -1");
+		
 		try {
-
+			
 			place1 = petrinetHandler.createPlace(idPetrinet, pointPlace1);
 			assertNotNull(place1);
 			
@@ -95,6 +101,9 @@ public class PetrinetHandlerTest {
 	@Test
 	public void testCreateTransition() {
 
+		idPetrinet = petrinetHandler.createPetrinet();
+		if(idPetrinet == -1) fail("testCreatePlace: idPetrinet == -1");
+		
 		try {
 			
 			transition1 = petrinetHandler.createTransition(idPetrinet, pointTransition1);
@@ -123,7 +132,7 @@ public class PetrinetHandlerTest {
 			
 			fail("something is wrong (createTransition): wrong id");
 			
-		} catch (EngineException e) {
+		} catch (Exception e) {
 			assertTrue(true);
 		}
 		

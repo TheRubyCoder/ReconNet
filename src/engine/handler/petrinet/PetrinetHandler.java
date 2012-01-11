@@ -149,7 +149,7 @@ final public class PetrinetHandler {
 			JungData jungData = petrinetData.getJungData();
 
 			if (jungData.isCreatePossibleAt(coordinate)) {
-
+				
 				// create a new Place
 				Place newPlace = petrinet.createPlace("undefined");
 
