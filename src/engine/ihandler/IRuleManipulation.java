@@ -250,6 +250,16 @@ public interface IRuleManipulation {
 	public void setPlaceColor(int id, INode place, Color color) throws EngineException;
 	
 	/**
+	 * 
+	 * This methods clean the Tool from this Rule.
+	 * 
+	 * @param id ID of the Rule
+	 * @throws EngineException
+	 * 
+	 */
+	public void closeRule(int id) throws EngineException;
+	
+	/**
 	 * Returns the type of the Object.
 	 * @param node to check
 	 * @return Enum composed of Place, Transition

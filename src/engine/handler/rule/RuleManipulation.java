@@ -234,4 +234,11 @@ public class RuleManipulation implements IRuleManipulation {
 		
 	}
 
+	@Override
+	public void closeRule(int id) throws EngineException {
+		
+		ruleManipulationBackend.closeRule(id);
+		
+	}
+
 }

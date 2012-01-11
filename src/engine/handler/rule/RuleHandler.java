@@ -27,6 +27,7 @@ import engine.attribute.PlaceAttribute;
 import engine.attribute.RuleAttribute;
 import engine.attribute.TransitionAttribute;
 import engine.data.JungData;
+import engine.data.PetrinetData;
 import engine.data.RuleData;
 import engine.handler.NodeTypeEnum;
 import engine.handler.RuleNet;
@@ -1190,6 +1191,24 @@ final public class RuleHandler {
 
 		}
 
+	}
+	
+	public void closeRule(int id) throws EngineException {
+		
+		// get the Petrinet from the id and SessionManager
+		RuleData ruleData = sessionManager.getRuleData(id);
+
+		// Test: is id valid
+		if (ruleData == null) {
+			exception("closeRule - id of the Rule is wrong");
+		} else {
+
+			if(!sessionManager.closeSessionData(id)){
+				exception("closeRule - can not remove RuleData");
+			}
+			
+		}
+		
 	}
 		
 	public NodeTypeEnum getNodeType(INode node) {
