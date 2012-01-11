@@ -232,7 +232,7 @@ public interface IRuleManipulation {
 	 * 
 	 * Sets a Strings as RNW.
 	 * 
-	 * @param id ID of the Petrinet
+	 * @param id ID of the Rule
 	 * @param rnw String as RNW
 	 * 
 	 */
@@ -242,7 +242,7 @@ public interface IRuleManipulation {
 	 * 
 	 * Set Color of a Place.
 	 * 
-	 * @param id ID of the Petrinet
+	 * @param id ID of the Rule
 	 * @param place which should modify
 	 * @param color new Color
 	 * 

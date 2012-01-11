@@ -742,6 +742,7 @@ final public class RuleHandler {
 
 			// TODO : change default color
 			Color color = Color.gray;
+			
 
 			PlaceAttribute placeAttribute = new PlaceAttribute(marking, pname,
 					color);
@@ -942,15 +943,19 @@ final public class RuleHandler {
 				RuleNet net = getContainingNet(id, place);
 				if(net.equals(RuleNet.L)){
 					Place placeInK = (Place) rule.fromLtoK(p);
+					Place placeInR = (Place) rule.fromKtoR(placeInK);
 					placeInK.setMark(marking);
+					if (placeInR != null) { placeInR.setMark(marking); }
 				} else if (net.equals(RuleNet.K)){
 					Place placeInL = (Place) rule.fromKtoL(p);
 					Place placeInR = (Place) rule.fromKtoR(p);
-					placeInL.setMark(marking);
-					placeInR.setMark(marking);
+					if (placeInL != null) { placeInL.setMark(marking); }
+					if (placeInR != null) { placeInR.setMark(marking); }
 				} else if(net.equals(RuleNet.R)){
 					Place placeInK = (Place) rule.fromRtoK(p);
+					Place placeInL = (Place) rule.fromKtoL(placeInK);
 					placeInK.setMark(marking);
+					if (placeInL != null) { placeInL.setMark(marking); }
 				}
 
 			}
@@ -983,15 +988,19 @@ final public class RuleHandler {
 				RuleNet net = getContainingNet(id, place);
 				if(net.equals(RuleNet.L)){
 					Place placeInK = (Place) rule.fromLtoK(p);
+					Place placeInR = (Place) rule.fromKtoR(placeInK);
 					placeInK.setName(pname);
+					if (placeInR != null) { placeInR.setName(pname); }
 				} else if (net.equals(RuleNet.K)){
 					Place placeInL = (Place) rule.fromKtoL(p);
 					Place placeInR = (Place) rule.fromKtoR(p);
-					placeInL.setName(pname);
-					placeInR.setName(pname);
+					if (placeInL != null) { placeInL.setName(pname); }
+					if (placeInR != null) { placeInR.setName(pname); }
 				} else if(net.equals(RuleNet.R)){
 					Place placeInK = (Place) rule.fromRtoK(p);
+					Place placeInL = (Place) rule.fromKtoL(placeInK);
 					placeInK.setName(pname);
+					if (placeInL != null) { placeInL.setName(pname); }
 				}
 			}
 
@@ -1020,17 +1029,21 @@ final public class RuleHandler {
 				if(net.equals(RuleNet.L)){
 					lJungData.setPlaceColor(p, color);
 					Place placeInK = (Place) rule.fromLtoK(p);
+					Place placeInR = (Place) rule.fromKtoR(p);
 					kJungData.setPlaceColor(placeInK, color);
+					if ( placeInR != null) { rJungData.setPlaceColor(placeInR, color); }
 				} else if (net.equals(RuleNet.K)){
 					kJungData.setPlaceColor(p, color);
 					Place placeInL = (Place) rule.fromKtoL(p);
 					Place placeInR = (Place) rule.fromKtoR(p);
-					lJungData.setPlaceColor(placeInL, color);
-					rJungData.setPlaceColor(placeInR, color);
+					if (placeInL != null) { lJungData.setPlaceColor(placeInL, color); }
+					if (placeInR != null) { rJungData.setPlaceColor(placeInR, color); }
 				} else if(net.equals(RuleNet.R)){
 					rJungData.setPlaceColor(p, color);
 					Place placeInK = (Place) rule.fromRtoK(p);
+					Place placeInL = (Place) rule.fromKtoL(placeInK);
 					kJungData.setPlaceColor(placeInK, color);
+					if (placeInL != null) { lJungData.setPlaceColor(placeInL, color); }
 				}
 			}
 		}
@@ -1059,15 +1072,19 @@ final public class RuleHandler {
 				RuleNet net = getContainingNet(id, transition);
 				if(net.equals(RuleNet.L)){
 					Transition transitionInK = (Transition) rule.fromLtoK(t);
+					Transition transitionInR = (Transition) rule.fromKtoR(transitionInK);
 					transitionInK.setTlb(tlb);
+					if (transitionInR != null) { transitionInR.setTlb(tlb); }
 				} else if (net.equals(RuleNet.K)){
 					Transition transitionInL = (Transition) rule.fromKtoL(t);
 					Transition transitionInR = (Transition) rule.fromKtoR(t);
-					transitionInL.setTlb(tlb);
-					transitionInR.setTlb(tlb);
+					if (transitionInL != null) { transitionInL.setTlb(tlb); }
+					if (transitionInR != null) { transitionInR.setTlb(tlb); }
 				} else if(net.equals(RuleNet.R)){
 					Transition transitionInK = (Transition) rule.fromRtoK(t);
+					Transition transitionInL = (Transition) rule.fromKtoL(transitionInK);
 					transitionInK.setTlb(tlb);
+					if (transitionInL != null) { transitionInL.setTlb(tlb); }
 				}
 
 			}
@@ -1099,15 +1116,19 @@ final public class RuleHandler {
 				RuleNet net = getContainingNet(id, transition);
 				if(net.equals(RuleNet.L)){
 					Transition transitionInK = (Transition) rule.fromLtoK(t);
+					Transition transitionInR = (Transition) rule.fromKtoR(transitionInK);
 					transitionInK.setName(tname);
+					if (transitionInR != null) { transitionInR.setName(tname); }
 				} else if (net.equals(RuleNet.K)){
 					Transition transitionInL = (Transition) rule.fromKtoL(t);
 					Transition transitionInR = (Transition) rule.fromKtoR(t);
-					transitionInL.setName(tname);
-					transitionInR.setName(tname);
+					if (transitionInL != null) { transitionInL.setName(tname); }
+					if (transitionInR != null) { transitionInR.setName(tname); }
 				} else if(net.equals(RuleNet.R)){
 					Transition transitionInK = (Transition) rule.fromRtoK(t);
+					Transition transitionInL = (Transition) rule.fromKtoL(transitionInK);
 					transitionInK.setName(tname);
+					if (transitionInL != null) { transitionInL.setName(tname); }
 				}
 
 			}
@@ -1146,15 +1167,19 @@ final public class RuleHandler {
 				RuleNet net = getContainingNet(id, transition);
 				if(net.equals(RuleNet.L)){
 					Transition transitionInK = (Transition) rule.fromLtoK(t);
+					Transition transitionInR = (Transition) rule.fromKtoR(transitionInK);
 					transitionInK.setRnw(rnw);
+					if (transitionInR != null) { transitionInR.setRnw(rnw); }
 				} else if (net.equals(RuleNet.K)){
 					Transition transitionInL = (Transition) rule.fromKtoL(t);
 					Transition transitionInR = (Transition) rule.fromKtoR(t);
-					transitionInL.setRnw(rnw);
-					transitionInR.setRnw(rnw);
+					if (transitionInL != null) { transitionInL.setRnw(rnw); }
+					if (transitionInR != null) { transitionInR.setRnw(rnw); }
 				} else if(net.equals(RuleNet.R)){
 					Transition transitionInK = (Transition) rule.fromRtoK(t);
+					Transition transitionInL = (Transition) rule.fromKtoL(transitionInK);
 					transitionInK.setRnw(rnw);
+					if (transitionInL != null) { transitionInL.setRnw(rnw); }
 				}
 			}
 		}
@@ -1178,15 +1203,19 @@ final public class RuleHandler {
 			RuleNet net = getContainingNet(id, arc);
 			if(net.equals(RuleNet.L)){
 				Arc arcInK = rule.fromLtoK(arc);
+				Arc arcInR = rule.fromKtoR(arcInK);
 				arcInK.setMark(weight);
+				if (arcInR != null) { arcInR.setMark(weight); }
 			} else if (net.equals(RuleNet.K)){
 				Arc arcInL = rule.fromKtoL(arc);
 				Arc arcInR = rule.fromKtoR(arc);
-				arcInL.setMark(weight);
-				arcInR.setMark(weight);
+				if (arcInL != null) { arcInL.setMark(weight); }
+				if (arcInR != null) { arcInR.setMark(weight); }
 			} else if(net.equals(RuleNet.R)){
-				Arc arcInR = rule.fromRtoK(arc);
-				arcInR.setMark(weight);
+				Arc arcInK = rule.fromRtoK(arc);
+				Arc arcInL = rule.fromKtoL(arcInK); 
+				arcInK.setMark(weight);
+				if (arcInL != null) { arcInL.setMark(weight); }
 			}
 
 		}
@@ -1244,7 +1273,7 @@ final public class RuleHandler {
 			return RuleNet.K;
 		}
 		if(rule.getR().getAllPlaces().contains(node) || rule.getR().getAllTransitions().contains(node) || rule.getR().getAllArcs().contains(node)){
-			return RuleNet.K;
+			return RuleNet.R;
 		}
 		return null;
 	}
