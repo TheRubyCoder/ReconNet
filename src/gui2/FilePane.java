@@ -202,6 +202,12 @@ class FilePane {
 			int id = FilePane.getRuleFilePane().deleteSelectedItem();
 			if (id != -1) {
 				RulePane.getInstance().displayEmpty();
+				try {
+					EngineAdapter.getRuleManipulation().closeRule(id);
+				} catch (EngineException e1) {
+					PopUp.popError(e1);
+					e1.printStackTrace();
+				}
 			}
 		}
 	}
