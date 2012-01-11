@@ -270,4 +270,10 @@ public class EngineMockup implements IPetrinetManipulation {
 
 	@Override
 	public void setPlaceColor(int id, INode place, Color color) {}
+
+	@Override
+	public void closePetrinet(int id) throws EngineException {
+		// TODO Auto-generated method stub
+		
+	}
 }

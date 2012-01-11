@@ -205,5 +205,11 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 		petrinetManipulationBackend.setPlaceColor(id, place, color);
 		
 	}
+	
+	public void closePetrinet(int id) throws EngineException{
+		
+		petrinetManipulationBackend.closePetrinet(id);
+		
+	}
 
 }

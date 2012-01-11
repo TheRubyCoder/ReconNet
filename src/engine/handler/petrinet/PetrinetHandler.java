@@ -768,6 +768,24 @@ final public class PetrinetHandler {
 
 	}
 
+	public void closePetrinet(int id) throws EngineException {
+		
+		// get the Petrinet from the id and SessionManager
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
+
+		// Test: is id valid
+		if (petrinetData == null) {
+			exception("closePetrinet - id of the Petrinet is wrong");
+		} else {
+
+			if(!sessionManager.closeSessionData(id)){
+				exception("closePetrinet - can not remove PetrinetData");
+			}
+			
+		}
+		
+	}
+	
 	public NodeTypeEnum getNodeType(@NotNull INode node) throws EngineException {
 
 		if (node instanceof Place) {

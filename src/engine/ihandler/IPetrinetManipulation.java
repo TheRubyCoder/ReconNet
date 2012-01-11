@@ -254,6 +254,16 @@ public interface IPetrinetManipulation {
 	public void setPlaceColor(int id, INode place, Color color) throws EngineException;
 	
 	/**
+	 * 
+	 * This methods clean the Tool from this Petrinet.
+	 * 
+	 * @param id ID of the Petrinet
+	 * @throws EngineException
+	 * 
+	 */
+	public void closePetrinet(int id) throws EngineException;
+	
+	/**
 	 * Returns the type of the Object.
 	 * @param node to check
 	 * @return Enum composed of Place, Transition

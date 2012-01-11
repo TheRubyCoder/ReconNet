@@ -267,5 +267,12 @@ public class EngineMockupForPersistence implements IPetrinetManipulation {
 		
 	}
 
+	@Override
+	public void closePetrinet(int id) throws EngineException {
+
+		iPetrinetManipulation.closePetrinet(id);
+		
+	}
+
 	
 }

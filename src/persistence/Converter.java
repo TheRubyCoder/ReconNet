@@ -8,19 +8,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
+import petrinet.INode;
+import petrinet.Petrinet;
+import transformation.Rule;
 import engine.attribute.NodeLayoutAttribute;
 import engine.handler.RuleNet;
-
 import engine.ihandler.IPetrinetPersistence;
 import engine.ihandler.IRulePersistence;
 import exceptions.EngineException;
-
-
-import petrinet.INode;
-import petrinet.Petrinet;
-import sun.awt.resources.awt;
-import transformation.Rule;
 /**
  * This class provides converting methods which are used by persistence class to convert from and to JAXB-classes.
  * 

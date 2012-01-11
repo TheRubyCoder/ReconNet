@@ -241,6 +241,13 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 		iPetrinetManipulation.setPlaceColor(id, place, color);
 		
 	}
+
+	@Override
+	public void closePetrinet(int id) throws EngineException {
+
+		iPetrinetManipulation.closePetrinet(id);
+		
+	}
 	
 }
 
