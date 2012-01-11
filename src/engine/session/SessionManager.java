@@ -122,6 +122,16 @@ final public class SessionManager {
 		return data;
 	}
 	
+	/**
+	 * removes a Data from session manager
+	 * 
+	 * @param id of a SessionData
+	 * @return true if Data was successful closed, false if id was not found, or data coulnd't be closed
+	 */
+	public boolean closeSessionData(int id) {
+		return sessiondata.remove(id) != null;
+	}
+	
 	
 	private JungData getNewJungData() {
 		DirectedSparseGraph<INode, Arc> graph = new DirectedSparseGraph<INode, Arc>();

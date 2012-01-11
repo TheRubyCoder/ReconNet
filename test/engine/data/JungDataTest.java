@@ -432,7 +432,9 @@ public class JungDataTest {
 	public void testMoveNode_selfCloseBottom() {
 		emptyJung.createPlace(place1, pointPositive1);
 		emptyJung.moveNode(place1, pointPositive1TooCloseBottom);
-	}	/**
+	}	
+	
+	/**
 	 *  Node gerade weit genug weg von einem anderen Node
 	 */
 	@Test
@@ -542,6 +544,87 @@ public class JungDataTest {
 	}
 
 	
+	
+	
+	
+
+	
+	/**
+	 * Koordinate ist zu nah an einer Transition (Überlagerung)
+	 */
+	@Test
+	public void test_isCreatePossibleAt_toClose_OverlayTransition() {
+		emptyJung.createTransition(transition1, pointPositive1);
+		assertFalse(emptyJung.isCreatePossibleAt(pointPositive1));
+	}
+	
+	/**
+	 * Koordinate ist zu nah an einer Transition (Innerhalb der Mindestentfernung)
+	 */
+	@Test
+	public void test_isCreatePossibleAt_toClose_TooCloseLeftTransition() {
+		emptyJung.createTransition(transition1, pointPositive1);
+		assertFalse(emptyJung.isCreatePossibleAt(pointPositive1TooCloseLeft));
+	}
+	
+	@Test
+	public void test_isCreatePossibleAt_toClose_TooCloseRightTransition() {
+		emptyJung.createTransition(transition1, pointPositive1);
+		assertFalse(emptyJung.isCreatePossibleAt(pointPositive1TooCloseRight));
+	}
+	
+	@Test
+	public void test_isCreatePossibleAt_toClose_TooCloseTopTransition() {
+		emptyJung.createTransition(transition1, pointPositive1);
+		assertFalse(emptyJung.isCreatePossibleAt(pointPositive1TooCloseTop));
+	}
+	
+	@Test
+	public void test_isCreatePossibleAt_toClose_TooCloseBottomTransition() {
+		emptyJung.createTransition(transition1, pointPositive1);
+		assertFalse(emptyJung.isCreatePossibleAt(pointPositive1TooCloseBottom));
+	}
+		
+	
+	/**
+	 *  Koordinate gerade weit genug weg von einem anderen Node
+	 */
+	@Test
+	public void test_isCreatePossibleAt_JustEnoughLeft() {
+		emptyJung.createPlace(place1, pointPositive1);
+		assertTrue(emptyJung.isCreatePossibleAt(pointPositive1JustEnoughLeft));
+	}
+	
+	/**
+	 *  Koordinate gerade weit genug weg von einem anderen Node
+	 */
+	@Test
+	public void test_isCreatePossibleAt_JustEnoughRight() {
+		emptyJung.createPlace(place1, pointPositive1);
+		assertTrue(emptyJung.isCreatePossibleAt(pointPositive1JustEnoughRight));
+	}
+	
+	/**
+	 *  Koordinate gerade weit genug weg von einem anderen Node
+	 */
+	@Test
+	public void test_isCreatePossibleAt_JustEnoughTop() {
+		emptyJung.createPlace(place1, pointPositive1);
+		assertTrue(emptyJung.isCreatePossibleAt(pointPositive1JustEnoughTop));
+	}
+	
+	/**
+	 *  Koordinate gerade weit genug weg von einem anderen Node
+	 */
+	@Test
+	public void test_isCreatePossibleAt_JustEnoughBottom() {
+		emptyJung.createPlace(place1, pointPositive1);
+		assertTrue(emptyJung.isCreatePossibleAt(pointPositive1JustEnoughBottom));
+	}
+	
+	
+	
+	
 	////////////////////////////////////////////////////
 	// 	Testen der Methoden mit Parameter null
 	////////////////////////////////////////////////////
@@ -597,6 +680,7 @@ public class JungDataTest {
 		emptyJung.setPlaceColor(place1, null); 
 	}
 	
+	@Test public void testNull_isCreatePossibleAt() { assertFalse(emptyJung.isCreatePossibleAt(null)); }
 	
 	//////////////////////////////////////////////////////////
 	// Testen der Methoden mit fachlich ungültigen Parametern

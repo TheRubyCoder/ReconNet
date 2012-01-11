@@ -221,6 +221,20 @@ final public class JungData {
 		return null == color ? DEFAULT_COLOR_PLACE : color;
 	}
 	
+	/**
+	 * @param  coordinate where a place or a transition will be created
+	 * @return 
+	 */
+	public boolean isCreatePossibleAt(Point2D coordinate) {
+		try {
+			checkPoint2DInvariant(coordinate);		
+			checkPoint2DLocation(coordinate, new HashSet<INode>());
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
 
 	
 	/**
