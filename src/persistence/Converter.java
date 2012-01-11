@@ -132,11 +132,11 @@ public class Converter {
 
 
 			newArc.setTarget(arcEnd);
-			
+		
 			String arcStart = null;
 
 			for (Place p : places) {
-				if (p.getId().equals(String.valueOf(arc.getEnd().getId()))) {
+				if (p.getId().equals(String.valueOf(arc.getStart().getId()))) {
 					arcStart = p.getId();
 					break;
 				}
@@ -144,7 +144,7 @@ public class Converter {
 
 			if (arcStart == null) {
 				for (Transition t : Tlist) {
-					if (t.getId().equals(String.valueOf(arc.getEnd().getId()))) {
+					if (t.getId().equals(String.valueOf(arc.getStart().getId()))) {
 						arcStart = t.getId();
 						break;
 					}
@@ -152,7 +152,7 @@ public class Converter {
 			}
 
 			newArc.setSource(arcStart);
-
+			System.out.println("creating arc source:"+arcStart +" target:"+arcEnd);
 			Inscription i = new Inscription();
 			i.setText(arc.getName());
 			newArc.setInscription(i);
@@ -216,7 +216,7 @@ public class Converter {
 
 				handler.setTname(petrinetID, realTransition, trans.getTransitionName().getText());
 				handler.setTlb(petrinetID, realTransition, trans.getTransitionLabel().getText());
-
+				if (placesAndTransis.containsKey(trans.getId())) System.out.println("AHHHHHH!");
 				placesAndTransis.put(trans.getId(), realTransition);
 
 

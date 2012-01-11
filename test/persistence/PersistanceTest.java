@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.awt.geom.Point2D;
 import java.io.File;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -137,73 +138,105 @@ public class PersistanceTest {
 	
 
 	@Test
-	public void testPetrinetSaveLoadEquality() {
+	public void testPetrinetSaveLoadEquality() throws Exception {
 		EngineMockupForPersistence mockup = new EngineMockupForPersistence();
 		
 		// save
 		int pid = -1;
-		try {
+		//try {
 			pid = mockup.build();
 			Petrinet saved = mockup.getPetrinet(pid);
 			
 			mockup.saveTest(pid, "/tmp", "petrinet_saveload_test", "pnml");
 			int loaded_pid = mockup.load("/tmp", "petrinet_saveload_test.pnml");
+			if (loaded_pid == -1) fail("failed to load/parse petrinet");
 			Petrinet loaded = mockup.getPetrinet(loaded_pid);
 			AbstractLayout layout = mockup.getJungLayout(loaded_pid);
 			assertTrue(petrinetEqualsBasedOnLayout(mockup, saved, pid, mockup.getJungLayout(pid), loaded, loaded_pid, mockup.getJungLayout(loaded_pid)));
-			
+			/*
 		} catch(Exception e) {
 			e.printStackTrace();
 			fail(e.getMessage());
-		}
+		}*/
 	}
 
 	public static boolean petrinetEqualsBasedOnLayout(EngineMockupForPersistence mockup, petrinet.Petrinet net1, int net1_pid, AbstractLayout layout1, petrinet.Petrinet net2, int net2_pid, AbstractLayout layout2) throws EngineException {
 		Map<Point2D, petrinet.Place> pos2place = new HashMap<Point2D, petrinet.Place>();
 		Map<Point2D, petrinet.Transition> pos2trans = new HashMap<Point2D, petrinet.Transition>();
 		
-		for (petrinet.Place p :net1.getAllPlaces()) {
-			Point2D pos = new Point2D.Double(layout1.getX(p), layout1.getY(p));
-			pos2place.put(pos, p);
-		}
-		
-		for (petrinet.Transition t :net1.getAllTransitions()) {
-			Point2D pos = new Point2D.Double(layout1.getX(t), layout1.getY(t));
-			pos2trans.put(pos, t);
-		}
-		
-		// test that all places and transitions of net2 are at the same locations in net1
 		for (petrinet.Place p :net2.getAllPlaces()) {
 			Point2D pos = new Point2D.Double(layout2.getX(p), layout2.getY(p));
-			
-			if (pos2place.containsKey(pos)) {
-				petrinet.Place net1Place = pos2place.get(pos);
-				
-				if (!net1Place.getName().equals(p.getName())) return false;
-				if (net1Place.getMark() != p.getMark()) return false;
-				
-				java.awt.Color net1PlaceColor = mockup.getPlaceAttribute(net1_pid, net1Place).getColor();
-				java.awt.Color net2PlaceColor = mockup.getPlaceAttribute(net2_pid, p).getColor();
-				if (!net1PlaceColor.equals(net2PlaceColor)) return false;
-				if (!mockup.getPlaceAttribute(net1_pid, net1Place).getPname().equals(mockup.getPlaceAttribute(net2_pid, p).getPname())) return false;
-				if (mockup.getPlaceAttribute(net1_pid, net1Place).getMarking() != (mockup.getPlaceAttribute(net2_pid, p).getMarking())) return false;
-			} else {
-				return false;
-			}
+			pos2place.put(pos, p);
 		}
 		
 		for (petrinet.Transition t :net2.getAllTransitions()) {
 			Point2D pos = new Point2D.Double(layout2.getX(t), layout2.getY(t));
+			pos2trans.put(pos, t);
+		}
+		
+		// test that all places and transitions of net2 are at the same locations in net1
+		for (petrinet.Place p :net1.getAllPlaces()) {
+			Point2D pos = new Point2D.Double(layout1.getX(p), layout1.getY(p));
 			
-			if (pos2trans.containsKey(pos)) {
-				petrinet.Transition net1Transition = pos2trans.get(pos);
+			if (pos2place.containsKey(pos)) {
+				petrinet.Place net2Place = pos2place.get(pos);
 				
-				if (!net1Transition.getName().equals(t.getName())) return false;
-				if (!net1Transition.getTlb().equals(t.getTlb())) return false;
+				if (!net2Place.getName().equals(p.getName())) return false;
+				if (net2Place.getMark() != p.getMark()) return false;
+				
+				java.awt.Color net2PlaceColor = mockup.getPlaceAttribute(net2_pid, net2Place).getColor();
+				java.awt.Color net1PlaceColor = mockup.getPlaceAttribute(net1_pid, p).getColor();
+				if (!net1PlaceColor.equals(net2PlaceColor)) return false;
+				if (!mockup.getPlaceAttribute(net2_pid, net2Place).getPname().equals(mockup.getPlaceAttribute(net1_pid, p).getPname())) return false;
+				if (mockup.getPlaceAttribute(net2_pid, net2Place).getMarking() != (mockup.getPlaceAttribute(net1_pid, p).getMarking())) return false;
 			} else {
 				return false;
 			}
 		}
+		
+		for (petrinet.Transition t :net1.getAllTransitions()) {
+			Point2D pos = new Point2D.Double(layout1.getX(t), layout1.getY(t));
+			
+			if (pos2trans.containsKey(pos)) {
+				petrinet.Transition net2Transition = pos2trans.get(pos);
+				
+				if (!net2Transition.getName().equals(t.getName())) return false;
+				if (!net2Transition.getTlb().equals(t.getTlb())) return false;
+			} else {
+				return false;
+			}
+		}
+		/*
+		for (Point2D p2d : pos2place.keySet()) {
+			System.out.println("place in net2 at " + p2d);
+		}
+		
+		for (Point2D p2d : pos2trans.keySet()) {
+			System.out.println("trans in net2 at " + p2d);
+		}*/
+		
+		//System.out.println("ARCS net1: " + net1.getAllArcs());
+
+		//System.out.println("ARCS net2: " + net2.getAllArcs());
+		
+		/*
+		for (petrinet.Arc a:net1.getAllArcs()) {
+			Point2D startA = new Point2D.Double(layout1.getX(a.getStart()), layout1.getX(a.getStart()));
+			Point2D endA = new Point2D.Double(layout1.getX(a.getEnd()), layout1.getY(a.getEnd()));
+			
+			System.out.println("start: " + startA + " end: " + endA);
+			System.out.println(pos2place.get(startA));
+			System.out.println(pos2place.get(endA));
+			System.out.println(pos2trans.get(startA));
+			System.out.println(pos2trans.get(endA));
+			
+			if (!(pos2place.containsKey(startA) && pos2trans.containsKey(endA)) ||
+					pos2trans.containsKey(startA) && pos2place.containsKey(endA)) {
+				System.out.println("ARC: " + a);
+				System.out.println("arc not found");
+				return false;
+			}
+		}*/
 		
 		return true;
 	}
