@@ -78,6 +78,7 @@ public class Converter {
 			Dimension d=new Dimension();
 			Position pos=new Position();
 			pos.setX(layout.get(transi.getId())[0]);
+			
 			pos.setY(layout.get(transi.getId())[1]);
 			//	AbstractLayout<INode, petrinet.Arc> layout = handler.getJungLayout(t.getId(), type);
 
@@ -369,6 +370,9 @@ public class Converter {
 					}
 				}
 				
+			if(test){
+				System.out.println();
+			}
 
 			}
 

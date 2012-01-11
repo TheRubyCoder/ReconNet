@@ -79,7 +79,7 @@ public class PersistanceTest {
 		
 	}
 	
-	
+	@Ignore
 	@Test
 	public void testSavePetrinet() {
 		EngineMockupForPersistence mockup = new EngineMockupForPersistence();
@@ -100,12 +100,12 @@ public class PersistanceTest {
 		IRulePersistence rulePersistence=RulePersistence.getInstance();
 		
 		int id=Persistence.loadRule("test/persistence/exampleRule.rnml", rulePersistence);
+		
 		assert(id>-1);
 		
 	}
 	
 	@Test
-	@Ignore
 	public void testSaveRule() throws EngineException{
 		RuleHandler handler = RuleHandler.getInstance();
 		
@@ -136,7 +136,7 @@ public class PersistanceTest {
 		assertTrue(new File("test/rule_save_test.pnml").exists());
 	}
 	
-
+	@Ignore
 	@Test
 	public void testPetrinetSaveLoadEquality() throws Exception {
 		EngineMockupForPersistence mockup = new EngineMockupForPersistence();
@@ -159,7 +159,7 @@ public class PersistanceTest {
 			fail(e.getMessage());
 		}*/
 	}
-
+	@Ignore
 	public static boolean petrinetEqualsBasedOnLayout(EngineMockupForPersistence mockup, petrinet.Petrinet net1, int net1_pid, AbstractLayout layout1, petrinet.Petrinet net2, int net2_pid, AbstractLayout layout2) throws EngineException {
 		Map<Point2D, petrinet.Place> pos2place = new HashMap<Point2D, petrinet.Place>();
 		Map<Point2D, petrinet.Transition> pos2trans = new HashMap<Point2D, petrinet.Transition>();

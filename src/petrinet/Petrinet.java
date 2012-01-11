@@ -17,12 +17,21 @@ import java.util.logging.Logger;
 //import petrinetze.impl.MockObjects;
 
 /**
+ * 
  * @mainpage Hier entsteht die Mainpage. <li>
  * 
- *           \li {@link MockObjects Mocki}
  * 
- *           </li>
+ *           \li {@link persistence.Converter ExampleLink to Converter}
  * 
+ *     </li>
+ *     
+ *     @image html komponenten.png "the components"
+ *           
+ *           
+ * the mainpage-document is placed in the petrinetclass
+ * 
+ *\package 
+ * This package concerns all persistence needs
  */
 public class Petrinet {
 
