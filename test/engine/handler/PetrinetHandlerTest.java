@@ -2,61 +2,162 @@ package engine.handler;
 
 import static org.junit.Assert.*;
 
+import java.awt.geom.Point2D;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import engine.handler.petrinet.PetrinetManipulation;
-import engine.ihandler.IPetrinetManipulation;
+import petrinet.INode;
+import engine.handler.petrinet.PetrinetPersistence;
+import engine.ihandler.IPetrinetPersistence;
+import exceptions.EngineException;
 
 public class PetrinetHandlerTest {
+
+	private IPetrinetPersistence petrinetHandler;
 	
-	private static IPetrinetManipulation petrinetManipulation;
+	// ids from all Petrinet *************************************************
+	private int idPetrinet = -1;
 	
-	// ids from all Petrinet
-	private static int idPetrinet1 = -1;
-	private int idPetrinet2 = -1;
-	private int idPetrinet3 = -1;
-	private int idPetrinet4 = -1;
-	private int idPetrinet5 = -1;
+	// Places & Places *******************************************************
+	private Point2D pointPlace1 = null;
+	private Point2D pointPlace2 = null;
+	private Point2D pointPlace3 = null;
+	private Point2D pointPlace4 = null;
+	
+	private INode place1 = null;
+	private INode place2 = null;
+	private INode place3 = null;
+	private INode place4 = null;
+	
+	// Transitions & Places **************************************************
+	private Point2D pointTransition1 = null;
+	private Point2D pointTransition2 = null;
+	private Point2D pointTransition3 = null;
+	private Point2D pointTransition4 = null;
+	
+	private INode transition1 = null;
+	private INode transition2 = null;
+	private INode transition3 = null;
+	private INode transition4 = null;
 
 	@Before
 	public void setUp() throws Exception {
+
+		petrinetHandler = PetrinetPersistence.getInstance();
 		
-		petrinetManipulation = PetrinetManipulation.getInstance();
+		pointPlace1 = new Point2D.Double(10., 10.);
+		pointPlace2 = new Point2D.Double(90., 10.);
+		pointPlace3 = new Point2D.Double(10., 90.);
+		pointPlace4 = new Point2D.Double(90., 90.);
+
+		pointTransition1 = new Point2D.Double(45., 10.);
+		pointTransition2 = new Point2D.Double(90., 45.);
+		pointTransition3 = new Point2D.Double(10., 45.);
+		pointTransition4 = new Point2D.Double(45., 90.);
 		
 	}
 
 	@Test
 	public void testCreatePetrinet() {
-		
-		idPetrinet1 = petrinetManipulation.createPetrinet();
-		assertTrue(idPetrinet1 != -1);
-		idPetrinet2 = petrinetManipulation.createPetrinet();
-		assertTrue(idPetrinet2 != -1);
-		idPetrinet3 = petrinetManipulation.createPetrinet();
-		assertTrue(idPetrinet3 != -1);
-		idPetrinet4 = petrinetManipulation.createPetrinet();
-		assertTrue(idPetrinet4 != -1);
-		idPetrinet5 = petrinetManipulation.createPetrinet();
-		assertTrue(idPetrinet5 != -1);
-		
+
+		idPetrinet = petrinetHandler.createPetrinet();
+		assertTrue(idPetrinet != -1);
+
 	}
 
 	@Test
 	public void testCreatePlace() {
-		assertTrue(true);
+
+		try {
+
+			place1 = petrinetHandler.createPlace(idPetrinet, pointPlace1);
+			assertNotNull(place1);
+			
+			place2 = petrinetHandler.createPlace(idPetrinet, pointPlace2);
+			assertNotNull(place2);
+			
+			place3 = petrinetHandler.createPlace(idPetrinet, pointPlace3);
+			assertNotNull(place3);
+			
+			place4 = petrinetHandler.createPlace(idPetrinet, pointPlace4);
+			assertNotNull(place4);
+
+		} catch (EngineException e) {
+
+			// if you this test.. something is wrong..!
+			assertTrue(false);
+
+		}
+
 	}
 
 	@Test
 	public void testCreateTransition() {
-		assertTrue(true);
+
+		try {
+			
+			transition1 = petrinetHandler.createTransition(idPetrinet, pointTransition1);
+			assertNotNull(transition1);
+			
+			transition2 = petrinetHandler.createTransition(idPetrinet, pointTransition2);
+			assertNotNull(transition2);
+			
+			transition3 = petrinetHandler.createTransition(idPetrinet, pointTransition3);
+			assertNotNull(transition3);
+			
+			transition4 = petrinetHandler.createTransition(idPetrinet, pointTransition4);
+			assertNotNull(transition4);
+								
+		} catch (EngineException e) {
+
+			// if you this test.. something is wrong..!
+			assertTrue(false);
+
+		}
+		
+		try {
+			
+			// wrong id
+			petrinetHandler.createTransition(-1, pointTransition1);
+			
+			fail("something is wrong (createTransition): wrong id");
+			
+		} catch (EngineException e) {
+			assertTrue(true);
+		}
+		
+		try {
+			
+			// null as Point
+			petrinetHandler.createTransition(idPetrinet, null);
+
+			fail("something is wrong (createTransition): null as Point");
+			
+		} catch (EngineException e) {
+			assertTrue(true);
+		}
+		
+		try {
+			// wrong Point => Point(-1, -1)
+			petrinetHandler.createTransition(idPetrinet, new Point2D.Double(-1., -1.));
+			
+			fail("something is wrong (createTransition): wrong Point => Point(-1, -1)");
+			
+		} catch (EngineException e) {
+			assertTrue(true);
+		}
+
 	}
 
 	@Test
 	public void testCreateArc() {
+		
+//		petrinetManipulation.createArc(idPetrinet, from, to)
+		
 		assertTrue(true);
 	}
-	
+
 	@Test
 	public void testDeleteArc() {
 		assertTrue(true);
