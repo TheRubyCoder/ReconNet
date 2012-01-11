@@ -764,6 +764,7 @@ class FilePane {
 
 		listItemToPId.put(listItem, petrinetId);
 		listIdToFilepath.put(petrinetId, path);
+		list.setSelectedIndex(0);
 	}
 
 	String extractListEntryNameFromFilePath(File path) {
