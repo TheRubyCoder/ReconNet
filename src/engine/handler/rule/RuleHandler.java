@@ -159,6 +159,13 @@ final public class RuleHandler {
 				// Get Petrinet and corresponding JungData
 				petrinet = rule.getK();
 				
+				if(rule.fromKtoL(from) == null || rule.fromKtoL(to) == null) {
+					exception("Arc not possible in L");
+				}
+				if(rule.fromKtoR(from) == null || rule.fromKtoR(to) == null) {
+					exception("Arc not possible in R");
+				}
+				
 				if (this.getNodeType(from).equals(NodeTypeEnum.Place)
 						&& this.getNodeType(to).equals(NodeTypeEnum.Transition)) {
 					// place => transition
@@ -354,7 +361,10 @@ final public class RuleHandler {
 			JungData lJungData = ruleData.getLJungData();
 			JungData kJungData = ruleData.getKJungData();
 			JungData rJungData = ruleData.getRJungData();
-
+			if(!lJungData.isCreatePossibleAt(coordinate)){ exception("Place too close to Node in L"); }
+			if(!kJungData.isCreatePossibleAt(coordinate)){ exception("Place too close to Node in K"); }
+			if(!rJungData.isCreatePossibleAt(coordinate)){ exception("Place too close to Node in R"); }
+			
 			if (net.equals(RuleNet.L)) {
 				// Manipulation in L
 				//
@@ -474,6 +484,10 @@ final public class RuleHandler {
 			JungData lJungData = ruleData.getLJungData();
 			JungData kJungData = ruleData.getKJungData();
 			JungData rJungData = ruleData.getRJungData();
+			
+			if(!lJungData.isCreatePossibleAt(coordinate)){ exception("Transition too close to Node in L"); }
+			if(!kJungData.isCreatePossibleAt(coordinate)){ exception("Transition too close to Node in K"); }
+			if(!rJungData.isCreatePossibleAt(coordinate)){ exception("Transition too close to Node in R"); }
 
 			if (net.equals(RuleNet.L)) {
 				// Manipulation in L
