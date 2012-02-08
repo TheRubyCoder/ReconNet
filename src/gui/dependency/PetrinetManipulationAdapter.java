@@ -4,7 +4,6 @@ package gui.dependency;
 import petrinet.Petrinet;
 import transformation.Rule;
 import transformation.Transformation;
-import engine.EngineComponent;
 import engine.dependency.PetrinetAdapter;
 import engine.dependency.TransformationAdapter;
 
