@@ -54,8 +54,6 @@ final public class RuleHandler {
 	}
 
 	// Really Ugly Method
-	// Wirft Exception wenn Arc in K hinzugefügt wird, Start und Endknoten jedoch in L oder R nicht existieren
-	// Problem liegt in -->transformation.Rule$Listener.kEdgeChanged<--
 	public Arc createArc(int id, RuleNet net, INode from, INode to)
 			throws EngineException {
 
@@ -827,28 +825,69 @@ final public class RuleHandler {
 		if (ruleData == null) {
 			exception("moveNode - id of the rule is wrong");
 		} else {
-
+			Rule rule = ruleData.getRule();
 			// get all jungdata => l, k, r
 			JungData lJungData = ruleData.getLJungData();
 			JungData kJungData = ruleData.getKJungData();
 			JungData rJungData = ruleData.getRJungData();
-
+			if(!lJungData.isCreatePossibleAt(relativePosition)){ exception("Place too close to Node in L"); }
+			if(!kJungData.isCreatePossibleAt(relativePosition)){ exception("Place too close to Node in K"); }
+			if(!rJungData.isCreatePossibleAt(relativePosition)){ exception("Place too close to Node in R"); }
+			
 			Map<INode, NodeLayoutAttribute> lLayoutMap = lJungData
 					.getNodeLayoutAttributes();
 			Map<INode, NodeLayoutAttribute> kLayoutMap = kJungData
 					.getNodeLayoutAttributes();
 			Map<INode, NodeLayoutAttribute> rLayoutMap = rJungData
 					.getNodeLayoutAttributes();
+			
+			RuleNet net = getContainingNet(id, node);
+			if(net.equals(RuleNet.L)){
+				// move node in l
+				moveNodeInternal(lJungData, lLayoutMap, node, relativePosition);
+			
+				// move node in k
+				INode nodeInK = rule.fromLtoK(node);
+				if(nodeInK != null){
+					moveNodeInternal(kJungData, kLayoutMap, nodeInK, relativePosition);
 
-			// move node in l
-			moveNodeInternal(lJungData, lLayoutMap, node, relativePosition);
+					// move node in r
+					INode nodeInR = rule.fromKtoR(nodeInK);
+					if(nodeInR != null){
+						moveNodeInternal(rJungData, rLayoutMap, nodeInR, relativePosition); 
+					}
+				}
+			}
+			if(net.equals(RuleNet.K)){
+				// move node in l
+				INode nodeInL = rule.fromKtoL(node);
+				if(nodeInL != null){
+					moveNodeInternal(lJungData, lLayoutMap, nodeInL, relativePosition);
+				}
+				// move node in k
+				moveNodeInternal(kJungData, kLayoutMap, node, relativePosition);
 
-			// move node in k
-			moveNodeInternal(kJungData, kLayoutMap, node, relativePosition);
-
-			// move node in r
-			moveNodeInternal(rJungData, rLayoutMap, node, relativePosition);
-
+				// move node in r
+				INode nodeInR = rule.fromKtoR(node);
+				if(nodeInR != null){
+					moveNodeInternal(rJungData, rLayoutMap, nodeInR, relativePosition);
+				}
+			}
+			if(net.equals(RuleNet.R)){
+				// move node in k
+					INode nodeInK = rule.fromRtoK(node);
+					if(nodeInK != null){
+						moveNodeInternal(kJungData, kLayoutMap, nodeInK, relativePosition);
+					
+				// move node in l
+						INode nodeInL = rule.fromKtoL(nodeInK);
+						if(nodeInL != null){
+							moveNodeInternal(lJungData, lLayoutMap, nodeInL, relativePosition);
+						}
+					}
+				// move node in r
+					moveNodeInternal(rJungData, rLayoutMap, node, relativePosition);
+			}
 		}
 
 	}
