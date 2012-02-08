@@ -391,12 +391,17 @@ public class Converter {
 		Pnml pnml=new Pnml();
 
 		pnml.net = new ArrayList<Net>();
-		Net lNet = createNet(rule.getL(), map, RuleNet.L);
-		Net kNet = createNet(rule.getK(), map, RuleNet.K);
-		Net rNet = createNet(rule.getR(), map, RuleNet.R);
+		final Net lNet = createNet(rule.getL(), map, RuleNet.L);
+		final Net kNet = createNet(rule.getK(), map, RuleNet.K);
+		final Net rNet = createNet(rule.getR(), map, RuleNet.R);
 
-		List<Net>nets=new ArrayList<Net>();
-		pnml.setNet(nets);
+		
+		
+		pnml.setNet(new ArrayList<Net>(){{
+			add(lNet);
+			add(kNet);
+			add(rNet);
+		}});
 
 
 		return pnml;
@@ -408,6 +413,7 @@ public class Converter {
 		net.setId(String.valueOf(petrinet.getId()));
 		net.setNettype(type.name());
 
+		net.setPage(page);
 
 
 		Set<petrinet.Arc> arcs=petrinet.getAllArcs();
@@ -440,9 +446,10 @@ public class Converter {
 				pos.setY(String.valueOf(map.get(p).getCoordinate().getY()));
 				
 				Color c=new Color();
-				c.setR(String.valueOf(map.get(newPlace.getId()).getColor().getRed()));
-				c.setG(String.valueOf(map.get(newPlace.getId()).getColor().getGreen()));
-				c.setB(String.valueOf(map.get(newPlace.getId()).getColor().getBlue()));
+				/** FIXME: make code work */
+				//c.setR(String.valueOf(map.get(newPlace.getId()).getColor().getRed()));
+				//c.setG(String.valueOf(map.get(newPlace.getId()).getColor().getGreen()));
+				//c.setB(String.valueOf(map.get(newPlace.getId()).getColor().getBlue()));
 				
 				
 				List<Position> positions=new ArrayList<Position>();
@@ -538,7 +545,6 @@ public class Converter {
 		page.setArc(listArcs);
 		page.setPlace(listPlace);
 		page.setTransition(listTrans);
-
 
 
 		return net;
