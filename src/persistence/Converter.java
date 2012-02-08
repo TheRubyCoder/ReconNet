@@ -257,6 +257,7 @@ public class Converter {
 	 * <li>adds remaining places/transitions/arcs from L and R to the petrinet (per RuleHandler)</li>
 	 * </ul>
 	 */
+	/** TODO: fix method. currently doesn't correctly load and reconstruct the rule. */
 	public static int convertToRule(Pnml pnml, IRulePersistence handler) {
 		int id=handler.createRule();
 		try {
