@@ -70,6 +70,7 @@ class FilePane {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			FilePane.getPetrinetFilePane().insertData("Petrinetz");
+			FilePane.getPetrinetFilePane().enableWholeButtons();
 		}
 	}
 
@@ -118,6 +119,7 @@ class FilePane {
 					"Petrinetz");
 			if (file != null) {
 				FilePane.getPetrinetFilePane().loadPetrinet(file);
+				FilePane.getPetrinetFilePane().enableWholeButtons();
 			}
 		}
 	}
@@ -155,6 +157,7 @@ class FilePane {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			FilePane.getRuleFilePane().insertData("Regel");
+			FilePane.getRuleFilePane().enableWholeButtons();
 		}
 	}
 
@@ -165,6 +168,7 @@ class FilePane {
 			File file = FilePane.getRuleFilePane().choseFileForLoad("Regel");
 			if (file != null) {
 				FilePane.getRuleFilePane().loadRule(file);
+				FilePane.getRuleFilePane().enableWholeButtons();
 			}
 		}
 	}
@@ -341,6 +345,11 @@ class FilePane {
 		list = initiateList(selectionListener);
 		treeAndButtonContainerWithBorder = initiateTreeAndButtonContainerWithBorder(
 				list, buttonContainer, typePlural);
+
+		saveAsButton.setEnabled(false);
+		saveButton.setEnabled(false);
+		deleteButton.setEnabled(false);
+		list.setEnabled(false);
 	}
 
 	private Map<Object, Integer> initiateListItemToPid() {
@@ -548,7 +557,7 @@ class FilePane {
 	}
 
 	/** disable hole buttons and tree */
-	void setHoleButtonsDisable() {
+	void disableWholeButtons() {
 		loadButton.setEnabled(false);
 		newButton.setEnabled(false);
 		saveAsButton.setEnabled(false);
@@ -558,7 +567,7 @@ class FilePane {
 	}
 
 	/** enable hole buttons and tree */
-	void setHoleButtonsEnable() {
+	void enableWholeButtons() {
 		loadButton.setEnabled(true);
 		newButton.setEnabled(true);
 		saveAsButton.setEnabled(true);
@@ -577,9 +586,10 @@ class FilePane {
 	String insertData(String type) {
 		String input = JOptionPane.showInputDialog("Bitte Name für " + type
 				+ " eingeben.", "neue(s) " + type);
-		while(listItemToPId.keySet().contains(input)){
+		while (listItemToPId.keySet().contains(input)) {
 			input = JOptionPane.showInputDialog("Name für " + type
-					+ " bereits vergeben. Bitte geben sie einen anderen ein.", "neue(s) " + type);
+					+ " bereits vergeben. Bitte geben sie einen anderen ein.",
+					"neue(s) " + type);
 		}
 		if (input != null) {
 			// Add item to list without listeners! they acticate on
@@ -770,19 +780,38 @@ class FilePane {
 	String extractListEntryNameFromFilePath(File path) {
 		String initial = path.getName().split(FILE_EXTENSION)[0];
 		String number = "";
-		while(listItemToPId.keySet().contains(initial+number)){
+		while (listItemToPId.keySet().contains(initial + number)) {
 			if (number.equals("")) {
 				number = "(1)";
 			} else {
-				number = "("+(Integer.parseInt(String.valueOf(number.charAt(1)))+1)+")";
+				number = "("
+						+ (Integer.parseInt(String.valueOf(number.charAt(1))) + 1)
+						+ ")";
 			}
 		}
-		return initial+number;
+		return initial + number;
 	}
 
 	public void loadRule(File path) {
-		PopUp.popUnderConstruction("LoadRule in Filepane");
-		// TODO: Remember Id and Filepath in Map
+		// EngineAdapter.getPetrinetManipulation().createPetrinet();
+		int ruleId = EngineAdapter.getRuleManipulation().load(path.getParent(),
+				path.getName());
+
+		// Add item to list without listeners! they acticate on
+		// inserting thus leading to inconsistent states: nullpointers
+		ListSelectionListener ruleListSelectionListener = list
+				.getListSelectionListeners()[0];
+		list.removeListSelectionListener(ruleListSelectionListener);
+
+		String listItem = extractListEntryNameFromFilePath(path);
+		listModel.add(0, listItem);
+
+		// After inserting add the listener again
+		list.addListSelectionListener(ruleListSelectionListener);
+
+		listItemToPId.put(listItem, ruleId);
+		listIdToFilepath.put(ruleId, path);
+		list.setSelectedIndex(0);
 	}
 
 	public File existsFileForSelectedItem() {

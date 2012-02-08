@@ -78,7 +78,7 @@ class MainWindow {
 	 */
 	private void initializeMainFrame() {
 		mainFrame = new JFrame();
-		mainFrame.setTitle("Petri Tool");
+		mainFrame.setTitle("ReconNet");
 		mainFrame.setSize(TOTAL_WIDTH, TOTAL_HEIGHT);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setLayout(new BorderLayout());

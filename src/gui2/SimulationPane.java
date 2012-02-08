@@ -101,7 +101,7 @@ class SimulationPane {
 		simulationModePicker = initiateModePicker();
 
 		simulationTimer = initiateSimulationTimer();
-		
+
 		setSimulationPaneDisable();
 	}
 
@@ -122,7 +122,7 @@ class SimulationPane {
 
 	private Timer initiateSimulationTimer() {
 		Timer timer = new Timer(getCurrentDelayInMillis(),
-				new OneStepListener());
+				new SimulationStepper());
 		timer.setRepeats(true);
 		timer.stop();
 		return timer;
@@ -310,8 +310,8 @@ class SimulationPane {
 		transformButton.setEnabled(false);
 		EditorPane.getInstance().setTheHoleEditorPanelDisable();
 		AttributePane.getInstance().setTableDisable();
-		FilePane.getPetrinetFilePane().setHoleButtonsDisable();
-		FilePane.getRuleFilePane().setHoleButtonsDisable();
+		FilePane.getPetrinetFilePane().disableWholeButtons();
+		FilePane.getRuleFilePane().disableWholeButtons();
 		// PetrinetPane.getInstance().setPanelDisable();
 	}
 
@@ -324,14 +324,14 @@ class SimulationPane {
 		transformButton.setEnabled(true);
 		EditorPane.getInstance().setTheHoleEditorPanelEnable();
 		AttributePane.getInstance().setTableEnable();
-		FilePane.getPetrinetFilePane().setHoleButtonsEnable();
-		FilePane.getRuleFilePane().setHoleButtonsEnable();
+		FilePane.getPetrinetFilePane().enableWholeButtons();
+		FilePane.getRuleFilePane().enableWholeButtons();
 	}
-	
+
 	/**
 	 * set all Buttons in Simulationpane disable
 	 */
-	void setSimulationPaneDisable(){
+	void setSimulationPaneDisable() {
 		oneStepButton.setEnabled(false);
 		kStepsButton.setEnabled(false);
 		kStepsSpinner.setEnabled(false);
@@ -340,11 +340,11 @@ class SimulationPane {
 		transformButton.setEnabled(false);
 		transformSpeedSlider.setEnabled(false);
 	}
-	
+
 	/**
 	 * set all Buttons in Simulationpane enable
 	 */
-	void setSimulationPaneEnable(){
+	void setSimulationPaneEnable() {
 		oneStepButton.setEnabled(true);
 		kStepsButton.setEnabled(true);
 		kStepsSpinner.setEnabled(true);
@@ -374,27 +374,10 @@ class SimulationPane {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// int simulationSessionId = EngineAdapter.getSimulation()
-			// .createSimulationSession(
-			// PetrinetPane.getInstance().currentPetrinetId);
-
 			try {
+				EngineAdapter.getSimulation().fire(
+						PetrinetPane.getInstance().getCurrentPetrinetId(), 1);
 
-				if (getMode() == SimulationMode.TOKENS) {
-					EngineAdapter.getSimulation().fire(
-							PetrinetPane.getInstance().getCurrentPetrinetId(),
-							1);
-				} else if (getMode() == SimulationMode.RULES) {
-					EngineAdapter.getSimulation().transform(
-							PetrinetPane.getInstance().getCurrentPetrinetId(),
-							FilePane.getRuleFilePane()
-									.getIdsFromSelectedListItems(), 1);
-				} else {
-					EngineAdapter.getSimulation().fireOrTransform(
-							PetrinetPane.getInstance().getCurrentPetrinetId(),
-							FilePane.getRuleFilePane()
-									.getIdsFromSelectedListItems(), 1);
-				}
 				PetrinetPane.getInstance().repaint();
 
 			} catch (EngineException e1) {
@@ -410,7 +393,7 @@ class SimulationPane {
 	private class KStepsListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			int  k = SimulationPane.getInstance().getK();
+			int k = SimulationPane.getInstance().getK();
 			try {
 				if (getMode() == SimulationMode.TOKENS) {
 					EngineAdapter.getSimulation().fire(
@@ -438,6 +421,37 @@ class SimulationPane {
 		}
 	}
 	
+	private class SimulationStepper implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int k = 1;
+			try {
+				if (getMode() == SimulationMode.TOKENS) {
+					EngineAdapter.getSimulation().fire(
+							PetrinetPane.getInstance().getCurrentPetrinetId(),
+							k);
+				} else if (getMode() == SimulationMode.RULES) {
+					EngineAdapter.getSimulation().transform(
+							PetrinetPane.getInstance().getCurrentPetrinetId(),
+							FilePane.getRuleFilePane()
+									.getIdsFromSelectedListItems(), k);
+				} else {
+					EngineAdapter.getSimulation().fireOrTransform(
+							PetrinetPane.getInstance().getCurrentPetrinetId(),
+							FilePane.getRuleFilePane()
+									.getIdsFromSelectedListItems(), k);
+				}
+				PetrinetPane.getInstance().repaint();
+			} catch (NumberFormatException e1) {
+				// cannot be thrown
+				e1.printStackTrace();
+			} catch (EngineException e1) {
+				PopUp.popError(e1);
+				e1.printStackTrace();
+			}
+		}
+	}
+
 	private class TransformButtonListener implements ActionListener {
 
 		@Override
@@ -447,13 +461,13 @@ class SimulationPane {
 						PetrinetPane.getInstance().getCurrentPetrinetId(),
 						FilePane.getRuleFilePane()
 								.getIdsFromSelectedListItems(), 1);
-				MainWindow.getInstance().repaint();
+				PetrinetPane.getInstance().repaint();
 			} catch (EngineException e1) {
 				PopUp.popError(e1);
 				e1.printStackTrace();
 			}
 		}
-		
+
 	}
 
 	private class SpeedSliderListener implements ChangeListener {
