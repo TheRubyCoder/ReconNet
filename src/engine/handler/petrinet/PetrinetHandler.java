@@ -165,9 +165,6 @@ final public class PetrinetHandler {
 					exception("createPlace - can not create Place");
 				}
 
-				System.out.println(petrinetData.getPetrinet()
-						.getAllGraphElement().getAllNodes());
-
 				return newPlace;
 
 			} else {

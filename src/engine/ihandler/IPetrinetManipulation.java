@@ -3,6 +3,8 @@ package engine.ihandler;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
+import com.sun.istack.NotNull;
+
 import petrinet.Arc;
 import petrinet.INode;
 import petrinet.Place;
@@ -43,7 +45,7 @@ public interface IPetrinetManipulation {
 	 * @param to Target of the Arc
 	 * @throws EngineException 
 	 */
-	public void createArc(int id, INode from, INode to) throws EngineException;
+	public void createArc(@NotNull int id,@NotNull INode from,@NotNull INode to) throws EngineException;
 	
 	/**
 	 * 
@@ -55,7 +57,7 @@ public interface IPetrinetManipulation {
 	 * @throws EngineException 
 	 * 
 	 */
-	public void createPlace(int id, Point2D coordinate) throws EngineException;
+	public void createPlace(@NotNull int id,@NotNull Point2D coordinate) throws EngineException;
 	
 	/**
 	 * 
@@ -74,7 +76,7 @@ public interface IPetrinetManipulation {
 	 * @return 
 	 * @throws EngineException 
 	 */
-	public void createTransition(int id, Point2D coordinate) throws EngineException;
+	public void createTransition(@NotNull int id, @NotNull Point2D coordinate) throws EngineException;
 	
 	/**
 	 * Deletes an Arc
@@ -83,7 +85,7 @@ public interface IPetrinetManipulation {
 	 * @param arc which will be deleted
 	 * @throws EngineException 
 	 */
-	public void deleteArc(int id, Arc arc) throws EngineException; // TODO IArc gibt es nicht?
+	public void deleteArc(@NotNull int id, @NotNull Arc arc) throws EngineException; // TODO IArc gibt es nicht?
 	
 	// TODO: da sollte doch ne methode drueber die INode aufloest oder?
 	/**
@@ -92,7 +94,7 @@ public interface IPetrinetManipulation {
 	 * @param id ID of the Petrinet
 	 * @param place which will be deleted
 	 */
-	public void deletePlace(int id, INode place) throws EngineException;
+	public void deletePlace(@NotNull int id, @NotNull INode place) throws EngineException;
 	
 	/**
 	 * Deletes a Transition
@@ -100,7 +102,7 @@ public interface IPetrinetManipulation {
 	 * @param id ID of the Petrinet
 	 * @param transition which will be deleted
 	 */
-	public void deleteTransition(int id, INode transition) throws EngineException;
+	public void deleteTransition(@NotNull int id, @NotNull INode transition) throws EngineException;
 	
 	/**
 	 * Gets the Attributes from an Arc
@@ -109,7 +111,7 @@ public interface IPetrinetManipulation {
 	 * @param arc which attributes are wanted
 	 * @return ArcAttribute
 	 */
-	public ArcAttribute getArcAttribute(int id, Arc arc) throws EngineException; // TODO IArc gibt es nicht?
+	public ArcAttribute getArcAttribute(@NotNull int id, @NotNull Arc arc) throws EngineException; // TODO IArc gibt es nicht?
 	
 	/**
 	 * Gets the JungLayout from the Petrinet
@@ -120,7 +122,7 @@ public interface IPetrinetManipulation {
 	 */
 	
 	// TODO
-	public AbstractLayout<INode, Arc> getJungLayout(int id) throws EngineException; // TODO: AbstractLayout<INode, Arc> richtig?
+	public AbstractLayout<INode, Arc> getJungLayout(@NotNull int id) throws EngineException; // TODO: AbstractLayout<INode, Arc> richtig?
 	
 	/**
 	 * Gets the Attributes from a Place
@@ -130,7 +132,7 @@ public interface IPetrinetManipulation {
 	 * @return PlaceAtrribute
 	 * @throws EngineException 
 	 */
-	public PlaceAttribute getPlaceAttribute(int id, INode place) throws EngineException;
+	public PlaceAttribute getPlaceAttribute(@NotNull int id, @NotNull INode place) throws EngineException;
 	
 	/**
 	 * Gets the Attributes from a Transition
@@ -140,7 +142,7 @@ public interface IPetrinetManipulation {
 	 * @return TransitionAttribute
 	 * @throws EngineException 
 	 */
-	public TransitionAttribute getTransitionAttribute(int id, INode transition) throws EngineException;
+	public TransitionAttribute getTransitionAttribute(@NotNull int id, @NotNull INode transition) throws EngineException;
 	
 	/**
 	 * Moves a Graph.
@@ -149,7 +151,7 @@ public interface IPetrinetManipulation {
 	 * @param relativePosition relative movement of the Graph
 	 * @throws EngineException 
 	 */
-	public void moveGraph(int id, Point2D relativePosition) throws EngineException;
+	public void moveGraph(@NotNull int id, @NotNull Point2D relativePosition) throws EngineException;
 	
 	/**
 	 * Moves a node.
@@ -159,7 +161,7 @@ public interface IPetrinetManipulation {
 	 * @param relativePosition relative movement of the node
 	 * @throws EngineException 
 	 */
-	public void moveNode(int id, INode node, Point2D relativePosition) throws EngineException;
+	public void moveNode(@NotNull int id, @NotNull INode node, @NotNull Point2D relativePosition) throws EngineException;
 	
 	/**
 	 * Saves a Petrinet.
@@ -169,7 +171,7 @@ public interface IPetrinetManipulation {
 	 * @param filename name for the Petrinet
 	 * @param format which the Petrinet should be saved. (PNML the only option till now)
 	 */
-	public void save(int id, String path, String filename, String format) throws EngineException; // TODO: String format zu => Format format
+	public void save(@NotNull int id, @NotNull String path, @NotNull String filename, @NotNull String format) throws EngineException; // TODO: String format zu => Format format
 	
 	/**
 	 * 
@@ -180,7 +182,7 @@ public interface IPetrinetManipulation {
 	 * @return the id of the Petrinet
 	 * 
 	 */
-	public int load(String path, String filename);
+	public int load(@NotNull String path, @NotNull String filename);
 	
 	/**
 	 * Sets the Marking of a Place.
@@ -190,7 +192,7 @@ public interface IPetrinetManipulation {
 	 * @param marking amount of mark 
 	 * @throws EngineException 
 	 */
-	public void setMarking(int id, INode place, int marking) throws EngineException;
+	public void setMarking(@NotNull int id, @NotNull INode place, @NotNull int marking) throws EngineException;
 	
 	/**
 	 * Sets the PName of a Place.
@@ -200,7 +202,7 @@ public interface IPetrinetManipulation {
 	 * @param pname PName
 	 * @throws EngineException 
 	 */
-	public void setPname(int id, INode place, String pname) throws EngineException;
+	public void setPname(@NotNull int id, @NotNull INode place, @NotNull String pname) throws EngineException;
 	
 	/**
 	 * Sets the Tlb of a Transition.
@@ -210,7 +212,7 @@ public interface IPetrinetManipulation {
 	 * @param tlb TransitionLabel
 	 * @throws EngineException 
 	 */
-	public void setTlb(int id, INode transition, String tlb) throws EngineException;
+	public void setTlb(@NotNull int id, @NotNull INode transition, @NotNull String tlb) throws EngineException;
 	
 	/**
 	 * Sets the TName of a Transition.
@@ -220,7 +222,7 @@ public interface IPetrinetManipulation {
 	 * @param tname TName
 	 * @throws EngineException 
 	 */
-	public void setTname(int id, INode transition, String tname) throws EngineException;
+	public void setTname(@NotNull int id, @NotNull INode transition, @NotNull String tname) throws EngineException;
 	
 	/**
 	 * Sets the Weight of an Arc.
@@ -230,7 +232,7 @@ public interface IPetrinetManipulation {
 	 * @param weight weight of the arc
 	 * @throws EngineException 
 	 */
-	public void setWeight(int id, Arc arc, int weight) throws EngineException;
+	public void setWeight(@NotNull int id, @NotNull Arc arc, @NotNull int weight) throws EngineException;
 	
 	/**
 	 * 
@@ -241,7 +243,7 @@ public interface IPetrinetManipulation {
 	 * @throws EngineException 
 	 * 
 	 */
-	public void setRnw(int id, INode transition, Renews renews) throws EngineException;
+	public void setRnw(@NotNull int id, @NotNull INode transition, @NotNull Renews renews) throws EngineException;
 	
 	/**
 	 * 
@@ -253,7 +255,7 @@ public interface IPetrinetManipulation {
 	 * @throws EngineException 
 	 * 
 	 */
-	public void setPlaceColor(int id, INode place, Color color) throws EngineException;
+	public void setPlaceColor(@NotNull int id, @NotNull INode place, @NotNull Color color) throws EngineException;
 	
 	/**
 	 * 
@@ -263,7 +265,7 @@ public interface IPetrinetManipulation {
 	 * @throws EngineException
 	 * 
 	 */
-	public void closePetrinet(int id) throws EngineException;
+	public void closePetrinet(@NotNull int id) throws EngineException;
 	
 	/**
 	 * Returns the type of the Object.
@@ -271,6 +273,6 @@ public interface IPetrinetManipulation {
 	 * @return Enum composed of Place, Transition
 	 * @throws EngineException 
 	 */
-	public NodeTypeEnum getNodeType(INode node) throws EngineException;
+	public NodeTypeEnum getNodeType(@NotNull INode node) throws EngineException;
 	
 }
