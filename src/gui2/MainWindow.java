@@ -8,6 +8,7 @@ import static gui2.Style.TOTAL_WIDTH;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -79,6 +80,7 @@ class MainWindow {
 	private void initializeMainFrame() {
 		mainFrame = new JFrame();
 		mainFrame.setTitle("ReconNet");
+		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage("src/gui2/icons/ReconNetLogo.png"));
 		mainFrame.setSize(TOTAL_WIDTH, TOTAL_HEIGHT);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setLayout(new BorderLayout());
