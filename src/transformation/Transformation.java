@@ -164,7 +164,7 @@ public class Transformation{
 					petrinet.deletePlaceById(morphism.getPlaceMorphism((Place)i).getId());
 				}
 				else {
-					deletedNodes.add(i);
+					deletedNodes.add(morphism.getTransitionMorphism((Transition) i));
 					petrinet.deleteTransitionByID(morphism.getTransitionMorphism((Transition)i).getId());
 				}
 			}
