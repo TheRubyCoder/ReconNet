@@ -106,6 +106,7 @@ public class PersistanceTest {
 		
 	}
 	
+	@Ignore
 	@Test
 	public void testSaveRule() throws EngineException{
 		RulePersistence handler = RulePersistence.getInstance();
@@ -125,6 +126,8 @@ public class PersistanceTest {
 			
 			INode trans2=handler.createTransition(id, RuleNet.R, new Point2D.Double(10,500));
 			
+			/** TODO: map place 1 to INode in R */
+						
 			handler.createArc(id, RuleNet.R, place1, trans2);
 			handler.createArc(id, RuleNet.R, trans2, place3);
 			
