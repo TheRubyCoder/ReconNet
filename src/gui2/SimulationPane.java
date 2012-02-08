@@ -447,6 +447,7 @@ class SimulationPane {
 						PetrinetPane.getInstance().getCurrentPetrinetId(),
 						FilePane.getRuleFilePane()
 								.getIdsFromSelectedListItems(), 1);
+				MainWindow.getInstance().repaint();
 			} catch (EngineException e1) {
 				PopUp.popError(e1);
 				e1.printStackTrace();
