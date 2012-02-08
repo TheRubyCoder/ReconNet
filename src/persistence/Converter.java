@@ -391,11 +391,10 @@ public class Converter {
 		Pnml pnml=new Pnml();
 
 		pnml.net = new ArrayList<Net>();
-		final Net lNet = createNet(rule.getL(), map, RuleNet.L);
-		final Net kNet = createNet(rule.getK(), map, RuleNet.K);
-		final Net rNet = createNet(rule.getR(), map, RuleNet.R);
+		final Net lNet = createNet(rule.getL(), map, RuleNet.L, rule);
+		final Net kNet = createNet(rule.getK(), map, RuleNet.K, rule);
+		final Net rNet = createNet(rule.getR(), map, RuleNet.R, rule);
 
-		
 		
 		pnml.setNet(new ArrayList<Net>(){{
 			add(lNet);
@@ -407,7 +406,7 @@ public class Converter {
 		return pnml;
 	}
 
-	private static Net createNet(Petrinet petrinet, Map<INode, NodeLayoutAttribute> map, RuleNet type) {
+	private static Net createNet(Petrinet petrinet, Map<INode, NodeLayoutAttribute> map, RuleNet type, Rule rule) {
 		Net net=new Net();
 		Page page=new Page();
 		net.setId(String.valueOf(petrinet.getId()));
@@ -430,12 +429,19 @@ public class Converter {
 			for(petrinet.Place p:places){
 				Place newPlace=new Place();
 
+				//id
+				if (type != RuleNet.K) {
+					INode correspondingNode = type == RuleNet.L ? rule.fromLtoK(p) : rule.fromRtoK(p);
+					if (correspondingNode != null) {
+						p = (petrinet.Place)correspondingNode;
+					}
+				}
+				
 				//name
 				PlaceName name=new PlaceName();
 				name.setText(p.getName());
 				newPlace.setPlaceName(name);
 				
-				//id
 				newPlace.setId(String.valueOf(p.getId()));
 
 				//Coordinates
@@ -468,6 +474,14 @@ public class Converter {
 			//inserting Transitions
 			for(petrinet.Transition t:transis){
 				Transition transi=new Transition();
+				
+				if (type != RuleNet.K) {
+					INode correspondingNode = type == RuleNet.L ? rule.fromLtoK(t) : rule.fromRtoK(t);
+					if (correspondingNode != null) {
+						t = (petrinet.Transition)correspondingNode;
+					}
+				}
+				
 				transi.setId(String.valueOf(t.getId()));
 
 				TransitionName name=new TransitionName();
@@ -509,6 +523,15 @@ public class Converter {
 			//inserting arcs
 			for(petrinet.Arc a:arcs){
 				Arc arc=new Arc();
+				
+				
+				if (type != RuleNet.K) {
+					INode correspondingNode = type == RuleNet.L ? rule.fromLtoK(a) : rule.fromRtoK(a);
+					if (correspondingNode != null) {
+						a = (petrinet.Arc)correspondingNode;
+					}
+				}
+				
 				arc.setId(String.valueOf(a.getId()));
 
 
