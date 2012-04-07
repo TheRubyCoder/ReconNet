@@ -509,6 +509,7 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 				} else {
 					petrinetViewer.deleteArc(arc);
 				}
+				MainWindow.getInstance().repaint();
 			}
 		}
 

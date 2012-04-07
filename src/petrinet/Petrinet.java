@@ -23,15 +23,14 @@ import java.util.logging.Logger;
  * 
  *           \li {@link persistence.Converter ExampleLink to Converter}
  * 
- *     </li>
- *     
- *     @image html komponenten.png "the components"
- *           
- *           
- * the mainpage-document is placed in the petrinetclass
+ *           </li>
  * 
- *\package 
- * This package concerns all persistence needs
+ * @image html komponenten.png "the components"
+ * 
+ * 
+ *        the mainpage-document is placed in the petrinetclass
+ * 
+ *        \package This package concerns all persistence needs
  */
 public class Petrinet {
 
@@ -157,9 +156,11 @@ public class Petrinet {
 			onEdgeChanged(arc, ActionType.deleted);
 		} else if (getNodeType(id) == ElementType.PLACE) {
 			Place place = getPlaceById(id);
-			
-			Collection<Arc> copyOfStartArcs = new ArrayList<Arc>(place.getStartArcs());
-			Collection<Arc> copyOfEndArcs = new ArrayList<Arc>(place.getEndArcs());
+
+			Collection<Arc> copyOfStartArcs = new ArrayList<Arc>(
+					place.getStartArcs());
+			Collection<Arc> copyOfEndArcs = new ArrayList<Arc>(
+					place.getEndArcs());
 			for (Arc arc : copyOfStartArcs) {
 				result.addAll(deleteElementById(arc.getId()));
 			}
@@ -173,8 +174,10 @@ public class Petrinet {
 		} else if (getNodeType(id) == ElementType.TRANSITION) {
 			Transition transition = getTransitionById(id);
 			result.add(transition.getId());
-			Collection<Arc> copyOfStartArcs = new ArrayList<Arc>(transition.getStartArcs());
-			Collection<Arc> copyOfEndArcs = new ArrayList<Arc>(transition.getEndArcs());
+			Collection<Arc> copyOfStartArcs = new ArrayList<Arc>(
+					transition.getStartArcs());
+			Collection<Arc> copyOfEndArcs = new ArrayList<Arc>(
+					transition.getEndArcs());
 			for (Arc arc : copyOfStartArcs) {
 				result.addAll(deleteElementById(arc.getId()));
 			}
@@ -189,9 +192,17 @@ public class Petrinet {
 		return result;
 	}
 
+	public boolean contains(INode nodeOrArc) {
+		return getAllArcs().contains(nodeOrArc)
+				|| getAllPlaces().contains(nodeOrArc)
+				|| getAllTransitions().contains(nodeOrArc);
+	}
+
 	/**
 	 * This method is for the engine!
-	 * @param id of the elem
+	 * 
+	 * @param id
+	 *            of the elem
 	 * @return Collection of all Item
 	 */
 	public Collection<Integer> giveAllDeleteElem(int id) {
@@ -202,9 +213,11 @@ public class Petrinet {
 
 		} else if (getNodeType(id) == ElementType.PLACE) {
 			Place place = getPlaceById(id);
-			
-			Collection<Arc> copyOfStartArcs = new ArrayList<Arc>(place.getStartArcs());
-			Collection<Arc> copyOfEndArcs = new ArrayList<Arc>(place.getEndArcs());
+
+			Collection<Arc> copyOfStartArcs = new ArrayList<Arc>(
+					place.getStartArcs());
+			Collection<Arc> copyOfEndArcs = new ArrayList<Arc>(
+					place.getEndArcs());
 			for (Arc arc : copyOfStartArcs) {
 				result.addAll(giveAllDeleteElem(arc.getId()));
 			}
@@ -216,8 +229,10 @@ public class Petrinet {
 		} else if (getNodeType(id) == ElementType.TRANSITION) {
 			Transition transition = getTransitionById(id);
 			result.add(transition.getId());
-			Collection<Arc> copyOfStartArcs = new ArrayList<Arc>(transition.getStartArcs());
-			Collection<Arc> copyOfEndArcs = new ArrayList<Arc>(transition.getEndArcs());
+			Collection<Arc> copyOfStartArcs = new ArrayList<Arc>(
+					transition.getStartArcs());
+			Collection<Arc> copyOfEndArcs = new ArrayList<Arc>(
+					transition.getEndArcs());
 			for (Arc arc : copyOfStartArcs) {
 				result.addAll(giveAllDeleteElem(arc.getId()));
 			}
@@ -230,7 +245,6 @@ public class Petrinet {
 		return result;
 	}
 
-	
 	public Transition createTransition(String name, IRenew rnw) {
 		Transition t = new Transition(UUID.gettID(), rnw, this);
 		t.setName(name);

@@ -1,5 +1,9 @@
 package transformation;
 
+import java.util.List;
+
+import petrinet.Arc;
+import petrinet.INode;
 import petrinet.Petrinet;
 import exceptions.GeneralPetrinetException;
 
@@ -94,6 +98,16 @@ public class TransformationComponent implements ITransformation{
 	@Override
 	public ChangedPetrinetElements setMark(Rule rule, int placeId, int mark) {
 		return rule.setMark(placeId, mark);
+	}
+
+	@Override
+	public List<INode> getMappings(Rule rule, INode node) {
+		return rule.getMappings(node);
+	}
+
+	@Override
+	public List<Arc> getMappings(Rule rule, Arc arc) {
+		return rule.getMappings(arc);
 	}
 
 }

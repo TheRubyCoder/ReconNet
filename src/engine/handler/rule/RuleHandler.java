@@ -2,9 +2,12 @@ package engine.handler.rule;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import persistence.Persistence;
@@ -71,9 +74,9 @@ final public class RuleHandler {
 
 			if (net.equals(RuleNet.L)) {
 				// Manipulation in L
-				// 
+				//
 				petrinet = rule.getL();
-				
+
 				if (this.getNodeType(from).equals(NodeTypeEnum.Place)
 						&& this.getNodeType(to).equals(NodeTypeEnum.Transition)) {
 					// place => transition
@@ -92,12 +95,12 @@ final public class RuleHandler {
 					} catch (IllegalArgumentException e) {
 						exception("createArc - can not create Arc in L");
 					}
-					
-					//get automatically added Corresponding Arc in K
+
+					// get automatically added Corresponding Arc in K
 					Arc newArcInK = rule.fromLtoK(arc);
-					
-					//Add this Arc into the JungData of K
-					if (newArcInK != null){
+
+					// Add this Arc into the JungData of K
+					if (newArcInK != null) {
 						Place fromInK = (Place) newArcInK.getStart();
 						Transition toInK = (Transition) newArcInK.getEnd();
 						try {
@@ -108,7 +111,8 @@ final public class RuleHandler {
 					}
 
 					return arc;
-				} else if (this.getNodeType(from).equals(NodeTypeEnum.Transition)
+				} else if (this.getNodeType(from).equals(
+						NodeTypeEnum.Transition)
 						&& this.getNodeType(to).equals(NodeTypeEnum.Place)) {
 					// transition => place
 
@@ -131,12 +135,12 @@ final public class RuleHandler {
 					} catch (IllegalArgumentException e) {
 						exception("createArc - can not create Arc");
 					}
-					
-					//get automatically added Corresponding Arc in K
+
+					// get automatically added Corresponding Arc in K
 					Arc newArcInK = rule.fromLtoK(arc);
-					
-					//Add this Arc into the JungData of K
-					if (newArcInK != null){
+
+					// Add this Arc into the JungData of K
+					if (newArcInK != null) {
 						Transition fromInK = (Transition) newArcInK.getStart();
 						Place toInK = (Place) newArcInK.getEnd();
 						try {
@@ -151,19 +155,19 @@ final public class RuleHandler {
 
 					return null;
 				}
-				
+
 			} else if (net.equals(RuleNet.K)) {
 				// Manipulation in K
 				// Get Petrinet and corresponding JungData
 				petrinet = rule.getK();
-				
-				if(rule.fromKtoL(from) == null || rule.fromKtoL(to) == null) {
+
+				if (rule.fromKtoL(from) == null || rule.fromKtoL(to) == null) {
 					exception("Arc not possible in L");
 				}
-				if(rule.fromKtoR(from) == null || rule.fromKtoR(to) == null) {
+				if (rule.fromKtoR(from) == null || rule.fromKtoR(to) == null) {
 					exception("Arc not possible in R");
 				}
-				
+
 				if (this.getNodeType(from).equals(NodeTypeEnum.Place)
 						&& this.getNodeType(to).equals(NodeTypeEnum.Transition)) {
 					// place => transition
@@ -182,27 +186,28 @@ final public class RuleHandler {
 					} catch (IllegalArgumentException e) {
 						exception("createArc - can not create Arc in K");
 					}
-					
-					//get automatically added Corresponding Arc in L and R
+
+					// get automatically added Corresponding Arc in L and R
 					Arc newArcInL = rule.fromKtoL(arc);
 					Arc newArcInR = rule.fromKtoR(arc);
-					
-					//Add this Arc into the JungData of L and R
-					if (newArcInL != null && newArcInR != null){
+
+					// Add this Arc into the JungData of L and R
+					if (newArcInL != null && newArcInR != null) {
 						Place fromInL = (Place) newArcInL.getStart();
 						Transition toInL = (Transition) newArcInL.getEnd();
 						Place fromInR = (Place) newArcInR.getStart();
 						Transition toInR = (Transition) newArcInR.getEnd();
 						try {
-							lJungData.createArc(newArcInL, fromInL, toInL); 
-							rJungData.createArc(newArcInR, fromInR, toInR); 
+							lJungData.createArc(newArcInL, fromInL, toInL);
+							rJungData.createArc(newArcInR, fromInR, toInR);
 						} catch (IllegalArgumentException e) {
 							exception("createArc - can not create Arc in L or R");
 						}
 					}
 
 					return arc;
-				} else if (this.getNodeType(from).equals(NodeTypeEnum.Transition)
+				} else if (this.getNodeType(from).equals(
+						NodeTypeEnum.Transition)
 						&& this.getNodeType(to).equals(NodeTypeEnum.Place)) {
 					// transition => place
 
@@ -225,20 +230,20 @@ final public class RuleHandler {
 					} catch (IllegalArgumentException e) {
 						exception("createArc - can not create Arc in K");
 					}
-					
-					//get automatically added Corresponding Arc in K
+
+					// get automatically added Corresponding Arc in K
 					Arc newArcInL = rule.fromKtoL(arc);
 					Arc newArcInR = rule.fromKtoR(arc);
-					
-					//Add this Arc into the JungData of K
-					if (newArcInL != null && newArcInR != null){
+
+					// Add this Arc into the JungData of K
+					if (newArcInL != null && newArcInR != null) {
 						Transition fromInL = (Transition) newArcInL.getStart();
 						Place toInL = (Place) newArcInL.getEnd();
 						Transition fromInR = (Transition) newArcInR.getStart();
 						Place toInR = (Place) newArcInR.getEnd();
 						try {
 							lJungData.createArc(newArcInL, fromInL, toInL);
-							rJungData.createArc(newArcInR, fromInR, toInR); 
+							rJungData.createArc(newArcInR, fromInR, toInR);
 						} catch (IllegalArgumentException e) {
 							e.printStackTrace();
 							exception("createArc - can not create Arc in L or R");
@@ -250,12 +255,12 @@ final public class RuleHandler {
 
 					return null;
 				}
-				
+
 			} else if (net.equals(RuleNet.R)) {
 				// Manipulation in R
 				// Get Petrinet and corresponding JungData
 				petrinet = rule.getR();
-				
+
 				if (this.getNodeType(from).equals(NodeTypeEnum.Place)
 						&& this.getNodeType(to).equals(NodeTypeEnum.Transition)) {
 					// place => transition
@@ -274,12 +279,12 @@ final public class RuleHandler {
 					} catch (IllegalArgumentException e) {
 						exception("createArc - can not create Arc in R");
 					}
-					
-					//get automatically added Corresponding Arc in K
+
+					// get automatically added Corresponding Arc in K
 					Arc newArcInK = rule.fromRtoK(arc);
-					
-					//Add this Arc into the JungData of K
-					if (newArcInK != null){
+
+					// Add this Arc into the JungData of K
+					if (newArcInK != null) {
 						Place fromInK = (Place) newArcInK.getStart();
 						Transition toInK = (Transition) newArcInK.getEnd();
 						try {
@@ -290,7 +295,8 @@ final public class RuleHandler {
 					}
 
 					return arc;
-				} else if (this.getNodeType(from).equals(NodeTypeEnum.Transition)
+				} else if (this.getNodeType(from).equals(
+						NodeTypeEnum.Transition)
 						&& this.getNodeType(to).equals(NodeTypeEnum.Place)) {
 					// transition => place
 
@@ -313,12 +319,12 @@ final public class RuleHandler {
 					} catch (IllegalArgumentException e) {
 						exception("createArc - can not create Arc in R");
 					}
-					
-					//get automatically added Corresponding Arc in K
+
+					// get automatically added Corresponding Arc in K
 					Arc newArcInK = rule.fromRtoK(arc);
-					
-					//Add this Arc into the JungData of K
-					if (newArcInK != null){
+
+					// Add this Arc into the JungData of K
+					if (newArcInK != null) {
 						Transition fromInK = (Transition) newArcInK.getStart();
 						Place toInK = (Place) newArcInK.getEnd();
 						try {
@@ -328,21 +334,20 @@ final public class RuleHandler {
 						}
 					}
 					return arc;
-					
+
 				} else {
 					exception("createArc - wrong combi");
 
 					return null;
 				}
-				
+
 			} else {
 				exception("createArc - Not given if Manipulation is in L,K or R");
 				return null;
 			}
-			
 
 		}
-		
+
 	}
 
 	public INode createPlace(int id, RuleNet net, Point2D coordinate)
@@ -359,15 +364,21 @@ final public class RuleHandler {
 			JungData lJungData = ruleData.getLJungData();
 			JungData kJungData = ruleData.getKJungData();
 			JungData rJungData = ruleData.getRJungData();
-			if(!lJungData.isCreatePossibleAt(coordinate)){ exception("Place too close to Node in L"); }
-			if(!kJungData.isCreatePossibleAt(coordinate)){ exception("Place too close to Node in K"); }
-			if(!rJungData.isCreatePossibleAt(coordinate)){ exception("Place too close to Node in R"); }
-			
+			if (!lJungData.isCreatePossibleAt(coordinate)) {
+				exception("Place too close to Node in L");
+			}
+			if (!kJungData.isCreatePossibleAt(coordinate)) {
+				exception("Place too close to Node in K");
+			}
+			if (!rJungData.isCreatePossibleAt(coordinate)) {
+				exception("Place too close to Node in R");
+			}
+
 			if (net.equals(RuleNet.L)) {
 				// Manipulation in L
 				//
 				petrinet = rule.getL();
-				
+
 				// create a new Place
 				Place newPlace = petrinet.createPlace("undefined");
 
@@ -377,10 +388,10 @@ final public class RuleHandler {
 				} catch (IllegalArgumentException e) {
 					exception("createPlace - can not create Place in L");
 				}
-				
-				//get automatically added Corresponding Place in K
+
+				// get automatically added Corresponding Place in K
 				Place newPlaceInK = (Place) rule.fromLtoK(newPlace);
-				if(newPlaceInK != null){
+				if (newPlaceInK != null) {
 					try {
 						kJungData.createPlace(newPlaceInK, coordinate);
 					} catch (IllegalArgumentException e) {
@@ -389,13 +400,12 @@ final public class RuleHandler {
 				}
 
 				return newPlace;
-				
-				
+
 			} else if (net.equals(RuleNet.K)) {
 				// Manipulation in K
-				// 
+				//
 				petrinet = rule.getK();
-				
+
 				// create a new Place
 				Place newPlace = petrinet.createPlace("undefined");
 
@@ -405,11 +415,11 @@ final public class RuleHandler {
 				} catch (IllegalArgumentException e) {
 					exception("createPlace - can not create Place in K");
 				}
-				
-				//get automatically added Corresponding Place in L and R
+
+				// get automatically added Corresponding Place in L and R
 				Place newPlaceInL = (Place) rule.fromKtoL(newPlace);
 				Place newPlaceInR = (Place) rule.fromKtoR(newPlace);
-				if(newPlaceInL != null && newPlaceInR != null){
+				if (newPlaceInL != null && newPlaceInR != null) {
 					try {
 						lJungData.createPlace(newPlaceInL, coordinate);
 						rJungData.createPlace(newPlaceInR, coordinate);
@@ -419,12 +429,12 @@ final public class RuleHandler {
 				}
 
 				return newPlace;
-				
+
 			} else if (net.equals(RuleNet.R)) {
 				// Manipulation in R
 				// Get Petrinet and corresponding JungData
 				petrinet = rule.getR();
-				
+
 				// create a new Place
 				Place newPlace = petrinet.createPlace("undefined");
 
@@ -434,10 +444,10 @@ final public class RuleHandler {
 				} catch (IllegalArgumentException e) {
 					exception("createPlace - can not create Place in R");
 				}
-				
-				//get automatically added Corresponding Place in K
+
+				// get automatically added Corresponding Place in K
 				Place newPlaceInK = (Place) rule.fromRtoK(newPlace);
-				if(newPlaceInK != null){
+				if (newPlaceInK != null) {
 					try {
 						kJungData.createPlace(newPlaceInK, coordinate);
 					} catch (IllegalArgumentException e) {
@@ -446,12 +456,11 @@ final public class RuleHandler {
 				}
 
 				return newPlace;
-				
+
 			} else {
 				exception("createPlace - Not given if Manipulation is in L,K or R");
 				return null;
 			}
-
 
 		}
 
@@ -482,18 +491,25 @@ final public class RuleHandler {
 			JungData lJungData = ruleData.getLJungData();
 			JungData kJungData = ruleData.getKJungData();
 			JungData rJungData = ruleData.getRJungData();
-			
-			if(!lJungData.isCreatePossibleAt(coordinate)){ exception("Transition too close to Node in L"); }
-			if(!kJungData.isCreatePossibleAt(coordinate)){ exception("Transition too close to Node in K"); }
-			if(!rJungData.isCreatePossibleAt(coordinate)){ exception("Transition too close to Node in R"); }
+
+			if (!lJungData.isCreatePossibleAt(coordinate)) {
+				exception("Transition too close to Node in L");
+			}
+			if (!kJungData.isCreatePossibleAt(coordinate)) {
+				exception("Transition too close to Node in K");
+			}
+			if (!rJungData.isCreatePossibleAt(coordinate)) {
+				exception("Transition too close to Node in R");
+			}
 
 			if (net.equals(RuleNet.L)) {
 				// Manipulation in L
-				// 
+				//
 				petrinet = rule.getL();
-				
+
 				// create a new Place
-				Transition newTransition = petrinet.createTransition("undefined");
+				Transition newTransition = petrinet
+						.createTransition("undefined");
 
 				// call JungModificator
 				try {
@@ -501,26 +517,29 @@ final public class RuleHandler {
 				} catch (IllegalArgumentException e) {
 					exception("createTransition - can not create Transition in L");
 				}
-				
-				//get automatically added Corresponding Place in K
-				Transition newTransitionInK = (Transition) rule.fromLtoK(newTransition);
-				if(newTransitionInK != null){
+
+				// get automatically added Corresponding Place in K
+				Transition newTransitionInK = (Transition) rule
+						.fromLtoK(newTransition);
+				if (newTransitionInK != null) {
 					try {
-						kJungData.createTransition(newTransitionInK, coordinate);
+						kJungData
+								.createTransition(newTransitionInK, coordinate);
 					} catch (IllegalArgumentException e) {
 						exception("createPlace - can not create Transition in K");
 					}
 				}
 
 				return newTransition;
-				
+
 			} else if (net.equals(RuleNet.K)) {
 				// Manipulation in K
 				//
 				petrinet = rule.getK();
-				
+
 				// create a new Transition
-				Transition newTransition = petrinet.createTransition("undefined");
+				Transition newTransition = petrinet
+						.createTransition("undefined");
 
 				// call JungModificator
 				try {
@@ -528,28 +547,33 @@ final public class RuleHandler {
 				} catch (IllegalArgumentException e) {
 					exception("createTransition - can not create Transition in K");
 				}
-				
-				//get automatically added Corresponding Transition in L and R
-				Transition newTransitionInL = (Transition) rule.fromKtoL(newTransition);
-				Transition newTransitionInR = (Transition) rule.fromKtoR(newTransition);
-				if(newTransitionInL != null && newTransitionInR != null){
+
+				// get automatically added Corresponding Transition in L and R
+				Transition newTransitionInL = (Transition) rule
+						.fromKtoL(newTransition);
+				Transition newTransitionInR = (Transition) rule
+						.fromKtoR(newTransition);
+				if (newTransitionInL != null && newTransitionInR != null) {
 					try {
-						lJungData.createTransition(newTransitionInL, coordinate);
-						rJungData.createTransition(newTransitionInR, coordinate);
+						lJungData
+								.createTransition(newTransitionInL, coordinate);
+						rJungData
+								.createTransition(newTransitionInR, coordinate);
 					} catch (IllegalArgumentException e) {
 						exception("createTransition - can not create Transition in L or R");
 					}
 				}
 
 				return newTransition;
-				
+
 			} else if (net.equals(RuleNet.R)) {
 				// Manipulation in R
-				// 
+				//
 				petrinet = rule.getR();
-				
+
 				// create a new Transition
-				Transition newTransition = petrinet.createTransition("undefined");
+				Transition newTransition = petrinet
+						.createTransition("undefined");
 
 				// call JungModificator
 				try {
@@ -557,19 +581,21 @@ final public class RuleHandler {
 				} catch (IllegalArgumentException e) {
 					exception("createTransition - can not create Transition in R");
 				}
-				
-				//get automatically added Corresponding Transition in K
-				Transition newTransitionInK = (Transition) rule.fromRtoK(newTransition);
-				if(newTransitionInK != null){
+
+				// get automatically added Corresponding Transition in K
+				Transition newTransitionInK = (Transition) rule
+						.fromRtoK(newTransition);
+				if (newTransitionInK != null) {
 					try {
-						kJungData.createTransition(newTransitionInK, coordinate);
+						kJungData
+								.createTransition(newTransitionInK, coordinate);
 					} catch (IllegalArgumentException e) {
 						exception("createTransition - can not create Transition in K");
 					}
 				}
 
 				return newTransition;
-				
+
 			} else {
 				exception("createTransition - Not given if Manipulation is in L,K or R");
 				return null;
@@ -580,60 +606,66 @@ final public class RuleHandler {
 	}
 
 	public void deleteArc(int id, RuleNet net, Arc arc) throws EngineException {
-		// get the RuleData from the id and SessionManager
-		RuleData ruleData = sessionManager.getRuleData(id);
-
-		// Test: is id valid
-		if (ruleData == null) {
-			exception("deleteArc - id of the Rule is wrong");
-		} else {
-			Rule rule = ruleData.getRule();
-			Petrinet petrinet = null;
-			JungData jungData = null;
-
-			if (net.equals(RuleNet.L)) {
-				// Manipulation in L
-				// Get Petrinet and corresponding JungData
-				petrinet = rule.getL();
-				jungData = ruleData.getLJungData();
-			} else if (net.equals(RuleNet.K)) {
-				// Manipulation in K
-				// Get Petrinet and corresponding JungData
-				petrinet = rule.getK();
-				jungData = ruleData.getKJungData();
-			} else if (net.equals(RuleNet.R)) {
-				// Manipulation in R
-				// Get Petrinet and corresponding JungData
-				petrinet = rule.getR();
-				jungData = ruleData.getRJungData();
-			} else {
-				exception("deleteArc - Not given if Manipulation is in L,K or R");
-			}
-			petrinet.deleteElementById(arc.getId());
-
-			// call JundModification and create Collection
-			Collection<Arc> collArc = new HashSet<Arc>();
-			collArc.add(arc);
-
-			Collection<INode> collINodes = new HashSet<INode>();
-
-			try {
-				jungData.delete(collArc, collINodes);
-			} catch (IllegalArgumentException e) {
-				exception("deleteArc - can not delete Arc");
-			}
-		}
+		deleteInternal(id, net, arc);
+//		// get the RuleData from the id and SessionManager
+//		RuleData ruleData = sessionManager.getRuleData(id);
+//
+//		// Test: is id valid
+//		if (ruleData == null) {
+//			exception("deleteArc - id of the Rule is wrong");
+//		} else {
+//			Rule rule = ruleData.getRule();
+//			
+//			
+//			Petrinet petrinet = null;
+//			JungData jungData = null;
+//
+//			if (net.equals(RuleNet.L)) {
+//				// Manipulation in L
+//				// Get Petrinet and corresponding JungData
+//				petrinet = rule.getL();
+//				jungData = ruleData.getLJungData();
+//			} else if (net.equals(RuleNet.K)) {
+//				// Manipulation in K
+//				// Get Petrinet and corresponding JungData
+//				petrinet = rule.getK();
+//				jungData = ruleData.getKJungData();
+//			} else if (net.equals(RuleNet.R)) {
+//				// Manipulation in R
+//				// Get Petrinet and corresponding JungData
+//				petrinet = rule.getR();
+//				jungData = ruleData.getRJungData();
+//			} else {
+//				exception("deleteArc - Not given if Manipulation is in L,K or R");
+//			}
+//			petrinet.deleteElementById(arc.getId());
+//
+//			// call JundModification and create Collection
+//			Collection<Arc> collArc = new HashSet<Arc>();
+//			collArc.add(arc);
+//
+//			Collection<INode> collINodes = new HashSet<INode>();
+//
+//			try {
+//				jungData.delete(collArc, collINodes);
+//			} catch (IllegalArgumentException e) {
+//				exception("deleteArc - can not delete Arc");
+//			}
+//		}
 	}
 
-	public void deletePlace(int id, RuleNet net, INode place) throws EngineException {
+	public void deletePlace(int id, RuleNet net, INode place)
+			throws EngineException {
 		deleteInternal(id, net, place);
 	}
 
-	public void deleteTransition(int id, RuleNet net, INode transition) throws EngineException {
+	public void deleteTransition(int id, RuleNet net, INode transition)
+			throws EngineException {
 		deleteInternal(id, net, transition);
 	}
 
-	private void deleteInternal(int id, RuleNet net, INode node) throws EngineException {
+	private void deleteInternal(int id, RuleNet net, INode node)
+			throws EngineException {
 
 		// get the RuleData from the id and SessionManager
 		RuleData ruleData = sessionManager.getRuleData(id);
@@ -643,64 +675,11 @@ final public class RuleHandler {
 			exception("deleteInternal - id of the Rule is wrong");
 		} else {
 			Rule rule = ruleData.getRule();
-			Petrinet petrinet = null;
-			JungData jungData = null;
-
-			if (net.equals(RuleNet.L)) {
-				// Manipulation in L
-				// Get Petrinet and corresponding JungData
-				petrinet = rule.getL();
-				jungData = ruleData.getLJungData();
-			} else if (net.equals(RuleNet.K)) {
-				// Manipulation in K
-				// Get Petrinet and corresponding JungData
-				petrinet = rule.getK();
-				jungData = ruleData.getKJungData();
-			} else if (net.equals(RuleNet.R)) {
-				// Manipulation in R
-				// Get Petrinet and corresponding JungData
-				petrinet = rule.getR();
-				jungData = ruleData.getRJungData();
-			} else {
-				exception("deleteInternal - Not given if Manipulation is in L,K or R");
-			}
-
-			// all deleted elements, returned by Petrinet
-			Collection<Integer> allDelElemFromPetrinet = petrinet
-					.giveAllDeleteElem(node.getId());
-
-			Iterator<Integer> iter = allDelElemFromPetrinet.iterator();
-			Collection<Arc> collArc = new HashSet<Arc>();
-			Collection<INode> collINodes = new HashSet<INode>();
-
-			while (iter.hasNext()) {
-				int idOfElem = iter.next();
-				ElementType type = petrinet.getNodeType(idOfElem);
-
-				// test type of Element
-				if (type == ElementType.ARC) {
-					collArc.add(petrinet.getArcById(idOfElem));
-				} else if (type == ElementType.PLACE) {
-					collINodes.add(petrinet.getPlaceById(idOfElem));
-				} else if (type == ElementType.TRANSITION) {
-					collINodes.add(petrinet.getTransitionById(idOfElem));
-				} else {
-					exception("deleteInternal - invalid type from id");
-				}
-
-			}
-
-			try {
-				jungData.delete(collArc, collINodes);
-			} catch (IllegalArgumentException e) {
-				exception("deleteInternal - can not delete Place/Transition");
-			}
-
-			// all deleted elements, returned by Petrinet
-			petrinet.deleteElementById(node.getId());
 			
+			rule.removeNodeOrArc(node);
+			
+			ruleData.deleteDataOfMissingElements(rule);
 		}
-
 	}
 
 	public ArcAttribute getArcAttribute(int id, Arc arc) {
@@ -713,7 +692,8 @@ final public class RuleHandler {
 
 	}
 
-	public AbstractLayout<INode, Arc> getJungLayout(int id, RuleNet net) throws EngineException {
+	public AbstractLayout<INode, Arc> getJungLayout(int id, RuleNet net)
+			throws EngineException {
 
 		// get the RuleData from the id and SessionManager
 		RuleData ruleData = sessionManager.getRuleData(id);
@@ -722,7 +702,7 @@ final public class RuleHandler {
 		if (ruleData == null) {
 			exception("getJungLayout - id of the Rule is wrong");
 		} else {
-			//Rule rule = ruleData.getRule();
+			// Rule rule = ruleData.getRule();
 			JungData jungData = null;
 
 			if (net.equals(RuleNet.L)) {
@@ -757,7 +737,6 @@ final public class RuleHandler {
 
 			// TODO : change default color
 			Color color = Color.gray;
-			
 
 			PlaceAttribute placeAttribute = new PlaceAttribute(marking, pname,
 					color);
@@ -830,63 +809,75 @@ final public class RuleHandler {
 			JungData lJungData = ruleData.getLJungData();
 			JungData kJungData = ruleData.getKJungData();
 			JungData rJungData = ruleData.getRJungData();
-			if(!lJungData.isCreatePossibleAt(relativePosition)){ exception("Place too close to Node in L"); }
-			if(!kJungData.isCreatePossibleAt(relativePosition)){ exception("Place too close to Node in K"); }
-			if(!rJungData.isCreatePossibleAt(relativePosition)){ exception("Place too close to Node in R"); }
-			
+			if (!lJungData.isCreatePossibleAt(relativePosition)) {
+				exception("Place too close to Node in L");
+			}
+			if (!kJungData.isCreatePossibleAt(relativePosition)) {
+				exception("Place too close to Node in K");
+			}
+			if (!rJungData.isCreatePossibleAt(relativePosition)) {
+				exception("Place too close to Node in R");
+			}
+
 			Map<INode, NodeLayoutAttribute> lLayoutMap = lJungData
 					.getNodeLayoutAttributes();
 			Map<INode, NodeLayoutAttribute> kLayoutMap = kJungData
 					.getNodeLayoutAttributes();
 			Map<INode, NodeLayoutAttribute> rLayoutMap = rJungData
 					.getNodeLayoutAttributes();
-			
+
 			RuleNet net = getContainingNet(id, node);
-			if(net.equals(RuleNet.L)){
+			if (net.equals(RuleNet.L)) {
 				// move node in l
 				moveNodeInternal(lJungData, lLayoutMap, node, relativePosition);
-			
+
 				// move node in k
 				INode nodeInK = rule.fromLtoK(node);
-				if(nodeInK != null){
-					moveNodeInternal(kJungData, kLayoutMap, nodeInK, relativePosition);
+				if (nodeInK != null) {
+					moveNodeInternal(kJungData, kLayoutMap, nodeInK,
+							relativePosition);
 
 					// move node in r
 					INode nodeInR = rule.fromKtoR(nodeInK);
-					if(nodeInR != null){
-						moveNodeInternal(rJungData, rLayoutMap, nodeInR, relativePosition); 
+					if (nodeInR != null) {
+						moveNodeInternal(rJungData, rLayoutMap, nodeInR,
+								relativePosition);
 					}
 				}
 			}
-			if(net.equals(RuleNet.K)){
+			if (net.equals(RuleNet.K)) {
 				// move node in l
 				INode nodeInL = rule.fromKtoL(node);
-				if(nodeInL != null){
-					moveNodeInternal(lJungData, lLayoutMap, nodeInL, relativePosition);
+				if (nodeInL != null) {
+					moveNodeInternal(lJungData, lLayoutMap, nodeInL,
+							relativePosition);
 				}
 				// move node in k
 				moveNodeInternal(kJungData, kLayoutMap, node, relativePosition);
 
 				// move node in r
 				INode nodeInR = rule.fromKtoR(node);
-				if(nodeInR != null){
-					moveNodeInternal(rJungData, rLayoutMap, nodeInR, relativePosition);
+				if (nodeInR != null) {
+					moveNodeInternal(rJungData, rLayoutMap, nodeInR,
+							relativePosition);
 				}
 			}
-			if(net.equals(RuleNet.R)){
+			if (net.equals(RuleNet.R)) {
 				// move node in k
-					INode nodeInK = rule.fromRtoK(node);
-					if(nodeInK != null){
-						moveNodeInternal(kJungData, kLayoutMap, nodeInK, relativePosition);
-					
-				// move node in l
-						INode nodeInL = rule.fromKtoL(nodeInK);
-						if(nodeInL != null){
-							moveNodeInternal(lJungData, lLayoutMap, nodeInL, relativePosition);
-						}
+				INode nodeInK = rule.fromRtoK(node);
+				if (nodeInK != null) {
+					moveNodeInternal(kJungData, kLayoutMap, nodeInK,
+							relativePosition);
+
+					// move node in l
+					INode nodeInL = rule.fromKtoL(nodeInK);
+					if (nodeInL != null) {
+						moveNodeInternal(lJungData, lLayoutMap, nodeInL,
+								relativePosition);
 					}
+				}
 				// move node in r
-					moveNodeInternal(rJungData, rLayoutMap, node, relativePosition);
+				moveNodeInternal(rJungData, rLayoutMap, node, relativePosition);
 			}
 		}
 
@@ -939,7 +930,8 @@ final public class RuleHandler {
 
 	}
 
-	public void save(int id, String path, String filename, String format) throws EngineException {
+	public void save(int id, String path, String filename, String format)
+			throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
 		RuleData ruleData = sessionManager.getRuleData(id);
@@ -948,32 +940,40 @@ final public class RuleHandler {
 		if (ruleData == null) {
 			exception("save - id of the Petrinet is wrong");
 		} else {
-			
+
 			Rule rule = ruleData.getRule();
-			
-//			Petrinet petrinet = ruleData.getPetrinet();
+
+			// Petrinet petrinet = ruleData.getPetrinet();
 			JungData jungDataL = ruleData.getLJungData();
 			JungData jungDataK = ruleData.getKJungData();
 			JungData jungDataR = ruleData.getRJungData();
-			
-			Map<INode, NodeLayoutAttribute> nodeMapL = jungDataL.getNodeLayoutAttributes();
-			Map<INode, NodeLayoutAttribute> nodeMapK = jungDataK.getNodeLayoutAttributes();
-			Map<INode, NodeLayoutAttribute> nodeMapR = jungDataR.getNodeLayoutAttributes();
-			
-			checkNodeLayoutAttribute(nodeMapL == null, "save - nodeMapL == null");
-			checkNodeLayoutAttribute(nodeMapK == null, "save - nodeMapK == null");
-			checkNodeLayoutAttribute(nodeMapR == null, "save - nodeMapR == null");
-			
-			Persistence.saveRule(path + "/" + filename + "." + format, rule, nodeMapL, nodeMapK, nodeMapR);
+
+			Map<INode, NodeLayoutAttribute> nodeMapL = jungDataL
+					.getNodeLayoutAttributes();
+			Map<INode, NodeLayoutAttribute> nodeMapK = jungDataK
+					.getNodeLayoutAttributes();
+			Map<INode, NodeLayoutAttribute> nodeMapR = jungDataR
+					.getNodeLayoutAttributes();
+
+			checkNodeLayoutAttribute(nodeMapL == null,
+					"save - nodeMapL == null");
+			checkNodeLayoutAttribute(nodeMapK == null,
+					"save - nodeMapK == null");
+			checkNodeLayoutAttribute(nodeMapR == null,
+					"save - nodeMapR == null");
+
+			Persistence.saveRule(path + "/" + filename + "." + format, rule,
+					nodeMapL, nodeMapK, nodeMapR);
 
 		}
-		
+
 	}
-	
-	public int load(String path, String filename){
-		
-		return Persistence.loadRule(path + "/" + filename, RulePersistence.getInstance());
-		
+
+	public int load(String path, String filename) {
+
+		return Persistence.loadRule(path + "/" + filename,
+				RulePersistence.getInstance());
+
 	}
 
 	public void setMarking(int id, INode place, int marking)
@@ -994,24 +994,32 @@ final public class RuleHandler {
 
 				// set new marking
 				p.setMark(marking);
-				
-				//Synchronize Places in the other parts of the rules
+
+				// Synchronize Places in the other parts of the rules
 				RuleNet net = getContainingNet(id, place);
-				if(net.equals(RuleNet.L)){
+				if (net.equals(RuleNet.L)) {
 					Place placeInK = (Place) rule.fromLtoK(p);
 					Place placeInR = (Place) rule.fromKtoR(placeInK);
 					placeInK.setMark(marking);
-					if (placeInR != null) { placeInR.setMark(marking); }
-				} else if (net.equals(RuleNet.K)){
+					if (placeInR != null) {
+						placeInR.setMark(marking);
+					}
+				} else if (net.equals(RuleNet.K)) {
 					Place placeInL = (Place) rule.fromKtoL(p);
 					Place placeInR = (Place) rule.fromKtoR(p);
-					if (placeInL != null) { placeInL.setMark(marking); }
-					if (placeInR != null) { placeInR.setMark(marking); }
-				} else if(net.equals(RuleNet.R)){
+					if (placeInL != null) {
+						placeInL.setMark(marking);
+					}
+					if (placeInR != null) {
+						placeInR.setMark(marking);
+					}
+				} else if (net.equals(RuleNet.R)) {
 					Place placeInK = (Place) rule.fromRtoK(p);
 					Place placeInL = (Place) rule.fromKtoL(placeInK);
 					placeInK.setMark(marking);
-					if (placeInL != null) { placeInL.setMark(marking); }
+					if (placeInL != null) {
+						placeInL.setMark(marking);
+					}
 				}
 
 			}
@@ -1031,7 +1039,6 @@ final public class RuleHandler {
 			exception("setPname - id of the rule is wrong");
 		} else {
 
-
 			Rule rule = ruleData.getRule();
 			if (this.getNodeType(place).equals(NodeTypeEnum.Place)) {
 				// cast object
@@ -1039,33 +1046,42 @@ final public class RuleHandler {
 
 				// set new Pname
 				p.setName(pname);
-				
-				//Synchronize Places in the other parts of the rules
+
+				// Synchronize Places in the other parts of the rules
 				RuleNet net = getContainingNet(id, place);
-				if(net.equals(RuleNet.L)){
+				if (net.equals(RuleNet.L)) {
 					Place placeInK = (Place) rule.fromLtoK(p);
 					Place placeInR = (Place) rule.fromKtoR(placeInK);
 					placeInK.setName(pname);
-					if (placeInR != null) { placeInR.setName(pname); }
-				} else if (net.equals(RuleNet.K)){
+					if (placeInR != null) {
+						placeInR.setName(pname);
+					}
+				} else if (net.equals(RuleNet.K)) {
 					Place placeInL = (Place) rule.fromKtoL(p);
 					Place placeInR = (Place) rule.fromKtoR(p);
-					if (placeInL != null) { placeInL.setName(pname); }
-					if (placeInR != null) { placeInR.setName(pname); }
-				} else if(net.equals(RuleNet.R)){
+					if (placeInL != null) {
+						placeInL.setName(pname);
+					}
+					if (placeInR != null) {
+						placeInR.setName(pname);
+					}
+				} else if (net.equals(RuleNet.R)) {
 					Place placeInK = (Place) rule.fromRtoK(p);
 					Place placeInL = (Place) rule.fromKtoL(placeInK);
 					placeInK.setName(pname);
-					if (placeInL != null) { placeInL.setName(pname); }
+					if (placeInL != null) {
+						placeInL.setName(pname);
+					}
 				}
 			}
 
 		}
 
 	}
-	
-	public void setPlaceColor(int id, INode place, Color color) throws EngineException {
-		
+
+	public void setPlaceColor(int id, INode place, Color color)
+			throws EngineException {
+
 		// get the RuleData from the id and SessionManager
 		RuleData ruleData = sessionManager.getRuleData(id);
 
@@ -1079,27 +1095,35 @@ final public class RuleHandler {
 			JungData rJungData = ruleData.getRJungData();
 			if (this.getNodeType(place).equals(NodeTypeEnum.Place)) {
 				Place p = (Place) place;
-				
-				//Synchronize Places in the other parts of the rules
+
+				// Synchronize Places in the other parts of the rules
 				RuleNet net = getContainingNet(id, place);
-				if(net.equals(RuleNet.L)){
+				if (net.equals(RuleNet.L)) {
 					lJungData.setPlaceColor(p, color);
 					Place placeInK = (Place) rule.fromLtoK(p);
 					Place placeInR = (Place) rule.fromKtoR(p);
 					kJungData.setPlaceColor(placeInK, color);
-					if ( placeInR != null) { rJungData.setPlaceColor(placeInR, color); }
-				} else if (net.equals(RuleNet.K)){
+					if (placeInR != null) {
+						rJungData.setPlaceColor(placeInR, color);
+					}
+				} else if (net.equals(RuleNet.K)) {
 					kJungData.setPlaceColor(p, color);
 					Place placeInL = (Place) rule.fromKtoL(p);
 					Place placeInR = (Place) rule.fromKtoR(p);
-					if (placeInL != null) { lJungData.setPlaceColor(placeInL, color); }
-					if (placeInR != null) { rJungData.setPlaceColor(placeInR, color); }
-				} else if(net.equals(RuleNet.R)){
+					if (placeInL != null) {
+						lJungData.setPlaceColor(placeInL, color);
+					}
+					if (placeInR != null) {
+						rJungData.setPlaceColor(placeInR, color);
+					}
+				} else if (net.equals(RuleNet.R)) {
 					rJungData.setPlaceColor(p, color);
 					Place placeInK = (Place) rule.fromRtoK(p);
 					Place placeInL = (Place) rule.fromKtoL(placeInK);
 					kJungData.setPlaceColor(placeInK, color);
-					if (placeInL != null) { lJungData.setPlaceColor(placeInL, color); }
+					if (placeInL != null) {
+						lJungData.setPlaceColor(placeInL, color);
+					}
 				}
 			}
 		}
@@ -1123,24 +1147,34 @@ final public class RuleHandler {
 
 				// set new Tlb
 				t.setTlb(tlb);
-				
-				//Synchronize Transitions in the other parts of the rules
+
+				// Synchronize Transitions in the other parts of the rules
 				RuleNet net = getContainingNet(id, transition);
-				if(net.equals(RuleNet.L)){
+				if (net.equals(RuleNet.L)) {
 					Transition transitionInK = (Transition) rule.fromLtoK(t);
-					Transition transitionInR = (Transition) rule.fromKtoR(transitionInK);
+					Transition transitionInR = (Transition) rule
+							.fromKtoR(transitionInK);
 					transitionInK.setTlb(tlb);
-					if (transitionInR != null) { transitionInR.setTlb(tlb); }
-				} else if (net.equals(RuleNet.K)){
+					if (transitionInR != null) {
+						transitionInR.setTlb(tlb);
+					}
+				} else if (net.equals(RuleNet.K)) {
 					Transition transitionInL = (Transition) rule.fromKtoL(t);
 					Transition transitionInR = (Transition) rule.fromKtoR(t);
-					if (transitionInL != null) { transitionInL.setTlb(tlb); }
-					if (transitionInR != null) { transitionInR.setTlb(tlb); }
-				} else if(net.equals(RuleNet.R)){
+					if (transitionInL != null) {
+						transitionInL.setTlb(tlb);
+					}
+					if (transitionInR != null) {
+						transitionInR.setTlb(tlb);
+					}
+				} else if (net.equals(RuleNet.R)) {
 					Transition transitionInK = (Transition) rule.fromRtoK(t);
-					Transition transitionInL = (Transition) rule.fromKtoL(transitionInK);
+					Transition transitionInL = (Transition) rule
+							.fromKtoL(transitionInK);
 					transitionInK.setTlb(tlb);
-					if (transitionInL != null) { transitionInL.setTlb(tlb); }
+					if (transitionInL != null) {
+						transitionInL.setTlb(tlb);
+					}
 				}
 
 			}
@@ -1167,24 +1201,34 @@ final public class RuleHandler {
 
 				// set new Tname
 				t.setName(tname);
-				
-				//Synchronize Transitions in the other parts of the rules
+
+				// Synchronize Transitions in the other parts of the rules
 				RuleNet net = getContainingNet(id, transition);
-				if(net.equals(RuleNet.L)){
+				if (net.equals(RuleNet.L)) {
 					Transition transitionInK = (Transition) rule.fromLtoK(t);
-					Transition transitionInR = (Transition) rule.fromKtoR(transitionInK);
+					Transition transitionInR = (Transition) rule
+							.fromKtoR(transitionInK);
 					transitionInK.setName(tname);
-					if (transitionInR != null) { transitionInR.setName(tname); }
-				} else if (net.equals(RuleNet.K)){
+					if (transitionInR != null) {
+						transitionInR.setName(tname);
+					}
+				} else if (net.equals(RuleNet.K)) {
 					Transition transitionInL = (Transition) rule.fromKtoL(t);
 					Transition transitionInR = (Transition) rule.fromKtoR(t);
-					if (transitionInL != null) { transitionInL.setName(tname); }
-					if (transitionInR != null) { transitionInR.setName(tname); }
-				} else if(net.equals(RuleNet.R)){
+					if (transitionInL != null) {
+						transitionInL.setName(tname);
+					}
+					if (transitionInR != null) {
+						transitionInR.setName(tname);
+					}
+				} else if (net.equals(RuleNet.R)) {
 					Transition transitionInK = (Transition) rule.fromRtoK(t);
-					Transition transitionInL = (Transition) rule.fromKtoL(transitionInK);
+					Transition transitionInL = (Transition) rule
+							.fromKtoL(transitionInK);
 					transitionInK.setName(tname);
-					if (transitionInL != null) { transitionInL.setName(tname); }
+					if (transitionInL != null) {
+						transitionInL.setName(tname);
+					}
 				}
 
 			}
@@ -1218,29 +1262,39 @@ final public class RuleHandler {
 					exception("setRnw - renews is not correct");
 				}
 				t.setRnw(rnw);
-				
-				//Synchronize Transitions in the other parts of the rules
+
+				// Synchronize Transitions in the other parts of the rules
 				RuleNet net = getContainingNet(id, transition);
-				if(net.equals(RuleNet.L)){
+				if (net.equals(RuleNet.L)) {
 					Transition transitionInK = (Transition) rule.fromLtoK(t);
-					Transition transitionInR = (Transition) rule.fromKtoR(transitionInK);
+					Transition transitionInR = (Transition) rule
+							.fromKtoR(transitionInK);
 					transitionInK.setRnw(rnw);
-					if (transitionInR != null) { transitionInR.setRnw(rnw); }
-				} else if (net.equals(RuleNet.K)){
+					if (transitionInR != null) {
+						transitionInR.setRnw(rnw);
+					}
+				} else if (net.equals(RuleNet.K)) {
 					Transition transitionInL = (Transition) rule.fromKtoL(t);
 					Transition transitionInR = (Transition) rule.fromKtoR(t);
-					if (transitionInL != null) { transitionInL.setRnw(rnw); }
-					if (transitionInR != null) { transitionInR.setRnw(rnw); }
-				} else if(net.equals(RuleNet.R)){
+					if (transitionInL != null) {
+						transitionInL.setRnw(rnw);
+					}
+					if (transitionInR != null) {
+						transitionInR.setRnw(rnw);
+					}
+				} else if (net.equals(RuleNet.R)) {
 					Transition transitionInK = (Transition) rule.fromRtoK(t);
-					Transition transitionInL = (Transition) rule.fromKtoL(transitionInK);
+					Transition transitionInL = (Transition) rule
+							.fromKtoL(transitionInK);
 					transitionInK.setRnw(rnw);
-					if (transitionInL != null) { transitionInL.setRnw(rnw); }
+					if (transitionInL != null) {
+						transitionInL.setRnw(rnw);
+					}
 				}
 			}
 		}
 	}
-	
+
 	public void setWeight(int id, Arc arc, int weight) throws EngineException {
 
 		// get the RuleData from the id and SessionManager
@@ -1254,32 +1308,40 @@ final public class RuleHandler {
 			Rule rule = ruleData.getRule();
 			// set new weight
 			arc.setMark(weight);
-			
-			//Synchronize Arcs in the other parts of the rules
+
+			// Synchronize Arcs in the other parts of the rules
 			RuleNet net = getContainingNet(id, arc);
-			if(net.equals(RuleNet.L)){
+			if (net.equals(RuleNet.L)) {
 				Arc arcInK = rule.fromLtoK(arc);
 				Arc arcInR = rule.fromKtoR(arcInK);
 				arcInK.setMark(weight);
-				if (arcInR != null) { arcInR.setMark(weight); }
-			} else if (net.equals(RuleNet.K)){
+				if (arcInR != null) {
+					arcInR.setMark(weight);
+				}
+			} else if (net.equals(RuleNet.K)) {
 				Arc arcInL = rule.fromKtoL(arc);
 				Arc arcInR = rule.fromKtoR(arc);
-				if (arcInL != null) { arcInL.setMark(weight); }
-				if (arcInR != null) { arcInR.setMark(weight); }
-			} else if(net.equals(RuleNet.R)){
+				if (arcInL != null) {
+					arcInL.setMark(weight);
+				}
+				if (arcInR != null) {
+					arcInR.setMark(weight);
+				}
+			} else if (net.equals(RuleNet.R)) {
 				Arc arcInK = rule.fromRtoK(arc);
-				Arc arcInL = rule.fromKtoL(arcInK); 
+				Arc arcInL = rule.fromKtoL(arcInK);
 				arcInK.setMark(weight);
-				if (arcInL != null) { arcInL.setMark(weight); }
+				if (arcInL != null) {
+					arcInL.setMark(weight);
+				}
 			}
 
 		}
 
 	}
-	
+
 	public void closeRule(int id) throws EngineException {
-		
+
 		// get the Petrinet from the id and SessionManager
 		RuleData ruleData = sessionManager.getRuleData(id);
 
@@ -1288,14 +1350,14 @@ final public class RuleHandler {
 			exception("closeRule - id of the Rule is wrong");
 		} else {
 
-			if(!sessionManager.closeSessionData(id)){
+			if (!sessionManager.closeSessionData(id)) {
 				exception("closeRule - can not remove RuleData");
 			}
-			
+
 		}
-		
+
 	}
-		
+
 	public NodeTypeEnum getNodeType(INode node) {
 
 		if (node instanceof Place) {
@@ -1311,29 +1373,34 @@ final public class RuleHandler {
 	private void exception(String value) throws EngineException {
 		throw new EngineException("RuleHandler: " + value);
 	}
-	
-	private void checkNodeLayoutAttribute(boolean value, String errorMessage) throws EngineException{
-		if(value){
+
+	private void checkNodeLayoutAttribute(boolean value, String errorMessage)
+			throws EngineException {
+		if (value) {
 			exception(errorMessage);
 		}
-	}	
-	
-	//Helper Method
-	private RuleNet getContainingNet(int id, INode node){
+	}
+
+	// Helper Method
+	private RuleNet getContainingNet(int id, INode node) {
 		RuleData ruleData = sessionManager.getRuleData(id);
 		Rule rule = ruleData.getRule();
-		if(rule.getL().getAllPlaces().contains(node) || rule.getL().getAllTransitions().contains(node) || rule.getL().getAllArcs().contains(node)){
+		if (rule.getL().getAllPlaces().contains(node)
+				|| rule.getL().getAllTransitions().contains(node)
+				|| rule.getL().getAllArcs().contains(node)) {
 			return RuleNet.L;
 		}
-		if(rule.getK().getAllPlaces().contains(node) || rule.getK().getAllTransitions().contains(node) || rule.getK().getAllArcs().contains(node)){
+		if (rule.getK().getAllPlaces().contains(node)
+				|| rule.getK().getAllTransitions().contains(node)
+				|| rule.getK().getAllArcs().contains(node)) {
 			return RuleNet.K;
 		}
-		if(rule.getR().getAllPlaces().contains(node) || rule.getR().getAllTransitions().contains(node) || rule.getR().getAllArcs().contains(node)){
+		if (rule.getR().getAllPlaces().contains(node)
+				|| rule.getR().getAllTransitions().contains(node)
+				|| rule.getR().getAllArcs().contains(node)) {
 			return RuleNet.R;
 		}
 		return null;
 	}
-	
-
 
 }

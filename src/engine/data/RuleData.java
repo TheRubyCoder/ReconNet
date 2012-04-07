@@ -1,5 +1,10 @@
 package engine.data;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import petrinet.INode;
+import petrinet.Petrinet;
 import transformation.Rule;
 
 /**
@@ -70,6 +75,17 @@ final public class RuleData extends SessionDataAbstract {
 	 */
 	public Rule getRule(){
 		return rule;
+	}
+	
+	/**
+	 * Removes data of elements that are no longer in the rule. This may be
+	 * used if the rule is altered from outside the engine.
+	 * @param petrinet
+	 */
+	public void deleteDataOfMissingElements(Rule rule) {
+		getLJungData().deleteDataOfMissingElements(rule.getL());
+		getKJungData().deleteDataOfMissingElements(rule.getK());
+		getRJungData().deleteDataOfMissingElements(rule.getR());
 	}
 
 
