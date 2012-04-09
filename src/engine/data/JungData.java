@@ -283,14 +283,23 @@ final public class JungData {
 	 * @param petrinet
 	 */
 	public void deleteDataOfMissingElements(Petrinet petrinet) {
-		List<INode> missing = new LinkedList<INode>();
+		List<INode> missingNodes = new LinkedList<INode>();
+		List<Arc> missingEdges = new LinkedList<Arc>();
 		for (INode node : graph.getVertices()) {
 			if(!petrinet.getAllGraphElement().getAllNodes().contains(node)) {
-				missing.add(node);
+				missingNodes.add(node);
 			}
 		}
-		for (INode missingNode : missing) {
+		for (Arc arc : graph.getEdges()) {
+			if(!petrinet.getAllArcs().contains(arc)){
+				missingEdges.add(arc);
+			}
+		}
+		for (INode missingNode : missingNodes) {
 			graph.removeVertex(missingNode);
+		}
+		for (Arc arc : missingEdges) {
+			graph.removeEdge(arc);
 		}
 	}
 

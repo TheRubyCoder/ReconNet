@@ -24,6 +24,8 @@ import engine.data.RuleData;
 import engine.ihandler.ISimulation;
 import engine.session.SessionManager;
 import exceptions.EngineException;
+import exceptions.ShowAsInfoException;
+import exceptions.ShowAsWarningException;
 
 public class Simulation implements ISimulation {
 
@@ -85,11 +87,15 @@ public class Simulation implements ISimulation {
 	}
 
 	private Random random = new Random();
-	public static final int   DISTANCE = 100;
+	public static final int DISTANCE = 100;
 
-	//@Override
+	// @Override
 	public void transform(int id, Collection<Integer> ruleIDs, int n)
 			throws EngineException {
+
+		if (ruleIDs.isEmpty()) {
+			info("Es sind keine Regeln ausgewählt");
+		}
 
 		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
 
@@ -118,7 +124,8 @@ public class Simulation implements ISimulation {
 							.get(randomRule));
 					Rule rule = ruleData.getRule();
 
-					//TODO the shit seems to happen when there is a transition in L!!!! fix and remove try catch block
+					// TODO the shit seems to happen when there is a transition
+					// in L!!!! fix and remove try catch block
 					try {
 						transformation = transformationComponent.transform(
 								petrinet, rule);
@@ -126,7 +133,7 @@ public class Simulation implements ISimulation {
 						// Some weird crap happens i often get a
 						// IndexOutofBoundsException, but the Result should be
 						// null, if there's no morphism found
-						
+
 						System.out.println("------------------------------");
 						e.printStackTrace();
 						System.out.println("------------------------------");
@@ -205,17 +212,29 @@ public class Simulation implements ISimulation {
 			}
 		}
 	}
-	
 
-	
 	@Override
 	public void fireOrTransform(int id, Collection<Integer> ruleIDs, int n)
 			throws EngineException {
-		// TODO Auto-generated method stub
+		for (int i = 0; i < n; i++) {
+			if (random.nextFloat() < 0.5d) {
+				fire(id, 1);
+			} else {
+				transform(id, ruleIDs, 1);
+			}
+		}
 	}
 
 	private void exception(String value) throws EngineException {
 		throw new EngineException(value);
+	}
+
+	private void warning(String message) throws ShowAsWarningException {
+		throw new ShowAsWarningException(message);
+	}
+
+	private void info(String message) throws ShowAsInfoException {
+		throw new ShowAsInfoException(message);
 	}
 
 }

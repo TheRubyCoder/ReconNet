@@ -120,6 +120,7 @@ public class Rule {
 	public void removeNodeOrArc(INode nodeOrArc) {
 		if (nodeOrArc instanceof Arc) {
 			List<Arc> mappings = getMappings((Arc) nodeOrArc);
+			System.out.println("ME: "+ mappings);
 			if (mappings.get(0) != null) {
 				getL().deleteArcByID(mappings.get(0).getId());
 			}
@@ -619,18 +620,15 @@ public class Rule {
 		Arc inK = null;
 		Arc inR = null;
 		fromKtoR(null);
-		if (getL().getAllPlaces().contains(arc)
-				|| getL().getAllTransitions().contains(arc)) {
+		if (getL().getAllArcs().contains(arc)) {
 			inL = arc;
 			inK = fromLtoK(inL);
 			inR = fromKtoR(inK);
-		} else if (getK().getAllPlaces().contains(arc)
-				|| getK().getAllTransitions().contains(arc)) {
+		} else if (getK().getAllArcs().contains(arc)) {
 			inK = arc;
 			inL = fromKtoL(inK);
 			inR = fromKtoR(inK);
-		} else if (getR().getAllPlaces().contains(arc)
-				|| getR().getAllTransitions().contains(arc)) {
+		} else if (getR().getAllArcs().contains(arc)) {
 			inR = arc;
 			inK = fromRtoK(inR);
 			inL = fromLtoK(inL);

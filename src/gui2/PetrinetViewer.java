@@ -267,7 +267,7 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 						getRuleNet(), start, end);
 			}
 			smartRepaint();
-		} catch (Exception e) {
+		} catch (EngineException e) {
 			PopUp.popError(e);
 			e.printStackTrace();
 		}
@@ -283,7 +283,7 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 						getCurrentId(), getRuleNet(), point);
 			}
 			smartRepaint();
-		} catch (Exception e) {
+		} catch (EngineException e) {
 			PopUp.popError(e);
 			e.printStackTrace();
 		}
@@ -299,7 +299,7 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 						getRuleNet(), point);
 			}
 			smartRepaint();
-		} catch (Exception e) {
+		} catch (EngineException e) {
 			PopUp.popError(e);
 		}
 	}
@@ -344,6 +344,7 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 			} else {
 				EngineAdapter.getRuleManipulation().deleteArc(getCurrentId(),
 						getRuleNet(), arc);
+//				MainWindow.getInstance().repaint();
 			}
 			smartRepaint();
 		} catch (Exception e) {

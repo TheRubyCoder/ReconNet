@@ -33,6 +33,7 @@ import engine.data.PetrinetData;
 import engine.handler.NodeTypeEnum;
 import engine.session.SessionManager;
 import exceptions.EngineException;
+import exceptions.ShowAsWarningException;
 
 /**
  * 
@@ -125,7 +126,7 @@ final public class PetrinetHandler {
 
 				return arc;
 			} else {
-				exception("createArc - wrong combi");
+				warning("Pfeile dürfen nicht zwischen Stelle und Stelle bzw. zwischen Transition und Transition bestehen.");
 
 				return null;
 			}
@@ -149,7 +150,7 @@ final public class PetrinetHandler {
 			JungData jungData = petrinetData.getJungData();
 
 			if (jungData.isCreatePossibleAt(coordinate)) {
-				
+
 				// create a new Place
 				Place newPlace = petrinet.createPlace("undefined");
 
@@ -169,7 +170,7 @@ final public class PetrinetHandler {
 
 			} else {
 
-				exception("createPlace - can not create Place");
+				warning("Dort kann keine Stelle erstellt werden.");
 				return null;
 
 			}
@@ -229,12 +230,12 @@ final public class PetrinetHandler {
 				return newTransition;
 
 			} else {
-				
-				exception("createTransition - can not create Transition");
+
+				warning("Dort kann keine Transition erstellt werden.");
 				return null;
 
 			}
-			
+
 		}
 
 	}
@@ -819,6 +820,10 @@ final public class PetrinetHandler {
 
 	private void exception(@NotNull String value) throws EngineException {
 		throw new EngineException("PetrinetHandler: " + value);
+	}
+
+	private void warning(@NotNull String value) throws ShowAsWarningException {
+		throw new ShowAsWarningException(value);
 	}
 
 	private void checkNodeLayoutAttribute(boolean value, String errorMessage)

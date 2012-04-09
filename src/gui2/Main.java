@@ -6,6 +6,9 @@ import java.awt.Toolkit;
 
 import javax.swing.SwingUtilities;
 
+import exceptions.ShowAsInfoException;
+import exceptions.ShowAsWarningException;
+
 
 /**
  * Main Class of GUI. It simply openes and configures the main window
@@ -18,6 +21,10 @@ public class Main {
 		protected void dispatchEvent(AWTEvent newEvent) {
 			try {
 				super.dispatchEvent(newEvent);
+			} catch (ShowAsWarningException warning){
+				PopUp.popWarning(warning);
+			} catch (ShowAsInfoException info){
+				PopUp.popInfo(info);
 			} catch (Throwable t) {
 				t.printStackTrace();
 				PopUp.popError(t);

@@ -3,6 +3,7 @@ package engine.ihandler;
 import java.util.Collection;
 
 import exceptions.EngineException;
+import exceptions.ShowAsWarningException;
 
 /**
  * 
