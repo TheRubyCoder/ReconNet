@@ -13,8 +13,6 @@ public class Graphics {
 	
 	List<Dimension> dimension;
 	
-	
-	
 	@XmlElements(value = { @XmlElement })
 	public List<Position> getPosition() {
 		return position;

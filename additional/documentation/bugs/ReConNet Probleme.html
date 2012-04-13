@@ -15,15 +15,14 @@
 				<th>Anmerkung / mögliche Lösung</th>
 			</tr>
 			<tr>
-				<td>p1</td>
-				<td>JP</td>
-				<td>&nbsp;Laden der Regeln führt zu falschen Morphismen:<br>
-					<a href="Figs/p1_regeln1.png">r1 mit leerer rechter Seite</a> wird
-					zu<a href="Figs/p1_regeln2.png"> r1 mit Stelle in rechter Seite</a><br>
-					<a href="Figs/p1_console.png">eclipse-console:</a><br></td>
+				<td>p11</td>
 				<td>ME</td>
-				<td>4</td>
-				<td>jaxb und Speicherkomponente angucken</td>
+				<td>Beim <b>Speichern</b> der <b>Regeln</b> werden keine <b>Attribute</b> von Knoten (außer Position) gespeichert. Aus
+					<a href="Figs/p11_richtig.png">r4 mit Transitionen namens "Heinz"</a> wird
+					zu<a href="Figs/p11_falsch.png"> r4 mit Transitionen namend "undefined"</a>
+				<td>ME</td>
+				<td>5</td>
+				<td>persistence.Converter#convertRuleToPnml(Rule, Map<INode, NodeLayoutAttribute>) anschauen</td>
 			</tr>
 			<tr>
 				<td>p3</td>
@@ -93,6 +92,17 @@
 				<th>zuständig</th>
 				<th>0&lt;&nbsp; Priorität &lt;6</th>
 				<th>Anmerkung / mögliche Lösung</th>
+			</tr>
+			<tr>
+				<td>p1</td>
+				<td>JP</td>
+				<td>&nbsp;Laden der Regeln führt zu falschen Morphismen:<br>
+					<a href="Figs/p1_regeln1.png">r1 mit leerer rechter Seite</a> wird
+					zu<a href="Figs/p1_regeln2.png"> r1 mit Stelle in rechter Seite</a><br>
+					<a href="Figs/p1_console.png">eclipse-console:</a><br></td>
+				<td>ME</td>
+				<td>4</td>
+				<td>jaxb und Speicherkomponente angucken</td>
 			</tr>
 			<tr>
 				<td>p4</td>
