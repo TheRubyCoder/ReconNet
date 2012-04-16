@@ -531,7 +531,6 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(color);
 				petrinetViewer.setPlaceColor(place, color);
 			}
 

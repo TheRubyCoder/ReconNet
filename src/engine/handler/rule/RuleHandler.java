@@ -607,51 +607,51 @@ final public class RuleHandler {
 
 	public void deleteArc(int id, RuleNet net, Arc arc) throws EngineException {
 		deleteInternal(id, net, arc);
-//		// get the RuleData from the id and SessionManager
-//		RuleData ruleData = sessionManager.getRuleData(id);
-//
-//		// Test: is id valid
-//		if (ruleData == null) {
-//			exception("deleteArc - id of the Rule is wrong");
-//		} else {
-//			Rule rule = ruleData.getRule();
-//			
-//			
-//			Petrinet petrinet = null;
-//			JungData jungData = null;
-//
-//			if (net.equals(RuleNet.L)) {
-//				// Manipulation in L
-//				// Get Petrinet and corresponding JungData
-//				petrinet = rule.getL();
-//				jungData = ruleData.getLJungData();
-//			} else if (net.equals(RuleNet.K)) {
-//				// Manipulation in K
-//				// Get Petrinet and corresponding JungData
-//				petrinet = rule.getK();
-//				jungData = ruleData.getKJungData();
-//			} else if (net.equals(RuleNet.R)) {
-//				// Manipulation in R
-//				// Get Petrinet and corresponding JungData
-//				petrinet = rule.getR();
-//				jungData = ruleData.getRJungData();
-//			} else {
-//				exception("deleteArc - Not given if Manipulation is in L,K or R");
-//			}
-//			petrinet.deleteElementById(arc.getId());
-//
-//			// call JundModification and create Collection
-//			Collection<Arc> collArc = new HashSet<Arc>();
-//			collArc.add(arc);
-//
-//			Collection<INode> collINodes = new HashSet<INode>();
-//
-//			try {
-//				jungData.delete(collArc, collINodes);
-//			} catch (IllegalArgumentException e) {
-//				exception("deleteArc - can not delete Arc");
-//			}
-//		}
+		// // get the RuleData from the id and SessionManager
+		// RuleData ruleData = sessionManager.getRuleData(id);
+		//
+		// // Test: is id valid
+		// if (ruleData == null) {
+		// exception("deleteArc - id of the Rule is wrong");
+		// } else {
+		// Rule rule = ruleData.getRule();
+		//
+		//
+		// Petrinet petrinet = null;
+		// JungData jungData = null;
+		//
+		// if (net.equals(RuleNet.L)) {
+		// // Manipulation in L
+		// // Get Petrinet and corresponding JungData
+		// petrinet = rule.getL();
+		// jungData = ruleData.getLJungData();
+		// } else if (net.equals(RuleNet.K)) {
+		// // Manipulation in K
+		// // Get Petrinet and corresponding JungData
+		// petrinet = rule.getK();
+		// jungData = ruleData.getKJungData();
+		// } else if (net.equals(RuleNet.R)) {
+		// // Manipulation in R
+		// // Get Petrinet and corresponding JungData
+		// petrinet = rule.getR();
+		// jungData = ruleData.getRJungData();
+		// } else {
+		// exception("deleteArc - Not given if Manipulation is in L,K or R");
+		// }
+		// petrinet.deleteElementById(arc.getId());
+		//
+		// // call JundModification and create Collection
+		// Collection<Arc> collArc = new HashSet<Arc>();
+		// collArc.add(arc);
+		//
+		// Collection<INode> collINodes = new HashSet<INode>();
+		//
+		// try {
+		// jungData.delete(collArc, collINodes);
+		// } catch (IllegalArgumentException e) {
+		// exception("deleteArc - can not delete Arc");
+		// }
+		// }
 	}
 
 	public void deletePlace(int id, RuleNet net, INode place)
@@ -675,9 +675,9 @@ final public class RuleHandler {
 			exception("deleteInternal - id of the Rule is wrong");
 		} else {
 			Rule rule = ruleData.getRule();
-			
+
 			rule.removeNodeOrArc(node);
-			
+
 			ruleData.deleteDataOfMissingElements(rule);
 		}
 	}
@@ -735,8 +735,26 @@ final public class RuleHandler {
 			int marking = p.getMark();
 			String pname = p.getName();
 
-			// TODO : change default color
-			Color color = Color.gray;
+			RuleData ruleData = sessionManager.getRuleData(id);
+			RuleNet containingNet = getContainingNet(id, place);
+			JungData petrinetData = null;
+			switch (containingNet) {
+			case L:
+				petrinetData = ruleData.getLJungData();
+				break;
+			case K:
+				petrinetData = ruleData.getKJungData();
+				break;
+			case R:
+				petrinetData = ruleData.getRJungData();
+				break;
+			}
+			Color color = null;
+			try {
+				color = petrinetData.getPlaceColor(p);
+			} catch (IllegalArgumentException ex) {
+				color = Color.gray;
+			}
 
 			PlaceAttribute placeAttribute = new PlaceAttribute(marking, pname,
 					color);
@@ -1094,37 +1112,60 @@ final public class RuleHandler {
 			JungData kJungData = ruleData.getKJungData();
 			JungData rJungData = ruleData.getRJungData();
 			if (this.getNodeType(place).equals(NodeTypeEnum.Place)) {
-				Place p = (Place) place;
-
-				// Synchronize Places in the other parts of the rules
-				RuleNet net = getContainingNet(id, place);
-				if (net.equals(RuleNet.L)) {
-					lJungData.setPlaceColor(p, color);
-					Place placeInK = (Place) rule.fromLtoK(p);
-					Place placeInR = (Place) rule.fromKtoR(p);
-					kJungData.setPlaceColor(placeInK, color);
-					if (placeInR != null) {
-						rJungData.setPlaceColor(placeInR, color);
-					}
-				} else if (net.equals(RuleNet.K)) {
-					kJungData.setPlaceColor(p, color);
-					Place placeInL = (Place) rule.fromKtoL(p);
-					Place placeInR = (Place) rule.fromKtoR(p);
-					if (placeInL != null) {
-						lJungData.setPlaceColor(placeInL, color);
-					}
-					if (placeInR != null) {
-						rJungData.setPlaceColor(placeInR, color);
-					}
-				} else if (net.equals(RuleNet.R)) {
-					rJungData.setPlaceColor(p, color);
-					Place placeInK = (Place) rule.fromRtoK(p);
-					Place placeInL = (Place) rule.fromKtoL(placeInK);
-					kJungData.setPlaceColor(placeInK, color);
-					if (placeInL != null) {
-						lJungData.setPlaceColor(placeInL, color);
+				List<INode> mappings = TransformationComponent
+						.getTransformation().getMappings(rule, place);
+				RuleNet ruleNet = RuleNet.L;
+				for (INode accordingPlace : mappings) {
+					switch (ruleNet) {
+					case L:
+						if(accordingPlace != null) {
+							lJungData.setPlaceColor((Place) accordingPlace, color);
+						}
+						ruleNet = RuleNet.K;
+						break;
+					case K:
+						if(accordingPlace != null) {
+							kJungData.setPlaceColor((Place) accordingPlace, color);
+						}
+						ruleNet = RuleNet.R;
+						break;
+					case R:
+						if(accordingPlace != null) {
+							rJungData.setPlaceColor((Place) accordingPlace, color);
+						}
 					}
 				}
+				// Place p = (Place) place;
+				//
+				// // Synchronize Places in the other parts of the rules
+				// RuleNet net = getContainingNet(id, place);
+				// if (net.equals(RuleNet.L)) {
+				// lJungData.setPlaceColor(p, color);
+				// Place placeInK = (Place) rule.fromLtoK(p);
+				// Place placeInR = (Place) rule.fromKtoR(p);
+				// kJungData.setPlaceColor(placeInK, color);
+				// if (placeInR != null) {
+				// rJungData.setPlaceColor(placeInR, color);
+				// }
+				// } else if (net.equals(RuleNet.K)) {
+				// kJungData.setPlaceColor(p, color);
+				// Place placeInL = (Place) rule.fromKtoL(p);
+				// Place placeInR = (Place) rule.fromKtoR(p);
+				// if (placeInL != null) {
+				// lJungData.setPlaceColor(placeInL, color);
+				// }
+				// if (placeInR != null) {
+				// rJungData.setPlaceColor(placeInR, color);
+				// }
+				// } else if (net.equals(RuleNet.R)) {
+				// rJungData.setPlaceColor(p, color);
+				// Place placeInK = (Place) rule.fromRtoK(p);
+				// Place placeInL = (Place) rule.fromKtoL(placeInK);
+				// kJungData.setPlaceColor(placeInK, color);
+				// if (placeInL != null) {
+				// lJungData.setPlaceColor(placeInL, color);
+				// }
+				// }
 			}
 		}
 	}

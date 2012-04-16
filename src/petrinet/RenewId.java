@@ -28,5 +28,10 @@ public class RenewId implements IRenew {
 	public boolean equals(Object obj) {
 		return this == obj || (obj != null && obj.getClass() == getClass());
 	}
+
+	@Override
+	public String toGUIString() {
+		return "id";
+	}
 	
 }

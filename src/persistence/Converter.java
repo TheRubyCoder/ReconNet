@@ -3,7 +3,6 @@ package persistence;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,7 @@ public class Converter {
 	private static boolean test = true;
 
 	/** not working yet */
-	static public Pnml convertToPnml(Petrinet petrinet,
+	static public Pnml convertPetrinetToPnml(Petrinet petrinet,
 			Map<String, String[]> layout) {
 		Pnml pnml = new Pnml();
 		pnml.net = new ArrayList<Net>();
@@ -488,13 +487,14 @@ public class Converter {
 			}
 			INode createdPlace = handler.createPlace(id, toAddto,
 					positionToPoint2D(place.getGraphics().getPosition()));
+			handler.setPlaceColor(id, createdPlace, place.getGraphics()
+					.getColor().toAWTColor());
+			handler.setPname(id, createdPlace, place.getPlaceName().getText());
+			handler.setMarking(id, createdPlace,
+					Integer.valueOf(place.getInitialMarking().getText()));
+			// FIXME: Uncommented due to nullpointer: initialMarking and Color
+			// are null (maybe not safed?)
 			result.put(place.getId(), createdPlace);
-//			FIXME: Uncommented due to nullpointer: initialMarking and Color are null (maybe not safed?)
-//			handler.setMarking(id, (INode) place,
-//					Integer.valueOf(place.getInitialMarking().getText()));
-//			handler.setPlaceColor(id, (INode) place, place.getGraphics()
-//					.getColor().toAWTColor());
-//			handler.setPname(id, (INode) place, place.getPlaceName().getText());
 		}
 		return result;
 	}
@@ -524,6 +524,10 @@ public class Converter {
 			}
 			INode createdTransition = handler.createTransition(id, toAddto,
 					positionToPoint2D(transition.getGraphics().getPosition()));
+			handler.setTlb(id, createdTransition, transition
+					.getTransitionLabel().getText());
+			handler.setTname(id, createdTransition, transition
+					.getTransitionName().getText());
 			result.put(transition.getId(), createdTransition);
 		}
 		return result;
@@ -564,6 +568,8 @@ public class Converter {
 		final Net rNet = createNet(rule.getR(), map, RuleNet.R, rule);
 
 		pnml.setNet(new ArrayList<Net>() {
+			private static final long serialVersionUID = 8434245017694015611L;
+
 			{
 				add(lNet);
 				add(kNet);
@@ -615,24 +621,26 @@ public class Converter {
 				// Coordinates
 				Graphics graphics = new Graphics();
 				Position pos = new Position();
-
 				pos.setX(String.valueOf(map.get(p).getCoordinate().getX()));
 				pos.setY(String.valueOf(map.get(p).getCoordinate().getY()));
-
-				Color c = new Color();
-				/** FIXME: make code work */
-				// c.setR(String.valueOf(map.get(newPlace.getId()).getColor().getRed()));
-				// c.setG(String.valueOf(map.get(newPlace.getId()).getColor().getGreen()));
-				// c.setB(String.valueOf(map.get(newPlace.getId()).getColor().getBlue()));
-
 				List<Position> positions = new ArrayList<Position>();
 				positions.add(pos);
 				graphics.setPosition(positions);
 
+				// Color
+				Color c = new Color();
+				c.setR(String.valueOf(map.get(p).getColor().getRed()));
+				c.setG(String.valueOf(map.get(p).getColor().getGreen()));
+				c.setB(String.valueOf(map.get(p).getColor().getBlue()));
+				graphics.setColor(c);
+
 				newPlace.setGraphics(graphics);
 
+				// Marking
 				InitialMarking initM = new InitialMarking();
 				initM.setText(String.valueOf(p.getMark()));
+
+				newPlace.setInitialMarking(initM);
 
 				listPlace.add(newPlace);
 
@@ -678,7 +686,7 @@ public class Converter {
 				transi.setTransitionLabel(label);
 
 				TransitionRenew rnw = new TransitionRenew();
-				rnw.setText(t.getRnw().renew(label.getText()));
+				rnw.setText(t.getRnw().toGUIString());
 
 				transi.setTransitionRenew(rnw);
 

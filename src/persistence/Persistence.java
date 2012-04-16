@@ -2,6 +2,7 @@ package persistence;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -17,6 +18,7 @@ import transformation.Rule;
 import engine.attribute.NodeLayoutAttribute;
 import engine.ihandler.IPetrinetPersistence;
 import engine.ihandler.IRulePersistence;
+import gui2.PopUp;
 
 public class Persistence /* implements IPersistance */{
 	static {
@@ -49,7 +51,7 @@ public class Persistence /* implements IPersistance */{
 			coordinates.put(String.valueOf(e.getKey().getId()), coords);
 		}
 
-		Pnml pnml = Converter.convertToPnml(petrinet, coordinates);
+		Pnml pnml = Converter.convertPetrinetToPnml(petrinet, coordinates);
 		File file = new File(pathAndFilename);
 
 		try {
@@ -121,9 +123,10 @@ public class Persistence /* implements IPersistance */{
 			fw.flush();
 			fw.close();
 
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		} catch (IOException e) {
+			PopUp.popError(e);
+		} catch (JAXBException e) {
+			PopUp.popError(e);
 		}
 
 		return success;

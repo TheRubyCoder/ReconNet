@@ -35,6 +35,11 @@ public class CoffeeNetTest {
 		public boolean isTlbValid(String tlb) {
 			return true;
 		}
+
+		@Override
+		public String toGUIString() {
+			return "coffee";
+		}
 		
 	}
 	

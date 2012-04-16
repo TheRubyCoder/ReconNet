@@ -41,4 +41,9 @@ public class RenewMap implements IRenew {
 
         return this.rnw.equals(((RenewMap)obj).rnw);
 	}
+	
+	@Override
+	public String toGUIString() {
+		return "map (not supported)";
+	}
 }

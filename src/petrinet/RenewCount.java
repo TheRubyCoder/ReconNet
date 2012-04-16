@@ -41,6 +41,11 @@ public class RenewCount implements IRenew {
 	public boolean equals(Object obj) {
 		return this == obj || (obj != null && obj.getClass() == this.getClass());
 	}
+
+	@Override
+	public String toGUIString() {
+		return "count";
+	}
 	
 
 }
