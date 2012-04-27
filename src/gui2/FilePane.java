@@ -726,11 +726,18 @@ class FilePane {
 
 	/** Deletes all selected petrinets or rules */
 	public void delete() {
-
 		int[] selectedIndices = list.getSelectedIndices();
 		if (selectedIndices.length < 1) {
 			throw new ShowAsInfoException("Es sind keine Dateien ausgewählt");
 		} else {
+			int loeschen = JOptionPane.showOptionDialog(treeAndButtonContainerWithBorder,
+					"Sollen die Dateien vom Dateisystem gelöscht werden?",
+					"Löschen", 0, JOptionPane.QUESTION_MESSAGE, null,
+					new String[] { "Dateien löschen",
+							"Nur aus Übersicht löschen" },
+					"Nur aus Übersicht löschen");
+			System.out.println(loeschen);
+
 			ListSelectionListener petrinetListSelectionListener = list
 					.getListSelectionListeners()[0];
 			list.removeListSelectionListener(petrinetListSelectionListener);
@@ -740,6 +747,9 @@ class FilePane {
 				String name = listModel.get(index);
 				listModel.removeElementAt(index);
 				nameToPId.remove(name);
+				if(loeschen == 0){
+					nameToFilepath.get(name).delete();
+				}
 				nameToFilepath.remove(name);
 			}
 
