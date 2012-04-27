@@ -1,17 +1,14 @@
 package transformation;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import petrinet.Arc;
 import petrinet.INode;
 import petrinet.IRenew;
 import petrinet.Petrinet;
 import petrinet.Place;
 import petrinet.Transition;
-
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-
-import exceptions.GeneralPetrinetException;
 /**
  * An Transformation on a Petrinet<br/>
  * The Transformation applies a rule on an petrinet under a certain morphism

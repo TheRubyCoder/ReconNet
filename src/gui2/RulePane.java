@@ -5,9 +5,7 @@ import static gui2.Style.RULE_PANE_BORDER_K;
 import static gui2.Style.RULE_PANE_BORDER_L;
 import static gui2.Style.RULE_PANE_BORDER_R;
 
-import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Point;
 
 import javax.swing.JPanel;
 

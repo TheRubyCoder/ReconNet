@@ -1,7 +1,6 @@
 package persistence;
 
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElements;
 
 public class Inscription {
 	private String text;

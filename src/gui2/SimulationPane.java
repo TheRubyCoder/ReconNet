@@ -1,9 +1,30 @@
 package gui2;
 
+import static gui2.Style.BUTTON_HEIGHT;
+import static gui2.Style.BUTTON_WIDTH;
+import static gui2.Style.SIMULATION_PANE_BORDER;
+import static gui2.Style.SIMULATION_PANE_BUTTON_KSTEPS_LOCATION;
+import static gui2.Style.SIMULATION_PANE_BUTTON_KSTEPS_SIZE;
+import static gui2.Style.SIMULATION_PANE_BUTTON_ONESTEP_LOCATION;
+import static gui2.Style.SIMULATION_PANE_BUTTON_ONESTEP_SIZE;
+import static gui2.Style.SIMULATION_PANE_BUTTON_STARTSIMULATION_LOCATION;
+import static gui2.Style.SIMULATION_PANE_BUTTON_TRANSFORM_LOCATION;
+import static gui2.Style.SIMULATION_PANE_BUTTON_TRANSFORM_SIZE;
+import static gui2.Style.SIMULATION_PANE_COMBOBOX_LOCATION;
+import static gui2.Style.SIMULATION_PANE_COMBOBOX_SIZE;
+import static gui2.Style.SIMULATION_PANE_DIMENSION;
+import static gui2.Style.SIMULATION_PANE_SLIDER_LOCATION;
+import static gui2.Style.SIMULATION_PANE_SLIDER_SIZE;
+import static gui2.Style.SIMULATION_PANE_SPEED_SLIDER_BORDER;
+import static gui2.Style.SIMULATION_PANE_SPINNER_LOCATION;
+import static gui2.Style.SIMULATION_PANE_SPINNER_SIZE;
+import static gui2.Style.SIMULATION_PAUSE_ICON;
+import static gui2.Style.SIMULATION_PAUSE_ICON_PRESSED;
+import static gui2.Style.SIMULATION_START_ICON;
+import static gui2.Style.SIMULATION_START_ICON_DISABLE;
+import static gui2.Style.SIMULATION_START_ICON_PRESSED;
+
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.LayoutManager;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -14,8 +35,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
@@ -25,8 +44,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import exceptions.EngineException;
-
-import static gui2.Style.*;
 
 /**
  * The Panel that contains buttons and slider for simulation purposes like
@@ -52,7 +69,7 @@ class SimulationPane {
 	private JSlider transformSpeedSlider;
 
 	/** Combo box for selecting the simulation mode */
-	private JComboBox simulationModePicker;
+	private JComboBox<String> simulationModePicker;
 
 	/** Button for start and pause the simulation */
 	private JButton simulationButton;
@@ -137,10 +154,10 @@ class SimulationPane {
 	 * 
 	 * @return Combobox with the holding modi
 	 */
-	private JComboBox initiateModePicker() {
+	private JComboBox<String> initiateModePicker() {
 		String[] modi = { "Nur Tokenspiel", "Nur Regeln",
 				"Tokenspiel und Regeln" };
-		JComboBox comboBox = new JComboBox(modi);
+		JComboBox<String> comboBox = new JComboBox<String>(modi);
 		comboBox.setLocation(SIMULATION_PANE_COMBOBOX_LOCATION);
 		comboBox.setSize(SIMULATION_PANE_COMBOBOX_SIZE);
 		getSimulationPane().add(comboBox);
@@ -149,7 +166,7 @@ class SimulationPane {
 
 	/** Initiate and layouting Simulationbutton */
 	private JButton initiateSimulateButton() {
-		JButton button = new JButton("start Simulation");
+		JButton button = new JButton("Start Simulation");
 		button.setMnemonic(KeyEvent.VK_P);
 		button.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
 		button.setLocation(SIMULATION_PANE_BUTTON_STARTSIMULATION_LOCATION);
@@ -186,7 +203,7 @@ class SimulationPane {
 		simulationButton.setIconTextGap(10);
 
 		simulationButton
-				.setToolTipText("startet eine Endlossimulation, bis diese pausiert wird.");
+				.setToolTipText("Startet eine Endlossimulation, bis diese pausiert wird.");
 		simulationButton.setRolloverEnabled(true);
 	}
 
@@ -359,16 +376,25 @@ class SimulationPane {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (SimulationPane.getInstance().isSimulationIsRunning()) {
-				simulationTimer.stop();
-				SimulationPane.getInstance().setSimulationButtonPlay();
-				setAllOtherPanesEnable();
+				SimulationPane.getInstance().stopSimulation();
 			} else {
-				simulationTimer.start();
-				SimulationPane.getInstance().setSimulationButtonPause();
-				setAllOtherPanesDisable();
+				SimulationPane.getInstance().startSimulation();
 			}
 		}
 	}
+	
+	public void stopSimulation() {
+		simulationTimer.stop();
+		setSimulationButtonPlay();
+		setAllOtherPanesEnable();
+	}
+	
+	public void startSimulation() {
+		simulationTimer.start();
+		setSimulationButtonPause();
+		setAllOtherPanesDisable();
+	}
+
 
 	private class OneStepListener implements ActionListener {
 
@@ -445,7 +471,9 @@ class SimulationPane {
 			} catch (NumberFormatException e1) {
 				// cannot be thrown
 				e1.printStackTrace();
+				SimulationPane.getInstance().stopSimulation();
 			} catch (EngineException e1) {
+				SimulationPane.getInstance().stopSimulation();
 				PopUp.popError(e1);
 				e1.printStackTrace();
 			}
@@ -481,5 +509,4 @@ class SimulationPane {
 	private enum SimulationMode {
 		TOKENS, RULES, TOKENS_AND_RULES
 	}
-
 }

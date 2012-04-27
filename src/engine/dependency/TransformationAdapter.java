@@ -1,12 +1,12 @@
 package engine.dependency;
 
 import petrinet.Petrinet;
-import exceptions.GeneralPetrinetException;
 import transformation.ChangedPetrinetElements;
 import transformation.Morphism;
 import transformation.Rule;
 import transformation.Transformation;
 import transformation.TransformationComponent;
+import exceptions.GeneralPetrinetException;
 
 
 public class TransformationAdapter {

@@ -1,5 +1,7 @@
 package transformation;
 
+import static transformation.dependency.PetrinetAdapter.createPetrinet;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,7 +15,6 @@ import petrinet.IPetrinetListener;
 import petrinet.Petrinet;
 import petrinet.Place;
 import petrinet.Transition;
-import static transformation.dependency.PetrinetAdapter.createPetrinet;
 
 /**
  * An Interface for Rules<br\>

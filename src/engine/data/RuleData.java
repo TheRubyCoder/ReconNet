@@ -1,10 +1,5 @@
 package engine.data;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import petrinet.INode;
-import petrinet.Petrinet;
 import transformation.Rule;
 
 /**

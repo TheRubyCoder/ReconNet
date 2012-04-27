@@ -1,5 +1,8 @@
 package gui2;
 
+import static gui2.Style.ATTRIBUTE_PANE_BORDER;
+import static gui2.Style.ATTRIBUTE_PANE_DIMENSION;
+
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
@@ -11,11 +14,6 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
-import engine.attribute.PlaceAttribute;
-import engine.attribute.TransitionAttribute;
-import engine.handler.NodeTypeEnum;
-import exceptions.EngineException;
-
 import petrinet.Arc;
 import petrinet.INode;
 import petrinet.IRenew;
@@ -24,8 +22,10 @@ import petrinet.RenewCount;
 import petrinet.RenewId;
 import petrinet.RenewMap;
 import petrinet.Transition;
-
-import static gui2.Style.*;
+import engine.attribute.PlaceAttribute;
+import engine.attribute.TransitionAttribute;
+import engine.handler.NodeTypeEnum;
+import exceptions.EngineException;
 
 /** Singleton class that represents the attribute chart at the middle top */
 public class AttributePane {
@@ -159,6 +159,11 @@ public class AttributePane {
 	private static abstract class AbstractPetriTableModel extends
 			AbstractTableModel {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 6737819176767454927L;
+
 		protected abstract String[][] getData();
 
 		/** Head of table */
@@ -210,6 +215,10 @@ public class AttributePane {
 	private static class PlaceTableModel extends AbstractPetriTableModel {
 
 		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -6357182574839407504L;
+		/**
 		 * The General Data for the Placetable
 		 */
 		private String[][] data = { { "Id", "" }, { "Name", "" },
@@ -232,6 +241,10 @@ public class AttributePane {
 	/** Class for the Table with Transition Attributes */
 	private static class TransitionTableModel extends AbstractPetriTableModel {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -3955002911201794539L;
 		/**
 		 * The General Data for the Transitiontable
 		 */
@@ -257,6 +270,10 @@ public class AttributePane {
 	/** Class for the Table with Arc Attributes */
 	private static class ArcTableModel extends AbstractPetriTableModel {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -6770322595921463169L;
 		/**
 		 * The General Data for the Arctable
 		 */

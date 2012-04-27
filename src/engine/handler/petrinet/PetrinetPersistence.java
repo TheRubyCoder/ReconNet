@@ -5,7 +5,6 @@ import java.awt.geom.Point2D;
 
 import petrinet.Arc;
 import petrinet.INode;
-import petrinet.Place;
 import petrinet.Renews;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;

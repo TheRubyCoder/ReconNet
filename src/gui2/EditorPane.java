@@ -1,17 +1,15 @@
 package gui2;
 
+import static gui2.Style.EDITOR_PANE_BORDER;
+import static gui2.Style.EDITOR_PANE_DIMENSION;
+import static gui2.Style.EDITOR_PANE_LAYOUT;
+
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-
-import static gui2.Style.*;
 
 /** The Panel that contains buttons for Editor-Modes like Pick, Translate, AddTransition, AddPlace etc */
 class EditorPane {

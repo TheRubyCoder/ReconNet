@@ -7,9 +7,9 @@ package petrinet;
  * @author Reiter, Safai
  * @version 1.0
  */
-import java.util.*;
-
-import petrinet.Arc;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
 
 public class Transition implements INode {
 

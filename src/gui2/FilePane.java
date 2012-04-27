@@ -1,5 +1,10 @@
 package gui2;
 
+import static gui2.Style.DELETE_BUTTON_X;
+import static gui2.Style.DELETE_BUTTON_Y;
+import static gui2.Style.DELETE_PETRINET;
+import static gui2.Style.DELETE_PETRINET_DISABLED_ICON;
+import static gui2.Style.DELETE_PETRINET_PRESSED_ICON;
 import static gui2.Style.FILE_PANE_ICON_BUTTON_SIZE;
 import static gui2.Style.LEFT_PANEL_DIMENSION;
 import static gui2.Style.LOAD_BUTTON_X;
@@ -12,7 +17,6 @@ import static gui2.Style.NEW_BUTTON_Y;
 import static gui2.Style.NEW_PETRINET_DISABLED_ICON;
 import static gui2.Style.NEW_PETRINET_ICON;
 import static gui2.Style.NEW_PETRINET_PRESSED_ICON;
-import static gui2.Style.PETRINET_FILE_PANE_BORDER;
 import static gui2.Style.SAVE_AS_BUTTON_X;
 import static gui2.Style.SAVE_AS_BUTTON_Y;
 import static gui2.Style.SAVE_AS_PETRINET_DISABLED_ICON;
@@ -24,19 +28,14 @@ import static gui2.Style.SAVE_PETRINET_DISABLED_ICON;
 import static gui2.Style.SAVE_PETRINET_ICON;
 import static gui2.Style.SAVE_PETRINET_PRESSED_ICON;
 import static gui2.Style.SOUTH_PANEL_HEIHT;
-import static gui2.Style.DELETE_BUTTON_X;
-import static gui2.Style.DELETE_BUTTON_Y;
-import static gui2.Style.DELETE_PETRINET_DISABLED_ICON;
-import static gui2.Style.DELETE_PETRINET_PRESSED_ICON;
-import static gui2.Style.DELETE_PETRINET;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -54,6 +53,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import exceptions.EngineException;
+import exceptions.ShowAsInfoException;
+import exceptions.ShowAsWarningException;
 
 /**
  * Class for FilePanes (saving and creating petrinets and rules)<br/>
@@ -69,8 +70,7 @@ class FilePane {
 	private static class NewPetrinetListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			FilePane.getPetrinetFilePane().insertData("Petrinetz");
-			FilePane.getPetrinetFilePane().enableWholeButtons();
+			FilePane.getPetrinetFilePane().create("Petrinetz");
 		}
 	}
 
@@ -79,11 +79,12 @@ class FilePane {
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
 			if (!e.getValueIsAdjusting()) {
-				Object selectedValue = ((JList) e.getSource())
+				@SuppressWarnings("unchecked")
+				String selectedValue = ((JList<String>) e.getSource())
 						.getSelectedValue();
 				if (selectedValue != null) {
-					int pId = FilePane.getPetrinetFilePane().getIdFrom(
-							selectedValue);
+					int pId = FilePane.getPetrinetFilePane()
+							.getIdFromSelectedItem();
 					PetrinetPane.getInstance().displayPetrinet(pId,
 							"Petrinetz: " + selectedValue);
 				} else {
@@ -98,11 +99,11 @@ class FilePane {
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
 			if (!e.getValueIsAdjusting()) {
-				Object selectedValue = ((JList) e.getSource())
+				Object selectedValue = ((JList<?>) e.getSource())
 						.getSelectedValue();
 				if (selectedValue != null) {
-					int ruleId = FilePane.getRuleFilePane().getIdFrom(
-							selectedValue);
+					int ruleId = FilePane.getRuleFilePane()
+							.getIdFromSelectedItem();
 					RulePane.getInstance().displayRule(ruleId);
 				} else {
 					RulePane.getInstance().displayEmpty();
@@ -115,12 +116,7 @@ class FilePane {
 	private static class LoadPetrinetListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			File file = FilePane.getPetrinetFilePane().choseFileForLoad(
-					"Petrinetz");
-			if (file != null) {
-				FilePane.getPetrinetFilePane().loadPetrinet(file);
-				FilePane.getPetrinetFilePane().enableWholeButtons();
-			}
+			FilePane.getPetrinetFilePane().load("Petrinetz");
 		}
 	}
 
@@ -128,14 +124,7 @@ class FilePane {
 	private static class SavePetrinetListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			File fileToSafe = FilePane.getPetrinetFilePane()
-					.existsFileForSelectedItem();
-			if (fileToSafe != null) {
-				FilePane.getPetrinetFilePane().savePetrinetOnFilesystem(
-						fileToSafe);
-			} else {
-				(new SaveAsPetrinetListener()).actionPerformed(e);
-			}
+			FilePane.getPetrinetFilePane().saveSelected("Petrinetz");
 		}
 	}
 
@@ -143,12 +132,7 @@ class FilePane {
 	private static class SaveAsPetrinetListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			File filepath = FilePane.getPetrinetFilePane()
-					.choseFileForSaveAsAndRememberpath("Petrinetz");
-			if (filepath != null) {
-				FilePane.getPetrinetFilePane().savePetrinetOnFilesystem(
-						filepath);
-			}
+			FilePane.getPetrinetFilePane().saveSelectedAs("Petrinetz");
 		}
 	}
 
@@ -156,8 +140,7 @@ class FilePane {
 	private static class NewRuleListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			FilePane.getRuleFilePane().insertData("Regel");
-			FilePane.getRuleFilePane().enableWholeButtons();
+			FilePane.getRuleFilePane().create("Regel");
 		}
 	}
 
@@ -165,11 +148,7 @@ class FilePane {
 	private static class LoadRuleListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			File file = FilePane.getRuleFilePane().choseFileForLoad("Regel");
-			if (file != null) {
-				FilePane.getRuleFilePane().loadRule(file);
-				FilePane.getRuleFilePane().enableWholeButtons();
-			}
+			FilePane.getRuleFilePane().load("Regel");
 		}
 	}
 
@@ -177,13 +156,7 @@ class FilePane {
 	private static class SaveRuleListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			File fileToSafe = FilePane.getRuleFilePane()
-					.existsFileForSelectedItem();
-			if (fileToSafe != null) {
-				FilePane.getRuleFilePane().saveRuleOnFilesystem(fileToSafe);
-			} else {
-				(new SaveAsRuleListener()).actionPerformed(e);
-			}
+			FilePane.getRuleFilePane().saveSelected("Regel");
 		}
 	}
 
@@ -191,11 +164,7 @@ class FilePane {
 	private static class SaveAsRuleListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			File filepath = FilePane.getRuleFilePane()
-					.choseFileForSaveAsAndRememberpath("Regel");
-			if (filepath != null) {
-				FilePane.getRuleFilePane().saveRuleOnFilesystem(filepath);
-			}
+			FilePane.getRuleFilePane().saveSelectedAs("Regel");
 		}
 	}
 
@@ -203,16 +172,7 @@ class FilePane {
 	private static class DeleteRuleListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			int id = FilePane.getRuleFilePane().deleteSelectedItem();
-			if (id != -1) {
-				RulePane.getInstance().displayEmpty();
-				try {
-					EngineAdapter.getRuleManipulation().closeRule(id);
-				} catch (EngineException e1) {
-					PopUp.popError(e1);
-					e1.printStackTrace();
-				}
-			}
+			FilePane.getRuleFilePane().delete();
 		}
 	}
 
@@ -220,16 +180,7 @@ class FilePane {
 	private static class DeletePetrinetListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			int id = FilePane.getPetrinetFilePane().deleteSelectedItem();
-			if (id != -1) {
-				PetrinetPane.getInstance().displayEmpty();
-				try {
-					EngineAdapter.getPetrinetManipulation().closePetrinet(id);
-				} catch (EngineException e1) {
-					PopUp.popError(e1);
-					e1.printStackTrace();
-				}
-			}
+			FilePane.getPetrinetFilePane().delete();
 		}
 	}
 
@@ -277,7 +228,7 @@ class FilePane {
 	private JPanel buttonContainer;
 
 	/** The List containing all loaded files */
-	private JList list;
+	private JList<String> list;
 
 	/** The button for creating a new petrinet/rule */
 	private JButton newButton;
@@ -295,13 +246,13 @@ class FilePane {
 	private JButton saveAsButton;
 
 	/** Model for list */
-	private DefaultListModel listModel;
+	private DefaultListModel<String> listModel;
 
 	/** To remember what list entry refers to wich petrinet */
-	private Map<Object, Integer> listItemToPId;
+	private Map<String, Integer> nameToPId;
 
 	/** To remember waht list entry refers to which filepath */
-	private Map<Integer, File> listIdToFilepath;
+	private Map<String, File> nameToFilepath;
 
 	// private DefaultMutableTreeNode root;
 
@@ -332,8 +283,8 @@ class FilePane {
 			ActionListener saveListener, ActionListener saveAsListener,
 			ActionListener deleteListener,
 			ListSelectionListener selectionListener) {
-		listItemToPId = initiateListItemToPid();
-		listIdToFilepath = iniateListItemToFilepath();
+		nameToPId = initiateListItemToPid();
+		nameToFilepath = iniateListItemToFilepath();
 
 		newButton = initiateNewButton(type, newListener);
 		saveButton = initiateSaveButton(type, saveListener);
@@ -352,17 +303,17 @@ class FilePane {
 		list.setEnabled(false);
 	}
 
-	private Map<Object, Integer> initiateListItemToPid() {
-		return new HashMap<Object, Integer>();
+	private Map<String, Integer> initiateListItemToPid() {
+		return new HashMap<String, Integer>();
 	}
 
-	private Map<Integer, File> iniateListItemToFilepath() {
-		return new HashMap<Integer, File>();
+	private Map<String, File> iniateListItemToFilepath() {
+		return new HashMap<String, File>();
 	}
 
-	private JList initiateList(ListSelectionListener listener) {
-		listModel = new DefaultListModel();
-		JList list = new JList(listModel);
+	private JList<String> initiateList(ListSelectionListener listener) {
+		listModel = new DefaultListModel<String>();
+		JList<String> list = new JList<String>(listModel);
 		list.addListSelectionListener(listener);
 		return list;
 	}
@@ -376,7 +327,7 @@ class FilePane {
 	 *            Descriptor: "Petrinetze" / "Regeln"
 	 * @return
 	 */
-	private JPanel initiateTreeAndButtonContainerWithBorder(JList list,
+	private JPanel initiateTreeAndButtonContainerWithBorder(JList<String> list,
 			JPanel buttonContainer, String typePlural) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
@@ -547,8 +498,8 @@ class FilePane {
 		frame.add(treeAndButtonContainerWithBorder);
 	}
 
-	int getIdFrom(Object listItem) {
-		Integer integer = listItemToPId.get(listItem);
+	int getIdFrom(String listItem) {
+		Integer integer = nameToPId.get(listItem);
 		if (integer != null) {
 			return integer;
 		} else {
@@ -577,263 +528,237 @@ class FilePane {
 	}
 
 	/**
-	 * write user data into list
+	 * Makes sure the <tt>file</tt> ends with ".PNML"
+	 * 
+	 * @return <tt>file</tt> if it already ends with ".PNML" <br>
+	 *         else a new file with that ending
+	 * 
+	 * */
+	private File ensurePNMLEnding(File file) {
+		if (file.getName().endsWith(FILE_EXTENSION)) {
+			return file;
+		} else {
+			return new File(file.getPath() + FILE_EXTENSION);
+		}
+	}
+
+	/** Returns the name of the file without folders and without .PNML */
+	private String fileToListEntry(File file) {
+		return file.getName().substring(0, file.getName().length() - 5);
+	}
+
+	private boolean userWantsToOverwrite(File file) {
+		if (file.exists()) {
+			int confirm = JOptionPane
+					.showConfirmDialog(treeAndButtonContainerWithBorder,
+							"Die Datei existiert bereits. Möchten Sie sie überspeichern?");
+			if (confirm == JOptionPane.YES_OPTION) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return true;
+		}
+	}
+
+	/**
+	 * Creates a new petrinet or rule
 	 * 
 	 * @param type
 	 *            of panel
 	 * @return name of the petrinet, if no data entered return <tt>null</tt>
 	 */
-	String insertData(String type) {
-		String input = JOptionPane.showInputDialog("Bitte Name für " + type
-				+ " eingeben.", "neue(s) " + type);
-		while (listItemToPId.keySet().contains(input)) {
-			input = JOptionPane.showInputDialog("Name für " + type
-					+ " bereits vergeben. Bitte geben sie einen anderen ein.",
-					"neue(s) " + type);
-		}
-		if (input != null) {
-			// Add item to list without listeners! they acticate on
-			// inserting thus leading to inconsistent states: nullpointers
-			ListSelectionListener petrinetListSelectionListener = list
-					.getListSelectionListeners()[0];
-			list.removeListSelectionListener(petrinetListSelectionListener);
+	String create(String type) {
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Bitte Speicherort für neue(s) " + type
+				+ " aussuchen");
+		int ret = fileChooser.showDialog(treeAndButtonContainerWithBorder,
+				"Dort erstellen");
+		if (ret == JFileChooser.APPROVE_OPTION) {
+			File file = ensurePNMLEnding(fileChooser.getSelectedFile());
+			String name = fileToListEntry(file);
 
-			listModel.add(0, input);
+			if (userWantsToOverwrite(file)) {
+				try {
+					file.createNewFile();
+					ListSelectionListener petrinetListSelectionListener = list
+							.getListSelectionListeners()[0];
+					list.removeListSelectionListener(petrinetListSelectionListener);
 
-			// After inserting add the listener again
-			list.addListSelectionListener(petrinetListSelectionListener);
+					listModel.add(0, name);
 
-			int id;
-			if (this == FilePane.getPetrinetFilePane()) {
-				id = EngineAdapter.getPetrinetManipulation().createPetrinet();
-			} else {
-				id = EngineAdapter.getRuleManipulation().createRule();
-			}
-			listItemToPId.put(input, id);
-			list.setSelectedIndex(0);
-			return input;
-		}
-		return null;
-	}
+					// After inserting add the listener again
+					list.addListSelectionListener(petrinetListSelectionListener);
 
-	/**
-	 * Returns true if display should stay same, false if display shall be empty
-	 */
-	int deleteSelectedItem() {
-		Object selectedValue = list.getSelectedValue();
-		int id = getIdFromSelectedItem();
-		if (selectedValue != null) {
-			int confirmDialog = JOptionPane.showConfirmDialog(
-					treeAndButtonContainerWithBorder, "Wollen sie "
-							+ selectedValue + " wirklich löschen?",
-					"Petrinetz löschen?", JOptionPane.YES_NO_OPTION);
-			if (confirmDialog == 0) {
-				// Remove item from list without listeners! they acticate on
-				// deleting thus leading to inconsistent states: nullpointers
-				ListSelectionListener petrinetListSelectionListener = list
-						.getListSelectionListeners()[0];
-				list.removeListSelectionListener(petrinetListSelectionListener);
-
-				boolean success = listModel.removeElement(selectedValue)
-						&& listItemToPId.remove(selectedValue) != null;
-
-				// After removing add the listener again
-				list.addListSelectionListener(petrinetListSelectionListener);
-				if (success) {
-					return id;
-				} else {
-					return -1;
-				}
-			} else {
-				return -1;
-			}
-		} else {
-			return -1;
-		}
-	}
-
-	/**
-	 * Open filechooser and do all the save as logic
-	 * 
-	 * @param type
-	 *            type of the Saveing Object. (Petrinet or Rule)
-	 * @return File with the Filepath
-	 */
-	public File choseFileForSaveAsAndRememberpath(String type) {
-		if (!isItemSelected()) {
-			JOptionPane
-					.showMessageDialog(
-							null,
-							"Keine Auswahl in der Liste getroffen. \n Bitte eine Auswahl in der Liste vornehmen.",
-							"keine Auswahl", JOptionPane.INFORMATION_MESSAGE);
-		} else {
-			final JFileChooser fileChooser = new JFileChooser();
-			fileChooser.setDialogTitle(type + " speichern unter...");
-			int returnVal = fileChooser.showSaveDialog(fileChooser);
-
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-
-				File file = null;
-				String path = fileChooser.getSelectedFile().getPath();
-
-				if (!path.toLowerCase().endsWith(FILE_EXTENSION)) {
-					path = path + FILE_EXTENSION;
-				}
-				file = new File(path);
-				if (file.exists()) {
-					int confirmDialog = JOptionPane.showConfirmDialog(null,
-							"Wollen sie die Datei  \"" + path
-									+ "\" wirklich überspeichern?", type
-									+ " speichern", JOptionPane.YES_NO_OPTION,
-							JOptionPane.QUESTION_MESSAGE);
-					if (confirmDialog == 0) {
-						rememberFilePath(file);
-						return file;
+					int id;
+					if (this == FilePane.getPetrinetFilePane()) {
+						id = EngineAdapter.getPetrinetManipulation()
+								.createPetrinet();
 					} else {
-						return null;
+						id = EngineAdapter.getRuleManipulation().createRule();
 					}
-				} else {
-					rememberFilePath(file);
-					return file;
+					nameToPId.put(name, id);
+					nameToFilepath.put(name, file);
+
+					list.setSelectedIndex(0);
+					saveSelected(type);
+					enableWholeButtons();
+
+					return name;
+				} catch (IOException e) {
+					throw new ShowAsWarningException(e);
+				}
+			} else {
+				return null;
+			}
+		}
+		return null;
+	}
+
+	/** Quick saves the petrinet or rule to the file it is mapped to */
+	public void saveSelected(String type) {
+		String name = listModel.get(list.getMinSelectionIndex());
+		int id = getIdFromSelectedItem();
+		File file = nameToFilepath.get(name);
+		try {
+			if (this == FilePane.getPetrinetFilePane()) {
+				EngineAdapter.getPetrinetManipulation().save(id,
+						file.getParent(), fileToListEntry(file),
+						FILE_EXTENSION_WITHOUT_DOT);
+			} else {
+				EngineAdapter.getRuleManipulation().save(id, file.getParent(),
+						fileToListEntry(file), FILE_EXTENSION_WITHOUT_DOT);
+			}
+		} catch (EngineException e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Saves the petrinet or rule to a file that is chosen by the user.
+	 * Afterwards both petrinets or rules are opended. They are equally but not
+	 * identical
+	 */
+	public void saveSelectedAs(String type) {
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Bitte Speicherort für neue(s) " + type
+				+ " aussuchen");
+		int ret = fileChooser.showDialog(treeAndButtonContainerWithBorder,
+				"Dort speichern");
+		if (ret == JFileChooser.APPROVE_OPTION) {
+			File file = ensurePNMLEnding(fileChooser.getSelectedFile());
+			// String name = fileToListEntry(file);
+
+			if (userWantsToOverwrite(file)) {
+				try {
+					int id = getIdFromSelectedItem();
+					if (this == FilePane.getPetrinetFilePane()) {
+						EngineAdapter.getPetrinetManipulation().save(id,
+								file.getParent(), fileToListEntry(file),
+								FILE_EXTENSION_WITHOUT_DOT);
+					} else {
+						EngineAdapter.getRuleManipulation().save(id,
+								file.getParent(), fileToListEntry(file),
+								FILE_EXTENSION_WITHOUT_DOT);
+					}
+
+					loadFromFile(file);
+				} catch (EngineException e) {
+					throw new ShowAsWarningException(e);
 				}
 			}
 		}
-		return null;
 	}
 
-	public File choseFileForLoad(String type) {
-		final JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setDialogTitle(type + " laden");
-		int returnVal = fileChooser.showOpenDialog(fileChooser);
-
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-
-			File file = null;
-			String path = fileChooser.getSelectedFile().getPath();
-
-			if (!path.endsWith(FILE_EXTENSION)) {
-				JOptionPane.showMessageDialog(null, "Datei muss mit "
-						+ FILE_EXTENSION + " enden.",
-						"Warnung: Falsche Endung", JOptionPane.WARNING_MESSAGE);
-				return null;
-			}
-			file = new File(path);
-			if (file.exists()) {
-				return file;
-			} else {
-				JOptionPane.showMessageDialog(null, "Datei " + path
-						+ " existiert nicht.", "Warnung: Falscher Dateipfad",
-						JOptionPane.WARNING_MESSAGE);
-				return null;
-			}
+	/** Loads a petrinet or file from a given file */
+	private void loadFromFile(File file) {
+		int id;
+		String name = fileToListEntry(file);
+		if (this == FilePane.getPetrinetFilePane()) {
+			id = EngineAdapter.getPetrinetManipulation().load(file.getParent(),
+					file.getName());
+		} else {
+			id = EngineAdapter.getRuleManipulation().load(file.getParent(),
+					file.getName());
 		}
-		return null;
-	}
+		nameToPId.put(name, id);
+		nameToFilepath.put(name, file);
 
-	public void savePetrinetOnFilesystem(File path) {
-		int id = getIdFromSelectedItem();
-		try {
-			EngineAdapter.getPetrinetManipulation().save(id, path.getParent(),
-					extractListEntryNameFromFilePath(path),
-					FILE_EXTENSION_WITHOUT_DOT);
-		} catch (EngineException e) {
-			PopUp.popError(e);
-			e.printStackTrace();
-		}
-	}
-
-	public void saveRuleOnFilesystem(File path) {
-		int id = getIdFromSelectedItem();
-		try {
-			EngineAdapter.getRuleManipulation().save(id, path.getParent(),
-					extractListEntryNameFromFilePath(path),
-					FILE_EXTENSION_WITHOUT_DOT);
-		} catch (EngineException e) {
-			PopUp.popError(e);
-			e.printStackTrace();
-		}
-		// PopUp.popUnderConstruction("SaveRuleOnFilesystem in Filepane");
-	}
-
-	public void loadPetrinet(File path) {
-		// EngineAdapter.getPetrinetManipulation().createPetrinet();
-		int petrinetId = EngineAdapter.getPetrinetManipulation().load(
-				path.getParent(), path.getName());
-
-		// Add item to list without listeners! they acticate on
-		// inserting thus leading to inconsistent states: nullpointers
 		ListSelectionListener petrinetListSelectionListener = list
 				.getListSelectionListeners()[0];
 		list.removeListSelectionListener(petrinetListSelectionListener);
 
-		String listItem = extractListEntryNameFromFilePath(path);
-		listModel.add(0, listItem);
+		listModel.add(0, name);
 
 		// After inserting add the listener again
 		list.addListSelectionListener(petrinetListSelectionListener);
 
-		listItemToPId.put(listItem, petrinetId);
-		listIdToFilepath.put(petrinetId, path);
 		list.setSelectedIndex(0);
+		enableWholeButtons();
 	}
 
-	String extractListEntryNameFromFilePath(File path) {
-		String initial = path.getName().split(FILE_EXTENSION)[0];
-		String number = "";
-		while (listItemToPId.keySet().contains(initial + number)) {
-			if (number.equals("")) {
-				number = "(1)";
-			} else {
-				number = "("
-						+ (Integer.parseInt(String.valueOf(number.charAt(1))) + 1)
-						+ ")";
-			}
-		}
-		return initial + number;
-	}
+	/** Loads a petrinet or rule from a rule that is chosen by the user */
+	public void load(String type) {
+		JFileChooser fileChooser = new JFileChooser();
 
-	public void loadRule(File path) {
-		// EngineAdapter.getPetrinetManipulation().createPetrinet();
-		int ruleId = EngineAdapter.getRuleManipulation().load(path.getParent(),
-				path.getName());
+		fileChooser.setDialogTitle("Was möchten sie laden?");
 
-		// Add item to list without listeners! they acticate on
-		// inserting thus leading to inconsistent states: nullpointers
-		ListSelectionListener ruleListSelectionListener = list
-				.getListSelectionListeners()[0];
-		list.removeListSelectionListener(ruleListSelectionListener);
-
-		String listItem = extractListEntryNameFromFilePath(path);
-		listModel.add(0, listItem);
-
-		// After inserting add the listener again
-		list.addListSelectionListener(ruleListSelectionListener);
-
-		listItemToPId.put(listItem, ruleId);
-		listIdToFilepath.put(ruleId, path);
-		list.setSelectedIndex(0);
-	}
-
-	public File existsFileForSelectedItem() {
-		int id = getIdFromSelectedItem();
-		File file = listIdToFilepath.get(id);
-		if (file != null) {
+		int open = fileChooser.showOpenDialog(treeAndButtonContainerWithBorder);
+		if (open == JFileChooser.APPROVE_OPTION) {
+			File file = fileChooser.getSelectedFile();
+			String name = fileToListEntry(file);
 			if (file.exists()) {
-				return file; // file is on file system. can be safed
+				if (listModel.contains(name)) {
+					throw new ShowAsInfoException(
+							"Die ausgewählte Datei ist bereits geladen.");
+				} else {
+					loadFromFile(file);
+				}
 			} else {
-				return null; // is mapped but file does not exist
+				throw new ShowAsInfoException(
+						"Die ausgewählte Datei existiert nicht. Haben sie vieleicht die Endung vergessen?");
 			}
+		}
+
+	}
+
+	/** Deletes all selected petrinets or rules */
+	public void delete() {
+
+		int[] selectedIndices = list.getSelectedIndices();
+		if (selectedIndices.length < 1) {
+			throw new ShowAsInfoException("Es sind keine Dateien ausgewählt");
 		} else {
-			return null; // not mapped / no file chosen by user
+			ListSelectionListener petrinetListSelectionListener = list
+					.getListSelectionListeners()[0];
+			list.removeListSelectionListener(petrinetListSelectionListener);
+
+			for (int i = selectedIndices.length - 1; i <= 0; i++) {
+				int index = selectedIndices[i];
+				String name = listModel.get(index);
+				listModel.removeElementAt(index);
+				nameToPId.remove(name);
+				nameToFilepath.remove(name);
+			}
+
+			// After removing add the listener again
+			list.addListSelectionListener(petrinetListSelectionListener);
+			list.setSelectedIndex(0);
+			if (list.getSelectedValue() == null) {
+				if (this == FilePane.getPetrinetFilePane()) {
+					PetrinetPane.getInstance().displayEmpty();
+				} else {
+					RulePane.getInstance().displayEmpty();
+				}
+			}
 		}
 	}
 
-	private boolean isItemSelected() {
-		return list.getSelectedValue() != null;
-	}
-
+	/** Returns the id of the currently selected item */
 	private int getIdFromSelectedItem() {
-		Object selectedValue = list.getSelectedValue();
+		String selectedValue = list.getSelectedValue();
 		if (selectedValue != null) {
 			return getIdFrom(selectedValue);
 		} else {
@@ -841,15 +766,12 @@ class FilePane {
 		}
 	}
 
-	private void rememberFilePath(File path) {
-		int id = getIdFromSelectedItem();
-		listIdToFilepath.put(id, path);
-	}
-
+	@SuppressWarnings("deprecation")
+	// deprecated in 1.7 but recon is developet on 1.6
 	public Collection<Integer> getIdsFromSelectedListItems() {
 		Collection<Integer> result = new HashSet<Integer>();
 		for (Object value : list.getSelectedValues()) {
-			result.add(listItemToPId.get(value));
+			result.add(nameToPId.get(value));
 		}
 		return result;
 	}

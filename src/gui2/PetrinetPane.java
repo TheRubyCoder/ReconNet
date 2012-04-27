@@ -8,7 +8,6 @@ import javax.swing.JPanel;
 
 import petrinet.Arc;
 import petrinet.INode;
-
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import exceptions.EngineException;
 

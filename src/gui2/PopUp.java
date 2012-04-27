@@ -62,6 +62,10 @@ public class PopUp {
 	
 	private static class ImagePanel extends JPanel {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -6232258106891598165L;
 		private Image img;
 
 		public ImagePanel(String img) {

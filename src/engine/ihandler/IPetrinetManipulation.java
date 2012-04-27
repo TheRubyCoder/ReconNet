@@ -3,12 +3,12 @@ package engine.ihandler;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
-import com.sun.istack.NotNull;
-
 import petrinet.Arc;
 import petrinet.INode;
-import petrinet.Place;
 import petrinet.Renews;
+
+import com.sun.istack.NotNull;
+
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;

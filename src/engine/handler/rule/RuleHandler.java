@@ -2,17 +2,11 @@ package engine.handler.rule;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import persistence.Persistence;
 import petrinet.Arc;
-import petrinet.ElementType;
 import petrinet.INode;
 import petrinet.IRenew;
 import petrinet.Petrinet;
@@ -30,11 +24,9 @@ import engine.attribute.PlaceAttribute;
 import engine.attribute.RuleAttribute;
 import engine.attribute.TransitionAttribute;
 import engine.data.JungData;
-import engine.data.PetrinetData;
 import engine.data.RuleData;
 import engine.handler.NodeTypeEnum;
 import engine.handler.RuleNet;
-import engine.handler.petrinet.PetrinetPersistence;
 import engine.session.SessionManager;
 import exceptions.EngineException;
 
