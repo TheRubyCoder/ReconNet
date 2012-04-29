@@ -10,7 +10,9 @@ import java.util.Set;
 
 import petrinet.INode;
 import petrinet.Petrinet;
+import transformation.ITransformation;
 import transformation.Rule;
+import transformation.TransformationComponent;
 import engine.attribute.NodeLayoutAttribute;
 import engine.handler.RuleNet;
 import engine.ihandler.IPetrinetPersistence;
@@ -155,8 +157,6 @@ public class Converter {
 			}
 
 			newArc.setSource(arcStart);
-			System.out.println("creating arc source:" + arcStart + " target:"
-					+ arcEnd);
 			Inscription i = new Inscription();
 			i.setText(arc.getName());
 			newArc.setInscription(i);
@@ -221,9 +221,6 @@ public class Converter {
 				INode realTransition;
 				if (trans.getGraphics() != null
 						&& !trans.getGraphics().getPosition().isEmpty()) {
-					System.out.println(trans.getTransitionName().getText());
-					System.out
-							.println(trans.getGraphics().getPosition().size());
 					realTransition = handler
 							.createTransition(petrinetID,
 									positionToPoint2D(trans.getGraphics()
@@ -277,9 +274,7 @@ public class Converter {
 	 */
 	public static int convertToRule(Pnml pnml, IRulePersistence handler) {
 		int id = handler.createRule();
-		// try {
 
-		// Todo: make nettype independent from position in rnml-file
 		Net lNet = pnml.getNet().get(0);
 		Net kNet = pnml.getNet().get(1);
 		Net rNet = pnml.getNet().get(2);
@@ -296,153 +291,99 @@ public class Converter {
 		List<Transition> rTransis = rNet.getPage().getTransition();
 		List<Arc> rArcs = rNet.getPage().getArc();
 
-		Map<String, INode> idToINode = new HashMap<String, INode>();
+		/** Contains the created INode object for each XML-id */
+		Map<String, INode> idToINodeInL = new HashMap<String, INode>();
+		Map<String, INode> idToINodeInK = new HashMap<String, INode>();
+		Map<String, INode> idToINodeInR = new HashMap<String, INode>();
 		try {
-			Map<String, INode> mappedPlaces = addPlacesToRule(id, lPlaces,
-					kPlaces, rPlaces, handler);
-			Map<String, INode> mappedTransitions = addTransitionsToRule(id,
-					lTransis, kTransis, rTransis, handler);
-			idToINode.putAll(mappedPlaces);
-			idToINode.putAll(mappedTransitions);
-			addArcsToTule(id, lArcs, kArcs, rArcs, handler, idToINode);
+			addPlacesToRule(id, lPlaces, kPlaces, rPlaces, handler,
+					idToINodeInL, idToINodeInK, idToINodeInR);
+			addTransitionsToRule(id, lTransis, kTransis, rTransis, handler,
+					idToINodeInL, idToINodeInK, idToINodeInR);
+			fillMapsWithMappings(id, idToINodeInL, idToINodeInK, idToINodeInR);
+			addArcsToTule(id, lArcs, kArcs, rArcs, handler, idToINodeInL,
+					idToINodeInK, idToINodeInR);
 		} catch (EngineException e) {
 			PopUp.popError(e);
 			e.printStackTrace();
 		}
-
-		//
-		// List<?>[] arrayWithPlaceLists = { kPlaces, lPlaces, rPlaces };
-		// List<?>[] arrayWithTransLists = { kTransis, lTransis, rTransis };
-		// List<?>[] arrayWithArcLists = { kArcs, lArcs, rArcs };
-		//
-		// Map<String, INode> idToINode = new HashMap<String, INode>();
-		//
-		// for (int i = 0; i < arrayWithPlaceLists.length; i++) {
-		// RuleNet rulenet = null;
-		// switch (i) {
-		// case 0:
-		// rulenet = RuleNet.K;
-		// if (test)
-		// System.out.println("K");
-		// break;
-		// case 1:
-		// rulenet = RuleNet.L;
-		// if (test)
-		// System.out.println("L");
-		// break;
-		// case 2:
-		// rulenet = RuleNet.R;
-		// if (test)
-		// System.out.println("R");
-		// }
-		//
-		// for (Place p : (List<Place>) arrayWithPlaceLists[i]) {
-		// INode node = handler.createPlace(id, rulenet,
-		// positionToPoint2D(p.getGraphics().getPosition()));
-		// node.setName(p.getPlaceName().getText());
-		// java.awt.Color c = new java.awt.Color(255, 255, 255);
-		// if (p.graphics.getColor() != null) {
-		// c = new java.awt.Color(Integer.parseInt(p.getGraphics()
-		// .getColor().getR()), Integer.parseInt(p
-		// .getGraphics().getColor().getG()),
-		// Integer.parseInt(p.getGraphics().getColor()
-		// .getB()));
-		// if (test)
-		// System.out.println("found color: " + c);
-		// }
-		// handler.setPlaceColor(id, node, c);
-		// idToINode.put(p.getId(), node);
-		//
-		// if (rulenet == RuleNet.K) {
-		// Iterator<Place> iter = lPlaces.iterator();
-		// while (iter.hasNext()) {
-		// Place tempPlace = iter.next();
-		// if (tempPlace.getId().equals(p.getId()))
-		// iter.remove();
-		// }
-		//
-		// iter = rPlaces.iterator();
-		// while (iter.hasNext()) {
-		// Place tempPlace = iter.next();
-		// if (tempPlace.getId().equals(p.getId()))
-		// iter.remove();
-		// }
-		// }
-		// }
-		//
-		// if (test)
-		// System.out.println("Rulenet: " + rulenet.name()
-		// + " map id -> inode (only Places): \n" + idToINode);
-		//
-		// for (Transition t : (List<Transition>) arrayWithTransLists[i]) {
-		// INode node = handler.createTransition(id, rulenet,
-		// positionToPoint2D(t.getGraphics().getPosition()));
-		// node.setName(t.getTransitionName().getText());
-		// handler.setTlb(id, node, t.getTransitionLabel().getText());
-		// idToINode.put(t.getId(), node);
-		//
-		// if (rulenet == RuleNet.K) {
-		// Iterator<Transition> iter = lTransis.iterator();
-		// while (iter.hasNext()) {
-		// Transition tempT = iter.next();
-		// if (tempT.getId().equals(t.getId()))
-		// iter.remove();
-		// }
-		// iter = rTransis.iterator();
-		// while (iter.hasNext()) {
-		// Transition tempT = iter.next();
-		// if (tempT.getId().equals(t.getId()))
-		// iter.remove();
-		// }
-		// }
-		// }
-		//
-		// if (test)
-		// System.out.println("Rulenet: " + rulenet.name()
-		// + " map id -> inode(with Transistions): \n"
-		// + idToINode);
-		//
-		// for (Arc a : (List<Arc>) arrayWithArcLists[i]) {
-		// System.out.println(idToINode.get(a.getSource()) + " -> "
-		// + idToINode.get(a.getTarget()));
-		// INode node = handler.createArc(id, rulenet,
-		// idToINode.get(a.getSource()),
-		// idToINode.get(a.getTarget()));
-		// node.setName(a.getInscription().getText());
-		// if (rulenet == RuleNet.K) {
-		// Iterator<Arc> iter = lArcs.iterator();
-		// while (iter.hasNext()) {
-		// Arc temp = iter.next();
-		// if (temp.getId().equals(a.getId()))
-		// iter.remove();
-		// }
-		// iter = rArcs.iterator();
-		// while (iter.hasNext()) {
-		// Arc temp = iter.next();
-		// if (temp.getId().equals(a.getId()))
-		// iter.remove();
-		// }
-		// }
-		// }
-		//
-		// if (test) {
-		// System.out.println();
-		// }
-		//
-		// }
-		//
-		// } catch (EngineException e) {
-		//
-		// e.printStackTrace();
-		// return -1;
-		// }
-
 		return id;
 	}
 
+	/**
+	 * After Places and Rules have been added, there are only
+	 * String-id-to-INode-mappings for the original inserted nodes, but not for
+	 * the ones that were inserted automatically For beeing able to properly add
+	 * arcs to the rule, we need those mappings
+	 */
+	private static void fillMapsWithMappings(int ruleId,
+			Map<String, INode> idToINodeInL, Map<String, INode> idToINodeInK,
+			Map<String, INode> idToINodeInR) {
+		ITransformation transformation = TransformationComponent
+				.getTransformation();
+		// fill with mappings of Ls nodes
+		for (String xmlId : idToINodeInL.keySet()) {
+			INode node = idToINodeInL.get(xmlId);
+			List<INode> mappings = transformation.getMappings(ruleId, node);
+			for (int i = 0; i < mappings.size(); i++) {
+				INode respectiveNode = mappings.get(i);
+				if (respectiveNode != null) {
+					if (i == 0) {
+						idToINodeInL.put(xmlId, respectiveNode);
+					} else if (i == 1) {
+						idToINodeInK.put(xmlId, respectiveNode);
+					} else if (i == 2) {
+						idToINodeInR.put(xmlId, respectiveNode);
+					}
+				}
+			}
+		}
+		// fill with mappings of Ks nodes
+		for (String xmlId : idToINodeInK.keySet()) {
+			INode node = idToINodeInK.get(xmlId);
+			List<INode> mappings = transformation.getMappings(ruleId, node);
+			for (int i = 0; i < mappings.size(); i++) {
+				INode respectiveNode = mappings.get(i);
+				if (respectiveNode != null) {
+					if (i == 0) {
+						idToINodeInL.put(xmlId, respectiveNode);
+					} else if (i == 1) {
+						idToINodeInK.put(xmlId, respectiveNode);
+					} else if (i == 2) {
+						idToINodeInR.put(xmlId, respectiveNode);
+					}
+				}
+			}
+		}
+		// fill with mappings of Rs nodes
+		for (String xmlId : idToINodeInR.keySet()) {
+			INode node = idToINodeInR.get(xmlId);
+			List<INode> mappings = transformation.getMappings(ruleId, node);
+			for (int i = 0; i < mappings.size(); i++) {
+				INode respectiveNode = mappings.get(i);
+				if (respectiveNode != null) {
+					if (i == 0) {
+						idToINodeInL.put(xmlId, respectiveNode);
+					} else if (i == 1) {
+						idToINodeInK.put(xmlId, respectiveNode);
+					} else if (i == 2) {
+						idToINodeInR.put(xmlId, respectiveNode);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Adds all arcs from the XML to the rule object, using the engine handler
+	 * 
+	 * @param idToINodeInR
+	 * @param idToINodeInK
+	 */
 	private static void addArcsToTule(int id, List<Arc> lArcs, List<Arc> kArcs,
 			List<Arc> rArcs, IRulePersistence handler,
-			Map<String, INode> idToINode) throws EngineException {
+			Map<String, INode> idToINodeInL, Map<String, INode> idToINodeInK,
+			Map<String, INode> idToINodeInR) throws EngineException {
 		/*
 		 * All arcs must be in K. To determine where the arcs must be added, we
 		 * have to find out: Are they also in L AND in K or just in one of them?
@@ -450,24 +391,48 @@ public class Converter {
 		 */
 		for (Arc arc : kArcs) {
 			RuleNet toAddto;
+			INode source;
+			INode target;
 			if (getIdsOfArcsList(lArcs).contains(arc.getId())) {
 				if (getIdsOfArcsList(rArcs).contains(arc.getId())) {
 					toAddto = RuleNet.K;
+					source = idToINodeInK.get(arc.getSource());
+					target = idToINodeInK.get(arc.getTarget());
 				} else {
 					toAddto = RuleNet.L;
+					source = idToINodeInL.get(arc.getSource());
+					target = idToINodeInL.get(arc.getTarget());
 				}
 			} else {
 				toAddto = RuleNet.R;
+				source = idToINodeInR.get(arc.getSource());
+				target = idToINodeInR.get(arc.getTarget());
 			}
-			handler.createArc(id, toAddto, idToINode.get(arc.getSource()),
-					idToINode.get(arc.getTarget()));
+			handler.createArc(id, toAddto, source, target);
 		}
 
 	}
 
+	/**
+	 * Adds places to the rule, writing the mappings of created places into the
+	 * resprective maps (last 3 parameters)
+	 * 
+	 * @param id
+	 * @param lPlaces
+	 * @param kPlaces
+	 * @param rPlaces
+	 * @param handler
+	 * @param idToINodeInL
+	 * @param idToINodeInK
+	 * @param idToINodeInR
+	 * @return
+	 * @throws EngineException
+	 */
 	private static Map<String, INode> addPlacesToRule(int id,
 			List<Place> lPlaces, List<Place> kPlaces, List<Place> rPlaces,
-			IRulePersistence handler) throws EngineException {
+			IRulePersistence handler, Map<String, INode> idToINodeInL,
+			Map<String, INode> idToINodeInK, Map<String, INode> idToINodeInR)
+			throws EngineException {
 		Map<String, INode> result = new HashMap<String, INode>();
 		/*
 		 * All places must be in K. To determine where the places must be added,
@@ -492,17 +457,22 @@ public class Converter {
 			handler.setPname(id, createdPlace, place.getPlaceName().getText());
 			handler.setMarking(id, createdPlace,
 					Integer.valueOf(place.getInitialMarking().getText()));
-			// FIXME: Uncommented due to nullpointer: initialMarking and Color
-			// are null (maybe not safed?)
-			result.put(place.getId(), createdPlace);
+			if (toAddto == RuleNet.L) {
+				idToINodeInL.put(place.id, createdPlace);
+			} else if (toAddto == RuleNet.K) {
+				idToINodeInK.put(place.id, createdPlace);
+			} else {
+				idToINodeInR.put(place.id, createdPlace);
+			}
 		}
 		return result;
 	}
 
 	private static Map<String, INode> addTransitionsToRule(int id,
 			List<Transition> lTransitions, List<Transition> kTransition,
-			List<Transition> rTransition, IRulePersistence handler)
-			throws EngineException {
+			List<Transition> rTransition, IRulePersistence handler,
+			Map<String, INode> idToINodeInL, Map<String, INode> idToINodeInK,
+			Map<String, INode> idToINodeInR) throws EngineException {
 		Map<String, INode> result = new HashMap<String, INode>();
 		/*
 		 * All Transitions must be in K. To determine where the transitions must
@@ -528,7 +498,13 @@ public class Converter {
 					.getTransitionLabel().getText());
 			handler.setTname(id, createdTransition, transition
 					.getTransitionName().getText());
-			result.put(transition.getId(), createdTransition);
+			if (toAddto == RuleNet.L) {
+				idToINodeInL.put(transition.id, createdTransition);
+			} else if (toAddto == RuleNet.K) {
+				idToINodeInK.put(transition.id, createdTransition);
+			} else {
+				idToINodeInR.put(transition.id, createdTransition);
+			}
 		}
 		return result;
 	}

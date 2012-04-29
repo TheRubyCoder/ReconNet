@@ -59,6 +59,7 @@ public class Persistence /* implements IPersistance */{
 			Marshaller m = context.createMarshaller();
 
 			m.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
+			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
 			FileWriter fw = new FileWriter(file);
 			m.marshal(pnml, fw);
@@ -114,6 +115,7 @@ public class Persistence /* implements IPersistance */{
 			nodeMapMerged.putAll(nodeMapR);
 
 			Marshaller m = context.createMarshaller();
+			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			Pnml pnml = Converter.convertRuleToPnml(rule, nodeMapMerged);
 
 			m.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());

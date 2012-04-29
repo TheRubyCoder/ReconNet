@@ -121,7 +121,7 @@ public class Rule {
 	public void removeNodeOrArc(INode nodeOrArc) {
 		if (nodeOrArc instanceof Arc) {
 			List<Arc> mappings = getMappings((Arc) nodeOrArc);
-			System.out.println("ME: "+ mappings);
+			System.out.println("ME: " + mappings);
 			if (mappings.get(0) != null) {
 				getL().deleteArcByID(mappings.get(0).getId());
 			}
@@ -503,7 +503,12 @@ public class Rule {
 		private void rEdgeChanged(Arc element, ActionType actionType) {
 			if (actionType == ActionType.added) {
 				if (!rKSameEdges.containsKey(element)) {
-					INode start = (rKSameNodes.get(element.getStart()));
+					System.out.println(k);
+					System.out.println(r);
+					System.out.println("rk same: " + rKSameNodes);
+					System.out.println("element " + element);
+					System.out.println("start " + element.getStart());
+					INode start = rKSameNodes.get(element.getStart());
 					INode end = rKSameNodes.get(element.getEnd());
 					Arc edge = k.createArc(element.getName(), start, end);
 					rKSameEdges.put(element, edge);
@@ -587,24 +592,26 @@ public class Rule {
 		INode inL = null;
 		INode inK = null;
 		INode inR = null;
-		fromKtoR(null);
-		if (getL().getAllPlaces().contains(node)
-				|| getL().getAllTransitions().contains(node)) {
-			inL = node;
-			inK = fromLtoK(inL);
-			inR = fromKtoR(inK);
-		} else if (getK().getAllPlaces().contains(node)
-				|| getK().getAllTransitions().contains(node)) {
-			inK = node;
-			inL = fromKtoL(inK);
-			inR = fromKtoR(inK);
-		} else if (getR().getAllPlaces().contains(node)
-				|| getR().getAllTransitions().contains(node)) {
-			inR = node;
-			inK = fromRtoK(inR);
-			inL = fromLtoK(inL);
-		} else {
-			return null;
+		if (node != null) {
+			fromKtoR(null);
+			if (getL().getAllPlaces().contains(node)
+					|| getL().getAllTransitions().contains(node)) {
+				inL = node;
+				inK = fromLtoK(inL);
+				inR = fromKtoR(inK);
+			} else if (getK().getAllPlaces().contains(node)
+					|| getK().getAllTransitions().contains(node)) {
+				inK = node;
+				inL = fromKtoL(inK);
+				inR = fromKtoR(inK);
+			} else if (getR().getAllPlaces().contains(node)
+					|| getR().getAllTransitions().contains(node)) {
+				inR = node;
+				inK = fromRtoK(inR);
+				inL = fromLtoK(inL);
+			} else {
+				return null;
+			}
 		}
 		mappings.add(inL);
 		mappings.add(inK);

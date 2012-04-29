@@ -117,11 +117,27 @@ public interface ITransformation {
 	 *         the return would be List(node of L, node of K, <tt>null</tt>)
 	 */
 	List<INode> getMappings(Rule rule, INode node);
+	
+	/**
+	 * Very similiar to {@link ITransformation#getMappings(Rule, INode)} but with the sessionId of <tt>rule</tt> instead.
+	 * @see ITransformation#storeSessionId(int, Rule)
+	 * @param ruleId
+	 * @param node
+	 * @return
+	 */
+	List<INode> getMappings(int ruleId, INode node);
 
 	/**
 	 * Very similar to {@link ITransformation#getMappings(Rule, INode)}
 	 * but with Arc instead of INode
 	 */
 	List<Arc> getMappings(Rule rule, Arc arc);
+	
+	/**
+	 * Stores the session id of a rule so it can be used in {@link ITransformation#getMappings(int, INode)}
+	 * @param id
+	 * @param rule
+	 */
+	void storeSessionId(int id, Rule rule);
 
 }

@@ -18,6 +18,16 @@
 				<th>Anmerkung / mögliche Lösung</th>
 			</tr>
 			<tr>
+				<td style="background-color: rgb(255, 204, 255);">p13</td>
+				<td>JP</td>
+				<td>bei Simulation Beides werden <a href="Figs/p13.png">Token
+						nicht angezeig</a>t, inhaltlich aber richtig geschaltet
+				</td>
+				<td>ME</td>
+				<td>3</td>
+				<td></td>
+			</tr>
+			<tr>
 				<td>p3</td>
 				<td>JP</td>
 				<td><a href="Figs/p3_keinmatch.png">Fehlermeldung</a> "kein
@@ -70,29 +80,34 @@
 				<td>schwierig, daher später</td>
 			</tr>
 			<tr>
+				<th colspan="3" rowspan="1">Gelöste Probleme</th>
+				<th>zuständig</th>
+				<th>0&lt;&nbsp; Priorität &lt;6</th>
+				<th>Anmerkung / mögliche Lösung</th>
+			</tr>
+			<tr>
+				<td>p15</td>
+				<td>ME</td>
+				<td>Die XML ist nun menschenfreundlich lesbar</td>
+				<td>ME</td>
+				<td>1</td>
+				<td></td>
+			</tr>
+			<tr>
 				<td style="background-color: rgb(255, 204, 255);">p12</td>
 				<td>JP</td>
 				<td>speichern von<a href="Figs/p12.png"> Regel</a> klappt nicht
 				</td>
 				<td>ME</td>
 				<td>3</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td style="background-color: rgb(255, 204, 255);">p13</td>
-				<td>JP</td>
-				<td>bei Simulation Beides werden <a href="Figs/p13.png">Token
-						nicht angezeig</a>t, inhaltlich aber richtig geschaltet
-				</td>
-				<td>ME</td>
-				<td>3</td>
-				<td></td>
-			</tr>
-			<tr>
-				<th colspan="3" rowspan="1">Gelöste Probleme</th>
-				<th>zuständig</th>
-				<th>0&lt;&nbsp; Priorität &lt;6</th>
-				<th>Anmerkung / mögliche Lösung</th>
+				<td>Das Speichern hat richtig funktioniert. Beim Aufbau der
+					Regel aus der XML wurden aber die mappings von xml-id auf node-id
+					überschrieben (da es zu jeder xml-id mehrere node-ids gibt) wodurch
+					die Kante von der unteren Stelle in R zur Transition in K verlief.
+					Das gab natürlich schwere Folgefehler. Beheben des Problems war
+					recht aufwendig, da von den automatisch erstellten Nodes keine IDs
+					oder Objektreferenzen bekannt sind und auch mit der session id der
+					Regel nichts wirkliches angefangen werden konnte. </td>
 			</tr>
 			<tr>
 				<td>p14</td>
@@ -102,7 +117,7 @@
 				<td>1</td>
 				<td></td>
 			</tr>
-		    <tr>
+			<tr>
 				<td style="background-color: rgb(255, 204, 255);"><span
 					style="color: black;">p9a</span></td>
 				<td>JP</td>
@@ -127,10 +142,12 @@
 					Aktivierung vorliegt, muss man schnell genug auf den Button kommen</td>
 				<td>ME</td>
 				<td>3</td>
-				<td><tt>SimulationPane.stop()</tt> in entsprechender catch-klausel im ActionListener eingefügt</td>
+				<td><tt>SimulationPane.stop()</tt> in entsprechender
+					catch-klausel im ActionListener eingefügt</td>
 			</tr>
 			<tr>
-				<th colspan="6" rowspan="1" style="background-color: rgb(50,150,50)"></th>
+				<th colspan="6" rowspan="1"
+					style="background-color: rgb(50, 150, 50)"></th>
 			</tr>
 			<tr>
 				<td>p11</td>

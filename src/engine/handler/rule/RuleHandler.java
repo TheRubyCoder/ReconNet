@@ -463,6 +463,8 @@ final public class RuleHandler {
 		Rule rule = TransformationComponent.getTransformation().createRule();
 
 		RuleData ruleData = sessionManager.createRuleData(rule);
+		
+		TransformationComponent.getTransformation().storeSessionId(ruleData.getId(), rule);
 
 		return ruleData.getId();
 	}

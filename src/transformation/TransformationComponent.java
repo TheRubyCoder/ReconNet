@@ -1,10 +1,13 @@
 package transformation;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import petrinet.Arc;
 import petrinet.INode;
 import petrinet.Petrinet;
+import engine.session.SessionManager;
 import exceptions.GeneralPetrinetException;
 
 /**
@@ -12,6 +15,9 @@ import exceptions.GeneralPetrinetException;
  * Other components refer to this object to delegate to the transformation component instead of directly refering to the classes within the component
  */
 public class TransformationComponent implements ITransformation{
+	
+	/** To Store mappings of ids of {@link SessionManager} */
+	Map<Integer,Rule> rules = new HashMap<Integer, Rule>();
 	
 	//#################### singleton ##################
 	private static TransformationComponent instance;
@@ -108,6 +114,16 @@ public class TransformationComponent implements ITransformation{
 	@Override
 	public List<Arc> getMappings(Rule rule, Arc arc) {
 		return rule.getMappings(arc);
+	}
+
+	@Override
+	public List<INode> getMappings(int ruleId, INode node) {
+		return rules.get(ruleId).getMappings(node);
+	}
+
+	@Override
+	public void storeSessionId(int id, Rule rule) {
+		rules.put(id, rule);
 	}
 
 }
