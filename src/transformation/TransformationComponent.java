@@ -8,6 +8,7 @@ import petrinet.Arc;
 import petrinet.INode;
 import petrinet.Petrinet;
 import engine.session.SessionManager;
+import exceptions.EngineException;
 import exceptions.GeneralPetrinetException;
 
 /**
@@ -39,49 +40,49 @@ public class TransformationComponent implements ITransformation{
 		return new Rule();
 	}
 	
-	/**
-	 * Joins both petrinets, using the given transformation.
-	 * The right petrinet will be modified and will be the resulting net.
-	 * @param left the left petrinet.
-	 * @param right the right petrinet.
-	 * @param transformation the transformation to use.
-	 */
-	@Override
-	public void join(Petrinet left, Petrinet right, Transformation transformation)
-	{
-		left.addNet(right);
-		transformation.transform();
-	}
-
-	/**
-	 * Joins both petrinets, using the given morphism and rule.
-	 * The right petrinet will be modified and will be the resulting net.
-	 * @param left the left petrinet.
-	 * @param right the right petrinet.
-	 * @param morphism the morphism to use.
-	 * @param rule the rule to use.
-	 */
-	@Override
-	public void join(Petrinet left, Petrinet right, Morphism morphism, Rule rule)
-	{
-		left.addNet(right);
-		Transformation.createTransformation(left, morphism, rule).transform();
-//		new Transformation(left, morphism, rule).transform();
-	}
-
-	/**
-	 * Will join both petrinets, using the given rule and a random morphism.
-	 * The right petrinet will be modified and will be the resulting net.
-	 * @param left the left petrinet.
-	 * @param right the right petrinet.
-	 * @param rule the rule to use.
-	 */
-	@Override
-	public void join(Petrinet left, Petrinet right, Rule rule)
-	{
-		left.addNet(right);
-		Transformation.createTransformationWithAnyMorphism(left, rule).transform();
-	}
+//	/**
+//	 * Joins both petrinets, using the given transformation.
+//	 * The right petrinet will be modified and will be the resulting net.
+//	 * @param left the left petrinet.
+//	 * @param right the right petrinet.
+//	 * @param transformation the transformation to use.
+//	 */
+//	@Override
+//	public void join(Petrinet left, Petrinet right, Transformation transformation)
+//	{
+//		left.addNet(right);
+//		transformation.transform();
+//	}
+//
+//	/**
+//	 * Joins both petrinets, using the given morphism and rule.
+//	 * The right petrinet will be modified and will be the resulting net.
+//	 * @param left the left petrinet.
+//	 * @param right the right petrinet.
+//	 * @param morphism the morphism to use.
+//	 * @param rule the rule to use.
+//	 */
+//	@Override
+//	public void join(Petrinet left, Petrinet right, Morphism morphism, Rule rule)
+//	{
+//		left.addNet(right);
+//		Transformation.createTransformation(left, morphism, rule).transform();
+////		new Transformation(left, morphism, rule).transform();
+//	}
+//
+//	/**
+//	 * Will join both petrinets, using the given rule and a random morphism.
+//	 * The right petrinet will be modified and will be the resulting net.
+//	 * @param left the left petrinet.
+//	 * @param right the right petrinet.
+//	 * @param rule the rule to use.
+//	 */
+//	@Override
+//	public void join(Petrinet left, Petrinet right, Rule rule)
+//	{
+//		left.addNet(right);
+//		Transformation.createTransformationWithAnyMorphism(left, rule).transform();
+//	}
 	
 	/**
 	 * Transformations the petrinet like defined in rule with random morphism
@@ -91,11 +92,16 @@ public class TransformationComponent implements ITransformation{
 	 * @return the transformation that was used for transforming (containing rule, nNet and morphism)
 	 */
 	@Override
-	public  Transformation transform(Petrinet net, Rule rule)
+	public Transformation transform(Petrinet net, Rule rule)
 	{
 		Transformation transformation = Transformation.createTransformationWithAnyMorphism(net, rule);
 		if(transformation != null){
-			return transformation.transform();
+			try {
+				return transformation.transform();
+			} catch (EngineException contact){
+				System.out.println("Contact condition has been broken");
+				return null;
+			}
 		}else{
 			return null;
 		}

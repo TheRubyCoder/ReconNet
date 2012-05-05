@@ -298,7 +298,9 @@ public class MorphismFactory {
 		final BoolMatrix[] m_places = new BoolMatrix[numVertices];
 		final BoolMatrix[] m_transitions = new BoolMatrix[numVertices];
 
+		@SuppressWarnings("unchecked")
 		final List<Integer>[] placesB = new List[numPlacesFromNet]; // Alle moeglichen Zuordnungen von Stellen
+		@SuppressWarnings("unchecked")
 		final List<Integer>[] transitionsB = new List[numTransitionsFromNet]; // Alle moeglichen Zuordnungen von Transitionen
 
 

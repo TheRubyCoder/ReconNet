@@ -499,8 +499,6 @@ class SimulationPane {
 				e1.printStackTrace();
 				SimulationPane.getInstance().stopSimulation();
 			}
-			//TODO: For debug purpose
-			EngineAdapter.getPetrinetManipulation().printPetrinet(PetrinetPane.getInstance().getCurrentPetrinetId());
 		}
 	}
 

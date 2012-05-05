@@ -736,7 +736,6 @@ class FilePane {
 					new String[] { "Dateien löschen",
 							"Nur aus Übersicht löschen" },
 					"Nur aus Übersicht löschen");
-			System.out.println(loeschen);
 
 			ListSelectionListener petrinetListSelectionListener = list
 					.getListSelectionListeners()[0];

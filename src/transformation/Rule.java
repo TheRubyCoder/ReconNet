@@ -121,7 +121,6 @@ public class Rule {
 	public void removeNodeOrArc(INode nodeOrArc) {
 		if (nodeOrArc instanceof Arc) {
 			List<Arc> mappings = getMappings((Arc) nodeOrArc);
-			System.out.println("ME: " + mappings);
 			if (mappings.get(0) != null) {
 				getL().deleteArcByID(mappings.get(0).getId());
 			}
@@ -271,7 +270,6 @@ public class Rule {
 	 * added to L or R, it will get added to K.
 	 * 
 	 */
-	@SuppressWarnings("DONT READ ANY FURTHER THAN THIS LINE. SANITY MAY BE LOST")
 	private class Listener implements IPetrinetListener {
 		private final Net net;
 		private final Petrinet k;
@@ -503,11 +501,6 @@ public class Rule {
 		private void rEdgeChanged(Arc element, ActionType actionType) {
 			if (actionType == ActionType.added) {
 				if (!rKSameEdges.containsKey(element)) {
-					System.out.println(k);
-					System.out.println(r);
-					System.out.println("rk same: " + rKSameNodes);
-					System.out.println("element " + element);
-					System.out.println("start " + element.getStart());
 					INode start = rKSameNodes.get(element.getStart());
 					INode end = rKSameNodes.get(element.getEnd());
 					Arc edge = k.createArc(element.getName(), start, end);

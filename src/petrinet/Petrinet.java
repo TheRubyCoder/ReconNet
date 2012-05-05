@@ -691,6 +691,23 @@ public class Petrinet {
 		return null;
 	}
 
+	public List<Arc> getIncidetenArcsByNodeId(int id) {
+		LinkedList<Arc> arcs = new LinkedList<Arc>();
+		ElementType nodeType = getNodeType(id);
+		if (nodeType == ElementType.PLACE) {
+			Place place = getPlaceById(id);
+			arcs.addAll(place.getStartArcs());
+			arcs.addAll(place.getEndArcs());
+		} else if (nodeType == ElementType.TRANSITION) {
+			Transition transition = getTransitionById(id);
+			arcs.addAll(transition.getStartArcs());
+			arcs.addAll(transition.getEndArcs());
+		} else {
+			// ARC or INVALID -> skip to return empty arc list
+		}
+		return arcs;
+	}
+
 	/**
 	 * Fuegt einem bestehenden Petrinetz ein weiters hinzu
 	 * 

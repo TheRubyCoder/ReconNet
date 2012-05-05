@@ -18,44 +18,28 @@
 				<th>Anmerkung / mögliche Lösung</th>
 			</tr>
 			<tr>
-				<td>p16</td>
+				<td>p18</td>
 				<td>ME</td>
-				<td>Beim Simulieren "Nur Regeln" mit nur einer Regel (die eine
-					Stelle hinzufügt) wird eine Stelle gelöscht, die vorher da war. <br />
-					Aussehen: <a href="Figs/p16_vorher.png">Vorher</a>, <a
-					href="Figs/p16_nachher.png">nachher</a>, <a
-					href="Figs/p16_console.png">in der Konsole</a> <br /> Die Änderung
-					wird nicht in der GUI angezeigt, d.h. die <tt>jungData</tt> werden nicht
-					angepasst. Erst beim Speichern + Laden wird das Löschen sichtbar.
-				</td>
+				<td><b>Überspeichern</b> eines bereits geladenen Netzes macht
+					Probleme: Ist dann doppelt geladen</td>
 				<td>ME</td>
-				<td>6</td>
-				<td>Vermutung: Beim Anwenden der Regel in der
-					Transformationskomponente gibt es ein falsches Mapping. <br />
-					TODO: Ausserdem scheint das Anpassen der JungData nicht auf das
-					tatsächliche Petrinetz zu schauen, sondern eher auf die Regel.
-				</td>
+				<td>2</td>
+				<td><tt>FilePane</tt></td>
 			</tr>
 			<tr>
-				<td style="background-color: rgb(255, 204, 255);">p13a</td>
-				<td>JP</td>
-				<td>bei Simulation Beides werden <a href="Figs/p13.png">Token
-						nicht angezeig</a>t, inhaltlich aber richtig geschaltet
+				<td>p17</td>
+				<td>ME</td>
+				<td>Es wird zwar ein <b>Morphismus</b> zwischen L und N
+					gefunden. Es wird aber nicht berücksichtigt, ob dieser Morphismus
+					auch die <b>Kontaktbedingungen</b> erfüllen muss. (Der Algorithmus
+					zum Finden des Morphismus kennt nur L und N, nicht den K und R)
 				</td>
 				<td>ME</td>
-				<td>3</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td style="background-color: rgb(255, 204, 255);">p13b</td>
-				<td>ME</td>
-				<td>bei Simulation Beides können manche <a
-					href="Figs/p13_transition_kann_schalten.png">Transitionen
-						schalten</a>, die eigentlich nicht aktiviert sind.
+				<td>?</td>
+				<td>Wird ab jetzt umgangen indem man beim Anwenden der Regel
+					unter dem "falschen" Morphismus die <b>Kontaktbedingung</b>
+					überprüft und ggf. die <b>Transformation nicht durchführt</b>.
 				</td>
-				<td>ME</td>
-				<td>3</td>
-				<td>Bei Simulation "Nur Tokenspiel" passiert das nicht</td>
 			</tr>
 			<tr>
 				<td>p8</td>
@@ -102,6 +86,51 @@
 				<th>zuständig</th>
 				<th>0&lt;&nbsp; Priorität &lt;6</th>
 				<th>Anmerkung / mögliche Lösung</th>
+			</tr>
+			<tr>
+				<td>p16</td>
+				<td>ME</td>
+				<td>Beim Simulieren "Nur Regeln" mit nur einer Regel (die eine
+					Stelle hinzufügt) wird eine Stelle gelöscht, die vorher da war. <br />
+					Aussehen: <a href="Figs/p16_vorher.png">Vorher</a>, <a
+					href="Figs/p16_nachher.png">nachher</a>, <a
+					href="Figs/p16_console.png">in der Konsole</a> <br /> Die Änderung
+					wird nicht in der GUI angezeigt, d.h. die <tt>jungData</tt> werden
+					nicht angepasst. Erst beim Speichern + Laden wird das Löschen
+					sichtbar.
+				</td>
+				<td>ME</td>
+				<td>6</td>
+				<td>Vermutung: Beim Anwenden der Regel in der
+					Transformationskomponente gibt es ein falsches Mapping. <br />
+					TODO: Ausserdem scheint das Anpassen der JungData nicht auf das
+					tatsächliche Petrinetz zu schauen, sondern eher auf die Regel. <br />
+					<br /> @Vermutung: Mapping beachtet Kontaktbedingung nicht. Siehe
+					p17 @TODO: Fällt jetzt nicht weiter auf (soweit bekannt)
+				</td>
+			</tr>
+			<tr>
+				<td style="background-color: rgb(255, 204, 255);">p13a</td>
+				<td>JP</td>
+				<td>bei Simulation Beides werden <a href="Figs/p13.png">Token
+						nicht angezeig</a>t, inhaltlich aber richtig geschaltet
+				</td>
+				<td>ME</td>
+				<td>3</td>
+				<td>Eine Folge von p16</td>
+			</tr>
+			<tr>
+				<td style="background-color: rgb(255, 204, 255);">p13b</td>
+				<td>ME</td>
+				<td>bei Simulation Beides können manche <a
+					href="Figs/p13_transition_kann_schalten.png">Transitionen
+						schalten</a>, die eigentlich nicht aktiviert sind.
+				</td>
+				<td>ME</td>
+				<td>3</td>
+				<td>Bei Simulation "Nur Tokenspiel" passiert das nicht<br />
+					Eine Folge von p16
+				</td>
 			</tr>
 			<tr>
 				<td>p3</td>
@@ -156,7 +185,7 @@
 				<td>überschreiben klappt nicht</td>
 				<td>JP</td>
 				<td>1</td>
-				<td>Überschreiben von Dateien klappt. War das gemeint?</td>
+				<td>Überschreiben von Dateien klappt. <b>War das gemeint?</b></td>
 			</tr>
 			<tr>
 				<td>p9</td>

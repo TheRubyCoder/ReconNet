@@ -213,7 +213,6 @@ public class Transition implements INode {
 	}
 
 	public boolean isActivated() {
-		// TODO aus Petrinet uebernommen - pruefen!
 		for (Arc a : getEndArcs()) {
 			Place p = (Place) a.getStart();
 
