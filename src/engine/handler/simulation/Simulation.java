@@ -124,82 +124,82 @@ public class Simulation implements ISimulation {
 							.get(randomRule));
 					Rule rule = ruleData.getRule();
 
-					// TODO the shit seems to happen when there is a transition
-					// in L!!!! fix and remove try catch block
-					try {
-						transformation = transformationComponent.transform(
-								petrinet, rule);
-					} catch (Exception e) {
-						// Some weird crap happens i often get a
-						// IndexOutofBoundsException, but the Result should be
-						// null, if there's no morphism found
-
-						System.out.println("------------------------------");
-						e.printStackTrace();
-						System.out.println("------------------------------");
-
-					}
+					transformation = transformationComponent.transform(
+							petrinet, rule);
 					// if result of transformation != null the petrinet changed
 					// so
 					// we have to do the next transform step with the changed
 					// petrinet
 					if (transformation != null) {
-						petrinet = transformation.getPetrinet();
-						Set<INode> addedNodes = transformation.getAddedNodes();
-						Set<INode> deletedNodes = transformation
-								.getDeletedNodes();
-						Set<Arc> addedArcs = transformation.getAddedArcs();
-						Set<Arc> deletedArcs = transformation.getDeletedArcs();
+						try {
 
-						// step 1 alles durchgehen größtes x suchen
-						Map<INode, NodeLayoutAttribute> layoutMap = jungData
-								.getNodeLayoutAttributes();
+							petrinet = transformation.getPetrinet();
+							Set<INode> addedNodes = transformation
+									.getAddedNodes();
+							Set<INode> deletedNodes = transformation
+									.getDeletedNodes();
+							Set<Arc> addedArcs = transformation.getAddedArcs();
+							Set<Arc> deletedArcs = transformation
+									.getDeletedArcs();
 
-						double biggestX = 0;
+							// step 1 alles durchgehen größtes x suchen
+							Map<INode, NodeLayoutAttribute> layoutMap = jungData
+									.getNodeLayoutAttributes();
 
-						Collection<NodeLayoutAttribute> entrySet = layoutMap
-								.values();
+							double biggestX = 0;
 
-						for (NodeLayoutAttribute bla : entrySet) {
-							double x = bla.getCoordinate().getX();
+							Collection<NodeLayoutAttribute> entrySet = layoutMap
+									.values();
 
-							if (x > biggestX)
-								biggestX = x;
+							for (NodeLayoutAttribute bla : entrySet) {
+								double x = bla.getCoordinate().getX();
 
-						}
+								if (x > biggestX)
+									biggestX = x;
 
-						jungData.delete(deletedArcs, deletedNodes);
-						// TODO eventuell bessere Werte für Punkte suchen
-						// X Werte des Punktes werden alle biggestX + DISTANCE
-						// gesetzt
-						// Y Werte werden in DISTANCE Schritten nach oben
-						// gesetzt
-						int count = 0;
-						for (INode elem : addedNodes) {
-							count++;
-							if (elem instanceof Place) {
-								jungData.createPlace((Place) elem,
-										new Point2D.Double(biggestX + DISTANCE,
-												count * DISTANCE));
-							} else {
-								jungData.createTransition((Transition) elem,
-										new Point2D.Double(biggestX + DISTANCE,
-												count * DISTANCE));
+							}
+
+							jungData.delete(deletedArcs, deletedNodes);
+							// TODO eventuell bessere Werte für Punkte suchen
+							// X Werte des Punktes werden alle biggestX +
+							// DISTANCE
+							// gesetzt
+							// Y Werte werden in DISTANCE Schritten nach oben
+							// gesetzt
+							int count = 0;
+							for (INode elem : addedNodes) {
+								count++;
+								if (elem instanceof Place) {
+									jungData.createPlace((Place) elem,
+											new Point2D.Double(biggestX
+													+ DISTANCE, count
+													* DISTANCE));
+								} else {
+									jungData.createTransition(
+											(Transition) elem,
+											new Point2D.Double(biggestX
+													+ DISTANCE, count
+													* DISTANCE));
+								}
+							}
+							for (Arc arc : addedArcs) {
+								INode start = arc.getStart();
+								INode end = arc.getEnd();
+								if (start instanceof Place
+										&& end instanceof Transition) {
+									jungData.createArc(arc, (Place) start,
+											(Transition) end);
+								} else {
+									jungData.createArc(arc, (Transition) start,
+											(Place) end);
+								}
+							}
+						} catch (IllegalArgumentException ex) { //thrown when "not all incident arcs are given"
+							pickedRules.remove(randomRule);
+							if (pickedRules.size() == 0) {
+								exception("No Rule is matching");
 							}
 						}
-						for (Arc arc : addedArcs) {
-							INode start = arc.getStart();
-							INode end = arc.getEnd();
-							if (start instanceof Place
-									&& end instanceof Transition) {
-								jungData.createArc(arc, (Place) start,
-										(Transition) end);
-							} else {
-								jungData.createArc(arc, (Transition) start,
-										(Place) end);
-							}
-						}
-
 					} else {
 						// This Rule did not match so it's removed from the
 						// rules
@@ -218,9 +218,17 @@ public class Simulation implements ISimulation {
 			throws EngineException {
 		for (int i = 0; i < n; i++) {
 			if (random.nextFloat() < 0.5d) {
-				fire(id, 1);
+				try{
+					fire(id, 1);
+				} catch (EngineException ex){
+					transform(id, ruleIDs, 1);
+				}
 			} else {
-				transform(id, ruleIDs, 1);
+				try{
+					transform(id, ruleIDs, 1);
+				} catch (EngineException ex){
+					fire(id, 1);
+				}
 			}
 		}
 	}

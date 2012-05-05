@@ -274,5 +274,11 @@ public class EngineMockupForPersistence implements IPetrinetManipulation {
 		
 	}
 
+	@Override
+	public void printPetrinet(int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 }

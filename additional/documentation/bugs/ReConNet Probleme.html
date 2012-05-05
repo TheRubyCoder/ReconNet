@@ -18,7 +18,26 @@
 				<th>Anmerkung / mögliche Lösung</th>
 			</tr>
 			<tr>
-				<td style="background-color: rgb(255, 204, 255);">p13</td>
+				<td>p16</td>
+				<td>ME</td>
+				<td>Beim Simulieren "Nur Regeln" mit nur einer Regel (die eine
+					Stelle hinzufügt) wird eine Stelle gelöscht, die vorher da war. <br />
+					Aussehen: <a href="Figs/p16_vorher.png">Vorher</a>, <a
+					href="Figs/p16_nachher.png">nachher</a>, <a
+					href="Figs/p16_console.png">in der Konsole</a> <br /> Die Änderung
+					wird nicht in der GUI angezeigt, d.h. die <tt>jungData</tt> werden nicht
+					angepasst. Erst beim Speichern + Laden wird das Löschen sichtbar.
+				</td>
+				<td>ME</td>
+				<td>6</td>
+				<td>Vermutung: Beim Anwenden der Regel in der
+					Transformationskomponente gibt es ein falsches Mapping. <br />
+					TODO: Ausserdem scheint das Anpassen der JungData nicht auf das
+					tatsächliche Petrinetz zu schauen, sondern eher auf die Regel.
+				</td>
+			</tr>
+			<tr>
+				<td style="background-color: rgb(255, 204, 255);">p13a</td>
 				<td>JP</td>
 				<td>bei Simulation Beides werden <a href="Figs/p13.png">Token
 						nicht angezeig</a>t, inhaltlich aber richtig geschaltet
@@ -28,16 +47,15 @@
 				<td></td>
 			</tr>
 			<tr>
-				<td>p3</td>
-				<td>JP</td>
-				<td><a href="Figs/p3_keinmatch.png">Fehlermeldung</a> "kein
-					match" bei Auswahl mehrer Regeln, nur wenn gar kein match. <br>
-					Wenn mehrere Regeln ausgewählt sind und <b>eine</b> matched nicht,
-					kommt ein Fehler. Es soll aber nur ein Fehler kommen wenn <b>keine</b>
-					matched.</td>
+				<td style="background-color: rgb(255, 204, 255);">p13b</td>
+				<td>ME</td>
+				<td>bei Simulation Beides können manche <a
+					href="Figs/p13_transition_kann_schalten.png">Transitionen
+						schalten</a>, die eigentlich nicht aktiviert sind.
+				</td>
 				<td>ME</td>
 				<td>3</td>
-				<td>"fireOrStep" Methode in der Engine</td>
+				<td>Bei Simulation "Nur Tokenspiel" passiert das nicht</td>
 			</tr>
 			<tr>
 				<td>p8</td>
@@ -86,6 +104,20 @@
 				<th>Anmerkung / mögliche Lösung</th>
 			</tr>
 			<tr>
+				<td>p3</td>
+				<td>JP</td>
+				<td><a href="Figs/p3_keinmatch.png">Fehlermeldung</a> "kein
+					match" bei Auswahl mehrer Regeln, nur wenn gar kein match. <br>
+					Wenn mehrere Regeln ausgewählt sind und <b>eine</b> matched nicht,
+					kommt ein Fehler. Es soll aber nur ein Fehler kommen wenn <b>keine</b>
+					matched.</td>
+				<td>ME</td>
+				<td>3</td>
+				<td>"fireOrStep" Methode in der Engine. Transform-methode in
+					engine wirft nun EngineException anstatt IllegalArgument. Try-catch
+					blöcke in fireOrTransform-Methode</td>
+			</tr>
+			<tr>
 				<td>p15</td>
 				<td>ME</td>
 				<td>Die XML ist nun menschenfreundlich lesbar</td>
@@ -107,7 +139,7 @@
 					Das gab natürlich schwere Folgefehler. Beheben des Problems war
 					recht aufwendig, da von den automatisch erstellten Nodes keine IDs
 					oder Objektreferenzen bekannt sind und auch mit der session id der
-					Regel nichts wirkliches angefangen werden konnte. </td>
+					Regel nichts wirkliches angefangen werden konnte.</td>
 			</tr>
 			<tr>
 				<td>p14</td>

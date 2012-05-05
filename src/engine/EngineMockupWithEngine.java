@@ -248,6 +248,12 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 		iPetrinetManipulation.closePetrinet(id);
 		
 	}
+
+	@Override
+	public void printPetrinet(int id) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
 

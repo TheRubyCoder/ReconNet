@@ -10,6 +10,7 @@ import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.TransitionAttribute;
+import engine.dependency.PetrinetAdapter;
 import engine.handler.NodeTypeEnum;
 import engine.ihandler.IPetrinetManipulation;
 import exceptions.EngineException;
@@ -210,6 +211,11 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 		
 		petrinetManipulationBackend.closePetrinet(id);
 		
+	}
+
+	@Override
+	public void printPetrinet(int id) {
+		System.out.println(PetrinetAdapter.getPetrinetById(id));
 	}
 
 }

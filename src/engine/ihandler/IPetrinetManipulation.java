@@ -275,4 +275,9 @@ public interface IPetrinetManipulation {
 	 */
 	public NodeTypeEnum getNodeType(@NotNull INode node) throws EngineException;
 	
+	/**
+	 * Prints the petrinet with <tt>id</tt> in the console
+	 *  */
+	public void printPetrinet(@NotNull int id);
+	
 }

@@ -44,12 +44,16 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import exceptions.EngineException;
+import exceptions.ShowAsInfoException;
 
 /**
  * The Panel that contains buttons and slider for simulation purposes like
  * "fire 1 time", "fire k times" "transform 1 time", etc
  */
 class SimulationPane {
+	private static final String CANNOT_STEP_MESSAGE = "Keine der Transitionen kann schalten";
+	private static final String CANNOT_TRANSFORM_MESSAGE = "Keine der Regeln passt auf das Petrinetz";
+	private static final String CANNOT_STEP_NOR_TRANSFORM_MESSAGE = "Es konnte weder geschaltet noch transformiert werden";
 
 	/** Internal JPanel */
 	private JPanel simulationPane;
@@ -382,19 +386,18 @@ class SimulationPane {
 			}
 		}
 	}
-	
+
 	public void stopSimulation() {
 		simulationTimer.stop();
 		setSimulationButtonPlay();
 		setAllOtherPanesEnable();
 	}
-	
+
 	public void startSimulation() {
 		simulationTimer.start();
 		setSimulationButtonPause();
 		setAllOtherPanesDisable();
 	}
-
 
 	private class OneStepListener implements ActionListener {
 
@@ -407,8 +410,7 @@ class SimulationPane {
 				PetrinetPane.getInstance().repaint();
 
 			} catch (EngineException e1) {
-				PopUp.popError(e1);
-				e1.printStackTrace();
+				throw new ShowAsInfoException(CANNOT_STEP_MESSAGE);
 
 			}
 
@@ -422,61 +424,83 @@ class SimulationPane {
 			int k = SimulationPane.getInstance().getK();
 			try {
 				if (getMode() == SimulationMode.TOKENS) {
-					EngineAdapter.getSimulation().fire(
-							PetrinetPane.getInstance().getCurrentPetrinetId(),
-							k);
+					try {
+						EngineAdapter.getSimulation().fire(
+								PetrinetPane.getInstance()
+										.getCurrentPetrinetId(), k);
+					} catch (EngineException step) {
+						throw new ShowAsInfoException(CANNOT_STEP_MESSAGE);
+					}
 				} else if (getMode() == SimulationMode.RULES) {
+					try {
 					EngineAdapter.getSimulation().transform(
 							PetrinetPane.getInstance().getCurrentPetrinetId(),
 							FilePane.getRuleFilePane()
 									.getIdsFromSelectedListItems(), k);
+					} catch (EngineException transform) {
+						throw new ShowAsInfoException(CANNOT_TRANSFORM_MESSAGE);
+					}
 				} else {
+					try {
 					EngineAdapter.getSimulation().fireOrTransform(
 							PetrinetPane.getInstance().getCurrentPetrinetId(),
 							FilePane.getRuleFilePane()
 									.getIdsFromSelectedListItems(), k);
+					} catch (EngineException both) {
+						throw new ShowAsInfoException(CANNOT_STEP_NOR_TRANSFORM_MESSAGE);
+					}
 				}
 				PetrinetPane.getInstance().repaint();
 			} catch (NumberFormatException e1) {
 				// cannot be thrown
 				e1.printStackTrace();
-			} catch (EngineException e1) {
-				PopUp.popError(e1);
-				e1.printStackTrace();
 			}
 		}
 	}
-	
+
 	private class SimulationStepper implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			int k = 1;
 			try {
 				if (getMode() == SimulationMode.TOKENS) {
-					EngineAdapter.getSimulation().fire(
-							PetrinetPane.getInstance().getCurrentPetrinetId(),
-							k);
+					try {
+						EngineAdapter.getSimulation().fire(
+								PetrinetPane.getInstance()
+										.getCurrentPetrinetId(), k);
+					} catch (EngineException step) {
+						SimulationPane.getInstance().stopSimulation();
+						throw new ShowAsInfoException(CANNOT_STEP_MESSAGE);
+					}
 				} else if (getMode() == SimulationMode.RULES) {
+					try {
 					EngineAdapter.getSimulation().transform(
 							PetrinetPane.getInstance().getCurrentPetrinetId(),
 							FilePane.getRuleFilePane()
 									.getIdsFromSelectedListItems(), k);
+					} catch (EngineException transform) {
+						SimulationPane.getInstance().stopSimulation();
+						throw new ShowAsInfoException(CANNOT_TRANSFORM_MESSAGE);
+					}
 				} else {
+					try {
 					EngineAdapter.getSimulation().fireOrTransform(
 							PetrinetPane.getInstance().getCurrentPetrinetId(),
 							FilePane.getRuleFilePane()
 									.getIdsFromSelectedListItems(), k);
+					} catch (EngineException both) {
+						SimulationPane.getInstance().stopSimulation();
+						throw new ShowAsInfoException(CANNOT_STEP_NOR_TRANSFORM_MESSAGE);
+					}
 				}
 				PetrinetPane.getInstance().repaint();
 			} catch (NumberFormatException e1) {
 				// cannot be thrown
 				e1.printStackTrace();
 				SimulationPane.getInstance().stopSimulation();
-			} catch (EngineException e1) {
-				SimulationPane.getInstance().stopSimulation();
-				PopUp.popError(e1);
-				e1.printStackTrace();
 			}
+			//TODO: For debug purpose
+			EngineAdapter.getPetrinetManipulation().printPetrinet(PetrinetPane.getInstance().getCurrentPetrinetId());
 		}
 	}
 
@@ -491,8 +515,7 @@ class SimulationPane {
 								.getIdsFromSelectedListItems(), 1);
 				PetrinetPane.getInstance().repaint();
 			} catch (EngineException e1) {
-				PopUp.popError(e1);
-				e1.printStackTrace();
+				throw new ShowAsInfoException(CANNOT_TRANSFORM_MESSAGE);
 			}
 		}
 
