@@ -15,14 +15,12 @@ public class PetrinetComponent implements IPetrinet{
 	
 	private Map<Integer, Petrinet> petrinets;
 	
-	private Map<Integer, Transition> transitions;
 	
 	private PetrinetComponent() { }
 	
 	static { 
 		instance = new PetrinetComponent();
 		instance.petrinets = new HashMap<Integer, Petrinet>();
-		instance.transitions = new HashMap<Integer, Transition>();
 	}
 	
 	public static IPetrinet getPetrinet() {
@@ -51,18 +49,4 @@ public class PetrinetComponent implements IPetrinet{
 	public ElementType getNodeType(int petrinetId, int nodeId) {
 		return getPetrinetById(petrinetId).getNodeType(nodeId);
 	}
-
-//	@Override
-//	public Transition createTransition(Petrinet petrinet, IRenew renew) {
-//		int id = UUID.gettID();
-//		Transition transition = new Transition(id, renew, petrinet);
-//		transitions.put(id, transition);
-//		return transition;
-//	}
-//
-//	@Override
-//	public Transition getTransitionById(int id) {
-//		return transitions.get(id);
-//	}
-	
 }

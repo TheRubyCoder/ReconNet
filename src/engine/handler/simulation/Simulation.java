@@ -237,6 +237,7 @@ public class Simulation implements ISimulation {
 		throw new EngineException(value);
 	}
 
+	@SuppressWarnings("unused")
 	private void warning(String message) throws ShowAsWarningException {
 		throw new ShowAsWarningException(message);
 	}

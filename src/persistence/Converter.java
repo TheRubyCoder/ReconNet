@@ -26,7 +26,6 @@ import gui2.PopUp;
  * 
  * */
 public class Converter {
-	private static boolean test = true;
 
 	/** not working yet */
 	static public Pnml convertPetrinetToPnml(Petrinet petrinet,
@@ -81,7 +80,6 @@ public class Converter {
 
 			// Coordinates
 			Graphics graphics = new Graphics();
-			Dimension d = new Dimension();
 			Position pos = new Position();
 			pos.setX(layout.get(transi.getId())[0]);
 
@@ -184,7 +182,6 @@ public class Converter {
 			// Petrinet petrinet=ipetrinet.createPetrinet();
 			// Strings sind die IDsfür die objekte AUS der Pnml
 			Map<String, petrinet.INode> placesAndTransis = new HashMap<String, petrinet.INode>();
-			Map<String, petrinet.Arc> arcs = new HashMap<String, petrinet.Arc>();
 
 			// create places
 			for (Place place : pnml.getNet().get(0).page.place) {
@@ -642,7 +639,6 @@ public class Converter {
 
 				// Coordinates
 				Graphics graphics = new Graphics();
-				Dimension d = new Dimension();
 				Position pos = new Position();
 				// AbstractLayout<INode, petrinet.Arc> layout =
 				// handler.getJungLayout(t.getId(), type);

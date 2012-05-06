@@ -183,6 +183,6 @@ public interface IPetrinetPersistence {
 	 * @return Enum composed of Place, Transition
 	 * @throws EngineException 
 	 */
-	public Enum getNodeType(INode node) throws EngineException;
+	public Enum<?> getNodeType(INode node) throws EngineException;
 	
 }

@@ -748,10 +748,6 @@ final public class PetrinetHandler {
 				rnw = new RenewId();
 				t.setRnw(rnw);
 
-			} else if (false) {
-
-				// Todo: map
-
 			} else {
 				exception("setRnw - renews is not correct");
 			}

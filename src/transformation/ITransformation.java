@@ -32,7 +32,7 @@ public interface ITransformation {
 	 *            new value for mark
 	 * @return needs to be defined by engine group
 	 */
-	public ChangedPetrinetElements setMark(Rule rule, int placeId, int mark);
+	public void setMark(Rule rule, int placeId, int mark);
 
 //	/**
 //	 * Joins both petrinets, using the given transformation. The right petrinet
@@ -119,7 +119,7 @@ public interface ITransformation {
 	List<INode> getMappings(Rule rule, INode node);
 	
 	/**
-	 * Very similiar to {@link ITransformation#getMappings(Rule, INode)} but with the sessionId of <tt>rule</tt> instead.
+	 * Very similiar to {@link ITransformation#getMappings(Rule, INode)} but with the sessionId instead of <tt>rule</tt>.
 	 * @see ITransformation#storeSessionId(int, Rule)
 	 * @param ruleId
 	 * @param node

@@ -12,6 +12,7 @@ final public class PetrinetData extends SessionDataAbstract {
 	private boolean  isSimulation;
 	private int      parentId;
 
+	@SuppressWarnings("unused") //no default constructor
 	private PetrinetData() {}
 	
 	/**

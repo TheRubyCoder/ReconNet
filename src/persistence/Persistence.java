@@ -98,7 +98,6 @@ public class Persistence /* implements IPersistance */{
 			Map<INode, NodeLayoutAttribute> nodeMapR) {
 		boolean success = false;
 
-		Map<String, String[]> coordinates = new HashMap<String, String[]>();
 		/*
 		 * for(Entry<INode, NodeLayoutAttribute> e:nodeMap.entrySet()){ String[]
 		 * coords

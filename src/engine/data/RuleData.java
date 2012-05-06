@@ -14,6 +14,7 @@ final public class RuleData extends SessionDataAbstract {
 	private JungData jungDataK;
 	private JungData jungDataR;
 	
+	@SuppressWarnings("unused") // no default constructor
 	private RuleData() {}
 	
 	public RuleData(int id, Rule rule, JungData lJungData, JungData kJungData, JungData rJungData) {

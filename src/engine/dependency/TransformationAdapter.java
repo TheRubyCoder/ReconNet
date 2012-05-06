@@ -1,8 +1,6 @@
 package engine.dependency;
 
 import petrinet.Petrinet;
-import transformation.ChangedPetrinetElements;
-import transformation.Morphism;
 import transformation.Rule;
 import transformation.Transformation;
 import transformation.TransformationComponent;
@@ -74,7 +72,7 @@ public class TransformationAdapter {
 	 * @param mark new value for mark
 	 * @return needs to be defined by engine group
 	 */
-	public static ChangedPetrinetElements setMark(Rule rule, int placeId, int mark){
-		return TransformationComponent.getTransformation().setMark(rule, placeId, mark);
+	public static void setMark(Rule rule, int placeId, int mark){
+		TransformationComponent.getTransformation().setMark(rule, placeId, mark);
 	}
 }

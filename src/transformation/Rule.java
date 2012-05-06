@@ -516,43 +516,38 @@ public class Rule {
 		}
 	}
 
-	ChangedPetrinetElements setMark(int placeId, int mark) {
+	void setMark(int placeId, int mark) {
 		Petrinet rulePart = getPetrinetOfNode(placeId);
-		if (rulePart == null) {
-			return null;
-		} else {
+		if (rulePart != null) {
 			// if place was in k...
 			if (rulePart.getId() == k.getId()) {
-				return setMarkInK(k.getPlaceById(placeId), mark);
+				setMarkInK(k.getPlaceById(placeId), mark);
 			}
 			// if place was in l
 			else if (rulePart.getId() == l.getId()) {
-				return setMarkInL(l.getPlaceById(placeId), mark);
+				setMarkInL(l.getPlaceById(placeId), mark);
 			}
 			// if place was in r
 			else {
-				return setMarkInR(r.getPlaceById(placeId), mark);
+				setMarkInR(r.getPlaceById(placeId), mark);
 			}
 		}
 	}
 
-	private ChangedPetrinetElements setMarkInL(Place place, int mark) {
+	private void setMarkInL(Place place, int mark) {
 		place.setMark(mark);
 		((Place) fromLtoK(place)).setMark(mark);
-		return new ChangedPetrinetElements();
 	}
 
-	private ChangedPetrinetElements setMarkInR(Place place, int mark) {
+	private void setMarkInR(Place place, int mark) {
 		place.setMark(mark);
 		((Place) fromRtoK(place)).setMark(mark);
-		return new ChangedPetrinetElements();
 	}
 
-	private ChangedPetrinetElements setMarkInK(Place place, int mark) {
+	private void setMarkInK(Place place, int mark) {
 		place.setMark(mark);
 		((Place) fromKtoR(place)).setMark(mark);
 		((Place) fromKtoL(place)).setMark(mark);
-		return new ChangedPetrinetElements();
 	}
 
 	/**

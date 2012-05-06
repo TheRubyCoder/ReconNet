@@ -209,7 +209,6 @@ public class Petrinet {
 		List<Integer> result = new ArrayList<Integer>();
 		if (getNodeType(id) == ElementType.ARC) {
 			result.add(id);
-			Arc arc = getArcById(id);
 
 		} else if (getNodeType(id) == ElementType.PLACE) {
 			Place place = getPlaceById(id);
