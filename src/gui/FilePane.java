@@ -663,7 +663,12 @@ class FilePane {
 								file.getParent(), fileToListEntry(file),
 								FILE_EXTENSION_WITHOUT_DOT);
 					}
-
+					String name = fileToListEntry(file);
+					// If it is already loaded, remove it. As it will be loaded
+					// in the next line
+					if (listModel.contains(name)) {
+						listModel.removeElement(name);
+					}
 					loadFromFile(file);
 				} catch (EngineException e) {
 					throw new ShowAsWarningException(e);
@@ -730,7 +735,8 @@ class FilePane {
 		if (selectedIndices.length < 1) {
 			throw new ShowAsInfoException("Es sind keine Dateien ausgewählt");
 		} else {
-			int loeschen = JOptionPane.showOptionDialog(treeAndButtonContainerWithBorder,
+			int loeschen = JOptionPane.showOptionDialog(
+					treeAndButtonContainerWithBorder,
 					"Sollen die Dateien vom Dateisystem gelöscht werden?",
 					"Löschen", 0, JOptionPane.QUESTION_MESSAGE, null,
 					new String[] { "Dateien löschen",
@@ -746,7 +752,7 @@ class FilePane {
 				String name = listModel.get(index);
 				listModel.removeElementAt(index);
 				nameToPId.remove(name);
-				if(loeschen == 0){
+				if (loeschen == 0) {
 					nameToFilepath.get(name).delete();
 				}
 				nameToFilepath.remove(name);

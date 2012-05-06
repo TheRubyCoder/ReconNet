@@ -169,6 +169,8 @@ class Style {
 	
 	public static final int TRANSITION_SIZE = PLACE_HEIGHT;
 	
+	public static final double FACTOR_SELECTED_NODE = 1.2;
+	
 	/* ************************************* 
 	 * petrinet file pane
 	 * *************************************/

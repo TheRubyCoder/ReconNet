@@ -1,5 +1,6 @@
 package engine.data;
 
+import engine.attribute.ColorGenerator;
 import transformation.Rule;
 
 /**
@@ -9,34 +10,40 @@ import transformation.Rule;
  */
 
 final public class RuleData extends SessionDataAbstract {
-	private Rule     rule;
+	private Rule rule;
 	private JungData jungDataL;
 	private JungData jungDataK;
 	private JungData jungDataR;
-	
-	@SuppressWarnings("unused") // no default constructor
-	private RuleData() {}
-	
-	public RuleData(int id, Rule rule, JungData lJungData, JungData kJungData, JungData rJungData) {
+	private ColorGenerator colorGenerator;
+
+	@SuppressWarnings("unused")
+	// no default constructor
+	private RuleData() {
+	}
+
+	public RuleData(int id, Rule rule, JungData lJungData, JungData kJungData,
+			JungData rJungData) {
 		check(id > 0, "id have to be greater than 0");
 		check(rule instanceof Rule, "petrinet not of type Petrinet");
 		check(lJungData instanceof JungData, "lJungData not of type JungData");
 		check(kJungData instanceof JungData, "kJungData not of type JungData");
 		check(rJungData instanceof JungData, "rJungData not of type JungData");
-		
+
 		checkContaining(rule.getK(), kJungData);
 		checkContaining(rule.getL(), lJungData);
 		checkContaining(rule.getR(), rJungData);
-		
-		check(!(kJungData == lJungData || lJungData == rJungData || kJungData == rJungData), "jungData same instance");
-		
-		this.id        = id;
-		this.rule      = rule;
+
+		check(!(kJungData == lJungData || lJungData == rJungData || kJungData == rJungData),
+				"jungData same instance");
+
+		this.id = id;
+		this.rule = rule;
 		this.jungDataL = lJungData;
 		this.jungDataK = kJungData;
 		this.jungDataR = rJungData;
+		this.colorGenerator = new ColorGenerator();
 	}
-	
+
 	/**
 	 * Gets the JungData of L from a Rule
 	 * 
@@ -45,7 +52,7 @@ final public class RuleData extends SessionDataAbstract {
 	public JungData getLJungData() {
 		return jungDataL;
 	}
-	
+
 	/**
 	 * Gets the JungData of K from a Rule
 	 * 
@@ -54,7 +61,7 @@ final public class RuleData extends SessionDataAbstract {
 	public JungData getKJungData() {
 		return jungDataK;
 	}
-	
+
 	/**
 	 * Gets the JungData of R from a Rule
 	 * 
@@ -63,19 +70,25 @@ final public class RuleData extends SessionDataAbstract {
 	public JungData getRJungData() {
 		return jungDataR;
 	}
-	
+
 	/**
-	 * Gets a Rule.  
+	 * Gets a Rule.
 	 * 
 	 * @return Rule
 	 */
-	public Rule getRule(){
+	public Rule getRule() {
 		return rule;
 	}
 	
+	/** Returns the color generator for this rule */
+	public ColorGenerator getColorGenerator() {
+		return colorGenerator;
+	}
+
 	/**
-	 * Removes data of elements that are no longer in the rule. This may be
-	 * used if the rule is altered from outside the engine.
+	 * Removes data of elements that are no longer in the rule. This may be used
+	 * if the rule is altered from outside the engine.
+	 * 
 	 * @param petrinet
 	 */
 	public void deleteDataOfMissingElements(Rule rule) {
@@ -83,7 +96,6 @@ final public class RuleData extends SessionDataAbstract {
 		getKJungData().deleteDataOfMissingElements(rule.getK());
 		getRJungData().deleteDataOfMissingElements(rule.getR());
 	}
-
 
 	@Override
 	public int hashCode() {

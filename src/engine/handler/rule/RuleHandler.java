@@ -391,6 +391,9 @@ final public class RuleHandler {
 					}
 				}
 
+				setPlaceColor(id, newPlace, ruleData.getColorGenerator()
+						.next());
+
 				return newPlace;
 
 			} else if (net.equals(RuleNet.K)) {
@@ -420,6 +423,8 @@ final public class RuleHandler {
 					}
 				}
 
+				setPlaceColor(id, newPlace, ruleData.getColorGenerator()
+						.next());
 				return newPlace;
 
 			} else if (net.equals(RuleNet.R)) {
@@ -446,6 +451,8 @@ final public class RuleHandler {
 						exception("createPlace - can not create Place in K");
 					}
 				}
+				setPlaceColor(id, newPlace, ruleData.getColorGenerator()
+						.next());
 
 				return newPlace;
 
@@ -463,8 +470,9 @@ final public class RuleHandler {
 		Rule rule = TransformationComponent.getTransformation().createRule();
 
 		RuleData ruleData = sessionManager.createRuleData(rule);
-		
-		TransformationComponent.getTransformation().storeSessionId(ruleData.getId(), rule);
+
+		TransformationComponent.getTransformation().storeSessionId(
+				ruleData.getId(), rule);
 
 		return ruleData.getId();
 	}
@@ -1112,20 +1120,23 @@ final public class RuleHandler {
 				for (INode accordingPlace : mappings) {
 					switch (ruleNet) {
 					case L:
-						if(accordingPlace != null) {
-							lJungData.setPlaceColor((Place) accordingPlace, color);
+						if (accordingPlace != null) {
+							lJungData.setPlaceColor((Place) accordingPlace,
+									color);
 						}
 						ruleNet = RuleNet.K;
 						break;
 					case K:
-						if(accordingPlace != null) {
-							kJungData.setPlaceColor((Place) accordingPlace, color);
+						if (accordingPlace != null) {
+							kJungData.setPlaceColor((Place) accordingPlace,
+									color);
 						}
 						ruleNet = RuleNet.R;
 						break;
 					case R:
-						if(accordingPlace != null) {
-							rJungData.setPlaceColor((Place) accordingPlace, color);
+						if (accordingPlace != null) {
+							rJungData.setPlaceColor((Place) accordingPlace,
+									color);
 						}
 					}
 				}

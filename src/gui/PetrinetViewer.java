@@ -5,6 +5,7 @@ import static gui.Style.NODE_BORDER_COLOR;
 import static gui.Style.PLACE_HEIGHT;
 import static gui.Style.PLACE_WIDTH;
 import static gui.Style.TRANSITION_SIZE;
+import static gui.Style.FACTOR_SELECTED_NODE;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -28,6 +29,7 @@ import petrinet.Arc;
 import petrinet.INode;
 import petrinet.Place;
 import petrinet.Transition;
+import transformation.TransformationComponent;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.RenderContext;
@@ -38,6 +40,7 @@ import edu.uci.ics.jung.visualization.control.ScalingControl;
 import edu.uci.ics.jung.visualization.renderers.Renderer.Vertex;
 import edu.uci.ics.jung.visualization.transform.shape.GraphicsDecorator;
 import engine.attribute.ArcAttribute;
+import engine.attribute.ColorGenerator;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.TransitionAttribute;
 import engine.handler.NodeTypeEnum;
@@ -77,6 +80,12 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	 * zooms too deep
 	 */
 	float currentZoom = 1;
+
+	/**
+	 * The node that is currently selected by user. <tt>null</tt> if no node is
+	 * selected
+	 */
+	INode currentSelectedNode = null;
 
 	/**
 	 * Initiates a new petrinet viewer with a petrinet. Rulenet == null if the
@@ -344,7 +353,7 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 			} else {
 				EngineAdapter.getRuleManipulation().deleteArc(getCurrentId(),
 						getRuleNet(), arc);
-//				MainWindow.getInstance().repaint();
+				// MainWindow.getInstance().repaint();
 			}
 			smartRepaint();
 		} catch (Exception e) {
@@ -523,7 +532,8 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 
 			private INode place;
 
-			private ChangeColorListener(Color color, INode place, PetrinetViewer petrinetViewer) {
+			private ChangeColorListener(Color color, INode place,
+					PetrinetViewer petrinetViewer) {
 				this.petrinetViewer = petrinetViewer;
 				this.color = color;
 				this.place = place;
@@ -541,10 +551,12 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 
 		/** Adds a new item to the menu for changing the color of a node */
 		static private void addColorToPopUpMenu(PetrinetPopUpMenu menu,
-				String description, Color color, INode node, PetrinetViewer petrinetViewer) {
+				String description, Color color, INode node,
+				PetrinetViewer petrinetViewer) {
 			JMenuItem item = new JMenuItem(description);
 			item.setBackground(color);
-			item.addActionListener(new ChangeColorListener(color, node, petrinetViewer));
+			item.addActionListener(new ChangeColorListener(color, node,
+					petrinetViewer));
 			menu.add(item);
 		}
 
@@ -562,19 +574,13 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 						petrinetViewer));
 				result.add(delete);
 
-				// Color blue
-				addColorToPopUpMenu(result, "Blau", Color.BLUE, node, petrinetViewer);
-
-				// Color light blue
-				addColorToPopUpMenu(result, "Hellblau",
-						new Color(200, 200, 250), node, petrinetViewer);
-
-				// Color red
-				addColorToPopUpMenu(result, "Rot", Color.RED, node, petrinetViewer);
-
-				// Light red
-				addColorToPopUpMenu(result, "HellRot",
-						new Color(250, 200, 200), node, petrinetViewer);
+				// Colors
+				ColorGenerator colorGenerator = new ColorGenerator();
+				for (Color color : colorGenerator.getFixedColors()) {
+					addColorToPopUpMenu(result,
+							colorGenerator.getDescription(color), color, node,
+							petrinetViewer);
+				}
 
 			} else {
 				TransitionAttribute transitionAttribute = petrinetViewer
@@ -649,6 +655,7 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 				if (edge != null) {
 					AttributePane.getInstance().displayEdge(edge,
 							petrinetViewer);
+					petrinetViewer.currentSelectedNode = null;
 					if (e.isMetaDown()) {
 						PetrinetPopUpMenu.fromArc(edge, petrinetViewer).show(
 								petrinetViewer, e.getX(), e.getY());
@@ -657,15 +664,26 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 				} else if (vertex != null) {
 					AttributePane.getInstance().displayNode(vertex,
 							petrinetViewer);
+					petrinetViewer.currentSelectedNode = vertex;
 					if (e.isMetaDown()) {
 						PetrinetPopUpMenu.fromNode(vertex, petrinetViewer)
 								.show(petrinetViewer, e.getX(), e.getY());
 					}
+				} else {
+					petrinetViewer.currentSelectedNode = null;
+					AttributePane.getInstance().displayEmpty();
 				}
 			} else if (mode == EditorMode.PLACE) {
 				petrinetViewer.createPlace(new Point(e.getX(), e.getY()));
 			} else if (mode == EditorMode.TRANSITION) {
 				petrinetViewer.createTransition(new Point(e.getX(), e.getY()));
+			}
+
+			if (petrinetViewer.isN()) {
+				petrinetViewer.repaint();
+			} else {
+				RulePane.getInstance().deselectBut(petrinetViewer);
+				RulePane.getInstance().repaint();
 			}
 		}
 
@@ -756,6 +774,22 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 				int height = PLACE_HEIGHT;
 				int x = (int) (center.getX() - width / 2);
 				int y = (int) (center.getY() - height / 2);
+
+				/* Draw selected node bigger */
+				if (petrinetViewer.isN()) {
+					if (petrinetViewer.currentSelectedNode == node) {
+						width *= FACTOR_SELECTED_NODE;
+						height *= FACTOR_SELECTED_NODE;
+					}
+				} else {
+					if (node != null
+							&& RulePane.getInstance()
+									.getMappingsOfSelectedNode().contains(node)) {
+						width *= FACTOR_SELECTED_NODE;
+						height *= FACTOR_SELECTED_NODE;
+					}
+				}
+
 				// Color lightBlue = new Color(200, 200, 250);
 				// decorator.setPaint(lightBlue);
 				decorator.setPaint(placeAttribute.getColor());
@@ -796,6 +830,20 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 
 				// draw rect
 				int size = TRANSITION_SIZE;
+
+				/* Draw selected node bigger */
+				if (petrinetViewer.isN()) {
+					if (petrinetViewer.currentSelectedNode == node) {
+						size *= FACTOR_SELECTED_NODE;
+					}
+				} else {
+					if (node != null
+							&& RulePane.getInstance()
+									.getMappingsOfSelectedNode().contains(node)) {
+						size *= FACTOR_SELECTED_NODE;
+					}
+				}
+
 				int x = (int) (center.getX() - size / 2);
 				int y = (int) (center.getY() - size / 2);
 				decorator.setPaint(blackOrWhite);

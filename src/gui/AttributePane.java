@@ -12,6 +12,7 @@ import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import petrinet.Arc;
@@ -127,6 +128,12 @@ public class AttributePane {
 
 		table.setModel(arcTableModel);
 		// table.getModel().addTableModelListener(tableListener);
+	}
+	
+
+	public void displayEmpty() {
+		DefaultTableModel defaultTableModel = new DefaultTableModel();
+		table.setModel(defaultTableModel);
 	}
 
 	/**
