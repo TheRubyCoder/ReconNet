@@ -1,4 +1,4 @@
-package gui2;
+package gui;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -47,9 +47,9 @@ public class PopUp {
 
 		private UnderConstructionPopUp(String title) {
 			frame = new JFrame(title);
-			// ImageIcon icon = new ImageIcon("src/gui2/icons/newPetrinet.png");
+			// ImageIcon icon = new ImageIcon("src/gui/icons/newPetrinet.png");
 			ImagePanel underConstructionPanel = new ImagePanel(
-					"src/gui2/icons/underConstructionWithText.png");
+					"src/gui/icons/underConstructionWithText.png");
 			frame.add(underConstructionPanel);
 			frame.pack();
 			frame.setVisible(true);

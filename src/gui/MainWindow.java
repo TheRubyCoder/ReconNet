@@ -1,9 +1,9 @@
-package gui2;
+package gui;
 
-import static gui2.Style.HEADER_DIMENSION;
-import static gui2.Style.LEFT_PANEL_DIMENSION;
-import static gui2.Style.TOTAL_HEIGHT;
-import static gui2.Style.TOTAL_WIDTH;
+import static gui.Style.HEADER_DIMENSION;
+import static gui.Style.LEFT_PANEL_DIMENSION;
+import static gui.Style.TOTAL_HEIGHT;
+import static gui.Style.TOTAL_WIDTH;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -80,7 +80,7 @@ class MainWindow {
 	private void initializeMainFrame() {
 		mainFrame = new JFrame();
 		mainFrame.setTitle("ReconNet");
-		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage("src/gui2/icons/ReconNetLogo.png"));
+		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage("src/gui/icons/ReconNetLogo.png"));
 		mainFrame.setSize(TOTAL_WIDTH, TOTAL_HEIGHT);
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFrame.setLayout(new BorderLayout());

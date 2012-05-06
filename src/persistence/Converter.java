@@ -18,7 +18,7 @@ import engine.handler.RuleNet;
 import engine.ihandler.IPetrinetPersistence;
 import engine.ihandler.IRulePersistence;
 import exceptions.EngineException;
-import gui2.PopUp;
+import gui.PopUp;
 
 /**
  * This class provides converting methods which are used by persistence class to

@@ -18,7 +18,7 @@ import transformation.Rule;
 import engine.attribute.NodeLayoutAttribute;
 import engine.ihandler.IPetrinetPersistence;
 import engine.ihandler.IRulePersistence;
-import gui2.PopUp;
+import gui.PopUp;
 
 public class Persistence /* implements IPersistance */{
 	static {

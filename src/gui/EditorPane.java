@@ -1,8 +1,8 @@
-package gui2;
+package gui;
 
-import static gui2.Style.EDITOR_PANE_BORDER;
-import static gui2.Style.EDITOR_PANE_DIMENSION;
-import static gui2.Style.EDITOR_PANE_LAYOUT;
+import static gui.Style.EDITOR_PANE_BORDER;
+import static gui.Style.EDITOR_PANE_DIMENSION;
+import static gui.Style.EDITOR_PANE_LAYOUT;
 
 import java.awt.BorderLayout;
 import java.awt.event.KeyEvent;

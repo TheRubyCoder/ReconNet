@@ -1,9 +1,9 @@
-package gui2;
+package gui;
 
-import static gui2.Style.RULE_PANEL_LAYOUT;
-import static gui2.Style.RULE_PANE_BORDER_K;
-import static gui2.Style.RULE_PANE_BORDER_L;
-import static gui2.Style.RULE_PANE_BORDER_R;
+import static gui.Style.RULE_PANEL_LAYOUT;
+import static gui.Style.RULE_PANE_BORDER_K;
+import static gui.Style.RULE_PANE_BORDER_L;
+import static gui.Style.RULE_PANE_BORDER_R;
 
 import java.awt.GridLayout;
 

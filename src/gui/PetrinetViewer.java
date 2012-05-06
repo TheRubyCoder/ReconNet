@@ -1,10 +1,10 @@
-package gui2;
+package gui;
 
-import static gui2.Style.FONT_COLOR;
-import static gui2.Style.NODE_BORDER_COLOR;
-import static gui2.Style.PLACE_HEIGHT;
-import static gui2.Style.PLACE_WIDTH;
-import static gui2.Style.TRANSITION_SIZE;
+import static gui.Style.FONT_COLOR;
+import static gui.Style.NODE_BORDER_COLOR;
+import static gui.Style.PLACE_HEIGHT;
+import static gui.Style.PLACE_WIDTH;
+import static gui.Style.TRANSITION_SIZE;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -43,7 +43,7 @@ import engine.attribute.TransitionAttribute;
 import engine.handler.NodeTypeEnum;
 import engine.handler.RuleNet;
 import exceptions.EngineException;
-import gui2.EditorPane.EditorMode;
+import gui.EditorPane.EditorMode;
 
 /**
  * A special jung visualization viewer for displaying and editing petrinets Some

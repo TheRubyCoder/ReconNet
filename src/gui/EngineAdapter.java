@@ -1,4 +1,4 @@
-package gui2;
+package gui;
 
 import engine.handler.petrinet.PetrinetManipulation;
 import engine.handler.petrinet.PetrinetPersistence;

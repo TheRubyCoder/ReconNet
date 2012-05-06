@@ -1,7 +1,7 @@
-package gui2;
+package gui;
 
-import static gui2.Style.ATTRIBUTE_PANE_BORDER;
-import static gui2.Style.ATTRIBUTE_PANE_DIMENSION;
+import static gui.Style.ATTRIBUTE_PANE_BORDER;
+import static gui.Style.ATTRIBUTE_PANE_DIMENSION;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;

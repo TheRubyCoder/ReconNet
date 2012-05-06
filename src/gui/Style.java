@@ -1,4 +1,4 @@
-package gui2;
+package gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -141,11 +141,11 @@ class Style {
 	public static final Border SIMULATION_PANE_SPEED_SLIDER_BORDER = 
 			BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Geschwindigkeit");
 	
-	public static final ImageIcon SIMULATION_START_ICON =  new ImageIcon("src/gui2/icons/simulationPlay.png");
-	public static final ImageIcon SIMULATION_START_ICON_DISABLE =  new ImageIcon("src/gui2/icons/simulationPlayDisable.png");
-	public static final ImageIcon SIMULATION_START_ICON_PRESSED =  new ImageIcon("src/gui2/icons/simulationPlayPressed.png");
-	public static final ImageIcon SIMULATION_PAUSE_ICON =  new ImageIcon("src/gui2/icons/simulationPause.png");
-	public static final ImageIcon SIMULATION_PAUSE_ICON_PRESSED =  new ImageIcon("src/gui2/icons/simulationPausePressed.png");
+	public static final ImageIcon SIMULATION_START_ICON =  new ImageIcon("src/gui/icons/simulationPlay.png");
+	public static final ImageIcon SIMULATION_START_ICON_DISABLE =  new ImageIcon("src/gui/icons/simulationPlayDisable.png");
+	public static final ImageIcon SIMULATION_START_ICON_PRESSED =  new ImageIcon("src/gui/icons/simulationPlayPressed.png");
+	public static final ImageIcon SIMULATION_PAUSE_ICON =  new ImageIcon("src/gui/icons/simulationPause.png");
+	public static final ImageIcon SIMULATION_PAUSE_ICON_PRESSED =  new ImageIcon("src/gui/icons/simulationPausePressed.png");
 	
 	
 	/* ************************************* 
@@ -184,25 +184,25 @@ class Style {
 	public static final int FILE_PANE_ICON_SPACING_SIZE = 9;
 	
 	
-	public static final ImageIcon NEW_PETRINET_ICON = new ImageIcon("src/gui2/icons/newPetrinet.png");
-	public static final ImageIcon NEW_PETRINET_PRESSED_ICON = new ImageIcon("src/gui2/icons/newPetrinetPressed.png");
-	public static final ImageIcon NEW_PETRINET_DISABLED_ICON = new ImageIcon("src/gui2/icons/newPetrinetDisabled.png");
+	public static final ImageIcon NEW_PETRINET_ICON = new ImageIcon("src/gui/icons/newPetrinet.png");
+	public static final ImageIcon NEW_PETRINET_PRESSED_ICON = new ImageIcon("src/gui/icons/newPetrinetPressed.png");
+	public static final ImageIcon NEW_PETRINET_DISABLED_ICON = new ImageIcon("src/gui/icons/newPetrinetDisabled.png");
 	
-	public static final ImageIcon LOAD_PETRINET_ICON = new ImageIcon("src/gui2/icons/loadPertinet.png");
-	public static final ImageIcon LOAD_PETRINET_PRESSED_ICON = new ImageIcon("src/gui2/icons/loadPetrinetPressed.png");
-	public static final ImageIcon LOAD_PETRINET_DISABLED_ICON = new ImageIcon("src/gui2/icons/loadPertinetDisabled.png");
+	public static final ImageIcon LOAD_PETRINET_ICON = new ImageIcon("src/gui/icons/loadPertinet.png");
+	public static final ImageIcon LOAD_PETRINET_PRESSED_ICON = new ImageIcon("src/gui/icons/loadPetrinetPressed.png");
+	public static final ImageIcon LOAD_PETRINET_DISABLED_ICON = new ImageIcon("src/gui/icons/loadPertinetDisabled.png");
 	
-	public static final ImageIcon SAVE_PETRINET_ICON = new ImageIcon("src/gui2/icons/savePertinet.png");
-	public static final ImageIcon SAVE_PETRINET_PRESSED_ICON = new ImageIcon("src/gui2/icons/savePertinetPressed.png");
-	public static final ImageIcon SAVE_PETRINET_DISABLED_ICON = new ImageIcon("src/gui2/icons/savePertinetDisabled.png");
+	public static final ImageIcon SAVE_PETRINET_ICON = new ImageIcon("src/gui/icons/savePertinet.png");
+	public static final ImageIcon SAVE_PETRINET_PRESSED_ICON = new ImageIcon("src/gui/icons/savePertinetPressed.png");
+	public static final ImageIcon SAVE_PETRINET_DISABLED_ICON = new ImageIcon("src/gui/icons/savePertinetDisabled.png");
 	
-	public static final ImageIcon SAVE_AS_PETRINET_ICON = new ImageIcon("src/gui2/icons/saveAsPertinet.png");
-	public static final ImageIcon SAVE_AS_PETRINET_PRESSED_ICON = new ImageIcon("src/gui2/icons/saveAsPertinetPressed.png");
-	public static final ImageIcon SAVE_AS_PETRINET_DISABLED_ICON = new ImageIcon("src/gui2/icons/saveAsPertinetDisabled.png");
+	public static final ImageIcon SAVE_AS_PETRINET_ICON = new ImageIcon("src/gui/icons/saveAsPertinet.png");
+	public static final ImageIcon SAVE_AS_PETRINET_PRESSED_ICON = new ImageIcon("src/gui/icons/saveAsPertinetPressed.png");
+	public static final ImageIcon SAVE_AS_PETRINET_DISABLED_ICON = new ImageIcon("src/gui/icons/saveAsPertinetDisabled.png");
 	
-	public static final ImageIcon DELETE_PETRINET = new ImageIcon("src/gui2/icons/deletePertinet.png");
-	public static final ImageIcon DELETE_PETRINET_PRESSED_ICON = new ImageIcon("src/gui2/icons/deletePetrinetPressed.png");
-	public static final ImageIcon DELETE_PETRINET_DISABLED_ICON = new ImageIcon("src/gui2/icons/deletePertinetDisabled.png");
+	public static final ImageIcon DELETE_PETRINET = new ImageIcon("src/gui/icons/deletePertinet.png");
+	public static final ImageIcon DELETE_PETRINET_PRESSED_ICON = new ImageIcon("src/gui/icons/deletePetrinetPressed.png");
+	public static final ImageIcon DELETE_PETRINET_DISABLED_ICON = new ImageIcon("src/gui/icons/deletePertinetDisabled.png");
 	
 	
 	

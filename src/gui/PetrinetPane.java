@@ -1,7 +1,7 @@
-package gui2;
+package gui;
 
-import static gui2.Style.PETRINET_BORDER;
-import static gui2.Style.PETRINET_PANE_LAYOUT;
+import static gui.Style.PETRINET_BORDER;
+import static gui.Style.PETRINET_PANE_LAYOUT;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
