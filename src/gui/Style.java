@@ -159,7 +159,9 @@ class Style {
 	
 	public static final GridLayout PETRINET_PANE_LAYOUT = new GridLayout(1,1);
 	
-	public static final Color FONT_COLOR = Color.DARK_GRAY;
+	public static final Color FONT_COLOR_DARK = Color.DARK_GRAY;
+	
+	public static final Color FONT_COLOR_BRIGHT = Color.LIGHT_GRAY;
 	
 	public static final Color NODE_BORDER_COLOR = Color.DARK_GRAY;
 	

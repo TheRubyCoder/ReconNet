@@ -1,6 +1,7 @@
 package gui;
 
-import static gui.Style.FONT_COLOR;
+import static gui.Style.FONT_COLOR_DARK;
+import static gui.Style.FONT_COLOR_BRIGHT;
 import static gui.Style.NODE_BORDER_COLOR;
 import static gui.Style.PLACE_HEIGHT;
 import static gui.Style.PLACE_WIDTH;
@@ -8,7 +9,9 @@ import static gui.Style.TRANSITION_SIZE;
 import static gui.Style.FACTOR_SELECTED_NODE;
 
 import java.awt.Color;
+import java.awt.GradientPaint;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -766,6 +769,10 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		public void paintVertex(RenderContext<INode, Arc> renderContext,
 				Layout<INode, Arc> layout, INode node) {
 			GraphicsDecorator decorator = renderContext.getGraphicsContext();
+			decorator.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+					RenderingHints.VALUE_ANTIALIAS_ON);
+			decorator.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+					RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 			Point2D center = layout.transform(node);
 			if (petrinetViewer.isNodePlace(node)) {
 				PlaceAttribute placeAttribute = petrinetViewer
@@ -790,9 +797,10 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 					}
 				}
 
-				// Color lightBlue = new Color(200, 200, 250);
-				// decorator.setPaint(lightBlue);
-				decorator.setPaint(placeAttribute.getColor());
+				GradientPaint gradientPaintPlace = new GradientPaint(x, y,
+						placeAttribute.getColor().brighter(), x, y + height,
+						placeAttribute.getColor().darker());
+				decorator.setPaint(gradientPaintPlace);
 				decorator.fillOval(x, y, width, height);
 
 				// draw frame
@@ -800,7 +808,7 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 				decorator.drawOval(x, y, width, height);
 
 				// write name
-				decorator.setPaint(FONT_COLOR);
+				decorator.setPaint(FONT_COLOR_DARK);
 				decorator.drawString(placeAttribute.getPname(), x + width, y
 						+ height);
 
@@ -815,21 +823,31 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 							height / 2, height / 2);
 				} else {
 					// draw number within place
+					if (colorIsBright(placeAttribute.getColor())) {
+						decorator.setPaint(FONT_COLOR_DARK);
+					} else {
+						decorator.setPaint(FONT_COLOR_BRIGHT);
+					}
 					decorator.drawString(String.valueOf(marking),
 							x + width / 3, y + (int) (height / 1.5));
 				}
 			} else {
 				TransitionAttribute transitionAttribute = petrinetViewer
 						.getTransitionAttribute((Transition) node);
-				Color blackOrWhite = null;
-				if (transitionAttribute.getIsActivated()) {
-					blackOrWhite = Color.BLACK;
-				} else {
-					blackOrWhite = Color.LIGHT_GRAY;
-				}
 
 				// draw rect
 				int size = TRANSITION_SIZE;
+				int x = (int) (center.getX() - size / 2);
+				int y = (int) (center.getY() - size / 2);
+
+				GradientPaint blackOrWhite = null;
+				if (transitionAttribute.getIsActivated()) {
+					blackOrWhite = new GradientPaint(x, y, Color.DARK_GRAY, x,
+							y + size, Color.BLACK);
+				} else {
+					blackOrWhite = new GradientPaint(x, y, Color.LIGHT_GRAY, x,
+							y + size, Color.LIGHT_GRAY.darker());
+				}
 
 				/* Draw selected node bigger */
 				if (petrinetViewer.isN()) {
@@ -844,8 +862,6 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 					}
 				}
 
-				int x = (int) (center.getX() - size / 2);
-				int y = (int) (center.getY() - size / 2);
 				decorator.setPaint(blackOrWhite);
 				decorator.fillRect(x, y, size, size);
 
@@ -854,7 +870,7 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 				decorator.drawRect(x, y, size, size);
 
 				// draw name
-				decorator.setPaint(FONT_COLOR);
+				decorator.setPaint(FONT_COLOR_DARK);
 				decorator.drawString(transitionAttribute.getTname(), x + size
 						+ 2, y + size);
 
@@ -868,7 +884,20 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 						x + size / 3, y + size / 1.5f);
 			}
 		}
+
+		private boolean colorIsBright(Color color) {
+			return color.getBlue() + color.getRed() + color.getGreen() > 382;
+		}
 	}
+
+	/**
+	 * Return <code>true</code> if the color is bright enough so text on it cant
+	 * be drawn with {@link Style#FONT_COLOR_DARK}. Else it should be drawn with
+	 * {@link Style#FONT_COLOR_DARK}
+	 * 
+	 * @param color
+	 * @return
+	 */
 
 	/**
 	 * Transforming Arcs to Strings. Actually just used for getting the label of
