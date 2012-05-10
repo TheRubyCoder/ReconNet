@@ -73,7 +73,10 @@ class SimulationPane {
 	private JSlider transformSpeedSlider;
 
 	/** Combo box for selecting the simulation mode */
-	private JComboBox<String> simulationModePicker;
+	@SuppressWarnings("rawtypes")
+	// You have to use raw types for JList as Jenkins will not compile these with
+	// parameters
+	private JComboBox simulationModePicker;
 
 	/** Button for start and pause the simulation */
 	private JButton simulationButton;
@@ -158,10 +161,16 @@ class SimulationPane {
 	 * 
 	 * @return Combobox with the holding modi
 	 */
-	private JComboBox<String> initiateModePicker() {
+	@SuppressWarnings("rawtypes")
+	// You have to use raw types for JList as Jenkins will not compile these with
+	// parameters
+	private JComboBox initiateModePicker() {
 		String[] modi = { "Nur Tokenspiel", "Nur Regeln",
 				"Tokenspiel und Regeln" };
-		JComboBox<String> comboBox = new JComboBox<String>(modi);
+		@SuppressWarnings("unchecked")
+		// You have to use raw types for JList as Jenkins will not compile these with
+		// parameters
+		JComboBox comboBox = new JComboBox(modi);
 		comboBox.setLocation(SIMULATION_PANE_COMBOBOX_LOCATION);
 		comboBox.setSize(SIMULATION_PANE_COMBOBOX_SIZE);
 		getSimulationPane().add(comboBox);

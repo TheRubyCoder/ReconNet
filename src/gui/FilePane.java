@@ -79,8 +79,10 @@ class FilePane {
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
 			if (!e.getValueIsAdjusting()) {
-				@SuppressWarnings("unchecked")
-				String selectedValue = ((JList<String>) e.getSource())
+				@SuppressWarnings("rawtypes")
+				// You have to use raw types for JList as Jenkins will not compile these with
+				// parameters
+				String selectedValue = (String) ((JList) e.getSource())
 						.getSelectedValue();
 				if (selectedValue != null) {
 					int pId = FilePane.getPetrinetFilePane()
@@ -228,7 +230,10 @@ class FilePane {
 	private JPanel buttonContainer;
 
 	/** The List containing all loaded files */
-	private JList<String> list;
+	@SuppressWarnings("rawtypes")
+	// You have to use raw types for JList as Jenkins will not compile these with
+	// parameters
+	private JList list;
 
 	/** The button for creating a new petrinet/rule */
 	private JButton newButton;
@@ -246,7 +251,10 @@ class FilePane {
 	private JButton saveAsButton;
 
 	/** Model for list */
-	private DefaultListModel<String> listModel;
+	@SuppressWarnings("rawtypes")
+	// You have to use raw types for JList as Jenkins will not compile these with
+	// parameters
+	private DefaultListModel listModel;
 
 	/** To remember what list entry refers to wich petrinet */
 	private Map<String, Integer> nameToPId;
@@ -311,9 +319,12 @@ class FilePane {
 		return new HashMap<String, File>();
 	}
 
-	private JList<String> initiateList(ListSelectionListener listener) {
-		listModel = new DefaultListModel<String>();
-		JList<String> list = new JList<String>(listModel);
+	@SuppressWarnings("rawtypes")
+	// You have to use raw types for JList as Jenkins will not compile these with
+	// parameters
+	private JList initiateList(ListSelectionListener listener) {
+		listModel = new DefaultListModel();
+		JList list = new JList(listModel);
 		list.addListSelectionListener(listener);
 		return list;
 	}
@@ -327,7 +338,7 @@ class FilePane {
 	 *            Descriptor: "Petrinetze" / "Regeln"
 	 * @return
 	 */
-	private JPanel initiateTreeAndButtonContainerWithBorder(JList<String> list,
+	private JPanel initiateTreeAndButtonContainerWithBorder(JList list,
 			JPanel buttonContainer, String typePlural) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BorderLayout());
@@ -569,6 +580,9 @@ class FilePane {
 	 *            of panel
 	 * @return name of the petrinet, if no data entered return <tt>null</tt>
 	 */
+	@SuppressWarnings("unchecked")
+	// You have to use raw types for JList as Jenkins will not compile these with
+	// parameters
 	String create(String type) {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Bitte Speicherort für neue(s) " + type
@@ -618,7 +632,7 @@ class FilePane {
 
 	/** Quick saves the petrinet or rule to the file it is mapped to */
 	public void saveSelected(String type) {
-		String name = listModel.get(list.getMinSelectionIndex());
+		String name = (String) listModel.get(list.getMinSelectionIndex());
 		int id = getIdFromSelectedItem();
 		File file = nameToFilepath.get(name);
 		try {
@@ -678,6 +692,9 @@ class FilePane {
 	}
 
 	/** Loads a petrinet or file from a given file */
+	@SuppressWarnings("unchecked")
+	// You have to use raw types for JList as Jenkins will not compile these with
+	// parameters
 	private void loadFromFile(File file) {
 		int id;
 		String name = fileToListEntry(file);
@@ -749,7 +766,7 @@ class FilePane {
 
 			for (int i = selectedIndices.length - 1; i <= 0; i++) {
 				int index = selectedIndices[i];
-				String name = listModel.get(index);
+				String name = (String) listModel.get(index);
 				listModel.removeElementAt(index);
 				nameToPId.remove(name);
 				if (loeschen == 0) {
@@ -773,9 +790,9 @@ class FilePane {
 
 	/** Returns the id of the currently selected item */
 	private int getIdFromSelectedItem() {
-		String selectedValue = list.getSelectedValue();
+		Object selectedValue = list.getSelectedValue();
 		if (selectedValue != null) {
-			return getIdFrom(selectedValue);
+			return getIdFrom((String) selectedValue);
 		} else {
 			return -1;
 		}
