@@ -13,6 +13,7 @@
     <property name="target" value="1.6"/>
     <property name="source" value="1.6"/>
 	<property name="src.dir" value="${basedir}/src"/>
+	<property name="test.dir" value="${basedir}/test"/>
 	<property name="lib.dir" value="${basedir}/lib"/>
 	<property name="build.dir" value="${basedir}/bin"/>
 	
@@ -91,13 +92,13 @@
         <mkdir dir="${build.dir}"/>
     	<mkdir dir="${test-report.dir}"/>
         <copy includeemptydirs="false" todir="${build.dir}">
-            <fileset dir="src">
+            <fileset dir="src.dir">
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
     	
         <copy includeemptydirs="false" todir="${build.dir}">
-            <fileset dir="test">
+            <fileset dir="test.dir">
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
