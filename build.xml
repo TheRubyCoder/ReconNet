@@ -92,13 +92,13 @@
         <mkdir dir="${build.dir}"/>
     	<mkdir dir="${test-report.dir}"/>
         <copy includeemptydirs="false" todir="${build.dir}">
-            <fileset dir="src.dir">
+            <fileset dir="${src.dir}">
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
     	
         <copy includeemptydirs="false" todir="${build.dir}">
-            <fileset dir="test.dir">
+            <fileset dir="${test.dir}">
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
