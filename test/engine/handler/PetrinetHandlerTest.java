@@ -17,6 +17,7 @@ import engine.handler.petrinet.PetrinetPersistence;
 import engine.ihandler.IPetrinetManipulation;
 import engine.ihandler.IPetrinetPersistence;
 import exceptions.EngineException;
+import exceptions.ShowAsWarningException;
 
 public class PetrinetHandlerTest {
 
@@ -132,8 +133,9 @@ public class PetrinetHandlerTest {
 			petrinetHandler.createTransition(idPetrinet, null);
 
 			fail("something is wrong (createTransition): null as Point");
-
 		} catch (EngineException e) {
+			fail("No engine exception expected");
+		} catch (ShowAsWarningException e) {
 			assertTrue(true);
 		}
 
@@ -143,8 +145,9 @@ public class PetrinetHandlerTest {
 					-1., -1.));
 
 			fail("something is wrong (createTransition): wrong Point => Point(-1, -1)");
-
 		} catch (EngineException e) {
+			fail("No engine exception expected");
+		} catch (ShowAsWarningException e) {
 			assertTrue(true);
 		}
 
@@ -263,6 +266,8 @@ public class PetrinetHandlerTest {
 			fail("testDeleteArc: wrong Arc");
 
 		} catch (EngineException e) {
+			fail("No EngineException expected");
+		} catch (NullPointerException e) {
 			assertTrue(true);
 		}
 
