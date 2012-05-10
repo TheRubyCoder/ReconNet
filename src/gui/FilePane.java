@@ -80,7 +80,8 @@ class FilePane {
 		public void valueChanged(ListSelectionEvent e) {
 			if (!e.getValueIsAdjusting()) {
 				@SuppressWarnings("rawtypes")
-				// You have to use raw types for JList as Jenkins will not compile these with
+				// You have to use raw types for JList as Jenkins will not
+				// compile these with
 				// parameters
 				String selectedValue = (String) ((JList) e.getSource())
 						.getSelectedValue();
@@ -101,7 +102,11 @@ class FilePane {
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
 			if (!e.getValueIsAdjusting()) {
-				Object selectedValue = ((JList<?>) e.getSource())
+				@SuppressWarnings("rawtypes")
+				// You have to use raw types for JList as Jenkins will not
+				// compile these with
+				// parameters
+				Object selectedValue = ((JList) e.getSource())
 						.getSelectedValue();
 				if (selectedValue != null) {
 					int ruleId = FilePane.getRuleFilePane()
@@ -231,7 +236,8 @@ class FilePane {
 
 	/** The List containing all loaded files */
 	@SuppressWarnings("rawtypes")
-	// You have to use raw types for JList as Jenkins will not compile these with
+	// You have to use raw types for JList as Jenkins will not compile these
+	// with
 	// parameters
 	private JList list;
 
@@ -252,7 +258,8 @@ class FilePane {
 
 	/** Model for list */
 	@SuppressWarnings("rawtypes")
-	// You have to use raw types for JList as Jenkins will not compile these with
+	// You have to use raw types for JList as Jenkins will not compile these
+	// with
 	// parameters
 	private DefaultListModel listModel;
 
@@ -320,7 +327,8 @@ class FilePane {
 	}
 
 	@SuppressWarnings("rawtypes")
-	// You have to use raw types for JList as Jenkins will not compile these with
+	// You have to use raw types for JList as Jenkins will not compile these
+	// with
 	// parameters
 	private JList initiateList(ListSelectionListener listener) {
 		listModel = new DefaultListModel();
@@ -581,7 +589,8 @@ class FilePane {
 	 * @return name of the petrinet, if no data entered return <tt>null</tt>
 	 */
 	@SuppressWarnings("unchecked")
-	// You have to use raw types for JList as Jenkins will not compile these with
+	// You have to use raw types for JList as Jenkins will not compile these
+	// with
 	// parameters
 	String create(String type) {
 		JFileChooser fileChooser = new JFileChooser();
@@ -693,7 +702,8 @@ class FilePane {
 
 	/** Loads a petrinet or file from a given file */
 	@SuppressWarnings("unchecked")
-	// You have to use raw types for JList as Jenkins will not compile these with
+	// You have to use raw types for JList as Jenkins will not compile these
+	// with
 	// parameters
 	private void loadFromFile(File file) {
 		int id;
