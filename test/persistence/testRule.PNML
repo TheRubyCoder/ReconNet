@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<pnml xmlns="http://www.pnml.org/version-2009/grammar/pnml">
+    <net id="18" nettype="L">
+        <page>
+            <place id="22">
+                <graphics>
+                    <color b="255" g="255" r="0"/>
+                    <position x="266.0" y="206.0"/>
+                </graphics>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <placeName>
+                    <text>türkis behalten</text>
+                </placeName>
+            </place>
+            <place id="26">
+                <graphics>
+                    <color b="0" g="0" r="255"/>
+                    <position x="40.0" y="38.0"/>
+                </graphics>
+                <initialMarking>
+                    <text>3</text>
+                </initialMarking>
+                <placeName>
+                    <text>rot gelöscht</text>
+                </placeName>
+            </place>
+        </page>
+    </net>
+    <net id="17" nettype="K">
+        <page>
+            <arc id="32" source="21" target="28">
+                <graphics>
+                    <dimension/>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+            </arc>
+            <arc id="30" source="28" target="22">
+                <graphics>
+                    <dimension/>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+            </arc>
+            <place id="22">
+                <graphics>
+                    <color b="255" g="255" r="0"/>
+                    <position x="266.0" y="206.0"/>
+                </graphics>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <placeName>
+                    <text>türkis behalten</text>
+                </placeName>
+            </place>
+            <place id="21">
+                <graphics>
+                    <color b="255" g="0" r="0"/>
+                    <position x="95.0" y="94.0"/>
+                </graphics>
+                <initialMarking>
+                    <text>1</text>
+                </initialMarking>
+                <placeName>
+                    <text>blau eingefügt</text>
+                </placeName>
+            </place>
+            <place id="26">
+                <graphics>
+                    <color b="0" g="0" r="255"/>
+                    <position x="40.0" y="38.0"/>
+                </graphics>
+                <initialMarking>
+                    <text>3</text>
+                </initialMarking>
+                <placeName>
+                    <text>rot gelöscht</text>
+                </placeName>
+            </place>
+            <transition id="28">
+                <graphics>
+                    <position x="294.0" y="132.0"/>
+                </graphics>
+                <transitionLabel>
+                    <text>tlb</text>
+                </transitionLabel>
+                <transitionName>
+                    <text>kann schalten</text>
+                </transitionName>
+                <transitionRenew>
+                    <text>id</text>
+                </transitionRenew>
+            </transition>
+        </page>
+    </net>
+    <net id="19" nettype="R">
+        <page>
+            <arc id="32" source="21" target="28">
+                <graphics>
+                    <dimension/>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+            </arc>
+            <arc id="30" source="28" target="22">
+                <graphics>
+                    <dimension/>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+            </arc>
+            <place id="21">
+                <graphics>
+                    <color b="255" g="0" r="0"/>
+                    <position x="95.0" y="94.0"/>
+                </graphics>
+                <initialMarking>
+                    <text>1</text>
+                </initialMarking>
+                <placeName>
+                    <text>blau eingefügt</text>
+                </placeName>
+            </place>
+            <place id="22">
+                <graphics>
+                    <color b="255" g="255" r="0"/>
+                    <position x="266.0" y="206.0"/>
+                </graphics>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <placeName>
+                    <text>türkis behalten</text>
+                </placeName>
+            </place>
+            <transition id="28">
+                <graphics>
+                    <position x="294.0" y="132.0"/>
+                </graphics>
+                <transitionLabel>
+                    <text>tlb</text>
+                </transitionLabel>
+                <transitionName>
+                    <text>kann schalten</text>
+                </transitionName>
+                <transitionRenew>
+                    <text>id</text>
+                </transitionRenew>
+            </transition>
+        </page>
+    </net>
+</pnml>

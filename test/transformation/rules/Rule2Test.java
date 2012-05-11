@@ -35,7 +35,7 @@ public class Rule2Test {
 	public static void applyingRule() {
 		System.out.println("Petrinetz:::: " + nPetrinet);
 		System.out.println("Regel-L:::: " + rule.getL());
-		System.out.println("Regel-K:::: " + rule.getK());
+//		System.out.println("Regel-K:::: " + rule.getK());
 		// Because the reference stays the same after transformation
 		// nPetrinet will always equals itself, no matter what happens in
 		// transformation
@@ -66,7 +66,7 @@ public class Rule2Test {
 		Morphism morphism = transformation.getMorphism();
 		System.out.println("MORPISM::PLACES::" + morphism.getPlacesMorphism());
 		assertEquals(2, transformation.getMorphism().getPlacesMorphism().size());
-		// Has 5 transitions been mapped?
+		// Have 5 transitions been mapped?
 		assertEquals(10, transformation.getMorphism().getTransitionsMorphism()
 				.size());
 

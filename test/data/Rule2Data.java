@@ -26,7 +26,7 @@ public class Rule2Data {
 	
 	static {
 		addSubnetToPetrinet(rule.getL());
-		TransformationComponent.getTransformation().setMark(rule, rule.getL().getAllPlaces().iterator().next().getId(), 4);
+		TransformationComponent.getTransformation().setMark(rule, rule.getL().getAllPlaces().iterator().next().getId(), 3);
 	}
 	
 	private static void addSubnetToPetrinet(Petrinet petrinet){

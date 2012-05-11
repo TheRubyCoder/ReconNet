@@ -28,9 +28,10 @@ public class DeleteTest {
 	
 	@Test
 	public void checkReturnValuePlace(){
+		Petrinet petrinet = MorphismData.getPetrinetIsomorphismPlacesTo();
 		int toDeletePlace = MorphismData.getIdMatchesInRule2();
 		
-		Collection<Integer> deleted = PetrinetComponent.getPetrinet().deleteElementInPetrinet(nPetrinet.getId(), toDeletePlace);
+		Collection<Integer> deleted = PetrinetComponent.getPetrinet().deleteElementInPetrinet(petrinet.getId(), toDeletePlace);
 		assertEquals(6,deleted.size());
 		assertEquals(MorphismData.getIdsOfPlaceAndArcsOfThirdPlace(),
 				new HashSet<Integer>(deleted));

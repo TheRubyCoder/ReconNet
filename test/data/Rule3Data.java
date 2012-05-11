@@ -15,6 +15,7 @@ public class Rule3Data {
 	private static Place newPlace;
 
 	public static Petrinet getnPetrinet() {
+		nPetrinet = MorphismData.getPetrinetIsomorphismPlacesTo();
 		return nPetrinet;
 	}
 

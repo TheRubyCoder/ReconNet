@@ -16,10 +16,11 @@ import petrinet.Place;
 import data.MorphismData;
 
 /**
- * Testing the morphism of places like specified in "../additional/images/Isomorphism_places.png"
+ * Testing the morphism of places like specified in
+ * "../additional/images/Isomorphism_places.png"
  */
 public class MorphismPlacesTest {
-	
+
 	private static int morphismCount = 2000;
 
 	private static Petrinet placesFromNet = MorphismData
@@ -71,39 +72,47 @@ public class MorphismPlacesTest {
 			boolean accepted = min < count && count < max;
 			if (!accepted)
 				System.out
-						.println("This test failed due to non determinism. Its not too bad it failed.\n" +
-								"It should have been between " + min + " and " + max + " but was " + count);
+						.println("This test failed due to non determinism. Its not too bad it failed.\n"
+								+ "It should have been between "
+								+ min
+								+ " and " + max + " but was " + count);
 			assertEquals(true, accepted);
 		}
 	}
 
 	@Test
-	public void testPlacesMorphismCorrectMatches() {
+	public void testPlacesMorphismCorrectMatches() throws Exception {
+
+		placesFromNet = MorphismData.getPetrinetIsomorphismPlacesFrom();
+		placesToNet = MorphismData.getPetrinetIsomorphismPlacesTo();
+		setUpOnce();
+
 		assertEquals(MorphismData.getIdFromPlaces(), fromPlace.getId());
 
 		Set<Integer> expectedMatches = MorphismData.getIdsMatchedPlaces();
-		
+
 		Set<Integer> actualMatches = new HashSet<Integer>();
 		for (Place place : counter.keySet()) {
 			actualMatches.add(place.getId());
 		}
 		assertEquals(expectedMatches, actualMatches);
 	}
-	
+
 	@Test
-	public void testStupidMethodToGetCodeCoverageForGetters(){
-		Morphism morphism = MorphismFactory.createMorphism(placesFromNet, placesToNet);
+	public void testStupidMethodToGetCodeCoverageForGetters() {
+		Morphism morphism = MorphismFactory.createMorphism(placesFromNet,
+				placesToNet);
 		Arc arc = placesFromNet.getAllArcs().iterator().next();
 		morphism.getArcMorphism(arc);
-		
+
 		morphism.getEdgesMorphism();
-		
+
 		morphism.getFrom();
-		
+
 		morphism.getPlacesMorphism();
-		
+
 		morphism.getTo();
-		
+
 		morphism.getTransitionsMorphism();
 	}
 }
