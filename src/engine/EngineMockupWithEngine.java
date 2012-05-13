@@ -7,6 +7,7 @@ import java.util.List;
 
 import petrinet.Arc;
 import petrinet.INode;
+import petrinet.IRenew;
 import petrinet.Petrinet;
 import petrinet.Place;
 import petrinet.Renews;
@@ -222,7 +223,7 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 	}
 	
 	@Override
-	public void setRnw(int id, INode transition, Renews renews) throws EngineException {
+	public void setRnw(int id, INode transition, IRenew renews) throws EngineException {
 
 		iPetrinetManipulation.setRnw(id, transition, renews);
 		

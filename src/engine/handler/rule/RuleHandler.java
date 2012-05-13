@@ -1283,7 +1283,7 @@ final public class RuleHandler {
 
 	}
 
-	public void setRnw(int id, INode transition, Renews renews)
+	public void setRnw(int id, INode transition, IRenew renew)
 			throws EngineException {
 
 		// get the RuleData from the id and SessionManager
@@ -1297,17 +1297,8 @@ final public class RuleHandler {
 			if (this.getNodeType(transition).equals(NodeTypeEnum.Transition)) {
 				Transition t = (Transition) transition;
 
-				IRenew rnw = null;
-
-				if (renews.equals(Renews.COUNT)) {
-					rnw = new RenewCount();
-				} else if (renews.equals(Renews.IDENTITY)) {
-					rnw = new RenewId();
-					// TODO Renew as Map<String,String>
-				} else {
-					exception("setRnw - renews is not correct");
-				}
-				t.setRnw(rnw);
+				
+				t.setRnw(renew);
 
 				// Synchronize Transitions in the other parts of the rules
 				RuleNet net = getContainingNet(id, transition);
@@ -1315,26 +1306,26 @@ final public class RuleHandler {
 					Transition transitionInK = (Transition) rule.fromLtoK(t);
 					Transition transitionInR = (Transition) rule
 							.fromKtoR(transitionInK);
-					transitionInK.setRnw(rnw);
+					transitionInK.setRnw(renew);
 					if (transitionInR != null) {
-						transitionInR.setRnw(rnw);
+						transitionInR.setRnw(renew);
 					}
 				} else if (net.equals(RuleNet.K)) {
 					Transition transitionInL = (Transition) rule.fromKtoL(t);
 					Transition transitionInR = (Transition) rule.fromKtoR(t);
 					if (transitionInL != null) {
-						transitionInL.setRnw(rnw);
+						transitionInL.setRnw(renew);
 					}
 					if (transitionInR != null) {
-						transitionInR.setRnw(rnw);
+						transitionInR.setRnw(renew);
 					}
 				} else if (net.equals(RuleNet.R)) {
 					Transition transitionInK = (Transition) rule.fromRtoK(t);
 					Transition transitionInL = (Transition) rule
 							.fromKtoL(transitionInK);
-					transitionInK.setRnw(rnw);
+					transitionInK.setRnw(renew);
 					if (transitionInL != null) {
-						transitionInL.setRnw(rnw);
+						transitionInL.setRnw(renew);
 					}
 				}
 			}

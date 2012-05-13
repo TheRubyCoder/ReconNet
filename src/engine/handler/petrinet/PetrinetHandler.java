@@ -723,7 +723,7 @@ final public class PetrinetHandler {
 
 	}
 
-	public void setRnw(int id, INode transition, Renews renews)
+	public void setRnw(int id, INode transition, IRenew renews)
 			throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
@@ -736,21 +736,7 @@ final public class PetrinetHandler {
 
 			Transition t = (Transition) transition;
 
-			IRenew rnw;
-
-			if (renews.equals(Renews.COUNT)) {
-
-				rnw = new RenewCount();
-				t.setRnw(rnw);
-
-			} else if (renews.equals(Renews.IDENTITY)) {
-
-				rnw = new RenewId();
-				t.setRnw(rnw);
-
-			} else {
-				exception("setRnw - renews is not correct");
-			}
+			t.setRnw(renews);
 
 		}
 

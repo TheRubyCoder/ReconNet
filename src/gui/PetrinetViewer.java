@@ -30,7 +30,9 @@ import org.apache.commons.collections15.Transformer;
 
 import petrinet.Arc;
 import petrinet.INode;
+import petrinet.IRenew;
 import petrinet.Place;
+import petrinet.Renews;
 import petrinet.Transition;
 import transformation.TransformationComponent;
 import edu.uci.ics.jung.algorithms.layout.Layout;
@@ -425,6 +427,23 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 						transition, data);
 			}
 			smartRepaint();
+		} catch (Exception e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
+	}
+
+	public void setRenew(Transition transition, String renew) {
+		
+		IRenew actualRenew = Renews.fromString(renew); 
+		try {
+			if (isN()) {
+				EngineAdapter.getPetrinetManipulation().setRnw(getCurrentId(),
+						transition, actualRenew);
+			} else {
+				EngineAdapter.getRuleManipulation().setRnw(getCurrentId(),
+						transition, actualRenew);
+			}
 		} catch (Exception e) {
 			PopUp.popError(e);
 			e.printStackTrace();

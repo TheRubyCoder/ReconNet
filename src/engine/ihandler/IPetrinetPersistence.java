@@ -5,6 +5,7 @@ import java.awt.geom.Point2D;
 
 import petrinet.Arc;
 import petrinet.INode;
+import petrinet.IRenew;
 import petrinet.Renews;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
@@ -163,7 +164,7 @@ public interface IPetrinetPersistence {
 	 * @throws EngineException 
 	 * 
 	 */
-	public void setRnw(int id, INode transition, Renews renews) throws EngineException;
+	public void setRnw(int id, INode transition, IRenew renews) throws EngineException;
 	
 	/**
 	 * 

@@ -4,16 +4,30 @@ import static gui.Style.ATTRIBUTE_PANE_BORDER;
 import static gui.Style.ATTRIBUTE_PANE_DIMENSION;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.GridLayout;
+import java.util.Arrays;
+import java.util.EventObject;
+import java.util.LinkedList;
+import java.util.List;
 
+import javax.swing.CellEditor;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
+
+import com.puppycrawl.tools.checkstyle.gui.AbstractCellEditor;
 
 import petrinet.Arc;
 import petrinet.INode;
@@ -22,11 +36,14 @@ import petrinet.Place;
 import petrinet.RenewCount;
 import petrinet.RenewId;
 import petrinet.RenewMap;
+import petrinet.Renews;
 import petrinet.Transition;
+import sun.rmi.runtime.NewThreadAction;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.TransitionAttribute;
 import engine.handler.NodeTypeEnum;
 import exceptions.EngineException;
+import exceptions.ShowAsInfoException;
 
 /** Singleton class that represents the attribute chart at the middle top */
 public class AttributePane {
@@ -98,20 +115,32 @@ public class AttributePane {
 				String name = transitionAttribute.getTname();
 				String tlb = transitionAttribute.getTLB();
 				IRenew renew = transitionAttribute.getRNW();
-				String renewString = "unbekannt";
-				if (renew instanceof RenewCount) {
-					renewString = "count";
-				} else if (renew instanceof RenewId) {
-					renewString = "id";
-				} else if (renew instanceof RenewMap) {
-					renewString = "map: " + renew;
-				}
+				String renewString = renew.toGUIString();
 				tableModel = new TransitionTableModel(id, name, tlb,
-						renewString);
+						renewString, table);
 			}
 			tableModel.addTableModelListener(new TableListener(petrinetViewer,
 					node));
 			table.setModel(tableModel);
+
+			// Following code tries to do renew with a combo box
+			// table.setRowHeight(18);
+			// if (type == NodeTypeEnum.Transition) {
+			// JComboBox<String> comboBox = new JComboBox<String>(
+			// new String[] { "id", "toggle", "count" });
+			// comboBox.setEditable(true);
+			// TransitionTableCellRenderer<String> transitionTableCellRenderer =
+			// new TransitionTableCellRenderer<String>(
+			// comboBox, table.getCellRenderer(1, 1));
+			// TransitionTableCellEditor<String> transitionTableCellEditor = new
+			// TransitionTableCellEditor<String>(
+			// comboBox, table.getCellEditor(1, 1));
+			//
+			// table.getColumnModel().getColumn(1)
+			// .setCellRenderer(transitionTableCellRenderer);
+			// table.getColumnModel().getColumn(1)
+			// .setCellEditor(transitionTableCellEditor);
+			// }
 		} catch (EngineException e) {
 			e.printStackTrace();
 		}
@@ -129,7 +158,6 @@ public class AttributePane {
 		table.setModel(arcTableModel);
 		// table.getModel().addTableModelListener(tableListener);
 	}
-	
 
 	public void displayEmpty() {
 		DefaultTableModel defaultTableModel = new DefaultTableModel();
@@ -258,9 +286,11 @@ public class AttributePane {
 		private String[][] data = { { "Id", "" }, { "Name", "" },
 				{ "Label", "" }, { "Renew", "" } };
 
-		/** Initiates the table with actual data for id, name, laben and renew */
+		/**
+		 * Initiates the table with actual data for id, name, laben and renew
+		 */
 		public TransitionTableModel(String id, String name, String label,
-				String renew) {
+				String renew, JTable table) {
 			data[0][1] = id;
 			data[1][1] = name;
 			data[2][1] = label;
@@ -271,6 +301,47 @@ public class AttributePane {
 		@Override
 		protected String[][] getData() {
 			return data;
+		}
+
+		@Override
+		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+			System.out.println(""+rowIndex+" "+columnIndex);
+			// renew changed
+			if (rowIndex == 3 && columnIndex == 1) {
+				String newTlb = renewValid(data[2][1], (String) aValue);
+				if (newTlb != null) {
+					super.setValueAt(aValue, rowIndex, columnIndex);
+					super.setValueAt(newTlb, 2, 1);
+				}
+			} else {
+				super.setValueAt(aValue, rowIndex, columnIndex);
+			}
+		}
+
+		private String renewValid(String tlb, String renew) {
+			System.out.println(tlb);
+			System.out.println(renew);
+			IRenew actualRenew = Renews.fromString(renew);
+			boolean valid = actualRenew.isTlbValid(tlb);
+			if (valid) {
+				return tlb;
+			} else {
+				String newTlb = tlb;
+				while (!actualRenew.isTlbValid(newTlb)) {
+					String inputDialog = JOptionPane
+							.showInputDialog("\""
+									+ newTlb
+									+ "\" passt nicht zum Renew \""
+									+ renew
+									+ "\". Bitte geben sie ein neues Label ein, das zum neuen Renew passt:");
+					if (inputDialog != null) {
+						newTlb = inputDialog;
+					} else {
+						return null;
+					}
+				}
+				return newTlb;
+			}
 		}
 	}
 
@@ -298,6 +369,75 @@ public class AttributePane {
 			return data;
 		}
 
+	}
+
+	/**
+	 * Renders a combo box for cell "renew" and redirects to the
+	 * <tt>defaultCellRenderer</tt>, which must be set before, in any other
+	 * cases.
+	 * 
+	 * @see TransitionTableCellRenderer#setDefaultCellEditor(TableCellEditor)
+	 */
+	private static class TransitionTableCellRenderer<E> implements
+			TableCellRenderer {
+
+		public TransitionTableCellRenderer(JComboBox<E> comboBox,
+				TableCellRenderer tableCellRenderer) {
+			this.comboBox = comboBox;
+			this.defaultCellRenderer = tableCellRenderer;
+		}
+
+		private TableCellRenderer defaultCellRenderer;
+
+		private JComboBox<E> comboBox;
+
+		@Override
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean isSelected, boolean hasFocus, int row,
+				int column) {
+			if (row == 3 && column == 1) {
+				comboBox.setSelectedItem(value);
+				return comboBox;
+			} else {
+				return defaultCellRenderer.getTableCellRendererComponent(table,
+						value, isSelected, hasFocus, row, column);
+			}
+		}
+	}
+
+	private static class TransitionTableCellEditor<E> extends DefaultCellEditor {
+
+		private TableCellEditor defaultCellEditor;
+
+		private JComboBox<E> comboBox;
+
+		private boolean lastEditWasRenew;
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -6542922947041763283L;
+
+		public TransitionTableCellEditor(JComboBox<E> comboBox,
+				TableCellEditor defaultCellEditor) {
+			super(comboBox);
+			this.comboBox = comboBox;
+			this.defaultCellEditor = defaultCellEditor;
+		}
+
+		@Override
+		public Component getTableCellEditorComponent(JTable table,
+				Object value, boolean isSelected, int row, int column) {
+			if (row == 3 && column == 1) {
+				lastEditWasRenew = true;
+				return super.getTableCellEditorComponent(table, value,
+						isSelected, row, column);
+			} else {
+				lastEditWasRenew = false;
+				return defaultCellEditor.getTableCellEditorComponent(table,
+						value, isSelected, row, column);
+			}
+		}
 	}
 
 	/** Class for Tablelistener to make Userchanges possible */
@@ -363,7 +503,7 @@ public class AttributePane {
 					} else if (attribute.equals("Label")) {
 						petrinetViewer.setTlb(transition, data);
 					} else if (attribute.equals("Renew")) {
-						// engine needs setRenew
+						petrinetViewer.setRenew(transition, data);
 					}
 				}
 			}
