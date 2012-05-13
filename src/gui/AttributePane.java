@@ -305,7 +305,6 @@ public class AttributePane {
 
 		@Override
 		public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-			System.out.println(""+rowIndex+" "+columnIndex);
 			// renew changed
 			if (rowIndex == 3 && columnIndex == 1) {
 				String newTlb = renewValid(data[2][1], (String) aValue);
@@ -313,14 +312,55 @@ public class AttributePane {
 					super.setValueAt(aValue, rowIndex, columnIndex);
 					super.setValueAt(newTlb, 2, 1);
 				}
+				// tlb changed
+			} else if (rowIndex == 2 && columnIndex == 1) {
+				String newRenew = tlbValid((String) aValue, data[3][1]);
+				if (newRenew != null) {
+					super.setValueAt(newRenew, 3, 1);
+					super.setValueAt(aValue, rowIndex, columnIndex);
+				}
+
 			} else {
 				super.setValueAt(aValue, rowIndex, columnIndex);
 			}
 		}
 
+		/**
+		 * Checks whether the newly set tlb is valid to the assigned renew.
+		 * Gives the user the chance to select a new renew
+		 */
+		private String tlbValid(String tlb, String renew) {
+			IRenew actualRenew = Renews.fromString(renew);
+			boolean valid = actualRenew.isTlbValid(tlb);
+			if (valid) {
+				return renew;
+			} else {
+				IRenew newRenew = actualRenew;
+				while (!newRenew.isTlbValid(tlb)) {
+					String[] options = new String[] { "id", "toggle", "count", "abbrechen" };
+					int pickedIndex = JOptionPane.showOptionDialog(null, "Das gewählte label \"" + tlb
+							+ "\" passt nicht zum aktuellen Renew \"" + tlb
+							+ newRenew.toGUIString()
+							+ "\". Wenn sie das Label behalten möchten, wählen sie ein passendes Renew:",
+							"Neues Renew wählen",
+							JOptionPane.INFORMATION_MESSAGE,
+							JOptionPane.INFORMATION_MESSAGE, null,
+							options, "id");
+					if (0 < pickedIndex && pickedIndex < 4) {
+						newRenew = Renews.fromString(options[pickedIndex]);
+					} else {
+						return null;
+					}
+				}
+				return newRenew.toGUIString();
+			}
+		}
+
+		/**
+		 * Checks whether the newly set renew is valid to the assigned tlb.
+		 * Gives the user the chance to insert a new tlb
+		 */
 		private String renewValid(String tlb, String renew) {
-			System.out.println(tlb);
-			System.out.println(renew);
 			IRenew actualRenew = Renews.fromString(renew);
 			boolean valid = actualRenew.isTlbValid(tlb);
 			if (valid) {
@@ -371,74 +411,74 @@ public class AttributePane {
 
 	}
 
-	/**
-	 * Renders a combo box for cell "renew" and redirects to the
-	 * <tt>defaultCellRenderer</tt>, which must be set before, in any other
-	 * cases.
-	 * 
-	 * @see TransitionTableCellRenderer#setDefaultCellEditor(TableCellEditor)
-	 */
-	private static class TransitionTableCellRenderer<E> implements
-			TableCellRenderer {
-
-		public TransitionTableCellRenderer(JComboBox<E> comboBox,
-				TableCellRenderer tableCellRenderer) {
-			this.comboBox = comboBox;
-			this.defaultCellRenderer = tableCellRenderer;
-		}
-
-		private TableCellRenderer defaultCellRenderer;
-
-		private JComboBox<E> comboBox;
-
-		@Override
-		public Component getTableCellRendererComponent(JTable table,
-				Object value, boolean isSelected, boolean hasFocus, int row,
-				int column) {
-			if (row == 3 && column == 1) {
-				comboBox.setSelectedItem(value);
-				return comboBox;
-			} else {
-				return defaultCellRenderer.getTableCellRendererComponent(table,
-						value, isSelected, hasFocus, row, column);
-			}
-		}
-	}
-
-	private static class TransitionTableCellEditor<E> extends DefaultCellEditor {
-
-		private TableCellEditor defaultCellEditor;
-
-		private JComboBox<E> comboBox;
-
-		private boolean lastEditWasRenew;
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -6542922947041763283L;
-
-		public TransitionTableCellEditor(JComboBox<E> comboBox,
-				TableCellEditor defaultCellEditor) {
-			super(comboBox);
-			this.comboBox = comboBox;
-			this.defaultCellEditor = defaultCellEditor;
-		}
-
-		@Override
-		public Component getTableCellEditorComponent(JTable table,
-				Object value, boolean isSelected, int row, int column) {
-			if (row == 3 && column == 1) {
-				lastEditWasRenew = true;
-				return super.getTableCellEditorComponent(table, value,
-						isSelected, row, column);
-			} else {
-				lastEditWasRenew = false;
-				return defaultCellEditor.getTableCellEditorComponent(table,
-						value, isSelected, row, column);
-			}
-		}
-	}
+//	/**
+//	 * Renders a combo box for cell "renew" and redirects to the
+//	 * <tt>defaultCellRenderer</tt>, which must be set before, in any other
+//	 * cases.
+//	 * 
+//	 * @see TransitionTableCellRenderer#setDefaultCellEditor(TableCellEditor)
+//	 */
+//	private static class TransitionTableCellRenderer<E> implements
+//			TableCellRenderer {
+//
+//		public TransitionTableCellRenderer(JComboBox<E> comboBox,
+//				TableCellRenderer tableCellRenderer) {
+//			this.comboBox = comboBox;
+//			this.defaultCellRenderer = tableCellRenderer;
+//		}
+//
+//		private TableCellRenderer defaultCellRenderer;
+//
+//		private JComboBox<E> comboBox;
+//
+//		@Override
+//		public Component getTableCellRendererComponent(JTable table,
+//				Object value, boolean isSelected, boolean hasFocus, int row,
+//				int column) {
+//			if (row == 3 && column == 1) {
+//				comboBox.setSelectedItem(value);
+//				return comboBox;
+//			} else {
+//				return defaultCellRenderer.getTableCellRendererComponent(table,
+//						value, isSelected, hasFocus, row, column);
+//			}
+//		}
+//	}
+//
+//	private static class TransitionTableCellEditor<E> extends DefaultCellEditor {
+//
+//		private TableCellEditor defaultCellEditor;
+//
+//		private JComboBox<E> comboBox;
+//
+//		private boolean lastEditWasRenew;
+//
+//		/**
+//		 * 
+//		 */
+//		private static final long serialVersionUID = -6542922947041763283L;
+//
+//		public TransitionTableCellEditor(JComboBox<E> comboBox,
+//				TableCellEditor defaultCellEditor) {
+//			super(comboBox);
+//			this.comboBox = comboBox;
+//			this.defaultCellEditor = defaultCellEditor;
+//		}
+//
+//		@Override
+//		public Component getTableCellEditorComponent(JTable table,
+//				Object value, boolean isSelected, int row, int column) {
+//			if (row == 3 && column == 1) {
+//				lastEditWasRenew = true;
+//				return super.getTableCellEditorComponent(table, value,
+//						isSelected, row, column);
+//			} else {
+//				lastEditWasRenew = false;
+//				return defaultCellEditor.getTableCellEditorComponent(table,
+//						value, isSelected, row, column);
+//			}
+//		}
+//	}
 
 	/** Class for Tablelistener to make Userchanges possible */
 	private static class TableListener implements TableModelListener {
