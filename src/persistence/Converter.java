@@ -10,6 +10,7 @@ import java.util.Set;
 
 import petrinet.INode;
 import petrinet.Petrinet;
+import petrinet.Renews;
 import transformation.ITransformation;
 import transformation.Rule;
 import transformation.TransformationComponent;
@@ -103,7 +104,7 @@ public class Converter {
 			transi.setTransitionLabel(label);
 
 			TransitionRenew rnw = new TransitionRenew();
-			rnw.setText(t.getRnw().renew(label.getText()));
+			rnw.setText(t.getRnw().toGUIString());
 
 			transi.setTransitionRenew(rnw);
 
@@ -233,6 +234,9 @@ public class Converter {
 						.getTransitionName().getText());
 				handler.setTlb(petrinetID, realTransition, trans
 						.getTransitionLabel().getText());
+				handler.setRnw(petrinetID, realTransition,
+						Renews.fromString(trans.getTransitionRenew().getText()));
+
 				if (placesAndTransis.containsKey(trans.getId()))
 					System.out.println("AHHHHHH!");
 				placesAndTransis.put(trans.getId(), realTransition);
@@ -495,6 +499,8 @@ public class Converter {
 					.getTransitionLabel().getText());
 			handler.setTname(id, createdTransition, transition
 					.getTransitionName().getText());
+			handler.setRnw(id, createdTransition, Renews.fromString(transition
+					.getTransitionRenew().getText()));
 			if (toAddto == RuleNet.L) {
 				idToINodeInL.put(transition.id, createdTransition);
 			} else if (toAddto == RuleNet.K) {
