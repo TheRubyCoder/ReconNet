@@ -1,7 +1,7 @@
 package engine.data;
 
-import engine.attribute.ColorGenerator;
 import transformation.Rule;
+import engine.attribute.ColorGenerator;
 
 /**
  * This Class is a Datacontainer for a Rule and all Petrinet in this Rule.

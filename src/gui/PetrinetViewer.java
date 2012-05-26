@@ -1,16 +1,15 @@
 package gui;
 
-import static gui.Style.FONT_COLOR_DARK;
+import static gui.Style.FACTOR_SELECTED_NODE;
 import static gui.Style.FONT_COLOR_BRIGHT;
+import static gui.Style.FONT_COLOR_DARK;
 import static gui.Style.NODE_BORDER_COLOR;
 import static gui.Style.PLACE_HEIGHT;
 import static gui.Style.PLACE_WIDTH;
 import static gui.Style.TRANSITION_SIZE;
-import static gui.Style.FACTOR_SELECTED_NODE;
 
 import java.awt.Color;
 import java.awt.GradientPaint;
-import java.awt.MenuItem;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Shape;
@@ -35,7 +34,6 @@ import petrinet.IRenew;
 import petrinet.Place;
 import petrinet.Renews;
 import petrinet.Transition;
-import transformation.TransformationComponent;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.RenderContext;

@@ -3,13 +3,9 @@ package engine.handler.petrinet;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
 
 import persistence.Persistence;
 import petrinet.Arc;
@@ -19,13 +15,8 @@ import petrinet.IRenew;
 import petrinet.Petrinet;
 import petrinet.PetrinetComponent;
 import petrinet.Place;
-import petrinet.RenewCount;
-import petrinet.RenewId;
-import petrinet.Renews;
 import petrinet.Transition;
-import sun.awt.image.ImageWatched.Link;
 
-import com.sun.corba.se.impl.interceptors.PINoOpHandlerImpl;
 import com.sun.istack.NotNull;
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;

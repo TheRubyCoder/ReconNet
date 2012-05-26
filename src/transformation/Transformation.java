@@ -5,8 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import exceptions.EngineException;
-
 import petrinet.Arc;
 import petrinet.ElementType;
 import petrinet.INode;
@@ -14,6 +12,7 @@ import petrinet.IRenew;
 import petrinet.Petrinet;
 import petrinet.Place;
 import petrinet.Transition;
+import exceptions.EngineException;
 
 /**
  * An Transformation on a Petrinet<br/>

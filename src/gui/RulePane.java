@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 
 import petrinet.Arc;
 import petrinet.INode;
-import transformation.ITransformation;
 import transformation.TransformationComponent;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import engine.handler.RuleNet;

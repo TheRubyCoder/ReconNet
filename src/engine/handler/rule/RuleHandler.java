@@ -11,9 +11,6 @@ import petrinet.INode;
 import petrinet.IRenew;
 import petrinet.Petrinet;
 import petrinet.Place;
-import petrinet.RenewCount;
-import petrinet.RenewId;
-import petrinet.Renews;
 import petrinet.Transition;
 import transformation.Rule;
 import transformation.TransformationComponent;
@@ -116,12 +113,7 @@ final public class RuleHandler {
 					// create new Arc
 					Arc arc = petrinet.createArc("undefined", fromTransition,
 							toPlace);
-
-					// ***************************
-					// TODO: ChangedPetrinetResult
-					// discuss: what to do
-					// ***************************
-
+					
 					// call Jung
 					try {
 						lJungData.createArc(arc, fromTransition, toPlace);
@@ -212,11 +204,6 @@ final public class RuleHandler {
 					Arc arc = petrinet.createArc("undefined", fromTransition,
 							toPlace);
 
-					// ***************************
-					// TODO: ChangedPetrinetResult
-					// discuss: what to do
-					// ***************************
-
 					// call Jung
 					try {
 						kJungData.createArc(arc, fromTransition, toPlace);
@@ -300,11 +287,6 @@ final public class RuleHandler {
 					// create new Arc
 					Arc arc = petrinet.createArc("undefined", fromTransition,
 							toPlace);
-
-					// ***************************
-					// TODO: ChangedPetrinetResult
-					// discuss: what to do
-					// ***************************
 
 					// call Jung
 					try {
@@ -779,7 +761,6 @@ final public class RuleHandler {
 			String tname = t.getName();
 			IRenew rnw = t.getRnw();
 
-			// TODO : change default boolean
 			boolean isActivated = t.isActivated();
 
 			TransitionAttribute transitionAttribute = new TransitionAttribute(

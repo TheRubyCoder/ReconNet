@@ -4,46 +4,28 @@ import static gui.Style.ATTRIBUTE_PANE_BORDER;
 import static gui.Style.ATTRIBUTE_PANE_DIMENSION;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.GridLayout;
-import java.util.Arrays;
-import java.util.EventObject;
-import java.util.LinkedList;
-import java.util.List;
 
-import javax.swing.CellEditor;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
-
-import com.puppycrawl.tools.checkstyle.gui.AbstractCellEditor;
 
 import petrinet.Arc;
 import petrinet.INode;
 import petrinet.IRenew;
 import petrinet.Place;
-import petrinet.RenewCount;
-import petrinet.RenewId;
-import petrinet.RenewMap;
 import petrinet.Renews;
 import petrinet.Transition;
-import sun.rmi.runtime.NewThreadAction;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.TransitionAttribute;
 import engine.handler.NodeTypeEnum;
 import exceptions.EngineException;
-import exceptions.ShowAsInfoException;
 
 /** Singleton class that represents the attribute chart at the middle top */
 public class AttributePane {
