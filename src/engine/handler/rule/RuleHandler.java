@@ -115,7 +115,7 @@ final public class RuleHandler {
 					// create new Arc
 					Arc arc = petrinet.createArc("undefined", fromTransition,
 							toPlace);
-					
+
 					// call Jung
 					try {
 						lJungData.createArc(arc, fromTransition, toPlace);
@@ -376,8 +376,7 @@ final public class RuleHandler {
 					}
 				}
 
-				setPlaceColor(id, newPlace, ruleData.getColorGenerator()
-						.next());
+				setPlaceColor(id, newPlace, ruleData.getColorGenerator().next());
 
 				return newPlace;
 
@@ -408,8 +407,7 @@ final public class RuleHandler {
 					}
 				}
 
-				setPlaceColor(id, newPlace, ruleData.getColorGenerator()
-						.next());
+				setPlaceColor(id, newPlace, ruleData.getColorGenerator().next());
 				return newPlace;
 
 			} else if (net.equals(RuleNet.R)) {
@@ -436,8 +434,7 @@ final public class RuleHandler {
 						exception("createPlace - can not create Place in K");
 					}
 				}
-				setPlaceColor(id, newPlace, ruleData.getColorGenerator()
-						.next());
+				setPlaceColor(id, newPlace, ruleData.getColorGenerator().next());
 
 				return newPlace;
 
@@ -808,8 +805,8 @@ final public class RuleHandler {
 		if (ruleData == null) {
 			exception("moveNode - id of the rule is wrong");
 		} else {
-			//get Position
-			
+			// get Position
+
 			ruleData.moveNodeRelative(node, relativePosition);
 		}
 
@@ -981,61 +978,18 @@ final public class RuleHandler {
 			if (this.getNodeType(place).equals(NodeTypeEnum.Place)) {
 				List<INode> mappings = TransformationComponent
 						.getTransformation().getMappings(rule, place);
-				RuleNet ruleNet = RuleNet.L;
-				for (INode accordingPlace : mappings) {
-					switch (ruleNet) {
-					case L:
-						if (accordingPlace != null) {
-							lJungData.setPlaceColor((Place) accordingPlace,
-									color);
-						}
-						ruleNet = RuleNet.K;
-						break;
-					case K:
-						if (accordingPlace != null) {
-							kJungData.setPlaceColor((Place) accordingPlace,
-									color);
-						}
-						ruleNet = RuleNet.R;
-						break;
-					case R:
-						if (accordingPlace != null) {
-							rJungData.setPlaceColor((Place) accordingPlace,
-									color);
-						}
-					}
+				INode nodeInL = mappings.get(0);
+				INode nodeInK = mappings.get(1);
+				INode nodeInR = mappings.get(2);
+				if (nodeInL != null) {
+					lJungData.setPlaceColor((Place) nodeInL, color);
 				}
-				// Place p = (Place) place;
-				//
-				// // Synchronize Places in the other parts of the rules
-				// RuleNet net = getContainingNet(id, place);
-				// if (net.equals(RuleNet.L)) {
-				// lJungData.setPlaceColor(p, color);
-				// Place placeInK = (Place) rule.fromLtoK(p);
-				// Place placeInR = (Place) rule.fromKtoR(p);
-				// kJungData.setPlaceColor(placeInK, color);
-				// if (placeInR != null) {
-				// rJungData.setPlaceColor(placeInR, color);
-				// }
-				// } else if (net.equals(RuleNet.K)) {
-				// kJungData.setPlaceColor(p, color);
-				// Place placeInL = (Place) rule.fromKtoL(p);
-				// Place placeInR = (Place) rule.fromKtoR(p);
-				// if (placeInL != null) {
-				// lJungData.setPlaceColor(placeInL, color);
-				// }
-				// if (placeInR != null) {
-				// rJungData.setPlaceColor(placeInR, color);
-				// }
-				// } else if (net.equals(RuleNet.R)) {
-				// rJungData.setPlaceColor(p, color);
-				// Place placeInK = (Place) rule.fromRtoK(p);
-				// Place placeInL = (Place) rule.fromKtoL(placeInK);
-				// kJungData.setPlaceColor(placeInK, color);
-				// if (placeInL != null) {
-				// lJungData.setPlaceColor(placeInL, color);
-				// }
-				// }
+				if (nodeInK != null) {
+					kJungData.setPlaceColor((Place) nodeInK, color);
+				}
+				if (nodeInR != null) {
+					rJungData.setPlaceColor((Place) nodeInR, color);
+				}
 			}
 		}
 	}
@@ -1162,7 +1116,6 @@ final public class RuleHandler {
 			if (this.getNodeType(transition).equals(NodeTypeEnum.Transition)) {
 				Transition t = (Transition) transition;
 
-				
 				t.setRnw(renew);
 
 				// Synchronize Transitions in the other parts of the rules

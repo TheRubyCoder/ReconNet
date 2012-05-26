@@ -581,7 +581,6 @@ public class Rule {
 		INode inK = null;
 		INode inR = null;
 		if (node != null) {
-			fromKtoR(null);
 			if (getL().getAllPlaces().contains(node)
 					|| getL().getAllTransitions().contains(node)) {
 				inL = node;
@@ -596,7 +595,7 @@ public class Rule {
 					|| getR().getAllTransitions().contains(node)) {
 				inR = node;
 				inK = fromRtoK(inR);
-				inL = fromLtoK(inL);
+				inL = fromKtoL(inK);
 			} else {
 				return null;
 			}
