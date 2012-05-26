@@ -266,5 +266,20 @@ public interface IRuleManipulation {
 	 * @return Enum composed of Place, Transition
 	 */
 	public NodeTypeEnum getNodeType(@NotNull INode node);
+
+	/**
+	 * Moves all petrinets of the rule.
+	 * @param id ID of rule
+	 * @param relativePosition
+	 * @see {@link IPetrinetManipulation#moveGraph(int, Point2D)}
+	 */
+	public void moveGraph(int id, Point2D relativePosition) throws EngineException;
+
+	/**
+	 * Moves all petrinets of the rule into vision.
+	 * @see {@link IPetrinetManipulation#moveGraphIntoVision(int)}
+	 * @param currentId
+	 */
+	public void moveGraphIntoVision(int currentId);
 	
 }

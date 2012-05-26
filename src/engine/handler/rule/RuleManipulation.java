@@ -237,9 +237,17 @@ public class RuleManipulation implements IRuleManipulation {
 
 	@Override
 	public void closeRule(int id) throws EngineException {
-		
 		ruleManipulationBackend.closeRule(id);
-		
+	}
+
+	@Override
+	public void moveGraph(int id, Point2D relativePosition){
+		ruleManipulationBackend.moveGraph(id, relativePosition);
+	}
+
+	@Override
+	public void moveGraphIntoVision(int id) {
+		ruleManipulationBackend.moveGraphIntoVision(id);
 	}
 
 }

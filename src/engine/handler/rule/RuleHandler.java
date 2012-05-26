@@ -27,6 +27,7 @@ import engine.data.JungData;
 import engine.data.RuleData;
 import engine.handler.NodeTypeEnum;
 import engine.handler.RuleNet;
+import engine.ihandler.IRuleManipulation;
 import engine.session.SessionManager;
 import exceptions.EngineException;
 
@@ -1438,6 +1439,29 @@ final public class RuleHandler {
 			return RuleNet.R;
 		}
 		return null;
+	}
+
+	/**
+	 * @see {@link IRuleManipulation#moveGraph(int, Point2D)}
+	 * @param id
+	 * @param relativePosition
+	 */
+	public void moveGraph(int id, Point2D relativePosition) {
+		RuleData ruleData = sessionManager.getRuleData(id);
+		ruleData.getLJungData().moveGraph(relativePosition);
+		ruleData.getKJungData().moveGraph(relativePosition);
+		ruleData.getRJungData().moveGraph(relativePosition);
+	}
+
+	/**
+	 * @see {@link IRuleManipulation#moveGraphIntoVision(int)}
+	 * @param id
+	 */
+	public void moveGraphIntoVision(int id) {
+		RuleData ruleData = sessionManager.getRuleData(id);
+		ruleData.getLJungData().moveGraphIntoVision();
+		ruleData.getKJungData().moveGraphIntoVision();
+		ruleData.getRJungData().moveGraphIntoVision();
 	}
 
 }

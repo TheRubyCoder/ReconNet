@@ -483,12 +483,29 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 	}
 
+	public void moveGraph(int id, Point2D relativePosition) {
+		try {
+			if (isN()) {
+				EngineAdapter.getPetrinetManipulation().moveGraph(id,
+						relativePosition);
+			} else {
+				EngineAdapter.getRuleManipulation().moveGraph(id,
+						relativePosition);
+			}
+			smartRepaint();
+		} catch (Exception e) {
+			PopUp.popError(e);
+		}
+	}
+
 	public void moveIntoVision() {
 		try {
 			if (isN()) {
 				EngineAdapter.getPetrinetManipulation().moveGraphIntoVision(
 						getCurrentId());
 			} else {
+				EngineAdapter.getRuleManipulation().moveGraphIntoVision(
+						getCurrentId());
 
 			}
 			smartRepaint();
@@ -722,7 +739,7 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 			// left-click TRANSITION: etc...
 			if (mode == EditorMode.PICK) {
 				if (edge != null) {
-					//edge clicked
+					// edge clicked
 					AttributePane.getInstance().displayEdge(edge,
 							petrinetViewer);
 					petrinetViewer.currentSelectedNode = null;
@@ -732,7 +749,7 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 					}
 
 				} else if (vertex != null) {
-					//vertex clicked
+					// vertex clicked
 					AttributePane.getInstance().displayNode(vertex,
 							petrinetViewer);
 					petrinetViewer.currentSelectedNode = vertex;
@@ -741,12 +758,13 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 								.show(petrinetViewer, e.getX(), e.getY());
 					}
 				} else {
-					//nothing clicked
+					// nothing clicked
 					if (e.isMetaDown()) {
-						PetrinetGraphPopUpMenu popUp = new PetrinetGraphPopUpMenu(petrinetViewer);
+						PetrinetGraphPopUpMenu popUp = new PetrinetGraphPopUpMenu(
+								petrinetViewer);
 						popUp.show(petrinetViewer, e.getX(), e.getY());
 					} else {
-						//nothing
+						// nothing
 					}
 					petrinetViewer.currentSelectedNode = null;
 					AttributePane.getInstance().displayEmpty();
@@ -804,22 +822,11 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 
 			if (!oldPoint.equals(newPoint)) {
 				if (dragMode == DragMode.SCROLL) {
-					/*
-					 * Scrolling is realized by zooming out of old position and
-					 * zooming in to new position
-					 */
-					try {
-						EngineAdapter.getPetrinetManipulation().moveGraph(
-								petrinetViewer.getCurrentId(),
-								new Point((int) (newPoint.getX() - oldPoint
-										.getX()),
-										(int) (newPoint.getY() - oldPoint
-												.getY())));
-						petrinetViewer.repaint();
-					} catch (EngineException e1) {
-						PopUp.popError(e1);
-						e1.printStackTrace();
-					}
+					petrinetViewer.moveGraph(petrinetViewer.getCurrentId(),
+							new Point(
+									(int) (newPoint.getX() - oldPoint.getX()),
+									(int) (newPoint.getY() - oldPoint.getY())));
+					petrinetViewer.repaint();
 					// petrinetViewer.scale(0.5f, newPoint);
 					// petrinetViewer.scale(2f, oldPoint);
 				} else if (dragMode == DragMode.MOVENODE) {

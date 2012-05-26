@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import petrinet.Arc;
@@ -18,6 +19,7 @@ import petrinet.Transition;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.graph.DirectedGraph;
 import engine.attribute.NodeLayoutAttribute;
+import engine.ihandler.IPetrinetManipulation;
 
 /**
  * @author Mathias Blumreiter
@@ -257,6 +259,53 @@ final public class JungData {
 	}
 
 	/**
+	 * Returns the addition of two points (vectors)
+	 * 
+	 * @param base
+	 * @param move
+	 * @return
+	 */
+	private Point2D addPoints(Point2D base, Point2D move) {
+		return new Point2D.Double(base.getX() + move.getX(), base.getY()
+				+ move.getY());
+	}
+
+	/**
+	 * Moves the graph.
+	 * 
+	 * @see {@link IPetrinetManipulation#moveGraph(int, Point2D)}
+	 * @param relativPosition
+	 */
+	public void moveGraph(Point2D relativPosition) {
+		Set<Entry<INode, NodeLayoutAttribute>> entrySet = getNodeLayoutAttributes()
+				.entrySet();
+		for (Entry<INode, NodeLayoutAttribute> entry : entrySet) {
+			INode node = entry.getKey();
+			Point2D currentPosition = entry.getValue().getCoordinate();
+			moveNodeWithoutPositionCheck(node,
+					addPoints(currentPosition, relativPosition));
+		}
+	}
+
+	/**
+	 * @see {@link IPetrinetManipulation#moveGraphIntoVision(int)}
+	 */
+	public void moveGraphIntoVision() {
+		// find smallest x and y
+		double smallestX = Double.MAX_VALUE;
+		double smallestY = Double.MAX_VALUE;
+		for (NodeLayoutAttribute nodeLayoutAttribute : getNodeLayoutAttributes().values()) {
+			double currentX = nodeLayoutAttribute.getCoordinate().getX();
+			smallestX = smallestX < currentX ? smallestX : currentX;
+			double currentY = nodeLayoutAttribute.getCoordinate().getY();
+			smallestY = smallestY < currentY ? smallestY : currentY;
+		}
+
+		// move graph so that smalles x and y are seemingly 0
+		moveGraph(new Point2D.Double(-smallestX + 20, -smallestY + 20));
+	}
+
+	/**
 	 * Moves a INode to position while checking for collisions
 	 * 
 	 * @param node
@@ -288,12 +337,13 @@ final public class JungData {
 	 * @param coordinate
 	 *            new Position of the INode
 	 */
-	private void moveNode(INode node, Point2D coordinate, boolean checkForCollisions) {
+	private void moveNode(INode node, Point2D coordinate,
+			boolean checkForCollisions) {
 		checkINodeInvariant(node);
 		if (checkForCollisions) {
 			checkPoint2DInvariant(coordinate);
 		} else {
-			//nothing
+			// nothing
 		}
 		check(graph.containsVertex(node), "unknown node");
 
@@ -303,7 +353,7 @@ final public class JungData {
 		if (checkForCollisions) {
 			checkPoint2DLocation(coordinate, excludes);
 		} else {
-			//nothing
+			// nothing
 		}
 
 		layout.setLocation(node, coordinate);

@@ -438,18 +438,6 @@ final public class PetrinetHandler {
 		return null;
 	}
 
-	/**
-	 * Returns the addition of two points (vectors)
-	 * 
-	 * @param base
-	 * @param move
-	 * @return
-	 */
-	private Point2D addPoints(Point2D base, Point2D move) {
-		return new Point2D.Double(base.getX() + move.getX(), base.getY()
-				+ move.getY());
-	}
-
 	public void moveGraph(@NotNull int id, @NotNull Point2D relativePosition)
 			throws EngineException {
 
@@ -460,44 +448,7 @@ final public class PetrinetHandler {
 		if (petrinetData == null) {
 			exception("moveGraph - id of the Petrinet is wrong");
 		} else {
-
-			Petrinet petrinet = petrinetData.getPetrinet();
-			JungData jungData = petrinetData.getJungData();
-
-			// step 1 alles durchgehen kleinstes x,y ; groeßstes x,y
-			Map<INode, NodeLayoutAttribute> layoutMap = jungData
-					.getNodeLayoutAttributes();
-
-			// For all Places
-			Set<Place> places = petrinet.getAllPlaces();
-			for (Place p : places) {
-				NodeLayoutAttribute nodeLayoutAttribute = layoutMap.get(p);
-
-				Point2D point = addPoints(nodeLayoutAttribute.getCoordinate(),
-						relativePosition);
-
-				try {
-					jungData.moveNodeWithoutPositionCheck(p, point);
-				} catch (IllegalArgumentException e) {
-					exception("moveGraph - can not move Node");
-				}
-			}
-
-			// For all Transitions
-			Set<Transition> transitions = petrinet.getAllTransitions();
-			for (Transition t : transitions) {
-				NodeLayoutAttribute nodeLayoutAttribute = layoutMap.get(t);
-
-				Point2D point = addPoints(nodeLayoutAttribute.getCoordinate(),
-						relativePosition);
-
-				try {
-					jungData.moveNodeWithoutPositionCheck(t, point);
-				} catch (IllegalArgumentException e) {
-					exception("moveGraph - can not move Node");
-				}
-			}
-
+			petrinetData.getJungData().moveGraph(relativePosition);
 		}
 
 	}
@@ -800,23 +751,7 @@ final public class PetrinetHandler {
 	 */
 	public void moveGraphIntoVision(int id) throws EngineException {
 		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
-		System.out.println("move graph into vision");
-		// find smallest x and y
-		Collection<NodeLayoutAttribute> nodeLayouts = petrinetData
-				.getJungData().getNodeLayoutAttributes().values();
-		double smallestX = Double.MAX_VALUE;
-		double smallestY = Double.MAX_VALUE;
-		for (NodeLayoutAttribute nodeLayoutAttribute : nodeLayouts) {
-			double currentX = nodeLayoutAttribute.getCoordinate().getX();
-			smallestX = smallestX < currentX ? smallestX : currentX;
-			double currentY = nodeLayoutAttribute.getCoordinate().getY();
-			smallestY = smallestY < currentY ? smallestY : currentY;
-		}
-		System.out.println(new Point2D.Double(smallestX, smallestY));
-
-		// move graph so that smalles x and y are 0
-		moveGraph(id, new Point2D.Double(-smallestX + 20, -smallestY + 20));
-
+		petrinetData.getJungData().moveGraphIntoVision();
 	}
 
 }
