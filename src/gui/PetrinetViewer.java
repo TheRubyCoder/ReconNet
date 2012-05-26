@@ -10,6 +10,7 @@ import static gui.Style.FACTOR_SELECTED_NODE;
 
 import java.awt.Color;
 import java.awt.GradientPaint;
+import java.awt.MenuItem;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Shape;
@@ -482,11 +483,54 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 	}
 
+	public void moveIntoVision() {
+		try {
+			if (isN()) {
+				EngineAdapter.getPetrinetManipulation().moveGraphIntoVision(
+						getCurrentId());
+			} else {
+
+			}
+			smartRepaint();
+		} catch (Exception e) {
+			PopUp.popError(e);
+		}
+
+	}
+
+	private static class PetrinetGraphPopUpMenu extends JPopupMenu {
+
+		private PetrinetViewer petrinetViewer;
+
+		public PetrinetGraphPopUpMenu(PetrinetViewer petrinetViewer) {
+			this.petrinetViewer = petrinetViewer;
+			JMenuItem menuItem = new JMenuItem("Ins Sichtfeld verschieben");
+			menuItem.addActionListener(new MoveListener(petrinetViewer));
+			add(menuItem);
+		}
+
+		private static class MoveListener implements ActionListener {
+
+			private PetrinetViewer petrinetViewer;
+
+			public MoveListener(PetrinetViewer petrinetViewer) {
+				this.petrinetViewer = petrinetViewer;
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				petrinetViewer.moveIntoVision();
+			}
+
+		}
+
+	}
+
 	/**
 	 * Pop up menu that appears when a node or arc is right-clicked. It is used
-	 * for deleting
+	 * for deleting and settings colors
 	 */
-	private static class PetrinetPopUpMenu extends JPopupMenu {
+	private static class PetrinetNodePopUpMenu extends JPopupMenu {
 
 		/**
 		 * Listener for clicking on menu items<br>
@@ -568,11 +612,11 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 
 		}
 
-		private PetrinetPopUpMenu(PetrinetViewer petrinetViewer) {
+		private PetrinetNodePopUpMenu(PetrinetViewer petrinetViewer) {
 		}
 
 		/** Adds a new item to the menu for changing the color of a node */
-		static private void addColorToPopUpMenu(PetrinetPopUpMenu menu,
+		static private void addColorToPopUpMenu(PetrinetNodePopUpMenu menu,
 				String description, Color color, INode node,
 				PetrinetViewer petrinetViewer) {
 			JMenuItem item = new JMenuItem(description);
@@ -582,9 +626,10 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 			menu.add(item);
 		}
 
-		static PetrinetPopUpMenu fromNode(INode node,
+		static PetrinetNodePopUpMenu fromNode(INode node,
 				PetrinetViewer petrinetViewer) {
-			PetrinetPopUpMenu result = new PetrinetPopUpMenu(petrinetViewer);
+			PetrinetNodePopUpMenu result = new PetrinetNodePopUpMenu(
+					petrinetViewer);
 			if (petrinetViewer.isNodePlace(node)) {
 				PlaceAttribute placeAttribute = petrinetViewer
 						.getPlaceAttribute((Place) node);
@@ -617,8 +662,10 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 			return result;
 		}
 
-		static PetrinetPopUpMenu fromArc(Arc arc, PetrinetViewer petrinetViewer) {
-			PetrinetPopUpMenu result = new PetrinetPopUpMenu(petrinetViewer);
+		static PetrinetNodePopUpMenu fromArc(Arc arc,
+				PetrinetViewer petrinetViewer) {
+			PetrinetNodePopUpMenu result = new PetrinetNodePopUpMenu(
+					petrinetViewer);
 			JMenuItem jMenuItem = new JMenuItem("Pfeil [" + arc.getId()
 					+ "] löschen");
 			jMenuItem.addActionListener(DeleteListener.fromArc(arc,
@@ -675,23 +722,32 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 			// left-click TRANSITION: etc...
 			if (mode == EditorMode.PICK) {
 				if (edge != null) {
+					//edge clicked
 					AttributePane.getInstance().displayEdge(edge,
 							petrinetViewer);
 					petrinetViewer.currentSelectedNode = null;
 					if (e.isMetaDown()) {
-						PetrinetPopUpMenu.fromArc(edge, petrinetViewer).show(
-								petrinetViewer, e.getX(), e.getY());
+						PetrinetNodePopUpMenu.fromArc(edge, petrinetViewer)
+								.show(petrinetViewer, e.getX(), e.getY());
 					}
 
 				} else if (vertex != null) {
+					//vertex clicked
 					AttributePane.getInstance().displayNode(vertex,
 							petrinetViewer);
 					petrinetViewer.currentSelectedNode = vertex;
 					if (e.isMetaDown()) {
-						PetrinetPopUpMenu.fromNode(vertex, petrinetViewer)
+						PetrinetNodePopUpMenu.fromNode(vertex, petrinetViewer)
 								.show(petrinetViewer, e.getX(), e.getY());
 					}
 				} else {
+					//nothing clicked
+					if (e.isMetaDown()) {
+						PetrinetGraphPopUpMenu popUp = new PetrinetGraphPopUpMenu(petrinetViewer);
+						popUp.show(petrinetViewer, e.getX(), e.getY());
+					} else {
+						//nothing
+					}
 					petrinetViewer.currentSelectedNode = null;
 					AttributePane.getInstance().displayEmpty();
 				}
@@ -981,4 +1037,5 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 
 	}
+
 }
