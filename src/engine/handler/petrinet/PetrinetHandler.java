@@ -20,6 +20,7 @@ import petrinet.Transition;
 import com.sun.istack.NotNull;
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
+import engine.Positioning;
 import engine.attribute.ArcAttribute;
 import engine.attribute.NodeLayoutAttribute;
 import engine.attribute.PlaceAttribute;
@@ -457,42 +458,11 @@ final public class PetrinetHandler {
 
 			JungData jungData = petrinetData.getJungData();
 
-			// step 1 alles durchgehen kleinstes x,y ; groeßstes x,y
-			Map<INode, NodeLayoutAttribute> layoutMap = jungData
-					.getNodeLayoutAttributes();
-
-			NodeLayoutAttribute nla = layoutMap.get(node);
-
-			double newPointX = nla.getCoordinate().getX()
-					+ relativePosition.getX();
-			double newPointY = nla.getCoordinate().getY()
-					+ relativePosition.getY();
-
-			if (newPointX < 0 || newPointY < 0) {
-
-				double x = relativePosition.getX() - newPointX;
-				double y = relativePosition.getY() - newPointY;
-
-				Point2D point = new Point2D.Double(x, y);
-
-				try {
-					jungData.moveNodeWithPositionCheck(node, point);
-				} catch (IllegalArgumentException e) {
-					exception("moveNode - can not move Node");
-				}
-
-			} else {
-
-				Point2D point = new Point2D.Double(newPointX, newPointY);
-
-				try {
-					jungData.moveNodeWithPositionCheck(node, point);
-				} catch (IllegalArgumentException e) {
-					exception("moveNode - can not move Node");
-				}
-
-			}
-
+			jungData.moveNodeWithPositionCheck(
+					node,
+					Positioning.addPoints(
+							jungData.getNodeLayoutAttributes().get(node)
+									.getCoordinate(), relativePosition));
 		}
 
 	}
@@ -722,6 +692,14 @@ final public class PetrinetHandler {
 
 	}
 
+	/**
+	 * @see {@link IPetrinetManipulation#moveGraphIntoVision(int)}
+	 */
+	public void moveGraphIntoVision(int id) throws EngineException {
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
+		petrinetData.getJungData().moveGraphIntoVision();
+	}
+
 	private void exception(@NotNull String value) throws EngineException {
 		throw new EngineException("PetrinetHandler: " + value);
 	}
@@ -735,14 +713,6 @@ final public class PetrinetHandler {
 		if (value) {
 			exception(errorMessage);
 		}
-	}
-
-	/**
-	 * @see {@link IPetrinetManipulation#moveGraphIntoVision(int)}
-	 */
-	public void moveGraphIntoVision(int id) throws EngineException {
-		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
-		petrinetData.getJungData().moveGraphIntoVision();
 	}
 
 }

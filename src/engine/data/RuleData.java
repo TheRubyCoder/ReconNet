@@ -1,7 +1,14 @@
 package engine.data;
 
+import java.awt.geom.Point2D;
+import java.util.List;
+
+import petrinet.INode;
 import transformation.Rule;
+import transformation.TransformationComponent;
+import engine.Positioning;
 import engine.attribute.ColorGenerator;
+import exceptions.ShowAsInfoException;
 
 /**
  * This Class is a Datacontainer for a Rule and all Petrinet in this Rule.
@@ -79,7 +86,7 @@ final public class RuleData extends SessionDataAbstract {
 	public Rule getRule() {
 		return rule;
 	}
-	
+
 	/** Returns the color generator for this rule */
 	public ColorGenerator getColorGenerator() {
 		return colorGenerator;
@@ -117,5 +124,47 @@ final public class RuleData extends SessionDataAbstract {
 		if (id != other.id)
 			return false;
 		return true;
+	}
+
+	/**
+	 * Moves the <tt>node</tt> to the <tt>coordinate</tt> relativ to its current
+	 * position. Also moves all mappings in L,K,R
+	 * 
+	 * @param node
+	 * @param coordinate
+	 * @throws ShowAsInfoException
+	 *             if nodes are in the way
+	 */
+	public void moveNodeRelative(INode node, Point2D coordinate) {
+		if (!getKJungData().isCreatePossibleAt(coordinate)) {
+			throw new ShowAsInfoException("Ein Knoten ist im Weg");
+		}
+
+		List<INode> nodeMappings = TransformationComponent.getTransformation()
+				.getMappings(getRule(), node);
+		INode nodeInL = nodeMappings.get(0);
+		INode nodeInK = nodeMappings.get(1);
+		INode nodeInR = nodeMappings.get(2);
+		if (nodeInL != null) {
+			getLJungData().moveNodeWithoutPositionCheck(
+					nodeInL,
+					Positioning.addPoints(getLJungData()
+							.getNodeLayoutAttributes().get(nodeInL)
+							.getCoordinate(), coordinate));
+		}
+		if (nodeInK != null) {
+			getKJungData().moveNodeWithoutPositionCheck(
+					nodeInK,
+					Positioning.addPoints(getKJungData()
+							.getNodeLayoutAttributes().get(nodeInK)
+							.getCoordinate(), coordinate));
+		}
+		if (nodeInR != null) {
+			getRJungData().moveNodeWithoutPositionCheck(
+					nodeInR,
+					Positioning.addPoints(getRJungData()
+							.getNodeLayoutAttributes().get(nodeInR)
+							.getCoordinate(), coordinate));
+		}
 	}
 }

@@ -18,6 +18,7 @@ import petrinet.Place;
 import petrinet.Transition;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.graph.DirectedGraph;
+import engine.Positioning;
 import engine.attribute.NodeLayoutAttribute;
 import engine.ihandler.IPetrinetManipulation;
 
@@ -259,18 +260,6 @@ final public class JungData {
 	}
 
 	/**
-	 * Returns the addition of two points (vectors)
-	 * 
-	 * @param base
-	 * @param move
-	 * @return
-	 */
-	private Point2D addPoints(Point2D base, Point2D move) {
-		return new Point2D.Double(base.getX() + move.getX(), base.getY()
-				+ move.getY());
-	}
-
-	/**
 	 * Moves the graph.
 	 * 
 	 * @see {@link IPetrinetManipulation#moveGraph(int, Point2D)}
@@ -283,7 +272,7 @@ final public class JungData {
 			INode node = entry.getKey();
 			Point2D currentPosition = entry.getValue().getCoordinate();
 			moveNodeWithoutPositionCheck(node,
-					addPoints(currentPosition, relativPosition));
+					Positioning.addPoints(currentPosition, relativPosition));
 		}
 	}
 
@@ -458,8 +447,8 @@ final public class JungData {
 	 */
 	private void checkPoint2DInvariant(Point2D point) {
 		check(point instanceof Point2D, "point illegal type");
-		check(point.getX() >= 0 && point.getY() >= 0,
-				"point x or y is negative");
+//		check(point.getX() >= 0 && point.getY() >= 0,
+//				"point x or y is negative");
 	}
 
 	/**

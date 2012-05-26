@@ -15,6 +15,7 @@ import petrinet.Transition;
 import transformation.Rule;
 import transformation.TransformationComponent;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
+import engine.Positioning;
 import engine.attribute.ArcAttribute;
 import engine.attribute.NodeLayoutAttribute;
 import engine.attribute.PlaceAttribute;
@@ -27,6 +28,7 @@ import engine.handler.RuleNet;
 import engine.ihandler.IRuleManipulation;
 import engine.session.SessionManager;
 import exceptions.EngineException;
+import exceptions.ShowAsInfoException;
 
 final public class RuleHandler {
 
@@ -806,128 +808,9 @@ final public class RuleHandler {
 		if (ruleData == null) {
 			exception("moveNode - id of the rule is wrong");
 		} else {
-			Rule rule = ruleData.getRule();
-			// get all jungdata => l, k, r
-			JungData lJungData = ruleData.getLJungData();
-			JungData kJungData = ruleData.getKJungData();
-			JungData rJungData = ruleData.getRJungData();
-			if (!lJungData.isCreatePossibleAt(relativePosition)) {
-				exception("Place too close to Node in L");
-			}
-			if (!kJungData.isCreatePossibleAt(relativePosition)) {
-				exception("Place too close to Node in K");
-			}
-			if (!rJungData.isCreatePossibleAt(relativePosition)) {
-				exception("Place too close to Node in R");
-			}
-
-			Map<INode, NodeLayoutAttribute> lLayoutMap = lJungData
-					.getNodeLayoutAttributes();
-			Map<INode, NodeLayoutAttribute> kLayoutMap = kJungData
-					.getNodeLayoutAttributes();
-			Map<INode, NodeLayoutAttribute> rLayoutMap = rJungData
-					.getNodeLayoutAttributes();
-
-			RuleNet net = getContainingNet(id, node);
-			if (net.equals(RuleNet.L)) {
-				// move node in l
-				moveNodeInternal(lJungData, lLayoutMap, node, relativePosition);
-
-				// move node in k
-				INode nodeInK = rule.fromLtoK(node);
-				if (nodeInK != null) {
-					moveNodeInternal(kJungData, kLayoutMap, nodeInK,
-							relativePosition);
-
-					// move node in r
-					INode nodeInR = rule.fromKtoR(nodeInK);
-					if (nodeInR != null) {
-						moveNodeInternal(rJungData, rLayoutMap, nodeInR,
-								relativePosition);
-					}
-				}
-			}
-			if (net.equals(RuleNet.K)) {
-				// move node in l
-				INode nodeInL = rule.fromKtoL(node);
-				if (nodeInL != null) {
-					moveNodeInternal(lJungData, lLayoutMap, nodeInL,
-							relativePosition);
-				}
-				// move node in k
-				moveNodeInternal(kJungData, kLayoutMap, node, relativePosition);
-
-				// move node in r
-				INode nodeInR = rule.fromKtoR(node);
-				if (nodeInR != null) {
-					moveNodeInternal(rJungData, rLayoutMap, nodeInR,
-							relativePosition);
-				}
-			}
-			if (net.equals(RuleNet.R)) {
-				// move node in k
-				INode nodeInK = rule.fromRtoK(node);
-				if (nodeInK != null) {
-					moveNodeInternal(kJungData, kLayoutMap, nodeInK,
-							relativePosition);
-
-					// move node in l
-					INode nodeInL = rule.fromKtoL(nodeInK);
-					if (nodeInL != null) {
-						moveNodeInternal(lJungData, lLayoutMap, nodeInL,
-								relativePosition);
-					}
-				}
-				// move node in r
-				moveNodeInternal(rJungData, rLayoutMap, node, relativePosition);
-			}
-		}
-
-	}
-
-	/**
-	 * 
-	 * This is a helper method for moveNode. It calculate the new position.
-	 * 
-	 * @param jungData
-	 * @param layoutMap
-	 * @param node
-	 * @param relativePosition
-	 * @throws EngineException
-	 * 
-	 */
-	private void moveNodeInternal(JungData jungData,
-			Map<INode, NodeLayoutAttribute> layoutMap, INode node,
-			Point2D relativePosition) throws EngineException {
-
-		NodeLayoutAttribute nla = layoutMap.get(node);
-
-		double newPointX = nla.getCoordinate().getX() + relativePosition.getX();
-		double newPointY = nla.getCoordinate().getY() + relativePosition.getY();
-
-		if (newPointX < 0 || newPointY < 0) {
-
-			double x = relativePosition.getX() - newPointX;
-			double y = relativePosition.getY() - newPointY;
-
-			Point2D point = new Point2D.Double(x, y);
-
-			try {
-				jungData.moveNodeWithPositionCheck(node, point);
-			} catch (IllegalArgumentException e) {
-				exception("moveNodeInternal - error: moveNode");
-			}
-
-		} else {
-
-			Point2D point = new Point2D.Double(newPointX, newPointY);
-
-			try {
-				jungData.moveNodeWithPositionCheck(node, point);
-			} catch (IllegalArgumentException e) {
-				exception("moveNodeInternal - error: moveNode");
-			}
-
+			//get Position
+			
+			ruleData.moveNodeRelative(node, relativePosition);
 		}
 
 	}
