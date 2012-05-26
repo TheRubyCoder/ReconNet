@@ -315,12 +315,14 @@ public class AttributePane {
 				// tlb changed
 			} else if (rowIndex == 2 && columnIndex == 1) {
 				String newRenew = tlbValid((String) aValue, data[3][1]);
+				System.out.println("tlbValid = " + newRenew);
 				if (newRenew != null) {
+					System.out.println(newRenew);
 					super.setValueAt(newRenew, 3, 1);
 					super.setValueAt(aValue, rowIndex, columnIndex);
 				}
-
 			} else {
+				// anything but renew or tlb changed
 				super.setValueAt(aValue, rowIndex, columnIndex);
 			}
 		}
@@ -328,6 +330,7 @@ public class AttributePane {
 		/**
 		 * Checks whether the newly set tlb is valid to the assigned renew.
 		 * Gives the user the chance to select a new renew
+		 * @return Returns new Renew as GUI String
 		 */
 		private String tlbValid(String tlb, String renew) {
 			IRenew actualRenew = Renews.fromString(renew);
@@ -339,14 +342,15 @@ public class AttributePane {
 				while (!newRenew.isTlbValid(tlb)) {
 					String[] options = new String[] { "id", "toggle", "count", "abbrechen" };
 					int pickedIndex = JOptionPane.showOptionDialog(null, "Das gewählte label \"" + tlb
-							+ "\" passt nicht zum aktuellen Renew \"" + tlb
+							+ "\" passt nicht zum aktuellen Renew \""
 							+ newRenew.toGUIString()
 							+ "\". Wenn sie das Label behalten möchten, wählen sie ein passendes Renew:",
 							"Neues Renew wählen",
 							JOptionPane.INFORMATION_MESSAGE,
 							JOptionPane.INFORMATION_MESSAGE, null,
 							options, "id");
-					if (0 < pickedIndex && pickedIndex < 4) {
+					System.out.println("options[pickedIndex] = " + options[pickedIndex]);
+					if (0 <= pickedIndex && pickedIndex <= 2) {
 						newRenew = Renews.fromString(options[pickedIndex]);
 					} else {
 						return null;

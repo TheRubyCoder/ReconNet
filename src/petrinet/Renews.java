@@ -29,7 +29,6 @@ public final class Renews {
 	public static final IRenew TOGGLE = new RenewToggle();
 
 	public static final IRenew fromMap(Map<String, String> f) {
-
 		return new RenewMap(f);
 	}
 }
