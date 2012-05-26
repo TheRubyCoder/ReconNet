@@ -279,5 +279,11 @@ public class EngineMockupForPersistence implements IPetrinetManipulation {
 	public void printPetrinet(int id) {
 	}
 
+	@Override
+	public void moveGraphIntoVision(int id) throws EngineException {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 }

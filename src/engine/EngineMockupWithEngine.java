@@ -255,6 +255,12 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void moveGraphIntoVision(int id) throws EngineException {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
 

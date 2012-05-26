@@ -257,22 +257,54 @@ final public class JungData {
 	}
 
 	/**
-	 * Moves a INode.
+	 * Moves a INode to position while checking for collisions
 	 * 
 	 * @param node
 	 *            Node to move
 	 * @param coordinate
 	 *            new Position of the INode
 	 */
-	public void moveNode(INode node, Point2D coordinate) {
+	public void moveNodeWithPositionCheck(INode node, Point2D coordinate) {
+		moveNode(node, coordinate, true);
+	}
+
+	/**
+	 * Moves a INode to position without checking for collisions
+	 * 
+	 * @param node
+	 *            Node to move
+	 * @param coordinate
+	 *            new Position of the INode
+	 */
+	public void moveNodeWithoutPositionCheck(INode node, Point2D coordinate) {
+		moveNode(node, coordinate, false);
+	}
+
+	/**
+	 * Moves a INode to position. Can check for collisions
+	 * 
+	 * @param node
+	 *            Node to move
+	 * @param coordinate
+	 *            new Position of the INode
+	 */
+	private void moveNode(INode node, Point2D coordinate, boolean checkForCollisions) {
 		checkINodeInvariant(node);
-		checkPoint2DInvariant(coordinate);
+		if (checkForCollisions) {
+			checkPoint2DInvariant(coordinate);
+		} else {
+			//nothing
+		}
 		check(graph.containsVertex(node), "unknown node");
 
 		Set<INode> excludes = new HashSet<INode>();
 		excludes.add(node);
 
-		checkPoint2DLocation(coordinate, excludes);
+		if (checkForCollisions) {
+			checkPoint2DLocation(coordinate, excludes);
+		} else {
+			//nothing
+		}
 
 		layout.setLocation(node, coordinate);
 	}
@@ -280,18 +312,19 @@ final public class JungData {
 	/**
 	 * Removes data of elements that are no longer in the petrinet. This may be
 	 * used if the petrinet is altered from outside the engine.
+	 * 
 	 * @param petrinet
 	 */
 	public void deleteDataOfMissingElements(Petrinet petrinet) {
 		List<INode> missingNodes = new LinkedList<INode>();
 		List<Arc> missingEdges = new LinkedList<Arc>();
 		for (INode node : graph.getVertices()) {
-			if(!petrinet.getAllGraphElement().getAllNodes().contains(node)) {
+			if (!petrinet.getAllGraphElement().getAllNodes().contains(node)) {
 				missingNodes.add(node);
 			}
 		}
 		for (Arc arc : graph.getEdges()) {
-			if(!petrinet.getAllArcs().contains(arc)){
+			if (!petrinet.getAllArcs().contains(arc)) {
 				missingEdges.add(arc);
 			}
 		}

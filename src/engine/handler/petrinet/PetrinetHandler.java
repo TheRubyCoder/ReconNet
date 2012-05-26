@@ -3,8 +3,11 @@ package engine.handler.petrinet;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,7 +23,9 @@ import petrinet.RenewCount;
 import petrinet.RenewId;
 import petrinet.Renews;
 import petrinet.Transition;
+import sun.awt.image.ImageWatched.Link;
 
+import com.sun.corba.se.impl.interceptors.PINoOpHandlerImpl;
 import com.sun.istack.NotNull;
 
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
@@ -31,6 +36,7 @@ import engine.attribute.TransitionAttribute;
 import engine.data.JungData;
 import engine.data.PetrinetData;
 import engine.handler.NodeTypeEnum;
+import engine.ihandler.IPetrinetManipulation;
 import engine.session.SessionManager;
 import exceptions.EngineException;
 import exceptions.ShowAsWarningException;
@@ -432,6 +438,18 @@ final public class PetrinetHandler {
 		return null;
 	}
 
+	/**
+	 * Returns the addition of two points (vectors)
+	 * 
+	 * @param base
+	 * @param move
+	 * @return
+	 */
+	private Point2D addPoints(Point2D base, Point2D move) {
+		return new Point2D.Double(base.getX() + move.getX(), base.getY()
+				+ move.getY());
+	}
+
 	public void moveGraph(@NotNull int id, @NotNull Point2D relativePosition)
 			throws EngineException {
 
@@ -450,51 +468,16 @@ final public class PetrinetHandler {
 			Map<INode, NodeLayoutAttribute> layoutMap = jungData
 					.getNodeLayoutAttributes();
 
-			double smallestX = Double.MAX_VALUE;
-			double smallestY = Double.MAX_VALUE;
-			double biggestX = 0;
-			double biggestY = 0;
-
-			Collection<NodeLayoutAttribute> entrySet = layoutMap.values();
-
-			for (NodeLayoutAttribute n : entrySet) {
-				double x = n.getCoordinate().getX();
-				double y = n.getCoordinate().getY();
-
-				if (x < smallestX)
-					smallestX = x;
-				if (x > biggestX)
-					biggestX = x;
-
-				if (y < smallestY)
-					smallestY = y;
-				if (y > biggestY)
-					biggestY = y;
-			}
-
-			double smallestXMove = smallestX + relativePosition.getX();
-			double smallestYMove = smallestY + relativePosition.getY();
-
-			double addX = relativePosition.getX();
-			double addY = relativePosition.getY();
-
-			// Move Graph
-			if (smallestXMove < 0 || smallestYMove < 0) {
-				addX = relativePosition.getX() - smallestXMove;
-				addY = relativePosition.getY() - smallestYMove;
-			}
-
 			// For all Places
 			Set<Place> places = petrinet.getAllPlaces();
 			for (Place p : places) {
 				NodeLayoutAttribute nodeLayoutAttribute = layoutMap.get(p);
 
-				Point2D point = new Point2D.Double(addX
-						+ nodeLayoutAttribute.getCoordinate().getX(), addY
-						+ nodeLayoutAttribute.getCoordinate().getY());
+				Point2D point = addPoints(nodeLayoutAttribute.getCoordinate(),
+						relativePosition);
 
 				try {
-					jungData.moveNode(p, point);
+					jungData.moveNodeWithoutPositionCheck(p, point);
 				} catch (IllegalArgumentException e) {
 					exception("moveGraph - can not move Node");
 				}
@@ -505,12 +488,11 @@ final public class PetrinetHandler {
 			for (Transition t : transitions) {
 				NodeLayoutAttribute nodeLayoutAttribute = layoutMap.get(t);
 
-				Point2D point = new Point2D.Double(addX
-						+ nodeLayoutAttribute.getCoordinate().getX(), addY
-						+ nodeLayoutAttribute.getCoordinate().getY());
+				Point2D point = addPoints(nodeLayoutAttribute.getCoordinate(),
+						relativePosition);
 
 				try {
-					jungData.moveNode(t, point);
+					jungData.moveNodeWithoutPositionCheck(t, point);
 				} catch (IllegalArgumentException e) {
 					exception("moveGraph - can not move Node");
 				}
@@ -552,7 +534,7 @@ final public class PetrinetHandler {
 				Point2D point = new Point2D.Double(x, y);
 
 				try {
-					jungData.moveNode(node, point);
+					jungData.moveNodeWithPositionCheck(node, point);
 				} catch (IllegalArgumentException e) {
 					exception("moveNode - can not move Node");
 				}
@@ -562,7 +544,7 @@ final public class PetrinetHandler {
 				Point2D point = new Point2D.Double(newPointX, newPointY);
 
 				try {
-					jungData.moveNode(node, point);
+					jungData.moveNodeWithPositionCheck(node, point);
 				} catch (IllegalArgumentException e) {
 					exception("moveNode - can not move Node");
 				}
@@ -811,6 +793,30 @@ final public class PetrinetHandler {
 		if (value) {
 			exception(errorMessage);
 		}
+	}
+
+	/**
+	 * @see {@link IPetrinetManipulation#moveGraphIntoVision(int)}
+	 */
+	public void moveGraphIntoVision(int id) throws EngineException {
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
+		System.out.println("move graph into vision");
+		// find smallest x and y
+		Collection<NodeLayoutAttribute> nodeLayouts = petrinetData
+				.getJungData().getNodeLayoutAttributes().values();
+		double smallestX = Double.MAX_VALUE;
+		double smallestY = Double.MAX_VALUE;
+		for (NodeLayoutAttribute nodeLayoutAttribute : nodeLayouts) {
+			double currentX = nodeLayoutAttribute.getCoordinate().getX();
+			smallestX = smallestX < currentX ? smallestX : currentX;
+			double currentY = nodeLayoutAttribute.getCoordinate().getY();
+			smallestY = smallestY < currentY ? smallestY : currentY;
+		}
+		System.out.println(new Point2D.Double(smallestX, smallestY));
+
+		// move graph so that smalles x and y are 0
+		moveGraph(id, new Point2D.Double(-smallestX + 20, -smallestY + 20));
+
 	}
 
 }

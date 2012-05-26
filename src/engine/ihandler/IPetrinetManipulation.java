@@ -155,6 +155,14 @@ public interface IPetrinetManipulation {
 	public void moveGraph(@NotNull int id, @NotNull Point2D relativePosition) throws EngineException;
 	
 	/**
+	 * Move a graph into the vision of the GUI. (Top left node will be at [0,0] position).
+	 * This may be useful if the user moved the graph outside the window and can't find it
+	 * @param id id of the graph
+	 * @throws EngineException
+	 */
+	public void moveGraphIntoVision(@NotNull int id) throws EngineException;
+	
+	/**
 	 * Moves a node.
 	 * 
 	 * @param id ID of the Petrinet

@@ -931,7 +931,7 @@ final public class RuleHandler {
 			Point2D point = new Point2D.Double(x, y);
 
 			try {
-				jungData.moveNode(node, point);
+				jungData.moveNodeWithPositionCheck(node, point);
 			} catch (IllegalArgumentException e) {
 				exception("moveNodeInternal - error: moveNode");
 			}
@@ -941,7 +941,7 @@ final public class RuleHandler {
 			Point2D point = new Point2D.Double(newPointX, newPointY);
 
 			try {
-				jungData.moveNode(node, point);
+				jungData.moveNodeWithPositionCheck(node, point);
 			} catch (IllegalArgumentException e) {
 				exception("moveNodeInternal - error: moveNode");
 			}

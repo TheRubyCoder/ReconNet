@@ -219,4 +219,9 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 		System.out.println(PetrinetAdapter.getPetrinetById(id));
 	}
 
+	@Override
+	public void moveGraphIntoVision(int id) throws EngineException {
+		petrinetManipulationBackend.moveGraphIntoVision(id);
+	}
+
 }

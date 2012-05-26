@@ -434,8 +434,8 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	}
 
 	public void setRenew(Transition transition, String renew) {
-		
-		IRenew actualRenew = Renews.fromString(renew); 
+
+		IRenew actualRenew = Renews.fromString(renew);
 		try {
 			if (isN()) {
 				EngineAdapter.getPetrinetManipulation().setRnw(getCurrentId(),
@@ -752,8 +752,20 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 					 * Scrolling is realized by zooming out of old position and
 					 * zooming in to new position
 					 */
-					petrinetViewer.scale(0.5f, newPoint);
-					petrinetViewer.scale(2f, oldPoint);
+					try {
+						EngineAdapter.getPetrinetManipulation().moveGraph(
+								petrinetViewer.getCurrentId(),
+								new Point((int) (newPoint.getX() - oldPoint
+										.getX()),
+										(int) (newPoint.getY() - oldPoint
+												.getY())));
+						petrinetViewer.repaint();
+					} catch (EngineException e1) {
+						PopUp.popError(e1);
+						e1.printStackTrace();
+					}
+					// petrinetViewer.scale(0.5f, newPoint);
+					// petrinetViewer.scale(2f, oldPoint);
 				} else if (dragMode == DragMode.MOVENODE) {
 					petrinetViewer.moveNode(nodeFromDrag, new Point(
 							(int) (newPoint.getX() - oldPoint.getX()),

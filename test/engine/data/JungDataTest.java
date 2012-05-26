@@ -383,7 +383,7 @@ public class JungDataTest {
 	public void testMoveNode() {
 		emptyJung.createTransition(transition1, pointPositive1);
 		
-		emptyJung.moveNode(transition1, pointPositive2);		
+		emptyJung.moveNodeWithPositionCheck(transition1, pointPositive2);		
 		
 		assertTrue(Double.compare(pointPositive2.getX(), emptyJung.getJungLayout().getX(transition1)) == 0);
 		assertTrue(Double.compare(pointPositive2.getY(), emptyJung.getJungLayout().getY(transition1)) == 0);
@@ -395,7 +395,7 @@ public class JungDataTest {
 	@Test
 	public void testMoveNode_selfOverlay() {
 		emptyJung.createPlace(place1, pointPositive1);
-		emptyJung.moveNode(place1, pointPositive1);
+		emptyJung.moveNodeWithPositionCheck(place1, pointPositive1);
 	}
 	
 	/**
@@ -404,7 +404,7 @@ public class JungDataTest {
 	@Test
 	public void testMoveNode_selfCloseLeft() {
 		emptyJung.createPlace(place1, pointPositive1);
-		emptyJung.moveNode(place1, pointPositive1TooCloseLeft);
+		emptyJung.moveNodeWithPositionCheck(place1, pointPositive1TooCloseLeft);
 	}
 	
 	/**
@@ -413,7 +413,7 @@ public class JungDataTest {
 	@Test
 	public void testMoveNode_selfCloseRight() {
 		emptyJung.createPlace(place1, pointPositive1);
-		emptyJung.moveNode(place1, pointPositive1TooCloseRight);
+		emptyJung.moveNodeWithPositionCheck(place1, pointPositive1TooCloseRight);
 	}
 	
 	/**
@@ -422,7 +422,7 @@ public class JungDataTest {
 	@Test
 	public void testMoveNode_selfCloseTop() {
 		emptyJung.createPlace(place1, pointPositive1);
-		emptyJung.moveNode(place1, pointPositive1TooCloseTop);
+		emptyJung.moveNodeWithPositionCheck(place1, pointPositive1TooCloseTop);
 	}
 	
 	/**
@@ -431,7 +431,7 @@ public class JungDataTest {
 	@Test
 	public void testMoveNode_selfCloseBottom() {
 		emptyJung.createPlace(place1, pointPositive1);
-		emptyJung.moveNode(place1, pointPositive1TooCloseBottom);
+		emptyJung.moveNodeWithPositionCheck(place1, pointPositive1TooCloseBottom);
 	}	
 	
 	/**
@@ -441,7 +441,7 @@ public class JungDataTest {
 	public void testMoveNode_JustEnoughLeft() {
 		emptyJung.createPlace(place1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive2);
-		emptyJung.moveNode(place2, pointPositive1JustEnoughLeft);
+		emptyJung.moveNodeWithPositionCheck(place2, pointPositive1JustEnoughLeft);
 	}
 	
 	/**
@@ -451,7 +451,7 @@ public class JungDataTest {
 	public void testMoveNode_JustEnoughRight() {
 		emptyJung.createPlace(place1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive2);
-		emptyJung.moveNode(place2, pointPositive1JustEnoughRight);
+		emptyJung.moveNodeWithPositionCheck(place2, pointPositive1JustEnoughRight);
 	}
 	
 	/**
@@ -461,7 +461,7 @@ public class JungDataTest {
 	public void testMoveNode_JustEnoughTop() {
 		emptyJung.createPlace(place1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive2);
-		emptyJung.moveNode(place2, pointPositive1JustEnoughTop);
+		emptyJung.moveNodeWithPositionCheck(place2, pointPositive1JustEnoughTop);
 	}
 	
 	/**
@@ -471,7 +471,7 @@ public class JungDataTest {
 	public void testMoveNode_JustEnoughBottom() {
 		emptyJung.createPlace(place1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive2);
-		emptyJung.moveNode(place2, pointPositive1JustEnoughBottom);
+		emptyJung.moveNodeWithPositionCheck(place2, pointPositive1JustEnoughBottom);
 	}
 	
 
@@ -668,8 +668,8 @@ public class JungDataTest {
 		emptyJung.delete(new HashSet<Arc>(), nodes); 
 	}
 	
-	@Test(expected=IllegalArgumentException.class) public void testNull_moveNode_1() { emptyJung.moveNode(null, 		pointPositive1); }
-	@Test(expected=IllegalArgumentException.class) public void testNull_moveNode_2() { emptyJung.moveNode(place1, 	null); }
+	@Test(expected=IllegalArgumentException.class) public void testNull_moveNode_1() { emptyJung.moveNodeWithPositionCheck(null, 		pointPositive1); }
+	@Test(expected=IllegalArgumentException.class) public void testNull_moveNode_2() { emptyJung.moveNodeWithPositionCheck(place1, 	null); }
 	
 
 	@Test(expected=IllegalArgumentException.class) public void testNull_getPlaceColor() { emptyJung.getPlaceColor(null); }
@@ -1061,7 +1061,7 @@ public class JungDataTest {
 	@Test(expected=IllegalArgumentException.class) 
 	public void testInvalidArguments_moveNode_NegativeX() { 
 		emptyJung.createPlace(place1, pointPositive1);
-		emptyJung.moveNode(place1, pointNegativeX); 
+		emptyJung.moveNodeWithPositionCheck(place1, pointNegativeX); 
 	}
 
 	/**
@@ -1070,7 +1070,7 @@ public class JungDataTest {
 	@Test(expected=IllegalArgumentException.class) 
 	public void testInvalidArguments_moveNode_NegativeY() { 
 		emptyJung.createPlace(place1, pointPositive1);
-		emptyJung.moveNode(place1, pointNegativeY); 
+		emptyJung.moveNodeWithPositionCheck(place1, pointNegativeY); 
 	}
 
 	/**
@@ -1079,7 +1079,7 @@ public class JungDataTest {
 	@Test(expected=IllegalArgumentException.class) 
 	public void testInvalidArguments_moveNode_NegativeXY() { 
 		emptyJung.createPlace(place1, pointPositive1);
-		emptyJung.moveNode(place1, pointNegativeXY);
+		emptyJung.moveNodeWithPositionCheck(place1, pointNegativeXY);
 	}
 
 	/**
@@ -1087,7 +1087,7 @@ public class JungDataTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void testInvalidArguments_moveNode_UnknownNode() { 
-		emptyJung.moveNode(place1, pointPositive1);
+		emptyJung.moveNodeWithPositionCheck(place1, pointPositive1);
 	}
 	
 	/**
@@ -1097,7 +1097,7 @@ public class JungDataTest {
 	public void testInvalidArguments_moveNode_Overlay() {
 		emptyJung.createPlace(place1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive2);
-		emptyJung.moveNode(place2, pointPositive1);
+		emptyJung.moveNodeWithPositionCheck(place2, pointPositive1);
 	}
 	
 	/**
@@ -1107,7 +1107,7 @@ public class JungDataTest {
 	public void testInvalidArguments_moveNode_TooCloseLeft() {
 		emptyJung.createPlace(place1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive2);
-		emptyJung.moveNode(place2, pointPositive1TooCloseLeft);
+		emptyJung.moveNodeWithPositionCheck(place2, pointPositive1TooCloseLeft);
 	}
 	
 	/**
@@ -1117,7 +1117,7 @@ public class JungDataTest {
 	public void testInvalidArguments_moveNode_TooCloseRight() {
 		emptyJung.createPlace(place1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive2);
-		emptyJung.moveNode(place2, pointPositive1TooCloseRight);
+		emptyJung.moveNodeWithPositionCheck(place2, pointPositive1TooCloseRight);
 	}
 	
 	/**
@@ -1127,7 +1127,7 @@ public class JungDataTest {
 	public void testInvalidArguments_moveNode_TooCloseTop() {
 		emptyJung.createPlace(place1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive2);
-		emptyJung.moveNode(place2, pointPositive1TooCloseTop);
+		emptyJung.moveNodeWithPositionCheck(place2, pointPositive1TooCloseTop);
 	}
 	
 	/**
@@ -1137,6 +1137,6 @@ public class JungDataTest {
 	public void testInvalidArguments_moveNode_TooCloseBottom() {
 		emptyJung.createPlace(place1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive2);
-		emptyJung.moveNode(place2, pointPositive1TooCloseBottom);
+		emptyJung.moveNodeWithPositionCheck(place2, pointPositive1TooCloseBottom);
 	}
 }
