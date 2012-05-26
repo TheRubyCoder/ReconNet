@@ -144,7 +144,9 @@ public class PetrinetHandlerTest {
 			petrinetHandler.createTransition(idPetrinet, new Point2D.Double(
 					-1., -1.));
 
-			fail("something is wrong (createTransition): wrong Point => Point(-1, -1)");
+			// Fail is no longer correct here. Transitions are now allowed to be
+			// created in negative positions
+			// fail("something is wrong (createTransition): wrong Point => Point(-1, -1)");
 		} catch (EngineException e) {
 			fail("No engine exception expected");
 		} catch (ShowAsWarningException e) {
