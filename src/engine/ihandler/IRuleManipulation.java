@@ -1,6 +1,7 @@
 package engine.ihandler;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 
 import petrinet.Arc;
@@ -14,9 +15,11 @@ import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.RuleAttribute;
 import engine.attribute.TransitionAttribute;
+import engine.data.JungData;
 import engine.handler.NodeTypeEnum;
 import engine.handler.RuleNet;
 import exceptions.EngineException;
+import gui.PetrinetViewer;
 
 /**
  * 
@@ -280,5 +283,22 @@ public interface IRuleManipulation {
 	 * @param currentId
 	 */
 	public void moveGraphIntoVision(int currentId);
-	
+
+	/**
+	 * Similar to {@link PetrinetViewer#moveAllNodesTo(float, Point)} but looks
+	 * up rule with <code>id</code> first and applies it to all parts of rule
+	 * 
+	 * @param currentId
+	 * @param factor
+	 * @param point
+	 */
+	public void moveAllNodesTo(int id, float factor, Point point);
+
+	/**
+	 * Sets the minDistance for the JungData of the petrinets of the rule with <code>id</code>
+	 * @see {@link JungData#setMinDistance(double)}
+	 * @param id
+	 * @param nodeDistance
+	 */
+	public void setMinDistance(int idd, double nodeDistance);	
 }

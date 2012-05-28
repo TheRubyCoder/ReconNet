@@ -1,6 +1,7 @@
 package engine;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -257,6 +258,18 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 
 	@Override
 	public void moveGraphIntoVision(int id) throws EngineException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void moveAllNodesTo(int id, float factor, Point point) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setMinDistance(int id, double nodeDistance) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -1,6 +1,7 @@
 package engine.handler.petrinet;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 
 import petrinet.Arc;
@@ -221,6 +222,17 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	@Override
 	public void moveGraphIntoVision(int id) throws EngineException {
 		petrinetManipulationBackend.moveGraphIntoVision(id);
+	}
+
+	@Override
+	public void moveAllNodesTo(int id, float factor, Point point) {
+		petrinetManipulationBackend.moveAllNodesTo(id,factor,point);
+	}
+
+	@Override
+	public void setMinDistance(int id, double nodeDistance) {
+		petrinetManipulationBackend.setMinDistance(id, nodeDistance);
+		
 	}
 
 }

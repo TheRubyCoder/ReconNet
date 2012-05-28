@@ -15,6 +15,7 @@ import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import engine.data.JungData;
+import gui.Style;
 import petrinet.Arc;
 import petrinet.INode;
 import petrinet.Petrinet;
@@ -58,7 +59,7 @@ public class JungDataTest {
 	private Point2D pointNegativeX;
 	private Point2D pointNegativeY;
 	private Point2D pointNegativeXY;
-	int justFarEnoughAway = JungData.NODE_RADIUS * 2;
+	int justFarEnoughAway = (int) Math.round(Style.getNodeDistanceDefault() + 0.5d);
 	int farEnoughAway = justFarEnoughAway + 1;
 
 	/**
@@ -141,7 +142,7 @@ public class JungDataTest {
 	 */
 	@Test
 	public void testCreateArc_MinNodeDistanceRadiusSize() {
-		assertTrue(JungData.NODE_RADIUS >= 1);
+		assertTrue(Style.getNodeDistanceDefault() >= 1);
 	}
 
 	/**

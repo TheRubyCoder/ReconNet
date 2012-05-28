@@ -1,6 +1,7 @@
 package engine.handler.petrinet;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.Collection;
 import java.util.HashSet;
@@ -460,9 +461,8 @@ final public class PetrinetHandler {
 
 			jungData.moveNodeWithPositionCheck(
 					node,
-					Positioning.addPoints(
-							jungData.getNodeLayoutAttributes().get(node)
-									.getCoordinate(), relativePosition));
+					Positioning.addPoints(jungData.getNodeLayoutAttributes()
+							.get(node).getCoordinate(), relativePosition));
 		}
 
 	}
@@ -713,6 +713,27 @@ final public class PetrinetHandler {
 		if (value) {
 			exception(errorMessage);
 		}
+	}
+
+	/**
+	 * @see {@link IPetrinetManipulation#moveAllNodesTo(int, float, Point)}
+	 * @param id
+	 * @param factor
+	 * @param point
+	 */
+	public void moveAllNodesTo(int id, float factor, Point point) {
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
+		petrinetData.getJungData().moveAllNodesTo(factor, point);
+	}
+
+	/**
+	 * @see {@link IPetrinetManipulation#setMinDistance(int, double)}
+	 * @param id
+	 * @param nodeDistance
+	 */
+	public void setMinDistance(int id, double nodeDistance) {
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
+		petrinetData.getJungData().setMinDistance(nodeDistance);
 	}
 
 }

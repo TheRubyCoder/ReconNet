@@ -4,9 +4,6 @@ import static gui.Style.FACTOR_SELECTED_NODE;
 import static gui.Style.FONT_COLOR_BRIGHT;
 import static gui.Style.FONT_COLOR_DARK;
 import static gui.Style.NODE_BORDER_COLOR;
-import static gui.Style.PLACE_HEIGHT;
-import static gui.Style.PLACE_WIDTH;
-import static gui.Style.TRANSITION_SIZE;
 
 import java.awt.Color;
 import java.awt.GradientPaint;
@@ -38,9 +35,7 @@ import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.RenderContext;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import edu.uci.ics.jung.visualization.control.CrossoverScalingControl;
 import edu.uci.ics.jung.visualization.control.PickingGraphMousePlugin;
-import edu.uci.ics.jung.visualization.control.ScalingControl;
 import edu.uci.ics.jung.visualization.renderers.Renderer.Vertex;
 import edu.uci.ics.jung.visualization.transform.shape.GraphicsDecorator;
 import engine.attribute.ArcAttribute;
@@ -58,7 +53,7 @@ import gui.EditorPane.EditorMode;
  * petrinet is part of a rule or not (different method calls to engine)
  */
 @SuppressWarnings("serial")
-class PetrinetViewer extends VisualizationViewer<INode, Arc> {
+public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 
 	/**
 	 * ID of currently displayed petrinet or rule. If RuleNet is set (L,K or R)
@@ -67,8 +62,13 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	 */
 	private int currentId = -1;
 
-	/** For zooming */
-	private ScalingControl scaler;
+	/**
+	 * Returns the general node size. Do not use this for concrete nodes. Use
+	 * one of the following instead:
+	 * 
+	 * @return
+	 */
+	private double nodeSize = Style.NODE_SIZE_DEFAULT;
 
 	/**
 	 * Defines whether the viewer displays a L, K or R net. Null if it displays
@@ -78,12 +78,6 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 
 	/** Wrapper for making scrolling possible */
 	private GraphZoomScrollPane graphZoomScrollPane;
-
-	/**
-	 * For defining maximim zoom. Places are not displayed correctly if the user
-	 * zooms too deep
-	 */
-	float currentZoom = 1;
 
 	/**
 	 * The node that is currently selected by user. <tt>null</tt> if no node is
@@ -101,7 +95,6 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		this.ruleNet = ruleNet;
 		this.currentId = petrinetOrRuleId;
 
-		scaler = new CrossoverScalingControl();
 		setBackground(Color.WHITE);
 
 		addMouseListener(new PetrinetMouseListener(this));
@@ -181,10 +174,97 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	}
 
 	void scale(float factor, Point point) {
-		if (currentZoom * factor <= 1) {
-			scaler.scale(this, factor, point);
-			currentZoom *= factor;
+		if (this.nodeSize >= 20 || factor > 1) {
+			resizeNodes(factor);
+			changeMinDistanceInJungData(getNodeDistance());
+			moveAllNodesTo(factor, point);
 		}
+		smartRepaint();
+	}
+
+	private void changeMinDistanceInJungData(double nodeDistance) {
+		if (isN()) {
+			EngineAdapter.getPetrinetManipulation().setMinDistance(
+					getCurrentId(), nodeDistance);
+		} else {
+			EngineAdapter.getRuleManipulation().setMinDistance(getCurrentId(),
+					nodeDistance);
+		}
+
+	}
+
+	private void resizeNodes(float factor) {
+		if (isN()) {
+			this.nodeSize *= factor;
+		} else {
+			RulePane.getInstance().resizeNodes(factor);
+		}
+	}
+
+	public void resizeNodesOnlyOnThisPartOfRule(float factor) {
+		if (!isN()) {
+			this.nodeSize *= factor;
+		}
+	}
+
+	/**
+	 * Moves all nodes to direction of <code>point</code> but only by
+	 * <code>factor</code><br \>
+	 * . If <code>factor</code> is smaller 1 nodes are moved towards the
+	 * <code>point</code>, if <code>factor</code> is greater 1 nodes are moved
+	 * away from <code>point</code>.
+	 * 
+	 * <h4>example</h4> Position of (only) node is [10,10], <code>point</code>
+	 * is [0,5] and <code>factor</code> is 0,9. Resulting position of node is
+	 * [9,9,5]
+	 * 
+	 * @param factor
+	 * @param point
+	 */
+	public void moveAllNodesTo(float factor, Point point) {
+		if (isN()) {
+			EngineAdapter.getPetrinetManipulation().moveAllNodesTo(
+					getCurrentId(), factor, point);
+		} else {
+			EngineAdapter.getRuleManipulation().moveAllNodesTo(getCurrentId(),
+					factor, point);
+		}
+	}
+
+	/**
+	 * Returns the width of a place in pixels
+	 * 
+	 * @return
+	 */
+	private double getPlaceWidth() {
+		return nodeSize;
+	}
+
+	/**
+	 * Returns the height of a place in pixels
+	 * 
+	 * @return
+	 */
+	private double getPlaceHeight() {
+		return getPlaceWidth() / 1.5d;
+	}
+
+	/**
+	 * Returns the size of a (quadratic) transition
+	 * 
+	 * @return
+	 */
+	private double getTransitionSize() {
+		return getPlaceHeight();
+	}
+
+	/**
+	 * Returns the distance that must be among nodes
+	 * 
+	 * @return
+	 */
+	public double getNodeDistance() {
+		return getPlaceHeight();
 	}
 
 	PlaceAttribute getPlaceAttribute(Place place) {
@@ -515,10 +595,7 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 
 	private static class PetrinetGraphPopUpMenu extends JPopupMenu {
 
-		private PetrinetViewer petrinetViewer;
-
 		public PetrinetGraphPopUpMenu(PetrinetViewer petrinetViewer) {
-			this.petrinetViewer = petrinetViewer;
 			JMenuItem menuItem = new JMenuItem("Ins Sichtfeld verschieben");
 			menuItem.addActionListener(new MoveListener(petrinetViewer));
 			add(menuItem);
@@ -600,6 +677,8 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 				} else {
 					petrinetViewer.deleteArc(arc);
 				}
+				//deselect node
+				petrinetViewer.currentSelectedNode = null;
 				MainWindow.getInstance().repaint();
 			}
 		}
@@ -869,10 +948,10 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 			if (petrinetViewer.isNodePlace(node)) {
 				PlaceAttribute placeAttribute = petrinetViewer
 						.getPlaceAttribute((Place) node);
-				int width = PLACE_WIDTH;
-				int height = PLACE_HEIGHT;
-				int x = (int) (center.getX() - width / 2);
-				int y = (int) (center.getY() - height / 2);
+				double width = petrinetViewer.getPlaceWidth();
+				double height = petrinetViewer.getPlaceHeight();
+				double x = center.getX() - width / 2;
+				double y = center.getY() - height / 2;
 
 				/* Draw selected node bigger */
 				if (petrinetViewer.isN()) {
@@ -889,20 +968,20 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 					}
 				}
 
-				GradientPaint gradientPaintPlace = new GradientPaint(x, y,
-						placeAttribute.getColor().brighter(), x, y + height,
-						placeAttribute.getColor().darker());
+				GradientPaint gradientPaintPlace = new GradientPaint((int) x,
+						(int) y, placeAttribute.getColor().brighter(), (int) x,
+						(int) (y + height), placeAttribute.getColor().darker());
 				decorator.setPaint(gradientPaintPlace);
-				decorator.fillOval(x, y, width, height);
+				decorator.fillOval((int) x, (int) y, (int) width, (int) height);
 
 				// draw frame
 				decorator.setPaint(NODE_BORDER_COLOR);
-				decorator.drawOval(x, y, width, height);
+				decorator.drawOval((int) x, (int) y, (int) width, (int) height);
 
 				// write name
 				decorator.setPaint(FONT_COLOR_DARK);
-				decorator.drawString(placeAttribute.getPname(), x + width, y
-						+ height);
+				decorator.drawString(placeAttribute.getPname(),
+						(int) (x + width), (int) (y + height));
 
 				// display marking
 				int marking = placeAttribute.getMarking();
@@ -911,8 +990,9 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 				} else if (marking == 1) {
 					// view black dot within place
 					decorator.setPaint(Color.BLACK);
-					decorator.fillOval(x + width / 4, y + height / 4,
-							height / 2, height / 2);
+					decorator.fillOval((int) (x + width / 4),
+							(int) (y + height / 4), (int) (height / 2),
+							(int) (height / 2));
 				} else {
 					// draw number within place
 					if (colorIsBright(placeAttribute.getColor())) {
@@ -921,14 +1001,14 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 						decorator.setPaint(FONT_COLOR_BRIGHT);
 					}
 					decorator.drawString(String.valueOf(marking),
-							x + width / 3, y + (int) (height / 1.5));
+							(int) (x + width / 3), (int) (y + height / 1.5));
 				}
 			} else {
 				TransitionAttribute transitionAttribute = petrinetViewer
 						.getTransitionAttribute((Transition) node);
 
 				// draw rect
-				int size = TRANSITION_SIZE;
+				int size = (int) petrinetViewer.getTransitionSize();
 				int x = (int) (center.getX() - size / 2);
 				int y = (int) (center.getY() - size / 2);
 
@@ -977,6 +1057,15 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 			}
 		}
 
+		/**
+		 * Returns <code>true</code> if the color is bright enough so text that
+		 * is displayed upon it, must be drawn with
+		 * {@link Style#FONT_COLOR_DARK}
+		 * 
+		 * @see Style#FONT_COLOR_BRIGHT
+		 * @param color
+		 * @return
+		 */
 		private boolean colorIsBright(Color color) {
 			return color.getBlue() + color.getRed() + color.getGreen() > 382;
 		}
@@ -1033,11 +1122,19 @@ class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		@Override
 		public Shape transform(INode node) {
 			if (petrinetViewer.isNodePlace(node)) {
-				return new Ellipse2D.Double(-PLACE_WIDTH / 2,
-						-PLACE_HEIGHT / 2, PLACE_WIDTH, PLACE_HEIGHT);
+				// return new Ellipse2D.Double(0d, 0d, Style.getPlaceWidth(),
+				// Style.getPlaceHeight());
+				return new Ellipse2D.Double(
+						-petrinetViewer.getPlaceWidth() / 2,
+						-petrinetViewer.getPlaceHeight() / 2,
+						petrinetViewer.getPlaceWidth(),
+						petrinetViewer.getPlaceHeight());
 			} else {
-				return new Rectangle2D.Double(-TRANSITION_SIZE / 2,
-						-TRANSITION_SIZE / 2, TRANSITION_SIZE, TRANSITION_SIZE);
+				return new Rectangle2D.Double(
+						-petrinetViewer.getTransitionSize() / 2,
+						-petrinetViewer.getTransitionSize() / 2,
+						petrinetViewer.getTransitionSize(),
+						petrinetViewer.getTransitionSize());
 			}
 		}
 

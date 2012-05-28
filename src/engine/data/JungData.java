@@ -1,6 +1,7 @@
 package engine.data;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,6 +22,7 @@ import edu.uci.ics.jung.graph.DirectedGraph;
 import engine.Positioning;
 import engine.attribute.NodeLayoutAttribute;
 import engine.ihandler.IPetrinetManipulation;
+import gui.Style;
 
 /**
  * @author Mathias Blumreiter
@@ -30,13 +32,13 @@ final public class JungData {
 	/**
 	 * radius to check the minimum distance between 2 nodes
 	 */
-	public static final int NODE_RADIUS = 10;
 	public static final Color DEFAULT_COLOR_PLACE = Color.GRAY;
 	public static final Color DEFAULT_COLOR_TRANSITION = Color.WHITE;
 
 	private DirectedGraph<INode, Arc> graph;
 	private AbstractLayout<INode, Arc> layout;
 	private Map<Place, Color> placeColors;
+	private double minDistance = Style.getNodeDistanceDefault();
 
 	public JungData(DirectedGraph<INode, Arc> graph,
 			AbstractLayout<INode, Arc> layout) {
@@ -69,6 +71,15 @@ final public class JungData {
 	 */
 	public AbstractLayout<INode, Arc> getJungLayout() {
 		return layout;
+	}
+
+	/**
+	 * Sets the distance that is checked for nodes on creation or movement
+	 * 
+	 * @param minDistance
+	 */
+	public void setMinDistance(double minDistance) {
+		this.minDistance = minDistance;
 	}
 
 	/**
@@ -283,7 +294,8 @@ final public class JungData {
 		// find smallest x and y
 		double smallestX = Double.MAX_VALUE;
 		double smallestY = Double.MAX_VALUE;
-		for (NodeLayoutAttribute nodeLayoutAttribute : getNodeLayoutAttributes().values()) {
+		for (NodeLayoutAttribute nodeLayoutAttribute : getNodeLayoutAttributes()
+				.values()) {
 			double currentX = nodeLayoutAttribute.getCoordinate().getX();
 			smallestX = smallestX < currentX ? smallestX : currentX;
 			double currentY = nodeLayoutAttribute.getCoordinate().getY();
@@ -447,8 +459,8 @@ final public class JungData {
 	 */
 	private void checkPoint2DInvariant(Point2D point) {
 		check(point instanceof Point2D, "point illegal type");
-//		check(point.getX() >= 0 && point.getY() >= 0,
-//				"point x or y is negative");
+		// check(point.getX() >= 0 && point.getY() >= 0,
+		// "point x or y is negative");
 	}
 
 	/**
@@ -555,7 +567,6 @@ final public class JungData {
 	 *            dont't check to these nodes
 	 */
 	private void checkPoint2DLocation(Point2D point, Collection<INode> excludes) {
-		final double MIN_DISTANCE = 2 * NODE_RADIUS;
 
 		for (INode node : graph.getVertices()) {
 			if (excludes.contains(node)) {
@@ -564,10 +575,33 @@ final public class JungData {
 
 			double xDistance = Math.abs(layout.getX(node) - point.getX());
 			double yDistance = Math.abs(layout.getY(node) - point.getY());
+			
+			System.out.println("min dinstace = " + minDistance);
 
-			check(Double.compare(xDistance, MIN_DISTANCE) >= 0
-					|| Double.compare(yDistance, MIN_DISTANCE) >= 0,
+			check(Double.compare(xDistance, minDistance) >= 0
+					|| Double.compare(yDistance, minDistance) >= 0,
 					"point is too close to a node");
+		}
+	}
+
+	/**
+	 * @see {@link IPetrinetManipulation#moveAllNodesTo(int, float, Point)}
+	 * @param factor
+	 * @param point
+	 */
+	public void moveAllNodesTo(float factor, Point point) {
+		double targetX = point.getX();
+		double targetY = point.getY();
+
+		for (INode node : graph.getVertices()) {
+			double nodeX = getNodeLayoutAttributes().get(node).getCoordinate()
+					.getX();
+			double nodeY = getNodeLayoutAttributes().get(node).getCoordinate()
+					.getY();
+
+			double newX = nodeX - ((targetX - nodeX) * (factor - 1));
+			double newY = nodeY - ((targetY - nodeY) * (factor - 1));
+			moveNodeWithoutPositionCheck(node, new Point2D.Double(newX, newY));
 		}
 	}
 }

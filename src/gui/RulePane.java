@@ -115,9 +115,9 @@ class RulePane {
 	}
 
 /**
-	 * Very similar to {@link ITransformation#getMappings(transformation.Rule, INode). Just it returns the mappings for the one selected node of the user
+	 * Very similar to {@link ITransformation#getMappings(transformation.Rule, INode)}. But it returns the mappings for the one selected node of the user
 	 * @see {@link PetrinetViewer#currentSelectedNode}
-	 * @return
+	 * @return <code>null</code> if selected node does not exists anymore
 	 */
 	public List<INode> getMappingsOfSelectedNode() {
 		return TransformationComponent.getTransformation().getMappings(
@@ -165,6 +165,17 @@ class RulePane {
 		if(rViewer != petrinetViewer){
 			rViewer.currentSelectedNode = null;
 		}
+	}
+
+	/**
+	 * Resizes Nodes on all parts of the rule
+	 * @see {@link PetrinetViewer#resizeNodes(float)}
+	 * @param factor
+	 */
+	public void resizeNodes(float factor) {
+		lViewer.resizeNodesOnlyOnThisPartOfRule(factor);
+		kViewer.resizeNodesOnlyOnThisPartOfRule(factor);
+		rViewer.resizeNodesOnlyOnThisPartOfRule(factor);
 	}
 
 }

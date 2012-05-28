@@ -1,11 +1,13 @@
 package engine.handler.rule;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 
 import petrinet.Arc;
 import petrinet.INode;
 import petrinet.IRenew;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
@@ -247,6 +249,17 @@ public class RuleManipulation implements IRuleManipulation {
 	@Override
 	public void moveGraphIntoVision(int id) {
 		ruleManipulationBackend.moveGraphIntoVision(id);
+	}
+
+	@Override
+	public void moveAllNodesTo(int id, float factor, Point point) {
+		ruleManipulationBackend.moveAllNodesTo(id, factor, point);
+	}
+
+	@Override
+	public void setMinDistance(int id, double nodeDistance) {
+		ruleManipulationBackend.setMinDistance(id, nodeDistance);
+		
 	}
 
 }

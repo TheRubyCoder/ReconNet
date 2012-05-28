@@ -12,7 +12,7 @@ import javax.swing.border.Border;
 
 
 /** Utility class for constants of gui styling */
-class Style {
+public class Style {
 	
 	private Style() {}
 	
@@ -165,12 +165,21 @@ class Style {
 	
 	public static final Color NODE_BORDER_COLOR = Color.DARK_GRAY;
 	
-	public static final int PLACE_WIDTH = 50;
+	public static int NODE_SIZE_DEFAULT = 50;
+
 	
-	public static final int PLACE_HEIGHT = (int)(PLACE_WIDTH / 1.5d);
+	/**
+	 * Returns the distance that must be among nodes
+	 * @return
+	 */
+	public static double getNodeDistanceDefault(){
+		return NODE_SIZE_DEFAULT / 1.5d;
+	}
 	
-	public static final int TRANSITION_SIZE = PLACE_HEIGHT;
 	
+	/**
+	 * The factor by which selected nodes are drawn bigger to highlight them
+	 */
 	public static final double FACTOR_SELECTED_NODE = 1.2;
 	
 	/* ************************************* 

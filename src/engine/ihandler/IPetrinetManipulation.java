@@ -1,6 +1,7 @@
 package engine.ihandler;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 
 import petrinet.Arc;
@@ -13,8 +14,10 @@ import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.TransitionAttribute;
+import engine.data.JungData;
 import engine.handler.NodeTypeEnum;
 import exceptions.EngineException;
+import gui.PetrinetViewer;
 
 /**
  * 
@@ -22,17 +25,13 @@ import exceptions.EngineException;
  * 
  * Implementation: engine.handler.petrinet.PetrinetManipulation
  * 
- * Some functions are:
- *  - create[Petrinet|Arc|Place|Transition](..)
- * 	- delete[Arc|Place|Transition](..)
- *  - get[Arc|Place|Transition]Attribute(..)
- *  - getJungLayout(..)
- *  - move[Graph|Node](..)
- *  - save(..)
- *  - set[Marking|Pname|Tlb|Tname|Weight|NodeType](..)
+ * Some functions are: - create[Petrinet|Arc|Place|Transition](..) -
+ * delete[Arc|Place|Transition](..) - get[Arc|Place|Transition]Attribute(..) -
+ * getJungLayout(..) - move[Graph|Node](..) - save(..) -
+ * set[Marking|Pname|Tlb|Tname|Weight|NodeType](..)
  * 
  * @author alex (aas772)
- *
+ * 
  */
 
 public interface IPetrinetManipulation {
@@ -40,25 +39,32 @@ public interface IPetrinetManipulation {
 	/**
 	 * Creates an Arc
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param from Source of the Arc
-	 * @param to Target of the Arc
-	 * @throws EngineException 
+	 * @param id
+	 *            ID of the Petrinet
+	 * @param from
+	 *            Source of the Arc
+	 * @param to
+	 *            Target of the Arc
+	 * @throws EngineException
 	 */
-	public void createArc(@NotNull int id,@NotNull INode from,@NotNull INode to) throws EngineException;
-	
+	public void createArc(@NotNull int id, @NotNull INode from,
+			@NotNull INode to) throws EngineException;
+
 	/**
 	 * 
 	 * Creates a Place
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param coordinate Point where the Place will be created
-	 * @return 
-	 * @throws EngineException 
+	 * @param id
+	 *            ID of the Petrinet
+	 * @param coordinate
+	 *            Point where the Place will be created
+	 * @return
+	 * @throws EngineException
 	 * 
 	 */
-	public void createPlace(@NotNull int id,@NotNull Point2D coordinate) throws EngineException;
-	
+	public void createPlace(@NotNull int id, @NotNull Point2D coordinate)
+			throws EngineException;
+
 	/**
 	 * 
 	 * Creates a Petrinet
@@ -67,225 +73,315 @@ public interface IPetrinetManipulation {
 	 * 
 	 */
 	public int createPetrinet();
-	
+
 	/**
 	 * Creates a Transition
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param coordinate Point where the Transition will be created
-	 * @return 
-	 * @throws EngineException 
+	 * @param id
+	 *            ID of the Petrinet
+	 * @param coordinate
+	 *            Point where the Transition will be created
+	 * @return
+	 * @throws EngineException
 	 */
-	public void createTransition(@NotNull int id, @NotNull Point2D coordinate) throws EngineException;
-	
+	public void createTransition(@NotNull int id, @NotNull Point2D coordinate)
+			throws EngineException;
+
 	/**
 	 * Deletes an Arc
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param arc which will be deleted
-	 * @throws EngineException 
+	 * @param id
+	 *            ID of the Petrinet
+	 * @param arc
+	 *            which will be deleted
+	 * @throws EngineException
 	 */
-	public void deleteArc(@NotNull int id, @NotNull Arc arc) throws EngineException; // TODO IArc gibt es nicht?
-	
+	public void deleteArc(@NotNull int id, @NotNull Arc arc)
+			throws EngineException; // TODO IArc gibt es nicht?
+
 	// TODO: da sollte doch ne methode drueber die INode aufloest oder?
 	/**
 	 * Deletes a Place
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param place which will be deleted
+	 * @param id
+	 *            ID of the Petrinet
+	 * @param place
+	 *            which will be deleted
 	 */
-	public void deletePlace(@NotNull int id, @NotNull INode place) throws EngineException;
-	
+	public void deletePlace(@NotNull int id, @NotNull INode place)
+			throws EngineException;
+
 	/**
 	 * Deletes a Transition
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param transition which will be deleted
+	 * @param id
+	 *            ID of the Petrinet
+	 * @param transition
+	 *            which will be deleted
 	 */
-	public void deleteTransition(@NotNull int id, @NotNull INode transition) throws EngineException;
-	
+	public void deleteTransition(@NotNull int id, @NotNull INode transition)
+			throws EngineException;
+
 	/**
 	 * Gets the Attributes from an Arc
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param arc which attributes are wanted
+	 * @param id
+	 *            ID of the Petrinet
+	 * @param arc
+	 *            which attributes are wanted
 	 * @return ArcAttribute
 	 */
-	public ArcAttribute getArcAttribute(@NotNull int id, @NotNull Arc arc) throws EngineException; // TODO IArc gibt es nicht?
-	
+	public ArcAttribute getArcAttribute(@NotNull int id, @NotNull Arc arc)
+			throws EngineException; // TODO IArc gibt es nicht?
+
 	/**
 	 * Gets the JungLayout from the Petrinet
 	 * 
-	 * @param id ID of the Petrinet
+	 * @param id
+	 *            ID of the Petrinet
 	 * @return AbstractLayout
-	 * @throws EngineException 
+	 * @throws EngineException
 	 */
-	
+
 	// TODO
-	public AbstractLayout<INode, Arc> getJungLayout(@NotNull int id) throws EngineException; // TODO: AbstractLayout<INode, Arc> richtig?
-	
+	public AbstractLayout<INode, Arc> getJungLayout(@NotNull int id)
+			throws EngineException; // TODO: AbstractLayout<INode, Arc> richtig?
+
 	/**
 	 * Gets the Attributes from a Place
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param place which attributes are wanted
+	 * @param id
+	 *            ID of the Petrinet
+	 * @param place
+	 *            which attributes are wanted
 	 * @return PlaceAtrribute
-	 * @throws EngineException 
+	 * @throws EngineException
 	 */
-	public PlaceAttribute getPlaceAttribute(@NotNull int id, @NotNull INode place) throws EngineException;
-	
+	public PlaceAttribute getPlaceAttribute(@NotNull int id,
+			@NotNull INode place) throws EngineException;
+
 	/**
 	 * Gets the Attributes from a Transition
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param transition which attributes are wanted
+	 * @param id
+	 *            ID of the Petrinet
+	 * @param transition
+	 *            which attributes are wanted
 	 * @return TransitionAttribute
-	 * @throws EngineException 
+	 * @throws EngineException
 	 */
-	public TransitionAttribute getTransitionAttribute(@NotNull int id, @NotNull INode transition) throws EngineException;
-	
+	public TransitionAttribute getTransitionAttribute(@NotNull int id,
+			@NotNull INode transition) throws EngineException;
+
 	/**
 	 * Moves a Graph.
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param relativePosition relative movement of the Graph
-	 * @throws EngineException 
+	 * @param id
+	 *            ID of the Petrinet
+	 * @param relativePosition
+	 *            relative movement of the Graph
+	 * @throws EngineException
 	 */
-	public void moveGraph(@NotNull int id, @NotNull Point2D relativePosition) throws EngineException;
-	
+	public void moveGraph(@NotNull int id, @NotNull Point2D relativePosition)
+			throws EngineException;
+
 	/**
-	 * Move a graph into the vision of the GUI. (Top left node will be at [0,0] position).
-	 * This may be useful if the user moved the graph outside the window and can't find it
-	 * @param id id of the graph
+	 * Move a graph into the vision of the GUI. (Top left node will be at [0,0]
+	 * position). This may be useful if the user moved the graph outside the
+	 * window and can't find it
+	 * 
+	 * @param id
+	 *            id of the graph
 	 * @throws EngineException
 	 */
 	public void moveGraphIntoVision(@NotNull int id) throws EngineException;
-	
+
 	/**
 	 * Moves a node.
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param node to move
-	 * @param relativePosition relative movement of the node
-	 * @throws EngineException 
+	 * @param id
+	 *            ID of the Petrinet
+	 * @param node
+	 *            to move
+	 * @param relativePosition
+	 *            relative movement of the node
+	 * @throws EngineException
 	 */
-	public void moveNode(@NotNull int id, @NotNull INode node, @NotNull Point2D relativePosition) throws EngineException;
-	
+	public void moveNode(@NotNull int id, @NotNull INode node,
+			@NotNull Point2D relativePosition) throws EngineException;
+
 	/**
 	 * Saves a Petrinet.
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param path where to save the Petrinet
-	 * @param filename name for the Petrinet
-	 * @param format which the Petrinet should be saved. (PNML the only option till now)
+	 * @param id
+	 *            ID of the Petrinet
+	 * @param path
+	 *            where to save the Petrinet
+	 * @param filename
+	 *            name for the Petrinet
+	 * @param format
+	 *            which the Petrinet should be saved. (PNML the only option till
+	 *            now)
 	 */
-	public void save(@NotNull int id, @NotNull String path, @NotNull String filename, @NotNull String format) throws EngineException; // TODO: String format zu => Format format
-	
+	public void save(@NotNull int id, @NotNull String path,
+			@NotNull String filename, @NotNull String format)
+			throws EngineException; // TODO: String format zu => Format format
+
 	/**
 	 * 
 	 * Load a Petrinet.
 	 * 
-	 * @param path where is this Petrinet
-	 * @param filename name for the Petrinet
+	 * @param path
+	 *            where is this Petrinet
+	 * @param filename
+	 *            name for the Petrinet
 	 * @return the id of the Petrinet
 	 * 
 	 */
 	public int load(@NotNull String path, @NotNull String filename);
-	
+
 	/**
 	 * Sets the Marking of a Place.
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param place where to set the Mark
-	 * @param marking amount of mark 
-	 * @throws EngineException 
+	 * @param id
+	 *            ID of the Petrinet
+	 * @param place
+	 *            where to set the Mark
+	 * @param marking
+	 *            amount of mark
+	 * @throws EngineException
 	 */
-	public void setMarking(@NotNull int id, @NotNull INode place, @NotNull int marking) throws EngineException;
-	
+	public void setMarking(@NotNull int id, @NotNull INode place,
+			@NotNull int marking) throws EngineException;
+
 	/**
 	 * Sets the PName of a Place.
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param place where to set the PName
-	 * @param pname PName
-	 * @throws EngineException 
+	 * @param id
+	 *            ID of the Petrinet
+	 * @param place
+	 *            where to set the PName
+	 * @param pname
+	 *            PName
+	 * @throws EngineException
 	 */
-	public void setPname(@NotNull int id, @NotNull INode place, @NotNull String pname) throws EngineException;
-	
+	public void setPname(@NotNull int id, @NotNull INode place,
+			@NotNull String pname) throws EngineException;
+
 	/**
 	 * Sets the Tlb of a Transition.
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param transition where to set the tlb
-	 * @param tlb TransitionLabel
-	 * @throws EngineException 
+	 * @param id
+	 *            ID of the Petrinet
+	 * @param transition
+	 *            where to set the tlb
+	 * @param tlb
+	 *            TransitionLabel
+	 * @throws EngineException
 	 */
-	public void setTlb(@NotNull int id, @NotNull INode transition, @NotNull String tlb) throws EngineException;
-	
+	public void setTlb(@NotNull int id, @NotNull INode transition,
+			@NotNull String tlb) throws EngineException;
+
 	/**
 	 * Sets the TName of a Transition.
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param transition where to set the TName
-	 * @param tname TName
-	 * @throws EngineException 
+	 * @param id
+	 *            ID of the Petrinet
+	 * @param transition
+	 *            where to set the TName
+	 * @param tname
+	 *            TName
+	 * @throws EngineException
 	 */
-	public void setTname(@NotNull int id, @NotNull INode transition, @NotNull String tname) throws EngineException;
-	
+	public void setTname(@NotNull int id, @NotNull INode transition,
+			@NotNull String tname) throws EngineException;
+
 	/**
 	 * Sets the Weight of an Arc.
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param arc where to set the weight
-	 * @param weight weight of the arc
-	 * @throws EngineException 
+	 * @param id
+	 *            ID of the Petrinet
+	 * @param arc
+	 *            where to set the weight
+	 * @param weight
+	 *            weight of the arc
+	 * @throws EngineException
 	 */
-	public void setWeight(@NotNull int id, @NotNull Arc arc, @NotNull int weight) throws EngineException;
-	
+	public void setWeight(@NotNull int id, @NotNull Arc arc, @NotNull int weight)
+			throws EngineException;
+
 	/**
 	 * 
 	 * Sets a Strings as RNW.
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param rnw String as RNW
-	 * @throws EngineException 
+	 * @param id
+	 *            ID of the Petrinet
+	 * @param rnw
+	 *            String as RNW
+	 * @throws EngineException
 	 * 
 	 */
-	public void setRnw(@NotNull int id, @NotNull INode transition, @NotNull IRenew renews) throws EngineException;
-	
+	public void setRnw(@NotNull int id, @NotNull INode transition,
+			@NotNull IRenew renews) throws EngineException;
+
 	/**
 	 * 
 	 * Set Color of a Place.
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param place which should modify
-	 * @param color new Color
-	 * @throws EngineException 
+	 * @param id
+	 *            ID of the Petrinet
+	 * @param place
+	 *            which should modify
+	 * @param color
+	 *            new Color
+	 * @throws EngineException
 	 * 
 	 */
-	public void setPlaceColor(@NotNull int id, @NotNull INode place, @NotNull Color color) throws EngineException;
-	
+	public void setPlaceColor(@NotNull int id, @NotNull INode place,
+			@NotNull Color color) throws EngineException;
+
 	/**
 	 * 
 	 * This methods clean the Tool from this Petrinet.
 	 * 
-	 * @param id ID of the Petrinet
+	 * @param id
+	 *            ID of the Petrinet
 	 * @throws EngineException
 	 * 
 	 */
 	public void closePetrinet(@NotNull int id) throws EngineException;
-	
+
 	/**
 	 * Returns the type of the Object.
-	 * @param node to check
+	 * 
+	 * @param node
+	 *            to check
 	 * @return Enum composed of Place, Transition
-	 * @throws EngineException 
+	 * @throws EngineException
 	 */
 	public NodeTypeEnum getNodeType(@NotNull INode node) throws EngineException;
-	
+
 	/**
 	 * Prints the petrinet with <tt>id</tt> in the console
-	 *  */
+	 * */
 	public void printPetrinet(@NotNull int id);
-	
+
+	/**
+	 * Similar to {@link PetrinetViewer#moveAllNodesTo(float, Point)} but looks
+	 * up petrinet with <code>id</code> first
+	 * 
+	 * @param id
+	 * @param factor
+	 * @param point
+	 */
+	public void moveAllNodesTo(int id, float factor, Point point);
+
+	/**
+	 * Sets the minDistance for the JungData of petrinet with <code>id</code>
+	 * @see {@link JungData#setMinDistance(double)}
+	 * @param id
+	 * @param nodeDistance
+	 */
+	public void setMinDistance(int id, double nodeDistance);
+
 }

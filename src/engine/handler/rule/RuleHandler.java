@@ -1,6 +1,7 @@
 package engine.handler.rule;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Map;
@@ -1279,6 +1280,31 @@ final public class RuleHandler {
 		ruleData.getLJungData().moveGraphIntoVision();
 		ruleData.getKJungData().moveGraphIntoVision();
 		ruleData.getRJungData().moveGraphIntoVision();
+	}
+
+	/**
+	 * @see {@link IRuleManipulation#moveAllNodesTo(int, float, Point)}
+	 * @param id
+	 * @param factor
+	 * @param point
+	 */
+	public void moveAllNodesTo(int id, float factor, Point point) {
+		RuleData ruleData = sessionManager.getRuleData(id);
+		ruleData.getLJungData().moveAllNodesTo(factor, point);
+		ruleData.getKJungData().moveAllNodesTo(factor, point);
+		ruleData.getRJungData().moveAllNodesTo(factor, point);
+	}
+
+	/**
+	 * @see {@link IRuleManipulation#setMinDistance(int, double)}
+	 * @param id
+	 * @param nodeDistance
+	 */
+	public void setMinDistance(int id, double nodeDistance) {
+		RuleData ruleData = sessionManager.getRuleData(id);
+		ruleData.getLJungData().setMinDistance(nodeDistance);
+		ruleData.getKJungData().setMinDistance(nodeDistance);
+		ruleData.getRJungData().setMinDistance(nodeDistance);
 	}
 
 }
