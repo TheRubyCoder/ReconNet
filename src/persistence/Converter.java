@@ -11,6 +11,7 @@ import java.util.Set;
 import petrinet.INode;
 import petrinet.Petrinet;
 import petrinet.Renews;
+import petrinetze.impl.PetrinetIntegTest;
 import transformation.ITransformation;
 import transformation.Rule;
 import transformation.TransformationComponent;
@@ -19,6 +20,7 @@ import engine.handler.RuleNet;
 import engine.ihandler.IPetrinetPersistence;
 import engine.ihandler.IRulePersistence;
 import exceptions.EngineException;
+import exceptions.ShowAsWarningException;
 import gui.PopUp;
 
 /**
@@ -27,12 +29,24 @@ import gui.PopUp;
  * 
  * */
 public class Converter {
+	
+	/**
+	 * Value for atribute {@link Net#getType() type} of {@link Net xmlNet}
+	 */
+	private static final String PETRINET_IDENT = "petrinet";
+	/**
+	 * Value for atribute {@link Net#getType() type} of {@link Net xmlNet}
+	 */
+	private static final String RULE_IDENT = "rule";
 
 	/** not working yet */
 	static public Pnml convertPetrinetToPnml(Petrinet petrinet,
-			Map<String, String[]> layout) {
+			Map<String, String[]> layout, double nodeSize) {
 		Pnml pnml = new Pnml();
+		pnml.setNodeSize(nodeSize);
+		pnml.setType("petrinet");
 		pnml.net = new ArrayList<Net>();
+		
 		Net xmlnet = new Net();
 		xmlnet.setId(String.valueOf(petrinet.getId()));
 		pnml.net.add(xmlnet);
@@ -172,12 +186,22 @@ public class Converter {
 				Double.parseDouble(pos.get(0).y));
 	}
 
-	/** works */
+	/**
+	 * Converts a {@link Pnml} object that was unmarshalled from an XMLFile into a {@link Petrinet}
+	 * @param pnml
+	 * @param handler
+	 * @return id of petrinet
+	 */
 	static public int convertToPetrinet(Pnml pnml, IPetrinetPersistence handler) {
+		if (pnml.getType().equals(RULE_IDENT)) {
+			throw new ShowAsWarningException("Die ausgewählte Datei enthält eine Regel, kein Petrinetz");
+		}
 		int petrinetID = -1;
 		try {
 			// create petrinet
 			petrinetID = handler.createPetrinet();
+			
+			handler.setNodeSize(petrinetID, pnml.getNodeSize());
 
 			// IPetrinet ipetrinet=PetrinetComponent.getPetrinet();
 			// Petrinet petrinet=ipetrinet.createPetrinet();
@@ -275,6 +299,8 @@ public class Converter {
 	 */
 	public static int convertToRule(Pnml pnml, IRulePersistence handler) {
 		int id = handler.createRule();
+		
+		handler.setNodeSize(id, pnml.getNodeSize());
 
 		Net lNet = pnml.getNet().get(0);
 		Net kNet = pnml.getNet().get(1);
@@ -538,8 +564,10 @@ public class Converter {
 	}
 
 	public static Pnml convertRuleToPnml(Rule rule,
-			Map<INode, NodeLayoutAttribute> map) {
+			Map<INode, NodeLayoutAttribute> map, double nodeSize) {
 		Pnml pnml = new Pnml();
+		
+		pnml.setNodeSize(nodeSize);
 
 		pnml.net = new ArrayList<Net>();
 		final Net lNet = createNet(rule.getL(), map, RuleNet.L, rule);

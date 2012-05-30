@@ -179,5 +179,11 @@ public class RulePersistence implements IRulePersistence {
 		ruleManipulationBackend.setPlaceColor(id, place, color);
 		
 	}
+
+	@Override
+	public void setNodeSize(int id, double nodeSize) {
+		
+		ruleManipulationBackend.setNodeSize(id, nodeSize);
+	}
 	
 }

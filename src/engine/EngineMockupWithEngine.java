@@ -12,6 +12,7 @@ import petrinet.IRenew;
 import petrinet.Petrinet;
 import petrinet.Place;
 import petrinet.Transition;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
@@ -171,10 +172,10 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 	}
 
 	@Override
-	public void save(int id, String path, String filename, String format)
+	public void save(int id, String path, String filename, String format, double nodeSize)
 			throws EngineException {
 		
-		iPetrinetManipulation.save(id, path, filename, format);
+		iPetrinetManipulation.save(id, path, filename, format, nodeSize);
 		
 	}
 	
@@ -252,26 +253,30 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 
 	@Override
 	public void printPetrinet(int id) {
-		// TODO Auto-generated method stub
-		
+		throw new NotImplementedException();
 	}
 
 	@Override
 	public void moveGraphIntoVision(int id) throws EngineException {
-		// TODO Auto-generated method stub
+		throw new NotImplementedException();
 		
 	}
 
 	@Override
 	public void moveAllNodesTo(int id, float factor, Point point) {
-		// TODO Auto-generated method stub
+		throw new NotImplementedException();
 		
 	}
 
 	@Override
-	public void setMinDistance(int id, double nodeDistance) {
-		// TODO Auto-generated method stub
+	public void setNodeSize(int id, double nodeDistance) {
+		throw new NotImplementedException();
 		
+	}
+
+	@Override
+	public double getNodeSize(int id) throws NullPointerException {
+		throw new NotImplementedException();
 	}
 	
 }

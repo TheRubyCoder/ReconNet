@@ -468,7 +468,7 @@ final public class PetrinetHandler {
 	}
 
 	public void save(@NotNull int id, @NotNull String path,
-			@NotNull String filename, @NotNull String format)
+			@NotNull String filename, @NotNull String format, double nodeSize)
 			throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
@@ -488,7 +488,7 @@ final public class PetrinetHandler {
 			checkNodeLayoutAttribute(nodeMap == null, "save - nodeMap == null");
 
 			Persistence.savePetrinet(path + "/" + filename + "." + format,
-					petrinet, nodeMap);
+					petrinet, nodeMap, nodeSize);
 
 		}
 
@@ -727,13 +727,23 @@ final public class PetrinetHandler {
 	}
 
 	/**
-	 * @see {@link IPetrinetManipulation#setMinDistance(int, double)}
+	 * @see {@link IPetrinetManipulation#setNodeSize(int, double)}
 	 * @param id
-	 * @param nodeDistance
+	 * @param nodeSize
 	 */
-	public void setMinDistance(int id, double nodeDistance) {
+	public void setNodeSize(int id, double nodeSize) {
 		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
-		petrinetData.getJungData().setMinDistance(nodeDistance);
+		petrinetData.getJungData().setNodeSize(nodeSize);
+	}
+
+	/**
+	 * @see {@link IPetrinetManipulation#getNodeSize(int)}
+	 * 
+	 * @param id
+	 */
+	public double getNodeSize(int id) {
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
+		return petrinetData.getJungData().getNodeSize();
 	}
 
 }

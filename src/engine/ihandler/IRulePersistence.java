@@ -14,6 +14,7 @@ import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.RuleAttribute;
 import engine.attribute.TransitionAttribute;
+import engine.data.JungData;
 import engine.handler.NodeTypeEnum;
 import engine.handler.RuleNet;
 import exceptions.EngineException;
@@ -197,5 +198,13 @@ public interface IRulePersistence {
 	 * @return Enum composed of Place, Transition
 	 */
 	public NodeTypeEnum getNodeType(@NotNull INode node);
+	
+	/**
+	 * Sets the nodeSize for the JungData of the petrinets of the rule with <code>id</code>
+	 * @see {@link JungData#setNodeSize(double)}
+	 * @param id
+	 * @param nodeSize
+	 */
+	public void setNodeSize(int id, double nodeSize);
 	
 }

@@ -32,7 +32,6 @@ import petrinet.Place;
 import petrinet.Renews;
 import petrinet.Transition;
 import edu.uci.ics.jung.algorithms.layout.Layout;
-import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.RenderContext;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.PickingGraphMousePlugin;
@@ -76,9 +75,6 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	 */
 	private RuleNet ruleNet;
 
-	/** Wrapper for making scrolling possible */
-	private GraphZoomScrollPane graphZoomScrollPane;
-
 	/**
 	 * The node that is currently selected by user. <tt>null</tt> if no node is
 	 * selected
@@ -107,12 +103,11 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	}
 
 	void addTo(JPanel component) {
-		graphZoomScrollPane = new GraphZoomScrollPane(this);
-		component.add(graphZoomScrollPane);
+		component.add(this);
 	}
 
 	public void removeFrom(JPanel frame) {
-		frame.remove(graphZoomScrollPane);
+		frame.remove(this);
 	}
 
 	void smartRepaint() {
@@ -176,19 +171,19 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	void scale(float factor, Point point) {
 		if (this.nodeSize >= 20 || factor > 1) {
 			resizeNodes(factor);
-			changeMinDistanceInJungData(getNodeDistance());
+			changeNodeSizeInJungData(getNodeSize());
 			moveAllNodesTo(factor, point);
 		}
 		smartRepaint();
 	}
 
-	private void changeMinDistanceInJungData(double nodeDistance) {
+	private void changeNodeSizeInJungData(double nodeSize) {
 		if (isN()) {
-			EngineAdapter.getPetrinetManipulation().setMinDistance(
-					getCurrentId(), nodeDistance);
+			EngineAdapter.getPetrinetManipulation().setNodeSize(getCurrentId(),
+					nodeSize);
 		} else {
-			EngineAdapter.getRuleManipulation().setMinDistance(getCurrentId(),
-					nodeDistance);
+			EngineAdapter.getRuleManipulation().setNodeSize(getCurrentId(),
+					nodeSize);
 		}
 
 	}
@@ -229,6 +224,19 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 			EngineAdapter.getRuleManipulation().moveAllNodesTo(getCurrentId(),
 					factor, point);
 		}
+	}
+
+	/**
+	 * Returns the size of nodes in pixels
+	 * 
+	 * @return
+	 */
+	public double getNodeSize() {
+		return nodeSize;
+	}
+
+	void setNodeSize(double nodeSize) {
+		this.nodeSize = nodeSize;
 	}
 
 	/**
@@ -677,7 +685,7 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 				} else {
 					petrinetViewer.deleteArc(arc);
 				}
-				//deselect node
+				// deselect node
 				petrinetViewer.currentSelectedNode = null;
 				MainWindow.getInstance().repaint();
 			}

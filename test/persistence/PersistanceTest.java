@@ -30,6 +30,7 @@ import engine.handler.rule.RuleManipulation;
 import engine.handler.rule.RulePersistence;
 import engine.ihandler.IRulePersistence;
 import exceptions.EngineException;
+import gui.Style;
 
 public class PersistanceTest {
 
@@ -89,7 +90,7 @@ public class PersistanceTest {
 
 		try {
 			int pid = mockup.build();
-			mockup.saveTest(pid, "/tmp", "petrinet_save_test", "pnml");
+			mockup.saveTest(pid, "/tmp", "petrinet_save_test", "pnml", Style.getNodeDistanceDefault());
 
 		} catch (EngineException e) {
 			e.printStackTrace();
@@ -158,7 +159,7 @@ public class PersistanceTest {
 		pid = mockup.build();
 		Petrinet saved = mockup.getPetrinet(pid);
 
-		mockup.saveTest(pid, "/tmp", "petrinet_saveload_test", "pnml");
+		mockup.saveTest(pid, "/tmp", "petrinet_saveload_test", "pnml", Style.getNodeDistanceDefault());
 		int loaded_pid = mockup.load("/tmp", "petrinet_saveload_test.pnml");
 		if (loaded_pid == -1)
 			fail("failed to load/parse petrinet");

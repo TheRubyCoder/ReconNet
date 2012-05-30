@@ -103,6 +103,13 @@ class RulePane {
 			kViewer = new PetrinetViewer(kLayout, ruleId, RuleNet.K);
 			rViewer = new PetrinetViewer(rLayout, ruleId, RuleNet.R);
 
+			double nodeSize = EngineAdapter.getRuleManipulation().getNodeSize(
+					ruleId);
+			
+			lViewer.setNodeSize(nodeSize);
+			kViewer.setNodeSize(nodeSize);
+			rViewer.setNodeSize(nodeSize);
+
 			lViewer.addTo(lBorderPanel);
 			kViewer.addTo(kBorderPanel);
 			rViewer.addTo(rBorderPanel);
@@ -114,8 +121,11 @@ class RulePane {
 		}
 	}
 
-/**
-	 * Very similar to {@link ITransformation#getMappings(transformation.Rule, INode)}. But it returns the mappings for the one selected node of the user
+	/**
+	 * Very similar to
+	 * {@link ITransformation#getMappings(transformation.Rule, INode)}. But it
+	 * returns the mappings for the one selected node of the user
+	 * 
 	 * @see {@link PetrinetViewer#currentSelectedNode}
 	 * @return <code>null</code> if selected node does not exists anymore
 	 */
@@ -156,19 +166,20 @@ class RulePane {
 	 * @param petrinetViewer
 	 */
 	public void deselectBut(PetrinetViewer petrinetViewer) {
-		if(lViewer != petrinetViewer){
+		if (lViewer != petrinetViewer) {
 			lViewer.currentSelectedNode = null;
 		}
-		if(kViewer != petrinetViewer){
+		if (kViewer != petrinetViewer) {
 			kViewer.currentSelectedNode = null;
 		}
-		if(rViewer != petrinetViewer){
+		if (rViewer != petrinetViewer) {
 			rViewer.currentSelectedNode = null;
 		}
 	}
 
 	/**
 	 * Resizes Nodes on all parts of the rule
+	 * 
 	 * @see {@link PetrinetViewer#resizeNodes(float)}
 	 * @param factor
 	 */

@@ -295,10 +295,19 @@ public interface IRuleManipulation {
 	public void moveAllNodesTo(int id, float factor, Point point);
 
 	/**
-	 * Sets the minDistance for the JungData of the petrinets of the rule with <code>id</code>
-	 * @see {@link JungData#setMinDistance(double)}
+	 * Sets the nodeSize for the JungData of the petrinets of the rule with <code>id</code>
+	 * @see {@link JungData#setNodeSize(double)}
 	 * @param id
-	 * @param nodeDistance
+	 * @param nodeSize
 	 */
-	public void setMinDistance(int idd, double nodeDistance);	
+	public void setNodeSize(int id, double nodeSize);
+	
+	
+	/**
+	 * Returns the nodeSize of Petrinet with <code>id</code>
+	 * @param id
+	 * @throws NullPointerException if id is wrong
+	 * @return
+	 */
+	public double getNodeSize(int id) throws NullPointerException;
 }

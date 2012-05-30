@@ -6,9 +6,11 @@ import static gui.Style.PETRINET_PANE_LAYOUT;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
+import persistence.Persistence;
 import petrinet.Arc;
 import petrinet.INode;
 import edu.uci.ics.jung.algorithms.layout.Layout;
+import engine.handler.NodeTypeEnum;
 import exceptions.EngineException;
 
 /** Pane for displaying petrinets */
@@ -78,6 +80,9 @@ class PetrinetPane {
 				petrinetViewer.removeFrom(petrinetPanel);
 			}
 			petrinetViewer = new PetrinetViewer(layout, petrinetId, null);
+			double nodeSize = EngineAdapter.getPetrinetManipulation()
+					.getNodeSize(petrinetId);
+			petrinetViewer.setNodeSize(nodeSize);
 			petrinetViewer.addTo(petrinetPanel);
 			MainWindow.getInstance().repaint();
 			SimulationPane.getInstance().setSimulationPaneEnable();
@@ -91,5 +96,15 @@ class PetrinetPane {
 			SimulationPane.getInstance().setSimulationPaneDisable();
 		}
 		petrinetPanel.setBorder(PETRINET_BORDER);
+	}
+
+	/**
+	 * Returns {@link PetrinetViewer#getNodeSize() current node size} of current
+	 * {@link PetrinetViewer}
+	 * 
+	 * @return
+	 */
+	public double getCurrentNodeSize() {
+		return petrinetViewer.getNodeSize();
 	}
 }

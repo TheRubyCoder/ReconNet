@@ -37,7 +37,8 @@ public class Persistence /* implements IPersistance */{
 	static JAXBContext context;
 
 	public static boolean savePetrinet(String pathAndFilename,
-			Petrinet petrinet, Map<INode, NodeLayoutAttribute> nodeMap) {
+			Petrinet petrinet, Map<INode, NodeLayoutAttribute> nodeMap,
+			double nodeSize) {
 
 		Map<String, String[]> coordinates = new HashMap<String, String[]>();
 
@@ -51,7 +52,8 @@ public class Persistence /* implements IPersistance */{
 			coordinates.put(String.valueOf(e.getKey().getId()), coords);
 		}
 
-		Pnml pnml = Converter.convertPetrinetToPnml(petrinet, coordinates);
+		Pnml pnml = Converter.convertPetrinetToPnml(petrinet, coordinates,
+				nodeSize);
 		File file = new File(pathAndFilename);
 
 		try {
@@ -84,9 +86,9 @@ public class Persistence /* implements IPersistance */{
 			pnml = (Pnml) m.unmarshal(new File(pathAndFilename));
 
 			return Converter.convertToPetrinet(pnml, handler);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
+		} catch (JAXBException e) {
 			e.printStackTrace();
+			PopUp.popError(e);
 		}
 
 		return -1;
@@ -95,7 +97,7 @@ public class Persistence /* implements IPersistance */{
 	public static boolean saveRule(String pathAndFilename, Rule rule,
 			Map<INode, NodeLayoutAttribute> nodeMapL,
 			Map<INode, NodeLayoutAttribute> nodeMapK,
-			Map<INode, NodeLayoutAttribute> nodeMapR) {
+			Map<INode, NodeLayoutAttribute> nodeMapR, double nodeSize) {
 		boolean success = false;
 
 		/*
@@ -115,7 +117,8 @@ public class Persistence /* implements IPersistance */{
 
 			Marshaller m = context.createMarshaller();
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			Pnml pnml = Converter.convertRuleToPnml(rule, nodeMapMerged);
+			Pnml pnml = Converter.convertRuleToPnml(rule, nodeMapMerged,
+					nodeSize);
 
 			m.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
 

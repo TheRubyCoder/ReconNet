@@ -10,6 +10,7 @@ import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.TransitionAttribute;
+import engine.data.JungData;
 import exceptions.EngineException;
 
 /**
@@ -184,5 +185,14 @@ public interface IPetrinetPersistence {
 	 * @throws EngineException 
 	 */
 	public Enum<?> getNodeType(INode node) throws EngineException;
+	
+	/**
+	 * Sets the nodeSize for the JungData of petrinet with <code>id</code>
+	 * 
+	 * @see {@link JungData#setNodeSize(double)}
+	 * @param id
+	 * @param nodeSize
+	 */
+	public void setNodeSize(int id, double nodeSize);
 	
 }

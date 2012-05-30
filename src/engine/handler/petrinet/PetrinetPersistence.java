@@ -188,5 +188,10 @@ public class PetrinetPersistence implements IPetrinetPersistence {
 	
 	}
 
+	@Override
+	public void setNodeSize(int id, double nodeSize) {
+		petrinetManipulationBackend.setNodeSize(id, nodeSize);
+	}
+
 }
 

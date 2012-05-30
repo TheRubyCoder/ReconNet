@@ -4,12 +4,12 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
 public	class Net{
-	private String type;
 	
 	private String id;
 	private String nettype;
 	
 	Page page;
+	
 
 	@XmlAttribute
 	public String getId() {
@@ -18,14 +18,6 @@ public	class Net{
 
 	public void setId(String id) {
 		this.id = id;
-	}
-	@XmlAttribute
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 
 	@XmlElement

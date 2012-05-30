@@ -38,7 +38,7 @@ final public class JungData {
 	private DirectedGraph<INode, Arc> graph;
 	private AbstractLayout<INode, Arc> layout;
 	private Map<Place, Color> placeColors;
-	private double minDistance = Style.getNodeDistanceDefault();
+	private double nodeSize = Style.NODE_SIZE_DEFAULT;
 
 	public JungData(DirectedGraph<INode, Arc> graph,
 			AbstractLayout<INode, Arc> layout) {
@@ -53,6 +53,18 @@ final public class JungData {
 		this.graph = graph;
 		this.layout = layout;
 		this.placeColors = new HashMap<Place, Color>();
+	}
+	
+	public double getNodeSize() {
+		return nodeSize;
+	}
+	
+	public void setNodeSize(double nodeSize) {
+		this.nodeSize = nodeSize;
+	}
+	
+	private double getMinDinstance(){
+		return nodeSize / 1.5d;
 	}
 
 	/**
@@ -73,14 +85,6 @@ final public class JungData {
 		return layout;
 	}
 
-	/**
-	 * Sets the distance that is checked for nodes on creation or movement
-	 * 
-	 * @param minDistance
-	 */
-	public void setMinDistance(double minDistance) {
-		this.minDistance = minDistance;
-	}
 
 	/**
 	 * Gets the LayoutAttributes of all Nodes.
@@ -576,10 +580,8 @@ final public class JungData {
 			double xDistance = Math.abs(layout.getX(node) - point.getX());
 			double yDistance = Math.abs(layout.getY(node) - point.getY());
 			
-			System.out.println("min dinstace = " + minDistance);
-
-			check(Double.compare(xDistance, minDistance) >= 0
-					|| Double.compare(yDistance, minDistance) >= 0,
+			check(Double.compare(xDistance, getMinDinstance()) >= 0
+					|| Double.compare(yDistance, getMinDinstance()) >= 0,
 					"point is too close to a node");
 		}
 	}

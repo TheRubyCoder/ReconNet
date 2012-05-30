@@ -846,7 +846,7 @@ final public class RuleHandler {
 					"save - nodeMapR == null");
 
 			Persistence.saveRule(path + "/" + filename + "." + format, rule,
-					nodeMapL, nodeMapK, nodeMapR);
+					nodeMapL, nodeMapK, nodeMapR, ruleData.getKJungData().getNodeSize());
 
 		}
 
@@ -1296,15 +1296,27 @@ final public class RuleHandler {
 	}
 
 	/**
-	 * @see {@link IRuleManipulation#setMinDistance(int, double)}
+	 * @see {@link IRuleManipulation#setNodeSize(int, double)}
 	 * @param id
-	 * @param nodeDistance
+	 * @param nodeSize
 	 */
-	public void setMinDistance(int id, double nodeDistance) {
+	public void setNodeSize(int id, double nodeSize) {
 		RuleData ruleData = sessionManager.getRuleData(id);
-		ruleData.getLJungData().setMinDistance(nodeDistance);
-		ruleData.getKJungData().setMinDistance(nodeDistance);
-		ruleData.getRJungData().setMinDistance(nodeDistance);
+		ruleData.getLJungData().setNodeSize(nodeSize);
+		ruleData.getKJungData().setNodeSize(nodeSize);
+		ruleData.getRJungData().setNodeSize(nodeSize);
+	}
+
+	/**
+	 * @see {@link IRuleManipulation#getNodeSize(int)}
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public double getNodeSize(int id) {
+		RuleData ruleData = sessionManager.getRuleData(id);
+		//NodeSize is equal for all parts of the rule
+		return ruleData.getLJungData().getNodeSize();
 	}
 
 }

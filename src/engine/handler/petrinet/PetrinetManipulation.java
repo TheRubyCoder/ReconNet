@@ -148,9 +148,9 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	}
 
 	@Override
-	public void save(int id, String path, String filename, String format)
+	public void save(int id, String path, String filename, String format, double nodeSize)
 			throws EngineException {
-		petrinetManipulationBackend.save(id, path, filename, format);
+		petrinetManipulationBackend.save(id, path, filename, format, nodeSize);
 	}
 	
 	@Override
@@ -230,9 +230,14 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	}
 
 	@Override
-	public void setMinDistance(int id, double nodeDistance) {
-		petrinetManipulationBackend.setMinDistance(id, nodeDistance);
+	public void setNodeSize(int id, double nodeDistance) {
+		petrinetManipulationBackend.setNodeSize(id, nodeDistance);
 		
+	}
+
+	@Override
+	public double getNodeSize(int id) throws NullPointerException {
+		return petrinetManipulationBackend.getNodeSize(id);
 	}
 
 }

@@ -525,6 +525,11 @@ class FilePane {
 			return -1;
 		}
 	}
+	
+	public double getNodeSizeFromSelectedItem() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
 	/** disable hole buttons and tree */
 	void disableWholeButtons() {
@@ -648,7 +653,8 @@ class FilePane {
 			if (this == FilePane.getPetrinetFilePane()) {
 				EngineAdapter.getPetrinetManipulation().save(id,
 						file.getParent(), fileToListEntry(file),
-						FILE_EXTENSION_WITHOUT_DOT);
+						FILE_EXTENSION_WITHOUT_DOT,
+						PetrinetPane.getInstance().getCurrentNodeSize());
 			} else {
 				EngineAdapter.getRuleManipulation().save(id, file.getParent(),
 						fileToListEntry(file), FILE_EXTENSION_WITHOUT_DOT);
@@ -678,9 +684,13 @@ class FilePane {
 				try {
 					int id = getIdFromSelectedItem();
 					if (this == FilePane.getPetrinetFilePane()) {
-						EngineAdapter.getPetrinetManipulation().save(id,
-								file.getParent(), fileToListEntry(file),
-								FILE_EXTENSION_WITHOUT_DOT);
+						EngineAdapter.getPetrinetManipulation()
+								.save(id,
+										file.getParent(),
+										fileToListEntry(file),
+										FILE_EXTENSION_WITHOUT_DOT,
+										PetrinetPane.getInstance()
+												.getCurrentNodeSize());
 					} else {
 						EngineAdapter.getRuleManipulation().save(id,
 								file.getParent(), fileToListEntry(file),

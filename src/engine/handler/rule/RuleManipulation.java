@@ -257,9 +257,14 @@ public class RuleManipulation implements IRuleManipulation {
 	}
 
 	@Override
-	public void setMinDistance(int id, double nodeDistance) {
-		ruleManipulationBackend.setMinDistance(id, nodeDistance);
+	public void setNodeSize(int id, double nodeSize) {
+		ruleManipulationBackend.setNodeSize(id, nodeSize);
 		
+	}
+
+	@Override
+	public double getNodeSize(int id) throws NullPointerException {
+		return ruleManipulationBackend.getNodeSize(id);
 	}
 
 }

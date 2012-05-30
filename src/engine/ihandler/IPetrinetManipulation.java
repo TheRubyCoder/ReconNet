@@ -224,8 +224,8 @@ public interface IPetrinetManipulation {
 	 *            now)
 	 */
 	public void save(@NotNull int id, @NotNull String path,
-			@NotNull String filename, @NotNull String format)
-			throws EngineException; // TODO: String format zu => Format format
+			@NotNull String filename, @NotNull String format, double nodeSize)
+			throws EngineException;
 
 	/**
 	 * 
@@ -377,11 +377,21 @@ public interface IPetrinetManipulation {
 	public void moveAllNodesTo(int id, float factor, Point point);
 
 	/**
-	 * Sets the minDistance for the JungData of petrinet with <code>id</code>
-	 * @see {@link JungData#setMinDistance(double)}
+	 * Sets the nodeSize for the JungData of petrinet with <code>id</code>
+	 * 
+	 * @see {@link JungData#setNodeSize(double)}
 	 * @param id
-	 * @param nodeDistance
+	 * @param nodeSize
 	 */
-	public void setMinDistance(int id, double nodeDistance);
+	public void setNodeSize(int id, double nodeSize);
+	
+	
+	/**
+	 * Returns the nodeSize of Petrinet with <code>id</code>
+	 * @param id
+	 * @throws if id is wrong
+	 * @return
+	 */
+	public double getNodeSize(int id) throws NullPointerException;
 
 }
