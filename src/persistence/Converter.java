@@ -11,7 +11,6 @@ import java.util.Set;
 import petrinet.INode;
 import petrinet.Petrinet;
 import petrinet.Renews;
-import petrinetze.impl.PetrinetIntegTest;
 import transformation.ITransformation;
 import transformation.Rule;
 import transformation.TransformationComponent;
@@ -44,7 +43,7 @@ public class Converter {
 			Map<String, String[]> layout, double nodeSize) {
 		Pnml pnml = new Pnml();
 		pnml.setNodeSize(nodeSize);
-		pnml.setType("petrinet");
+		pnml.setType(PETRINET_IDENT);
 		pnml.net = new ArrayList<Net>();
 		
 		Net xmlnet = new Net();
@@ -298,6 +297,9 @@ public class Converter {
 	 * @return id of created rule
 	 */
 	public static int convertToRule(Pnml pnml, IRulePersistence handler) {
+		if (pnml.getType().equals(RULE_IDENT)) {
+			throw new ShowAsWarningException("Die ausgewählte Datei enthält ein Petrinetz, keine Regel");
+		}
 		int id = handler.createRule();
 		
 		handler.setNodeSize(id, pnml.getNodeSize());
@@ -567,6 +569,7 @@ public class Converter {
 			Map<INode, NodeLayoutAttribute> map, double nodeSize) {
 		Pnml pnml = new Pnml();
 		
+		pnml.setType(RULE_IDENT);
 		pnml.setNodeSize(nodeSize);
 
 		pnml.net = new ArrayList<Net>();
