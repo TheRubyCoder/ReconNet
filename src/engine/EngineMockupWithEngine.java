@@ -253,30 +253,30 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 
 	@Override
 	public void printPetrinet(int id) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void moveGraphIntoVision(int id) throws EngineException {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 		
 	}
 
 	@Override
 	public void moveAllNodesTo(int id, float factor, Point point) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 		
 	}
 
 	@Override
 	public void setNodeSize(int id, double nodeDistance) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 		
 	}
 
 	@Override
 	public double getNodeSize(int id) throws NullPointerException {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 	
 }
