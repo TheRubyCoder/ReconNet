@@ -23,29 +23,51 @@ import exceptions.ShowAsWarningException;
 import gui.PopUp;
 
 /**
- * This class provides converting methods which are used by persistence class to
- * convert from and to JAXB-classes.
+ * This utility class provides converting methods which are used by persistence
+ * class to convert from and to JAXB-classes.
  * 
  * */
 public class Converter {
-	
+
+	private Converter() {
+		// utilitiy class
+	}
+
 	/**
-	 * Value for atribute {@link Net#getType() type} of {@link Net xmlNet}
+	 * Value for attribute {@link Net#getType() type} of {@link Net xmlNet}
 	 */
 	private static final String PETRINET_IDENT = "petrinet";
 	/**
-	 * Value for atribute {@link Net#getType() type} of {@link Net xmlNet}
+	 * Value for attribute {@link Net#getType() type} of {@link Net xmlNet}
 	 */
 	private static final String RULE_IDENT = "rule";
 
-	/** not working yet */
+	/**
+	 * Converts a logical {@link Petrinet petrinet} object into the equivalent
+	 * Pnml object tree, which can the be marshalled into a file.
+	 * 
+	 * @param petrinet
+	 *            logical petrinet
+	 * @param layout
+	 *            layout information in the following format:
+	 *            <ul>
+	 *            <li>key: id of node as String</li>
+	 *            <li>value: a list of Strings consistent of: [x, y, red, green,
+	 *            blue] all as Strings. Where x and y are position in pixels and
+	 *            red, green, blue are between 0 and 255
+	 *            </ul>
+	 * @param nodeSize
+	 *            the size of the nodes in pixels. This is important due to
+	 *            collision detection when loading the petrinet.
+	 * @return
+	 */
 	static public Pnml convertPetrinetToPnml(Petrinet petrinet,
 			Map<String, String[]> layout, double nodeSize) {
 		Pnml pnml = new Pnml();
 		pnml.setNodeSize(nodeSize);
 		pnml.setType(PETRINET_IDENT);
 		pnml.net = new ArrayList<Net>();
-		
+
 		Net xmlnet = new Net();
 		xmlnet.setId(String.valueOf(petrinet.getId()));
 		pnml.net.add(xmlnet);
@@ -180,31 +202,47 @@ public class Converter {
 		return pnml;
 	}
 
+	/**
+	 * Converts the position as a List of Strings like specified in
+	 * {@link Converter#convertPetrinetToPnml(Petrinet, Map, double)} into a
+	 * {@link Point2D.Double} object
+	 * 
+	 * @param pos
+	 * @return
+	 */
 	static private Point2D positionToPoint2D(List<Position> pos) {
 		return new Point2D.Double(Double.parseDouble(pos.get(0).x),
 				Double.parseDouble(pos.get(0).y));
 	}
 
 	/**
-	 * Converts a {@link Pnml} object that was unmarshalled from an XMLFile into a {@link Petrinet}
+	 * Converts a {@link Pnml} object that was unmarshalled from an XMLFile into
+	 * a {@link Petrinet}
+	 * 
 	 * @param pnml
+	 *            The object tree, representing the XML file
 	 * @param handler
-	 * @return id of petrinet
+	 *            The engine handler to create and modify the petrinet.
+	 * @return id of petrinet Id of the created petrinet
 	 */
-	static public int convertToPetrinet(Pnml pnml, IPetrinetPersistence handler) {
+	static public int convertPnmlToPetrinet(Pnml pnml,
+			IPetrinetPersistence handler) {
+		// In each XML file there is the type attribute for the pnml node to
+		// quick-check if its a rule or a petrinet
 		if (pnml.getType().equals(RULE_IDENT)) {
-			throw new ShowAsWarningException("Die ausgewählte Datei enthält eine Regel, kein Petrinetz");
+			throw new ShowAsWarningException(
+					"Die ausgewählte Datei enthält eine Regel, kein Petrinetz");
 		}
 		int petrinetID = -1;
 		try {
 			// create petrinet
 			petrinetID = handler.createPetrinet();
-			
+
 			handler.setNodeSize(petrinetID, pnml.getNodeSize());
 
-			// IPetrinet ipetrinet=PetrinetComponent.getPetrinet();
-			// Petrinet petrinet=ipetrinet.createPetrinet();
-			// Strings sind die IDsfür die objekte AUS der Pnml
+			/**
+			 * Maps XML id to logical object
+			 */
 			Map<String, petrinet.INode> placesAndTransis = new HashMap<String, petrinet.INode>();
 
 			// create places
@@ -260,8 +298,6 @@ public class Converter {
 				handler.setRnw(petrinetID, realTransition,
 						Renews.fromString(trans.getTransitionRenew().getText()));
 
-				if (placesAndTransis.containsKey(trans.getId()))
-					System.out.println("AHHHHHH!");
 				placesAndTransis.put(trans.getId(), realTransition);
 
 			}
@@ -271,17 +307,6 @@ public class Converter {
 				handler.createArc(petrinetID, placesAndTransis.get(arc.source),
 						placesAndTransis.get(arc.target));
 
-				/*
-				 * Set<petrinet.Place> arcsFromPetrinet=petrinet.getAllPlaces();
-				 * 
-				 * System.out.println("Source: "+arc.getSource());
-				 * System.out.println("Target: "+arc.getTarget()); petrinet.Arc
-				 * arc2=petrinet.createArc(arc.getId(),placesAndTransis.get(arc.
-				 * getSource()), placesAndTransis.get(arc.getTarget()));
-				 * arc2.setEnd(placesAndTransis.get(arc.getTarget()));
-				 * arc2.setStart(placesAndTransis.get(arc.getSource()));
-				 * arcs.put(arc.id, arc2);
-				 */
 			}
 			return petrinetID;
 		} catch (EngineException e) {
@@ -291,17 +316,24 @@ public class Converter {
 	}
 
 	/**
-	 * Creates a rule with the <tt>handler</tt> that is defined within
-	 * <tt>pnml</tt>
+	 * Converts a {@link Pnml} object that was unmarshalled from an XMLFile into
+	 * a {@link Rule}
 	 * 
-	 * @return id of created rule
+	 * @param pnml
+	 *            The object tree, representing the XML file
+	 * @param handler
+	 *            The engine handler to create and modify the rule.
+	 * @return id of petrinet Id of the created petrinet
 	 */
-	public static int convertToRule(Pnml pnml, IRulePersistence handler) {
+	public static int convertPnmlToRule(Pnml pnml, IRulePersistence handler) {
+		// In each XML file there is the type attribute for the pnml node to
+		// quick-check if its a rule or a petrinet
 		if (pnml.getType().equals(RULE_IDENT)) {
-			throw new ShowAsWarningException("Die ausgewählte Datei enthält ein Petrinetz, keine Regel");
+			throw new ShowAsWarningException(
+					"Die ausgewählte Datei enthält ein Petrinetz, keine Regel");
 		}
 		int id = handler.createRule();
-		
+
 		handler.setNodeSize(id, pnml.getNodeSize());
 
 		Net lNet = pnml.getNet().get(0);
@@ -497,6 +529,21 @@ public class Converter {
 		return result;
 	}
 
+	/**
+	 * Adds transitions to the rule, writing the mappings of created places into
+	 * the resprective maps (last 3 parameters)
+	 * 
+	 * @param id
+	 * @param lPlaces
+	 * @param kPlaces
+	 * @param rPlaces
+	 * @param handler
+	 * @param idToINodeInL
+	 * @param idToINodeInK
+	 * @param idToINodeInR
+	 * @return
+	 * @throws EngineException
+	 */
 	private static Map<String, INode> addTransitionsToRule(int id,
 			List<Transition> lTransitions, List<Transition> kTransition,
 			List<Transition> rTransition, IRulePersistence handler,
@@ -540,6 +587,12 @@ public class Converter {
 		return result;
 	}
 
+	/**
+	 * Extracts the XML ids of {@link Place places} into a List of ids as String
+	 * 
+	 * @param placeList
+	 * @return
+	 */
 	private static List<String> getIdsOfPlaceList(List<Place> placeList) {
 		List<String> ids = new LinkedList<String>();
 		for (Place place : placeList) {
@@ -548,6 +601,12 @@ public class Converter {
 		return ids;
 	}
 
+	/**
+	 * Extracts the XML ids of {@link Transition transitions} into a List of ids as String
+	 * 
+	 * @param placeList
+	 * @return
+	 */
 	private static List<String> getIdsOfTransitionList(
 			List<Transition> transitionList) {
 		List<String> ids = new LinkedList<String>();
@@ -557,6 +616,12 @@ public class Converter {
 		return ids;
 	}
 
+	/**
+	 * Extracts the XML ids of {@link Arc arc} into a List of ids as String
+	 * 
+	 * @param placeList
+	 * @return
+	 */
 	private static List<String> getIdsOfArcsList(List<Arc> arcList) {
 		List<String> ids = new LinkedList<String>();
 		for (Arc arc : arcList) {
@@ -565,10 +630,27 @@ public class Converter {
 		return ids;
 	}
 
+	/**
+	 * Converts a logical {@link Rule rule} object into the equivalent
+	 * Pnml object tree, which can the be marshalled into a file.
+	 * 
+	 * @param rule
+	 *            logical rule
+	 * @param layout
+	 *            layout information in the following format:
+	 *            <ul>
+	 *            <li>key: id of node as String</li>
+	 *            <li>value: {@link NodeLayoutAttribute layout}
+	 *            </ul>
+	 * @param nodeSize
+	 *            the size of the nodes in pixels. This is important due to
+	 *            collision detection when loading the petrinet.
+	 * @return
+	 */
 	public static Pnml convertRuleToPnml(Rule rule,
 			Map<INode, NodeLayoutAttribute> map, double nodeSize) {
 		Pnml pnml = new Pnml();
-		
+
 		pnml.setType(RULE_IDENT);
 		pnml.setNodeSize(nodeSize);
 
@@ -590,6 +672,14 @@ public class Converter {
 		return pnml;
 	}
 
+	/**
+	 * Creates an {@link Net xml petrinet} as part of a rule. You could see this as generating a sub tree
+	 * @param petrinet
+	 * @param map
+	 * @param type
+	 * @param rule
+	 * @return
+	 */
 	private static Net createNet(Petrinet petrinet,
 			Map<INode, NodeLayoutAttribute> map, RuleNet type, Rule rule) {
 		Net net = new Net();

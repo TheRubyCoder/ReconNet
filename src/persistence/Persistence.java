@@ -20,7 +20,7 @@ import engine.ihandler.IPetrinetPersistence;
 import engine.ihandler.IRulePersistence;
 import gui.PopUp;
 
-public class Persistence /* implements IPersistance */{
+public class Persistence {
 	static {
 		try {
 			context = JAXBContext.newInstance(persistence.Pnml.class,
@@ -36,6 +36,21 @@ public class Persistence /* implements IPersistance */{
 
 	static JAXBContext context;
 
+	/**
+	 * Saves a petrinet into a file
+	 * 
+	 * @param pathAndFilename
+	 *            String that identifies the file
+	 * @param petrinet
+	 *            logical petrinet to be safed
+	 * @param nodeMap
+	 *            layout information: color and position of nodes
+	 * @param nodeSize
+	 *            size of nodes. This is depending on "zoom" and is important
+	 *            when loading the file
+	 * @return <code>true</code> when successful, <code>false</code> when any
+	 *         exception was thrown
+	 */
 	public static boolean savePetrinet(String pathAndFilename,
 			Petrinet petrinet, Map<INode, NodeLayoutAttribute> nodeMap,
 			double nodeSize) {
@@ -75,6 +90,16 @@ public class Persistence /* implements IPersistance */{
 		return false;
 	}
 
+	/**
+	 * Loads a petrinet from a file
+	 * 
+	 * @param pathAndFilename
+	 *            String that identifies the file
+	 * @param handler
+	 *            The engine handler to create and modify the petrinet
+	 * @return the id of the created petrinet. <code>-1</code> if any exception
+	 *         was thrown
+	 */
 	public static int loadPetrinet(String pathAndFilename,
 			IPetrinetPersistence handler) {
 		Pnml pnml = new Pnml();
@@ -85,7 +110,7 @@ public class Persistence /* implements IPersistance */{
 
 			pnml = (Pnml) m.unmarshal(new File(pathAndFilename));
 
-			return Converter.convertToPetrinet(pnml, handler);
+			return Converter.convertPnmlToPetrinet(pnml, handler);
 		} catch (JAXBException e) {
 			e.printStackTrace();
 			PopUp.popError(e);
@@ -94,19 +119,30 @@ public class Persistence /* implements IPersistance */{
 		return -1;
 	}
 
+	/**
+	 * Saves a {@link Rule rule} into a file
+	 * 
+	 * @param pathAndFilename
+	 *            String that identifies the file
+	 * @param rule
+	 *            the logical rule to be saved
+	 * @param nodeMapL
+	 *            layout information for nodes in L
+	 * @param nodeMapK
+	 *            layout information for nodes in K
+	 * @param nodeMapR
+	 *            layout information for nodes in R
+	 * @param nodeSize
+	 *            Size of nodes. This is depending on "zoom" and is important
+	 *            when loading the file
+	 * @return <code>true</code> when successful, <code>false</code> when any
+	 *         exception was thrown
+	 */
 	public static boolean saveRule(String pathAndFilename, Rule rule,
 			Map<INode, NodeLayoutAttribute> nodeMapL,
 			Map<INode, NodeLayoutAttribute> nodeMapK,
 			Map<INode, NodeLayoutAttribute> nodeMapR, double nodeSize) {
 		boolean success = false;
-
-		/*
-		 * for(Entry<INode, NodeLayoutAttribute> e:nodeMap.entrySet()){ String[]
-		 * coords
-		 * ={String.valueOf(e.getValue().getCoordinate().getX()),String.valueOf
-		 * (e.getValue().getCoordinate().getY())};
-		 * coordinates.put(String.valueOf(e.getKey().getId()), coords); }
-		 */
 
 		try {
 
@@ -126,7 +162,7 @@ public class Persistence /* implements IPersistance */{
 			m.marshal(pnml, fw);
 			fw.flush();
 			fw.close();
-
+			success = true;
 		} catch (IOException e) {
 			PopUp.popError(e);
 		} catch (JAXBException e) {
@@ -136,6 +172,16 @@ public class Persistence /* implements IPersistance */{
 		return success;
 	}
 
+	/**
+	 * Loads a {@linkplain Rule} from a file
+	 * 
+	 * @param pathAndFilename
+	 *            String that identifies the file
+	 * @param handler
+	 *            The engine handler to create and modify the rule
+	 * @return the id of the created rule. <code>-1</code> if any exception
+	 *         was thrown
+	 */
 	public static int loadRule(String pathAndFilename, IRulePersistence handler) {
 		Pnml pnml;
 		try {
@@ -145,7 +191,7 @@ public class Persistence /* implements IPersistance */{
 
 			pnml = (Pnml) m.unmarshal(new File(pathAndFilename));
 
-			return Converter.convertToRule(pnml, handler);
+			return Converter.convertPnmlToRule(pnml, handler);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
