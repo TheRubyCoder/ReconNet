@@ -328,7 +328,7 @@ public class Converter {
 	public static int convertPnmlToRule(Pnml pnml, IRulePersistence handler) {
 		// In each XML file there is the type attribute for the pnml node to
 		// quick-check if its a rule or a petrinet
-		if (pnml.getType().equals(RULE_IDENT)) {
+		if (!pnml.getType().equals(RULE_IDENT)) {
 			throw new ShowAsWarningException(
 					"Die ausgewählte Datei enthält ein Petrinetz, keine Regel");
 		}
