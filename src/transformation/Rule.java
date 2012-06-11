@@ -2,7 +2,9 @@ package transformation;
 
 import static transformation.dependency.PetrinetAdapter.createPetrinet;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -635,5 +637,24 @@ public class Rule {
 		mappings.add(inR);
 		return mappings;
 	}
-
+	
+	/**
+	 * Returns the nodes (in L) that will be deleted on applying the rule.  
+	 * @return
+	 */
+	public List<INode> getNodesToDelete(){
+		List<INode> toDelete = new ArrayList<INode>();
+		toDelete.addAll(getL().getAllPlaces());
+		toDelete.addAll(getL().getAllTransitions());
+		Iterator<INode> iterator = toDelete.iterator();
+		while (iterator.hasNext()) {
+			INode toDeleteNode = (INode) iterator.next();
+			if (fromKtoR(fromLtoK(toDeleteNode)) == null) {
+				//stay in toDelete
+			}else{
+				iterator.remove();
+			}
+		}
+		return toDelete;
+	}
 }

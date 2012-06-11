@@ -55,6 +55,7 @@ public class TransformationComponent implements ITransformation{
 			try {
 				return transformation.transform();
 			} catch (EngineException contact){
+				contact.printStackTrace();
 				System.out.println("Contact condition has been broken");
 				return null;
 			}

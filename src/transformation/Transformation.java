@@ -253,12 +253,8 @@ public class Transformation {
 	 */
 	private boolean contactConditionFulfilled(Petrinet petrinet, Rule rule,
 			Morphism morphism) {
-		List<INode> lWithoutR = new LinkedList<INode>();
-		lWithoutR.addAll(rule.getL().getAllPlaces());
-		lWithoutR.addAll(rule.getL().getAllTransitions());
-		lWithoutR.removeAll(rule.getR().getAllPlaces());
-		lWithoutR.removeAll(rule.getR().getAllTransitions());
-		for (INode node : lWithoutR) {
+		List<INode> nodesToDelete = rule.getNodesToDelete();
+		for (INode node : nodesToDelete) {
 			if (!contactConditionFulfilled(node, getMorphism(), getPetrinet(),
 					getRule().getL())) {
 				return false;
