@@ -207,6 +207,7 @@ public class Petrinet {
 	 */
 	public Collection<Integer> giveAllDeleteElem(int id) {
 		List<Integer> result = new ArrayList<Integer>();
+		result.add(id);
 		if (getNodeType(id) == ElementType.ARC) {
 			result.add(id);
 

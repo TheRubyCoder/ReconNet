@@ -7,21 +7,29 @@ import static gui.Style.NODE_BORDER_COLOR;
 
 import java.awt.Color;
 import java.awt.GradientPaint;
+import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.KeyStroke;
 
 import org.apache.commons.collections15.Transformer;
 
@@ -44,6 +52,7 @@ import engine.attribute.TransitionAttribute;
 import engine.handler.NodeTypeEnum;
 import engine.handler.RuleNet;
 import exceptions.EngineException;
+import exceptions.ShowAsInfoException;
 import gui.EditorPane.EditorMode;
 
 /**
@@ -82,6 +91,12 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	INode currentSelectedNode = null;
 
 	/**
+	 * The node that is currently selected by user. <tt>null</tt> if no node is
+	 * selected
+	 */
+	Arc currentSelectedArc = null;
+
+	/**
 	 * Initiates a new petrinet viewer with a petrinet. Rulenet == null if the
 	 * viewer displays the N petrinet
 	 */
@@ -93,8 +108,27 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 
 		setBackground(Color.WHITE);
 
+		// getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("Plus"),
+		// "zoom in");
+		// getInputMap().put(KeyStroke.getKeyStroke("strg Minus"), "zoom out");
+		// getInputMap().put(KeyStroke.getKeyStroke("strg pressed X"), "safe");
+		// getInputMap().put(KeyStroke.getKeyStroke("DELETE"), "delete");
+		//
+		// final PetrinetViewer petrinetViewer = this;
+		// getActionMap().put("zoom in", new AbstractAction() {
+		// @Override
+		// public void actionPerformed(ActionEvent e) {
+		// System.out.println("zoom in");
+		// Point point = new Point(0,0);
+		// petrinetViewer.scale(-0.1f, point);
+		// }
+		// });
+		addKeyListener(new PetrinetKeyboardListener(this));
+
 		addMouseListener(new PetrinetMouseListener(this));
 		addMouseWheelListener(new PetrinetMouseListener(this));
+		addKeyListener(new PetrinetKeyboardListener(this));
+
 		getRenderer().setVertexRenderer(new PetrinetRenderer(this));
 		getRenderContext().setEdgeLabelTransformer(
 				new PetrinetArcLabelTransformer(this));
@@ -356,6 +390,26 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 			PopUp.popError(e);
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Deletes the currently selected node or arc
+	 * 
+	 * @return <code>false</code> if nothing was selected
+	 */
+	public boolean deleteSelected() {
+		if (currentSelectedArc != null) {
+			deleteArc(this.currentSelectedArc);
+		} else if (currentSelectedNode != null) {
+			if (isNodePlace(currentSelectedNode)) {
+				deletePlace((Place) currentSelectedNode);
+			} else {
+				deleteTransition((Transition) currentSelectedNode);
+			}
+		} else {
+			return false;
+		}
+		return true;
 	}
 
 	void createArc(INode start, INode end) {
@@ -779,7 +833,8 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 
 	/** mouse click listener for the drawing panel */
 	private static class PetrinetMouseListener extends
-			PickingGraphMousePlugin<INode, Arc> implements MouseWheelListener {
+			PickingGraphMousePlugin<INode, Arc> implements MouseWheelListener,
+			MouseMotionListener {
 
 		private static enum DragMode {
 			SCROLL, MOVENODE, ARC, NONE
@@ -828,6 +883,7 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 					AttributePane.getInstance().displayEdge(edge,
 							petrinetViewer);
 					petrinetViewer.currentSelectedNode = null;
+					petrinetViewer.currentSelectedArc = edge;
 					if (e.isMetaDown()) {
 						PetrinetNodePopUpMenu.fromArc(edge, petrinetViewer)
 								.show(petrinetViewer, e.getX(), e.getY());
@@ -838,6 +894,7 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 					AttributePane.getInstance().displayNode(vertex,
 							petrinetViewer);
 					petrinetViewer.currentSelectedNode = vertex;
+					petrinetViewer.currentSelectedArc = null;
 					if (e.isMetaDown()) {
 						PetrinetNodePopUpMenu.fromNode(vertex, petrinetViewer)
 								.show(petrinetViewer, e.getX(), e.getY());
@@ -852,6 +909,7 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 						// nothing
 					}
 					petrinetViewer.currentSelectedNode = null;
+					petrinetViewer.currentSelectedArc = null;
 					AttributePane.getInstance().displayEmpty();
 				}
 			} else if (mode == EditorMode.PLACE) {
@@ -931,6 +989,56 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 			nodeFromDrag = null;
 		}
 	} // end of mouse listener
+
+	private static class PetrinetKeyboardListener implements KeyListener {
+
+		private PetrinetViewer petrinetViewer;
+
+		private boolean strgPressed = false;
+
+		public PetrinetKeyboardListener(PetrinetViewer petrinetViewer) {
+			this.petrinetViewer = petrinetViewer;
+		}
+
+		@Override
+		public void keyPressed(KeyEvent pressed) {
+			// KeyCode 17 = Strg
+			if (pressed.getKeyCode() == 17) {
+				strgPressed = true;
+			}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent released) {
+			// KeyCode 17 = Strg
+			if (released.getKeyCode() == 17) {
+				strgPressed = false;
+			}
+			String keyText = KeyEvent.getKeyText(released.getKeyCode());
+			if (strgPressed) {
+				// Strg, + => zoom in
+				if (keyText.equals("Plus")) {
+					petrinetViewer.scale(1.1f, new Point(0, 0));
+					// Strg, - => zomm out
+				} else if (keyText.equals("Minus")) {
+					petrinetViewer.scale(0.9f, new Point(0, 0));
+				}
+			} else {
+				// delete => delete currently selected node
+				if (keyText.equals("Delete")) {
+					boolean wasSelected = petrinetViewer.deleteSelected();
+					if (!wasSelected) {
+						throw new ShowAsInfoException("Es ist nichts zum Löschen ausgewählt");
+					}
+				}
+			}
+		}
+
+		@Override
+		public void keyTyped(KeyEvent typed) {
+		}
+
+	}
 
 	/**
 	 * Custom renderer that is used from jung to make transitions cornered and
@@ -1147,5 +1255,6 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 
 	}
+
 
 }

@@ -294,54 +294,9 @@ final public class PetrinetHandler {
 
 			Petrinet petrinet = petrinetData.getPetrinet();
 			JungData jungData = petrinetData.getJungData();
-
-			// all deleted elements, returned by Petrinet
-			Collection<Integer> allDelElemFromPetrinet = petrinet
-					.giveAllDeleteElem(node.getId());
-
-			if (allDelElemFromPetrinet.size() == 0)
-				exception("deleteInternal - no items in delColl?!");
-
-			Iterator<Integer> iter = allDelElemFromPetrinet.iterator();
-			Collection<Arc> collArc = new HashSet<Arc>();
-			Collection<INode> collINodes = new HashSet<INode>();
-
-			while (iter.hasNext()) {
-
-				int idOfElem = iter.next();
-				ElementType type = petrinet.getNodeType(idOfElem);
-
-				// test type of Element
-				if (type.equals(ElementType.ARC)) {
-					Arc a = petrinet.getArcById(idOfElem);
-					if (a == null)
-						exception("deleteInternal - arc is null");
-					collArc.add(a);
-				} else if (type.equals(ElementType.PLACE)) {
-					Place p = petrinet.getPlaceById(idOfElem);
-					if (p == null)
-						exception("deleteInternal - place is null");
-					collINodes.add(p);
-				} else if (type.equals(ElementType.TRANSITION)) {
-					Transition t = petrinet.getTransitionById(idOfElem);
-					if (t == null)
-						exception("deleteInternal - transition is null");
-					collINodes.add(t);
-				} else {
-					exception("deleteInternal - invalid type from id: "
-							+ idOfElem + ", type: " + type.toString());
-				}
-
-			}
-
-			try {
-				jungData.delete(collArc, collINodes);
-			} catch (IllegalArgumentException e) {
-				exception("deleteInternal - can not delete Place/Transition");
-			}
-
-			// know kill all
+			
 			petrinet.deleteElementById(node.getId());
+			jungData.deleteDataOfMissingElements(petrinet);
 
 		}
 

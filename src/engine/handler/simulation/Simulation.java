@@ -194,6 +194,7 @@ public class Simulation implements ISimulation {
 											(Place) end);
 								}
 							}
+							jungData.deleteDataOfMissingElements(petrinet);
 						} catch (IllegalArgumentException ex) { //thrown when "not all incident arcs are given"
 							pickedRules.remove(randomRule);
 							if (pickedRules.size() == 0) {

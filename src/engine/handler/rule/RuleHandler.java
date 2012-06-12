@@ -592,51 +592,6 @@ final public class RuleHandler {
 
 	public void deleteArc(int id, RuleNet net, Arc arc) throws EngineException {
 		deleteInternal(id, net, arc);
-		// // get the RuleData from the id and SessionManager
-		// RuleData ruleData = sessionManager.getRuleData(id);
-		//
-		// // Test: is id valid
-		// if (ruleData == null) {
-		// exception("deleteArc - id of the Rule is wrong");
-		// } else {
-		// Rule rule = ruleData.getRule();
-		//
-		//
-		// Petrinet petrinet = null;
-		// JungData jungData = null;
-		//
-		// if (net.equals(RuleNet.L)) {
-		// // Manipulation in L
-		// // Get Petrinet and corresponding JungData
-		// petrinet = rule.getL();
-		// jungData = ruleData.getLJungData();
-		// } else if (net.equals(RuleNet.K)) {
-		// // Manipulation in K
-		// // Get Petrinet and corresponding JungData
-		// petrinet = rule.getK();
-		// jungData = ruleData.getKJungData();
-		// } else if (net.equals(RuleNet.R)) {
-		// // Manipulation in R
-		// // Get Petrinet and corresponding JungData
-		// petrinet = rule.getR();
-		// jungData = ruleData.getRJungData();
-		// } else {
-		// exception("deleteArc - Not given if Manipulation is in L,K or R");
-		// }
-		// petrinet.deleteElementById(arc.getId());
-		//
-		// // call JundModification and create Collection
-		// Collection<Arc> collArc = new HashSet<Arc>();
-		// collArc.add(arc);
-		//
-		// Collection<INode> collINodes = new HashSet<INode>();
-		//
-		// try {
-		// jungData.delete(collArc, collINodes);
-		// } catch (IllegalArgumentException e) {
-		// exception("deleteArc - can not delete Arc");
-		// }
-		// }
 	}
 
 	public void deletePlace(int id, RuleNet net, INode place)
