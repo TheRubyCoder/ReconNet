@@ -620,7 +620,7 @@ final public class RuleHandler {
 
 			ruleData.deleteDataOfMissingElements(rule);
 		}
-	}
+	} 
 
 	public ArcAttribute getArcAttribute(int id, Arc arc) {
 
