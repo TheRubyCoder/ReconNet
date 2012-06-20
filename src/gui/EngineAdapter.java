@@ -3,7 +3,7 @@ package gui;
 import engine.handler.petrinet.PetrinetManipulation;
 import engine.handler.petrinet.PetrinetPersistence;
 import engine.handler.rule.RuleManipulation;
-import engine.handler.simulation.Simulation;
+import engine.handler.simulation.SimulationHandler;
 import engine.ihandler.IPetrinetManipulation;
 import engine.ihandler.IPetrinetPersistence;
 import engine.ihandler.IRuleManipulation;
@@ -14,7 +14,7 @@ public class EngineAdapter {
 	private EngineAdapter() {}
 	
 	public static ISimulation getSimulation(){
-		return Simulation.getInstance();
+		return SimulationHandler.getInstance();
 	}
 	
 	public static IPetrinetManipulation getPetrinetManipulation(){

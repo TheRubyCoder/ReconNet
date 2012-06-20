@@ -27,20 +27,20 @@ import exceptions.EngineException;
 import exceptions.ShowAsInfoException;
 import exceptions.ShowAsWarningException;
 
-public class Simulation implements ISimulation {
+public class SimulationHandler implements ISimulation {
 
 	private final SessionManager sessionManager;
 	private final ITransformation transformationComponent;
-	private static Simulation simulation;
+	private static SimulationHandler simulation;
 
-	private Simulation() {
+	private SimulationHandler() {
 		sessionManager = SessionManager.getInstance();
 		transformationComponent = TransformationComponent.getTransformation();
 	}
 
-	public static Simulation getInstance() {
+	public static SimulationHandler getInstance() {
 		if (simulation == null)
-			simulation = new Simulation();
+			simulation = new SimulationHandler();
 
 		return simulation;
 	}
@@ -58,7 +58,7 @@ public class Simulation implements ISimulation {
 
 		// Test: is id valid
 		if (petrinetData == null) {
-			exception("Simulation - id of the Petrinet is wrong");
+			exception("SimulationHandler - id of the Petrinet is wrong");
 
 		} else {
 			Petrinet petrinet = petrinetData.getPetrinet();
@@ -101,7 +101,7 @@ public class Simulation implements ISimulation {
 
 		// Test: is id valid
 		if (petrinetData == null) {
-			exception("Simulation - id of the Petrinet is wrong");
+			exception("SimulationHandler - id of the Petrinet is wrong");
 
 		} else {
 			Petrinet petrinet = petrinetData.getPetrinet();

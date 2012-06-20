@@ -179,7 +179,7 @@ class SimulationPane {
 
 	/** Initiate and layouting Simulationbutton */
 	private JButton initiateSimulateButton() {
-		JButton button = new JButton("Start Simulation");
+		JButton button = new JButton("Start SimulationHandler");
 		button.setMnemonic(KeyEvent.VK_P);
 		button.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
 		button.setLocation(SIMULATION_PANE_BUTTON_STARTSIMULATION_LOCATION);
@@ -212,7 +212,7 @@ class SimulationPane {
 		simulationButton.setIcon(SIMULATION_START_ICON);
 		simulationButton.setDisabledIcon(SIMULATION_START_ICON_DISABLE);
 		simulationButton.setPressedIcon(SIMULATION_START_ICON_PRESSED);
-		simulationButton.setText("start Simulation");
+		simulationButton.setText("start SimulationHandler");
 		simulationButton.setIconTextGap(10);
 
 		simulationButton
@@ -224,7 +224,7 @@ class SimulationPane {
 	void setSimulationButtonPause() {
 		simulationButton.setIcon(SIMULATION_PAUSE_ICON);
 		simulationButton.setPressedIcon(SIMULATION_PAUSE_ICON_PRESSED);
-		simulationButton.setText("stop Simulation");
+		simulationButton.setText("stop SimulationHandler");
 
 		simulationButton.setToolTipText("laufende Endlossimulation pausieren.");
 		simulationButton.setRolloverEnabled(true);

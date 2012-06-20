@@ -84,7 +84,7 @@ public class Style {
 	
 	
 	/* ************************************* 
-	 * Simulation pane
+	 * SimulationHandler pane
 	 * *************************************/
 	
 	public static final Dimension SIMULATION_PANE_DIMENSION = new Dimension(INSET_LEFT +

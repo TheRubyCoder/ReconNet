@@ -82,7 +82,7 @@ public class CoffeeNetTest {
 //		 COFFEE_NET.createArc("", cookTea, teaReady);
 //		 
 //		 
-//		 Simulation sim =  engine.handler.simulation.Simulation.getInstance();
+//		 SimulationHandler sim =  engine.handler.simulation.SimulationHandler.getInstance();
 //		 sim.
 //		 
 //		 // set start tokens

@@ -43,6 +43,7 @@ public class Petrinet {
 	private Set<Transition> transitions;
 	private Set<Arc> arcs;
 	private IGraphElement graphElements;
+	private Random random = new Random();
 
 	@Override
 	public boolean equals(Object obj) {
@@ -404,8 +405,6 @@ public class Petrinet {
 			}
 		}
 	}
-
-	private Random random = new Random();
 
 	public Set<INode> fire() {
 		List<Transition> active = new ArrayList<Transition>(

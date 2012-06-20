@@ -5,12 +5,10 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 
 import persistence.Persistence;
 import petrinet.Arc;
-import petrinet.ElementType;
 import petrinet.INode;
 import petrinet.IRenew;
 import petrinet.Petrinet;
