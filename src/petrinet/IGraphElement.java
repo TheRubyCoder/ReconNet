@@ -3,6 +3,9 @@ package petrinet;
 import java.util.Set;
 
 
+/**
+ * For accessing all nodes and arcs of a petrinet 
+ */
 public interface IGraphElement {
 	/**
 	 * Liefert alle Stellen und Transitionen

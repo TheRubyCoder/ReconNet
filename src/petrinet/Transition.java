@@ -1,34 +1,50 @@
 package petrinet;
 
-/**
- * Diese Klasse stellt eine Transition in Petrinetze dar und
- * bietet die dazu gehoerige Methoden dafuer an.
- * 
- * @author Reiter, Safai
- * @version 1.0
- */
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
+/**
+ * This class represents a Transition within a {@link Petrinet}, holding
+ * information about name, renew and label
+ * 
+ */
 public class Transition implements INode {
 
+	/**
+	 * Id of this {@link Transition}
+	 */
 	private int id;
 
+	/**
+	 * Name of this {@link Transition}
+	 */
 	private String name;
 
+	/**
+	 * {@link IRenew Renew} of this {@link Transition}
+	 */
 	private IRenew rnw;
 
+	/**
+	 * Label of this {@link Transition}
+	 */
 	private String tlb = "";
 
 	/**
-	 * Liste aller Kanten, die von dieser Transition abgehen.
+	 * list of outgoing arcs
 	 */
 	private List<Arc> startArcs;
+
 	/**
-	 * Liste aller Kanten, die in diese Transition eingehen.
+	 * list of incoming arcs
 	 */
 	private List<Arc> endArcs;
+
+	/**
+	 * Petrinet of the transition
+	 */
+	private final Petrinet petrinet;
 
 	public void setStartArcs(Arc arc) {
 		this.startArcs.add(arc);
@@ -40,8 +56,16 @@ public class Transition implements INode {
 		petrinet.onNodeChanged(this, ActionType.changed);
 	}
 
-	private final Petrinet petrinet;
-
+	/**
+	 * Creates a new {@link Transition} with no name and no arcs
+	 * 
+	 * @param id
+	 *            Id of the {@link Transition}
+	 * @param rnw
+	 *            Renew of the {@link Transition}
+	 * @param petrinet
+	 *            {@link Petrinet} of the {@link Transition}
+	 */
 	Transition(int id, IRenew rnw, Petrinet petrinet) {
 		this.id = id;
 		this.rnw = rnw;
@@ -84,6 +108,15 @@ public class Transition implements INode {
 		return tlb;
 	}
 
+	/**
+	 * Sets the label of this {@link Transition}
+	 * 
+	 * @param tlb
+	 *            New Label
+	 * @throws IllegalArgumentException
+	 *             if Label is not valid for current {@link IRenew renew}
+	 * @see Transition#setRnw(IRenew)
+	 */
 	public void setTlb(String tlb) {
 		if (!rnw.isTlbValid(tlb)) {
 			throw new IllegalArgumentException("Invalid tlb: " + tlb
@@ -97,8 +130,15 @@ public class Transition implements INode {
 		return tlb;
 	}
 
-	public void setRnw(IRenew rnw) {
-		this.rnw = rnw;
+	/**
+	 * Sets the new renew without checking of the new renew fits to the label
+	 * 
+	 * @param renew
+	 *            The new Renew
+	 * @see Transition#setTlb(String)
+	 */
+	public void setRnw(IRenew renew) {
+		this.rnw = renew;
 		petrinet.onNodeChanged(this, ActionType.changed);
 	}
 
@@ -149,6 +189,12 @@ public class Transition implements INode {
 				+ "]";
 	}
 
+	/**
+	 * Returns the {@link Place places} that are at the other end of outgoing
+	 * {@link Arc arcs}
+	 * 
+	 * @return Empty list if there are no outgoing arcs
+	 */
 	public List<Place> getOutgoingPlaces() {
 		List<Place> out = new ArrayList<Place>(startArcs.size());
 		for (Arc arc : startArcs) {
@@ -158,6 +204,12 @@ public class Transition implements INode {
 		return out;
 	}
 
+	/**
+	 * Returns the {@link Place places} that are at the other end of incoming
+	 * {@link Arc arcs}
+	 * 
+	 * @return Empty list if there are no incoming arcs
+	 */
 	public List<Place> getIncomingPlaces() {
 		List<Place> in = new ArrayList<Place>(endArcs.size());
 
@@ -212,6 +264,12 @@ public class Transition implements INode {
 		return endArcs.remove(arc);
 	}
 
+	/**
+	 * Checks whether this {@link Transition} is active. Only incoming arcs are
+	 * checked
+	 * 
+	 * @return
+	 */
 	public boolean isActivated() {
 		for (Arc a : getEndArcs()) {
 			Place p = (Place) a.getStart();

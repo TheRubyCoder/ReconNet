@@ -1,7 +1,6 @@
 package petrinet;
 /**
  * Marker interface for JUNG layouting
- *
  */
 public interface INode {
 

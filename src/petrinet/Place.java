@@ -3,85 +3,99 @@ package petrinet;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 /**
-* Diese Klasse stellt eine Stelle in Petrinetze dar und
-* bietet die dazu gehoerige Methoden dafuer an.
-* 
-* @author Reiter, Safai
-* @version 1.0
-*/
+ * This class represents a place within a petrinet, holding information about
+ * name, mark and arcs
+ * 
+ * @author Reiter, Safai
+ * @version 1.0
+ */
 
-public class Place implements INode{
+public class Place implements INode {
 	private String name;
 	/**
-	 * Die maximal moegliche Anzahl von Token.
+	 * Capacity of the node
 	 */
 	private int mark;
+	/**
+	 * Unique id
+	 */
 	private int id;
 	/**
-	 * Liste aller Kanten, die von dieser Stelle
-	 * abgehen.
+	 * list of outgoing arcs
 	 */
 	private List<Arc> startArcs;
 	/**
-	 * Liste aller Kanten, die in diese Stelle
-	 * eingehen.
+	 * list of incoming arcs
 	 */
 	private List<Arc> endArcs;
-	
-	public void setStartArcs (Arc arc) {
+
+	public void setStartArcs(Arc arc) {
 		this.startArcs.add(arc);
 	}
-	public void setEndArcs (Arc arc) {
+
+	public void setEndArcs(Arc arc) {
 		this.endArcs.add(arc);
 	}
 
+	/**
+	 * Creates a new {@link Place} without name or arcs
+	 * @param id
+	 */
 	Place(int id) {
-		super();
 		this.id = id;
 		this.endArcs = new ArrayList<Arc>();
 		this.startArcs = new ArrayList<Arc>();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see haw.wp.rcpn.Place#getName()
 	 */
 	public String getName() {
 		return this.name;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see haw.wp.rcpn.Place#getId()
 	 */
 	public int getId() {
 		return this.id;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see haw.wp.rcpn.Place#setName(java.lang.String)
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see haw.wp.rcpn.Place#getMark()
 	 */
 	public int getMark() {
 		return mark;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see haw.wp.rcpn.Place#setMark(int)
 	 */
 	public void setMark(int mark) {
 		this.mark = mark;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -92,7 +106,9 @@ public class Place implements INode{
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -109,14 +125,21 @@ public class Place implements INode{
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		return "Place [name=" + name + ", mark=" + mark + ", id=" + id + "]";
 	}
-	
+
+	/**
+	 * Returns the {@link Transition transitions} that are at the other end
+	 * of incoming arcs
+	 * @return
+	 */
 	public List<Transition> getIncomingTransitions() {
 		List<Transition> in = new ArrayList<Transition>();
 		for (Arc arc : endArcs) {
@@ -124,7 +147,12 @@ public class Place implements INode{
 		}
 		return in;
 	}
-	
+
+	/**
+	 * Returns the {@link Transition transitions} that are at the other end
+	 * of outgoing arcs
+	 * @return
+	 */
 	public List<Transition> getOutgoingTransitions() {
 		List<Transition> out = new ArrayList<Transition>();
 		for (Arc arc : startArcs) {
@@ -132,7 +160,7 @@ public class Place implements INode{
 		}
 		return out;
 	}
-	
+
 	public List<Arc> getStartArcs() {
 		return startArcs;
 	}
@@ -140,12 +168,22 @@ public class Place implements INode{
 	public List<Arc> getEndArcs() {
 		return endArcs;
 	}
-	
-	public boolean removeStartArc(Arc arc){
+
+	/**
+	 * Removes a single arc from the outgoing arcs
+	 * @param arc
+	 * @return <code>false</code> if arc was not in the outgoing arcs
+	 */
+	public boolean removeStartArc(Arc arc) {
 		return startArcs.remove(arc);
 	}
-	
-	public boolean removeEndArc(Arc arc){
+
+	/**
+	 * Removes a single arc from the incoming arcs
+	 * @param arc
+	 * @return <code>false</code> if arc was not in the incoming arcs
+	 */
+	public boolean removeEndArc(Arc arc) {
 		return endArcs.remove(arc);
 	}
 }

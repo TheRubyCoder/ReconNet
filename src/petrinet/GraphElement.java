@@ -2,7 +2,9 @@ package petrinet;
 
 import java.util.Set;
 
-
+/**
+ * A class, that is used to access all nodes and arcs of a petrinet 
+ */
 public class GraphElement implements IGraphElement {
 	
 	private Set<INode>nodes;

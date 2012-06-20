@@ -1,32 +1,34 @@
 package petrinet;
 
-
+/**
+ * Renew that increments an integer upon firing a transition. The integer is
+ * represented as {@link String}. The guiString is "count"
+ * 
+ */
 public class RenewCount implements IRenew {
 
-    @Override
+	@Override
 	public String renew(String tlb) {
-    	try
-    	{
-    		return String.valueOf(Integer.parseInt(tlb) + 1);
-    	}
-    	catch (Exception e)
-    	{
-    		return "" + 1;
-    	}
+		try {
+			return String.valueOf(Integer.parseInt(tlb) + 1);
+		} catch (Exception e) {
+			return "" + 1;
+		}
 	}
 
 	@Override
 	public boolean isTlbValid(String tlb) {
 		try {
-            Integer.parseInt(tlb);
-            return true;
-        }
-        catch (Exception ex) {
-            return false;
-        }
+			Integer.parseInt(tlb);
+			return true;
+		} catch (Exception ex) {
+			return false;
+		}
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -34,18 +36,20 @@ public class RenewCount implements IRenew {
 		return getClass().hashCode();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		return this == obj || (obj != null && obj.getClass() == this.getClass());
+		return this == obj
+				|| (obj != null && obj.getClass() == this.getClass());
 	}
 
 	@Override
 	public String toGUIString() {
 		return "count";
 	}
-	
 
 }

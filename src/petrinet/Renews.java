@@ -4,6 +4,10 @@ import java.util.Map;
 
 import exceptions.ShowAsWarningException;
 
+/**
+ * Utility class for Renews. This pools the stateless Renews "id", "toggle" and
+ * "count" and also offers a factory method {@link Renews#fromString(String)}
+ */
 public final class Renews {
 
 	public static IRenew fromString(String string) {
@@ -14,8 +18,10 @@ public final class Renews {
 		} else if (string.equalsIgnoreCase("toggle")) {
 			return TOGGLE;
 		} else {
-			throw new ShowAsWarningException("\"" + string
-					+ "\" ist kein gültiger Renew-Bezeichner. Gültige Bezeichner sind: \"id\", \"count\", \"toggle\"");
+			throw new ShowAsWarningException(
+					"\""
+							+ string
+							+ "\" ist kein gültiger Renew-Bezeichner. Gültige Bezeichner sind: \"id\", \"count\", \"toggle\"");
 		}
 	}
 

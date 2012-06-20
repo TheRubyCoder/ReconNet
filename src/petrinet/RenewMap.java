@@ -3,7 +3,12 @@ package petrinet;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * Renew that transforms the label as specified in a map. The Label is
+ * represented as {@link String}. The guiString is "map (not supported)".
+ * <b>This Renew is not yet supported on the GUI</b>
+ * 
+ */
 public class RenewMap implements IRenew {
 
     private final HashMap<String,String> rnw;

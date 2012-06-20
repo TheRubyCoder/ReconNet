@@ -1,6 +1,10 @@
 package petrinet;
 
-
+/**
+ * Renew that keeps the label as it is. The Label is represented as
+ * {@link String}. The guiString is "id"
+ * 
+ */
 public class RenewId implements IRenew {
 
 	@Override
@@ -33,5 +37,5 @@ public class RenewId implements IRenew {
 	public String toGUIString() {
 		return "id";
 	}
-	
+
 }

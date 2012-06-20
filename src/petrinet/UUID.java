@@ -1,8 +1,17 @@
 package petrinet;
 
+/**
+ * Utility class for generating unique IDs for nodes, arcs and petrinets
+ * 
+ */
 public final class UUID {
-	private static int id = 0;
 	
+	private UUID() {
+		//utility class
+	}
+	
+	private static int id = 0;
+
 	/**
 	 * @return the pID
 	 */
