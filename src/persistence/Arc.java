@@ -6,20 +6,33 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType(XmlAccessType.PROPERTY)
+/**
+ * Class that represents the arc xml node 
+ */
 public class Arc {
-
-
+	/**
+	 * XML id
+	 */
 	String id;
 	
-	
+	/**
+	 * XML id of source node
+	 */
 	String source;
 	
-	
+	/**
+	 * XML id of target node
+	 */
 	String target;
 	
-	
+	/**
+	 * Information about the arcs graphics (sub xml node)
+	 */
 	Graphics graphics;
 	
+	/**
+	 * Information about its text (sub xml node)
+	 */
 	private Inscription inscription;
 
 	@XmlElement
@@ -63,7 +76,5 @@ public class Arc {
 	public void setGraphics(Graphics graphics) {
 		this.graphics = graphics;
 	}
-	
-	
 	
 }

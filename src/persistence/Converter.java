@@ -63,87 +63,34 @@ public class Converter {
 	 */
 	static public Pnml convertPetrinetToPnml(Petrinet petrinet,
 			Map<String, String[]> layout, double nodeSize) {
+		// PNML node
 		Pnml pnml = new Pnml();
 		pnml.setNodeSize(nodeSize);
 		pnml.setType(PETRINET_IDENT);
 		pnml.net = new ArrayList<Net>();
 
+		// Net node
 		Net xmlnet = new Net();
 		xmlnet.setId(String.valueOf(petrinet.getId()));
 		pnml.net.add(xmlnet);
 
+		// Page node
 		Page page = new Page();
 		xmlnet.setPage(page);
+
+		// Places
 		Set<petrinet.Place> set = petrinet.getAllPlaces();
 		List<Place> places = new ArrayList<Place>();
 		page.setPlace(places);
 		for (petrinet.Place place : set) {
-			Place newPlace = new Place();
-			newPlace.setId(String.valueOf(place.getId()));
-			PlaceName placeName = new PlaceName();
-			placeName.setText(place.getName());
-			newPlace.setPlaceName(placeName);
-			InitialMarking initm = new InitialMarking();
-			initm.setText(String.valueOf(place.getMark()));
-			newPlace.setInitialMarking(initm);
-			Graphics location = new Graphics();
-			Position position = new Position();
-			position.setX(layout.get(newPlace.getId())[0]);
-			position.setY(layout.get(newPlace.getId())[1]);
-			Color c = new Color();
-			c.setR(layout.get(newPlace.getId())[2]);
-			c.setG(layout.get(newPlace.getId())[3]);
-			c.setB(layout.get(newPlace.getId())[4]);
-			location.setColor(c);
-
-			List<Position> positionList = new ArrayList<Position>();
-			positionList.add(position);
-			location.setPosition(positionList);
-			newPlace.setGraphics(location);
-			places.add(newPlace);
-
+			addPlaceToPnml(layout, places, place);
 		}
 
+		// Transitions
 		Set<petrinet.Transition> transis = petrinet.getAllTransitions();
 		List<Transition> Tlist = new ArrayList<Transition>();
 		for (petrinet.Transition t : transis) {
-			Transition transi = new Transition();
-			transi.setId(String.valueOf(t.getId()));
-
-			TransitionName name = new TransitionName();
-			name.setText(t.getName());
-			transi.setTransitionName(name);
-
-			// Coordinates
-			Graphics graphics = new Graphics();
-			Position pos = new Position();
-			pos.setX(layout.get(transi.getId())[0]);
-
-			pos.setY(layout.get(transi.getId())[1]);
-			// AbstractLayout<INode, petrinet.Arc> layout =
-			// handler.getJungLayout(t.getId(), type);
-
-			// Todo Positionstuff
-			// pos.setX(String.valueOf(layout.get(t).getCoordinate().getX()));
-			// pos.setY(String.valueOf(map.get(t).getCoordinate().getY()));
-
-			List<Position> positions = new ArrayList<Position>();
-			positions.add(pos);
-			graphics.setPosition(positions);
-
-			transi.setGraphics(graphics);
-
-			// Transitionlabel
-			TransitionLabel label = new TransitionLabel();
-			label.setText(t.getTlb());
-			transi.setTransitionLabel(label);
-
-			TransitionRenew rnw = new TransitionRenew();
-			rnw.setText(t.getRnw().toGUIString());
-
-			transi.setTransitionRenew(rnw);
-
-			Tlist.add(transi);
+			addTransitionToPnml(layout, Tlist, t);
 		}
 		pnml.getNet().get(0).page.setTransition(Tlist);
 
@@ -200,6 +147,98 @@ public class Converter {
 		}
 		pnml.getNet().get(0).getPage().setArc(newArcs);
 		return pnml;
+	}
+
+	/**
+	 * Similar to Converter#addPlaceToPnml(Map, List, petrinet.Place)
+	 * 
+	 * @param layout
+	 * @param transitionsList
+	 * @param logicalTransition
+	 */
+	private static void addTransitionToPnml(Map<String, String[]> layout,
+			List<Transition> transitionsList,
+			petrinet.Transition logicalTransition) {
+		// Transition and ID
+		Transition pnmlTransition = new Transition();
+		pnmlTransition.setId(String.valueOf(logicalTransition.getId()));
+
+		//Name
+		TransitionName name = new TransitionName();
+		name.setText(logicalTransition.getName());
+		pnmlTransition.setTransitionName(name);
+
+		//Graphics -- Position
+		Graphics graphics = new Graphics();
+		Position position = new Position();
+		position.setX(layout.get(pnmlTransition.getId())[0]);
+		position.setY(layout.get(pnmlTransition.getId())[1]);
+		List<Position> positionsList = new ArrayList<Position>();
+		positionsList.add(position);
+		graphics.setPosition(positionsList);
+
+		pnmlTransition.setGraphics(graphics);
+
+		// Label
+		TransitionLabel label = new TransitionLabel();
+		label.setText(logicalTransition.getTlb());
+		pnmlTransition.setTransitionLabel(label);
+
+		// Renew
+		TransitionRenew rnw = new TransitionRenew();
+		rnw.setText(logicalTransition.getRnw().toGUIString());
+		pnmlTransition.setTransitionRenew(rnw);
+
+		// Add to list
+		transitionsList.add(pnmlTransition);
+	}
+
+	/**
+	 * Adds a {@link petrinet.Place} into the <code>places</code> List using the
+	 * given <code>layout</code>
+	 * 
+	 * @param layout
+	 * @param places
+	 * @param place
+	 */
+	private static void addPlaceToPnml(Map<String, String[]> layout,
+			List<Place> places, petrinet.Place place) {
+		// Place and ID
+		Place newPlace = new Place();
+		newPlace.setId(String.valueOf(place.getId()));
+
+		// Name
+		PlaceName placeName = new PlaceName();
+		placeName.setText(place.getName());
+		newPlace.setPlaceName(placeName);
+
+		// Marking
+		InitialMarking initm = new InitialMarking();
+		initm.setText(String.valueOf(place.getMark()));
+		newPlace.setInitialMarking(initm);
+
+		// Graphics
+		Graphics graphics = new Graphics();
+
+		// Graphics -- Color
+		Color c = new Color();
+		c.setR(layout.get(newPlace.getId())[2]);
+		c.setG(layout.get(newPlace.getId())[3]);
+		c.setB(layout.get(newPlace.getId())[4]);
+		graphics.setColor(c);
+
+		// Graphics -- Position
+		List<Position> positionList = new ArrayList<Position>();
+		Position position = new Position();
+		position.setX(layout.get(newPlace.getId())[0]);
+		position.setY(layout.get(newPlace.getId())[1]);
+		positionList.add(position);
+
+		graphics.setPosition(positionList);
+		newPlace.setGraphics(graphics);
+
+		// Add to List
+		places.add(newPlace);
 	}
 
 	/**
@@ -602,7 +641,8 @@ public class Converter {
 	}
 
 	/**
-	 * Extracts the XML ids of {@link Transition transitions} into a List of ids as String
+	 * Extracts the XML ids of {@link Transition transitions} into a List of ids
+	 * as String
 	 * 
 	 * @param placeList
 	 * @return
@@ -631,8 +671,8 @@ public class Converter {
 	}
 
 	/**
-	 * Converts a logical {@link Rule rule} object into the equivalent
-	 * Pnml object tree, which can the be marshalled into a file.
+	 * Converts a logical {@link Rule rule} object into the equivalent Pnml
+	 * object tree, which can the be marshalled into a file.
 	 * 
 	 * @param rule
 	 *            logical rule
@@ -673,7 +713,9 @@ public class Converter {
 	}
 
 	/**
-	 * Creates an {@link Net xml petrinet} as part of a rule. You could see this as generating a sub tree
+	 * Creates an {@link Net xml petrinet} as part of a rule. You could see this
+	 * as generating a sub tree
+	 * 
 	 * @param petrinet
 	 * @param map
 	 * @param type
