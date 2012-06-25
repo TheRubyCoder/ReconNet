@@ -8,11 +8,25 @@ import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name="pnml", namespace="http://www.pnml.org/version-2009/grammar/pnml")
+/**
+ * This class is the root of the XML. 
+ */
 public class Pnml {
+	/**
+	 * A List with one or three petrinets (three when this pnml safes a rule)
+	 */
 	List<Net> net;
 	
+	/**
+	 * The size of nodes in this petrinet/rule
+	 */
 	double nodeSize;
 	
+	/**
+	 * Indicating whether this is a petrinet or a rule
+	 * @see Converter#PETRINET_IDENT
+	 * @see Converter#RULE_IDENT
+	 */
 	String type;
 	
 	@XmlAttribute

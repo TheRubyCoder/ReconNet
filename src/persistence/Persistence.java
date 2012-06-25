@@ -20,14 +20,20 @@ import engine.ihandler.IPetrinetPersistence;
 import engine.ihandler.IRulePersistence;
 import gui.PopUp;
 
+/**
+ * The Persistence class is the interface between persistence component and
+ * engine component. It has high-level methods for saving and loading petrinets
+ * and rules
+ * 
+ */
 public class Persistence {
 	static {
 		try {
 			context = JAXBContext.newInstance(persistence.Pnml.class,
-					Arc.class, Converter.class, Dimension.class,
-					Graphics.class, InitialMarking.class, Name.class,
-					Net.class, Page.class, Place.class, PlaceName.class,
-					Position.class, Transition.class, TransitionLabel.class,
+					Arc.class, Converter.class, Graphics.class,
+					InitialMarking.class, Name.class, Net.class, Page.class,
+					Place.class, PlaceName.class, Position.class,
+					Transition.class, TransitionLabel.class,
 					TransitionName.class, TransitionRenew.class, Color.class);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -179,8 +185,8 @@ public class Persistence {
 	 *            String that identifies the file
 	 * @param handler
 	 *            The engine handler to create and modify the rule
-	 * @return the id of the created rule. <code>-1</code> if any exception
-	 *         was thrown
+	 * @return the id of the created rule. <code>-1</code> if any exception was
+	 *         thrown
 	 */
 	public static int loadRule(String pathAndFilename, IRulePersistence handler) {
 		Pnml pnml;

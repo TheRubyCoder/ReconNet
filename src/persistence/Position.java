@@ -2,12 +2,21 @@ package persistence;
 
 import javax.xml.bind.annotation.XmlAttribute;
 
-
+/**
+ * Information about the Position of a node
+ *
+ */
 public class Position {
 	
+	/**
+	 * X double as String
+	 */
 	String x;
 	
 	
+	/**
+	 * Y double as String
+	 */
 	String y;
 
 	@XmlAttribute

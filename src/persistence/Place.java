@@ -3,17 +3,30 @@ package persistence;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
+/**
+ * Represents information about a place 
+ */
 public class Place {
 	
+	/**
+	 * Id of the place
+	 */
 	String id;
 	
-	
+	/**
+	 * Name of the place
+	 */
 	PlaceName placeName;
 	
 	
+	/**
+	 * Marking of the place
+	 */
 	InitialMarking initialMarking;
 	
-
+	/**
+	 * Graphical information about the node
+	 */
 	Graphics graphics;
 
 	@XmlAttribute

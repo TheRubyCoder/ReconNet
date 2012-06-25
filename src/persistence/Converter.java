@@ -92,61 +92,83 @@ public class Converter {
 		for (petrinet.Transition t : transis) {
 			addTransitionToPnml(layout, Tlist, t);
 		}
-		pnml.getNet().get(0).page.setTransition(Tlist);
+		page.setTransition(Tlist);
 
+		// Arcs
 		Set<petrinet.Arc> arcs = petrinet.getAllArcs();
 		List<Arc> newArcs = new ArrayList<Arc>();
 		for (petrinet.Arc arc : arcs) {
-			Arc newArc = new Arc();
-			String arcEnd = null;
-
-			for (Place p : places) {
-				if (p.getId().equals(String.valueOf(arc.getEnd().getId()))) {
-					arcEnd = p.getId();
-					break;
-				}
-			}
-
-			if (arcEnd == null) {
-				for (Transition t : Tlist) {
-					if (t.getId().equals(String.valueOf(arc.getEnd().getId()))) {
-						arcEnd = t.getId();
-						break;
-					}
-				}
-			}
-
-			newArc.setTarget(arcEnd);
-
-			String arcStart = null;
-
-			for (Place p : places) {
-				if (p.getId().equals(String.valueOf(arc.getStart().getId()))) {
-					arcStart = p.getId();
-					break;
-				}
-			}
-
-			if (arcStart == null) {
-				for (Transition t : Tlist) {
-					if (t.getId()
-							.equals(String.valueOf(arc.getStart().getId()))) {
-						arcStart = t.getId();
-						break;
-					}
-				}
-			}
-
-			newArc.setSource(arcStart);
-			Inscription i = new Inscription();
-			i.setText(arc.getName());
-			newArc.setInscription(i);
-
-			newArc.setId(String.valueOf(arc.getId()));
-			newArcs.add(newArc);
+			addArcToPnml(places, Tlist, newArcs, arc);
 		}
-		pnml.getNet().get(0).getPage().setArc(newArcs);
+		page.setArc(newArcs);
 		return pnml;
+	}
+
+	/**
+	 * Similar to {@link Converter#addPlaceToPnml(Map, List, petrinet.Place)}
+	 * 
+	 * @param places
+	 * @param transitions
+	 * @param pnmlArcs
+	 * @param logicalArc
+	 */
+	private static void addArcToPnml(List<Place> places,
+			List<Transition> transitions, List<Arc> pnmlArcs,
+			petrinet.Arc logicalArc) {
+		// Arc and ID
+		Arc pnmlArc = new Arc();
+		pnmlArc.setId(String.valueOf(logicalArc.getId()));
+
+		// End of Arc -- Place
+		String arcEnd = null;
+		for (Place place : places) {
+			if (place.getId().equals(
+					String.valueOf(logicalArc.getEnd().getId()))) {
+				arcEnd = place.getId();
+				break;
+			}
+		}
+
+		// End of Arc -- Transition
+		if (arcEnd == null) {
+			for (Transition t : transitions) {
+				if (t.getId().equals(
+						String.valueOf(logicalArc.getEnd().getId()))) {
+					arcEnd = t.getId();
+					break;
+				}
+			}
+		}
+		pnmlArc.setTarget(arcEnd);
+
+		// Start of Arc -- Transition
+		String arcStart = null;
+		for (Place p : places) {
+			if (p.getId().equals(String.valueOf(logicalArc.getStart().getId()))) {
+				arcStart = p.getId();
+				break;
+			}
+		}
+
+		// Start of Arc -- Place
+		if (arcStart == null) {
+			for (Transition t : transitions) {
+				if (t.getId().equals(
+						String.valueOf(logicalArc.getStart().getId()))) {
+					arcStart = t.getId();
+					break;
+				}
+			}
+		}
+		pnmlArc.setSource(arcStart);
+
+		// Text
+		Inscription inscription = new Inscription();
+		inscription.setText(logicalArc.getName());
+		pnmlArc.setInscription(inscription);
+
+		// Add to List
+		pnmlArcs.add(pnmlArc);
 	}
 
 	/**
@@ -163,12 +185,12 @@ public class Converter {
 		Transition pnmlTransition = new Transition();
 		pnmlTransition.setId(String.valueOf(logicalTransition.getId()));
 
-		//Name
+		// Name
 		TransitionName name = new TransitionName();
 		name.setText(logicalTransition.getName());
 		pnmlTransition.setTransitionName(name);
 
-		//Graphics -- Position
+		// Graphics -- Position
 		Graphics graphics = new Graphics();
 		Position position = new Position();
 		position.setX(layout.get(pnmlTransition.getId())[0]);
@@ -242,11 +264,15 @@ public class Converter {
 	}
 
 	/**
-	 * Converts the position as a List of Strings like specified in
-	 * {@link Converter#convertPetrinetToPnml(Petrinet, Map, double)} into a
-	 * {@link Point2D.Double} object
+	 * Converts the position as a List of Strings into a {@link Point2D.Double}
+	 * object like specified in
+	 * {@link Converter#convertPetrinetToPnml(Petrinet, Map, double)}
 	 * 
 	 * @param pos
+	 * @throws NullPointerException
+	 *             if the any string is null
+	 * @throws NumberFormatException
+	 *             if any string does not contain a parsable double.
 	 * @return
 	 */
 	static private Point2D positionToPoint2D(List<Position> pos) {
@@ -286,58 +312,34 @@ public class Converter {
 
 			// create places
 			for (Place place : pnml.getNet().get(0).page.place) {
-				INode realPlace;
-				if (place.getGraphics() != null
-						&& !place.getGraphics().getPosition().isEmpty()) {
-					realPlace = handler
-							.createPlace(petrinetID, positionToPoint2D(place
-									.getGraphics().getPosition()));
-					handler.setPlaceColor(
-							petrinetID,
-							realPlace,
-							new java.awt.Color(Integer.parseInt(place
-									.getGraphics().getColor().getR()), Integer
-									.parseInt(place.getGraphics().getColor()
-											.getG()), Integer.parseInt(place
-									.getGraphics().getColor().getB())));
-				} else {
-					realPlace = handler.createPlace(
-							petrinetID,
-							new Point2D.Double(Math.random() * 10, Math
-									.random() * 10));
-				}
+				INode realPlace = handler.createPlace(petrinetID,
+						positionToPoint2D(place.getGraphics().getPosition()));
+				handler.setPlaceColor(petrinetID, realPlace, place
+						.getGraphics().getColor().toAWTColor());
 				handler.setPname(petrinetID, realPlace, place.getPlaceName()
 						.getText());
 				handler.setMarking(petrinetID, realPlace,
 						Integer.parseInt(place.getInitialMarking().getText()));
+
 				placesAndTransis.put(place.getId(), realPlace);
 			}
 
 			// create transitions
-			for (Transition trans : pnml.getNet().get(0).getPage()
+			for (Transition pnmlTransition : pnml.getNet().get(0).getPage()
 					.getTransition()) {
-				INode realTransition;
-				if (trans.getGraphics() != null
-						&& !trans.getGraphics().getPosition().isEmpty()) {
-					realTransition = handler
-							.createTransition(petrinetID,
-									positionToPoint2D(trans.getGraphics()
-											.getPosition()));
-				} else {
-					realTransition = handler.createTransition(
-							petrinetID,
-							new Point2D.Double(Math.random() * 100, Math
-									.random() * 100));
-				}
+				INode realTransition = handler.createTransition(petrinetID,
+						positionToPoint2D(pnmlTransition.getGraphics()
+								.getPosition()));
 
-				handler.setTname(petrinetID, realTransition, trans
+				handler.setTname(petrinetID, realTransition, pnmlTransition
 						.getTransitionName().getText());
-				handler.setTlb(petrinetID, realTransition, trans
+				handler.setTlb(petrinetID, realTransition, pnmlTransition
 						.getTransitionLabel().getText());
-				handler.setRnw(petrinetID, realTransition,
-						Renews.fromString(trans.getTransitionRenew().getText()));
+				handler.setRnw(petrinetID, realTransition, Renews
+						.fromString(pnmlTransition.getTransitionRenew()
+								.getText()));
 
-				placesAndTransis.put(trans.getId(), realTransition);
+				placesAndTransis.put(pnmlTransition.getId(), realTransition);
 
 			}
 
@@ -372,35 +374,40 @@ public class Converter {
 					"Die ausgewählte Datei enthält ein Petrinetz, keine Regel");
 		}
 		int id = handler.createRule();
-
 		handler.setNodeSize(id, pnml.getNodeSize());
 
 		Net lNet = pnml.getNet().get(0);
 		Net kNet = pnml.getNet().get(1);
 		Net rNet = pnml.getNet().get(2);
 
+		// Elements of L
 		List<Place> lPlaces = lNet.getPage().getPlace();
 		List<Transition> lTransis = lNet.getPage().getTransition();
 		List<Arc> lArcs = lNet.getPage().getArc();
 
+		// Elements of K
 		List<Place> kPlaces = kNet.getPage().getPlace();
 		List<Transition> kTransis = kNet.getPage().getTransition();
 		List<Arc> kArcs = kNet.getPage().getArc();
 
+		// Elements of R
 		List<Place> rPlaces = rNet.getPage().getPlace();
 		List<Transition> rTransis = rNet.getPage().getTransition();
 		List<Arc> rArcs = rNet.getPage().getArc();
 
 		/** Contains the created INode object for each XML-id */
 		Map<String, INode> idToINodeInL = new HashMap<String, INode>();
+		/** Contains the created INode object for each XML-id */
 		Map<String, INode> idToINodeInK = new HashMap<String, INode>();
+		/** Contains the created INode object for each XML-id */
 		Map<String, INode> idToINodeInR = new HashMap<String, INode>();
 		try {
 			addPlacesToRule(id, lPlaces, kPlaces, rPlaces, handler,
 					idToINodeInL, idToINodeInK, idToINodeInR);
 			addTransitionsToRule(id, lTransis, kTransis, rTransis, handler,
 					idToINodeInL, idToINodeInK, idToINodeInR);
-			fillMapsWithMappings(id, idToINodeInL, idToINodeInK, idToINodeInR);
+			fillMapsWithMissingMappings(id, idToINodeInL, idToINodeInK,
+					idToINodeInR);
 			addArcsToTule(id, lArcs, kArcs, rArcs, handler, idToINodeInL,
 					idToINodeInK, idToINodeInR);
 		} catch (EngineException e) {
@@ -416,7 +423,7 @@ public class Converter {
 	 * the ones that were inserted automatically For beeing able to properly add
 	 * arcs to the rule, we need those mappings
 	 */
-	private static void fillMapsWithMappings(int ruleId,
+	private static void fillMapsWithMissingMappings(int ruleId,
 			Map<String, INode> idToINodeInL, Map<String, INode> idToINodeInK,
 			Map<String, INode> idToINodeInR) {
 		ITransformation transformation = TransformationComponent
@@ -713,7 +720,7 @@ public class Converter {
 	}
 
 	/**
-	 * Creates an {@link Net xml petrinet} as part of a rule. You could see this
+	 * Creates an {@link Net xml petrinet} as part of a rule. You can view this
 	 * as generating a sub tree
 	 * 
 	 * @param petrinet
@@ -724,11 +731,11 @@ public class Converter {
 	 */
 	private static Net createNet(Petrinet petrinet,
 			Map<INode, NodeLayoutAttribute> map, RuleNet type, Rule rule) {
+		// Net, Page, ID and Type
 		Net net = new Net();
 		Page page = new Page();
 		net.setId(String.valueOf(petrinet.getId()));
 		net.setNettype(type.name());
-
 		net.setPage(page);
 
 		Set<petrinet.Arc> arcs = petrinet.getAllArcs();
@@ -741,103 +748,108 @@ public class Converter {
 
 		try {
 			// inserting places
-			for (petrinet.Place p : places) {
+			for (petrinet.Place place : places) {
 				Place newPlace = new Place();
-
-				// id
+				
+				// This "redirects" the variable place to the node in K in case
+				// it is not already a node in K
 				if (type != RuleNet.K) {
 					INode correspondingNode = type == RuleNet.L ? rule
-							.fromLtoK(p) : rule.fromRtoK(p);
+							.fromLtoK(place) : rule.fromRtoK(place);
 					if (correspondingNode != null) {
-						p = (petrinet.Place) correspondingNode;
+						place = (petrinet.Place) correspondingNode;
 					}
 				}
+				// id
+				newPlace.setId(String.valueOf(place.getId()));
 
-				// name
+				// Name
 				PlaceName name = new PlaceName();
-				name.setText(p.getName());
+				name.setText(place.getName());
 				newPlace.setPlaceName(name);
 
-				newPlace.setId(String.valueOf(p.getId()));
 
-				// Coordinates
+				//Graphics -- Color
 				Graphics graphics = new Graphics();
-				Position pos = new Position();
-				pos.setX(String.valueOf(map.get(p).getCoordinate().getX()));
-				pos.setY(String.valueOf(map.get(p).getCoordinate().getY()));
-				List<Position> positions = new ArrayList<Position>();
-				positions.add(pos);
-				graphics.setPosition(positions);
+				Color color = new Color();
+				color.setR(String.valueOf(map.get(place).getColor().getRed()));
+				color.setG(String.valueOf(map.get(place).getColor().getGreen()));
+				color.setB(String.valueOf(map.get(place).getColor().getBlue()));
+				graphics.setColor(color);
 
-				// Color
-				Color c = new Color();
-				c.setR(String.valueOf(map.get(p).getColor().getRed()));
-				c.setG(String.valueOf(map.get(p).getColor().getGreen()));
-				c.setB(String.valueOf(map.get(p).getColor().getBlue()));
-				graphics.setColor(c);
+				//Graphics -- Position
+				Position position = new Position();
+				position.setX(String.valueOf(map.get(place).getCoordinate().getX()));
+				position.setY(String.valueOf(map.get(place).getCoordinate().getY()));
+				List<Position> positions = new ArrayList<Position>();
+				positions.add(position);
+				graphics.setPosition(positions);
 
 				newPlace.setGraphics(graphics);
 
 				// Marking
 				InitialMarking initM = new InitialMarking();
-				initM.setText(String.valueOf(p.getMark()));
+				initM.setText(String.valueOf(place.getMark()));
 
 				newPlace.setInitialMarking(initM);
 
+				// Add to List
 				listPlace.add(newPlace);
 
 			}
 
 			// inserting Transitions
-			for (petrinet.Transition t : transis) {
-				Transition transi = new Transition();
+			for (petrinet.Transition logicalTransition : transis) {
+				Transition xmlTransition = new Transition();
 
+				// This "redirects" the variable place to the node in K in case
+				// it is not already a node in K
 				if (type != RuleNet.K) {
 					INode correspondingNode = type == RuleNet.L ? rule
-							.fromLtoK(t) : rule.fromRtoK(t);
+							.fromLtoK(logicalTransition) : rule.fromRtoK(logicalTransition);
 					if (correspondingNode != null) {
-						t = (petrinet.Transition) correspondingNode;
+						logicalTransition = (petrinet.Transition) correspondingNode;
 					}
 				}
 
-				transi.setId(String.valueOf(t.getId()));
+				// ID
+				xmlTransition.setId(String.valueOf(logicalTransition.getId()));
 
+				// Name
 				TransitionName name = new TransitionName();
-				name.setText(t.getName());
-				transi.setTransitionName(name);
+				name.setText(logicalTransition.getName());
+				xmlTransition.setTransitionName(name);
 
-				// Coordinates
+				// Graphics -- Position
 				Graphics graphics = new Graphics();
-				Position pos = new Position();
-				// AbstractLayout<INode, petrinet.Arc> layout =
-				// handler.getJungLayout(t.getId(), type);
-
-				pos.setX(String.valueOf(map.get(t).getCoordinate().getX()));
-				pos.setY(String.valueOf(map.get(t).getCoordinate().getY()));
-
 				List<Position> positions = new ArrayList<Position>();
-				positions.add(pos);
+				Position position = new Position();
+				position.setX(String.valueOf(map.get(logicalTransition).getCoordinate().getX()));
+				position.setY(String.valueOf(map.get(logicalTransition).getCoordinate().getY()));
+				positions.add(position);
 				graphics.setPosition(positions);
+				xmlTransition.setGraphics(graphics);
 
-				transi.setGraphics(graphics);
-
-				// Transitionlabel
+				// Label
 				TransitionLabel label = new TransitionLabel();
-				label.setText(t.getTlb());
-				transi.setTransitionLabel(label);
+				label.setText(logicalTransition.getTlb());
+				xmlTransition.setTransitionLabel(label);
 
+				// Renew
 				TransitionRenew rnw = new TransitionRenew();
-				rnw.setText(t.getRnw().toGUIString());
+				rnw.setText(logicalTransition.getRnw().toGUIString());
+				xmlTransition.setTransitionRenew(rnw);
 
-				transi.setTransitionRenew(rnw);
-
-				listTrans.add(transi);
+				// Add to List
+				listTrans.add(xmlTransition);
 			}
 
 			// inserting arcs
 			for (petrinet.Arc a : arcs) {
 				Arc arc = new Arc();
 
+				// This "redirects" the variable place to the node in K in case
+				// it is not already a node in K
 				if (type != RuleNet.K) {
 					INode correspondingNode = type == RuleNet.L ? rule
 							.fromLtoK(a) : rule.fromRtoK(a);
@@ -846,32 +858,29 @@ public class Converter {
 					}
 				}
 
+				// ID
 				arc.setId(String.valueOf(a.getId()));
 
-				// Coordinates
+				// Graphics -- Position
 				Graphics graphics = new Graphics();
-				Dimension d = new Dimension();
-				Position pos = new Position();
-
-				List<Dimension> dimensions = new ArrayList<Dimension>();
-				dimensions.add(d);
-				graphics.setDimension(dimensions);
+				Position position = new Position();
 
 				List<Position> positions = new ArrayList<Position>();
-				positions.add(pos);
+				positions.add(position);
 				graphics.setPosition(positions);
 
 				arc.setGraphics(graphics);
 
-				// inscripten = name!
-				Inscription i = new Inscription();
-				i.setText(a.getName());
-				arc.setInscription(i);
+				// Text
+				Inscription inscription = new Inscription();
+				inscription.setText(a.getName());
+				arc.setInscription(inscription);
 
-				// source and target
+				// Source and Target
 				arc.setSource(String.valueOf(a.getStart().getId()));
 				arc.setTarget(String.valueOf(a.getEnd().getId()));
 
+				// Add to List
 				listArcs.add(arc);
 			}
 

@@ -40,7 +40,7 @@ public class PersistanceTest {
 		JAXBContext context;
 		try {
 			context = JAXBContext.newInstance(persistence.Pnml.class,
-					Arc.class, Converter.class, Dimension.class,
+					Arc.class, Converter.class,
 					Graphics.class, InitialMarking.class, Name.class,
 					Net.class, Page.class, Place.class, PlaceName.class,
 					Position.class, Transition.class, TransitionLabel.class,

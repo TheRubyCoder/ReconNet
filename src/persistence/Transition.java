@@ -6,20 +6,34 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType(XmlAccessType.PROPERTY)
+/**
+ * This class represents the information about a transition (xml node) 
+ */
 public class Transition {
 	
-	
+	/**
+	 * Id of Transition
+	 */
 	String id;
 	
-	
+	/**	
+	 * Position of transition
+	 */
 	Graphics graphics;
 	
+	/**
+	 * Name
+	 */
 	TransitionName transitionName;
 	
-	
+	/**
+	 * Label
+	 */
 	TransitionLabel transitionLabel;
 	
-	
+	/**
+	 * Renew
+	 */
 	TransitionRenew transitionRenew;
 
 	@XmlAttribute

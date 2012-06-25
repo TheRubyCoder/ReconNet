@@ -2,6 +2,9 @@ package persistence;
 
 import javax.xml.bind.annotation.XmlElement;
 
+/**
+ * Representing the name of a place 
+ */
 public class PlaceName {
 	
 	String text;

@@ -2,9 +2,17 @@ package persistence;
 
 import javax.xml.bind.annotation.XmlElement;
 
-public class TransitionName {
+import petrinet.Transition;
 
+/**
+ * This class represents information about the Label of a Transition
+ * @see Transition#getName() 
+ */
+public class TransitionName {
 	
+	/**
+	 * Name
+	 */
 	String text;
 
 	@XmlElement

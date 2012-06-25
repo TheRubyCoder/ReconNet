@@ -27,7 +27,7 @@ public class TestStuff {
 
 		
 		JAXBContext context =  
-	        JAXBContext.newInstance( persistence.Pnml.class , Arc.class, Converter.class, Dimension.class, Graphics.class, InitialMarking.class, Name.class, Net.class,
+	        JAXBContext.newInstance( persistence.Pnml.class , Arc.class, Converter.class, Graphics.class, InitialMarking.class, Name.class, Net.class,
 	        		Page.class, Place.class, PlaceName.class, Position.class, Transition.class, TransitionLabel.class, TransitionName.class, TransitionRenew.class);
 	    Unmarshaller m = context.createUnmarshaller();
 	    
