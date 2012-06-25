@@ -172,18 +172,18 @@ public class Transformation {
 										morphism.getTransitionMorphism((Transition) a
 												.getEnd()));
 						addedArcs.add(n);
-						morphism.getEdgesMorphism().put(a, n);
+						morphism.getArcsMorphism().put(a, n);
 					} else {
 						Arc n = petrinet.createArc(a.getName(), morphism
 								.getTransitionMorphism((Transition) a
 										.getStart()), morphism
 								.getPlaceMorphism((Place) a.getEnd()));
 						addedArcs.add(n);
-						morphism.getEdgesMorphism().put(a, n);
+						morphism.getArcsMorphism().put(a, n);
 					}
 				} else {
 					// just add the edges to create d
-					morphism.getEdgesMorphism().put(a,
+					morphism.getArcsMorphism().put(a,
 							morphism.getArcMorphism(rule.fromKtoL(a)));
 				}
 			}
@@ -232,7 +232,7 @@ public class Transformation {
 		List<Arc> incidentArcs = toNet.getIncidetenArcsByNodeId(mappedNode
 				.getId());
 		for (Arc arc : incidentArcs) {
-			if (!morphism.getEdgesMorphism().containsValue(arc)) {
+			if (!morphism.getArcsMorphism().containsValue(arc)) {
 				return false;
 			}
 		}

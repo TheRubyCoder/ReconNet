@@ -34,49 +34,6 @@ public interface ITransformation {
 	 */
 	public void setMark(Rule rule, int placeId, int mark);
 
-//	/**
-//	 * Joins both petrinets, using the given transformation. The right petrinet
-//	 * will be modified and will be the resulting net.
-//	 * 
-//	 * @param left
-//	 *            the left petrinet.
-//	 * @param right
-//	 *            the right petrinet.
-//	 * @param transformation
-//	 *            the transformation to use.
-//	 */
-//	void join(Petrinet left, Petrinet right, Transformation transformation);
-//
-//	/**
-//	 * Joins both petrinets, using the given morphism and rule. The right
-//	 * petrinet will be modified and will be the resulting net.
-//	 * 
-//	 * @param left
-//	 *            the left petrinet.
-//	 * @param right
-//	 *            the right petrinet.
-//	 * @param morphism
-//	 *            the morphism to use.
-//	 * @param rule
-//	 *            the rule to use.
-//	 */
-//	void join(Petrinet left, Petrinet right, Morphism morphism, Rule rule);
-//
-//	/**
-//	 * Will join both petrinets, using the given rule and a random morphism. The
-//	 * right petrinet will be modified and will be the resulting net.
-//	 * 
-//	 * @param left
-//	 *            the left petrinet.
-//	 * @param right
-//	 *            the right petrinet.
-//	 * @param rule
-//	 *            the rule to use.
-//	 * @throws Exception
-//	 */
-//	void join(Petrinet left, Petrinet right, Rule rule)
-//			throws GeneralPetrinetException;
-
 	/**
 	 * Transformations the petrinet like defined in rule with random morphism
 	 * 
@@ -117,9 +74,11 @@ public interface ITransformation {
 	 *         the return would be List(node of L, node of K, <tt>null</tt>)
 	 */
 	List<INode> getMappings(Rule rule, INode node);
-	
+
 	/**
-	 * Very similiar to {@link ITransformation#getMappings(Rule, INode)} but with the sessionId instead of <tt>rule</tt>.
+	 * Very similar to {@link ITransformation#getMappings(Rule, INode)} but
+	 * with the <code>ruleId</code> instead of <tt>rule</tt>.
+	 * 
 	 * @see ITransformation#storeSessionId(int, Rule)
 	 * @param ruleId
 	 * @param node
@@ -128,13 +87,15 @@ public interface ITransformation {
 	List<INode> getMappings(int ruleId, INode node);
 
 	/**
-	 * Very similar to {@link ITransformation#getMappings(Rule, INode)}
-	 * but with Arc instead of INode
+	 * Very similar to {@link ITransformation#getMappings(Rule, INode)} but with
+	 * Arc instead of INode
 	 */
 	List<Arc> getMappings(Rule rule, Arc arc);
-	
+
 	/**
-	 * Stores the session id of a rule so it can be used in {@link ITransformation#getMappings(int, INode)}
+	 * Stores the session id of a rule so it can be used in
+	 * {@link ITransformation#getMappings(int, INode)}
+	 * 
 	 * @param id
 	 * @param rule
 	 */

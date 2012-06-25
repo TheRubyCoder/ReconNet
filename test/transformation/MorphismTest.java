@@ -88,7 +88,7 @@ public class MorphismTest {
      */
     @Test
     public void testEdges() {
-        assertEquals(expectedArcMap, testObject.getEdgesMorphism());
+        assertEquals(expectedArcMap, testObject.getArcsMorphism());
     }
 
     /**

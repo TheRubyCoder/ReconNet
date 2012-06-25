@@ -105,7 +105,7 @@ public class MorphismPlacesTest {
 		Arc arc = placesFromNet.getAllArcs().iterator().next();
 		morphism.getArcMorphism(arc);
 
-		morphism.getEdgesMorphism();
+		morphism.getArcsMorphism();
 
 		morphism.getFrom();
 

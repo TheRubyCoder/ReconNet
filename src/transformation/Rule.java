@@ -82,17 +82,6 @@ public class Rule {
 		rListener = new Listener(Net.R, l, k, r);
 	}
 
-	/*
-	 * Make sure garbage collector also kills the listeners (Not quite sure?)
-	 */
-	@Override
-	protected void finalize() throws Throwable {
-		super.finalize();
-		k.removePetrinetListener(kListener);
-		l.removePetrinetListener(lListener);
-		r.removePetrinetListener(rListener);
-	}
-
 	/**
 	 * Returns the gluing Petrinet of this rule.
 	 * 
@@ -269,7 +258,8 @@ public class Rule {
 	 * 
 	 * This Listener is used to listen for events on the L K and R nets. When
 	 * anything is added to K, it will get added to R and L. When anything is
-	 * added to L or R, it will get added to K.
+	 * added to L or R, it will get added to K. The same goes for deletion of
+	 * nodes.
 	 * 
 	 */
 	private class Listener implements IPetrinetListener {
@@ -518,6 +508,13 @@ public class Rule {
 		}
 	}
 
+	/**
+	 * Sets the mark of the place that is specified by <code>placeId</code> and
+	 * its mappings.
+	 * 
+	 * @param placeId
+	 * @param mark
+	 */
 	void setMark(int placeId, int mark) {
 		Petrinet rulePart = getPetrinetOfNode(placeId);
 		if (rulePart != null) {
@@ -536,16 +533,34 @@ public class Rule {
 		}
 	}
 
+	/**
+	 * Sets the mark for the place and its mappings, that is only in L and K
+	 * 
+	 * @param place
+	 * @param mark
+	 */
 	private void setMarkInL(Place place, int mark) {
 		place.setMark(mark);
 		((Place) fromLtoK(place)).setMark(mark);
 	}
 
+	/**
+	 * Sets the mark for the place and its mappings, thats in L, K and R
+	 * 
+	 * @param place
+	 * @param mark
+	 */
 	private void setMarkInR(Place place, int mark) {
 		place.setMark(mark);
 		((Place) fromRtoK(place)).setMark(mark);
 	}
 
+	/**
+	 * Sets the mark for the place and its mappings, thats only in K and R
+	 * 
+	 * @param place
+	 * @param mark
+	 */
 	private void setMarkInK(Place place, int mark) {
 		place.setMark(mark);
 		((Place) fromKtoR(place)).setMark(mark);
@@ -553,7 +568,7 @@ public class Rule {
 	}
 
 	/**
-	 * Finds the part of the rule in wich a place is included
+	 * Finds the part of the rule in which a place is included
 	 * 
 	 * @param placeId
 	 * @return <tt> null </tt> if place is not in rule
@@ -575,7 +590,8 @@ public class Rule {
 	}
 
 	/**
-	 * {@link ITransformation#getMappings(Rule, INode)}
+	 * Similar to {@link ITransformation#getMappings(Rule, INode)} but with
+	 * {@link INode} instead of {@link Arc}
 	 */
 	public List<INode> getMappings(INode node) {
 		List<INode> mappings = new LinkedList<INode>();
@@ -637,12 +653,13 @@ public class Rule {
 		mappings.add(inR);
 		return mappings;
 	}
-	
+
 	/**
-	 * Returns the nodes (in L) that will be deleted on applying the rule.  
+	 * Returns the nodes (in L) that will be deleted on applying the rule.
+	 * 
 	 * @return
 	 */
-	public List<INode> getNodesToDelete(){
+	public List<INode> getNodesToDelete() {
 		List<INode> toDelete = new ArrayList<INode>();
 		toDelete.addAll(getL().getAllPlaces());
 		toDelete.addAll(getL().getAllTransitions());
@@ -650,8 +667,8 @@ public class Rule {
 		while (iterator.hasNext()) {
 			INode toDeleteNode = (INode) iterator.next();
 			if (fromKtoR(fromLtoK(toDeleteNode)) == null) {
-				//stay in toDelete
-			}else{
+				// if L->K->R == null, then stay in toDelete
+			} else {
 				iterator.remove();
 			}
 		}
