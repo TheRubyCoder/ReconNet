@@ -1,16 +1,14 @@
 package persistence;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.awt.geom.Point2D;
 import java.io.File;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.junit.Ignore;
@@ -18,14 +16,9 @@ import org.junit.Test;
 
 import petrinet.INode;
 import petrinet.Petrinet;
-
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.EngineMockupForPersistence;
-import engine.attribute.NodeLayoutAttribute;
 import engine.handler.RuleNet;
-import engine.handler.petrinet.PetrinetHandler;
-import engine.handler.petrinet.PetrinetPersistence;
-import engine.handler.rule.RuleHandler;
 import engine.handler.rule.RuleManipulation;
 import engine.handler.rule.RulePersistence;
 import engine.ihandler.IRulePersistence;
@@ -40,7 +33,7 @@ public class PersistanceTest {
 		JAXBContext context;
 		try {
 			context = JAXBContext.newInstance(persistence.Pnml.class,
-					Arc.class, Converter.class,
+					Arc.class, Converter.class, 
 					Graphics.class, InitialMarking.class, Name.class,
 					Net.class, Page.class, Place.class, PlaceName.class,
 					Position.class, Transition.class, TransitionLabel.class,
