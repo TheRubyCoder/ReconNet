@@ -9,45 +9,35 @@ import petrinet.Petrinet;
 final public class PetrinetData extends SessionDataAbstract {
 	private Petrinet petrinet;
 	private JungData jungData;
-	private boolean  isSimulation;
-	private int      parentId;
 
-	@SuppressWarnings("unused") //no default constructor
-	private PetrinetData() {}
-	
+	@SuppressWarnings("unused")
+	// no default constructor
+	private PetrinetData() {
+	}
+
 	/**
 	 * Constructor for PetrinetData.
+	 * 
 	 * @param id
 	 * @param isSimulation
-	 * @param parentId 
+	 * @param parentId
 	 * @param iPetrinet
 	 * @param jungData
 	 */
-	public PetrinetData(int id, boolean isSimulation, int parentId, Petrinet petrinet, JungData jungData) {
+	public PetrinetData(int id,
+			Petrinet petrinet, JungData jungData) {
 		check(id > 0, "id have to be greater than 0");
-		check(parentId >= 0, "id have to be greater or equal 0");
 		check(petrinet instanceof Petrinet, "petrinet not of type Petrinet");
 		check(jungData instanceof JungData, "jungData not of type JungData");
 
-		// isSimulation -> (parentId > 0)
-		check(!isSimulation || parentId > 0, "a simulation net must have a parentId");
-
-		// (parentId > 0) -> isSimulation 
-		check(!(parentId > 0) || isSimulation, "a net with a parentId must be a simulation net");
-		
 		checkContaining(petrinet, jungData);
-		
-		this.id           = id;
-		this.parentId     = parentId;
-		this.petrinet     = petrinet;
-		this.jungData     = jungData;
-		this.isSimulation = isSimulation;
+
+		this.id = id;
+		this.petrinet = petrinet;
+		this.jungData = jungData;
 	}
-	
-	public boolean isSimulation() {
-		return isSimulation;
-	}
-	
+
+
 	/**
 	 * Gets the JungData.
 	 * 
@@ -56,13 +46,9 @@ final public class PetrinetData extends SessionDataAbstract {
 	public JungData getJungData() {
 		return jungData;
 	}
-	
-	public int getParentId() {
-		return parentId;
-	}
-	
+
 	/**
-	 * Gets the Petrinet. 
+	 * Gets the Petrinet.
 	 * 
 	 * @return IPetrinet
 	 */

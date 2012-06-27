@@ -2,10 +2,8 @@ package engine.attribute;
 
 /**
  * 
- * This Class holds all Information/Attribute of Arc
+ * This Class holds all Information/Attribute of Arc (which is the weight)
  * 
- * @author alex (aas772)
- *
  */
 
 public class ArcAttribute {

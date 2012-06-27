@@ -3,8 +3,6 @@ package engine.attribute;
 /**
  * 
  * This Class holds all Id's (Petrinet ID) of a rule.
- * 
- * @author alex
  *
  */
 

@@ -22,6 +22,10 @@ import engine.ihandler.IPetrinetManipulation;
 import engine.session.SessionManager;
 import exceptions.EngineException;
 
+/**
+ * This class is leftover from an older stage of development. It is only used
+ * in tests and should not be used any more
+ */
 public class EngineMockupForPersistence implements IPetrinetManipulation {
 
 	private IPetrinetManipulation iPetrinetManipulation;

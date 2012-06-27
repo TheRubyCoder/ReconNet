@@ -35,6 +35,7 @@ import exceptions.ShowAsWarningException;
 /**
  * 
  * This is the implementation of all methods for the Petrinet by engine.
+ * @see IPetrinetManipulation
  * 
  * @author alex (aas772)
  * 
@@ -57,6 +58,9 @@ final public class PetrinetHandler {
 		return petrinetHandler;
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#createArc(int, INode, INode)}
+	 */
 	public Arc createArc(@NotNull int id, @NotNull INode from, @NotNull INode to)
 			throws EngineException {
 
@@ -84,11 +88,6 @@ final public class PetrinetHandler {
 				Arc arc = petrinet.createArc("undefined", fromPlace,
 						toTransition);
 
-				// ***************************
-				// TODO: ChangedPetrinetResult
-				// discuss: what to do
-				// ***************************
-
 				// call Jung
 				try {
 					jungData.createArc(arc, fromPlace, toTransition);
@@ -109,11 +108,6 @@ final public class PetrinetHandler {
 				Arc arc = petrinet.createArc("undefined", fromTransition,
 						toPlace);
 
-				// ***************************
-				// TODO: ChangedPetrinetResult
-				// discuss: what to do
-				// ***************************
-
 				// call Jung
 				try {
 					jungData.createArc(arc, fromTransition, toPlace);
@@ -131,6 +125,9 @@ final public class PetrinetHandler {
 
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#createPlace(int, Point2D)}
+	 */
 	public INode createPlace(@NotNull int id, @NotNull Point2D coordinate)
 			throws EngineException {
 
@@ -175,6 +172,9 @@ final public class PetrinetHandler {
 
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#createPetrinet()}
+	 */
 	public int createPetrinet() {
 
 		// new Petrinet
@@ -190,6 +190,9 @@ final public class PetrinetHandler {
 
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#createTransition(int, Point2D)}
+	 */
 	public INode createTransition(@NotNull int id, @NotNull Point2D coordinate)
 			throws EngineException {
 
@@ -237,6 +240,9 @@ final public class PetrinetHandler {
 
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#deleteArc(int, Arc)}
+	 */
 	public void deleteArc(@NotNull int id, @NotNull Arc arc)
 			throws EngineException {
 
@@ -269,16 +275,27 @@ final public class PetrinetHandler {
 
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#deletePlace(int, INode)}
+	 */
 	public void deletePlace(@NotNull int id, @NotNull INode place)
 			throws EngineException {
 		this.deleteInternal(id, place);
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#deleteTransition(int, INode)}
+	 */
 	public void deleteTransition(@NotNull int id, @NotNull INode transition)
 			throws EngineException {
 		this.deleteInternal(id, transition);
 	}
 
+	/**
+	 * Internal Method to refactor the deletion of a node. For the process of
+	 * deletion it is not important to distinguish between places and
+	 * transitions
+	 */
 	private void deleteInternal(@NotNull int id, @NotNull INode node)
 			throws EngineException {
 
@@ -292,7 +309,7 @@ final public class PetrinetHandler {
 
 			Petrinet petrinet = petrinetData.getPetrinet();
 			JungData jungData = petrinetData.getJungData();
-			
+
 			petrinet.deleteElementById(node.getId());
 			jungData.deleteDataOfMissingElements(petrinet);
 
@@ -300,6 +317,9 @@ final public class PetrinetHandler {
 
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#getArcAttribute(int, Arc)}
+	 */
 	public ArcAttribute getArcAttribute(@NotNull int id, @NotNull Arc arc) {
 
 		int weight = arc.getMark();
@@ -310,6 +330,9 @@ final public class PetrinetHandler {
 
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#getJungLayout(int)}
+	 */
 	public AbstractLayout<INode, Arc> getJungLayout(@NotNull int id)
 			throws EngineException {
 
@@ -332,6 +355,9 @@ final public class PetrinetHandler {
 
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#getPlaceAttribute(int, INode)}
+	 */
 	public PlaceAttribute getPlaceAttribute(@NotNull int id,
 			@NotNull INode place) throws EngineException {
 
@@ -364,6 +390,9 @@ final public class PetrinetHandler {
 		return null;
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#getTransitionAttribute(int, INode)}
+	 */
 	public TransitionAttribute getTransitionAttribute(@NotNull int id,
 			@NotNull INode transition) throws EngineException {
 
@@ -384,6 +413,9 @@ final public class PetrinetHandler {
 		return null;
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#moveGraph(int, Point2D)}
+	 */
 	public void moveGraph(@NotNull int id, @NotNull Point2D relativePosition)
 			throws EngineException {
 
@@ -399,6 +431,9 @@ final public class PetrinetHandler {
 
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#moveNode(int, INode, Point2D)}
+	 */
 	public void moveNode(@NotNull int id, @NotNull INode node,
 			@NotNull Point2D relativePosition) throws EngineException {
 
@@ -420,6 +455,9 @@ final public class PetrinetHandler {
 
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#save(int, String, String, String, double)}
+	 */
 	public void save(@NotNull int id, @NotNull String path,
 			@NotNull String filename, @NotNull String format, double nodeSize)
 			throws EngineException {
@@ -438,7 +476,7 @@ final public class PetrinetHandler {
 			Map<INode, NodeLayoutAttribute> nodeMap = jungData
 					.getNodeLayoutAttributes();
 
-			checkNodeLayoutAttribute(nodeMap == null, "save - nodeMap == null");
+			exceptionIf(nodeMap == null, "save - nodeMap == null");
 
 			Persistence.savePetrinet(path + "/" + filename + "." + format,
 					petrinet, nodeMap, nodeSize);
@@ -447,6 +485,9 @@ final public class PetrinetHandler {
 
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#load(String, String)}
+	 */
 	public int load(@NotNull String path, @NotNull String filename) {
 
 		int id = Persistence.loadPetrinet(path + "/" + filename,
@@ -456,6 +497,9 @@ final public class PetrinetHandler {
 
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#setMarking(int, INode, int)}
+	 */
 	public void setMarking(@NotNull int id, @NotNull INode place,
 			@NotNull int marking) throws EngineException {
 
@@ -480,6 +524,9 @@ final public class PetrinetHandler {
 
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#setPname(int, INode, String)}
+	 */
 	public void setPname(@NotNull int id, @NotNull INode place,
 			@NotNull String pname) throws EngineException {
 
@@ -504,6 +551,9 @@ final public class PetrinetHandler {
 
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#setTlb(int, INode, String)}
+	 */
 	public void setTlb(@NotNull int id, @NotNull INode transition,
 			@NotNull String tlb) throws EngineException {
 
@@ -528,6 +578,9 @@ final public class PetrinetHandler {
 
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#setTname(int, INode, String)}
+	 */
 	public void setTname(@NotNull int id, @NotNull INode transition,
 			@NotNull String tname) throws EngineException {
 
@@ -552,6 +605,9 @@ final public class PetrinetHandler {
 
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#setWeight(int, Arc, int)}
+	 */
 	public void setWeight(@NotNull int id, @NotNull Arc arc, @NotNull int weight)
 			throws EngineException {
 
@@ -570,6 +626,9 @@ final public class PetrinetHandler {
 
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#setRnw(int, INode, IRenew)}
+	 */
 	public void setRnw(int id, INode transition, IRenew renews)
 			throws EngineException {
 
@@ -589,6 +648,9 @@ final public class PetrinetHandler {
 
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#setPlaceColor(int, INode, Color)}
+	 */
 	public void setPlaceColor(int id, INode place, Color color)
 			throws EngineException {
 
@@ -614,6 +676,9 @@ final public class PetrinetHandler {
 
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#closePetrinet(int)}
+	 */
 	public void closePetrinet(int id) throws EngineException {
 
 		// get the Petrinet from the id and SessionManager
@@ -632,6 +697,9 @@ final public class PetrinetHandler {
 
 	}
 
+	/**
+	 * {@link IPetrinetManipulation#getNodeType(INode)}
+	 */
 	public NodeTypeEnum getNodeType(@NotNull INode node) throws EngineException {
 
 		if (node instanceof Place) {
@@ -653,17 +721,34 @@ final public class PetrinetHandler {
 		petrinetData.getJungData().moveGraphIntoVision();
 	}
 
-	private void exception(@NotNull String value) throws EngineException {
-		throw new EngineException("PetrinetHandler: " + value);
+	/**
+	 * Throws an {@link EngineException} with a <code>message</code>
+	 * 
+	 * @param message
+	 * @throws EngineException
+	 */
+	private void exception(@NotNull String message) throws EngineException {
+		throw new EngineException("PetrinetHandler: " + message);
 	}
 
-	private void warning(@NotNull String value) throws ShowAsWarningException {
-		throw new ShowAsWarningException(value);
+	/**
+	 * Throws an {@link ShowAsWarningException} with a <code>message</code>.
+	 * This will result in the GUI displaying the message in a pop up window.
+	 * 
+	 * @param message
+	 * @throws ShowAsWarningException
+	 */
+	private void warning(@NotNull String message) throws ShowAsWarningException {
+		throw new ShowAsWarningException(message);
 	}
 
-	private void checkNodeLayoutAttribute(boolean value, String errorMessage)
+	/**
+	 * Throws an {@link EngineException} with a <code>message</code> if
+	 * <code>check</code> is <code>true</code>
+	 */
+	private void exceptionIf(boolean check, String errorMessage)
 			throws EngineException {
-		if (value) {
+		if (check) {
 			exception(errorMessage);
 		}
 	}

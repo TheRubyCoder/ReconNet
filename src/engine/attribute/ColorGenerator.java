@@ -11,7 +11,7 @@ import java.util.Random;
 /**
  * The ColorGenerator generates colors for Places. First it generates a certain
  * sequence of colors, afterwards it generates pseudo-random colors. No color is
- * generated twice. A ColorGenerator always generates the same sequence if
+ * generated twice. A ColorGenerator always generates the same sequence of
  * colors. (Fixed seed)
  */
 public class ColorGenerator implements Iterator<Color>{

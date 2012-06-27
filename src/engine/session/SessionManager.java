@@ -86,8 +86,6 @@ final public class SessionManager {
 				
 		PetrinetData data = new PetrinetData(
 			getNextSessionDataId(), 
-			false, 
-			0, 
 			petrinet, 
 			getNewJungData()
 		); 

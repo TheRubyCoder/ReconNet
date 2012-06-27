@@ -97,11 +97,11 @@ public class PetrinetDataTest {
 	
 	@Test
 	public void testData() { 		
-		PetrinetData data1 = buildAndTest(1, false, 0, p, jung);
-		PetrinetData data2 = buildAndTest(1, true, 1, p, jung);
+		PetrinetData data1 = buildAndTest(1, p, jung);
+		PetrinetData data2 = buildAndTest(1, p, jung);
 		
-		PetrinetData data3 = buildAndTest(2, false, 0, emptyPetrinet, emptyJung);
-		PetrinetData data4 = buildAndTest(2, true, 1, emptyPetrinet, emptyJung);
+		PetrinetData data3 = buildAndTest(2, emptyPetrinet, emptyJung);
+		PetrinetData data4 = buildAndTest(2, emptyPetrinet, emptyJung);
 
 		assertEquals(data1, data2);
 		assertEquals(data3, data4);
@@ -110,12 +110,10 @@ public class PetrinetDataTest {
 		assertFalse(data2.equals(data4));
 	}
 	
-	private PetrinetData buildAndTest(int id, boolean isSimulation, int parentId, Petrinet petrinet, JungData jungData) {
-		PetrinetData data = new PetrinetData(id, isSimulation, parentId, petrinet, jungData);
+	private PetrinetData buildAndTest(int id, Petrinet petrinet, JungData jungData) {
+		PetrinetData data = new PetrinetData(id, petrinet, jungData);
 
 		assertEquals(id, data.getId());
-		assertEquals(isSimulation, data.isSimulation());
-		assertEquals(parentId, data.getParentId());
 		assertEquals(petrinet, data.getPetrinet());
 		assertEquals(jungData, data.getJungData());
 
@@ -134,12 +132,12 @@ public class PetrinetDataTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void testNull_constructor_1() { 
-		new PetrinetData(1, false, 0, null, emptyJung); 
+		new PetrinetData(1, null, emptyJung); 
 	}
 	
 	@Test(expected=IllegalArgumentException.class) 
 	public void testNull_constructor_2() { 
-		new PetrinetData(1, false, 0, emptyPetrinet, null); 
+		new PetrinetData(1, emptyPetrinet, null); 
 	}
 	
 	/**
@@ -151,45 +149,21 @@ public class PetrinetDataTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void testIllegalArgument_constructor_id_1() { 
-		new PetrinetData(0, false, 0, emptyPetrinet, emptyJung); 
+		new PetrinetData(0, emptyPetrinet, emptyJung); 
 	}
 	@Test(expected=IllegalArgumentException.class) 
 	public void testIllegalArgument_constructor_id_2() { 
-		new PetrinetData(-1, false, 0, emptyPetrinet, emptyJung); 
+		new PetrinetData(-1, emptyPetrinet, emptyJung); 
 	}
 
-	/**
-	 * parentId zu klein
-	 */
-	@Test(expected=IllegalArgumentException.class) 
-	public void testIllegalArgument_constructor_parentId_1() {
-		new PetrinetData(1, true, -1, emptyPetrinet, emptyJung); 
-	}
 	
-	@Test(expected=IllegalArgumentException.class) 
-	public void testIllegalArgument_constructor_parentId_2() {
-		new PetrinetData(1, false, -1, emptyPetrinet, emptyJung); 
-	}
-	
-	/**
-	 * Zusammenhang zwischen Simulationsnetz und parentId
-	 */
-	@Test(expected=IllegalArgumentException.class) 
-	public void testIllegalArgument_constructor_simulation_1() { 
-		new PetrinetData(1, true, 0, emptyPetrinet, emptyJung); 
-	}
-	
-	@Test(expected=IllegalArgumentException.class) 
-	public void testIllegalArgument_constructor_simulation_2() { 
-		new PetrinetData(1, false, 1, emptyPetrinet, emptyJung); 
-	}
 		
 	/**
 	 * Jung enthält nicht alle Petrinetz-Elemente 
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void testIllegalArgument_constructor_petrinetAndJung_1() { 
-		new PetrinetData(1, false, 0, p, emptyJung); 
+		new PetrinetData(1, p, emptyJung); 
 	}
 
 	/**
@@ -198,7 +172,7 @@ public class PetrinetDataTest {
 	@Test(expected=IllegalArgumentException.class) 
 	public void testIllegalArgument_constructor_petrinetAndJung_2() { 
 		emptyJung.createPlace(place1, pointPositive1);
-		new PetrinetData(1, false, 0, emptyPetrinet, emptyJung); 
+		new PetrinetData(1, emptyPetrinet, emptyJung); 
 	}
 
 	/**
@@ -207,7 +181,7 @@ public class PetrinetDataTest {
 	@Test(expected=IllegalArgumentException.class) 
 	public void testIllegalArgument_constructor_petrinetAndJung_3() { 
 		emptyJung.createTransition(transition1, pointPositive1);
-		new PetrinetData(1, false, 0, emptyPetrinet, emptyJung); 
+		new PetrinetData(1, emptyPetrinet, emptyJung); 
 	}
 
 	/**
@@ -228,6 +202,6 @@ public class PetrinetDataTest {
 		
 		assertEquals(count - 1, p.getAllArcs().size());
 		
-		new PetrinetData(1, false, 0, p, emptyJung); 
+		new PetrinetData(1, p, emptyJung); 
 	}
 }

@@ -4,10 +4,9 @@ import java.awt.Color;
 
 /**
  * 
- * This Class holds all Information/Attributes of Places.
+ * This Class holds all Information/Attributes of Places. (Which is marking,
+ * pname and color)
  * 
- * @author alex (aas772)
- *
  */
 
 public class PlaceAttribute {
@@ -15,23 +14,23 @@ public class PlaceAttribute {
 	private int marking;
 	private String pname;
 	private Color color;
-	
-	public PlaceAttribute(int marking, String pname, Color color){
+
+	public PlaceAttribute(int marking, String pname, Color color) {
 		this.marking = marking;
 		this.pname = pname;
 		this.color = color;
 	}
-	
-	public int getMarking(){
+
+	public int getMarking() {
 		return marking;
 	}
-	
-	public String getPname(){
+
+	public String getPname() {
 		return pname;
 	}
-	
-	public Color getColor(){
+
+	public Color getColor() {
 		return color;
 	}
-	
+
 }

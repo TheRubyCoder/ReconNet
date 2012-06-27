@@ -7,11 +7,13 @@ import java.awt.geom.Point2D;
  */
 public class Positioning {
 	
-	private Positioning() {	}
+	private Positioning() {	
+		// utility class
+	}
 	
 	/**
-	 * Returns the addition of two points (vectors like addition)
-	 * 
+	 * Returns the addition of two points (vector-like addition)
+	 * @example [5,7] + [1,3] = [6,9]
 	 * @param base
 	 * @param move
 	 * @return

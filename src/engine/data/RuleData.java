@@ -11,7 +11,7 @@ import engine.attribute.ColorGenerator;
 import exceptions.ShowAsInfoException;
 
 /**
- * This Class is a Datacontainer for a Rule and all Petrinet in this Rule.
+ * This Class is a data container for a Rule and all Petrinet in this Rule.
  * 
  * @author alex (aas772)
  */
@@ -21,6 +21,7 @@ final public class RuleData extends SessionDataAbstract {
 	private JungData jungDataL;
 	private JungData jungDataK;
 	private JungData jungDataR;
+	/** Used for adding places so all places in the rule have the same color */
 	private ColorGenerator colorGenerator;
 
 	@SuppressWarnings("unused")

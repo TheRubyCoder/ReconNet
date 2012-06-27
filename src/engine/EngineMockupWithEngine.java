@@ -12,7 +12,6 @@ import petrinet.IRenew;
 import petrinet.Petrinet;
 import petrinet.Place;
 import petrinet.Transition;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
@@ -23,6 +22,10 @@ import engine.ihandler.IPetrinetManipulation;
 import engine.session.SessionManager;
 import exceptions.EngineException;
 
+/**
+ * This class is leftover from an older stage of development. It is only used
+ * in tests and should not be used any more
+ */
 public class EngineMockupWithEngine implements IPetrinetManipulation  {
 	
 	private IPetrinetManipulation iPetrinetManipulation;

@@ -25,7 +25,31 @@ import engine.ihandler.IPetrinetManipulation;
 import gui.Style;
 
 /**
- * @author Mathias Blumreiter
+ * This class adds JUNG relevant information to a petrinet. It holds information
+ * about the <b>position of the nodes<b>:
+ * <ul>
+ * <li>{@link JungData#getJungLayout()}</li>
+ * <li>{@link JungData#getNodeLayoutAttributes()}</li>
+ * </ul>
+ * the <b>size of nodes</b>
+ * <ul>
+ * <li>{@link JungData#getNodeSize()}</li>
+ * <li> {@link JungData#setNodeSize(double)}</li>
+ * </ul>
+ * and <b>the color of places</b>:
+ * <ul>
+ * <li>{@link JungData#getPlaceColor(Place)}</li>
+ * <li> {@link JungData#setPlaceColor(Place, Color)}</li>
+ * </ul>
+ * It also manages which nodes are known to JUNG, by <b>creating and deleting
+ * graph elements</b>:
+ * <ul>
+ * <li>{@link JungData#createArc(Arc, Place, Transition)}</li>
+ * <li>{@link JungData#createArc(Arc, Transition, Place)}</li>
+ * <li>{@link JungData#createPlace(Place, Point2D)}</li>
+ * <li>{@link JungData#createTransition(Transition, Point2D)}</li>
+ * <li>{@link JungData#deleteDataOfMissingElements(Petrinet)}</li>
+ * </ul>
  */
 
 final public class JungData {
@@ -33,7 +57,7 @@ final public class JungData {
 	 * radius to check the minimum distance between 2 nodes
 	 */
 	public static final Color DEFAULT_COLOR_PLACE = Color.GRAY;
-	public static final Color DEFAULT_COLOR_TRANSITION = Color.WHITE;
+	private static final Color DEFAULT_COLOR_TRANSITION = Color.WHITE;
 
 	private DirectedGraph<INode, Arc> graph;
 	private AbstractLayout<INode, Arc> layout;
@@ -54,16 +78,16 @@ final public class JungData {
 		this.layout = layout;
 		this.placeColors = new HashMap<Place, Color>();
 	}
-	
+
 	public double getNodeSize() {
 		return nodeSize;
 	}
-	
+
 	public void setNodeSize(double nodeSize) {
 		this.nodeSize = nodeSize;
 	}
-	
-	private double getMinDinstance(){
+
+	private double getMinDinstance() {
 		return nodeSize / 1.5d;
 	}
 
@@ -84,7 +108,6 @@ final public class JungData {
 	public AbstractLayout<INode, Arc> getJungLayout() {
 		return layout;
 	}
-
 
 	/**
 	 * Gets the LayoutAttributes of all Nodes.
@@ -579,7 +602,7 @@ final public class JungData {
 
 			double xDistance = Math.abs(layout.getX(node) - point.getX());
 			double yDistance = Math.abs(layout.getY(node) - point.getY());
-			
+
 			check(Double.compare(xDistance, getMinDinstance()) >= 0
 					|| Double.compare(yDistance, getMinDinstance()) >= 0,
 					"point is too close to a node");
