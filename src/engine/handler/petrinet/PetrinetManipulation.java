@@ -17,44 +17,52 @@ import engine.ihandler.IPetrinetManipulation;
 import exceptions.EngineException;
 
 /**
- * 
- * This Class implements engine.ihandler.IPetrinetManipulation,
- * and it is the interface for the GUI-Component.
- * 
+ * <p>
+ * This Class implements {@link IPetrinetManipulation}, and it is the interface
+ * for the GUI-Component.
+ * </p>
+ * <p>
  * We wrap the implementation in: PetriManipulationBackend
- * 
+ * </p>
+ * <p>
  * It is a Singleton. (PetrinetManipulation.getInstance)
- * 
+ * </p>
+ * <p>
  * It can be use for all manipulations for a Petrninet.
- * 	- create[Petrinet|Arc|Place|Transition](..)
- * 	- delete[Arc|Place|Transition](..)
- *  - get[Arc|Place|Transition]Attribute(..)
- *  - getJungLayout(..)
- *  - move[Graph|Node](..)
- *  - save(..)
- *  - set[Marking|Pname|Tlb|Tname|Weight|NodeType](..)
+ * <ul>
+ * <li>create[Petrinet|Arc|Place|Transition](..)</li>
+ * <li>delete[Arc|Place|Transition](..)</li>
+ * <li>get[Arc|Place|Transition]Attribute(..)</li>
+ * <li>getJungLayout(..)</li>
+ * <li>move[Graph|Node](..)</li>
+ * <li>save(..)</li>
+ * <li>set[Marking|Pname|Tlb|Tname|Weight|NodeType](..)</li>
+ * </ul>
+ * </p>
  * 
  * @author alex (aas772)
- *
+ * 
  */
 
 public class PetrinetManipulation implements IPetrinetManipulation {
 
+	/** Singleton instance */
 	private static PetrinetManipulation petrinetManipulation;
+	/** Object with actual logic to delegate to */
 	private PetrinetHandler petrinetManipulationBackend;
-	
-	private PetrinetManipulation(){
+
+	private PetrinetManipulation() {
 		this.petrinetManipulationBackend = PetrinetHandler.getInstance();
 	}
-	
-	public static PetrinetManipulation getInstance(){
-		if(petrinetManipulation == null){
+
+	public static PetrinetManipulation getInstance() {
+		if (petrinetManipulation == null) {
 			petrinetManipulation = new PetrinetManipulation();
 		}
-		
+
 		return petrinetManipulation;
 	}
-	
+
 	@Override
 	public void createArc(int id, INode from, INode to) throws EngineException {
 		petrinetManipulationBackend.createArc(id, from, to);
@@ -69,9 +77,9 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	public int createPetrinet() {
 
 		int petrinetid = petrinetManipulationBackend.createPetrinet();
-		
+
 		return petrinetid;
-		
+
 	}
 
 	@Override
@@ -98,41 +106,45 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 
 	@Override
 	public ArcAttribute getArcAttribute(int id, Arc arc) throws EngineException {
-		
-		ArcAttribute attr = petrinetManipulationBackend.getArcAttribute(id, arc);
-		
+
+		ArcAttribute attr = petrinetManipulationBackend
+				.getArcAttribute(id, arc);
+
 		return attr;
-		
+
 	}
 
 	@Override
 	public AbstractLayout<INode, Arc> getJungLayout(int id)
 			throws EngineException {
 
-		AbstractLayout<INode, Arc> attr = petrinetManipulationBackend.getJungLayout(id);
-		
+		AbstractLayout<INode, Arc> attr = petrinetManipulationBackend
+				.getJungLayout(id);
+
 		return attr;
-		
+
 	}
 
 	@Override
 	public PlaceAttribute getPlaceAttribute(int id, INode place)
 			throws EngineException {
 
-		PlaceAttribute attr = petrinetManipulationBackend.getPlaceAttribute(id, place);
-		
+		PlaceAttribute attr = petrinetManipulationBackend.getPlaceAttribute(id,
+				place);
+
 		return attr;
-		
+
 	}
 
 	@Override
 	public TransitionAttribute getTransitionAttribute(int id, INode transition)
 			throws EngineException {
 
-		TransitionAttribute attr = petrinetManipulationBackend.getTransitionAttribute(id, transition);
-		
+		TransitionAttribute attr = petrinetManipulationBackend
+				.getTransitionAttribute(id, transition);
+
 		return attr;
-		
+
 	}
 
 	@Override
@@ -148,11 +160,11 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	}
 
 	@Override
-	public void save(int id, String path, String filename, String format, double nodeSize)
-			throws EngineException {
+	public void save(int id, String path, String filename, String format,
+			double nodeSize) throws EngineException {
 		petrinetManipulationBackend.save(id, path, filename, format, nodeSize);
 	}
-	
+
 	@Override
 	public int load(String path, String filename) {
 		return petrinetManipulationBackend.load(path, filename);
@@ -188,30 +200,32 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	}
 
 	@Override
-	public void setRnw(int id, INode transition, IRenew renews) throws EngineException {
+	public void setRnw(int id, INode transition, IRenew renews)
+			throws EngineException {
 		petrinetManipulationBackend.setRnw(id, transition, renews);
 	}
-	
+
 	@Override
 	public NodeTypeEnum getNodeType(INode node) throws EngineException {
 
 		NodeTypeEnum nodeType = petrinetManipulationBackend.getNodeType(node);
-		
+
 		return nodeType;
-		
+
 	}
 
 	@Override
-	public void setPlaceColor(int id, INode place, Color color) throws EngineException {
+	public void setPlaceColor(int id, INode place, Color color)
+			throws EngineException {
 
 		petrinetManipulationBackend.setPlaceColor(id, place, color);
-		
+
 	}
-	
-	public void closePetrinet(int id) throws EngineException{
-		
+
+	public void closePetrinet(int id) throws EngineException {
+
 		petrinetManipulationBackend.closePetrinet(id);
-		
+
 	}
 
 	@Override
@@ -226,13 +240,13 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 
 	@Override
 	public void moveAllNodesTo(int id, float factor, Point point) {
-		petrinetManipulationBackend.moveAllNodesTo(id,factor,point);
+		petrinetManipulationBackend.moveAllNodesTo(id, factor, point);
 	}
 
 	@Override
 	public void setNodeSize(int id, double nodeDistance) {
 		petrinetManipulationBackend.setNodeSize(id, nodeDistance);
-		
+
 	}
 
 	@Override

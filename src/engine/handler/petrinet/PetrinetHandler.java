@@ -28,14 +28,16 @@ import engine.data.JungData;
 import engine.data.PetrinetData;
 import engine.handler.NodeTypeEnum;
 import engine.ihandler.IPetrinetManipulation;
+import engine.ihandler.IPetrinetPersistence;
 import engine.session.SessionManager;
 import exceptions.EngineException;
 import exceptions.ShowAsWarningException;
 
 /**
  * 
- * This is the implementation of all methods for the Petrinet by engine.
+ * This is the implementation of all methods regarding petrinets by engine.
  * @see IPetrinetManipulation
+ * @see IPetrinetPersistence
  * 
  * @author alex (aas772)
  * 
@@ -148,11 +150,6 @@ final public class PetrinetHandler {
 				// create a new Place
 				Place newPlace = petrinet.createPlace("undefined");
 
-				// ***************************
-				// TODO: ChangedPetrinetResult
-				// discuss: what to do
-				// ***************************
-
 				// call JungModificator
 				try {
 					jungData.createPlace(newPlace, coordinate);
@@ -214,11 +211,6 @@ final public class PetrinetHandler {
 				// create a new Place
 				Transition newTransition = petrinet
 						.createTransition("undefined");
-
-				// ***************************
-				// TODO: ChangedPetrinetResult
-				// discuss: what to do
-				// ***************************
 
 				// call JungModificator
 				try {

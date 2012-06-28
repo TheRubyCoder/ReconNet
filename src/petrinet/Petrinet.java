@@ -355,8 +355,15 @@ public class Petrinet {
 	 * @param end
 	 *            target {@link INode node} of the arc
 	 * @return The new {@link Arc}
+	 * @throws ShowAsWarningException with user friendly message if start and end are of same type
 	 */
 	public Arc createArc(String name, INode start, INode end) {
+
+		if (start.getClass().equals(end.getClass())) {
+			throw new ShowAsWarningException(
+					"Kanten nur zwischen Stellen und Transitionen, nicht zwischen Knoten des gleichen Typs.");
+		}
+
 		final Arc arc = new Arc(UUID.getaID(), this, start, end);
 		// Fuege Arc in die Startliste von Transition hinzu
 		if (start instanceof Transition) {
@@ -815,8 +822,22 @@ public class Petrinet {
 	}
 
 	/**
+	 * Returns the {@link INode} with <code>id</code>
+	 * 
+	 * @param id
+	 *            Id of the {@link INode}
+	 * @return <code>null</code> if {@link INode} is not in this petrinet
+	 */
+	public INode getNodeById(int id){
+		Transition transition = getTransitionById(id);
+		return transition != null ? transition : getPlaceById(id);
+	}
+
+	/**
 	 * Returns all incident arcs to a node referenced by its <code>id</code>
-	 * @param id Id of the references node
+	 * 
+	 * @param id
+	 *            Id of the references node
 	 * @return Empty List of there is no node with that <code>id</code>
 	 */
 	public List<Arc> getIncidetenArcsByNodeId(int id) {
@@ -888,8 +909,11 @@ public class Petrinet {
 	}
 
 	/**
-	 * Returns the {@link ElementType type} of the node referenced by <code>nodeId</code>
-	 * @param nodeId Id of the node
+	 * Returns the {@link ElementType type} of the node referenced by
+	 * <code>nodeId</code>
+	 * 
+	 * @param nodeId
+	 *            Id of the node
 	 * @return {@link ElementType#INVALID} if node is not in this petrinet
 	 */
 	public ElementType getNodeType(int nodeId) {

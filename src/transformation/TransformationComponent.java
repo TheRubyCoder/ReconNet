@@ -89,4 +89,10 @@ public class TransformationComponent implements ITransformation{
 		rules.put(id, rule);
 	}
 
+	@Override
+	public void setName(Rule rule, int nodeId, String name) {
+		rule.setName(nodeId, name);
+		
+	}
+
 }

@@ -509,6 +509,20 @@ public class Rule {
 	}
 
 	/**
+	 * @see ITransformation#setName(Rule, int, String)
+	 */
+	public void setName(int nodeId, String name) {
+		Petrinet rulePart = getPetrinetOfNode(nodeId);
+		INode node = rulePart.getNodeById(nodeId);
+		for (INode correspondingNode : getMappings(node)) {
+			if (correspondingNode != null) {
+				correspondingNode.setName(name);
+			}
+		}
+
+	}
+
+	/**
 	 * Sets the mark of the place that is specified by <code>placeId</code> and
 	 * its mappings.
 	 * 

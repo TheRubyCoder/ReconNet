@@ -30,9 +30,17 @@ public interface ITransformation {
 	 *            id of place
 	 * @param mark
 	 *            new value for mark
-	 * @return needs to be defined by engine group
+	 * @return 
 	 */
 	public void setMark(Rule rule, int placeId, int mark);
+	
+	/**
+	 * Sets the name of a node in a rule and modifies other parts of the rule accordingly
+	 * @param rule
+	 * @param nodeId
+	 * @param name
+	 */
+	public void setName(Rule rule, int nodeId, String name);
 
 	/**
 	 * Transformations the petrinet like defined in rule with random morphism
