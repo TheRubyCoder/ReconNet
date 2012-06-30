@@ -27,13 +27,17 @@ import exceptions.EngineException;
  */
 public class RulePersistence implements IRulePersistence {
 
+	/** Singleton instance */
 	private static RulePersistence rulePersistence;
+	
+	/** Object with actual logic to delegate to */
 	private RuleHandler ruleManipulationBackend;
 
 	private RulePersistence() {
 		this.ruleManipulationBackend = RuleHandler.getInstance();
 	}
 
+	/** Returns the singleton instance */
 	public static RulePersistence getInstance() {
 		if (rulePersistence == null) {
 			rulePersistence = new RulePersistence();

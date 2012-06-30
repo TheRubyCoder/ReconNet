@@ -13,6 +13,7 @@ import petrinet.INode;
 import petrinet.Petrinet;
 import petrinet.Place;
 import petrinet.Transition;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import transformation.ITransformation;
 import transformation.Rule;
 import transformation.Transformation;
@@ -29,15 +30,30 @@ import exceptions.ShowAsWarningException;
 
 public class SimulationHandler implements ISimulation {
 
+	/** Session manager holding session data */
 	private final SessionManager sessionManager;
+
+	/** The transformation component (singleton instance) */
 	private final ITransformation transformationComponent;
+
+	/** Singleton instance of this class */
 	private static SimulationHandler simulation;
+
+	/**
+	 * Random number generator to choose a random rule to be applied or to
+	 * choose whether to fire or to transform
+	 */
+	private Random random = new Random();
+	
+	/** The distance for nodes that are added through application of a rule */
+	public static final int DISTANCE_WHEN_ADDED = 100;
 
 	private SimulationHandler() {
 		sessionManager = SessionManager.getInstance();
 		transformationComponent = TransformationComponent.getTransformation();
 	}
 
+	/** Returns the singleton instance */
 	public static SimulationHandler getInstance() {
 		if (simulation == null)
 			simulation = new SimulationHandler();
@@ -47,7 +63,6 @@ public class SimulationHandler implements ISimulation {
 
 	@Override
 	public int createSimulationSession(int id) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -81,15 +96,10 @@ public class SimulationHandler implements ISimulation {
 	@Override
 	public void save(int id, String path, String filename, String format)
 			throws EngineException {
-		// TODO Auto-generated method stub
-		// waiting for Persistence Team
-
+		throw new UnsupportedOperationException("Simulation data are not implemented");
 	}
 
-	private Random random = new Random();
-	public static final int DISTANCE = 100;
-
-	// @Override
+	@Override
 	public void transform(int id, Collection<Integer> ruleIDs, int n)
 			throws EngineException {
 
@@ -162,9 +172,9 @@ public class SimulationHandler implements ISimulation {
 							jungData.delete(deletedArcs, deletedNodes);
 							// TODO eventuell bessere Werte für Punkte suchen
 							// X Werte des Punktes werden alle biggestX +
-							// DISTANCE
+							// DISTANCE_WHEN_ADDED
 							// gesetzt
-							// Y Werte werden in DISTANCE Schritten nach oben
+							// Y Werte werden in DISTANCE_WHEN_ADDED Schritten nach oben
 							// gesetzt
 							int count = 0;
 							for (INode elem : addedNodes) {
@@ -172,14 +182,14 @@ public class SimulationHandler implements ISimulation {
 								if (elem instanceof Place) {
 									jungData.createPlace((Place) elem,
 											new Point2D.Double(biggestX
-													+ DISTANCE, count
-													* DISTANCE));
+													+ DISTANCE_WHEN_ADDED, count
+													* DISTANCE_WHEN_ADDED));
 								} else {
 									jungData.createTransition(
 											(Transition) elem,
 											new Point2D.Double(biggestX
-													+ DISTANCE, count
-													* DISTANCE));
+													+ DISTANCE_WHEN_ADDED, count
+													* DISTANCE_WHEN_ADDED));
 								}
 							}
 							for (Arc arc : addedArcs) {
@@ -195,7 +205,8 @@ public class SimulationHandler implements ISimulation {
 								}
 							}
 							jungData.deleteDataOfMissingElements(petrinet);
-						} catch (IllegalArgumentException ex) { //thrown when "not all incident arcs are given"
+						} catch (IllegalArgumentException ex) { // thrown when
+																// "not all incident arcs are given"
 							pickedRules.remove(randomRule);
 							if (pickedRules.size() == 0) {
 								exception("No Rule is matching");
@@ -219,15 +230,15 @@ public class SimulationHandler implements ISimulation {
 			throws EngineException {
 		for (int i = 0; i < n; i++) {
 			if (random.nextFloat() < 0.5d) {
-				try{
+				try {
 					fire(id, 1);
-				} catch (EngineException ex){
+				} catch (EngineException ex) {
 					transform(id, ruleIDs, 1);
 				}
 			} else {
-				try{
+				try {
 					transform(id, ruleIDs, 1);
-				} catch (EngineException ex){
+				} catch (EngineException ex) {
 					fire(id, 1);
 				}
 			}
