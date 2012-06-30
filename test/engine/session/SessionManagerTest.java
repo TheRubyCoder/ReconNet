@@ -140,10 +140,10 @@ public class SessionManagerTest {
 	@Test
 	public void testGetSessionData() {
 		PetrinetData data1 = sessionManager.createPetrinetData(emptyPetrinet);	
-		assertEquals(sessionManager.getSessionData(data1.getId()), data1);	
+		assertEquals(sessionManager.getPetrinetData(data1.getId()), data1);	
 
 		RuleData data2 = sessionManager.createRuleData(emptyRule);		
-		assertEquals(sessionManager.getSessionData(data2.getId()), data2);			
+		assertEquals(sessionManager.getRuleData(data2.getId()), data2);			
 	}
 	
 
@@ -159,29 +159,31 @@ public class SessionManagerTest {
 		assertNotNull(data);
 	}
 
-	@Test(expected=IllegalArgumentException.class) 
 	public void testGetPetrinetData_exception() {
 		PetrinetData data = sessionManager.createPetrinetData(emptyPetrinet);
 		
-		sessionManager.getRuleData(data.getId());	
+		RuleData ruleData = sessionManager.getRuleData(data.getId());
+		
+		assertNull(ruleData);
 	}
 
-	@Test(expected=IllegalArgumentException.class) 
 	public void testGetRuleData_exception() {
 		RuleData data = sessionManager.createRuleData(emptyRule);
 
-		sessionManager.getPetrinetData(data.getId());
+		PetrinetData petrinetData = sessionManager.getPetrinetData(data.getId());
+		
+		assertNull(petrinetData);
 	}
 	
 	/**
 	 * Test auf NULL
 	 */	
-	@Test(expected=IllegalArgumentException.class) 
+	@Test(expected=NullPointerException.class) 
 	public void testNull_createPetrinetData() {
 		sessionManager.createPetrinetData(null);
 	}
 
-	@Test(expected=IllegalArgumentException.class) 
+	@Test(expected=NullPointerException.class) 
 	public void testNull_createRuleData() {
 		sessionManager.createRuleData(null);
 	}
@@ -189,55 +191,46 @@ public class SessionManagerTest {
 	/**
 	 * IDs zu klein
 	 */
-	@Test(expected=IllegalArgumentException.class) 
 	public void testInvalidArgument_getPetrinetData_1() {
-		sessionManager.getPetrinetData(0);
+		assertNull(sessionManager.getPetrinetData(0));
 	}
 	
-	@Test(expected=IllegalArgumentException.class) 
 	public void testInvalidArgument_getPetrinetData_2() {
-		sessionManager.getPetrinetData(-1);
+		assertNull(sessionManager.getPetrinetData(-1));
 	}
 
 	
-	@Test(expected=IllegalArgumentException.class) 
 	public void testInvalidArgument_getRuleData_1() {
-		sessionManager.getRuleData(0);
+		assertNull(sessionManager.getRuleData(0));
 	}
 	
-	@Test(expected=IllegalArgumentException.class) 
 	public void testInvalidArgument_getRuleData_2() {
-		sessionManager.getRuleData(-1);
+		assertNull(sessionManager.getRuleData(-1));
 	}
 
 	
-	@Test(expected=IllegalArgumentException.class) 
 	public void testInvalidArgument_getSessionData_1() {
-		sessionManager.getSessionData(0);
+		assertNull(sessionManager.getSessionData(0));
 	}
 	
-	@Test(expected=IllegalArgumentException.class) 
 	public void testInvalidArgument_getSessionData_2() {
-		sessionManager.getSessionData(-1);
+		assertNull(sessionManager.getSessionData(-1));
 	}
 	
 	
 	/**
 	 * data undefiniert
 	 */	
-	@Test(expected=IllegalArgumentException.class) 
 	public void testInvalidArgument_getPetrinetData_3() {
-		sessionManager.getPetrinetData(9999);
+		assertNull(sessionManager.getPetrinetData(9999));
 	}
 	
-	@Test(expected=IllegalArgumentException.class) 
 	public void testInvalidArgument_getRuleData_3() {
-		sessionManager.getRuleData(9999);
+		assertNull(sessionManager.getRuleData(9999));
 	}
 	
-	@Test(expected=IllegalArgumentException.class) 
 	public void testInvalidArgument_getSessionData_3() {
-		sessionManager.getSessionData(9999);
+		assertNull(sessionManager.getSessionData(9999));
 	}
 	
 	/**

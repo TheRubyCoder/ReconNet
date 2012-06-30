@@ -3,6 +3,8 @@ package engine.session;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sun.istack.NotNull;
+
 import petrinet.Arc;
 import petrinet.INode;
 import petrinet.Petrinet;
@@ -79,15 +81,7 @@ final public class SessionManager {
 	 * @return
 	 */
 	public SessionData getSessionData(int id) {
-		SessionData result = null;
-		result = sessionData.get(id);
-		if (result == null) {
-			result = petrinetData.get(id);
-		}
-		if (result == null) {
-			result = ruleData.get(id);
-		}
-		return result;
+		return sessionData.get(id);
 	}
 
 	/**
@@ -98,7 +92,7 @@ final public class SessionManager {
 	 * 
 	 * @return the new PetrinetData
 	 */
-	public PetrinetData createPetrinetData(Petrinet petrinet) {
+	public PetrinetData createPetrinetData(@NotNull Petrinet petrinet) {
 		checkEmptyPetrinet(petrinet);
 
 		PetrinetData data = new PetrinetData(getNextSessionDataId(), petrinet,
@@ -121,7 +115,7 @@ final public class SessionManager {
 	 * 
 	 * @return the new RuleData
 	 */
-	public RuleData createRuleData(Rule rule) {
+	public RuleData createRuleData(@NotNull Rule rule) {
 		checkEmptyRule(rule);
 
 		RuleData data = new RuleData(getNextSessionDataId(), rule,
