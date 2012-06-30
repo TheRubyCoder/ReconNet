@@ -198,6 +198,51 @@ final public class JungData {
 	}
 
 	/**
+	 * Creates a place or transition at a position that is chosen automatically
+	 * 
+	 * @param place
+	 */
+	public void createPlaceOrTransition(INode node) {
+		check(getJungGraph().addVertex(node), "" + node
+				+ " could not be added to JUNG graph");
+
+		getJungLayout().setLocation(node, findPositionForNewNode());
+	}
+
+	/**
+	 * Returns a position where a place or transition can be added
+	 * 
+	 * @return
+	 */
+	private Point2D findPositionForNewNode() {
+		INode farestRight = findNodeWithBiggestX();
+		return new Point2D.Double(layout.getX(farestRight) + getNodeDistance()
+				* 2, layout.getY(farestRight));
+	}
+
+	/**
+	 * Finds the {@link INode} that is the farest to the right
+	 * 
+	 * @return
+	 */
+	private INode findNodeWithBiggestX() {
+		double x = Double.MIN_VALUE;
+		INode farestRight = null;
+		for (INode node : graph.getVertices()) {
+			if (x < layout.getX(node)) {
+				x = layout.getX(node);
+				farestRight = node;
+			}
+		}
+		return farestRight;
+	}
+
+	/** Returns the distance that needs to be among {@link INode nodes} */
+	private double getNodeDistance() {
+		return nodeSize / 1.5d;
+	}
+
+	/**
 	 * Creates a Transition in the JungRepresentation of the petrinet.
 	 * 
 	 * @param transition
