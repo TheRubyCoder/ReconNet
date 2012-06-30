@@ -79,7 +79,15 @@ final public class SessionManager {
 	 * @return
 	 */
 	public SessionData getSessionData(int id) {
-		return sessionData.get(id);
+		SessionData result = null;
+		result = sessionData.get(id);
+		if (result == null) {
+			result = petrinetData.get(id);
+		}
+		if (result == null) {
+			result = ruleData.get(id);
+		}
+		return result;
 	}
 
 	/**
