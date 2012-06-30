@@ -5,7 +5,6 @@ import java.util.List;
 import petrinet.Arc;
 import petrinet.INode;
 import petrinet.Petrinet;
-import exceptions.GeneralPetrinetException;
 
 /**
  * Interface for accessing transformation component so other components do not
@@ -49,8 +48,6 @@ public interface ITransformation {
 	 *            Petrinet to transform
 	 * @param rule
 	 *            Rule to apply to petrinet
-	 * @throws GeneralPetrinetException
-	 *             When no default morphism found
 	 * @return the transformation that was used for transforming (containing
 	 *         rule, nNet and morphism)
 	 */

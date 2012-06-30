@@ -14,51 +14,63 @@ import engine.data.PetrinetData;
 import engine.data.RuleData;
 import engine.data.SessionData;
 
+/**
+ * The instance manager manages all the different types of data objects like
+ * {@link PetrinetData}, {@link JungData} etc. It has only a singleton instance
+ */
 final public class SessionManager {
-	private static SessionManager     session;
-	private Map<Integer, SessionData> sessiondata;	
-	private int 					  idPetrinetData = 0;
+	/** Singleton instance */
+	private static SessionManager instance;
+	
+	/** Counter for creating data IDs */
+	private int idSessionData = 0;
+	
+	/** Stores petrinet data by their ID */
+	private Map<Integer, PetrinetData> petrinetData;
+	
+	/** Stores rule data by their ID */
+	private Map<Integer, RuleData> ruleData;
+	
+	
+	private Map<Integer, SessionData> sessionData;
 
 	private SessionManager() {
-		sessiondata  = new HashMap<Integer, SessionData>();
+		sessionData = new HashMap<Integer, SessionData>();
+		petrinetData = new HashMap<Integer, PetrinetData>();
+		ruleData = new HashMap<Integer, RuleData>();
 	}
 
+	/** Returns the singleton instace */
 	public static SessionManager getInstance() {
-		if (session == null) {
-			session = new SessionManager();
+		if (instance == null) {
+			instance = new SessionManager();
 		}
 
-		return session;
+		return instance;
 	}
 
 	/**
 	 * Gets PetrinetData with the ID.
 	 * 
-	 * @param  id from the PetrinetData
+	 * @param id
+	 *            from the PetrinetData
 	 * 
 	 * @return the PetrinetData with this id, null if the Id is not known
 	 */
 	public PetrinetData getPetrinetData(int id) {
-		SessionData data = sessiondata.get(id);
-		
-		checkPetrinetData(data);
-
-		return (PetrinetData) data;
+		return petrinetData.get(id);
 	}
 
 	/**
 	 * This method return the RuleData for the Id
 	 * 
-	 * @param  id from the RuleData
+	 * @param id
+	 *            from the RuleData
 	 * 
 	 * @return the RuleData or null if the Id is not valid
 	 */
 	public RuleData getRuleData(int id) {
-		SessionData data = sessiondata.get(id);
-		
-		checkRuleData(data);
-
-		return (RuleData) data;
+		return ruleData.get(id);
 	}
 
 	/**
@@ -67,91 +79,82 @@ final public class SessionManager {
 	 * @return
 	 */
 	public SessionData getSessionData(int id) {
-		SessionData data = sessiondata.get(id);
-		
-		checkSessionData(data);
-
-		return data;
+		return sessionData.get(id);
 	}
 
 	/**
 	 * Create a new PetrinetData.
 	 * 
-	 * @param  empty petrinet for the PetrinetData
+	 * @param empty
+	 *            petrinet for the PetrinetData
 	 * 
 	 * @return the new PetrinetData
 	 */
 	public PetrinetData createPetrinetData(Petrinet petrinet) {
 		checkEmptyPetrinet(petrinet);
-				
-		PetrinetData data = new PetrinetData(
-			getNextSessionDataId(), 
-			petrinet, 
-			getNewJungData()
-		); 
-		
-		sessiondata.put(data.getId(), data);
-				
+
+		PetrinetData data = new PetrinetData(getNextSessionDataId(), petrinet,
+				getNewJungData());
+
+		petrinetData.put(data.getId(), data);
+
 		return data;
 	}
 
 	/**
-	 * It create a new RuleData from all Petrinet (l, k, r).
+	 * Creates a new RuleData from all Petrinet (l, k, r).
 	 * 
-	 * @param  l id of left Petrinet
-	 * @param  k id of middle Petrinet
-	 * @param  r id of right Petrinet
+	 * @param l
+	 *            id of left Petrinet
+	 * @param k
+	 *            id of middle Petrinet
+	 * @param r
+	 *            id of right Petrinet
 	 * 
 	 * @return the new RuleData
 	 */
 	public RuleData createRuleData(Rule rule) {
 		checkEmptyRule(rule);
-				
-		RuleData data = new RuleData(
-			getNextSessionDataId(), 
-			rule, 
-			getNewJungData(), 
-			getNewJungData(), 
-			getNewJungData()
-		);
-		
-		sessiondata.put(data.getId(), data);
-				
+
+		RuleData data = new RuleData(getNextSessionDataId(), rule,
+				getNewJungData(), getNewJungData(), getNewJungData());
+
+		ruleData.put(data.getId(), data);
+
 		return data;
 	}
-	
+
 	/**
-	 * removes a Data from session manager
+	 * removes a Data from instance manager
 	 * 
-	 * @param id of a SessionData
-	 * @return true if Data was successful closed, false if id was not found, or data coulnd't be closed
+	 * @param id
+	 *            of a SessionData
+	 * @return true if Data was successful closed, false if id was not found, or
+	 *         data coulnd't be closed
 	 */
 	public boolean closeSessionData(int id) {
-		return sessiondata.remove(id) != null;
+		return sessionData.remove(id) != null;
 	}
-	
-	
+
 	private JungData getNewJungData() {
 		DirectedSparseGraph<INode, Arc> graph = new DirectedSparseGraph<INode, Arc>();
-		
-		return new JungData(
-			graph, 
-			new StaticLayout<INode, Arc>(graph)
-		);
+
+		return new JungData(graph, new StaticLayout<INode, Arc>(graph));
 	}
-	
+
 	private int getNextSessionDataId() {
-		idPetrinetData++;
-		
-		return idPetrinetData;
+		idSessionData++;
+
+		return idSessionData;
 	}
-	
 
 	/**
 	 * throws an exception, if check result is negative.
 	 * 
-	 * @param isValid	if false, exception is thrown	
-	 * @param message	message of exception
+	 * @param isValid
+	 *            if false, exception is thrown
+	 * @param message
+	 *            message of exception
 	 */
 	private void check(boolean isValid, String message) {
 		if (!isValid) {
@@ -159,29 +162,15 @@ final public class SessionManager {
 		}
 	}
 
-
-	private void checkSessionData(SessionData data) {
-		check(data instanceof SessionData, "data not of type SessionData");
-	}
-
-	private void checkPetrinetData(SessionData data) {
-		check(data instanceof PetrinetData, "data not of type PetrinetData");
-	}
-
-
-	private void checkRuleData(SessionData data) {
-		check(data instanceof RuleData, "data not of type RuleData");
-	}
-
+	/** Checks whether a petrinet is empty */
 	private void checkEmptyPetrinet(Petrinet petrinet) {
-		check(petrinet instanceof Petrinet, "petrinet not of type Petrinet");
 		check(petrinet.getAllArcs().isEmpty(), "arcs have to be empty");
 		check(petrinet.getAllPlaces().isEmpty(), "arcs have to be empty");
 		check(petrinet.getAllTransitions().isEmpty(), "arcs have to be empty");
 	}
 
+	/** Checks whether a rule is empty */
 	private void checkEmptyRule(Rule rule) {
-		check(rule instanceof Rule, "rule not of type Rule");
 		checkEmptyPetrinet(rule.getK());
 		checkEmptyPetrinet(rule.getL());
 		checkEmptyPetrinet(rule.getR());

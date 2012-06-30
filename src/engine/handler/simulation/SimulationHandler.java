@@ -1,36 +1,31 @@
 package engine.handler.simulation;
 
-import java.awt.geom.Point2D;
+import static exceptions.Exceptions.exception;
+import static exceptions.Exceptions.info;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-
-import com.vladium.jcd.opcodes.IOpcodes.clinit;
 
 import petrinet.Arc;
 import petrinet.INode;
 import petrinet.Petrinet;
 import petrinet.Place;
 import petrinet.Transition;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import transformation.ITransformation;
 import transformation.Rule;
 import transformation.Transformation;
 import transformation.TransformationComponent;
-import engine.attribute.NodeLayoutAttribute;
 import engine.data.JungData;
 import engine.data.PetrinetData;
-import engine.data.RuleData;
 import engine.ihandler.ISimulation;
 import engine.session.SessionManager;
 import exceptions.EngineException;
 import exceptions.ShowAsInfoException;
-import exceptions.ShowAsWarningException;
 
 public class SimulationHandler implements ISimulation {
 
@@ -202,34 +197,24 @@ public class SimulationHandler implements ISimulation {
 	public void fireOrTransform(int id, Collection<Integer> ruleIDs, int n)
 			throws EngineException {
 		for (int i = 0; i < n; i++) {
+			//try fire first? 50 : 50 chance
 			if (random.nextFloat() < 0.5d) {
 				try {
 					fire(id, 1);
 				} catch (EngineException ex) {
+					//fire failed? OK, try transform
 					transform(id, ruleIDs, 1);
 				}
 			} else {
+				//try transform first? 50 : 50 chance
 				try {
 					transform(id, ruleIDs, 1);
 				} catch (EngineException ex) {
+					// transform failed? OK, try fire
 					fire(id, 1);
 				}
 			}
 		}
-	}
-
-	/** Throws an {@link EngineException} with the <code>message</code> */
-	private void exception(String message) throws EngineException {
-		throw new EngineException(message);
-	}
-
-	@SuppressWarnings("unused")
-	private void warning(String message) throws ShowAsWarningException {
-		throw new ShowAsWarningException(message);
-	}
-
-	private void info(String message) throws ShowAsInfoException {
-		throw new ShowAsInfoException(message);
 	}
 
 }

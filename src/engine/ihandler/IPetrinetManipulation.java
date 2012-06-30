@@ -97,9 +97,8 @@ public interface IPetrinetManipulation {
 	 * @throws EngineException
 	 */
 	public void deleteArc(@NotNull int id, @NotNull Arc arc)
-			throws EngineException; // TODO IArc gibt es nicht?
+			throws EngineException; 
 
-	// TODO: da sollte doch ne methode drueber die INode aufloest oder?
 	/**
 	 * Deletes a Place
 	 * 
@@ -132,7 +131,7 @@ public interface IPetrinetManipulation {
 	 * @return ArcAttribute
 	 */
 	public ArcAttribute getArcAttribute(@NotNull int id, @NotNull Arc arc)
-			throws EngineException; // TODO IArc gibt es nicht?
+			throws EngineException; 
 
 	/**
 	 * Gets the JungLayout from the Petrinet
@@ -143,9 +142,8 @@ public interface IPetrinetManipulation {
 	 * @throws EngineException
 	 */
 
-	// TODO
 	public AbstractLayout<INode, Arc> getJungLayout(@NotNull int id)
-			throws EngineException; // TODO: AbstractLayout<INode, Arc> richtig?
+			throws EngineException; 
 
 	/**
 	 * Gets the Attributes from a Place

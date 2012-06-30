@@ -12,7 +12,6 @@ import transformation.Rule;
 import transformation.Transformation;
 import transformation.TransformationComponent;
 import data.Rule2Data;
-import exceptions.GeneralPetrinetException;
 
 /**
  * Testing if Rule 2 like specified in /../additional/images/Rule_2.png works

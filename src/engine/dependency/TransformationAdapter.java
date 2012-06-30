@@ -4,7 +4,6 @@ import petrinet.Petrinet;
 import transformation.Rule;
 import transformation.Transformation;
 import transformation.TransformationComponent;
-import exceptions.GeneralPetrinetException;
 
 
 public class TransformationAdapter {
@@ -20,7 +19,6 @@ public class TransformationAdapter {
 	 * Transformations the petrinet like defined in rule with random morphism
 	 * @param petrinet Petrinet to transform
 	 * @param rule Rule to apply to petrinet
-	 * @throws GeneralPetrinetException When no default morphism found
 	 * @return the transformation that was used for transforming (containing rule, nNet and morphism)
 	 */
 	public static Transformation transform(Petrinet net, Rule rule)

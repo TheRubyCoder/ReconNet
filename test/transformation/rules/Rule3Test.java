@@ -20,7 +20,6 @@ import transformation.Rule;
 import transformation.Transformation;
 import transformation.TransformationComponent;
 import data.Rule3Data;
-import exceptions.GeneralPetrinetException;
 
 
 /**

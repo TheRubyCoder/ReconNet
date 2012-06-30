@@ -9,7 +9,6 @@ import petrinet.INode;
 import petrinet.Petrinet;
 import engine.session.SessionManager;
 import exceptions.EngineException;
-import exceptions.GeneralPetrinetException;
 
 /**
  * Singleton that represents the transformation component<br/>
@@ -44,7 +43,6 @@ public class TransformationComponent implements ITransformation{
 	 * Transformations the petrinet like defined in rule with random morphism
 	 * @param petrinet Petrinet to transform
 	 * @param rule Rule to apply to petrinet
-	 * @throws GeneralPetrinetException When no default morphism found
 	 * @return the transformation that was used for transforming (containing rule, nNet and morphism)
 	 */
 	@Override

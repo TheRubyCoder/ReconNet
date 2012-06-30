@@ -98,10 +98,8 @@ public interface IRuleManipulation {
 	 * 
 	 */
 	public void deleteArc(@NotNull int id, @NotNull RuleNet net,
-			@NotNull Arc arc) throws EngineException; // TODO IArc gibt es
-														// nicht?
+			@NotNull Arc arc) throws EngineException; 
 
-	// TODO: da sollte doch ne methode drueber die INode aufloest oder?
 	/**
 	 * Deletes a Place
 	 * 
@@ -134,7 +132,7 @@ public interface IRuleManipulation {
 	 * @return ArcAttribute
 	 */
 	public ArcAttribute getArcAttribute(@NotNull int id, @NotNull Arc arc)
-			throws EngineException; // TODO IArc gibt es nicht?
+			throws EngineException;
 
 	/**
 	 * Gets the JungLayout from the Rule
@@ -144,9 +142,7 @@ public interface IRuleManipulation {
 	 * @return AbstractLayout
 	 */
 	public AbstractLayout<INode, Arc> getJungLayout(@NotNull int id,
-			@NotNull RuleNet net) throws EngineException; // TODO:
-															// AbstractLayout<INode,
-															// Arc> richtig?
+			@NotNull RuleNet net) throws EngineException;
 
 	/**
 	 * Gets the Attributes from a Place
@@ -214,7 +210,7 @@ public interface IRuleManipulation {
 	 */
 	public void save(@NotNull int id, @NotNull String path,
 			@NotNull String filename, @NotNull String format)
-			throws EngineException; // TODO: String format zu => Format format
+			throws EngineException;
 
 	/**
 	 * 

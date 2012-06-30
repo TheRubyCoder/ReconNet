@@ -9,7 +9,6 @@ import petrinet.Petrinet;
 import transformation.Rule;
 import transformation.TransformationComponent;
 import data.Rule1Data;
-import exceptions.GeneralPetrinetException;
 
 /**
  * Testing if Rule 1 like specified in /../additional/images/Rule_1.png

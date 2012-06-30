@@ -82,7 +82,7 @@ public interface IRulePersistence {
 	 * @param arc which attributes are wanted
 	 * @return ArcAttribute
 	 */
-	public ArcAttribute getArcAttribute(@NotNull int id, @NotNull Arc arc) throws EngineException ; // TODO IArc gibt es nicht?
+	public ArcAttribute getArcAttribute(@NotNull int id, @NotNull Arc arc) throws EngineException ;
 	
 	/**
 	 * Gets the JungLayout from the Rule
@@ -90,7 +90,7 @@ public interface IRulePersistence {
 	 * @param id ID of the Rule
 	 * @return AbstractLayout
 	 */
-	public AbstractLayout<INode, Arc> getJungLayout(@NotNull int id, @NotNull RuleNet net) throws EngineException ; // TODO: AbstractLayout<INode, Arc> richtig?
+	public AbstractLayout<INode, Arc> getJungLayout(@NotNull int id, @NotNull RuleNet net) throws EngineException ;
 	
 	/**
 	 * Gets the Attributes from a Place

@@ -7,7 +7,6 @@ package exceptions;
  * @author alex (aas772)
  *
  */
-
 public class EngineException extends Exception {
 
 	private static final long serialVersionUID = 11039582039523852L;

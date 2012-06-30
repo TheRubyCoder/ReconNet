@@ -47,7 +47,7 @@ public interface ISimulation {
 	 *             result. Saving petrinets should be used instead: {@link IPetrinetManipulation#save(int, String, String, String, double)}
 	 */
 	public void save(int id, String path, String filename, String format)
-			throws EngineException; // TODO: String format zu => Format format
+			throws EngineException;
 
 	/**
 	 * Applies Rules to a Petrinet
@@ -75,6 +75,5 @@ public interface ISimulation {
 	 */
 	public void fireOrTransform(int id, Collection<Integer> ruleIDs, int n)
 			throws EngineException;
-	// TODO: fire & transform & weitere
 
 }

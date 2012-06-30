@@ -72,7 +72,7 @@ public interface IPetrinetPersistence {
 	 * @param arc which attributes are wanted
 	 * @return ArcAttribute
 	 */
-	public ArcAttribute getArcAttribute(int id, Arc arc); // TODO IArc gibt es nicht?
+	public ArcAttribute getArcAttribute(int id, Arc arc);
 	
 	/**
 	 * Gets the JungLayout from the Petrinet
@@ -82,8 +82,7 @@ public interface IPetrinetPersistence {
 	 * @throws EngineException 
 	 */
 	
-	// TODO
-	public AbstractLayout<INode, Arc> getJungLayout(int id) throws EngineException; // TODO: AbstractLayout<INode, Arc> richtig?
+	public AbstractLayout<INode, Arc> getJungLayout(int id) throws EngineException; 
 	
 	/**
 	 * Gets the Attributes from a Place

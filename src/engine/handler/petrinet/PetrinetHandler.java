@@ -1,5 +1,9 @@
 package engine.handler.petrinet;
 
+import static exceptions.Exceptions.exception;
+import static exceptions.Exceptions.exceptionIf;
+import static exceptions.Exceptions.warning;
+
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Point2D;
@@ -31,7 +35,6 @@ import engine.ihandler.IPetrinetManipulation;
 import engine.ihandler.IPetrinetPersistence;
 import engine.session.SessionManager;
 import exceptions.EngineException;
-import exceptions.ShowAsWarningException;
 
 /**
  * 
@@ -711,38 +714,6 @@ final public class PetrinetHandler {
 	public void moveGraphIntoVision(int id) throws EngineException {
 		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
 		petrinetData.getJungData().moveGraphIntoVision();
-	}
-
-	/**
-	 * Throws an {@link EngineException} with a <code>message</code>
-	 * 
-	 * @param message
-	 * @throws EngineException
-	 */
-	private void exception(@NotNull String message) throws EngineException {
-		throw new EngineException("PetrinetHandler: " + message);
-	}
-
-	/**
-	 * Throws an {@link ShowAsWarningException} with a <code>message</code>.
-	 * This will result in the GUI displaying the message in a pop up window.
-	 * 
-	 * @param message
-	 * @throws ShowAsWarningException
-	 */
-	private void warning(@NotNull String message) throws ShowAsWarningException {
-		throw new ShowAsWarningException(message);
-	}
-
-	/**
-	 * Throws an {@link EngineException} with a <code>message</code> if
-	 * <code>check</code> is <code>true</code>
-	 */
-	private void exceptionIf(boolean check, String errorMessage)
-			throws EngineException {
-		if (check) {
-			exception(errorMessage);
-		}
 	}
 
 	/**
