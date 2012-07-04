@@ -59,11 +59,15 @@ import exceptions.ShowAsWarningException;
 /**
  * Class for FilePanes (saving and creating petrinets and rules)<br/>
  * They are in one class as they are almost the same<br/>
- * There are two instances of filePane: petrinet file pane and rule file pane
+ * There are two instances of filePane: petrinet file pane (
+ * {@link FilePane#getPetrinetFilePane()} ) and rule file pane (
+ * {@link FilePane#getRuleFilePane()} )
  * */
 class FilePane {
 
+	/** The extension a file needs to have with the dot: ".PNML" */
 	private static final String FILE_EXTENSION = ".PNML";
+	/** The extension a file needs to have without the dot: "PNML" */
 	private static final String FILE_EXTENSION_WITHOUT_DOT = "PNML";
 
 	/** Listener for button new petri net */
@@ -74,6 +78,11 @@ class FilePane {
 		}
 	}
 
+	/**
+	 * A Listener that listens to the selection within the file list for
+	 * petrinets. Selecting an item in the list will display its respective
+	 * petrinet
+	 */
 	private static class PetrinetListSelectionListener implements
 			ListSelectionListener {
 		@Override
@@ -97,6 +106,10 @@ class FilePane {
 		}
 	}
 
+	/**
+	 * A Listener that listens to the selection within the file list for rules.
+	 * Selecting an item in the list will display its respective rule
+	 */
 	private static class RuleListSelectionListener implements
 			ListSelectionListener {
 		@Override
@@ -215,7 +228,7 @@ class FilePane {
 				new RuleListSelectionListener());
 	}
 
-	/** Retruns the only instance of a petrinet file panel */
+	/** Returns the only instance of a petrinet file panel */
 	public static FilePane getPetrinetFilePane() {
 		return petrinetFilePane;
 	}
@@ -266,14 +279,14 @@ class FilePane {
 	/** To remember what list entry refers to wich petrinet */
 	private Map<String, Integer> nameToPId;
 
-	/** To remember waht list entry refers to which filepath */
+	/** To remember what list entry refers to which filepath */
 	private Map<String, File> nameToFilepath;
 
 	// private DefaultMutableTreeNode root;
 
 	/** No default instances */
 	private FilePane() {
-	};
+	}
 
 	/**
 	 * Constructor that sets all the instance variables
@@ -318,15 +331,18 @@ class FilePane {
 		list.setEnabled(false);
 	}
 
+	/** Initializes the instance variable {@link FilePane#nameToPId} */
 	private Map<String, Integer> initiateListItemToPid() {
 		return new HashMap<String, Integer>();
 	}
 
+	/** Initializes the instance variable {@link FilePane#nameToFilepath} */
 	private Map<String, File> iniateListItemToFilepath() {
 		return new HashMap<String, File>();
 	}
 
-	@SuppressWarnings("rawtypes")
+	/** Initializes the instance variable {@link FilePane#list} */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	// You have to use raw types for JList as Jenkins will not compile these
 	// with
 	// parameters
@@ -517,6 +533,12 @@ class FilePane {
 		frame.add(treeAndButtonContainerWithBorder);
 	}
 
+	/**
+	 * Return the logical id of the pertrinet/rule behind the
+	 * <code>listItem</code>.
+	 * 
+	 * @return <code>-1</code when <code>listItem</code> is not in the list
+	 */
 	int getIdFrom(String listItem) {
 		Integer integer = nameToPId.get(listItem);
 		if (integer != null) {
@@ -524,11 +546,6 @@ class FilePane {
 		} else {
 			return -1;
 		}
-	}
-	
-	public double getNodeSizeFromSelectedItem() {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	/** disable hole buttons and tree */
@@ -571,6 +588,12 @@ class FilePane {
 		return file.getName().substring(0, file.getName().length() - 5);
 	}
 
+	/**
+	 * Makes sure the user wants to overwrite a file
+	 * 
+	 * @return <code>true</code> if he wants to overwrite, <code>false</code> if
+	 *         not
+	 */
 	private boolean userWantsToOverwrite(File file) {
 		if (file.exists()) {
 			int confirm = JOptionPane
@@ -587,7 +610,7 @@ class FilePane {
 	}
 
 	/**
-	 * Creates a new petrinet or rule
+	 * Creates a new petrinet or rule in a certain file defined by the user
 	 * 
 	 * @param type
 	 *            of panel
@@ -780,6 +803,8 @@ class FilePane {
 							"Nur aus Übersicht löschen" },
 					"Nur aus Übersicht löschen");
 
+			// When manipulating the list, the listener must be removed as
+			// otherwise selection events would be triggered
 			ListSelectionListener petrinetListSelectionListener = list
 					.getListSelectionListeners()[0];
 			list.removeListSelectionListener(petrinetListSelectionListener);
@@ -795,7 +820,7 @@ class FilePane {
 				nameToFilepath.remove(name);
 			}
 
-			// After removing add the listener again
+			// After removing the item, add the listener again
 			list.addListSelectionListener(petrinetListSelectionListener);
 			list.setSelectedIndex(0);
 			if (list.getSelectedValue() == null) {

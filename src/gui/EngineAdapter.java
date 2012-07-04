@@ -9,24 +9,29 @@ import engine.ihandler.IPetrinetPersistence;
 import engine.ihandler.IRuleManipulation;
 import engine.ihandler.ISimulation;
 
+/**
+ * Adapter to the engine component. This encapsulates the access of "handler"
+ * objects and just returns the interface
+ */
 public class EngineAdapter {
-	
-	private EngineAdapter() {}
-	
-	public static ISimulation getSimulation(){
+
+	private EngineAdapter() {
+	}
+
+	public static ISimulation getSimulation() {
 		return SimulationHandler.getInstance();
 	}
-	
-	public static IPetrinetManipulation getPetrinetManipulation(){
+
+	public static IPetrinetManipulation getPetrinetManipulation() {
 		return PetrinetManipulation.getInstance();
 	}
-	
-	public static IRuleManipulation getRuleManipulation(){
+
+	public static IRuleManipulation getRuleManipulation() {
 		return RuleManipulation.getInstance();
 	}
-	
-	public static IPetrinetPersistence getPetrinetPersistence(){
-		return PetrinetPersistence.getInstance(); 
+
+	public static IPetrinetPersistence getPetrinetPersistence() {
+		return PetrinetPersistence.getInstance();
 	}
 
 }

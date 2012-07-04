@@ -6,11 +6,9 @@ import static gui.Style.PETRINET_PANE_LAYOUT;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import persistence.Persistence;
 import petrinet.Arc;
 import petrinet.INode;
 import edu.uci.ics.jung.algorithms.layout.Layout;
-import engine.handler.NodeTypeEnum;
 import exceptions.EngineException;
 
 /** Pane for displaying petrinets */
@@ -19,6 +17,7 @@ class PetrinetPane {
 	/** Internal JPanel for gui-layouting the petrinet */
 	private JPanel petrinetPanel;
 
+	/** {@link PetrinetViewer} of currently displayed petrinet */
 	private PetrinetViewer petrinetViewer;
 
 	/** singleton instance of this pane */
@@ -45,11 +44,13 @@ class PetrinetPane {
 
 	}
 
+	/** Sets the title of the border to <code>title</code> */
 	private void setBorderTitle(String title) {
 		petrinetPanel.setBorder(BorderFactory.createTitledBorder(
 				BorderFactory.createEtchedBorder(), title));
 	}
 
+	/** Returns the singleton instance */
 	private JPanel getPetrinetPanel() {
 		return petrinetPanel;
 	}
@@ -59,10 +60,12 @@ class PetrinetPane {
 		frame.add(getPetrinetPanel());
 	}
 
+	/** repaints the panel */
 	public void repaint() {
 		petrinetViewer.repaint();
 	}
 
+	/** Returns the id of the currently displayed petrinet */
 	public int getCurrentPetrinetId() {
 		return petrinetViewer.getCurrentId();
 	}
@@ -90,6 +93,7 @@ class PetrinetPane {
 		}
 	}
 
+	/** Makes the pane display empty space (in case no petrinet is selected) */
 	public void displayEmpty() {
 		if (petrinetViewer != null) {
 			petrinetViewer.removeFrom(petrinetPanel);

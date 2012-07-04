@@ -150,6 +150,9 @@ class RulePane {
 		}
 	}
 
+	/**
+	 * Makes the {@link RulePane} display empty space, in case no rule is selected
+	 */
 	public void displayEmpty() {
 		if (lViewer != null) {
 			lViewer.removeFrom(lBorderPanel);

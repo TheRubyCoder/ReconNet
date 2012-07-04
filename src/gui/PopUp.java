@@ -9,38 +9,66 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+/**
+ * Utility class for pop up windows
+ * 
+ */
 public class PopUp {
-	
-	/** Utility class */
-	private PopUp() {}
 
-	
-	public static void popUnderConstruction(String function){
+	/** Utility class */
+	private PopUp() {
+	}
+
+	/**
+	 * Pops up a "under construction" window
+	 */
+	public static void popUnderConstruction(String function) {
 		UnderConstructionPopUp.pop(function);
 	}
-	
-	public static void popError(String message){
-		JOptionPane.showMessageDialog(new JFrame(), message, "Ein Fehler ist aufgetreten",
-		        JOptionPane.ERROR_MESSAGE);
+
+	/**
+	 * Pops up an error displaying window with a <code>message</code>
+	 * 
+	 * @param message
+	 */
+	public static void popError(String message) {
+		JOptionPane.showMessageDialog(new JFrame(), message,
+				"Ein Fehler ist aufgetreten", JOptionPane.ERROR_MESSAGE);
 	}
-	
-	public static void popError(Throwable t){
-		JOptionPane.showMessageDialog(new JFrame(), 
-				t.toString()+"\n\t"+t.getStackTrace()[0].toString(), 
-				"Ein Fehler ist aufgetreten",
-		        JOptionPane.ERROR_MESSAGE);
+
+	/**
+	 * Pops up an error displaying window with the message of the
+	 * <code>thrown</code> Exception
+	 */
+	public static void popError(Throwable thrown) {
+		JOptionPane.showMessageDialog(new JFrame(), thrown.toString() + "\n\t"
+				+ thrown.getStackTrace()[0].toString(),
+				"Ein Fehler ist aufgetreten", JOptionPane.ERROR_MESSAGE);
 	}
-	
-	public static void popWarning(Throwable t){
-		JOptionPane.showMessageDialog(new JFrame(), t.getMessage(), "Ein Fehler ist aufgetreten",
-		        JOptionPane.WARNING_MESSAGE);
+
+	/**
+	 * Pops up an warning displaying window with the message of the
+	 * <code>thrown</code> Exception
+	 */
+	public static void popWarning(Throwable thrown) {
+		JOptionPane.showMessageDialog(new JFrame(), thrown.getMessage(),
+				"Ein Fehler ist aufgetreten", JOptionPane.WARNING_MESSAGE);
 	}
-	
-	public static void popInfo(Throwable t){
-		JOptionPane.showMessageDialog(new JFrame(), t.getMessage(), "Ein Fehler ist aufgetreten",
-				JOptionPane.INFORMATION_MESSAGE);
+
+	/**
+	 * Pops up an info displaying window with the message of the
+	 * <code>thrown</code> Exception
+	 */
+	public static void popInfo(Throwable thrown) {
+		JOptionPane.showMessageDialog(new JFrame(), thrown.getMessage(),
+				"Ein Fehler ist aufgetreten", JOptionPane.INFORMATION_MESSAGE);
 	}
-	
+
+	/**
+	 * This may be used for features that are planned to be finnished in the
+	 * near future
+	 * 
+	 */
 	private static class UnderConstructionPopUp {
 
 		private JFrame frame;
@@ -59,7 +87,11 @@ public class PopUp {
 			new UnderConstructionPopUp(title);
 		}
 	}
-	
+
+	/**
+	 * Panel for displaying an image
+	 * 
+	 */
 	private static class ImagePanel extends JPanel {
 
 		/**

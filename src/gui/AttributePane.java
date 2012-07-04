@@ -27,7 +27,10 @@ import engine.attribute.TransitionAttribute;
 import engine.handler.NodeTypeEnum;
 import exceptions.EngineException;
 
-/** Singleton class that represents the attribute chart at the middle top */
+/**
+ * Singleton class that represents the attribute chart at the middle top. It
+ * implements the task to edit attributes of transitions, nodes and arcs
+ */
 public class AttributePane {
 
 	/** Singleton instancce */
@@ -78,12 +81,21 @@ public class AttributePane {
 		return table;
 	}
 
+	/**
+	 * Makes the attribute pane display the attributes of a <code>node</code>,
+	 * using its <code>petrinetViewer</code>
+	 * 
+	 * @param node
+	 * @param petrinetViewer
+	 */
 	void displayNode(INode node, PetrinetViewer petrinetViewer) {
 		try {
+			// get type and id
 			NodeTypeEnum type = (NodeTypeEnum) EngineAdapter
 					.getPetrinetManipulation().getNodeType(node);
 			String id = String.valueOf(node.getId());
 			AbstractPetriTableModel tableModel = null;
+			// display place
 			if (type == NodeTypeEnum.Place) {
 				PlaceAttribute placeAttribute = petrinetViewer
 						.getPlaceAttribute((Place) node);
@@ -92,6 +104,7 @@ public class AttributePane {
 
 				tableModel = new PlaceTableModel(id, name, mark);
 			} else {
+				// display edge
 				TransitionAttribute transitionAttribute = petrinetViewer
 						.getTransitionAttribute((Transition) node);
 				String name = transitionAttribute.getTname();
@@ -101,33 +114,23 @@ public class AttributePane {
 				tableModel = new TransitionTableModel(id, name, tlb,
 						renewString, table);
 			}
+			// add listener
 			tableModel.addTableModelListener(new TableListener(petrinetViewer,
 					node));
+			// make changes account
 			table.setModel(tableModel);
-
-			// Following code tries to do renew with a combo box
-			// table.setRowHeight(18);
-			// if (type == NodeTypeEnum.Transition) {
-			// JComboBox<String> comboBox = new JComboBox<String>(
-			// new String[] { "id", "toggle", "count" });
-			// comboBox.setEditable(true);
-			// TransitionTableCellRenderer<String> transitionTableCellRenderer =
-			// new TransitionTableCellRenderer<String>(
-			// comboBox, table.getCellRenderer(1, 1));
-			// TransitionTableCellEditor<String> transitionTableCellEditor = new
-			// TransitionTableCellEditor<String>(
-			// comboBox, table.getCellEditor(1, 1));
-			//
-			// table.getColumnModel().getColumn(1)
-			// .setCellRenderer(transitionTableCellRenderer);
-			// table.getColumnModel().getColumn(1)
-			// .setCellEditor(transitionTableCellEditor);
-			// }
 		} catch (EngineException e) {
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * Makes the attribute pane display the attributes of an <code>edge</code>,
+	 * using its <code>petrinetViewer</code>
+	 * 
+	 * @param edge
+	 * @param petrinetViewer
+	 */
 	void displayEdge(Arc edge, PetrinetViewer petrinetViewer) {
 		String weight = String.valueOf(petrinetViewer.getArcAttribute(edge)
 				.getWeight());
@@ -138,9 +141,11 @@ public class AttributePane {
 		arcTableModel.addTableModelListener(tableListener);
 
 		table.setModel(arcTableModel);
-		// table.getModel().addTableModelListener(tableListener);
 	}
 
+	/**
+	 * Makes the attribute pane display an empty space. (In case no node is selected)
+	 */
 	public void displayEmpty() {
 		DefaultTableModel defaultTableModel = new DefaultTableModel();
 		table.setModel(defaultTableModel);
@@ -312,6 +317,7 @@ public class AttributePane {
 		/**
 		 * Checks whether the newly set tlb is valid to the assigned renew.
 		 * Gives the user the chance to select a new renew
+		 * 
 		 * @return Returns new Renew as GUI String
 		 */
 		private String tlbValid(String tlb, String renew) {
@@ -322,16 +328,22 @@ public class AttributePane {
 			} else {
 				IRenew newRenew = actualRenew;
 				while (!newRenew.isTlbValid(tlb)) {
-					String[] options = new String[] { "id", "toggle", "count", "abbrechen" };
-					int pickedIndex = JOptionPane.showOptionDialog(null, "Das gewählte label \"" + tlb
-							+ "\" passt nicht zum aktuellen Renew \""
-							+ newRenew.toGUIString()
-							+ "\". Wenn sie das Label behalten möchten, wählen sie ein passendes Renew:",
-							"Neues Renew wählen",
-							JOptionPane.INFORMATION_MESSAGE,
-							JOptionPane.INFORMATION_MESSAGE, null,
-							options, "id");
-					System.out.println("options[pickedIndex] = " + options[pickedIndex]);
+					String[] options = new String[] { "id", "toggle", "count",
+							"abbrechen" };
+					int pickedIndex = JOptionPane
+							.showOptionDialog(
+									null,
+									"Das gewählte label \""
+											+ tlb
+											+ "\" passt nicht zum aktuellen Renew \""
+											+ newRenew.toGUIString()
+											+ "\". Wenn sie das Label behalten möchten, wählen sie ein passendes Renew:",
+									"Neues Renew wählen",
+									JOptionPane.INFORMATION_MESSAGE,
+									JOptionPane.INFORMATION_MESSAGE, null,
+									options, "id");
+					System.out.println("options[pickedIndex] = "
+							+ options[pickedIndex]);
 					if (0 <= pickedIndex && pickedIndex <= 2) {
 						newRenew = Renews.fromString(options[pickedIndex]);
 					} else {
@@ -397,82 +409,17 @@ public class AttributePane {
 
 	}
 
-//	/**
-//	 * Renders a combo box for cell "renew" and redirects to the
-//	 * <tt>defaultCellRenderer</tt>, which must be set before, in any other
-//	 * cases.
-//	 * 
-//	 * @see TransitionTableCellRenderer#setDefaultCellEditor(TableCellEditor)
-//	 */
-//	private static class TransitionTableCellRenderer<E> implements
-//			TableCellRenderer {
-//
-//		public TransitionTableCellRenderer(JComboBox<E> comboBox,
-//				TableCellRenderer tableCellRenderer) {
-//			this.comboBox = comboBox;
-//			this.defaultCellRenderer = tableCellRenderer;
-//		}
-//
-//		private TableCellRenderer defaultCellRenderer;
-//
-//		private JComboBox<E> comboBox;
-//
-//		@Override
-//		public Component getTableCellRendererComponent(JTable table,
-//				Object value, boolean isSelected, boolean hasFocus, int row,
-//				int column) {
-//			if (row == 3 && column == 1) {
-//				comboBox.setSelectedItem(value);
-//				return comboBox;
-//			} else {
-//				return defaultCellRenderer.getTableCellRendererComponent(table,
-//						value, isSelected, hasFocus, row, column);
-//			}
-//		}
-//	}
-//
-//	private static class TransitionTableCellEditor<E> extends DefaultCellEditor {
-//
-//		private TableCellEditor defaultCellEditor;
-//
-//		private JComboBox<E> comboBox;
-//
-//		private boolean lastEditWasRenew;
-//
-//		/**
-//		 * 
-//		 */
-//		private static final long serialVersionUID = -6542922947041763283L;
-//
-//		public TransitionTableCellEditor(JComboBox<E> comboBox,
-//				TableCellEditor defaultCellEditor) {
-//			super(comboBox);
-//			this.comboBox = comboBox;
-//			this.defaultCellEditor = defaultCellEditor;
-//		}
-//
-//		@Override
-//		public Component getTableCellEditorComponent(JTable table,
-//				Object value, boolean isSelected, int row, int column) {
-//			if (row == 3 && column == 1) {
-//				lastEditWasRenew = true;
-//				return super.getTableCellEditorComponent(table, value,
-//						isSelected, row, column);
-//			} else {
-//				lastEditWasRenew = false;
-//				return defaultCellEditor.getTableCellEditorComponent(table,
-//						value, isSelected, row, column);
-//			}
-//		}
-//	}
 
-	/** Class for Tablelistener to make Userchanges possible */
+	/** Class for Tablelistener to make changes by the user possible */
 	private static class TableListener implements TableModelListener {
 
+		/** {@link PetrinetViewer} of currently displayed element */
 		private PetrinetViewer petrinetViewer;
 
+		/** currently displayed node (in case its not a node this variable is <code>null</code>) */
 		private INode node;
 
+		/** currently displayed arc (in case its not an arc this variable is <code>null</code>) */
 		private Arc arc;
 
 		TableListener(PetrinetViewer petrinetViewer, INode node) {
@@ -481,6 +428,11 @@ public class AttributePane {
 			this.arc = null;
 		}
 
+		/**
+		 * Creates a table listener for a table that displays an arc
+		 * @param petrinetViewer
+		 * @param node
+		 */
 		TableListener(PetrinetViewer petrinetViewer, Arc arc) {
 			this.petrinetViewer = petrinetViewer;
 			this.node = null;

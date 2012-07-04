@@ -7,13 +7,11 @@ import static gui.Style.NODE_BORDER_COLOR;
 
 import java.awt.Color;
 import java.awt.GradientPaint;
-import java.awt.HeadlessException;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -24,12 +22,9 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
-import javax.swing.AbstractAction;
-import javax.swing.JComponent;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.KeyStroke;
 
 import org.apache.commons.collections15.Transformer;
 
@@ -49,16 +44,21 @@ import engine.attribute.ArcAttribute;
 import engine.attribute.ColorGenerator;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.TransitionAttribute;
+import engine.data.PetrinetData;
 import engine.handler.NodeTypeEnum;
 import engine.handler.RuleNet;
+import engine.ihandler.IPetrinetManipulation;
+import engine.ihandler.IRuleManipulation;
 import exceptions.EngineException;
 import exceptions.ShowAsInfoException;
 import gui.EditorPane.EditorMode;
 
 /**
- * A special jung visualization viewer for displaying and editing petrinets Some
- * methods are abstract as they behave different depending on whether the
- * petrinet is part of a rule or not (different method calls to engine)
+ * A special jung visualization viewer for displaying and editing petrinets. It
+ * also encapsulates the engine. This comes in handy when it is not important
+ * whether a method should be called on {@link IPetrinetManipulation} or
+ * {@link IRuleManipulation} (e.g. drawing a node is the same for petrinets and
+ * rules)
  */
 @SuppressWarnings("serial")
 public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
@@ -103,32 +103,22 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	PetrinetViewer(Layout<INode, Arc> layout, int petrinetOrRuleId,
 			RuleNet ruleNet) {
 		super(layout);
+		// Logic
 		this.ruleNet = ruleNet;
 		this.currentId = petrinetOrRuleId;
 
+		// Style
 		setBackground(Color.WHITE);
 
-		// getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke("Plus"),
-		// "zoom in");
-		// getInputMap().put(KeyStroke.getKeyStroke("strg Minus"), "zoom out");
-		// getInputMap().put(KeyStroke.getKeyStroke("strg pressed X"), "safe");
-		// getInputMap().put(KeyStroke.getKeyStroke("DELETE"), "delete");
-		//
-		// final PetrinetViewer petrinetViewer = this;
-		// getActionMap().put("zoom in", new AbstractAction() {
-		// @Override
-		// public void actionPerformed(ActionEvent e) {
-		// System.out.println("zoom in");
-		// Point point = new Point(0,0);
-		// petrinetViewer.scale(-0.1f, point);
-		// }
-		// });
+		// Keyboard
 		addKeyListener(new PetrinetKeyboardListener(this));
 
+		// Mouse
 		addMouseListener(new PetrinetMouseListener(this));
 		addMouseWheelListener(new PetrinetMouseListener(this));
 		addKeyListener(new PetrinetKeyboardListener(this));
 
+		// Renderer
 		getRenderer().setVertexRenderer(new PetrinetRenderer(this));
 		getRenderContext().setEdgeLabelTransformer(
 				new PetrinetArcLabelTransformer(this));
@@ -136,14 +126,20 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 				new PetrinetNodeShapeTransformer(this));
 	}
 
+	/** Add this {@link PetrinetViewer} to the <code>component</code> */
 	void addTo(JPanel component) {
 		component.add(this);
 	}
 
+	/** Removes this {@link PetrinetViewer} from the <code>component</code> */
 	public void removeFrom(JPanel frame) {
 		frame.remove(this);
 	}
 
+	/**
+	 * Repaints the {@link PetrinetViewer}. Distinguishes between petrinet and
+	 * rule
+	 */
 	void smartRepaint() {
 		if (isN()) {
 			super.repaint();
@@ -152,6 +148,7 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 	}
 
+	/** Returns the id of the currently displayed petrinet or rule */
 	int getCurrentId() {
 		return currentId;
 	}
@@ -182,27 +179,77 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		return !isIdPetrinetId();
 	}
 
+	/**
+	 * Is the currently displayed petrinet the R-part of a rule?
+	 * 
+	 * @see PetrinetViewer#isL()
+	 * @see PetrinetViewer#isK()
+	 * @see PetrinetViewer#isR()
+	 * @see PetrinetViewer#isN()
+	 */
 	boolean isR() {
 		return ruleNet == RuleNet.R;
 	}
 
+	/**
+	 * Is the currently displayed petrinet the K-part of a rule?
+	 * 
+	 * @see PetrinetViewer#isL()
+	 * @see PetrinetViewer#isK()
+	 * @see PetrinetViewer#isR()
+	 * @see PetrinetViewer#isN()
+	 */
 	boolean isK() {
 		return ruleNet == RuleNet.K;
 	}
 
+	/**
+	 * Is the currently displayed petrinet the L-part of a rule?
+	 * 
+	 * @see PetrinetViewer#isL()
+	 * @see PetrinetViewer#isK()
+	 * @see PetrinetViewer#isR()
+	 * @see PetrinetViewer#isN()
+	 */
 	boolean isL() {
 		return ruleNet == RuleNet.L;
 	}
 
+	/**
+	 * Is the currently displayed petrinet the N-part of a rule?
+	 * 
+	 * @see PetrinetViewer#isL()
+	 * @see PetrinetViewer#isK()
+	 * @see PetrinetViewer#isR()
+	 * @see PetrinetViewer#isN()
+	 */
 	boolean isN() {
 		return ruleNet == null;
 	}
 
+	/**
+	 * Returns the {@link RuleNet} of the {@link PetrinetViewer}.
+	 * <code>null</code> if the displayed petrinet is not part of a rule
+	 * 
+	 * @see PetrinetViewer#isL()
+	 * @see PetrinetViewer#isK()
+	 * @see PetrinetViewer#isR()
+	 * @see PetrinetViewer#isN()
+	 */
 	RuleNet getRuleNet() {
 		return ruleNet;
 	}
 
+	/**
+	 * Makes the view zoom in or out (depending of <code>factor</code>) from a
+	 * certain <code>point</code>
+	 * 
+	 * @param factor
+	 * @param point
+	 */
 	void scale(float factor, Point point) {
+		// Make sure nodes are not getting too small, as rounding errors would
+		// prevent zooming back in
 		if (this.nodeSize >= 20 || factor > 1) {
 			resizeNodes(factor);
 			changeNodeSizeInJungData(getNodeSize());
@@ -211,6 +258,12 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		smartRepaint();
 	}
 
+	/**
+	 * Sets the nodeSize in the {@link PetrinetData} within the engine to
+	 * <code>nodeSize</code>
+	 * 
+	 * @see PetrinetViewer#resizeNodes(float)
+	 */
 	private void changeNodeSizeInJungData(double nodeSize) {
 		if (isN()) {
 			EngineAdapter.getPetrinetManipulation().setNodeSize(getCurrentId(),
@@ -222,6 +275,13 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 
 	}
 
+	/**
+	 * Changes the nodeSize in this {@link PetrinetViewer} by a certain
+	 * <code>factor</code>. If this {@link PetrinetViewer} is part of a rule,
+	 * the node size in the other parts of the rule will be also changed
+	 * 
+	 * @see PetrinetViewer#changeNodeSizeInJungData(double)
+	 */
 	private void resizeNodes(float factor) {
 		if (isN()) {
 			this.nodeSize *= factor;
@@ -230,6 +290,10 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 	}
 
+	/**
+	 * Changes the nodeSize by a certain <code>factor</code> only for this
+	 * {@link PetrinetViewer} and only if its part of a rule
+	 */
 	public void resizeNodesOnlyOnThisPartOfRule(float factor) {
 		if (!isN()) {
 			this.nodeSize *= factor;
@@ -269,6 +333,12 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		return nodeSize;
 	}
 
+	/**
+	 * Sets the nodSize only for this {@link PetrinetViewer} (a simple setter).
+	 * This should only be used for init purposes. To change the node size, use
+	 * {@link PetrinetViewer#resizeNodes(float)} and
+	 * {@link PetrinetViewer#changeNodeSizeInJungData(double)}
+	 */
 	void setNodeSize(double nodeSize) {
 		this.nodeSize = nodeSize;
 	}
@@ -309,6 +379,10 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		return getPlaceHeight();
 	}
 
+	/**
+	 * Returns the {@link PlaceAttribute} of the <code>place</code> no matter if
+	 * its part of a rule or a regular petrinet
+	 */
 	PlaceAttribute getPlaceAttribute(Place place) {
 		PlaceAttribute placeAttribute = null;
 		try {
@@ -326,6 +400,10 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		return placeAttribute;
 	}
 
+	/**
+	 * Returns the {@link TransitionAttribute} of the <code>transition</code> no
+	 * matter if its part of a rule or a regular petrinet
+	 */
 	TransitionAttribute getTransitionAttribute(Transition transition) {
 		TransitionAttribute transitionAttribute = null;
 		try {
@@ -343,6 +421,10 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		return transitionAttribute;
 	}
 
+	/**
+	 * Returns the {@link ArcAttribute} of the <code>arc</code> no matter if its
+	 * part of a rule or a regular petrinet
+	 */
 	ArcAttribute getArcAttribute(Arc arc) {
 		ArcAttribute arcAttribute = null;
 		try {
@@ -360,6 +442,12 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		return arcAttribute;
 	}
 
+	/**
+	 * Checks for the type of the <code>node</code>
+	 * 
+	 * @param node
+	 * @return <code>true</code> if its a {@link Place}, <code>false</code> else
+	 */
 	boolean isNodePlace(INode node) {
 		NodeTypeEnum result = null;
 		try {
@@ -376,6 +464,13 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		return result == NodeTypeEnum.Place;
 	}
 
+	/**
+	 * Moves a <code>node</code> by a vector called
+	 * <code>relativePosition</code>
+	 * 
+	 * @param node
+	 * @param relativePosition
+	 */
 	void moveNode(INode node, Point relativePosition) {
 		try {
 			if (isN()) {
@@ -391,7 +486,7 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Deletes the currently selected node or arc
 	 * 
@@ -412,6 +507,10 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		return true;
 	}
 
+	/**
+	 * Creates a new arc from <code>start</code> to <code>end</code> no matter
+	 * if its part of a rule or a regular petrinet
+	 */
 	void createArc(INode start, INode end) {
 		try {
 			if (isN()) {
@@ -428,14 +527,18 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 	}
 
-	public void createTransition(Point point) {
+	/**
+	 * Creates a new {@link Transition} at a certain <code>position</code> no
+	 * matter if its part of a rule or a regular petrinet
+	 */
+	public void createTransition(Point position) {
 		try {
 			if (isN()) {
 				EngineAdapter.getPetrinetManipulation().createTransition(
-						getCurrentId(), point);
+						getCurrentId(), position);
 			} else {
 				EngineAdapter.getRuleManipulation().createTransition(
-						getCurrentId(), getRuleNet(), point);
+						getCurrentId(), getRuleNet(), position);
 			}
 			smartRepaint();
 		} catch (EngineException e) {
@@ -444,6 +547,10 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 	}
 
+	/**
+	 * Creates a new {@link Place} at a certain <code>position</code> no matter
+	 * if its part of a rule or a regular petrinet
+	 */
 	void createPlace(Point point) {
 		try {
 			if (isN()) {
@@ -459,6 +566,12 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 	}
 
+	/**
+	 * Deletes the <code>place</code> from the currently displayed petrinet or
+	 * rule
+	 * 
+	 * @param place
+	 */
 	void deletePlace(Place place) {
 		try {
 			if (isN()) {
@@ -475,6 +588,12 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 	}
 
+	/**
+	 * Deletes the <code>transition</code> from the currently displayed petrinet
+	 * or rule
+	 * 
+	 * @param transition
+	 */
 	void deleteTransition(Transition transition) {
 		try {
 			if (isN()) {
@@ -491,6 +610,12 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 	}
 
+	/**
+	 * Deletes the <code>arc</code> from the currently displayed petrinet or
+	 * rule
+	 * 
+	 * @param arc
+	 */
 	void deleteArc(Arc arc) {
 		try {
 			if (isN()) {
@@ -508,14 +633,21 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 	}
 
-	public void setPname(Place place, String data) {
+	/**
+	 * Sets the name of a {@link Transition} no matter if its part a rule or a
+	 * regular petrinet
+	 * 
+	 * @param place
+	 * @param pname
+	 */
+	public void setPname(Place place, String pname) {
 		try {
 			if (isN()) {
 				EngineAdapter.getPetrinetManipulation().setPname(
-						getCurrentId(), place, data);
+						getCurrentId(), place, pname);
 			} else {
 				EngineAdapter.getRuleManipulation().setPname(getCurrentId(),
-						place, data);
+						place, pname);
 			}
 			smartRepaint();
 		} catch (EngineException e) {
@@ -525,6 +657,13 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 
 	}
 
+	/**
+	 * Sets the <code>marking</code>of a <code>place</code> no matter if its
+	 * part a rule or a regular petrinet
+	 * 
+	 * @param place
+	 * @param marking
+	 */
 	public void setMarking(Place place, int marking) {
 		try {
 			if (isN()) {
@@ -542,14 +681,21 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 
 	}
 
-	public void setTname(Transition transition, String data) {
+	/**
+	 * Sets the <code>name</code> of a <code>transition</code> no matter if its
+	 * part a rule or a regular petrinet
+	 * 
+	 * @param transition
+	 * @param name
+	 */
+	public void setTname(Transition transition, String name) {
 		try {
 			if (isN()) {
 				EngineAdapter.getPetrinetManipulation().setTname(
-						getCurrentId(), transition, data);
+						getCurrentId(), transition, name);
 			} else {
 				EngineAdapter.getRuleManipulation().setTname(getCurrentId(),
-						transition, data);
+						transition, name);
 			}
 			smartRepaint();
 		} catch (Exception e) {
@@ -558,14 +704,21 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 	}
 
-	public void setTlb(Transition transition, String data) {
+	/**
+	 * Sets the <code>label</code> of a <code>transition</code> no matter if its
+	 * part a rule or a regular petrinet
+	 * 
+	 * @param transition
+	 * @param label
+	 */
+	public void setTlb(Transition transition, String label) {
 		try {
 			if (isN()) {
 				EngineAdapter.getPetrinetManipulation().setTlb(getCurrentId(),
-						transition, data);
+						transition, label);
 			} else {
 				EngineAdapter.getRuleManipulation().setTlb(getCurrentId(),
-						transition, data);
+						transition, label);
 			}
 			smartRepaint();
 		} catch (Exception e) {
@@ -574,6 +727,13 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 	}
 
+	/**
+	 * Sets the <code>renew</code> of a <code>transition</code> no matter if its
+	 * part a rule or a regular petrinet
+	 * 
+	 * @param transition
+	 * @param renew
+	 */
 	public void setRenew(Transition transition, String renew) {
 
 		IRenew actualRenew = Renews.fromString(renew);
@@ -591,6 +751,13 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 	}
 
+	/**
+	 * Sets the <code>weight</code> of an <code>arc</code> no matter if its part
+	 * a rule or a regular petrinet
+	 * 
+	 * @param arc
+	 * @param weight
+	 */
 	public void setWeight(Arc arc, int weight) {
 		try {
 			if (isN()) {
@@ -607,6 +774,13 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 	}
 
+	/**
+	 * Sets the <code>color</code> of a <code>place</code> no matter if its part
+	 * a rule or a regular petrinet
+	 * 
+	 * @param place
+	 * @param color
+	 */
 	public void setPlaceColor(INode place, Color color) {
 		try {
 			if (isN()) {
@@ -623,6 +797,13 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 	}
 
+	/**
+	 * Moves the whole graph of this {@link PetrinetViewer} by a vector called
+	 * <code>relativePosition</code>
+	 * 
+	 * @param id
+	 * @param relativePosition
+	 */
 	public void moveGraph(int id, Point2D relativePosition) {
 		try {
 			if (isN()) {
@@ -638,6 +819,10 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 	}
 
+	/**
+	 * Moves the whole graph to the top left (element with lowest x will have x
+	 * == 0, element with lowest y will have y == 0)
+	 */
 	public void moveIntoVision() {
 		try {
 			if (isN()) {
@@ -655,6 +840,11 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 
 	}
 
+	/**
+	 * Menu that show as up when right-clicking the white space. It has only one
+	 * item: "Ins Sichtfeld verschieben"
+	 * 
+	 */
 	private static class PetrinetGraphPopUpMenu extends JPopupMenu {
 
 		public PetrinetGraphPopUpMenu(PetrinetViewer petrinetViewer) {
@@ -663,6 +853,7 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 			add(menuItem);
 		}
 
+		/** Listener that is invoced when the menu item is clicked */
 		private static class MoveListener implements ActionListener {
 
 			private PetrinetViewer petrinetViewer;
@@ -715,15 +906,18 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 				this.petrinetViewer = petrinetViewer;
 			}
 
+			/** Create a delete listener for a pop up menu if a place */
 			static DeleteListener fromPlace(Place place,
 					PetrinetViewer petrinetViewer) {
 				return new DeleteListener(null, place, null, petrinetViewer);
 			}
 
+			/** Create a delete listener for a pop up menu if an arc */
 			static DeleteListener fromArc(Arc arc, PetrinetViewer petrinetViewer) {
 				return new DeleteListener(null, null, arc, petrinetViewer);
 			}
 
+			/** Create a delete listener for a pop up menu if a transition */
 			static DeleteListener fromTransition(Transition transition,
 					PetrinetViewer petrinetViewer) {
 				return new DeleteListener(transition, null, null,
@@ -990,6 +1184,11 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 	} // end of mouse listener
 
+	/**
+	 * Listener to handle key strokes. Current features: Strg+"+" -> zoom in,
+	 * Strg+"-" -> zomm out, entf/delete -> deleted currenty selected graph
+	 * element
+	 */
 	private static class PetrinetKeyboardListener implements KeyListener {
 
 		private PetrinetViewer petrinetViewer;
@@ -1028,7 +1227,8 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 				if (keyText.equals("Delete")) {
 					boolean wasSelected = petrinetViewer.deleteSelected();
 					if (!wasSelected) {
-						throw new ShowAsInfoException("Es ist nichts zum Löschen ausgewählt");
+						throw new ShowAsInfoException(
+								"Es ist nichts zum Löschen ausgewählt");
 					}
 				}
 			}
@@ -1255,6 +1455,5 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 
 	}
-
 
 }

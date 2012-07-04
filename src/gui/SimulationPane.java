@@ -74,7 +74,8 @@ class SimulationPane {
 
 	/** Combo box for selecting the simulation mode */
 	@SuppressWarnings("rawtypes")
-	// You have to use raw types for JList as Jenkins will not compile these with
+	// You have to use raw types for JList as Jenkins will not compile these
+	// with
 	// parameters
 	private JComboBox simulationModePicker;
 
@@ -129,6 +130,7 @@ class SimulationPane {
 		setSimulationPaneDisable();
 	}
 
+	/** Initializes the mapping of abstract speed to concrete delay */
 	private Map<Integer, Integer> initiateSpeedToDelay() {
 		Map<Integer, Integer> result = new HashMap<Integer, Integer>();
 		result.put(1, 2000);
@@ -144,6 +146,7 @@ class SimulationPane {
 		return result;
 	}
 
+	/** Initializes the timer (not running) */ 
 	private Timer initiateSimulationTimer() {
 		Timer timer = new Timer(getCurrentDelayInMillis(),
 				new SimulationStepper());
@@ -152,6 +155,7 @@ class SimulationPane {
 		return timer;
 	}
 
+	/** Checks whether the simulation is currently running or not */
 	boolean isSimulationIsRunning() {
 		return simulationTimer.isRunning();
 	}
@@ -162,13 +166,15 @@ class SimulationPane {
 	 * @return Combobox with the holding modi
 	 */
 	@SuppressWarnings("rawtypes")
-	// You have to use raw types for JList as Jenkins will not compile these with
+	// You have to use raw types for JList as Jenkins will not compile these
+	// with
 	// parameters
 	private JComboBox initiateModePicker() {
 		String[] modi = { "Nur Tokenspiel", "Nur Regeln",
 				"Tokenspiel und Regeln" };
 		@SuppressWarnings("unchecked")
-		// You have to use raw types for JList as Jenkins will not compile these with
+		// You have to use raw types for JList as Jenkins will not compile these
+		// with
 		// parameters
 		JComboBox comboBox = new JComboBox(modi);
 		comboBox.setLocation(SIMULATION_PANE_COMBOBOX_LOCATION);
@@ -309,18 +315,30 @@ class SimulationPane {
 		frame.add(simulationpane, BorderLayout.LINE_END);
 	}
 
+	/**
+	 * Returns the value if the spinner (k steps)
+	 */
 	int getK() {
 		return Integer.valueOf(kStepsSpinner.getModel().getValue().toString());
 	}
 
+	/**
+	 * Returns the abstract speed value as displayed in the slider
+	 */
 	int getSpeed() {
 		return transformSpeedSlider.getModel().getValue();
 	}
 
+	/**
+	 * Returns the concrete speed as delay in milliseconds
+	 */
 	int getCurrentDelayInMillis() {
 		return speedToDelay.get(getSpeed());
 	}
 
+	/**
+	 * Return the {@link SimulationMode} as displayed in the picker
+	 */
 	SimulationMode getMode() {
 		if (simulationModePicker.getSelectedItem().equals("Nur Tokenspiel")) {
 			return SimulationMode.TOKENS;
@@ -384,6 +402,7 @@ class SimulationPane {
 		transformSpeedSlider.setEnabled(true);
 	}
 
+	/** Listener for the "play" button */
 	private class SimulateButtonListener implements ActionListener {
 
 		@Override
@@ -396,18 +415,21 @@ class SimulationPane {
 		}
 	}
 
+	/** Stops the simulation */
 	public void stopSimulation() {
 		simulationTimer.stop();
 		setSimulationButtonPlay();
 		setAllOtherPanesEnable();
 	}
 
+	/** Starts the simulation */
 	public void startSimulation() {
 		simulationTimer.start();
 		setSimulationButtonPause();
 		setAllOtherPanesDisable();
 	}
 
+	/** Listener for the button "on step" */
 	private class OneStepListener implements ActionListener {
 
 		@Override
@@ -427,6 +449,7 @@ class SimulationPane {
 
 	}
 
+	/** Listener for the button "k steps" */
 	private class KStepsListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -442,21 +465,24 @@ class SimulationPane {
 					}
 				} else if (getMode() == SimulationMode.RULES) {
 					try {
-					EngineAdapter.getSimulation().transform(
-							PetrinetPane.getInstance().getCurrentPetrinetId(),
-							FilePane.getRuleFilePane()
-									.getIdsFromSelectedListItems(), k);
+						EngineAdapter.getSimulation().transform(
+								PetrinetPane.getInstance()
+										.getCurrentPetrinetId(),
+								FilePane.getRuleFilePane()
+										.getIdsFromSelectedListItems(), k);
 					} catch (EngineException transform) {
 						throw new ShowAsInfoException(CANNOT_TRANSFORM_MESSAGE);
 					}
 				} else {
 					try {
-					EngineAdapter.getSimulation().fireOrTransform(
-							PetrinetPane.getInstance().getCurrentPetrinetId(),
-							FilePane.getRuleFilePane()
-									.getIdsFromSelectedListItems(), k);
+						EngineAdapter.getSimulation().fireOrTransform(
+								PetrinetPane.getInstance()
+										.getCurrentPetrinetId(),
+								FilePane.getRuleFilePane()
+										.getIdsFromSelectedListItems(), k);
 					} catch (EngineException both) {
-						throw new ShowAsInfoException(CANNOT_STEP_NOR_TRANSFORM_MESSAGE);
+						throw new ShowAsInfoException(
+								CANNOT_STEP_NOR_TRANSFORM_MESSAGE);
 					}
 				}
 				PetrinetPane.getInstance().repaint();
@@ -467,6 +493,10 @@ class SimulationPane {
 		}
 	}
 
+	/**
+	 * Listener that is invoked continuously when the simulation is running to
+	 * perform a single simulation step
+	 */
 	private class SimulationStepper implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -483,23 +513,26 @@ class SimulationPane {
 					}
 				} else if (getMode() == SimulationMode.RULES) {
 					try {
-					EngineAdapter.getSimulation().transform(
-							PetrinetPane.getInstance().getCurrentPetrinetId(),
-							FilePane.getRuleFilePane()
-									.getIdsFromSelectedListItems(), k);
+						EngineAdapter.getSimulation().transform(
+								PetrinetPane.getInstance()
+										.getCurrentPetrinetId(),
+								FilePane.getRuleFilePane()
+										.getIdsFromSelectedListItems(), k);
 					} catch (EngineException transform) {
 						SimulationPane.getInstance().stopSimulation();
 						throw new ShowAsInfoException(CANNOT_TRANSFORM_MESSAGE);
 					}
 				} else {
 					try {
-					EngineAdapter.getSimulation().fireOrTransform(
-							PetrinetPane.getInstance().getCurrentPetrinetId(),
-							FilePane.getRuleFilePane()
-									.getIdsFromSelectedListItems(), k);
+						EngineAdapter.getSimulation().fireOrTransform(
+								PetrinetPane.getInstance()
+										.getCurrentPetrinetId(),
+								FilePane.getRuleFilePane()
+										.getIdsFromSelectedListItems(), k);
 					} catch (EngineException both) {
 						SimulationPane.getInstance().stopSimulation();
-						throw new ShowAsInfoException(CANNOT_STEP_NOR_TRANSFORM_MESSAGE);
+						throw new ShowAsInfoException(
+								CANNOT_STEP_NOR_TRANSFORM_MESSAGE);
 					}
 				}
 				PetrinetPane.getInstance().repaint();
@@ -511,6 +544,7 @@ class SimulationPane {
 		}
 	}
 
+	/** Listener for the button "transform" */
 	private class TransformButtonListener implements ActionListener {
 
 		@Override
@@ -528,6 +562,7 @@ class SimulationPane {
 
 	}
 
+	/** Listener sets the simulation timer speed when the slider is changed */
 	private class SpeedSliderListener implements ChangeListener {
 
 		@Override
@@ -536,6 +571,10 @@ class SimulationPane {
 		}
 	}
 
+	/**
+	 * Enum for distinguishing the simulation modes: TOKENS, RULES,
+	 * TOKENS_AND_RULES
+	 */
 	private enum SimulationMode {
 		TOKENS, RULES, TOKENS_AND_RULES
 	}
