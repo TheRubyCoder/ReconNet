@@ -585,7 +585,8 @@ class FilePane {
 
 	/** Returns the name of the file without folders and without .PNML */
 	private String fileToListEntry(File file) {
-		return file.getName().substring(0, file.getName().length() - 5);
+		return file.getName().endsWith(FILE_EXTENSION) ? file.getName()
+				.substring(0, file.getName().length() - 5) : file.getName();
 	}
 
 	/**
@@ -751,6 +752,8 @@ class FilePane {
 		nameToPId.put(name, id);
 		nameToFilepath.put(name, file);
 
+		// Before changing the list programatically the listener has to be
+		// removed so no change event will be fired
 		ListSelectionListener petrinetListSelectionListener = list
 				.getListSelectionListeners()[0];
 		list.removeListSelectionListener(petrinetListSelectionListener);
@@ -773,6 +776,7 @@ class FilePane {
 		int open = fileChooser.showOpenDialog(treeAndButtonContainerWithBorder);
 		if (open == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();
+			file = ensurePNMLEnding(file);
 			String name = fileToListEntry(file);
 			if (file.exists()) {
 				if (listModel.contains(name)) {

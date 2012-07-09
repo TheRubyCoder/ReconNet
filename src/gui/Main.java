@@ -22,12 +22,8 @@ public class Main {
 			try {
 				super.dispatchEvent(newEvent);
 			} catch (ShowAsWarningException warning){
-				//FIXME syso
-				System.out.println("warning");
 				PopUp.popWarning(warning);
 			} catch (ShowAsInfoException info){
-				//FIXME syso
-				System.out.println("info");
 				PopUp.popInfo(info);
 			} catch (Throwable t) {
 				t.printStackTrace();
