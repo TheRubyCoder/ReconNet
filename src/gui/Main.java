@@ -11,7 +11,7 @@ import exceptions.ShowAsWarningException;
 
 
 /**
- * Main Class of GUI. It simply openes and configures the main window
+ * Main Class of GUI. It simply opens and configures the main window
  * 
  */
 public class Main {
@@ -22,8 +22,12 @@ public class Main {
 			try {
 				super.dispatchEvent(newEvent);
 			} catch (ShowAsWarningException warning){
+				//FIXME syso
+				System.out.println("warning");
 				PopUp.popWarning(warning);
 			} catch (ShowAsInfoException info){
+				//FIXME syso
+				System.out.println("info");
 				PopUp.popInfo(info);
 			} catch (Throwable t) {
 				t.printStackTrace();

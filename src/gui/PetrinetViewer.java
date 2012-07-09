@@ -51,6 +51,7 @@ import engine.ihandler.IPetrinetManipulation;
 import engine.ihandler.IRuleManipulation;
 import exceptions.EngineException;
 import exceptions.ShowAsInfoException;
+import exceptions.ShowAsWarningException;
 import gui.EditorPane.EditorMode;
 
 /**
@@ -522,8 +523,9 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 			}
 			smartRepaint();
 		} catch (EngineException e) {
-			PopUp.popError(e);
 			e.printStackTrace();
+			throw new ShowAsWarningException(
+					"Diesen Pfeil gibt es bereits. Möchten sie die Kapazität ändern?");
 		}
 	}
 
@@ -1154,33 +1156,42 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			Point oldPoint = new Point(pressedX, pressedY);
-			Point newPoint = new Point(e.getX(), e.getY());
+			try {
 
-			if (!oldPoint.equals(newPoint)) {
-				if (dragMode == DragMode.SCROLL) {
-					petrinetViewer.moveGraph(petrinetViewer.getCurrentId(),
-							new Point(
-									(int) (newPoint.getX() - oldPoint.getX()),
-									(int) (newPoint.getY() - oldPoint.getY())));
-					petrinetViewer.repaint();
-					// petrinetViewer.scale(0.5f, newPoint);
-					// petrinetViewer.scale(2f, oldPoint);
-				} else if (dragMode == DragMode.MOVENODE) {
-					petrinetViewer.moveNode(nodeFromDrag, new Point(
-							(int) (newPoint.getX() - oldPoint.getX()),
-							(int) (newPoint.getY() - oldPoint.getY())));
-					petrinetViewer.repaint();
-				} else if (dragMode == DragMode.ARC) {
-					// find out what was released on
-					super.mousePressed(e);
-					if (vertex != null) {
-						petrinetViewer.createArc(nodeFromDrag, vertex);
+				Point oldPoint = new Point(pressedX, pressedY);
+				Point newPoint = new Point(e.getX(), e.getY());
+
+				if (!oldPoint.equals(newPoint)) {
+					if (dragMode == DragMode.SCROLL) {
+						petrinetViewer.moveGraph(
+								petrinetViewer.getCurrentId(),
+								new Point((int) (newPoint.getX() - oldPoint
+										.getX()),
+										(int) (newPoint.getY() - oldPoint
+												.getY())));
+						petrinetViewer.repaint();
+						// petrinetViewer.scale(0.5f, newPoint);
+						// petrinetViewer.scale(2f, oldPoint);
+					} else if (dragMode == DragMode.MOVENODE) {
+						petrinetViewer.moveNode(nodeFromDrag, new Point(
+								(int) (newPoint.getX() - oldPoint.getX()),
+								(int) (newPoint.getY() - oldPoint.getY())));
+						petrinetViewer.repaint();
+					} else if (dragMode == DragMode.ARC) {
+						// find out what was released on
+						super.mousePressed(e);
+						if (vertex != null) {
+							petrinetViewer.createArc(nodeFromDrag, vertex);
+						}
 					}
 				}
+			} catch (ShowAsWarningException arcAlreadyExists) {
+				vertex = null;
+				throw arcAlreadyExists;
+			} finally {
+				dragMode = DragMode.NONE;
+				nodeFromDrag = null;
 			}
-			dragMode = DragMode.NONE;
-			nodeFromDrag = null;
 		}
 	} // end of mouse listener
 
