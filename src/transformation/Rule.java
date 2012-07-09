@@ -582,22 +582,36 @@ public class Rule {
 	}
 
 	/**
-	 * Finds the part of the rule in which a place is included
+	 * Finds the part of the rule in which a node is included
 	 * 
-	 * @param placeId
+	 * @param nodeId
 	 * @return <tt> null </tt> if place is not in rule
 	 */
-	Petrinet getPetrinetOfNode(int placeId) {
+	Petrinet getPetrinetOfNode(int nodeId) {
 		for (Place place : k.getAllPlaces()) {
-			if (place.getId() == placeId)
+			if (place.getId() == nodeId)
 				return k;
 		}
+		for (Transition transition: k.getAllTransitions()) {
+			if (transition.getId() == nodeId)
+				return k;
+		}
+		
 		for (Place place : l.getAllPlaces()) {
-			if (place.getId() == placeId)
+			if (place.getId() == nodeId)
 				return l;
 		}
+		for (Transition transition: l.getAllTransitions()) {
+			if (transition.getId() == nodeId)
+				return l;
+		}
+		
 		for (Place place : r.getAllPlaces()) {
-			if (place.getId() == placeId)
+			if (place.getId() == nodeId)
+				return r;
+		}
+		for (Transition transition: r.getAllTransitions()) {
+			if (transition.getId() == nodeId)
 				return r;
 		}
 		return null;
