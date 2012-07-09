@@ -198,9 +198,9 @@ public class Persistence {
 			pnml = (Pnml) m.unmarshal(new File(pathAndFilename));
 
 			return Converter.convertPnmlToRule(pnml, handler);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
+		} catch (JAXBException e) {
 			e.printStackTrace();
+			PopUp.popError(e);
 		}
 
 		return 0;

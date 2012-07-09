@@ -292,9 +292,10 @@ public class Converter {
 	 */
 	static public int convertPnmlToPetrinet(Pnml pnml,
 			IPetrinetPersistence handler) {
+		System.out.println("convertPnmlToPetrinet");
 		// In each XML file there is the type attribute for the pnml node to
 		// quick-check if its a rule or a petrinet
-		if (pnml.getType().equals(RULE_IDENT)) {
+		if (!pnml.getType().equals(PETRINET_IDENT)) {
 			throw new ShowAsWarningException(
 					"Die ausgewählte Datei enthält eine Regel, kein Petrinetz");
 		}
@@ -369,6 +370,7 @@ public class Converter {
 	public static int convertPnmlToRule(Pnml pnml, IRulePersistence handler) {
 		// In each XML file there is the type attribute for the pnml node to
 		// quick-check if its a rule or a petrinet
+		System.out.println("convertPnmlToRule");
 		if (!pnml.getType().equals(RULE_IDENT)) {
 			throw new ShowAsWarningException(
 					"Die ausgewählte Datei enthält ein Petrinetz, keine Regel");
