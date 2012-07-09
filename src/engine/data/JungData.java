@@ -363,19 +363,34 @@ final public class JungData {
 	 * @see {@link IPetrinetManipulation#moveGraphIntoVision(int)}
 	 */
 	public void moveGraphIntoVision() {
-		// find smallest x and y
-		double smallestX = Double.MAX_VALUE;
-		double smallestY = Double.MAX_VALUE;
-		for (NodeLayoutAttribute nodeLayoutAttribute : getNodeLayoutAttributes()
-				.values()) {
-			double currentX = nodeLayoutAttribute.getCoordinate().getX();
-			smallestX = smallestX < currentX ? smallestX : currentX;
-			double currentY = nodeLayoutAttribute.getCoordinate().getY();
-			smallestY = smallestY < currentY ? smallestY : currentY;
-		}
+		moveGraph(getVectorToMoveIntoVision());
+	}
 
-		// move graph so that smalles x and y are seemingly 0
-		moveGraph(new Point2D.Double(-smallestX + 20, -smallestY + 20));
+	/**
+	 * Finds the vector for that graph to move it into vision
+	 * 
+	 * @return
+	 */
+	public Point2D.Double getVectorToMoveIntoVision() {
+		Point2D.Double vector = new Point2D.Double(0, 0);
+		if (getNodeLayoutAttributes().isEmpty()) {
+			// [0,0] is fine
+		} else {
+			// find smallest x and y
+			double smallestX = Double.MAX_VALUE;
+			double smallestY = Double.MAX_VALUE;
+			for (NodeLayoutAttribute nodeLayoutAttribute : getNodeLayoutAttributes()
+					.values()) {
+				double currentX = nodeLayoutAttribute.getCoordinate().getX();
+				smallestX = smallestX < currentX ? smallestX : currentX;
+				double currentY = nodeLayoutAttribute.getCoordinate().getY();
+				smallestY = smallestY < currentY ? smallestY : currentY;
+			}
+			// create vector
+			vector = new Point2D.Double(-smallestX + nodeSize / 2, -smallestY
+					+ nodeSize / 2);
+		}
+		return vector;
 	}
 
 	/**

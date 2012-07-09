@@ -3,6 +3,7 @@ package engine.handler.rule;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.util.List;
 import java.util.Map;
 
@@ -1302,9 +1303,12 @@ final public class RuleHandler {
 	 */
 	public void moveGraphIntoVision(int id) {
 		RuleData ruleData = sessionManager.getRuleData(id);
-		ruleData.getLJungData().moveGraphIntoVision();
-		ruleData.getKJungData().moveGraphIntoVision();
-		ruleData.getRJungData().moveGraphIntoVision();
+		// how must k be moved?
+		Point2D.Double vectorToMoveIntoVision = ruleData.getKJungData().getVectorToMoveIntoVision();
+		// move all graphs equally to k so their relative position stay the same
+		ruleData.getLJungData().moveGraph(vectorToMoveIntoVision);
+		ruleData.getKJungData().moveGraph(vectorToMoveIntoVision);
+		ruleData.getRJungData().moveGraph(vectorToMoveIntoVision);
 	}
 
 	/**
