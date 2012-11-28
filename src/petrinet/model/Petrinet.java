@@ -122,6 +122,18 @@ final public class Petrinet {
 		return arc;
 	}
 	
+	public boolean containsArc(int id) {
+		return containsPreArc(id) || containsPostArc(id);
+	}
+	
+	public boolean containsPreArc(int id) {
+		return preArcs.containsKey(id);
+	}
+	
+	public boolean containsPostArc(int id) {
+		return postArcs.containsKey(id);
+	}
+	
 	/**
 	 * Returns an {@link IArc} referenced by id
 	 * 
@@ -221,6 +233,10 @@ final public class Petrinet {
 		
 		return place;
 	}
+	
+	public boolean containsPlace(int id) {
+		return places.containsKey(id);
+	}
 
 	/**
 	 * Returns the {@link Place} with <code>id</code>
@@ -302,6 +318,10 @@ final public class Petrinet {
 	public Transition addTransition(String name) {
 		return addTransition(name, Renews.IDENTITY);
 	}
+	
+	public boolean containsTransition(int id) {
+		return transitions.containsKey(id);
+	}
 
 	/**
 	 * Returns all active {@link Transition transitions} of this petrinet
@@ -324,6 +344,7 @@ final public class Petrinet {
 		
 		return activitedTransitions;
 	}
+	
 
 	/**
 	 * Returns the {@link Transition} with <code>id</code>

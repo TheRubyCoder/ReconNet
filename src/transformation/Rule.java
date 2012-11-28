@@ -112,13 +112,14 @@ public class Rule {
 	public void removeNodeOrArc(INode nodeOrArc) {
 		if (nodeOrArc instanceof IArc) {
 			List<IArc> mappings = getMappings((IArc) nodeOrArc);
-			if (mappings.get(0) != null) {
+			if (mappings.get(0) != null && getL().containsArc(mappings.get(0).getId())) {
 				getL().removeArc(mappings.get(0).getId());
 			}
-			if (mappings.get(1) != null) {
+			
+			if (mappings.get(1) != null && getK().containsArc(mappings.get(1).getId())) {
 				getK().removeArc(mappings.get(1).getId());
 			}
-			if (mappings.get(2) != null) {
+			if (mappings.get(2) != null && getR().containsArc(mappings.get(2).getId())) {
 				getR().removeArc(mappings.get(2).getId());
 			}
 		} else {
@@ -348,13 +349,19 @@ public class Rule {
 						&& lKSameNodes.containsKey(element)) {
 					INode node = lKSameNodes.get(element);
 					lKSameNodes.remove(element);
-					k.removePlace(node.getId());
+
+					if (k.containsPlace(node.getId())) {
+						k.removePlace(node.getId());
+					}
 				} else if (element instanceof Transition
 						&& !r.getTransitions().contains(element)
 						&& lKSameNodes.containsKey(element)) {
 					INode node = lKSameNodes.get(element);
 					lKSameNodes.remove(element);
-					k.removeTransition(node.getId());
+					
+					if (k.containsTransition(node.getId())) {
+						k.removeTransition(node.getId());
+					}
 				}
 			}
 		}
@@ -387,12 +394,18 @@ public class Rule {
 					if (lKSameNodes.containsValue(element)) {
 						INode node = getKeyFromValue(lKSameNodes, element);
 						lKSameNodes.remove(element);
-						l.removePlace(node.getId());
+                        
+                        if (l.containsPlace(node.getId())) {
+                            l.removePlace(node.getId());
+                        }
 					}
 					if (rKSameNodes.containsValue(element)) {
 						INode node = getKeyFromValue(rKSameNodes, element);
 						rKSameNodes.remove(element);
-						r.removePlace(node.getId());
+                        
+                        if (r.containsPlace(node.getId())) {
+                            r.removePlace(node.getId());
+                        }
 					}
 				} else if (element instanceof Transition
 						&& !r.getTransitions().contains(element)
@@ -400,12 +413,18 @@ public class Rule {
 					if (lKSameNodes.containsValue(element)) {
 						INode node = getKeyFromValue(lKSameNodes, element);
 						lKSameNodes.remove(element);
-						l.removePlace(node.getId());
+                        
+                        if (l.containsTransition(node.getId())) {
+                            l.removeTransition(node.getId());
+                        }
 					}
 					if (rKSameNodes.containsValue(element)) {
 						INode node = getKeyFromValue(rKSameNodes, element);
 						rKSameNodes.remove(element);
-						r.removePlace(node.getId());
+                        
+                        if (r.containsTransition(node.getId())) {
+                            r.removeTransition(node.getId());
+                        }
 					}
 				}
 			}
@@ -429,13 +448,19 @@ public class Rule {
 						&& rKSameNodes.containsKey(element)) {
 					INode node = rKSameNodes.get(element);
 					rKSameNodes.remove(element);
-					k.removePlace(node.getId());
+					
+                    if (k.containsPlace(node.getId())) {
+                        k.removePlace(node.getId());
+                    }
 				} else if (element instanceof Transition
 						&& !r.getTransitions().contains(element)
 						&& rKSameNodes.containsKey(element)) {
 					INode node = rKSameNodes.get(element);
 					rKSameNodes.remove(element);
-					k.removeTransition(node.getId());
+                            
+                    if (k.containsTransition(node.getId())) {
+                        k.removeTransition(node.getId());
+                    }
 				}
 			}
 		}
@@ -461,7 +486,10 @@ public class Rule {
 				if (lkSameEdges.containsKey(element)) {
 					IArc edge = lkSameEdges.get(element);
 					lkSameEdges.remove(element);
-					k.removeArc(edge.getId());
+                    
+                    if (k.containsArc(edge.getId())) {
+                        k.removeArc(edge.getId());
+                    }
 				}
 			}
 		}
@@ -504,12 +532,18 @@ public class Rule {
 				if (lkSameEdges.containsValue(element)) {
 					IArc edge = getKeyFromValue(lkSameEdges, element);
 					lkSameEdges.remove(element);
-					l.removeArc(edge.getId());
+                    
+                    if (l.containsArc(edge.getId())) {
+                        l.removeArc(edge.getId());
+                    }
 				}
 				if (rKSameEdges.containsValue(element)) {
 					IArc edge = getKeyFromValue(rKSameEdges, element);
 					rKSameEdges.remove(element);
-					r.removeArc(edge.getId());
+                    
+                    if (r.containsArc(edge.getId())) {
+                        r.removeArc(edge.getId());
+                    }
 				}
 			}
 		}
@@ -535,7 +569,10 @@ public class Rule {
 				if (rKSameEdges.containsKey(element)) {
 					IArc edge = rKSameEdges.get(element);
 					rKSameEdges.remove(element);
-					k.removeArc(edge.getId());
+                    
+                    if (k.containsArc(edge.getId())) {
+                        k.removeArc(edge.getId());
+                    }
 				}
 			}
 		}
