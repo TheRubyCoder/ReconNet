@@ -13,8 +13,8 @@ import java.util.List;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import petrinet.Petrinet;
-import petrinet.Place;
+import petrinet.model.Petrinet;
+import petrinet.model.Place;
 
 import transformation.Rule;
 import transformation.Transformation;
@@ -58,15 +58,15 @@ public class Rule3Test {
 		
 		//find added place
 		Place addedPlace = null;
-		for (Place place : nPetrinet.getAllPlaces()) {
-			if(place.getStartArcs().isEmpty() && place.getEndArcs().isEmpty()){
+		for (Place place : nPetrinet.getPlaces()) {
+			if(place.getOutgoingArcs().isEmpty() && place.getIncomingArcs().isEmpty()){
 				addedPlace = place;
 			}
 		}
 		
 		assertNotNull("one place should have no arcs", addedPlace);
 		assertNotSame("places should not be same", newPlace, addedPlace);
-		assertEquals(8,nPetrinet.getAllPlaces().size());
+		assertEquals(8,nPetrinet.getPlaces().size());
 	}
 	
 

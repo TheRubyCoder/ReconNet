@@ -1,6 +1,6 @@
 package engine.attribute;
 
-import petrinet.IRenew;
+import petrinet.model.IRenew;
 
 /**
  * 

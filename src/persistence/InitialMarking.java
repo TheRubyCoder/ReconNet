@@ -2,7 +2,7 @@ package persistence;
 
 import javax.xml.bind.annotation.XmlElement;
 
-import petrinet.Place;
+import petrinet.model.Place;
 
 /**
  * This class represents information about markings

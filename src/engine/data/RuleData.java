@@ -3,7 +3,7 @@ package engine.data;
 import java.awt.geom.Point2D;
 import java.util.List;
 
-import petrinet.INode;
+import petrinet.model.INode;
 import transformation.Rule;
 import transformation.TransformationComponent;
 import engine.Positioning;

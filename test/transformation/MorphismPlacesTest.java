@@ -10,9 +10,9 @@ import java.util.Set;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import petrinet.Arc;
-import petrinet.Petrinet;
-import petrinet.Place;
+import petrinet.model.IArc;
+import petrinet.model.Petrinet;
+import petrinet.model.Place;
 import data.MorphismData;
 
 /**
@@ -35,7 +35,7 @@ public class MorphismPlacesTest {
 	@BeforeClass
 	public static void setUpOnce() throws Exception {
 		// Get the first (and only) place in the "from" net
-		fromPlace = placesFromNet.getAllPlaces().iterator().next();
+		fromPlace = placesFromNet.getPlaces().iterator().next();
 
 		counter = new HashMap<Place, Integer>();
 
@@ -102,7 +102,7 @@ public class MorphismPlacesTest {
 	public void testStupidMethodToGetCodeCoverageForGetters() {
 		Morphism morphism = MorphismFactory.createMorphism(placesFromNet,
 				placesToNet);
-		Arc arc = placesFromNet.getAllArcs().iterator().next();
+		IArc arc = placesFromNet.getArcs().iterator().next();
 		morphism.getArcMorphism(arc);
 
 		morphism.getArcsMorphism();

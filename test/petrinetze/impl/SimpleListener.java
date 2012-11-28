@@ -3,11 +3,11 @@ package petrinetze.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import petrinet.ActionType;
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.IPetrinetListener;
-import petrinet.Petrinet;
+import petrinet.model.ActionType;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.IPetrinetListener;
+import petrinet.model.Petrinet;
 
 
 /**
@@ -26,32 +26,32 @@ public class SimpleListener implements IPetrinetListener
 	List<INode> ChangedNodes = new ArrayList<INode>();
 	List<INode> DeletedNodes = new ArrayList<INode>();
 
-	List<Arc> AddedEdges = new ArrayList<Arc>();
-	List<Arc> ChangedEdges = new ArrayList<Arc>();
-	List<Arc> DeletedEdges = new ArrayList<Arc>();
+	List<IArc> AddedEdges   = new ArrayList<IArc>();
+	List<IArc> ChangedEdges = new ArrayList<IArc>();
+	List<IArc> DeletedEdges = new ArrayList<IArc>();
 	
 	@Override
 	public void changed(Petrinet petrinet, INode element,
 			ActionType actionType) 
 	{
-		if(actionType == ActionType.added)
+		if(actionType == ActionType.ADDED)
 			AddedNodes.add(element);
-		else if(actionType == ActionType.changed)
+		else if(actionType == ActionType.CHANGED)
 			ChangedNodes.add(element);
-		else if(actionType == ActionType.deleted)
+		else if(actionType == ActionType.REMOVED)
 			DeletedNodes.add(element);
 		
 	}
 
 	@Override
-	public void changed(Petrinet petrinet, Arc element,
+	public void changed(Petrinet petrinet, IArc element,
 			ActionType actionType) 
 	{
-			if(actionType == ActionType.added)
+			if(actionType == ActionType.ADDED)
 				AddedEdges.add(element);
-			else if(actionType == ActionType.changed)
+			else if(actionType == ActionType.CHANGED)
 				ChangedEdges.add(element);
-			else if(actionType == ActionType.deleted)
+			else if(actionType == ActionType.REMOVED)
 				DeletedEdges.add(element);
 	}
 }

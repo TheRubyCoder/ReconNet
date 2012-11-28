@@ -16,12 +16,12 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.IRenew;
-import petrinet.Place;
-import petrinet.Renews;
-import petrinet.Transition;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.IRenew;
+import petrinet.model.Place;
+import petrinet.model.Renews;
+import petrinet.model.Transition;
 import engine.attribute.PlaceAttribute;
 import engine.attribute.TransitionAttribute;
 import engine.handler.NodeTypeEnum;
@@ -131,7 +131,7 @@ public class AttributePane {
 	 * @param edge
 	 * @param petrinetViewer
 	 */
-	void displayEdge(Arc edge, PetrinetViewer petrinetViewer) {
+	void displayEdge(IArc edge, PetrinetViewer petrinetViewer) {
 		String weight = String.valueOf(petrinetViewer.getArcAttribute(edge)
 				.getWeight());
 		String id = String.valueOf(edge.getId());
@@ -420,7 +420,7 @@ public class AttributePane {
 		private INode node;
 
 		/** currently displayed arc (in case its not an arc this variable is <code>null</code>) */
-		private Arc arc;
+		private IArc arc;
 
 		TableListener(PetrinetViewer petrinetViewer, INode node) {
 			this.petrinetViewer = petrinetViewer;
@@ -433,7 +433,7 @@ public class AttributePane {
 		 * @param petrinetViewer
 		 * @param node
 		 */
-		TableListener(PetrinetViewer petrinetViewer, Arc arc) {
+		TableListener(PetrinetViewer petrinetViewer, IArc arc) {
 			this.petrinetViewer = petrinetViewer;
 			this.node = null;
 			this.arc = arc;

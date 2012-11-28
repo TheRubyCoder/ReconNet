@@ -14,8 +14,9 @@ import javax.xml.bind.Unmarshaller;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import petrinet.INode;
-import petrinet.Petrinet;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.Petrinet;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.EngineMockupForPersistence;
 import engine.handler.RuleNet;
@@ -168,28 +169,28 @@ public class PersistanceTest {
 
 	@Ignore
 	public static boolean petrinetEqualsBasedOnLayout(
-			EngineMockupForPersistence mockup, petrinet.Petrinet net1,
-			int net1_pid, AbstractLayout layout1, petrinet.Petrinet net2,
+			EngineMockupForPersistence mockup, petrinet.model.Petrinet net1,
+			int net1_pid, AbstractLayout layout1, petrinet.model.Petrinet net2,
 			int net2_pid, AbstractLayout layout2) throws EngineException {
-		Map<Point2D, petrinet.Place> pos2place = new HashMap<Point2D, petrinet.Place>();
-		Map<Point2D, petrinet.Transition> pos2trans = new HashMap<Point2D, petrinet.Transition>();
+		Map<Point2D, petrinet.model.Place> pos2place = new HashMap<Point2D, petrinet.model.Place>();
+		Map<Point2D, petrinet.model.Transition> pos2trans = new HashMap<Point2D, petrinet.model.Transition>();
 
-		for (petrinet.Place p : net2.getAllPlaces()) {
+		for (petrinet.model.Place p : net2.getPlaces()) {
 			Point2D pos = new Point2D.Double(layout2.getX(p), layout2.getY(p));
 			pos2place.put(pos, p);
 		}
 
-		for (petrinet.Transition t : net2.getAllTransitions()) {
+		for (petrinet.model.Transition t : net2.getTransitions()) {
 			Point2D pos = new Point2D.Double(layout2.getX(t), layout2.getY(t));
 			pos2trans.put(pos, t);
 		}
 
 		// test that all places and transitions of net2 are at the same
 		// locations in net1
-		for (petrinet.Place p : net1.getAllPlaces()) {
+		for (petrinet.model.Place p : net1.getPlaces()) {
 			Point2D pos = new Point2D.Double(layout1.getX(p), layout1.getY(p));
 			if (pos2place.containsKey(pos)) {
-				petrinet.Place net2Place = pos2place.get(pos);
+				petrinet.model.Place net2Place = pos2place.get(pos);
 
 				if (!net2Place.getName().equals(p.getName()))
 					return false;
@@ -216,10 +217,10 @@ public class PersistanceTest {
 			}
 		}
 
-		for (petrinet.Transition t : net1.getAllTransitions()) {
+		for (petrinet.model.Transition t : net1.getTransitions()) {
 			Point2D pos = new Point2D.Double(layout1.getX(t), layout1.getY(t));
 			if (pos2trans.containsKey(pos)) {
-				petrinet.Transition net2Transition = pos2trans.get(pos);
+				petrinet.model.Transition net2Transition = pos2trans.get(pos);
 
 				if (!net2Transition.getName().equals(t.getName()))
 					return false;
@@ -231,20 +232,20 @@ public class PersistanceTest {
 		}
 
 		// test the arcs
-		for (petrinet.Arc arcIn1 : net1.getAllArcs()) {
+		for (IArc arcIn1 : net1.getArcs()) {
 			Point2D startA = new Point2D.Double(
-					layout1.getX(arcIn1.getStart()), layout1.getX(arcIn1
-							.getStart()));
-			Point2D endA = new Point2D.Double(layout1.getX(arcIn1.getEnd()),
-					layout1.getX(arcIn1.getEnd()));
+					layout1.getX(arcIn1.getSource()), layout1.getX(arcIn1
+							.getSource()));
+			Point2D endA = new Point2D.Double(layout1.getX(arcIn1.getTarget()),
+					layout1.getX(arcIn1.getTarget()));
 
 			boolean found = false;
-			for (petrinet.Arc arcIn2 : net2.getAllArcs()) {
+			for (IArc arcIn2 : net2.getArcs()) {
 				Point2D startB = new Point2D.Double(layout2.getX(arcIn2
-						.getStart()), layout2.getX(arcIn2.getStart()));
+						.getSource()), layout2.getX(arcIn2.getSource()));
 				Point2D endB = new Point2D.Double(
-						layout2.getX(arcIn2.getEnd()), layout2.getX(arcIn2
-								.getEnd()));
+						layout2.getX(arcIn2.getTarget()), layout2.getX(arcIn2
+								.getTarget()));
 
 				if (startA.equals(startB) && endA.equals(endB)) {
 					found = true;

@@ -1,13 +1,12 @@
 package petrinetze.impl;
 
-import petrinet.Arc;
-import petrinet.Petrinet;
 import petrinet.PetrinetComponent;
-import petrinet.Place;
-import petrinet.Post;
-import petrinet.Pre;
-import petrinet.Transition;
-import petrinet.Petrinet;
+import petrinet.model.IArc;
+import petrinet.model.Petrinet;
+import petrinet.model.Place;
+import petrinet.model.Post;
+import petrinet.model.Pre;
+import petrinet.model.Transition;
 
 public class PetrinetIntegTest {
 
@@ -16,30 +15,30 @@ public class PetrinetIntegTest {
 	 */
 	public static void main(String[] args) {
 		Petrinet net = PetrinetComponent.getPetrinet().createPetrinet();
-		Place p1 = net.createPlace("AAA");
+		Place p1 = net.addPlace("AAA");
 		p1.setMark(3);
-		Place p2 = net.createPlace("BBB");
-		Place p3 = net.createPlace("CCC");
-		Place p4 = net.createPlace("DDD");
+		Place p2 = net.addPlace("BBB");
+		Place p3 = net.addPlace("CCC");
+		Place p4 = net.addPlace("DDD");
 		
 		p2.setMark(6);
 		
-		Transition t1 = net.createTransition("ttt");
-		Transition t2 = net.createTransition("uuu");
-		Arc a4 = net.createArc("dt", p2, t2);
+		Transition t1 = net.addTransition("ttt");
+		Transition t2 = net.addTransition("uuu");
+		IArc a4 = net.addPreArc("dt", p2, t2);
 		a4.setMark(5);
 		
-		Arc a1 = net.createArc("at", p1, t1);
+		IArc a1 = net.addPreArc("at", p1, t1);
 		a1.setMark(2);
 		
-		Arc a5 = net.createArc("at", t2, p4);
+		IArc a5 = net.addPostArc("at", t2, p4);
 		a1.setMark(2);
 		
-		Arc a2 = net.createArc("bt", t1, p2);
-		Arc a3 = net.createArc("ct", t1, p3);
+		IArc a2 = net.addPostArc("bt", t1, p2);
+		IArc a3 = net.addPostArc("ct", t1, p3);
 		a3.setMark(3);
 		
-		for (Arc a : net.getAllArcs()) {
+		for (IArc a : net.getArcs()) {
 			System.out.println("Arc ID: " + a.getId() + " Name: " + a.getName());
 		}
 		
@@ -59,7 +58,7 @@ public class PetrinetIntegTest {
 		
 		Post post1 = net.getPost();
 		System.out.println(post1);
-		for (Arc a : net.getAllArcs()) {
+		for (IArc a : net.getArcs()) {
 			System.out.println("Arc ID: " + a.getId() + " Name: " + a.getName());
 		}
 		

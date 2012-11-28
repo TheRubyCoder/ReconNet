@@ -1,10 +1,10 @@
 package engine.data;
 
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.Petrinet;
-import petrinet.Place;
-import petrinet.Transition;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.Petrinet;
+import petrinet.model.Place;
+import petrinet.model.Transition;
 import edu.uci.ics.jung.graph.DirectedGraph;
 
 /**
@@ -35,22 +35,22 @@ public abstract class SessionDataAbstract implements SessionData {
 	}
 
 	protected void checkContaining(Petrinet petrinet, JungData jungData) {
-		DirectedGraph<INode, Arc> graph = jungData.getJungGraph();
+		DirectedGraph<INode, IArc> graph = jungData.getJungGraph();
 
-		check(graph.getEdgeCount() == petrinet.getAllArcs().size(),
+		check(graph.getEdgeCount() == petrinet.getArcs().size(),
 				"to many arcs");
-		check(graph.getVertexCount() == (petrinet.getAllTransitions().size() + petrinet
-				.getAllPlaces().size()), "to many nodes");
+		check(graph.getVertexCount() == (petrinet.getTransitions().size() + petrinet
+				.getPlaces().size()), "to many nodes");
 
-		for (Arc arc : petrinet.getAllArcs()) {
+		for (IArc arc : petrinet.getArcs()) {
 			check(graph.containsEdge(arc), "arc not in graph");
 		}
 
-		for (Place place : petrinet.getAllPlaces()) {
+		for (Place place : petrinet.getPlaces()) {
 			check(graph.containsVertex(place), "place not in graph");
 		}
 
-		for (Transition transition : petrinet.getAllTransitions()) {
+		for (Transition transition : petrinet.getTransitions()) {
 			check(graph.containsVertex(transition), "transition not in graph");
 		}
 	}

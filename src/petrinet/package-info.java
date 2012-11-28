@@ -6,19 +6,19 @@
  * transition, Renews, Labels etc.
  * </p>
  * <p>
- * Obviously the most important class is the {@link petrinet.Petrinet Petrinet}
+ * Obviously the most important class is the {@link petrinet.model.Petrinet Petrinet}
  * as it has most of the functionalities described above. It is composed of
- * {@link petrinet.Place places}, {@link petrinet.Transition transitions} and
- * {@link petrinet.Arc arcs} which also reference one another.
- * The {@link petrinet.Place Place} does not have information about its
+ * {@link petrinet.model.Place places}, {@link petrinet.model.Transition transitions} and
+ * {@link petrinet.model.Arc arcs} which also reference one another.
+ * The {@link petrinet.model.Place Place} does not have information about its
  * position or color as it is mapped in the engine.
- * {@link petrinet.IRenew Renews} are implemented as an object that has the
- * {@link petrinet.IRenew#renew(String) renew method} to transform an input
+ * {@link petrinet.model.IRenew Renews} are implemented as an object that has the
+ * {@link petrinet.model.IRenew#renew(String) renew method} to transform an input
  * String to an output String. So all Labels need to be Strings. Also there
  * are only a few implementations of Renews that are actually used: 
- * {@link petrinet.RenewCount count},
- * {@link petrinet.RenewToggle toggle} and
- * {@link petrinet.RenewId id}
+ * {@link petrinet.model.rnw.Count count},
+ * {@link petrinet.model.rnw.Toggle toggle} and
+ * {@link petrinet.model.rnw.Identity id}
  * </p>
  */
 package petrinet;

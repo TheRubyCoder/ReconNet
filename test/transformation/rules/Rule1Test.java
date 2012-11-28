@@ -5,7 +5,7 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import petrinet.Petrinet;
+import petrinet.model.Petrinet;
 import transformation.Rule;
 import transformation.TransformationComponent;
 import data.Rule1Data;

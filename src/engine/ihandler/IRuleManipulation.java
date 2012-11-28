@@ -4,9 +4,9 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.IRenew;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.IRenew;
 
 import com.sun.istack.NotNull;
 
@@ -98,7 +98,7 @@ public interface IRuleManipulation {
 	 * 
 	 */
 	public void deleteArc(@NotNull int id, @NotNull RuleNet net,
-			@NotNull Arc arc) throws EngineException; 
+			@NotNull IArc arc) throws EngineException; 
 
 	/**
 	 * Deletes a Place
@@ -131,7 +131,7 @@ public interface IRuleManipulation {
 	 *            which attributes are wanted
 	 * @return ArcAttribute
 	 */
-	public ArcAttribute getArcAttribute(@NotNull int id, @NotNull Arc arc)
+	public ArcAttribute getArcAttribute(@NotNull int id, @NotNull IArc arc)
 			throws EngineException;
 
 	/**
@@ -141,7 +141,7 @@ public interface IRuleManipulation {
 	 *            ID of the Rule
 	 * @return AbstractLayout
 	 */
-	public AbstractLayout<INode, Arc> getJungLayout(@NotNull int id,
+	public AbstractLayout<INode, IArc> getJungLayout(@NotNull int id,
 			@NotNull RuleNet net) throws EngineException;
 
 	/**
@@ -296,7 +296,7 @@ public interface IRuleManipulation {
 	 *            weight of the arc
 	 * @throws EngineException
 	 */
-	public void setWeight(@NotNull int id, @NotNull Arc arc, @NotNull int weight)
+	public void setWeight(@NotNull int id, @NotNull IArc arc, @NotNull int weight)
 			throws EngineException;
 
 	/**

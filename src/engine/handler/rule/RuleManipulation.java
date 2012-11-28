@@ -4,9 +4,9 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.IRenew;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.IRenew;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
@@ -92,7 +92,7 @@ public class RuleManipulation implements IRuleManipulation {
 	}
 
 	@Override
-	public void deleteArc(int id, RuleNet net, Arc arc) throws EngineException {
+	public void deleteArc(int id, RuleNet net, IArc arc) throws EngineException {
 
 		ruleManipulationBackend.deleteArc(id, net, arc);
 
@@ -115,7 +115,7 @@ public class RuleManipulation implements IRuleManipulation {
 	}
 
 	@Override
-	public ArcAttribute getArcAttribute(int id, Arc arc) {
+	public ArcAttribute getArcAttribute(int id, IArc arc) {
 
 		ArcAttribute attr = ruleManipulationBackend.getArcAttribute(id, arc);
 
@@ -124,10 +124,10 @@ public class RuleManipulation implements IRuleManipulation {
 	}
 
 	@Override
-	public AbstractLayout<INode, Arc> getJungLayout(int id, RuleNet net)
+	public AbstractLayout<INode, IArc> getJungLayout(int id, RuleNet net)
 			throws EngineException {
 
-		AbstractLayout<INode, Arc> layout = ruleManipulationBackend
+		AbstractLayout<INode, IArc> layout = ruleManipulationBackend
 				.getJungLayout(id, net);
 
 		return layout;
@@ -198,7 +198,7 @@ public class RuleManipulation implements IRuleManipulation {
 	}
 
 	@Override
-	public void setWeight(int id, Arc arc, int weight) throws EngineException {
+	public void setWeight(int id, IArc arc, int weight) throws EngineException {
 
 		ruleManipulationBackend.setWeight(id, arc, weight);
 

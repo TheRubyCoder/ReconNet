@@ -6,12 +6,12 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.IRenew;
-import petrinet.Petrinet;
-import petrinet.Place;
-import petrinet.Transition;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.IRenew;
+import petrinet.model.Petrinet;
+import petrinet.model.Place;
+import petrinet.model.Transition;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
@@ -54,9 +54,9 @@ public class EngineMockupForPersistence implements IPetrinetManipulation {
 		Petrinet petrinet = SessionManager.getInstance().getPetrinetData(id)
 				.getPetrinet();
 
-		List<Place> places = new ArrayList<Place>(petrinet.getAllPlaces());
+		List<Place> places = new ArrayList<Place>(petrinet.getPlaces());
 		List<Transition> transitions = new ArrayList<Transition>(
-				petrinet.getAllTransitions());
+				petrinet.getTransitions());
 
 		iPetrinetManipulation.setMarking(id, places.get(0), 2);
 		iPetrinetManipulation.setPname(id, places.get(1), "Hello hello");
@@ -133,7 +133,7 @@ public class EngineMockupForPersistence implements IPetrinetManipulation {
 	}
 
 	@Override
-	public void deleteArc(int id, Arc arc) throws EngineException {
+	public void deleteArc(int id, IArc arc) throws EngineException {
 
 		iPetrinetManipulation.deleteArc(id, arc);
 
@@ -155,14 +155,14 @@ public class EngineMockupForPersistence implements IPetrinetManipulation {
 	}
 
 	@Override
-	public ArcAttribute getArcAttribute(int id, Arc arc) throws EngineException {
+	public ArcAttribute getArcAttribute(int id, IArc arc) throws EngineException {
 
 		return iPetrinetManipulation.getArcAttribute(id, arc);
 
 	}
 
 	@Override
-	public AbstractLayout<INode, Arc> getJungLayout(int id)
+	public AbstractLayout<INode, IArc> getJungLayout(int id)
 			throws EngineException {
 
 		return iPetrinetManipulation.getJungLayout(id);
@@ -249,7 +249,7 @@ public class EngineMockupForPersistence implements IPetrinetManipulation {
 	}
 
 	@Override
-	public void setWeight(int id, Arc arc, int weight) throws EngineException {
+	public void setWeight(int id, IArc arc, int weight) throws EngineException {
 
 		iPetrinetManipulation.setWeight(id, arc, weight);
 

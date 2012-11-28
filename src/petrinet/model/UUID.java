@@ -1,4 +1,4 @@
-package petrinet;
+package petrinet.model;
 
 /**
  * Utility class for generating unique IDs for nodes, arcs and petrinets

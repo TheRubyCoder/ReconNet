@@ -12,13 +12,13 @@ import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import engine.data.JungData;
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.Petrinet;
 import petrinet.PetrinetComponent;
-import petrinet.Place;
-import petrinet.Renews;
-import petrinet.Transition;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.Petrinet;
+import petrinet.model.Place;
+import petrinet.model.Renews;
+import petrinet.model.Transition;
 
 /**
  * @author Mathias Blumreiter
@@ -33,15 +33,15 @@ public class PetrinetDataTest {
     private Transition transition1;
     private Transition transition2; 
     
-    private Arc arc11;
-    private Arc arc12;
-    private Arc arc22;
+    private IArc arc11;
+    private IArc arc12;
+    private IArc arc22;
 
     private JungData emptyJung;
     private JungData jung;
     
-	private DirectedGraph<INode, Arc> graph;
-	private AbstractLayout<INode, Arc> layout;
+	private DirectedGraph<INode, IArc> graph;
+	private AbstractLayout<INode, IArc> layout;
 
     private Point2D pointPositive1;
     
@@ -54,21 +54,21 @@ public class PetrinetDataTest {
 		
 		p = PetrinetComponent.getPetrinet().createPetrinet();
 		
-        place1 = p.createPlace("A");
-        place2 = p.createPlace("B");
+        place1 = p.addPlace("A");
+        place2 = p.addPlace("B");
 
-        transition1 = p.createTransition("t1", Renews.COUNT);
-        transition2 = p.createTransition("t2", Renews.COUNT);
+        transition1 = p.addTransition("t1", Renews.COUNT);
+        transition2 = p.addTransition("t2", Renews.COUNT);
         
-        arc11 = p.createArc("y1", place1, transition1);
+        arc11 = p.addPreArc("y1", place1, transition1);
 
-        arc12 = p.createArc("x1", transition1, place2);
-        arc22 = p.createArc("x2", transition2, place2);
+        arc12 = p.addPostArc("x1", transition1, place2);
+        arc22 = p.addPostArc("x2", transition2, place2);
         
         place1.setMark(1);
 
-        graph    = new DirectedSparseGraph<INode, Arc>();
-        layout   = new StaticLayout<INode, Arc>(graph);
+        graph    = new DirectedSparseGraph<INode, IArc>();
+        layout   = new StaticLayout<INode, IArc>(graph);
         		
         emptyJung = new JungData(graph, layout);
         
@@ -78,8 +78,8 @@ public class PetrinetDataTest {
         pointPositive1  = new Point(x, y);
 
 
-    	DirectedGraph<INode, Arc>  graph2    = new DirectedSparseGraph<INode, Arc>();
-        AbstractLayout<INode, Arc> layout2   = new StaticLayout<INode, Arc>(graph2);
+    	DirectedGraph<INode, IArc>  graph2    = new DirectedSparseGraph<INode, IArc>();
+        AbstractLayout<INode, IArc> layout2   = new StaticLayout<INode, IArc>(graph2);
         		
         jung = new JungData(graph2, layout2);
         
@@ -189,18 +189,18 @@ public class PetrinetDataTest {
 	 */
 	@Test(expected=IllegalArgumentException.class) 
 	public void testIllegalArgument_constructor_petrinetAndJung_4() {
-		Place      place      = p.getAllPlaces().iterator().next();
-		Transition transition = p.getAllTransitions().iterator().next();
+		Place      place      = p.getPlaces().iterator().next();
+		Transition transition = p.getTransitions().iterator().next();
 		
-		Arc arc = p.createArc("test", place, transition); 
+		IArc arc = p.addPreArc("test", place, transition); 
 		
 		emptyJung.createArc(arc, place, transition);
 		
-		int count = p.getAllArcs().size();
+		int count = p.getArcs().size();
 		
-		p.deleteArcByID(arc.getId());
+		p.removeArc(arc.getId());
 		
-		assertEquals(count - 1, p.getAllArcs().size());
+		assertEquals(count - 1, p.getArcs().size());
 		
 		new PetrinetData(1, p, emptyJung); 
 	}

@@ -10,11 +10,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.Petrinet;
-import petrinet.Place;
-import petrinet.Transition;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.Petrinet;
+import petrinet.model.Place;
+import petrinet.model.Transition;
 
 //Will not be documented any further as it may be reimplemented by Mathias soon
 /**
@@ -131,7 +131,7 @@ public class MorphismFactory {
 
 	private Map<Place, Place> places;
 	private Map<Transition, Transition> transitions;
-	private Map<Arc, Arc> edges;
+	private Map<IArc, IArc> edges;
 
 	private MorphismFactory(Petrinet from, Petrinet to) {
 		fromNet = from;
@@ -163,7 +163,7 @@ public class MorphismFactory {
 			Morphism emptyMorphism = new Morphism(fromNet, toNet,
 					new HashMap<Place, Place>(),
 					new HashMap<Transition, Transition>(),
-					new HashMap<Arc, Arc>());
+					new HashMap<IArc, IArc>());
 			return emptyMorphism;
 		} else {
 			boolean successful = findMorphism();
@@ -200,10 +200,10 @@ public class MorphismFactory {
 		m0_places = new boolean[numPlacesFromNet][numPlacesToNet];
 
 		for (int indexA = 0; indexA < numPlacesFromNet; indexA++) {
-			final Place placeA = fromNet.getPlaceById(fromNet.getPre()
+			final Place placeA = fromNet.getPlace(fromNet.getPre()
 					.getPlaceIds()[indexA]);
 			for (int indexB = 0; indexB < numPlacesToNet; indexB++) {
-				final Place placeB = toNet.getPlaceById(toNet.getPre()
+				final Place placeB = toNet.getPlace(toNet.getPre()
 						.getPlaceIds()[indexB]);
 				// Alle Bedingungen pruefen, die erfuellt sein muessen, damit
 				// die m0-Matrix fuer das aktuelle Mapping placeA --> placeB
@@ -231,10 +231,10 @@ public class MorphismFactory {
 		m0_transitions = new boolean[numTransitionsFromNet][numTransitionsToNet];
 
 		for (int indexA = 0; indexA < numTransitionsFromNet; indexA++) {
-			final Transition transitionA = fromNet.getTransitionById(fromNet
+			final Transition transitionA = fromNet.getTransition(fromNet
 					.getPre().getTransitionIds()[indexA]);
 			for (int indexB = 0; indexB < numTransitionsToNet; indexB++) {
-				final Transition transitionB = toNet.getTransitionById(toNet
+				final Transition transitionB = toNet.getTransition(toNet
 						.getPre().getTransitionIds()[indexB]);
 				if (transitionA.getName().equals(transitionB.getName())
 						&& transitionA.getTlb().equals(transitionB.getTlb())
@@ -628,11 +628,11 @@ public class MorphismFactory {
 
 		for (int r = 0; r < matrix.getNumRows(); r++) {
 			assert matrix.getNumTrues(r) == 1;
-			final Place placeA = fromNet.getPlaceById(fromNet.getPre()
+			final Place placeA = fromNet.getPlace(fromNet.getPre()
 					.getPlaceIds()[r]);
 			for (int c = 0; /* c < m[0].getNumCols() */; c++) {
 				if (matrix.getValue(r, c)) {
-					final Place placeB = toNet.getPlaceById(toNet.getPre()
+					final Place placeB = toNet.getPlace(toNet.getPre()
 							.getPlaceIds()[c]);
 					result.put(placeA, placeB);
 					break;
@@ -648,12 +648,12 @@ public class MorphismFactory {
 
 		for (int r = 0; r < m.getNumRows(); r++) {
 			assert m.getNumTrues(r) == 1;
-			final Transition transitionA = fromNet.getTransitionById(fromNet
+			final Transition transitionA = fromNet.getTransition(fromNet
 					.getPre().getTransitionIds()[r]);
 			for (int c = 0; /* c < m[0].getNumCols() */; c++) {
 				if (m.getValue(r, c)) {
 					final Transition transitionB = toNet
-							.getTransitionById(toNet.getPre()
+							.getTransition(toNet.getPre()
 									.getTransitionIds()[c]);
 					result.put(transitionA, transitionB);
 					break;
@@ -664,42 +664,42 @@ public class MorphismFactory {
 		return Collections.unmodifiableMap(result);
 	}
 
-	private Map<Arc, Arc> createEdgesMap() {
-		Map<Arc, Arc> result = new HashMap<Arc, Arc>();
+	private Map<IArc, IArc> createEdgesMap() {
+		Map<IArc, IArc> result = new HashMap<IArc, IArc>();
 
-		Set<Arc> arcsA = fromNet.getAllArcs();
-		Set<Arc> arcsB = toNet.getAllArcs();
+		Set<IArc> arcsA = fromNet.getArcs();
+		Set<IArc> arcsB = toNet.getArcs();
 
-		Set<Arc> arcsB_p_to_t = new HashSet<Arc>();
-		Set<Arc> arcsB_t_to_p = new HashSet<Arc>();
+		Set<IArc> arcsB_p_to_t = new HashSet<IArc>();
+		Set<IArc> arcsB_t_to_p = new HashSet<IArc>();
 
-		for (Arc arcB : arcsB) {
-			if (arcB.getStart() instanceof Place) {
+		for (IArc arcB : arcsB) {
+			if (arcB.getSource() instanceof Place) {
 				arcsB_p_to_t.add(arcB);
 			} else { // arcB.getStart() instanceof Transition
 				arcsB_t_to_p.add(arcB);
 			}
 		}
 
-		for (Arc arcA : arcsA) {
+		for (IArc arcA : arcsA) {
 			Place placeB;
 			Transition transB;
-			INode tempStartA = arcA.getStart();
+			INode tempStartA = arcA.getSource();
 
 			if (tempStartA instanceof Place) {
 				placeB = places.get(tempStartA);
-				transB = transitions.get(arcA.getEnd());
-				for (Arc arcB : arcsB_p_to_t) {
-					if (arcB.getStart() == placeB && arcB.getEnd() == transB) {
+				transB = transitions.get(arcA.getTarget());
+				for (IArc arcB : arcsB_p_to_t) {
+					if (arcB.getSource() == placeB && arcB.getTarget() == transB) {
 						result.put(arcA, arcB);
 						break;
 					}
 				}
 			} else { // tempStartA instanceof Transition
 				transB = transitions.get(tempStartA);
-				placeB = places.get(arcA.getEnd());
-				for (Arc arcB : arcsB_t_to_p) {
-					if (arcB.getStart() == transB && arcB.getEnd() == placeB) {
+				placeB = places.get(arcA.getTarget());
+				for (IArc arcB : arcsB_t_to_p) {
+					if (arcB.getSource() == transB && arcB.getTarget() == placeB) {
 						result.put(arcA, arcB);
 						break;
 					}

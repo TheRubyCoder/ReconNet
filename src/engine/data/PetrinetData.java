@@ -1,6 +1,6 @@
 package engine.data;
 
-import petrinet.Petrinet;
+import petrinet.model.Petrinet;
 
 /**
  * This Class holds all information: Petrinet and JungData with a Id

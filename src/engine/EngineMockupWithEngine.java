@@ -6,12 +6,12 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.IRenew;
-import petrinet.Petrinet;
-import petrinet.Place;
-import petrinet.Transition;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.IRenew;
+import petrinet.model.Petrinet;
+import petrinet.model.Place;
+import petrinet.model.Transition;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
@@ -55,8 +55,8 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 
 		Petrinet petrinet = SessionManager.getInstance().getPetrinetData(1).getPetrinet();
 
-		List<Place> 	 places 	 = new ArrayList<Place>(petrinet.getAllPlaces());
-		List<Transition> transitions = new ArrayList<Transition>(petrinet.getAllTransitions());
+		List<Place> 	 places 	 = new ArrayList<Place>(petrinet.getPlaces());
+		List<Transition> transitions = new ArrayList<Transition>(petrinet.getTransitions());
 		
 		createArc(id, places.get(0),      transitions.get(0));
 		createArc(id, transitions.get(0), places.get(1));
@@ -106,10 +106,8 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 	}
 
 	@Override
-	public void deleteArc(int id, Arc arc) throws EngineException {
-		
-		iPetrinetManipulation.deleteArc(id, arc);
-		
+	public void deleteArc(int id, IArc arc) throws EngineException {		
+		iPetrinetManipulation.deleteArc(id, arc);		
 	}
 
 	@Override
@@ -128,14 +126,14 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 	}
 
 	@Override
-	public ArcAttribute getArcAttribute(int id, Arc arc) throws EngineException {
+	public ArcAttribute getArcAttribute(int id, IArc arc) throws EngineException {
 		
 		return iPetrinetManipulation.getArcAttribute(id, arc);
 		
 	}
 
 	@Override
-	public AbstractLayout<INode, Arc> getJungLayout(int id)
+	public AbstractLayout<INode, IArc> getJungLayout(int id)
 			throws EngineException {
 		
 		return iPetrinetManipulation.getJungLayout(id);
@@ -220,7 +218,7 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 	}
 
 	@Override
-	public void setWeight(int id, Arc arc, int weight) throws EngineException {
+	public void setWeight(int id, IArc arc, int weight) throws EngineException {
 
 		iPetrinetManipulation.setWeight(id, arc, weight);
 		

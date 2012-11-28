@@ -3,9 +3,9 @@ package engine.handler.rule;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.IRenew;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.IRenew;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
@@ -47,10 +47,10 @@ public class RulePersistence implements IRulePersistence {
 	}
 
 	@Override
-	public Arc createArc(int id, RuleNet net, INode from, INode to)
+	public IArc createArc(int id, RuleNet net, INode from, INode to)
 			throws EngineException {
 
-		Arc arc = ruleManipulationBackend.createArc(id, net, from, to);
+		IArc arc = ruleManipulationBackend.createArc(id, net, from, to);
 
 		return arc;
 
@@ -87,7 +87,7 @@ public class RulePersistence implements IRulePersistence {
 	}
 
 	@Override
-	public ArcAttribute getArcAttribute(int id, Arc arc) {
+	public ArcAttribute getArcAttribute(int id, IArc arc) {
 
 		ArcAttribute attr = ruleManipulationBackend.getArcAttribute(id, arc);
 
@@ -96,10 +96,10 @@ public class RulePersistence implements IRulePersistence {
 	}
 
 	@Override
-	public AbstractLayout<INode, Arc> getJungLayout(int id, RuleNet net)
+	public AbstractLayout<INode, IArc> getJungLayout(int id, RuleNet net)
 			throws EngineException {
 
-		AbstractLayout<INode, Arc> layout = ruleManipulationBackend
+		AbstractLayout<INode, IArc> layout = ruleManipulationBackend
 				.getJungLayout(id, net);
 
 		return layout;
@@ -170,7 +170,7 @@ public class RulePersistence implements IRulePersistence {
 	}
 
 	@Override
-	public void setWeight(int id, Arc arc, int weight) throws EngineException {
+	public void setWeight(int id, IArc arc, int weight) throws EngineException {
 
 		ruleManipulationBackend.setWeight(id, arc, weight);
 

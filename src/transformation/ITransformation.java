@@ -2,9 +2,9 @@ package transformation;
 
 import java.util.List;
 
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.Petrinet;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.Petrinet;
 
 /**
  * Interface for accessing transformation component so other components do not
@@ -95,7 +95,7 @@ public interface ITransformation {
 	 * Very similar to {@link ITransformation#getMappings(Rule, INode)} but with
 	 * Arc instead of INode
 	 */
-	List<Arc> getMappings(Rule rule, Arc arc);
+	List<IArc> getMappings(Rule rule, IArc arc);
 
 	/**
 	 * Stores the session id of a rule so it can be used in

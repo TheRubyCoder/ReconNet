@@ -1,6 +1,6 @@
 package engine.dependency;
 
-import petrinet.Petrinet;
+import petrinet.model.Petrinet;
 import transformation.Rule;
 import transformation.Transformation;
 import transformation.TransformationComponent;

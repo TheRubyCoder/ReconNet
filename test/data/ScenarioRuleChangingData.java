@@ -1,7 +1,7 @@
 package data;
 
-import petrinet.Place;
-import petrinet.Transition;
+import petrinet.model.Place;
+import petrinet.model.Transition;
 import transformation.Rule;
 import transformation.TransformationComponent;
 
@@ -73,14 +73,14 @@ public class ScenarioRuleChangingData {
 		emptyRule = TransformationComponent.getTransformation().createRule();
 
 		ruleWithOnePlaceInLKR = TransformationComponent.getTransformation().createRule();
-		ruleWithOnePlaceInLKR.getK().createPlace("P1");
+		ruleWithOnePlaceInLKR.getK().addPlace("P1");
 
 		ruleWithOnePlaceAndOneTransition = TransformationComponent.getTransformation().createRule();
-		Place placeInK = ruleWithOnePlaceAndOneTransition.getK().createPlace(
+		Place placeInK = ruleWithOnePlaceAndOneTransition.getK().addPlace(
 				"P1");
 		Transition transitionInK = ruleWithOnePlaceAndOneTransition.getK()
-				.createTransition("A");
-		ruleWithOnePlaceAndOneTransition.getK().createArc("", placeInK,
+				.addTransition("A");
+		ruleWithOnePlaceAndOneTransition.getK().addPreArc("", placeInK,
 				transitionInK);
 	}
 

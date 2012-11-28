@@ -1,7 +1,8 @@
-package petrinet;
+package petrinet.model;
 
 import java.util.Map;
 
+import petrinet.model.rnw.*;
 import exceptions.ShowAsWarningException;
 
 /**
@@ -9,6 +10,9 @@ import exceptions.ShowAsWarningException;
  * "count" and also offers a factory method {@link Renews#fromString(String)}
  */
 public final class Renews {
+	public static final IRenew IDENTITY = new Identity();
+	public static final IRenew COUNT    = new Count();
+	public static final IRenew TOGGLE   = new Toggle();
 
 	public static IRenew fromString(String string) {
 		if (string.equalsIgnoreCase("id")) {
@@ -19,22 +23,15 @@ public final class Renews {
 			return TOGGLE;
 		} else {
 			throw new ShowAsWarningException(
-					"\""
-							+ string
-							+ "\" ist kein gültiger Renew-Bezeichner. Gültige Bezeichner sind: \"id\", \"count\", \"toggle\"");
+				"\"" + string + "\" ist kein gültiger Renew-Bezeichner. Gültige Bezeichner sind: \"id\", \"count\", \"toggle\""
+			);
 		}
 	}
 
 	private Renews() {
 	}
 
-	public static final IRenew IDENTITY = new RenewId();
-
-	public static final IRenew COUNT = new RenewCount();
-
-	public static final IRenew TOGGLE = new RenewToggle();
-
 	public static final IRenew fromMap(Map<String, String> f) {
-		return new RenewMap(f);
+		return new Mapping(f);
 	}
 }

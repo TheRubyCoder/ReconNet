@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import petrinet.INode;
-import petrinet.Petrinet;
-import petrinet.Renews;
+import petrinet.model.INode;
+import petrinet.model.Petrinet;
+import petrinet.model.Renews;
 import transformation.ITransformation;
 import transformation.Rule;
 import transformation.TransformationComponent;
@@ -79,25 +79,25 @@ public class Converter {
 		xmlnet.setPage(page);
 
 		// Places
-		Set<petrinet.Place> set = petrinet.getAllPlaces();
+		Set<petrinet.model.Place> set = petrinet.getPlaces();
 		List<Place> places = new ArrayList<Place>();
 		page.setPlace(places);
-		for (petrinet.Place place : set) {
+		for (petrinet.model.Place place : set) {
 			addPlaceToPnml(layout, places, place);
 		}
 
 		// Transitions
-		Set<petrinet.Transition> transis = petrinet.getAllTransitions();
+		Set<petrinet.model.Transition> transis = petrinet.getTransitions();
 		List<Transition> Tlist = new ArrayList<Transition>();
-		for (petrinet.Transition t : transis) {
+		for (petrinet.model.Transition t : transis) {
 			addTransitionToPnml(layout, Tlist, t);
 		}
 		page.setTransition(Tlist);
 
 		// Arcs
-		Set<petrinet.Arc> arcs = petrinet.getAllArcs();
+		Set<petrinet.model.IArc> arcs = petrinet.getArcs();
 		List<Arc> newArcs = new ArrayList<Arc>();
-		for (petrinet.Arc arc : arcs) {
+		for (petrinet.model.IArc arc : arcs) {
 			addArcToPnml(places, Tlist, newArcs, arc);
 		}
 		page.setArc(newArcs);
@@ -105,7 +105,7 @@ public class Converter {
 	}
 
 	/**
-	 * Similar to {@link Converter#addPlaceToPnml(Map, List, petrinet.Place)}
+	 * Similar to {@link Converter#addPlaceToPnml(Map, List, petrinet.model.Place)}
 	 * 
 	 * @param places
 	 * @param transitions
@@ -114,7 +114,7 @@ public class Converter {
 	 */
 	private static void addArcToPnml(List<Place> places,
 			List<Transition> transitions, List<Arc> pnmlArcs,
-			petrinet.Arc logicalArc) {
+			petrinet.model.IArc logicalArc) {
 		// Arc and ID
 		Arc pnmlArc = new Arc();
 		pnmlArc.setId(String.valueOf(logicalArc.getId()));
@@ -123,7 +123,7 @@ public class Converter {
 		String arcEnd = null;
 		for (Place place : places) {
 			if (place.getId().equals(
-					String.valueOf(logicalArc.getEnd().getId()))) {
+					String.valueOf(logicalArc.getTarget().getId()))) {
 				arcEnd = place.getId();
 				break;
 			}
@@ -133,7 +133,7 @@ public class Converter {
 		if (arcEnd == null) {
 			for (Transition t : transitions) {
 				if (t.getId().equals(
-						String.valueOf(logicalArc.getEnd().getId()))) {
+						String.valueOf(logicalArc.getTarget().getId()))) {
 					arcEnd = t.getId();
 					break;
 				}
@@ -144,7 +144,7 @@ public class Converter {
 		// Start of Arc -- Transition
 		String arcStart = null;
 		for (Place p : places) {
-			if (p.getId().equals(String.valueOf(logicalArc.getStart().getId()))) {
+			if (p.getId().equals(String.valueOf(logicalArc.getSource().getId()))) {
 				arcStart = p.getId();
 				break;
 			}
@@ -154,7 +154,7 @@ public class Converter {
 		if (arcStart == null) {
 			for (Transition t : transitions) {
 				if (t.getId().equals(
-						String.valueOf(logicalArc.getStart().getId()))) {
+						String.valueOf(logicalArc.getSource().getId()))) {
 					arcStart = t.getId();
 					break;
 				}
@@ -180,7 +180,7 @@ public class Converter {
 	 */
 	private static void addTransitionToPnml(Map<String, String[]> layout,
 			List<Transition> transitionsList,
-			petrinet.Transition logicalTransition) {
+			petrinet.model.Transition logicalTransition) {
 		// Transition and ID
 		Transition pnmlTransition = new Transition();
 		pnmlTransition.setId(String.valueOf(logicalTransition.getId()));
@@ -216,7 +216,7 @@ public class Converter {
 	}
 
 	/**
-	 * Adds a {@link petrinet.Place} into the <code>places</code> List using the
+	 * Adds a {@link petrinet.model.Place} into the <code>places</code> List using the
 	 * given <code>layout</code>
 	 * 
 	 * @param layout
@@ -224,7 +224,7 @@ public class Converter {
 	 * @param place
 	 */
 	private static void addPlaceToPnml(Map<String, String[]> layout,
-			List<Place> places, petrinet.Place place) {
+			List<Place> places, petrinet.model.Place place) {
 		// Place and ID
 		Place newPlace = new Place();
 		newPlace.setId(String.valueOf(place.getId()));
@@ -309,7 +309,7 @@ public class Converter {
 			/**
 			 * Maps XML id to logical object
 			 */
-			Map<String, petrinet.INode> placesAndTransis = new HashMap<String, petrinet.INode>();
+			Map<String, petrinet.model.INode> placesAndTransis = new HashMap<String, petrinet.model.INode>();
 
 			// create places
 			for (Place place : pnml.getNet().get(0).page.place) {
@@ -740,9 +740,9 @@ public class Converter {
 		net.setNettype(type.name());
 		net.setPage(page);
 
-		Set<petrinet.Arc> arcs = petrinet.getAllArcs();
-		Set<petrinet.Place> places = petrinet.getAllPlaces();
-		Set<petrinet.Transition> transis = petrinet.getAllTransitions();
+		Set<petrinet.model.IArc> arcs = petrinet.getArcs();
+		Set<petrinet.model.Place> places = petrinet.getPlaces();
+		Set<petrinet.model.Transition> transis = petrinet.getTransitions();
 
 		List<Arc> listArcs = new ArrayList<Arc>();
 		List<Place> listPlace = new ArrayList<Place>();
@@ -750,7 +750,7 @@ public class Converter {
 
 		try {
 			// inserting places
-			for (petrinet.Place place : places) {
+			for (petrinet.model.Place place : places) {
 				Place newPlace = new Place();
 				
 				// This "redirects" the variable place to the node in K in case
@@ -759,7 +759,7 @@ public class Converter {
 					INode correspondingNode = type == RuleNet.L ? rule
 							.fromLtoK(place) : rule.fromRtoK(place);
 					if (correspondingNode != null) {
-						place = (petrinet.Place) correspondingNode;
+						place = (petrinet.model.Place) correspondingNode;
 					}
 				}
 				// id
@@ -801,7 +801,7 @@ public class Converter {
 			}
 
 			// inserting Transitions
-			for (petrinet.Transition logicalTransition : transis) {
+			for (petrinet.model.Transition logicalTransition : transis) {
 				Transition xmlTransition = new Transition();
 
 				// This "redirects" the variable place to the node in K in case
@@ -810,7 +810,7 @@ public class Converter {
 					INode correspondingNode = type == RuleNet.L ? rule
 							.fromLtoK(logicalTransition) : rule.fromRtoK(logicalTransition);
 					if (correspondingNode != null) {
-						logicalTransition = (petrinet.Transition) correspondingNode;
+						logicalTransition = (petrinet.model.Transition) correspondingNode;
 					}
 				}
 
@@ -847,7 +847,7 @@ public class Converter {
 			}
 
 			// inserting arcs
-			for (petrinet.Arc a : arcs) {
+			for (petrinet.model.IArc a : arcs) {
 				Arc arc = new Arc();
 
 				// This "redirects" the variable place to the node in K in case
@@ -856,7 +856,7 @@ public class Converter {
 					INode correspondingNode = type == RuleNet.L ? rule
 							.fromLtoK(a) : rule.fromRtoK(a);
 					if (correspondingNode != null) {
-						a = (petrinet.Arc) correspondingNode;
+						a = (petrinet.model.IArc) correspondingNode;
 					}
 				}
 
@@ -879,8 +879,8 @@ public class Converter {
 				arc.setInscription(inscription);
 
 				// Source and Target
-				arc.setSource(String.valueOf(a.getStart().getId()));
-				arc.setTarget(String.valueOf(a.getEnd().getId()));
+				arc.setSource(String.valueOf(a.getSource().getId()));
+				arc.setTarget(String.valueOf(a.getTarget().getId()));
 
 				// Add to List
 				listArcs.add(arc);

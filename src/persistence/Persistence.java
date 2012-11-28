@@ -12,8 +12,8 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import petrinet.INode;
-import petrinet.Petrinet;
+import petrinet.model.INode;
+import petrinet.model.Petrinet;
 import transformation.Rule;
 import engine.attribute.NodeLayoutAttribute;
 import engine.ihandler.IPetrinetPersistence;

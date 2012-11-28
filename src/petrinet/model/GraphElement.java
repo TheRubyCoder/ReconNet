@@ -1,4 +1,4 @@
-package petrinet;
+package petrinet.model;
 
 import java.util.Set;
 
@@ -7,8 +7,8 @@ import java.util.Set;
  */
 public class GraphElement implements IGraphElement {
 	
-	private Set<INode>nodes;
-	private Set<Arc>arcs;
+	private Set<INode> nodes;
+	private Set<IArc>  arcs;
 	
 	@Override
 	public Set<INode> getAllNodes() {
@@ -16,7 +16,7 @@ public class GraphElement implements IGraphElement {
 	}
 
 	@Override
-	public Set<Arc> getAllArcs() {
+	public Set<IArc> getAllArcs() {
 		return arcs;
 	}
 
@@ -30,7 +30,7 @@ public class GraphElement implements IGraphElement {
 	/**
 	 * @param arcs the arcs to set
 	 */
-	public void setArcs(Set<Arc> arcs) {
+	public void setArcs(Set<IArc> arcs) {
 		this.arcs = arcs;
 	}
 	

@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.Petrinet;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.Petrinet;
 import engine.session.SessionManager;
 import exceptions.EngineException;
 
@@ -73,7 +73,7 @@ public class TransformationComponent implements ITransformation{
 	}
 
 	@Override
-	public List<Arc> getMappings(Rule rule, Arc arc) {
+	public List<IArc> getMappings(Rule rule, IArc arc) {
 		return rule.getMappings(arc);
 	}
 

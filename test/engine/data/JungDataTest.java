@@ -16,13 +16,13 @@ import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import engine.data.JungData;
 import gui.Style;
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.Petrinet;
 import petrinet.PetrinetComponent;
-import petrinet.Place;
-import petrinet.Renews;
-import petrinet.Transition;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.Petrinet;
+import petrinet.model.Place;
+import petrinet.model.Renews;
+import petrinet.model.Transition;
 
 /**
  * @author Mathias Blumreiter
@@ -36,13 +36,13 @@ public class JungDataTest {
 	private Transition transition1;
 	private Transition transition2;
 
-	private Arc arc11;
-	private Arc arc12;
-	private Arc arc22;
+	private IArc arc11;
+	private IArc arc12;
+	private IArc arc22;
 
 	private JungData emptyJung;
-	private DirectedGraph<INode, Arc> graph;
-	private AbstractLayout<INode, Arc> layout;
+	private DirectedGraph<INode, IArc> graph;
+	private AbstractLayout<INode, IArc> layout;
 
 	private Point2D pointPositive1;
 	private Point2D pointPositive1TooCloseLeft;
@@ -69,21 +69,21 @@ public class JungDataTest {
 	public void setUp() throws Exception {
 		p = PetrinetComponent.getPetrinet().createPetrinet();
 
-		place1 = p.createPlace("A");
-		place2 = p.createPlace("B");
+		place1 = p.addPlace("A");
+		place2 = p.addPlace("B");
 
-		transition1 = p.createTransition("t1", Renews.COUNT);
-		transition2 = p.createTransition("t2", Renews.COUNT);
+		transition1 = p.addTransition("t1", Renews.COUNT);
+		transition2 = p.addTransition("t2", Renews.COUNT);
 
-		arc11 = p.createArc("y1", place1, transition1);
+		arc11 = p.addPreArc("y1", place1, transition1);
 
-		arc12 = p.createArc("x1", transition1, place2);
-		arc22 = p.createArc("x2", transition2, place2);
+		arc12 = p.addPostArc("x1", transition1, place2);
+		arc22 = p.addPostArc("x2", transition2, place2);
 
 		place1.setMark(1);
 
-		graph = new DirectedSparseGraph<INode, Arc>();
-		layout = new StaticLayout<INode, Arc>(graph);
+		graph = new DirectedSparseGraph<INode, IArc>();
+		layout = new StaticLayout<INode, IArc>(graph);
 
 		emptyJung = new JungData(graph, layout);
 
@@ -203,13 +203,13 @@ public class JungDataTest {
 
 		Set<INode> nodesBefore = new HashSet<INode>(jung.getJungGraph()
 				.getVertices());
-		Set<Arc> arcsBefore = new HashSet<Arc>(jung.getJungGraph().getEdges());
+		Set<IArc> arcsBefore = new HashSet<IArc>(jung.getJungGraph().getEdges());
 
-		jung.delete(new HashSet<Arc>(), new HashSet<INode>());
+		jung.delete(new HashSet<IArc>(), new HashSet<INode>());
 
 		assertTrue(nodesBefore.equals(new HashSet<INode>(jung.getJungGraph()
 				.getVertices())));
-		assertTrue(arcsBefore.equals(new HashSet<Arc>(jung.getJungGraph()
+		assertTrue(arcsBefore.equals(new HashSet<IArc>(jung.getJungGraph()
 				.getEdges())));
 	}
 
@@ -227,20 +227,20 @@ public class JungDataTest {
 		Set<Transition> transitionsToContain = new HashSet<Transition>();
 		Set<Transition> transitionsToDelete = new HashSet<Transition>();
 
-		Set<Arc> arcsToContain = new HashSet<Arc>();
-		Set<Arc> arcsToDelete = new HashSet<Arc>();
+		Set<IArc> arcsToContain = new HashSet<IArc>();
+		Set<IArc> arcsToDelete  = new HashSet<IArc>();
 
 		Petrinet p = PetrinetComponent.getPetrinet().createPetrinet();
 
-		Place placeA = p.createPlace("A");
-		Place placeB = p.createPlace("B");
-		Place placeY = p.createPlace("Y");
-		Place placeZ = p.createPlace("Z");
+		Place placeA = p.addPlace("A");
+		Place placeB = p.addPlace("B");
+		Place placeY = p.addPlace("Y");
+		Place placeZ = p.addPlace("Z");
 
-		Transition transition1 = p.createTransition("t1", Renews.COUNT);
-		Transition transition2 = p.createTransition("t2", Renews.COUNT);
-		Transition transition9 = p.createTransition("t9", Renews.COUNT);
-		Transition transition10 = p.createTransition("t10", Renews.COUNT);
+		Transition transition1 = p.addTransition("t1", Renews.COUNT);
+		Transition transition2 = p.addTransition("t2", Renews.COUNT);
+		Transition transition9 = p.addTransition("t9", Renews.COUNT);
+		Transition transition10 = p.addTransition("t10", Renews.COUNT);
 
 		placesToContain.add(placeA);
 		placesToContain.add(placeB);
@@ -254,25 +254,25 @@ public class JungDataTest {
 
 		// Kanten von allen Places zu allen Transitions
 
-		Arc arcA1 = p.createArc("xA1", placeA, transition1);
-		Arc arcA2 = p.createArc("xA2", placeA, transition2);
-		Arc arcA9 = p.createArc("xA9", placeA, transition9);
-		Arc arcA10 = p.createArc("xA10", placeA, transition10);
+		IArc arcA1 = p.addPreArc("xA1", placeA, transition1);
+		IArc arcA2 = p.addPreArc("xA2", placeA, transition2);
+		IArc arcA9 = p.addPreArc("xA9", placeA, transition9);
+		IArc arcA10 = p.addPreArc("xA10", placeA, transition10);
 
-		Arc arcB1 = p.createArc("xB1", placeB, transition1);
-		Arc arcB2 = p.createArc("xB2", placeB, transition2);
-		Arc arcB9 = p.createArc("xB9", placeB, transition9);
-		Arc arcB10 = p.createArc("xB10", placeB, transition10);
+		IArc arcB1 = p.addPreArc("xB1", placeB, transition1);
+		IArc arcB2 = p.addPreArc("xB2", placeB, transition2);
+		IArc arcB9 = p.addPreArc("xB9", placeB, transition9);
+		IArc arcB10 = p.addPreArc("xB10", placeB, transition10);
 
-		Arc arcY1 = p.createArc("xY1", placeY, transition1);
-		Arc arcY2 = p.createArc("xY2", placeY, transition2);
-		Arc arcY9 = p.createArc("xY9", placeY, transition9);
-		Arc arcY10 = p.createArc("xY10", placeY, transition10);
+		IArc arcY1 = p.addPreArc("xY1", placeY, transition1);
+		IArc arcY2 = p.addPreArc("xY2", placeY, transition2);
+		IArc arcY9 = p.addPreArc("xY9", placeY, transition9);
+		IArc arcY10 = p.addPreArc("xY10", placeY, transition10);
 
-		Arc arcZ1 = p.createArc("xZ1", placeZ, transition1);
-		Arc arcZ2 = p.createArc("xZ2", placeZ, transition2);
-		Arc arcZ9 = p.createArc("xZ9", placeZ, transition9);
-		Arc arcZ10 = p.createArc("xZ10", placeZ, transition10);
+		IArc arcZ1 = p.addPreArc("xZ1", placeZ, transition1);
+		IArc arcZ2 = p.addPreArc("xZ2", placeZ, transition2);
+		IArc arcZ9 = p.addPreArc("xZ9", placeZ, transition9);
+		IArc arcZ10 = p.addPreArc("xZ10", placeZ, transition10);
 
 		arcsToContain.add(arcA1);
 		arcsToContain.add(arcA2);
@@ -296,25 +296,25 @@ public class JungDataTest {
 
 		// Kanten von allen Trasitions zu allen Places
 
-		Arc arc1A = p.createArc("x1A", transition1, placeA);
-		Arc arc1B = p.createArc("x1B", transition1, placeB);
-		Arc arc1Y = p.createArc("x1Y", transition1, placeY);
-		Arc arc1Z = p.createArc("x1Z", transition1, placeZ);
+		IArc arc1A = p.addPostArc("x1A", transition1, placeA);
+		IArc arc1B = p.addPostArc("x1B", transition1, placeB);
+		IArc arc1Y = p.addPostArc("x1Y", transition1, placeY);
+		IArc arc1Z = p.addPostArc("x1Z", transition1, placeZ);
 
-		Arc arc2A = p.createArc("x2A", transition2, placeA);
-		Arc arc2B = p.createArc("x2B", transition2, placeB);
-		Arc arc2Y = p.createArc("x2Y", transition2, placeY);
-		Arc arc2Z = p.createArc("x2Z", transition2, placeZ);
+		IArc arc2A = p.addPostArc("x2A", transition2, placeA);
+		IArc arc2B = p.addPostArc("x2B", transition2, placeB);
+		IArc arc2Y = p.addPostArc("x2Y", transition2, placeY);
+		IArc arc2Z = p.addPostArc("x2Z", transition2, placeZ);
 
-		Arc arc9A = p.createArc("x9A", transition9, placeA);
-		Arc arc9B = p.createArc("x9B", transition9, placeB);
-		Arc arc9Y = p.createArc("x9Y", transition9, placeY);
-		Arc arc9Z = p.createArc("x9Z", transition9, placeZ);
+		IArc arc9A = p.addPostArc("x9A", transition9, placeA);
+		IArc arc9B = p.addPostArc("x9B", transition9, placeB);
+		IArc arc9Y = p.addPostArc("x9Y", transition9, placeY);
+		IArc arc9Z = p.addPostArc("x9Z", transition9, placeZ);
 
-		Arc arc10A = p.createArc("x10A", transition10, placeA);
-		Arc arc10B = p.createArc("x10B", transition10, placeB);
-		Arc arc10Y = p.createArc("x10Y", transition10, placeY);
-		Arc arc10Z = p.createArc("x10Z", transition10, placeZ);
+		IArc arc10A = p.addPostArc("x10A", transition10, placeA);
+		IArc arc10B = p.addPostArc("x10B", transition10, placeB);
+		IArc arc10Y = p.addPostArc("x10Y", transition10, placeY);
+		IArc arc10Z = p.addPostArc("x10Z", transition10, placeZ);
 
 		// Kanten in zu löschende und zu behaltende aufteilen
 
@@ -345,7 +345,7 @@ public class JungDataTest {
 
 		jung.delete(arcsToDelete, nodesToDelete);
 
-		Set<Arc> remainingArcs = new HashSet<Arc>(jung.getJungGraph()
+		Set<IArc> remainingArcs = new HashSet<IArc>(jung.getJungGraph()
 				.getEdges());
 		Set<INode> remainingNodes = new HashSet<INode>(jung.getJungGraph()
 				.getVertices());
@@ -357,29 +357,29 @@ public class JungDataTest {
 	}
 
 	private JungData buildJung(Petrinet p) {
-		DirectedSparseGraph<INode, Arc> graph = new DirectedSparseGraph<INode, Arc>();
-		JungData jung = new JungData(graph, new StaticLayout<INode, Arc>(graph));
+		DirectedSparseGraph<INode, IArc> graph = new DirectedSparseGraph<INode, IArc>();
+		JungData jung = new JungData(graph, new StaticLayout<INode, IArc>(graph));
 
 		int y = 1;
 
-		for (Place place : p.getAllPlaces()) {
+		for (Place place : p.getPlaces()) {
 			y = y + farEnoughAway;
 			jung.createPlace(place, new Point(1, y));
 		}
 
-		for (Transition transition : p.getAllTransitions()) {
+		for (Transition transition : p.getTransitions()) {
 			y = y + farEnoughAway;
 			jung.createTransition(transition, new Point(1, y));
 		}
 
-		for (Arc arc : p.getAllArcs()) {
+		for (IArc arc : p.getArcs()) {
 
-			if (arc.getStart() instanceof Place) {
-				jung.createArc(arc, (Place) arc.getStart(),
-						(Transition) arc.getEnd());
+			if (arc.getSource() instanceof Place) {
+				jung.createArc(arc, (Place) arc.getSource(),
+						(Transition) arc.getTarget());
 			} else {
-				jung.createArc(arc, (Transition) arc.getStart(),
-						(Place) arc.getEnd());
+				jung.createArc(arc, (Transition) arc.getSource(),
+						(Place) arc.getTarget());
 			}
 		}
 
@@ -534,7 +534,7 @@ public class JungDataTest {
 		assertEquals(emptyJung.getPlaceColor(place1), color);
 
 		Set<INode> nodes = new HashSet<INode>();
-		Set<Arc> arcs = new HashSet<Arc>();
+		Set<IArc> arcs   = new HashSet<IArc>();
 
 		nodes.add(place1);
 
@@ -688,12 +688,12 @@ public class JungDataTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testNull_delete_2() {
-		emptyJung.delete(new HashSet<Arc>(), null);
+		emptyJung.delete(new HashSet<IArc>(), null);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testNull_delete_4() {
-		Set<Arc> arcs = new HashSet<Arc>();
+		Set<IArc> arcs = new HashSet<IArc>();
 		arcs.add(null);
 		emptyJung.delete(arcs, new HashSet<INode>());
 	}
@@ -702,7 +702,7 @@ public class JungDataTest {
 	public void testNull_delete_5() {
 		Set<INode> nodes = new HashSet<INode>();
 		nodes.add(null);
-		emptyJung.delete(new HashSet<Arc>(), nodes);
+		emptyJung.delete(new HashSet<IArc>(), nodes);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -1071,7 +1071,7 @@ public class JungDataTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testInvalidArguments_delete_unknownArc() {
-		Set<Arc> arcs = new HashSet<Arc>();
+		Set<IArc>  arcs  = new HashSet<IArc>();
 		Set<INode> nodes = new HashSet<INode>();
 
 		arcs.add(arc11);
@@ -1084,7 +1084,7 @@ public class JungDataTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testInvalidArguments_delete_unknownINode() {
-		Set<Arc> arcs = new HashSet<Arc>();
+		Set<IArc>  arcs  = new HashSet<IArc>();
 		Set<INode> nodes = new HashSet<INode>();
 
 		nodes.add(place1);
@@ -1097,7 +1097,7 @@ public class JungDataTest {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testInvalidArguments_delete_missingArcsToDelete() {
-		Set<Arc> arcs = new HashSet<Arc>();
+		Set<IArc>  arcs  = new HashSet<IArc>();
 		Set<INode> nodes = new HashSet<INode>();
 
 		emptyJung.createPlace(place1, pointPositive1);

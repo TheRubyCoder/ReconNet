@@ -3,10 +3,10 @@ package transformation;
 import java.util.HashMap;
 import java.util.Map;
 
-import petrinet.Arc;
-import petrinet.Petrinet;
-import petrinet.Place;
-import petrinet.Transition;
+import petrinet.model.IArc;
+import petrinet.model.Petrinet;
+import petrinet.model.Place;
+import petrinet.model.Transition;
 
 /**
  * A morphism maps places, transitions and arcs in a way that pre and post have
@@ -37,7 +37,7 @@ public class Morphism {
 	/**
 	 * Morphisms between arcs
 	 */
-	private final Map<Arc, Arc> arcs;
+	private final Map<IArc, IArc> arcs;
 
 	/**
 	 * Creates a new Morphism with the given parameters
@@ -54,12 +54,13 @@ public class Morphism {
 	 *            mapping of arcs
 	 */
 	Morphism(Petrinet from, Petrinet to, Map<Place, Place> places,
-			Map<Transition, Transition> transitions, Map<Arc, Arc> edges) {
-		this.from = from;
-		this.to = to;
-		this.places = new HashMap<Place, Place>(places);
+			Map<Transition, Transition> transitions, Map<IArc, IArc> edges) {
+		
+		this.from 		 = from;
+		this.to 		 = to;
+		this.places 	 = new HashMap<Place, Place>(places);
 		this.transitions = new HashMap<Transition, Transition>(transitions);
-		this.arcs = new HashMap<Arc, Arc>(edges);
+		this.arcs        = new HashMap<IArc, IArc>(edges);
 	}
 
 	/**
@@ -85,7 +86,7 @@ public class Morphism {
 	 * 
 	 * @return the morphism of all arcs.
 	 */
-	public Map<Arc, Arc> getArcsMorphism() {
+	public Map<IArc, IArc> getArcsMorphism() {
 		return arcs;
 	}
 
@@ -118,7 +119,7 @@ public class Morphism {
 	 *            arc in the "from" net
 	 * @return the respective arc in the "to" net
 	 */
-	public Arc getArcMorphism(Arc arc) {
+	public IArc getArcMorphism(IArc arc) {
 		return arcs.get(arc);
 	}
 

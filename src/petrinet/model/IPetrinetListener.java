@@ -1,6 +1,4 @@
-package petrinet;
-
-
+package petrinet.model;
 
 /**
  * A PetrinetListener can be attacked to a petrinet 
@@ -9,10 +7,6 @@ package petrinet;
  * concrete class that implements {@link IPetrinetListener} 
  */
 public interface IPetrinetListener {
-
 	void changed(Petrinet petrinet, INode element, ActionType actionType);
-
-    void changed(Petrinet petrinet, Arc element, ActionType actionType);
-
-
+    void changed(Petrinet petrinet, IArc element, ActionType actionType);
 }

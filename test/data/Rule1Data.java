@@ -1,8 +1,8 @@
 package data;
 
-import petrinet.Petrinet;
-import petrinet.Place;
-import petrinet.Transition;
+import petrinet.model.Petrinet;
+import petrinet.model.Place;
+import petrinet.model.Transition;
 import transformation.Rule;
 import transformation.TransformationComponent;
 
@@ -33,14 +33,14 @@ public class Rule1Data {
 	}
 	
 	private static void addSubnetToPetrinet(Petrinet petrinet){
-		Place place = petrinet.createPlace("P1");
+		Place place = petrinet.addPlace("P1");
 		for (int i = 0; i < 2; i++) {
-			Transition transition = petrinet.createTransition("A");
-			petrinet.createArc("", place, transition);
+			Transition transition = petrinet.addTransition("A");
+			petrinet.addPreArc("", place, transition);
 		}
 		for (int i = 0; i < 3; i++) {
-			Transition transition = petrinet.createTransition("A");
-			petrinet.createArc("", transition, place);
+			Transition transition = petrinet.addTransition("A");
+			petrinet.addPostArc("", transition, place);
 		}
 	}
 

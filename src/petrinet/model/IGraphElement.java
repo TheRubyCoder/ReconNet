@@ -1,4 +1,4 @@
-package petrinet;
+package petrinet.model;
 
 import java.util.Set;
 
@@ -16,5 +16,5 @@ public interface IGraphElement {
 	 * Liefert alle Kanten
 	 * @return {@link}
 	 */
-	public Set<Arc> getAllArcs();
+	public Set<IArc> getAllArcs();
 }

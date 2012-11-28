@@ -1,7 +1,7 @@
 package data;
 
-import petrinet.Petrinet;
-import petrinet.Place;
+import petrinet.model.Petrinet;
+import petrinet.model.Place;
 import transformation.Rule;
 import transformation.TransformationComponent;
 
@@ -32,7 +32,7 @@ public class Rule3Data {
 	}
 
 	private static void addSubnetToPetrinet(Petrinet petrinet) {
-		newPlace = petrinet.createPlace("NewPlace");
+		newPlace = petrinet.addPlace("NewPlace");
 	}
 
 

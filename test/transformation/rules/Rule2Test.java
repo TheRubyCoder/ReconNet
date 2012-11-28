@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import petrinet.Petrinet;
-import petrinet.Place;
+import petrinet.model.Petrinet;
+import petrinet.model.Place;
 import transformation.Morphism;
 import transformation.Rule;
 import transformation.Transformation;
@@ -78,13 +78,13 @@ public class Rule2Test {
 	@Test
 	public void testChangesApplied() {
 		// Only 6 places left?
-		assertEquals(6, nPetrinet.getAllPlaces().size());
+		assertEquals(6, nPetrinet.getPlaces().size());
 		// Only 29 transitions left?
-		assertEquals(30, nPetrinet.getAllTransitions().size());
+		assertEquals(30, nPetrinet.getTransitions().size());
 		// Only 29 arcs left?
-		assertEquals(30, nPetrinet.getAllArcs().size());
+		assertEquals(30, nPetrinet.getArcs().size());
 		// right place deleted?
-		for (Place place : nPetrinet.getAllPlaces()) {
+		for (Place place : nPetrinet.getPlaces()) {
 			if (place.getId() == Rule2Data.getIdOfMatchedPlace()) {
 				fail("the place that should have been deleted is still in the petrinet");
 			}

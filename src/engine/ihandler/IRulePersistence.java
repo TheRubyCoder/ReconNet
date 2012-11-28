@@ -3,9 +3,9 @@ package engine.ihandler;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.IRenew;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.IRenew;
 
 import com.sun.istack.NotNull;
 
@@ -41,7 +41,7 @@ public interface IRulePersistence {
 	 * @return the new Arc
 	 * 
 	 */
-	public Arc createArc(@NotNull int id,RuleNet net, @NotNull INode from, @NotNull INode to) throws EngineException ;
+	public IArc createArc(@NotNull int id,RuleNet net, @NotNull INode from, @NotNull INode to) throws EngineException ;
 	
 	/**
 	 * 
@@ -82,7 +82,7 @@ public interface IRulePersistence {
 	 * @param arc which attributes are wanted
 	 * @return ArcAttribute
 	 */
-	public ArcAttribute getArcAttribute(@NotNull int id, @NotNull Arc arc) throws EngineException ;
+	public ArcAttribute getArcAttribute(@NotNull int id, @NotNull IArc arc) throws EngineException ;
 	
 	/**
 	 * Gets the JungLayout from the Rule
@@ -90,7 +90,7 @@ public interface IRulePersistence {
 	 * @param id ID of the Rule
 	 * @return AbstractLayout
 	 */
-	public AbstractLayout<INode, Arc> getJungLayout(@NotNull int id, @NotNull RuleNet net) throws EngineException ;
+	public AbstractLayout<INode, IArc> getJungLayout(@NotNull int id, @NotNull RuleNet net) throws EngineException ;
 	
 	/**
 	 * Gets the Attributes from a Place
@@ -169,7 +169,7 @@ public interface IRulePersistence {
 	 * @param weight weight of the arc
 	 * @throws EngineException 
 	 */
-	public void setWeight(@NotNull int id, @NotNull Arc arc, @NotNull int weight) throws EngineException;
+	public void setWeight(@NotNull int id, @NotNull IArc arc, @NotNull int weight) throws EngineException;
 	
 	/**
 	 * 

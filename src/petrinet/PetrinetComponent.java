@@ -4,6 +4,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import petrinet.model.ElementType;
+import petrinet.model.Petrinet;
+
 /**
  * Singleton that represents the petrinet component<br/>
  * Other components refer to this object to delegate to the petrinet component
@@ -35,18 +38,18 @@ public class PetrinetComponent implements IPetrinet {
 	}
 
 	@Override
-	public Petrinet getPetrinetById(int id) {
+	public Petrinet getPetrinet(int id) {
 		return petrinets.get(id);
 	}
 
 	@Override
-	public Collection<Integer> deleteElementInPetrinet(int petrinetId,
+	public Collection<Integer> removeElementFromPetrinet(int petrinetId,
 			int elementId) {
-		return getPetrinetById(petrinetId).deleteElementById(elementId);
+		return getPetrinet(petrinetId).removeElement(elementId);
 	}
 
 	@Override
 	public ElementType getNodeType(int petrinetId, int nodeId) {
-		return getPetrinetById(petrinetId).getNodeType(nodeId);
+		return getPetrinet(petrinetId).getNodeType(nodeId);
 	}
 }

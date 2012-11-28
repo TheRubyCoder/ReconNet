@@ -10,8 +10,8 @@ import java.util.Set;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import petrinet.Petrinet;
-import petrinet.Transition;
+import petrinet.model.Petrinet;
+import petrinet.model.Transition;
 import data.MorphismData;
 
 /**
@@ -33,7 +33,7 @@ public class MorphismTransitionsTest {
 	public static void setUpOnce() throws Exception {
 
 		// Get the first (and only) transition in the "from" net
-		fromTransition = transitionFromNet.getAllTransitions().iterator()
+		fromTransition = transitionFromNet.getTransitions().iterator()
 				.next();
 
 		counter = new HashMap<Transition, Integer>();

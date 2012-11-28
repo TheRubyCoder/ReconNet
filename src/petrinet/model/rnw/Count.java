@@ -1,11 +1,13 @@
-package petrinet;
+package petrinet.model.rnw;
+
+import petrinet.model.IRenew;
 
 /**
  * Renew that increments an integer upon firing a transition. The integer is
  * represented as {@link String}. The guiString is "count"
  * 
  */
-public class RenewCount implements IRenew {
+final public class Count implements IRenew {
 
 	@Override
 	public String renew(String tlb) {

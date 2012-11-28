@@ -28,12 +28,12 @@ import javax.swing.JPopupMenu;
 
 import org.apache.commons.collections15.Transformer;
 
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.IRenew;
-import petrinet.Place;
-import petrinet.Renews;
-import petrinet.Transition;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.IRenew;
+import petrinet.model.Place;
+import petrinet.model.Renews;
+import petrinet.model.Transition;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.RenderContext;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
@@ -62,7 +62,7 @@ import gui.EditorPane.EditorMode;
  * rules)
  */
 @SuppressWarnings("serial")
-public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
+public class PetrinetViewer extends VisualizationViewer<INode, IArc> {
 
 	/**
 	 * ID of currently displayed petrinet or rule. If RuleNet is set (L,K or R)
@@ -95,13 +95,13 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	 * The node that is currently selected by user. <tt>null</tt> if no node is
 	 * selected
 	 */
-	Arc currentSelectedArc = null;
+	IArc currentSelectedArc = null;
 
 	/**
 	 * Initiates a new petrinet viewer with a petrinet. Rulenet == null if the
 	 * viewer displays the N petrinet
 	 */
-	PetrinetViewer(Layout<INode, Arc> layout, int petrinetOrRuleId,
+	PetrinetViewer(Layout<INode, IArc> layout, int petrinetOrRuleId,
 			RuleNet ruleNet) {
 		super(layout);
 		// Logic
@@ -426,7 +426,7 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	 * Returns the {@link ArcAttribute} of the <code>arc</code> no matter if its
 	 * part of a rule or a regular petrinet
 	 */
-	ArcAttribute getArcAttribute(Arc arc) {
+	ArcAttribute getArcAttribute(IArc arc) {
 		ArcAttribute arcAttribute = null;
 		try {
 			if (isN()) {
@@ -618,7 +618,7 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	 * 
 	 * @param arc
 	 */
-	void deleteArc(Arc arc) {
+	void deleteArc(IArc arc) {
 		try {
 			if (isN()) {
 				EngineAdapter.getPetrinetManipulation().deleteArc(
@@ -760,7 +760,7 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	 * @param arc
 	 * @param weight
 	 */
-	public void setWeight(Arc arc, int weight) {
+	public void setWeight(IArc arc, int weight) {
 		try {
 			if (isN()) {
 				EngineAdapter.getPetrinetManipulation().setWeight(
@@ -896,11 +896,11 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 
 			private Place place;
 
-			private Arc arc;
+			private IArc arc;
 
 			private PetrinetViewer petrinetViewer;
 
-			private DeleteListener(Transition transition, Place place, Arc arc,
+			private DeleteListener(Transition transition, Place place, IArc arc,
 					PetrinetViewer petrinetViewer) {
 				this.transition = transition;
 				this.place = place;
@@ -915,7 +915,7 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 			}
 
 			/** Create a delete listener for a pop up menu if an arc */
-			static DeleteListener fromArc(Arc arc, PetrinetViewer petrinetViewer) {
+			static DeleteListener fromArc(IArc arc, PetrinetViewer petrinetViewer) {
 				return new DeleteListener(null, null, arc, petrinetViewer);
 			}
 
@@ -1014,7 +1014,7 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 			return result;
 		}
 
-		static PetrinetNodePopUpMenu fromArc(Arc arc,
+		static PetrinetNodePopUpMenu fromArc(IArc arc,
 				PetrinetViewer petrinetViewer) {
 			PetrinetNodePopUpMenu result = new PetrinetNodePopUpMenu(
 					petrinetViewer);
@@ -1029,7 +1029,7 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 
 	/** mouse click listener for the drawing panel */
 	private static class PetrinetMouseListener extends
-			PickingGraphMousePlugin<INode, Arc> implements MouseWheelListener,
+			PickingGraphMousePlugin<INode, IArc> implements MouseWheelListener,
 			MouseMotionListener {
 
 		private static enum DragMode {
@@ -1255,7 +1255,7 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	 * Custom renderer that is used from jung to make transitions cornered and
 	 * places circular
 	 */
-	private static class PetrinetRenderer implements Vertex<INode, Arc> {
+	private static class PetrinetRenderer implements Vertex<INode, IArc> {
 
 		private PetrinetViewer petrinetViewer;
 
@@ -1264,8 +1264,8 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 
 		@Override
-		public void paintVertex(RenderContext<INode, Arc> renderContext,
-				Layout<INode, Arc> layout, INode node) {
+		public void paintVertex(RenderContext<INode, IArc> renderContext,
+				Layout<INode, IArc> layout, INode node) {
 			GraphicsDecorator decorator = renderContext.getGraphicsContext();
 			decorator.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 					RenderingHints.VALUE_ANTIALIAS_ON);
@@ -1412,7 +1412,7 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 	 * an Arc
 	 */
 	private static class PetrinetArcLabelTransformer implements
-			Transformer<Arc, String> {
+			Transformer<IArc, String> {
 
 		private PetrinetViewer petrinetViewer;
 
@@ -1421,7 +1421,7 @@ public class PetrinetViewer extends VisualizationViewer<INode, Arc> {
 		}
 
 		@Override
-		public String transform(Arc arc) {
+		public String transform(IArc arc) {
 			int weight = 1;
 			ArcAttribute arcAttribute = petrinetViewer.getArcAttribute(arc);
 			weight = arcAttribute.getWeight();

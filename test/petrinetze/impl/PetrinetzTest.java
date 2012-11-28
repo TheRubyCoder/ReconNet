@@ -9,6 +9,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import petrinet.*;
+import petrinet.model.IArc;
+import petrinet.model.Petrinet;
+import petrinet.model.Place;
+import petrinet.model.Renews;
+import petrinet.model.Transition;
 
 public class PetrinetzTest {
 
@@ -29,25 +34,25 @@ public class PetrinetzTest {
 		listener = new SimpleListener();
 		p.addPetrinetListener(listener);
 
-        place1 = p.createPlace("place1");
-        place2 = p.createPlace("place2");
+        place1 = p.addPlace("place1");
+        place2 = p.addPlace("place2");
 
-        transition = p.createTransition("transition", Renews.COUNT);
+        transition = p.addTransition("transition", Renews.COUNT);
 
-        p.createArc("p1t", place1, transition);
-        p.createArc("tp2", transition, place2);
+        p.addPreArc("p1t", place1, transition);
+        p.addPostArc("tp2", transition, place2);
 	}
 	
 	@Test
 	public void createPlace()
 	{
 		assertEquals(place1.getName(), "place1");
-		assertTrue(p.getAllPlaces().contains(place1));
+		assertTrue(p.getPlaces().contains(place1));
 		assertTrue(p.getAllGraphElement().getAllNodes().contains(place1));
 		assertTrue(listener.AddedNodes.contains(place1));
 
 		assertEquals(place2.getName(), "place2");
-		assertTrue(p.getAllPlaces().contains(place2));
+		assertTrue(p.getPlaces().contains(place2));
 		assertTrue(p.getAllGraphElement().getAllNodes().contains(place2));
 		assertTrue(listener.AddedNodes.contains(place2));
 	}
@@ -56,7 +61,7 @@ public class PetrinetzTest {
 	public void createTransition()
 	{
 		assertEquals(transition.getName(), "transition");
-		assertTrue(p.getAllTransitions().contains(transition));
+		assertTrue(p.getTransitions().contains(transition));
 		assertTrue(p.getAllGraphElement().getAllNodes().contains(transition));
 		assertEquals(Renews.COUNT, transition.getRnw());
 		assertTrue(listener.AddedNodes.contains(transition));
@@ -65,22 +70,22 @@ public class PetrinetzTest {
 	@Test
 	public void createArc()
 	{
-        Transition transition = p.createTransition("t");
-		Arc edge1 = p.createArc("edge1", place1, transition);
+        Transition transition = p.addTransition("t");
+		IArc edge1 = p.addPreArc("edge1", place1, transition);
 		assertEquals("edge1", edge1.getName());
-		assertTrue(p.getAllArcs().contains(edge1));
+		assertTrue(p.getArcs().contains(edge1));
 		assertTrue(p.getAllGraphElement().getAllArcs().contains(edge1));
-		assertEquals(place1, edge1.getStart());
-		assertEquals(transition, edge1.getEnd());
+		assertEquals(place1, edge1.getSource());
+		assertEquals(transition, edge1.getTarget());
 		assertEquals(1, edge1.getMark());
 		assertTrue(listener.AddedEdges.contains(edge1));
 
-		Arc edge2 = p.createArc("edge2", transition, place2);
+		IArc edge2 = p.addPostArc("edge2", transition, place2);
 		assertEquals("edge2", edge2.getName());
-		assertTrue(p.getAllArcs().contains(edge2));
+		assertTrue(p.getArcs().contains(edge2));
 		assertTrue(p.getAllGraphElement().getAllArcs().contains(edge2));
-		assertEquals(transition, edge2.getStart());
-		assertEquals(place2, edge2.getEnd());
+		assertEquals(transition, edge2.getSource());
+		assertEquals(place2, edge2.getTarget());
 		assertEquals(1, edge2.getMark());
 		assertTrue(listener.AddedEdges.contains(edge2));
 	}
@@ -101,14 +106,14 @@ public class PetrinetzTest {
 	{
         final Petrinet petrinet = PetrinetComponent.getPetrinet().createPetrinet();
 
-		Place p = petrinet.createPlace("p");
+		Place p = petrinet.addPlace("p");
         p.setMark(1);
-		Transition a = petrinet.createTransition("a", Renews.COUNT);
-		Transition b = petrinet.createTransition("b", Renews.COUNT);
-		petrinet.createArc("pa", p, a);
-		petrinet.createArc("pb", p, b);
-		petrinet.createArc("ap", a, p);
-		petrinet.createArc("bp", b, p);
+		Transition a = petrinet.addTransition("a", Renews.COUNT);
+		Transition b = petrinet.addTransition("b", Renews.COUNT);
+		petrinet.addPreArc("pa", p, a);
+		petrinet.addPreArc("pb", p, b);
+		petrinet.addPostArc("ap", a, p);
+		petrinet.addPostArc("bp", b, p);
 
 //		int times = 100000000; // for serious testing
 		int times = 1000; // for every day testing so jenkins does not take 5 minutes per build

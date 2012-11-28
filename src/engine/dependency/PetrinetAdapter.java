@@ -1,7 +1,7 @@
 package engine.dependency;
 
-import petrinet.Petrinet;
 import petrinet.PetrinetComponent;
+import petrinet.model.Petrinet;
 
 /** Adapter to petrinet component */
 public class PetrinetAdapter {
@@ -13,7 +13,7 @@ public class PetrinetAdapter {
 	}
 	
 	public static Petrinet getPetrinetById(int id){
-		return PetrinetComponent.getPetrinet().getPetrinetById(id);
+		return PetrinetComponent.getPetrinet().getPetrinet(id);
 	}
 
 }

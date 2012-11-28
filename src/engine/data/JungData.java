@@ -12,11 +12,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.Petrinet;
-import petrinet.Place;
-import petrinet.Transition;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.Petrinet;
+import petrinet.model.Place;
+import petrinet.model.Transition;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.graph.DirectedGraph;
 import engine.Positioning;
@@ -59,13 +59,13 @@ final public class JungData {
 	public static final Color DEFAULT_COLOR_PLACE = Color.GRAY;
 	private static final Color DEFAULT_COLOR_TRANSITION = Color.WHITE;
 
-	private DirectedGraph<INode, Arc> graph;
-	private AbstractLayout<INode, Arc> layout;
+	private DirectedGraph<INode, IArc> graph;
+	private AbstractLayout<INode, IArc> layout;
 	private Map<Place, Color> placeColors;
 	private double nodeSize = Style.NODE_SIZE_DEFAULT;
 
-	public JungData(DirectedGraph<INode, Arc> graph,
-			AbstractLayout<INode, Arc> layout) {
+	public JungData(DirectedGraph<INode, IArc> graph,
+			AbstractLayout<INode, IArc> layout) {
 		if (!(graph instanceof DirectedGraph<?, ?>)) {
 			throw new IllegalArgumentException("graph illegal type");
 		}
@@ -94,18 +94,18 @@ final public class JungData {
 	/**
 	 * Gets the JungGraph representation
 	 * 
-	 * @return DirectedGraph<INode,Arc>
+	 * @return DirectedGraph<INode, IArc>
 	 */
-	public DirectedGraph<INode, Arc> getJungGraph() {
+	public DirectedGraph<INode, IArc> getJungGraph() {
 		return graph;
 	}
 
 	/**
 	 * Gets the JungLayout information
 	 * 
-	 * @return AbstractLayout<INode, Arc>
+	 * @return AbstractLayout<INode, IArc>
 	 */
-	public AbstractLayout<INode, Arc> getJungLayout() {
+	public AbstractLayout<INode, IArc> getJungLayout() {
 		return layout;
 	}
 
@@ -144,7 +144,7 @@ final public class JungData {
 	 * @param toTransition
 	 *            Target of the arc
 	 */
-	public void createArc(Arc arc, Place fromPlace, Transition toTransition) {
+	public void createArc(IArc arc, Place fromPlace, Transition toTransition) {
 		checkPlaceInvariant(fromPlace);
 		checkTransitionInvariant(toTransition);
 		checkArcInvariant(arc, fromPlace, toTransition);
@@ -167,7 +167,7 @@ final public class JungData {
 	 * @param toPlace
 	 *            Target of the arc
 	 */
-	public void createArc(Arc arc, Transition fromTransition, Place toPlace) {
+	public void createArc(IArc arc, Transition fromTransition, Place toPlace) {
 		checkPlaceInvariant(toPlace);
 		checkTransitionInvariant(fromTransition);
 		checkArcInvariant(arc, fromTransition, toPlace);
@@ -269,7 +269,7 @@ final public class JungData {
 	 * @param nodes
 	 *            Collection of INodes to be deleted
 	 */
-	public void delete(Collection<Arc> arcs, Collection<INode> nodes) {
+	public void delete(Collection<IArc> arcs, Collection<INode> nodes) {
 		checkArcsInvariant(arcs);
 		checkINodesInvariant(nodes);
 
@@ -277,7 +277,7 @@ final public class JungData {
 		checkContainsNodes(nodes);
 
 		// are all incident arcs given?
-		Set<Arc> arcsHaveToBeDeleted = new HashSet<Arc>();
+		Set<IArc> arcsHaveToBeDeleted = new HashSet<IArc>();
 
 		for (INode node : nodes) {
 			arcsHaveToBeDeleted.addAll(graph.getIncidentEdges(node));
@@ -288,7 +288,7 @@ final public class JungData {
 		check(arcsHaveToBeDeleted.size() == 0, "not all incident arcs given");
 
 		// delete arcs and nodes
-		for (Arc arc : arcs) {
+		for (IArc arc : arcs) {
 			check(graph.removeEdge(arc), "arc couldn't be removed");
 		}
 
@@ -455,21 +455,22 @@ final public class JungData {
 	 */
 	public void deleteDataOfMissingElements(Petrinet petrinet) {
 		List<INode> missingNodes = new LinkedList<INode>();
-		List<Arc> missingEdges = new LinkedList<Arc>();
+		List<IArc> missingEdges  = new LinkedList<IArc>();
+		
 		for (INode node : graph.getVertices()) {
 			if (!petrinet.getAllGraphElement().getAllNodes().contains(node)) {
 				missingNodes.add(node);
 			}
 		}
-		for (Arc arc : graph.getEdges()) {
-			if (!petrinet.getAllArcs().contains(arc)) {
+		for (IArc arc : graph.getEdges()) {
+			if (!petrinet.getArcs().contains(arc)) {
 				missingEdges.add(arc);
 			}
 		}
 		for (INode missingNode : missingNodes) {
 			graph.removeVertex(missingNode);
 		}
-		for (Arc arc : missingEdges) {
+		for (IArc arc : missingEdges) {
 			graph.removeEdge(arc);
 		}
 	}
@@ -498,8 +499,8 @@ final public class JungData {
 	 * @param arc
 	 *            arc to check
 	 */
-	private void checkArcInvariant(Arc arc) {
-		check(arc instanceof Arc, "arc illegal type");
+	private void checkArcInvariant(IArc arc) {
+		check(arc instanceof IArc, "arc illegal type");
 	}
 
 	/**
@@ -512,9 +513,9 @@ final public class JungData {
 	 * @param to
 	 *            node where arc ends
 	 */
-	private void checkArcInvariant(Arc arc, INode from, INode to) {
+	private void checkArcInvariant(IArc arc, INode from, INode to) {
 		checkArcInvariant(arc);
-		check(arc.getStart().equals(from) && arc.getEnd().equals(to),
+		check(arc.getSource().equals(from) && arc.getTarget().equals(to),
 				"arc illegal nodes");
 	}
 
@@ -566,10 +567,10 @@ final public class JungData {
 	 * @param arcs
 	 *            collection to check
 	 */
-	private void checkArcsInvariant(Collection<Arc> arcs) {
+	private void checkArcsInvariant(Collection<IArc> arcs) {
 		check(arcs instanceof Collection<?>, "arcs illegal type");
 
-		for (Arc arc : arcs) {
+		for (IArc arc : arcs) {
 			checkArcInvariant(arc);
 		}
 	}
@@ -597,7 +598,7 @@ final public class JungData {
 	 * @throws NullPointerException
 	 *             if jung or arc == null
 	 */
-	private void checkContainsArc(Arc arc) {
+	private void checkContainsArc(IArc arc) {
 		check(graph.containsEdge(arc), "unknown node");
 	}
 
@@ -610,8 +611,8 @@ final public class JungData {
 	 * @throws NullPointerException
 	 *             if jung or arcs == null
 	 */
-	private void checkContainsArcs(Collection<Arc> arcs) {
-		for (Arc arc : arcs) {
+	private void checkContainsArcs(Collection<IArc> arcs) {
+		for (IArc arc : arcs) {
 			checkContainsArc(arc);
 		}
 	}

@@ -1,4 +1,4 @@
-package petrinet;
+package petrinet.model;
 
 /**
  * A {@link IRenew renew object} basically consists of the renew function

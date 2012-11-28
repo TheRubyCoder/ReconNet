@@ -1,4 +1,6 @@
-package petrinet;
+package petrinet.model.rnw;
+
+import petrinet.model.IRenew;
 
 /**
  * Renew that switches the label from <code>true</code> to <code>false</code>
@@ -6,7 +8,7 @@ package petrinet;
  * "toggle"
  * 
  */
-class RenewToggle implements IRenew {
+final public class Toggle implements IRenew {
 
 	@Override
 	public String renew(String tlb) {

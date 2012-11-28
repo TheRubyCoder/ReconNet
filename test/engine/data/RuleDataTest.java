@@ -11,11 +11,11 @@ import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import engine.data.JungData;
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.Petrinet;
-import petrinet.Place;
-import petrinet.Transition;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.Petrinet;
+import petrinet.model.Place;
+import petrinet.model.Transition;
 import transformation.Rule;
 import transformation.TransformationComponent;
 
@@ -41,31 +41,31 @@ public class RuleDataTest {
         emptyRule = TransformationComponent.getTransformation().createRule();
         rule      = TransformationComponent.getTransformation().createRule();
         
-        DirectedGraph<INode, Arc> graph = new DirectedSparseGraph<INode, Arc>();
-        emptyJungk = new JungData(graph, new StaticLayout<INode, Arc>(graph));
+        DirectedGraph<INode, IArc> graph = new DirectedSparseGraph<INode, IArc>();
+        emptyJungk = new JungData(graph, new StaticLayout<INode, IArc>(graph));
         
-        graph = new DirectedSparseGraph<INode, Arc>();
-        emptyJungl = new JungData(graph, new StaticLayout<INode, Arc>(graph));
+        graph = new DirectedSparseGraph<INode, IArc>();
+        emptyJungl = new JungData(graph, new StaticLayout<INode, IArc>(graph));
         
-        graph = new DirectedSparseGraph<INode, Arc>();
-        emptyJungr = new JungData(graph, new StaticLayout<INode, Arc>(graph));
+        graph = new DirectedSparseGraph<INode, IArc>();
+        emptyJungr = new JungData(graph, new StaticLayout<INode, IArc>(graph));
         
 
-        graph = new DirectedSparseGraph<INode, Arc>();
-        jungk = new JungData(graph, new StaticLayout<INode, Arc>(graph));
+        graph = new DirectedSparseGraph<INode, IArc>();
+        jungk = new JungData(graph, new StaticLayout<INode, IArc>(graph));
         
-        graph = new DirectedSparseGraph<INode, Arc>();
-        jungl = new JungData(graph, new StaticLayout<INode, Arc>(graph));
+        graph = new DirectedSparseGraph<INode, IArc>();
+        jungl = new JungData(graph, new StaticLayout<INode, IArc>(graph));
         
-        graph = new DirectedSparseGraph<INode, Arc>();
-        jungr = new JungData(graph, new StaticLayout<INode, Arc>(graph));
+        graph = new DirectedSparseGraph<INode, IArc>();
+        jungr = new JungData(graph, new StaticLayout<INode, IArc>(graph));
 
-        Place 	   place1      = rule.getL().createPlace("test1");
-        Transition transition1 = rule.getL().createTransition("test2");
-        rule.getK().createPlace("test3");
-        rule.getR().createTransition("test4");
+        Place 	   place1      = rule.getL().addPlace("test1");
+        Transition transition1 = rule.getL().addTransition("test2");
+        rule.getK().addPlace("test3");
+        rule.getR().addTransition("test4");
         
-        rule.getL().createArc("test5", place1, transition1);
+        rule.getL().addPreArc("test5", place1, transition1);
 
         buildJung(rule.getL(), jungl);
         buildJung(rule.getK(), jungk);
@@ -75,7 +75,7 @@ public class RuleDataTest {
 	
 	@Test
 	public void testData() {
-		assertFalse(rule.getK().getAllPlaces().isEmpty());
+		assertFalse(rule.getK().getPlaces().isEmpty());
 		
 		RuleData data1 = buildAndTest(1, rule, jungl, jungk, jungr);
 		RuleData data2 = buildAndTest(1, emptyRule, emptyJungl, emptyJungk, emptyJungr);
@@ -109,21 +109,21 @@ public class RuleDataTest {
 	private void buildJung(Petrinet p, JungData jung) {        
         int y = 1;
         
-        for (Place place : p.getAllPlaces()) {
+        for (Place place : p.getPlaces()) {
         	y = y + 100;
         	jung.createPlace(place, new Point(1, y));
         }
         
-        for (Transition transition : p.getAllTransitions()) {
+        for (Transition transition : p.getTransitions()) {
         	y = y + 100;
         	jung.createTransition(transition, new Point(1, y));
         }
         
-        for (Arc arc : p.getAllArcs()) { 
-        	if (arc.getStart() instanceof Place) {
-        		jung.createArc(arc, (Place) arc.getStart(), (Transition) arc.getEnd());
+        for (IArc arc : p.getArcs()) { 
+        	if (arc.getSource() instanceof Place) {
+        		jung.createArc(arc, (Place) arc.getSource(), (Transition) arc.getTarget());
         	} else {
-        		jung.createArc(arc, (Transition) arc.getStart(), (Place) arc.getEnd());
+        		jung.createArc(arc, (Transition) arc.getSource(), (Place) arc.getTarget());
         	}
         }
 	}

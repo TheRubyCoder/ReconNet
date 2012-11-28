@@ -2,7 +2,7 @@ package persistence;
 
 import javax.xml.bind.annotation.XmlElement;
 
-import petrinet.Transition;
+import petrinet.model.Transition;
 
 /**
  * This class represents information about the Label of a Transition

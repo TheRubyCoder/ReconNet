@@ -6,8 +6,8 @@ import static gui.Style.PETRINET_PANE_LAYOUT;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 
-import petrinet.Arc;
-import petrinet.INode;
+import petrinet.model.IArc;
+import petrinet.model.INode;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import exceptions.EngineException;
 
@@ -77,7 +77,7 @@ class PetrinetPane {
 	public void displayPetrinet(int petrinetId, String title) {
 		setBorderTitle(title);
 		try {
-			Layout<INode, Arc> layout = EngineAdapter.getPetrinetManipulation()
+			Layout<INode, IArc> layout = EngineAdapter.getPetrinetManipulation()
 					.getJungLayout(petrinetId);
 			if (petrinetViewer != null) {
 				petrinetViewer.removeFrom(petrinetPanel);

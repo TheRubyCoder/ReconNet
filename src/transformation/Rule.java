@@ -10,13 +10,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import petrinet.ActionType;
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.IPetrinetListener;
-import petrinet.Petrinet;
-import petrinet.Place;
-import petrinet.Transition;
+import petrinet.model.ActionType;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.IPetrinetListener;
+import petrinet.model.Petrinet;
+import petrinet.model.Place;
+import petrinet.model.Transition;
 
 /**
  * An Interface for Rules<br\>
@@ -44,9 +44,9 @@ public class Rule {
 	/** Mapping of nodes between R and K */
 	private final Map<INode, INode> rKSameNodes;
 	/** Mapping of edges between L and K */
-	private final Map<Arc, Arc> lkSameEdges;
+	private final Map<IArc, IArc> lkSameEdges;
 	/** Mapping of edges between R and K */
-	private final Map<Arc, Arc> rKSameEdges;
+	private final Map<IArc, IArc> rKSameEdges;
 
 	/**
 	 * Indicates that R has initially been changed to prevent cycle.<br\>
@@ -74,8 +74,8 @@ public class Rule {
 
 		lKSameNodes = new HashMap<INode, INode>();
 		rKSameNodes = new HashMap<INode, INode>();
-		lkSameEdges = new HashMap<Arc, Arc>();
-		rKSameEdges = new HashMap<Arc, Arc>();
+		lkSameEdges = new HashMap<IArc, IArc>();
+		rKSameEdges = new HashMap<IArc, IArc>();
 
 		kListener = new Listener(Net.K, l, k, r);
 		lListener = new Listener(Net.L, l, k, r);
@@ -110,27 +110,27 @@ public class Rule {
 	}
 
 	public void removeNodeOrArc(INode nodeOrArc) {
-		if (nodeOrArc instanceof Arc) {
-			List<Arc> mappings = getMappings((Arc) nodeOrArc);
+		if (nodeOrArc instanceof IArc) {
+			List<IArc> mappings = getMappings((IArc) nodeOrArc);
 			if (mappings.get(0) != null) {
-				getL().deleteArcByID(mappings.get(0).getId());
+				getL().removeArc(mappings.get(0).getId());
 			}
 			if (mappings.get(1) != null) {
-				getK().deleteArcByID(mappings.get(1).getId());
+				getK().removeArc(mappings.get(1).getId());
 			}
 			if (mappings.get(2) != null) {
-				getR().deleteArcByID(mappings.get(2).getId());
+				getR().removeArc(mappings.get(2).getId());
 			}
 		} else {
 			List<INode> mappings = getMappings(nodeOrArc);
 			if (mappings.get(0) != null) {
-				getL().deleteElementById(mappings.get(0).getId());
+				getL().removeElement(mappings.get(0).getId());
 			}
 			if (mappings.get(1) != null) {
-				getK().deleteElementById(mappings.get(1).getId());
+				getK().removeElement(mappings.get(1).getId());
 			}
 			if (mappings.get(2) != null) {
-				getR().deleteElementById(mappings.get(2).getId());
+				getR().removeElement(mappings.get(2).getId());
 			}
 		}
 	}
@@ -171,7 +171,7 @@ public class Rule {
 	 *            a edge in K.
 	 * @return the corresponding edge in L.
 	 */
-	public Arc fromKtoL(Arc edge) {
+	public IArc fromKtoL(IArc edge) {
 		return getKeyFromValue(lkSameEdges, edge);
 	}
 
@@ -193,7 +193,7 @@ public class Rule {
 	 *            a edge in K.
 	 * @return the corresponding edge in R.
 	 */
-	public Arc fromKtoR(Arc edge) {
+	public IArc fromKtoR(IArc edge) {
 		return getKeyFromValue(rKSameEdges, edge);
 	}
 
@@ -217,7 +217,7 @@ public class Rule {
 	 *            a edge in L.
 	 * @return the corresponding edge in K.
 	 */
-	public Arc fromLtoK(Arc edge) {
+	public IArc fromLtoK(IArc edge) {
 		if (lkSameEdges.containsKey(edge))
 			return lkSameEdges.get(edge);
 		return null;
@@ -243,7 +243,7 @@ public class Rule {
 	 *            a edge in R.
 	 * @return the corresponding edge in K.
 	 */
-	public Arc fromRtoK(Arc edge) {
+	public IArc fromRtoK(IArc edge) {
 		if (rKSameEdges.containsKey(edge))
 			return rKSameEdges.get(edge);
 		return null;
@@ -307,7 +307,7 @@ public class Rule {
 		}
 
 		@Override
-		public void changed(Petrinet petrinet, Arc element,
+		public void changed(Petrinet petrinet, IArc element,
 				ActionType actionType) {
 			if (net == Net.L) {
 				if (!kChanging && !rChanging) {
@@ -331,178 +331,211 @@ public class Rule {
 		}
 
 		private void lNodeChanged(INode element, ActionType actionType) {
-			if (actionType == ActionType.added) {
+			if (actionType == ActionType.ADDED) {
 				if (element instanceof Place
 						&& !lKSameNodes.containsKey(element)) {
-					INode node = k.createPlace(element.getName());
+					INode node = k.addPlace(element.getName());
 					lKSameNodes.put(element, node);
 				} else if (element instanceof Transition
 						&& !lKSameNodes.containsKey(element)) {
-					INode node = k.createTransition(element.getName(),
+					INode node = k.addTransition(element.getName(),
 							((Transition) element).getRnw());
 					lKSameNodes.put(element, node);
 				}
-			} else if (actionType == ActionType.deleted) {
+			} else if (actionType == ActionType.REMOVED) {
 				if (element instanceof Place
-						&& !r.getAllPlaces().contains(element)
+						&& !r.getPlaces().contains(element)
 						&& lKSameNodes.containsKey(element)) {
 					INode node = lKSameNodes.get(element);
 					lKSameNodes.remove(element);
-					k.deletePlaceById(node.getId());
+					k.removePlace(node.getId());
 				} else if (element instanceof Transition
-						&& !r.getAllTransitions().contains(element)
+						&& !r.getTransitions().contains(element)
 						&& lKSameNodes.containsKey(element)) {
 					INode node = lKSameNodes.get(element);
 					lKSameNodes.remove(element);
-					k.deleteTransitionByID(node.getId());
+					k.removeTransition(node.getId());
 				}
 			}
 		}
 
 		private void kNodeChanged(INode element, ActionType actionType) {
-			if (actionType == ActionType.added) {
+			if (actionType == ActionType.ADDED) {
 				if (element instanceof Place) {
 					if (!lKSameNodes.containsValue(element)) {
-						INode node = l.createPlace(element.getName());
+						INode node = l.addPlace(element.getName());
 						lKSameNodes.put(node, element);
 					}
 					if (!rKSameNodes.containsValue(element)) {
-						INode node = r.createPlace(element.getName());
+						INode node = r.addPlace(element.getName());
 						rKSameNodes.put(node, element);
 					}
 				} else if (element instanceof Transition) {
 					if (!lKSameNodes.containsValue(element)) {
-						INode node = l.createTransition(element.getName(),
+						INode node = l.addTransition(element.getName(),
 								((Transition) element).getRnw());
 						lKSameNodes.put(node, element);
 					}
 					if (!rKSameNodes.containsValue(element)) {
-						INode node = r.createTransition(element.getName(),
+						INode node = r.addTransition(element.getName(),
 								((Transition) element).getRnw());
 						rKSameNodes.put(node, element);
 					}
 				}
-			} else if (actionType == ActionType.deleted) {
+			} else if (actionType == ActionType.REMOVED) {
 				if (element instanceof Place) {
 					if (lKSameNodes.containsValue(element)) {
 						INode node = getKeyFromValue(lKSameNodes, element);
 						lKSameNodes.remove(element);
-						l.deletePlaceById(node.getId());
+						l.removePlace(node.getId());
 					}
 					if (rKSameNodes.containsValue(element)) {
 						INode node = getKeyFromValue(rKSameNodes, element);
 						rKSameNodes.remove(element);
-						r.deletePlaceById(node.getId());
+						r.removePlace(node.getId());
 					}
 				} else if (element instanceof Transition
-						&& !r.getAllTransitions().contains(element)
+						&& !r.getTransitions().contains(element)
 						&& lKSameNodes.containsKey(element)) {
 					if (lKSameNodes.containsValue(element)) {
 						INode node = getKeyFromValue(lKSameNodes, element);
 						lKSameNodes.remove(element);
-						l.deletePlaceById(node.getId());
+						l.removePlace(node.getId());
 					}
 					if (rKSameNodes.containsValue(element)) {
 						INode node = getKeyFromValue(rKSameNodes, element);
 						rKSameNodes.remove(element);
-						r.deletePlaceById(node.getId());
+						r.removePlace(node.getId());
 					}
 				}
 			}
 		}
 
 		private void rNodeChanged(INode element, ActionType actionType) {
-			if (actionType == ActionType.added) {
+			if (actionType == ActionType.ADDED) {
 				if (element instanceof Place
 						&& !rKSameNodes.containsKey(element)) {
-					INode node = k.createPlace(element.getName());
+					INode node = k.addPlace(element.getName());
 					rKSameNodes.put(element, node);
 				} else if (element instanceof Transition
 						&& !rKSameNodes.containsKey(element)) {
-					INode node = k.createTransition(element.getName(),
+					INode node = k.addTransition(element.getName(),
 							((Transition) element).getRnw());
 					rKSameNodes.put(element, node);
 				}
-			} else if (actionType == ActionType.deleted) {
+			} else if (actionType == ActionType.REMOVED) {
 				if (element instanceof Place
-						&& !r.getAllPlaces().contains(element)
+						&& !r.getPlaces().contains(element)
 						&& rKSameNodes.containsKey(element)) {
 					INode node = rKSameNodes.get(element);
 					rKSameNodes.remove(element);
-					k.deletePlaceById(node.getId());
+					k.removePlace(node.getId());
 				} else if (element instanceof Transition
-						&& !r.getAllTransitions().contains(element)
+						&& !r.getTransitions().contains(element)
 						&& rKSameNodes.containsKey(element)) {
 					INode node = rKSameNodes.get(element);
 					rKSameNodes.remove(element);
-					k.deleteTransitionByID(node.getId());
+					k.removeTransition(node.getId());
 				}
 			}
 		}
 
-		private void lEdgeChanged(Arc element, ActionType actionType) {
-			if (actionType == ActionType.added) {
+		private void lEdgeChanged(IArc element, ActionType actionType) {
+			if (actionType == ActionType.ADDED) {
 				if (!lkSameEdges.containsKey(element)) {
-					INode start = lKSameNodes.get(element.getStart());
-					INode end = lKSameNodes.get(element.getEnd());
-					Arc edge = k.createArc(element.getName(), start, end);
+					INode start = lKSameNodes.get(element.getSource());
+					INode end   = lKSameNodes.get(element.getTarget());
+
+					IArc edge  = null;
+					
+					if (start instanceof Place && end instanceof Transition) {
+						edge  = k.addPreArc(element.getName(), (Place) start, (Transition) end);
+						
+					} else if (start instanceof Transition && end instanceof Place) {
+						edge  = k.addPostArc(element.getName(), (Transition) start, (Place) end);						
+					}
 
 					lkSameEdges.put(element, edge);
 				}
-			} else if (actionType == ActionType.deleted) {
+			} else if (actionType == ActionType.REMOVED) {
 				if (lkSameEdges.containsKey(element)) {
-					Arc edge = lkSameEdges.get(element);
+					IArc edge = lkSameEdges.get(element);
 					lkSameEdges.remove(element);
-					k.deleteArcByID(edge.getId());
+					k.removeArc(edge.getId());
 				}
 			}
 		}
 
-		private void kEdgeChanged(Arc element, ActionType actionType) {
-			if (actionType == ActionType.added) {
+		private void kEdgeChanged(IArc element, ActionType actionType) {
+			if (actionType == ActionType.ADDED) {
 				if (!lkSameEdges.containsValue(element)) {
 					INode start = getKeyFromValue(lKSameNodes,
-							element.getStart());
-					INode end = getKeyFromValue(lKSameNodes, element.getEnd());
+							element.getSource());
+					INode end = getKeyFromValue(lKSameNodes, element.getTarget());
 
-					Arc edge = l.createArc(element.getName(), start, end);
+					IArc edge  = null;
+					
+					if (start instanceof Place && end instanceof Transition) {
+						edge  = l.addPreArc(element.getName(), (Place) start, (Transition) end);
+						
+					} else if (start instanceof Transition && end instanceof Place) {
+						edge  = l.addPostArc(element.getName(), (Transition) start, (Place) end);						
+					}
 
 					lkSameEdges.put(edge, element);
 				}
 				if (!rKSameEdges.containsValue(element)) {
 					INode start = getKeyFromValue(rKSameNodes,
-							element.getStart());
-					INode end = getKeyFromValue(rKSameNodes, element.getEnd());
-					Arc edge = r.createArc(element.getName(), start, end);
+							element.getSource());
+					INode end = getKeyFromValue(rKSameNodes, element.getTarget());
+
+					IArc edge  = null;
+					
+					if (start instanceof Place && end instanceof Transition) {
+						edge  = r.addPreArc(element.getName(), (Place) start, (Transition) end);
+						
+					} else if (start instanceof Transition && end instanceof Place) {
+						edge  = r.addPostArc(element.getName(), (Transition) start, (Place) end);						
+					}
+					
 					rKSameEdges.put(edge, element);
 				}
-			} else if (actionType == ActionType.deleted) {
+			} else if (actionType == ActionType.REMOVED) {
 				if (lkSameEdges.containsValue(element)) {
-					Arc edge = getKeyFromValue(lkSameEdges, element);
+					IArc edge = getKeyFromValue(lkSameEdges, element);
 					lkSameEdges.remove(element);
-					l.deleteArcByID(edge.getId());
+					l.removeArc(edge.getId());
 				}
 				if (rKSameEdges.containsValue(element)) {
-					Arc edge = getKeyFromValue(rKSameEdges, element);
+					IArc edge = getKeyFromValue(rKSameEdges, element);
 					rKSameEdges.remove(element);
-					r.deleteArcByID(edge.getId());
+					r.removeArc(edge.getId());
 				}
 			}
 		}
 
-		private void rEdgeChanged(Arc element, ActionType actionType) {
-			if (actionType == ActionType.added) {
+		private void rEdgeChanged(IArc element, ActionType actionType) {
+			if (actionType == ActionType.ADDED) {
 				if (!rKSameEdges.containsKey(element)) {
-					INode start = rKSameNodes.get(element.getStart());
-					INode end = rKSameNodes.get(element.getEnd());
-					Arc edge = k.createArc(element.getName(), start, end);
+					INode start = rKSameNodes.get(element.getSource());
+					INode end = rKSameNodes.get(element.getTarget());
+					
+					IArc edge  = null;
+					
+					if (start instanceof Place && end instanceof Transition) {
+						edge  = k.addPreArc(element.getName(), (Place) start, (Transition) end);
+						
+					} else if (start instanceof Transition && end instanceof Place) {
+						edge  = k.addPostArc(element.getName(), (Transition) start, (Place) end);						
+					}
+					
 					rKSameEdges.put(element, edge);
 				}
-			} else if (actionType == ActionType.deleted) {
+			} else if (actionType == ActionType.REMOVED) {
 				if (rKSameEdges.containsKey(element)) {
-					Arc edge = rKSameEdges.get(element);
+					IArc edge = rKSameEdges.get(element);
 					rKSameEdges.remove(element);
-					k.deleteArcByID(edge.getId());
+					k.removeArc(edge.getId());
 				}
 			}
 		}
@@ -513,7 +546,7 @@ public class Rule {
 	 */
 	public void setName(int nodeId, String name) {
 		Petrinet rulePart = getPetrinetOfNode(nodeId);
-		INode node = rulePart.getNodeById(nodeId);
+		INode node = rulePart.getNode(nodeId);
 		for (INode correspondingNode : getMappings(node)) {
 			if (correspondingNode != null) {
 				correspondingNode.setName(name);
@@ -534,15 +567,15 @@ public class Rule {
 		if (rulePart != null) {
 			// if place was in k...
 			if (rulePart.getId() == k.getId()) {
-				setMarkInK(k.getPlaceById(placeId), mark);
+				setMarkInK(k.getPlace(placeId), mark);
 			}
 			// if place was in l
 			else if (rulePart.getId() == l.getId()) {
-				setMarkInL(l.getPlaceById(placeId), mark);
+				setMarkInL(l.getPlace(placeId), mark);
 			}
 			// if place was in r
 			else {
-				setMarkInR(r.getPlaceById(placeId), mark);
+				setMarkInR(r.getPlace(placeId), mark);
 			}
 		}
 	}
@@ -588,29 +621,29 @@ public class Rule {
 	 * @return <tt> null </tt> if place is not in rule
 	 */
 	Petrinet getPetrinetOfNode(int nodeId) {
-		for (Place place : k.getAllPlaces()) {
+		for (Place place : k.getPlaces()) {
 			if (place.getId() == nodeId)
 				return k;
 		}
-		for (Transition transition: k.getAllTransitions()) {
+		for (Transition transition: k.getTransitions()) {
 			if (transition.getId() == nodeId)
 				return k;
 		}
 		
-		for (Place place : l.getAllPlaces()) {
+		for (Place place : l.getPlaces()) {
 			if (place.getId() == nodeId)
 				return l;
 		}
-		for (Transition transition: l.getAllTransitions()) {
+		for (Transition transition: l.getTransitions()) {
 			if (transition.getId() == nodeId)
 				return l;
 		}
 		
-		for (Place place : r.getAllPlaces()) {
+		for (Place place : r.getPlaces()) {
 			if (place.getId() == nodeId)
 				return r;
 		}
-		for (Transition transition: r.getAllTransitions()) {
+		for (Transition transition: r.getTransitions()) {
 			if (transition.getId() == nodeId)
 				return r;
 		}
@@ -619,7 +652,7 @@ public class Rule {
 
 	/**
 	 * Similar to {@link ITransformation#getMappings(Rule, INode)} but with
-	 * {@link INode} instead of {@link Arc}
+	 * {@link INode} instead of {@link IArc}
 	 */
 	public List<INode> getMappings(INode node) {
 		List<INode> mappings = new LinkedList<INode>();
@@ -627,18 +660,18 @@ public class Rule {
 		INode inK = null;
 		INode inR = null;
 		if (node != null) {
-			if (getL().getAllPlaces().contains(node)
-					|| getL().getAllTransitions().contains(node)) {
+			if (getL().getPlaces().contains(node)
+					|| getL().getTransitions().contains(node)) {
 				inL = node;
 				inK = fromLtoK(inL);
 				inR = fromKtoR(inK);
-			} else if (getK().getAllPlaces().contains(node)
-					|| getK().getAllTransitions().contains(node)) {
+			} else if (getK().getPlaces().contains(node)
+					|| getK().getTransitions().contains(node)) {
 				inK = node;
 				inL = fromKtoL(inK);
 				inR = fromKtoR(inK);
-			} else if (getR().getAllPlaces().contains(node)
-					|| getR().getAllTransitions().contains(node)) {
+			} else if (getR().getPlaces().contains(node)
+					|| getR().getTransitions().contains(node)) {
 				inR = node;
 				inK = fromRtoK(inR);
 				inL = fromKtoL(inK);
@@ -653,23 +686,23 @@ public class Rule {
 	}
 
 	/**
-	 * {@link ITransformation#getMappings(Rule, Arc)}
+	 * {@link ITransformation#getMappings(Rule, IArc)}
 	 */
-	public List<Arc> getMappings(Arc arc) {
-		List<Arc> mappings = new LinkedList<Arc>();
-		Arc inL = null;
-		Arc inK = null;
-		Arc inR = null;
+	public List<IArc> getMappings(IArc arc) {
+		List<IArc> mappings = new LinkedList<IArc>();
+		IArc inL = null;
+		IArc inK = null;
+		IArc inR = null;
 		fromKtoR(null);
-		if (getL().getAllArcs().contains(arc)) {
+		if (getL().getArcs().contains(arc)) {
 			inL = arc;
 			inK = fromLtoK(inL);
 			inR = fromKtoR(inK);
-		} else if (getK().getAllArcs().contains(arc)) {
+		} else if (getK().getArcs().contains(arc)) {
 			inK = arc;
 			inL = fromKtoL(inK);
 			inR = fromKtoR(inK);
-		} else if (getR().getAllArcs().contains(arc)) {
+		} else if (getR().getArcs().contains(arc)) {
 			inR = arc;
 			inK = fromRtoK(inR);
 			inL = fromLtoK(inL);
@@ -689,8 +722,8 @@ public class Rule {
 	 */
 	public List<INode> getNodesToDelete() {
 		List<INode> toDelete = new ArrayList<INode>();
-		toDelete.addAll(getL().getAllPlaces());
-		toDelete.addAll(getL().getAllTransitions());
+		toDelete.addAll(getL().getPlaces());
+		toDelete.addAll(getL().getTransitions());
 		Iterator<INode> iterator = toDelete.iterator();
 		while (iterator.hasNext()) {
 			INode toDeleteNode = (INode) iterator.next();

@@ -5,9 +5,9 @@ import java.util.Map;
 
 import com.sun.istack.NotNull;
 
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.Petrinet;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.Petrinet;
 import transformation.Rule;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
@@ -139,9 +139,9 @@ final public class SessionManager {
 	}
 
 	private JungData getNewJungData() {
-		DirectedSparseGraph<INode, Arc> graph = new DirectedSparseGraph<INode, Arc>();
+		DirectedSparseGraph<INode, IArc> graph = new DirectedSparseGraph<INode, IArc>();
 
-		return new JungData(graph, new StaticLayout<INode, Arc>(graph));
+		return new JungData(graph, new StaticLayout<INode, IArc>(graph));
 	}
 
 	private int getNextSessionDataId() {
@@ -166,9 +166,9 @@ final public class SessionManager {
 
 	/** Checks whether a petrinet is empty */
 	private void checkEmptyPetrinet(Petrinet petrinet) {
-		check(petrinet.getAllArcs().isEmpty(), "arcs have to be empty");
-		check(petrinet.getAllPlaces().isEmpty(), "arcs have to be empty");
-		check(petrinet.getAllTransitions().isEmpty(), "arcs have to be empty");
+		check(petrinet.getArcs().isEmpty(), "arcs have to be empty");
+		check(petrinet.getPlaces().isEmpty(), "arcs have to be empty");
+		check(petrinet.getTransitions().isEmpty(), "arcs have to be empty");
 	}
 
 	/** Checks whether a rule is empty */

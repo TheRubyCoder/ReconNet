@@ -1,7 +1,9 @@
-package petrinet;
+package petrinet.model.rnw;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import petrinet.model.IRenew;
 
 /**
  * Renew that transforms the label as specified in a map. The Label is
@@ -9,11 +11,11 @@ import java.util.Map;
  * <b>This Renew is not yet supported on the GUI</b>
  * 
  */
-public class RenewMap implements IRenew {
+final public class Mapping implements IRenew {
 
     private final HashMap<String,String> rnw;
 
-	public RenewMap(final Map<String, String> rnw) {
+	public Mapping(final Map<String, String> rnw) {
 		this.rnw = new HashMap<String, String>(rnw);
 	}
 	
@@ -44,7 +46,7 @@ public class RenewMap implements IRenew {
             return false;
         }
 
-        return this.rnw.equals(((RenewMap)obj).rnw);
+        return this.rnw.equals(((Mapping)obj).rnw);
 	}
 	
 	@Override

@@ -3,7 +3,7 @@ package petrinetze.impl;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import petrinet.IRenew;
+import petrinet.model.IRenew;
 
 /**
  * Testing example with coffee machine and tea. Custom renew function which changes the label depending on time of day.

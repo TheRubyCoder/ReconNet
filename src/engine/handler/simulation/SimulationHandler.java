@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.Petrinet;
-import petrinet.Place;
-import petrinet.Transition;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.Petrinet;
+import petrinet.model.Place;
+import petrinet.model.Transition;
 import transformation.ITransformation;
 import transformation.Rule;
 import transformation.Transformation;
@@ -73,23 +73,22 @@ public class SimulationHandler implements ISimulation {
 		// Test: is id valid
 		if (petrinetData == null) {
 			exception("SimulationHandler - id of the Petrinet is wrong");
+			return;
+		} 
+		
+		Petrinet petrinet = petrinetData.getPetrinet();
+		for (int i = 0; i < n; i++) {
 
-		} else {
-			Petrinet petrinet = petrinetData.getPetrinet();
-			for (int i = 0; i < n; i++) {
-
-				// if there are no more activated transitions the
-				// petrinet.fire()method will throw a IllegalState Exception
-				// this method catches the IllegalState Exception and throws a
-				// EngineException so the GUI only will get EngineExceptions
-				try {
-					petrinet.fire();
-				} catch (IllegalStateException e) {
-					exception(e.getMessage());
-				}
+			// if there are no more activated transitions the
+			// petrinet.fire()method will throw a IllegalState Exception
+			// this method catches the IllegalState Exception and throws a
+			// EngineException so the GUI only will get EngineExceptions
+			try {
+				petrinet.fire();
+			} catch (IllegalStateException e) {
+				exception(e.getMessage());
 			}
 		}
-
 	}
 
 	@Override
@@ -112,30 +111,30 @@ public class SimulationHandler implements ISimulation {
 		// Test: is id valid
 		if (petrinetData == null) {
 			exception("SimulationHandler - id of the Petrinet is wrong");
+			return;
+		} 
+	
+		Petrinet petrinet = petrinetData.getPetrinet();
+		JungData jungData = petrinetData.getJungData();
+		List<Rule> sortedRules = new ArrayList<Rule>();
+		for (Integer ruleId : ruleIDs) {
+			sortedRules.add(sessionManager.getRuleData(ruleId).getRule());
+		}
+		sortedRules = Collections.unmodifiableList(sortedRules);
 
-		} else {
-			Petrinet petrinet = petrinetData.getPetrinet();
-			JungData jungData = petrinetData.getJungData();
-			List<Rule> sortedRules = new ArrayList<Rule>();
-			for (Integer ruleId : ruleIDs) {
-				sortedRules.add(sessionManager.getRuleData(ruleId).getRule());
-			}
-			sortedRules = Collections.unmodifiableList(sortedRules);
-
-			for (int i = 0; i < n; i++) {
-				// Make sure a random rule is selected each time
-				List<Rule> shuffledRules = new ArrayList<Rule>(sortedRules);
-				Collections.shuffle(shuffledRules);
-				// Find matching rule and apply it
-				Transformation transformation = findMatchingRule(shuffledRules,
-						petrinet);
-				// Remove deleted elements from display
-				jungData.deleteDataOfMissingElements(petrinet);
-				// Add new elements to display
-				fillJungDataWithNewElements(jungData,
-						transformation.getAddedNodes(),
-						transformation.getAddedArcs());
-			}
+		for (int i = 0; i < n; i++) {
+			// Make sure a random rule is selected each time
+			List<Rule> shuffledRules = new ArrayList<Rule>(sortedRules);
+			Collections.shuffle(shuffledRules);
+			// Find matching rule and apply it
+			Transformation transformation = findMatchingRule(shuffledRules,
+					petrinet);
+			// Remove deleted elements from display
+			jungData.deleteDataOfMissingElements(petrinet);
+			// Add new elements to display
+			fillJungDataWithNewElements(jungData,
+					transformation.getAddedNodes(),
+					transformation.getAddedArcs());
 		}
 	}
 
@@ -148,18 +147,19 @@ public class SimulationHandler implements ISimulation {
 	 * @param addedArcs
 	 */
 	private void fillJungDataWithNewElements(JungData jungData,
-			Set<INode> addedNodes, Set<Arc> addedArcs) {
+			Set<INode> addedNodes, Set<IArc> addedArcs) {
 		//Add nodes at "random" position
 		for (INode node : addedNodes) {
 			jungData.createPlaceOrTransition(node);
 		}
+		
 		//Add arcs
-		for (Arc arc : addedArcs) {
+		for (IArc arc : addedArcs) {
 			//Find out which method to call
-			if (arc.getStart() instanceof Place) {
-				jungData.createArc(arc, (Place)arc.getStart(), (Transition)arc.getEnd());
+			if (arc.getSource() instanceof Place) {
+				jungData.createArc(arc, (Place)arc.getSource(), (Transition)arc.getTarget());
 			}else{
-				jungData.createArc(arc, (Transition)arc.getStart(), (Place)arc.getEnd());
+				jungData.createArc(arc, (Transition)arc.getSource(), (Place)arc.getTarget());
 			}
 		}
 

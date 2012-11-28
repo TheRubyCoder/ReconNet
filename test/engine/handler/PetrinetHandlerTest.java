@@ -10,8 +10,8 @@ import java.awt.geom.Point2D;
 import org.junit.Before;
 import org.junit.Test;
 
-import petrinet.Arc;
-import petrinet.INode;
+import petrinet.model.IArc;
+import petrinet.model.INode;
 import engine.handler.petrinet.PetrinetManipulation;
 import engine.handler.petrinet.PetrinetPersistence;
 import engine.ihandler.IPetrinetManipulation;
@@ -52,15 +52,15 @@ public class PetrinetHandlerTest {
 	private INode transition4 = null;
 
 	// Arcs ******************************************************************
-	private Arc arc1;
-	private Arc arc2;
-	private Arc arc3;
-	private Arc arc4;
-	private Arc arc5;
-	private Arc arc6;
-	private Arc arc7;
-	private Arc arc8;
-	private Arc arc9;
+	private IArc arc1;
+	private IArc arc2;
+	private IArc arc3;
+	private IArc arc4;
+	private IArc arc5;
+	private IArc arc6;
+	private IArc arc7;
+	private IArc arc8;
+	private IArc arc9;
 
 	@Before
 	public void setUp() throws Exception {

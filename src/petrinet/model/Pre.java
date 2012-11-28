@@ -1,34 +1,43 @@
-package petrinet;
+package petrinet.model;
 
 import java.util.Arrays;
 
 /**
- * Das Objekt bildet das Post-State eines Petrinetzes.
- * Und Liefert entsprechende Methoden.
- * 
+ * Das Objekt bildet das Pre-State eines Petrinetzes. Und Liefert entsprechende
+ * Methoden.
  */
-public class Post{
+public class Pre{
 
-	private int[][] post;
-
+	private int[][] pre;
 	private int[] tIds;
-
 	private int[] pIds;
 
-	Post(int[][] post, int[] pId, int[] tId) {
+	Pre(int[][] pre, int[] pId, int[] tId) {
 		this.pIds = pId;
 		this.tIds = tId;
-		this.post = post;
+		this.pre = pre;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null)
 			return false;
-		if (!(obj instanceof Post))
+		if (!(obj instanceof Pre))
 			return false;
-		Post other = (Post) obj;
-		return Arrays.deepEquals(getPostAsArray(), other.getPostAsArray());
+		Pre other = (Pre) obj;
+		return Arrays.deepEquals(getPreAsArray(), other.getPreAsArray());
+	}
+
+	/**
+	 * Liefert das Pre von dem entsprechenden Petrinetz Kantengewichte der
+	 * jeweiligen Transitionen und Stellen.
+	 * 
+	 * 0 1 3 6 1 1 3 2 2 2 5 3 3 1 3 1
+	 * 
+	 * @return Senkrecht: Stellen Waagerecht: Transitionen
+	 */
+	public int[][] getPreAsArray() {
+		return pre;
 	}
 
 	/**
@@ -37,7 +46,7 @@ public class Post{
 	 * @return Array mit den Ids.
 	 */
 	public int[] getTransitionIds() {
-		return this.tIds;
+		return tIds;
 	}
 
 	/**
@@ -58,37 +67,20 @@ public class Post{
 		return toString().split("=")[1].split("tIds")[0];
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		final String nl = System.getProperty("line.separator", "\n");
-		StringBuilder sb = new StringBuilder("Post [post=").append(nl);
+		StringBuilder sb = new StringBuilder("Pre [pre=").append(nl);
 
 		for (int i = 0; i < pIds.length; i++) {
 			for (int z = 0; z < tIds.length; z++) {
-				sb.append(" [").append(post[i][z]).append(']');
+				sb.append(" [").append(pre[i][z]).append(']');
 			}
 			sb.append(nl);
 		}
 
-		return sb.append(", tIds=").append(Arrays.toString(tIds))
+		return sb.append("tIds=").append(Arrays.toString(tIds))
 				.append(", pIds=").append(Arrays.toString(pIds)).append(']')
 				.toString();
-	}
-
-	/**
-	 * Liefert das Post von dem entsprechenden Petrinetz. Das heißt, die
-	 * Kantengewichte der jeweiligen Transitionen und Stellen.
-	 * 
-	 * 0 1 3 6 1 1 3 2 2 2 5 3 3 1 3 1
-	 * 
-	 * @return Senkrecht: Stellen Waagerecht: Transitionen
-	 */
-	public int[][] getPostAsArray() {
-		return this.post;
 	}
 }

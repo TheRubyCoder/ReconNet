@@ -1,11 +1,13 @@
-package petrinet;
+package petrinet.model.rnw;
+
+import petrinet.model.IRenew;
 
 /**
  * Renew that keeps the label as it is. The Label is represented as
  * {@link String}. The guiString is "id"
  * 
  */
-public class RenewId implements IRenew {
+final public class Identity implements IRenew {
 
 	@Override
 	public String renew(String tlb) {

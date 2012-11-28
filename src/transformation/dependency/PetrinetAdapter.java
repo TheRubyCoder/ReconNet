@@ -1,7 +1,7 @@
 package transformation.dependency;
 
-import petrinet.Petrinet;
 import petrinet.PetrinetComponent;
+import petrinet.model.Petrinet;
 
 public class PetrinetAdapter {
 	

@@ -3,9 +3,9 @@ package engine.ihandler;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.IRenew;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.IRenew;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
@@ -33,7 +33,7 @@ public interface IPetrinetPersistence {
 	 * @param to Target of the Arc
 	 * @throws EngineException 
 	 */
-	public Arc createArc(int id, INode from, INode to) throws EngineException;
+	public IArc createArc(int id, INode from, INode to) throws EngineException;
 	
 	/**
 	 * 
@@ -72,7 +72,7 @@ public interface IPetrinetPersistence {
 	 * @param arc which attributes are wanted
 	 * @return ArcAttribute
 	 */
-	public ArcAttribute getArcAttribute(int id, Arc arc);
+	public ArcAttribute getArcAttribute(int id, IArc arc);
 	
 	/**
 	 * Gets the JungLayout from the Petrinet
@@ -82,7 +82,7 @@ public interface IPetrinetPersistence {
 	 * @throws EngineException 
 	 */
 	
-	public AbstractLayout<INode, Arc> getJungLayout(int id) throws EngineException; 
+	public AbstractLayout<INode, IArc> getJungLayout(int id) throws EngineException; 
 	
 	/**
 	 * Gets the Attributes from a Place
@@ -152,7 +152,7 @@ public interface IPetrinetPersistence {
 	 * @param weight weight of the arc
 	 * @throws EngineException 
 	 */
-	public void setWeight(int id, Arc arc, int weight) throws EngineException;
+	public void setWeight(int id, IArc arc, int weight) throws EngineException;
 	
 	/**
 	 * 

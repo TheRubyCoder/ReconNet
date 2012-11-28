@@ -6,9 +6,9 @@ import java.awt.geom.Point2D;
 
 import org.junit.Test;
 
-import petrinet.Arc;
-import petrinet.INode;
-import petrinet.Place;
+import petrinet.model.IArc;
+import petrinet.model.INode;
+import petrinet.model.Place;
 
 import engine.handler.rule.RuleManipulation;
 import engine.handler.rule.RulePersistence;
@@ -27,10 +27,10 @@ public class RuleHandlerTest {
 		try {
 			INode place1 = foo.createPlace(id, RuleNet.R, new Point2D.Double(10,10));
 			INode transition1 = foo.createTransition(id, RuleNet.R, new Point2D.Double(50,50));
-			Arc arc1 = foo.createArc(id, RuleNet.R, place1, transition1);
+			IArc arc1 = foo.createArc(id, RuleNet.R, place1, transition1);
 			INode place2 = foo.createPlace(id, RuleNet.K, new Point2D.Double(100,10));
 			INode transition2 = foo.createTransition(id, RuleNet.K, new Point2D.Double(100,50));
-			Arc arc2 = foo.createArc(id, RuleNet.K, transition2, place2);
+			IArc arc2 = foo.createArc(id, RuleNet.K, transition2, place2);
 			//foo.createArc(id, RuleNet.K, place2, transition2);
 			foo.setPname(id, place1, "Place in R");
 			foo.setPname(id, place2, "Place in K");

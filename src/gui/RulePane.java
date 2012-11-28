@@ -10,8 +10,8 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import petrinet.Arc;
-import petrinet.INode;
+import petrinet.model.IArc;
+import petrinet.model.INode;
 import transformation.TransformationComponent;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import engine.handler.RuleNet;
@@ -88,11 +88,11 @@ class RulePane {
 	public void displayRule(int ruleId) {
 		currentId = ruleId;
 		try {
-			Layout<INode, Arc> lLayout = EngineAdapter.getRuleManipulation()
+			Layout<INode, IArc> lLayout = EngineAdapter.getRuleManipulation()
 					.getJungLayout(ruleId, RuleNet.L);
-			Layout<INode, Arc> kLayout = EngineAdapter.getRuleManipulation()
+			Layout<INode, IArc> kLayout = EngineAdapter.getRuleManipulation()
 					.getJungLayout(ruleId, RuleNet.K);
-			Layout<INode, Arc> rLayout = EngineAdapter.getRuleManipulation()
+			Layout<INode, IArc> rLayout = EngineAdapter.getRuleManipulation()
 					.getJungLayout(ruleId, RuleNet.R);
 			if (lViewer != null) {
 				lViewer.removeFrom(lBorderPanel);

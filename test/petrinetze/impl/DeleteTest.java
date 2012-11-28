@@ -7,8 +7,8 @@ import java.util.HashSet;
 
 import org.junit.*;
 
-import petrinet.Petrinet;
 import petrinet.PetrinetComponent;
+import petrinet.model.Petrinet;
 
 import data.MorphismData;
 
@@ -31,7 +31,7 @@ public class DeleteTest {
 		Petrinet petrinet = MorphismData.getPetrinetIsomorphismPlacesTo();
 		int toDeletePlace = MorphismData.getIdMatchesInRule2();
 		
-		Collection<Integer> deleted = PetrinetComponent.getPetrinet().deleteElementInPetrinet(petrinet.getId(), toDeletePlace);
+		Collection<Integer> deleted = PetrinetComponent.getPetrinet().removeElementFromPetrinet(petrinet.getId(), toDeletePlace);
 		assertEquals(6,deleted.size());
 		assertEquals(MorphismData.getIdsOfPlaceAndArcsOfThirdPlace(),
 				new HashSet<Integer>(deleted));
@@ -42,12 +42,12 @@ public class DeleteTest {
 		int toDeleteTransitionPre = MorphismData.getIdPreTransiotionOfThird();
 		int toDeleteTransitionPost = MorphismData.getIdPostTransiotionOfThird();
 		
-		Collection<Integer> deletedPre = PetrinetComponent.getPetrinet().deleteElementInPetrinet(nPetrinet.getId(), toDeleteTransitionPre);
+		Collection<Integer> deletedPre = PetrinetComponent.getPetrinet().removeElementFromPetrinet(nPetrinet.getId(), toDeleteTransitionPre);
 		assertEquals(2,deletedPre.size());
 		assertEquals(MorphismData.getIdsOfTransitionPreAndArcsOfThirdPlace(),
 				new HashSet<Integer>(deletedPre));
 		
-		Collection<Integer> deletedPost = PetrinetComponent.getPetrinet().deleteElementInPetrinet(nPetrinet.getId(), toDeleteTransitionPost);
+		Collection<Integer> deletedPost = PetrinetComponent.getPetrinet().removeElementFromPetrinet(nPetrinet.getId(), toDeleteTransitionPost);
 		assertEquals(2,deletedPost.size());
 		assertEquals(MorphismData.getIdsOfTransitionPostAndArcsOfThirdPlace(),
 				new HashSet<Integer>(deletedPost));
@@ -57,10 +57,10 @@ public class DeleteTest {
 	public void checkReturnValueArc(){
 		int toDeleteArc = MorphismData.getIdOfDeleteArc();
 		
-		Collection<Integer> deletedArc = PetrinetComponent.getPetrinet().deleteElementInPetrinet(nPetrinet.getId(),toDeleteArc );
+		Collection<Integer> deletedArc = PetrinetComponent.getPetrinet().removeElementFromPetrinet(nPetrinet.getId(),toDeleteArc );
 		assertEquals(1,deletedArc.size());
 		assertEquals(deletedArc.iterator().next(),(Integer)toDeleteArc);
-		Collection<Integer> deleteNothing = PetrinetComponent.getPetrinet().deleteElementInPetrinet(nPetrinet.getId(),toDeleteArc );
+		Collection<Integer> deleteNothing = PetrinetComponent.getPetrinet().removeElementFromPetrinet(nPetrinet.getId(),toDeleteArc );
 		assertTrue(deleteNothing.isEmpty());
 	}
 

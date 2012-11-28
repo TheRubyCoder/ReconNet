@@ -1,4 +1,4 @@
-package petrinet;
+package petrinet.model;
 
 /**
  * Indicating types of nodes in petrinets.
