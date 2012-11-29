@@ -4,12 +4,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import petrinet.model.ElementType;
 import petrinet.model.IArc;
 import petrinet.model.INode;
-import petrinet.model.IRenew;
 import petrinet.model.Petrinet;
 import petrinet.model.Place;
+import petrinet.model.PostArc;
 import petrinet.model.PreArc;
 import petrinet.model.Transition;
 import exceptions.EngineException;
@@ -22,55 +21,55 @@ public class Transformation {
 
 	private final Petrinet petrinet;
 	private final Morphism morphism;
-	private final Rule rule;
+	private final Rule     rule;
+	
 	// New for Engine
-	private Set<INode> addedNodes   = null;
-	private Set<INode> deletedNodes = null;
-	private Set<IArc>  addedArcs    = null;
-	private Set<IArc>  deletedArcs  = null;
+	private Set<Place> addedPlaces   = null;
+	private Set<Place> deletedPlaces = null;
+	
+	private Set<Transition> addedTransitions   = null;
+	private Set<Transition> deletedTransitions = null;
+
+	private Set<PreArc>   addedPreArcs     = null;
+	private Set<PreArc>   deletedPreArcs   = null;
+
+	private Set<PostArc>  addedPostArcs    = null;
+	private Set<PostArc>  deletedPostArcs  = null;
 
 	/**
 	 * Constructor for the class Transformation
 	 * 
-	 * @param net
-	 *            ,the petrinet to transform
-	 * @param morph
-	 *            , the morphism to use
-	 * @param r
-	 *            , the rule that should apply
+	 * @param net    the petrinet to transform
+	 * @param morph  the morphism to use
+	 * @param rule   the rule that should apply
 	 */
 	private Transformation(Petrinet petrinet, Morphism morphism, Rule rule) {
 		this.petrinet = petrinet;
 		this.morphism = morphism;
-		this.rule = rule;
-
+		this.rule     = rule;
 	}
 
 	/**
 	 * Creates a new Transformation with given parameters
 	 * 
-	 * @param petrinet
-	 *            Petrinet to transform
-	 * @param morphism
-	 *            Morphism to use the rule under
-	 * @param rule
-	 *            Rule to apply to petrinet
+	 * @param petrinet   Petrinet to transform
+	 * @param morphism   Morphism to use the rule under
+	 * @param rule       Rule to apply to petrinet
 	 * @return the transformation
 	 */
 	static Transformation createTransformation(Petrinet petrinet,
 			Morphism morphism, Rule rule) {
+		
 		return new Transformation(petrinet, morphism, rule);
 	}
 
 	/**
 	 * Creates a new Transformation with given parameters
 	 * 
-	 * @param petrinet
-	 *            Petrinet to transform
-	 * @param morphism
-	 *            Morphism to use the rule under
-	 * @param rule
-	 *            Rule to apply to petrinet
+	 * @param petrinet   Petrinet to transform
+	 * @param morphism   Morphism to use the rule under
+	 * @param rule       Rule to apply to petrinet
+	 * 
 	 * @return the transformation<br/>
 	 *         <tt>null</tt>if no Morphism found
 	 */
@@ -79,12 +78,13 @@ public class Transformation {
 
 		Morphism tempMorphism = MorphismFactory.createMorphism(rule.getL(),
 				petrinet);
-		// Morphism found?
-		if (tempMorphism != null) {
-			return new Transformation(petrinet, tempMorphism, rule);
-		} else {
-			return null;
+		
+		// no Morphism found?
+		if (tempMorphism == null) {
+			return null;			
 		}
+		
+		return new Transformation(petrinet, tempMorphism, rule);
 	}
 
 	/**
@@ -124,102 +124,138 @@ public class Transformation {
 	 *             When contact condition is not fulfilled
 	 */
 	Transformation transform() throws EngineException {
-		if (contactConditionFulfilled(getPetrinet(), getRule(), getMorphism())) {
-			addedNodes   = new HashSet<INode>();
-			deletedNodes = new HashSet<INode>();
-			addedArcs    = new HashSet<IArc>();
-			deletedArcs  = new HashSet<IArc>();
-			Petrinet   kNet   = rule.getK();
-			Set<INode> kNodes = kNet.getAllGraphElement().getAllNodes();
-			Set<IArc>  kArcs  = kNet.getArcs();
-			
-			for (INode kNode : kNodes) // Add K - L Places
-			{
-				if (rule.fromKtoL(kNode) == null) { // If K not in L do,.....
-					if (kNode instanceof Place) {
-						Place n = petrinet.addPlace(kNode.getName());
-						addedNodes.add(n);
-						morphism.getPlacesMorphism().put((Place) kNode, n);
-					} else {
-						IRenew rnw = ((Transition) kNode).getRnw();
-						Transition n = petrinet.addTransition(
-								kNode.getName(), rnw);
-						addedNodes.add(n);
-						morphism.getTransitionsMorphism().put(
-								(Transition) kNode, n);
-					}
-				} else {
-					// just add the nodes to create d
-					if (kNode instanceof Place) {
-						morphism.getPlacesMorphism().put(
-								(Place) kNode,
-								morphism.getPlaceMorphism((Place) rule
-										.fromKtoL(kNode)));
-					} else {
-						morphism.getTransitionsMorphism()
-								.put((Transition) kNode,
-										morphism.getTransitionMorphism((Transition) rule
-												.fromKtoL(kNode)));
-					}
-				}
-			}
-			for (IArc a : kArcs) { // Add K - L Arcs
-				if (rule.fromKtoL(a) == null) {
-					if (a.getSource() instanceof Place) {
-						IArc n = petrinet.addPreArc(
-							a.getName(),
-							(Place) morphism.getPlaceMorphism((Place) a.getSource()),
-							(Transition) morphism.getTransitionMorphism((Transition) a.getTarget())
-						);
-						addedArcs.add(n);
-						morphism.getArcsMorphism().put(a, n);						
-					} else {
-						IArc n = petrinet.addPostArc(
-							a.getName(), 
-							(Transition) morphism.getTransitionMorphism((Transition) a.getSource()), 
-							(Place) morphism.getPlaceMorphism((Place) a.getTarget())
-						);
-						addedArcs.add(n);
-						morphism.getArcsMorphism().put(a, n);
-					}
-				} else {
-					// just add the edges to create d
-					morphism.getArcsMorphism().put(a,
-							morphism.getArcMorphism(rule.fromKtoL(a)));
-				}
-			}
-			for (INode i : kNodes) // Delete K - R Places and check for contact
-									// condition
-			{
-				if (rule.fromKtoR(i) == null) {
-					if (i instanceof Place) {
-						Place deletedPlace = morphism.getPlaceMorphism((Place) i);						
-						deletedNodes.add(deletedPlace);											
-						petrinet.removePlace(deletedPlace.getId());						
-					} else {
-						Transition deletedTranstion = morphism.getTransitionMorphism((Transition) i);		
-						deletedNodes.add(deletedTranstion);
-						petrinet.removeTransition(deletedTranstion.getId());
-					}
-				}
-			}
-			
-			for (IArc i : kArcs) { // Delete K - R Arcs
-				if (rule.fromKtoR(i) == null) {		
-					deletedArcs.add(i);		
-					
-					IArc deletedArc = morphism.getArcMorphism(i);	
-					
-					if (petrinet.getArc(deletedArc.getId()) != null) {			
-						petrinet.removeArc(deletedArc.getId());
-					}
-				}
-			}
-
-			return this;
-		} else {
+		if (!contactConditionFulfilled(getPetrinet(), getRule(), getMorphism())) {
 			throw new EngineException("Kontaktbedingung verletzt");
 		}
+
+		addedPlaces        = new HashSet<Place>();
+		deletedPlaces      = new HashSet<Place>();		
+		
+		addedTransitions   = new HashSet<Transition>();
+		deletedTransitions = new HashSet<Transition>();
+		
+		addedPreArcs       = new HashSet<PreArc>();
+		deletedPreArcs     = new HashSet<PreArc>();
+		
+		addedPostArcs      = new HashSet<PostArc>();
+		deletedPostArcs    = new HashSet<PostArc>();		
+		
+		Petrinet      kNet = rule.getK();
+		
+		// Add new places, map k to these new Places
+		for (Place placeToAdd : rule.getPlacesToAdd()) {			
+			Place newPlace = petrinet.addPlace(placeToAdd.getName());
+			addedPlaces.add(newPlace);
+			morphism.getPlacesMorphism().put(rule.fromRtoK(placeToAdd), newPlace);
+		}
+
+		// Add new transitions, map k to these new Places
+		for (Transition transitionToAdd : rule.getTransitionsToAdd()) {			
+			Transition newTransition = petrinet.addTransition(transitionToAdd.getName(), transitionToAdd.getRnw());			
+			addedTransitions.add(newTransition);
+			morphism.getTransitionsMorphism().put(rule.fromRtoK(transitionToAdd), newTransition);
+		}
+
+		// map remaining old K places to the match of L
+		for (Place place : kNet.getPlaces()) {
+			if (morphism.getPlacesMorphism().get(place) == null) {
+				morphism.getPlacesMorphism().put(
+					place,
+					morphism.getPlaceMorphism(rule.fromKtoL(place))
+				);
+			}
+		}
+
+		// map remaining old K transitions to the match of L
+		for (Transition transition : kNet.getTransitions()) {
+			if (morphism.getTransitionsMorphism().get(transition) == null) {
+				morphism.getTransitionsMorphism().put(
+					transition,
+					morphism.getTransitionMorphism(rule.fromKtoL(transition))
+				);
+			}
+		}
+		
+		// Add new preArcs, map k preArcs to these 
+		for (PreArc preArcToAdd : rule.getPreArcsToAdd()) {	
+			PreArc newPreArc = petrinet.addPreArc(
+				preArcToAdd.getName(),
+				morphism.getPlaceMorphism(rule.fromRtoK(preArcToAdd.getPlace())),
+				morphism.getTransitionMorphism(rule.fromRtoK(preArcToAdd.getTransition()))
+			);
+			addedPreArcs.add(newPreArc);
+			morphism.getArcsMorphism().put(preArcToAdd, newPreArc);
+		}
+
+		// Add new postArcs, map k preArcs to these
+		for (PostArc postArcToAdd : rule.getPostArcsToAdd()) {	
+			PostArc newPostArc = petrinet.addPostArc(
+				postArcToAdd.getName(),
+				morphism.getTransitionMorphism(rule.fromRtoK(postArcToAdd.getTransition())),
+				morphism.getPlaceMorphism(rule.fromRtoK(postArcToAdd.getPlace()))
+			);
+			addedPostArcs.add(newPostArc);
+			morphism.getArcsMorphism().put(postArcToAdd, newPostArc);
+		}
+
+		// map remaining old K preArcs to the match of L
+		for (PreArc preArc : kNet.getPreArcs()) {
+			if (morphism.getArcsMorphism().get(preArc) == null) {
+				morphism.getArcsMorphism().put(
+					preArc,
+					morphism.getArcMorphism(rule.fromKtoL(preArc))
+				);
+			}
+		}
+
+		// map remaining old K postArcs to the match of L
+		for (PostArc postArc : kNet.getPostArcs()) {
+			if (morphism.getArcsMorphism().get(postArc) == null) {
+				morphism.getArcsMorphism().put(
+					postArc,
+					morphism.getArcMorphism(rule.fromKtoL(postArc))
+				);
+			}
+		}
+
+
+		// Delete K - R Places
+		for (Place placeToDelete : rule.getPlacesToDelete()) {
+			Place deletedPlace = morphism.getPlaceMorphism(rule.fromLtoK(placeToDelete));
+			deletedPlaces.add(deletedPlace);				
+			petrinet.removePlace(deletedPlace);				
+		}
+
+		// Delete K - R Transitions
+		for (Transition transitionToDelete : rule.getTransitionsToDelete()) {
+			Transition deletedTransition = morphism.getTransitionMorphism(rule.fromLtoK(transitionToDelete));
+			deletedTransitions.add(deletedTransition);				
+			petrinet.removeTransition(deletedTransition);				
+		}
+		
+		// Deleted K - R PreArcs
+		for (PreArc preArcToDelete : rule.getPreArcsToDelete()) {
+			PreArc deletedArc = (PreArc) morphism.getArcMorphism(rule.fromLtoK(preArcToDelete));
+
+			deletedPreArcs.add(deletedArc);	
+			
+			if (petrinet.containsPreArc(deletedArc)) {			
+				petrinet.removeArc(deletedArc);
+			}				
+		}
+		
+		// Deleted K - R PostArcs
+		for (PostArc postArcToDelete : rule.getPostArcsToDelete()) {	
+			PostArc deletedArc = (PostArc) morphism.getArcMorphism(rule.fromLtoK(postArcToDelete));	
+
+			deletedPostArcs.add(deletedArc);	
+			
+			if (petrinet.containsPostArc(deletedArc)) {			
+				petrinet.removeArc(deletedArc);
+			}				
+		}
+
+		return this;
 	}
 
 	/**
@@ -227,22 +263,38 @@ public class Transformation {
 	 * fulfilled. Which means: Are all incident Arcs of <tt>node</tt> also
 	 * mapped in the morphism?
 	 */
-	private boolean contactConditionFulfilled(INode node, Morphism morphism,
+	private boolean contactConditionFulfilled(Place place, Morphism morphism,
 			Petrinet toNet, Petrinet fromNet) {
-		ElementType nodeType = fromNet.getNodeType(node.getId());
-		INode mappedNode = null;
-		if (nodeType == ElementType.PLACE) {
-			mappedNode = morphism.getPlaceMorphism((Place) node);
-		} else {
-			mappedNode = morphism.getTransitionMorphism((Transition) node);
-		}
-		List<IArc> incidentArcs = toNet.getIncidetenArcs(mappedNode
-				.getId());
+		
+		Place      mappedNode   = morphism.getPlaceMorphism(place);
+		List<IArc> incidentArcs = toNet.getIncidetenArcs(mappedNode.getId());
+		
 		for (IArc arc : incidentArcs) {
 			if (!morphism.getArcsMorphism().containsValue(arc)) {
 				return false;
 			}
 		}
+		
+		return true;
+	}
+
+	/**
+	 * Returns <tt>true</tt> if the contact condition for <tt>node</tt> is
+	 * fulfilled. Which means: Are all incident Arcs of <tt>node</tt> also
+	 * mapped in the morphism?
+	 */
+	private boolean contactConditionFulfilled(Transition transition, Morphism morphism,
+			Petrinet toNet, Petrinet fromNet) {
+		
+		INode      mappedNode   = morphism.getTransitionMorphism(transition);
+		List<IArc> incidentArcs = toNet.getIncidetenArcs(mappedNode.getId());
+		
+		for (IArc arc : incidentArcs) {
+			if (!morphism.getArcsMorphism().containsValue(arc)) {
+				return false;
+			}
+		}
+		
 		return true;
 	}
 
@@ -250,8 +302,7 @@ public class Transformation {
 	 * Returns <tt>true</tt> if the contact condition for all Nodes in K-R is
 	 * fulfilled.
 	 * 
-	 * @see {link
-	 *      {@link Transformation#contactConditionFulfilled(INode, Morphism, Petrinet)}
+	 * @see   {link {@link Transformation#contactConditionFulfilled(INode, Morphism, Petrinet)}
 	 * @param petrinet
 	 * @param rule
 	 * @param morphism
@@ -259,47 +310,84 @@ public class Transformation {
 	 */
 	private boolean contactConditionFulfilled(Petrinet petrinet, Rule rule,
 			Morphism morphism) {
-		List<INode> nodesToDelete = rule.getNodesToDelete();
-		for (INode node : nodesToDelete) {
-			if (!contactConditionFulfilled(node, getMorphism(), getPetrinet(),
-					getRule().getL())) {
+
+		for (Place place : rule.getPlacesToDelete()) {
+			if (!contactConditionFulfilled(place, getMorphism(), getPetrinet(), getRule().getL())) {
 				return false;
 			}
 		}
+
+		for (Transition transition : rule.getTransitionsToDelete()) {
+			if (!contactConditionFulfilled(transition, getMorphism(), getPetrinet(), getRule().getL())) {
+				return false;
+			}
+		}
+		
 		return true;
 
 	}
 
-	public Set<INode> getAddedNodes() {
-		if (addedNodes == null) {
-			return new HashSet<INode>();
-		} else {
-			return addedNodes;
-		}
+	public Set<Place> getAddedPlaces() {
+		if (addedPlaces == null) {
+			return new HashSet<Place>();
+		} 
+			
+		return addedPlaces;
 	}
 
-	public Set<INode> getDeletedNodes() {
-		if (deletedNodes == null) {
-			return new HashSet<INode>();
-		} else {
-			return deletedNodes;
-		}
+	public Set<Place> getDeletedPlaces() {
+		if (deletedPlaces == null) {
+			return new HashSet<Place>();
+		} 
+			
+		return deletedPlaces;
 	}
 
-	public Set<IArc> getAddedArcs() {
-		if (addedArcs == null) {
-			return new HashSet<IArc>();
-		} else {
-			return addedArcs;
-		}
+	public Set<Transition> getAddedTransitions() {
+		if (addedTransitions == null) {
+			return new HashSet<Transition>();
+		} 
+			
+		return addedTransitions;
 	}
 
-	public Set<IArc> getDeletedArcs() {
-		if (deletedArcs == null) {
-			return new HashSet<IArc>();
-		} else {
-			return deletedArcs;
-		}
+	public Set<Transition> getDeletedTransitions() {
+		if (deletedTransitions == null) {
+			return new HashSet<Transition>();
+		} 
+			
+		return deletedTransitions;
 	}
 
+	public Set<PreArc> getAddedPreArcs() {
+		if (addedPreArcs == null) {
+			return new HashSet<PreArc>();
+		}
+
+		return addedPreArcs;
+	}
+
+	public Set<PreArc> getDeletedPreArcs() {
+		if (deletedPreArcs == null) {
+			return new HashSet<PreArc>();
+		}
+
+		return deletedPreArcs;
+	}
+
+	public Set<PostArc> getAddedPostArcs() {
+		if (addedPostArcs == null) {
+			return new HashSet<PostArc>();
+		}
+
+		return addedPostArcs;
+	}
+
+	public Set<PostArc> getDeletedPostArcs() {
+		if (deletedPostArcs == null) {
+			return new HashSet<PostArc>();
+		}
+
+		return deletedPostArcs;
+	}
 }

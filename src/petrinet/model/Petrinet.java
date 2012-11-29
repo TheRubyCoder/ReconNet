@@ -27,11 +27,6 @@ final public class Petrinet {
 	private final int id;
 
 	/**
-	 * Listeners attached to this petrinet
-	 */
-	private final Set<IPetrinetListener> listeners = new HashSet<IPetrinetListener>();
-
-	/**
 	 * Places of this petrinet
 	 */
 	private Map<Integer, Place> places;
@@ -81,6 +76,10 @@ final public class Petrinet {
 	 */
 	public PostArc addPostArc(String name, Transition transition, Place place) {
 		if (name == null || place == null || transition == null) {
+			System.out.println(name);
+			System.out.println(place);
+			System.out.println(transition);
+			System.out.println(this);
 			throw new IllegalArgumentException();
 		}
 
@@ -92,7 +91,6 @@ final public class Petrinet {
 
 		postArcs.put(id, arc);
 
-		onEdgeChanged(arc, ActionType.ADDED);
 		return arc;
 	}
 	
@@ -105,7 +103,7 @@ final public class Petrinet {
 	 * @return The new {@link PreArc}
 	 * @throws IllegalArgumentException
 	 */
-	public IArc addPreArc(String name, Place place, Transition transition) {
+	public PreArc addPreArc(String name, Place place, Transition transition) {
 		if (name == null || place == null || transition == null) {
 			throw new IllegalArgumentException();
 		}
@@ -118,7 +116,6 @@ final public class Petrinet {
 
 		preArcs.put(id, arc);
 
-		onEdgeChanged(arc, ActionType.ADDED);
 		return arc;
 	}
 	
@@ -130,8 +127,16 @@ final public class Petrinet {
 		return preArcs.containsKey(id);
 	}
 	
+	public boolean containsPreArc(PreArc preArc) {
+		return preArcs.containsKey(preArc.getId());
+	}
+	
 	public boolean containsPostArc(int id) {
 		return postArcs.containsKey(id);
+	}
+	
+	public boolean containsPostArc(PostArc postArc) {
+		return postArcs.containsKey(postArc.getId());
 	}
 	
 	/**
@@ -156,13 +161,21 @@ final public class Petrinet {
 		
 		return arcs;
 	}
+
+	public Set<PreArc> getPreArcs() {
+		return new HashSet<PreArc>(preArcs.values());
+	}
+
+	public Set<PostArc> getPostArcs() {
+		return new HashSet<PostArc>(postArcs.values()); 
+	}
 	
 	/**
 	 * removes an arc from the petrinet
 	 * 
 	 * @param arc  {@link PostArc} to be removed
 	 */
-	private void removeArc(PostArc arc) {
+	public void removeArc(PostArc arc) {
 		if (arc == null) {
 			throw new IllegalArgumentException();
 		}
@@ -170,7 +183,6 @@ final public class Petrinet {
 		arc.getTransition().removeOutgoingArc(arc);
 
 		postArcs.remove(arc.getId());
-		onEdgeChanged(arc, ActionType.REMOVED);
 	}
 	
 	/**
@@ -178,7 +190,7 @@ final public class Petrinet {
 	 * 
 	 * @param arc  {@link PreArc} to be removed
 	 */
-	private void removeArc(PreArc arc) {
+	public void removeArc(PreArc arc) {
 		if (arc == null) {
 			throw new IllegalArgumentException();
 		}
@@ -186,7 +198,6 @@ final public class Petrinet {
 		arc.getTransition().removeIncomingArc(arc);
 
 		preArcs.remove(arc.getId());
-		onEdgeChanged(arc, ActionType.REMOVED);
 	}
 
 	public void removeArc(int id) {
@@ -229,9 +240,11 @@ final public class Petrinet {
 		place.setName(name);
 		places.put(id, place);
 		
-		onNodeChanged(place, ActionType.ADDED);
-		
 		return place;
+	}
+	
+	public boolean containsPlace(Place place) {
+		return places.containsKey(place.getId());
 	}
 	
 	public boolean containsPlace(int id) {
@@ -250,6 +263,15 @@ final public class Petrinet {
 
 	public Set<Place> getPlaces() {
 		return new HashSet<Place>(places.values());
+	}
+	
+	/**
+	 * removes an place 
+	 * 
+	 * @param place the place that will be removed
+	 */
+	public void removePlace(Place place) {
+		removePlace(place.getId());
 	}
 	
 	/**
@@ -275,7 +297,6 @@ final public class Petrinet {
 		}
 
 		places.remove(id);
-		onNodeChanged(place, ActionType.REMOVED);
 	}
 	
 	
@@ -303,8 +324,6 @@ final public class Petrinet {
 		transition.setName(name);
 		transitions.put(id, transition);
 		
-		onNodeChanged(transition, ActionType.ADDED);
-		
 		return transition;
 	}
 
@@ -317,6 +336,10 @@ final public class Petrinet {
 	 */
 	public Transition addTransition(String name) {
 		return addTransition(name, Renews.IDENTITY);
+	}
+	
+	public boolean containsTransition(Transition transition) {
+		return transitions.containsKey(transition.getId());
 	}
 	
 	public boolean containsTransition(int id) {
@@ -360,6 +383,15 @@ final public class Petrinet {
 	public Set<Transition> getTransitions() {
 		return new HashSet<Transition>(transitions.values());
 	}
+	
+	/**
+	 * removes a {@link Transition} 
+	 * 
+	 * @param transition the transition that will be removed
+	 */
+	public void removeTransition(Transition transition) {
+		removeTransition(transition.getId());
+	}
 
 	
 	/**
@@ -387,7 +419,6 @@ final public class Petrinet {
 		}
 
 		transitions.remove(id);
-		onNodeChanged(transition, ActionType.REMOVED);
 	}
 
 	
@@ -400,10 +431,9 @@ final public class Petrinet {
 	/**
 	 * Checks whether a node or arc is part of this petrinet
 	 */
-	public boolean contains(INode nodeOrArc) {
-		return getArcs().contains(nodeOrArc)
-			|| getPlaces().contains(nodeOrArc)
-			|| getTransitions().contains(nodeOrArc);
+	public boolean contains(INode node) {
+		return getPlaces().contains(node)
+			|| getTransitions().contains(node);
 	}
 	
 	
@@ -450,7 +480,6 @@ final public class Petrinet {
 
 			result.add(place.getId());
 			places.remove(place.getId());
-			onNodeChanged(place, ActionType.REMOVED);
 		} else if (getNodeType(id) == ElementType.TRANSITION) {
 			Transition transition = getTransition(id);
 			result.add(transition.getId());
@@ -466,7 +495,6 @@ final public class Petrinet {
 			}
 
 			transitions.remove(transition.getId());
-			onNodeChanged(transition, ActionType.REMOVED);
 		}
 
 		return result;
@@ -556,25 +584,6 @@ final public class Petrinet {
 		Transition transition = transitions.get(id);
 
 		return transition.fire();
-	}
-
-	/**
-	 * Fires the {@link Petrinet#onNodeChanged(INode, ActionType)} event for all
-	 * <code>nodes</code>
-	 * 
-	 * @param nodes
-	 *            Nodes that have been changed
-	 * @param action
-	 *            changed, removed or added?
-	 */
-	public void fireChanged(Iterable<INode> nodes, ActionType action) {
-		for (INode node : nodes) {
-			try {
-				onNodeChanged(node, action);
-			} catch (Exception ex) {
-				throw new ShowAsWarningException(ex);
-			}
-		}
 	}
 
 	/**
@@ -745,47 +754,6 @@ final public class Petrinet {
 		return graphElements;
 	}
 
-	/**
-	 * Attaches a {@link IPetrinetListener} to this petrinet
-	 * 
-	 * @param listener
-	 */
-	public void addPetrinetListener(IPetrinetListener listener) {
-		listeners.add(listener);
-
-	}
-
-	public void removePetrinetListener(IPetrinetListener listener) {
-		listeners.remove(listener);
-	}
-
-	/**
-	 * Notify all listeners, that a node has changed. This will also be called
-	 * by all Nodes in this petrinet.
-	 * 
-	 * @param element
-	 *            the element which has changed
-	 * @param actionType
-	 *            the ActionType
-	 */
-	void onNodeChanged(INode element, ActionType actionType) {
-		for (IPetrinetListener listener : new HashSet<IPetrinetListener>(listeners)) {
-			listener.changed(this, element, actionType);
-		}
-	}
-
-	/**
-	 * Notify all listeners, that a node has changed. This will also be called
-	 * by Edges in this petrinet.
-	 * 
-	 * @param element     the element which has changed
-	 * @param actionType  the ActionType
-	 */
-	void onEdgeChanged(IArc element, ActionType actionType) {		
-		for (IPetrinetListener listener : new HashSet<IPetrinetListener>(listeners)) {
-			listener.changed(this, element, actionType);
-		}
-	}
 
 	/**
 	 * Returns the {@link INode} with <code>id</code>

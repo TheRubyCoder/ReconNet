@@ -28,11 +28,11 @@ public class Rule3Data {
 	}
 	
 	static {
-		addSubnetToPetrinet(rule.getR());
+		addSubnetToPetrinet(rule);
 	}
 
-	private static void addSubnetToPetrinet(Petrinet petrinet) {
-		newPlace = petrinet.addPlace("NewPlace");
+	private static void addSubnetToPetrinet(Rule rule) {
+		newPlace = rule.addPlaceToR("NewPlace");
 	}
 
 

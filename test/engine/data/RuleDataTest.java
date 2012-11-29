@@ -60,12 +60,12 @@ public class RuleDataTest {
         graph = new DirectedSparseGraph<INode, IArc>();
         jungr = new JungData(graph, new StaticLayout<INode, IArc>(graph));
 
-        Place 	   place1      = rule.getL().addPlace("test1");
-        Transition transition1 = rule.getL().addTransition("test2");
-        rule.getK().addPlace("test3");
-        rule.getR().addTransition("test4");
+        Place 	   place1      = rule.addPlaceToL("test1");
+        Transition transition1 = rule.addTransitionToL("test2");
+        rule.addPlaceToK("test3");
+        rule.addTransitionToR("test4");
         
-        rule.getL().addPreArc("test5", place1, transition1);
+        rule.addPreArcToL("test5", place1, transition1);
 
         buildJung(rule.getL(), jungl);
         buildJung(rule.getK(), jungk);

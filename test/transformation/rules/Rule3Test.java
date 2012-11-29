@@ -51,9 +51,11 @@ public class Rule3Test {
 	@Test
 	public void testRightMorphism() {
 		nPetrinet = Rule3Data.getnPetrinet();
-		rule = Rule3Data.getRule();
-		newPlace = Rule3Data.getNewPlace();
+		rule      = Rule3Data.getRule();
+		newPlace  = Rule3Data.getNewPlace();
+
 		applyingRule();
+
 		assertFalse("nPetrinet should not be empty", nPetrinet.isEmpty());
 		
 		//find added place

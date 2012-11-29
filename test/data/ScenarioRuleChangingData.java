@@ -73,14 +73,12 @@ public class ScenarioRuleChangingData {
 		emptyRule = TransformationComponent.getTransformation().createRule();
 
 		ruleWithOnePlaceInLKR = TransformationComponent.getTransformation().createRule();
-		ruleWithOnePlaceInLKR.getK().addPlace("P1");
+		ruleWithOnePlaceInLKR.addPlaceToK("P1");
 
 		ruleWithOnePlaceAndOneTransition = TransformationComponent.getTransformation().createRule();
-		Place placeInK = ruleWithOnePlaceAndOneTransition.getK().addPlace(
-				"P1");
-		Transition transitionInK = ruleWithOnePlaceAndOneTransition.getK()
-				.addTransition("A");
-		ruleWithOnePlaceAndOneTransition.getK().addPreArc("", placeInK,
+		Place placeInK = ruleWithOnePlaceAndOneTransition.addPlaceToK("P1");
+		Transition transitionInK = ruleWithOnePlaceAndOneTransition.addTransitionToK("A");
+		ruleWithOnePlaceAndOneTransition.addPreArcToK("", placeInK,
 				transitionInK);
 	}
 

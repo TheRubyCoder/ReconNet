@@ -15,6 +15,8 @@ import petrinet.model.IArc;
 import petrinet.model.INode;
 import petrinet.model.Petrinet;
 import petrinet.model.Place;
+import petrinet.model.PostArc;
+import petrinet.model.PreArc;
 import petrinet.model.Transition;
 import transformation.ITransformation;
 import transformation.Rule;
@@ -132,9 +134,13 @@ public class SimulationHandler implements ISimulation {
 			// Remove deleted elements from display
 			jungData.deleteDataOfMissingElements(petrinet);
 			// Add new elements to display
-			fillJungDataWithNewElements(jungData,
-					transformation.getAddedNodes(),
-					transformation.getAddedArcs());
+			fillJungDataWithNewElements(
+				jungData,
+				transformation.getAddedPlaces(),
+				transformation.getAddedTransitions(),
+				transformation.getAddedPreArcs(),
+				transformation.getAddedPostArcs()
+			);
 		}
 	}
 
@@ -147,22 +153,29 @@ public class SimulationHandler implements ISimulation {
 	 * @param addedArcs
 	 */
 	private void fillJungDataWithNewElements(JungData jungData,
-			Set<INode> addedNodes, Set<IArc> addedArcs) {
-		//Add nodes at "random" position
-		for (INode node : addedNodes) {
-			jungData.createPlaceOrTransition(node);
+			Set<Place> addedPlaces, Set<Transition> addedTransitions,
+			Set<PreArc> addedPreArcs, Set<PostArc> addedPostArcs) {
+
+		//Add places at "random" position
+		for (Place place : addedPlaces) {
+			jungData.createPlace(place);
+		}
+
+		//Add transitions at "random" position
+		for (Transition transition : addedTransitions) {
+			jungData.createTransition(transition);
 		}
 		
 		//Add arcs
-		for (IArc arc : addedArcs) {
+		for (PreArc arc : addedPreArcs) {
 			//Find out which method to call
-			if (arc.getSource() instanceof Place) {
-				jungData.createArc(arc, (Place)arc.getSource(), (Transition)arc.getTarget());
-			}else{
-				jungData.createArc(arc, (Transition)arc.getSource(), (Place)arc.getTarget());
-			}
+			jungData.createArc(arc, arc.getSource(), arc.getTarget());
 		}
 
+		for (PostArc arc : addedPostArcs) {
+			//Find out which method to call			
+			jungData.createArc(arc, arc.getSource(), arc.getTarget());
+		}
 	}
 
 	/**

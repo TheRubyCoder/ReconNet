@@ -10,8 +10,7 @@
  * The most important class in this component is the 
  * {@link transformation.Rule Rule} which is composed of three petrinets and
  * explicit morphisms among their nodes or to be more precise between L<->K 
- * and K<->R. It uses {@link petrinet.model.IPetrinetListener petrinet listeners} to
- * automatically add nodes to other part of rules.
+ * and K<->R.
  * A {@link transformation.Morphism Morphism} is just an information holding 
  * class without any high level logic. It just combines the source and target
  * petrinets as well as mappings between their elements into one handy object.

@@ -25,15 +25,4 @@ public class TransformationAdapter {
 	{
 		return TransformationComponent.getTransformation().transform(net, rule);
 	}
-	
-	/**
-	 * Sets the mark of a node in a rule and modifies other parts of rule accordingly
-	 * @param rule Rule in wich the node is included
-	 * @param placeId id of place
-	 * @param mark new value for mark
-	 * @return needs to be defined by engine group
-	 */
-	public static void setMark(Rule rule, int placeId, int mark){
-		TransformationComponent.getTransformation().setMark(rule, placeId, mark);
-	}
 }

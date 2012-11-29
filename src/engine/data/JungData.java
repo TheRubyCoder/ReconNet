@@ -198,15 +198,21 @@ final public class JungData {
 	}
 
 	/**
-	 * Creates a place or transition at a position that is chosen automatically
+	 * Creates a place at a position that is chosen automatically
 	 * 
 	 * @param place
 	 */
-	public void createPlaceOrTransition(INode node) {
-		check(getJungGraph().addVertex(node), "" + node
-				+ " could not be added to JUNG graph");
+	public void createPlace(Place place) {
+		createPlace(place, findPositionForNewNode());
+	}
 
-		getJungLayout().setLocation(node, findPositionForNewNode());
+	/**
+	 * Creates a transition at a position that is chosen automatically
+	 * 
+	 * @param place
+	 */
+	public void createTransition(Transition transition) {
+		createTransition(transition, findPositionForNewNode());
 	}
 
 	/**
@@ -654,8 +660,7 @@ final public class JungData {
 	 * @param excludes
 	 *            dont't check to these nodes
 	 */
-	private void checkPoint2DLocation(Point2D point, Collection<INode> excludes) {
-
+	private void checkPoint2DLocation(Point2D point, Collection<INode> excludes) {		
 		for (INode node : graph.getVertices()) {
 			if (excludes.contains(node)) {
 				continue;

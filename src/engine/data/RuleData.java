@@ -137,15 +137,18 @@ final public class RuleData extends SessionDataAbstract {
 	 *             if nodes are in the way
 	 */
 	public void moveNodeRelative(INode node, Point2D coordinate) {
+		
 		if (!getKJungData().isCreatePossibleAt(coordinate)) {
 			throw new ShowAsInfoException("Ein Knoten ist im Weg");
 		}
-
+		
 		List<INode> nodeMappings = TransformationComponent.getTransformation()
 				.getMappings(getRule(), node);
+		
 		INode nodeInL = nodeMappings.get(0);
 		INode nodeInK = nodeMappings.get(1);
 		INode nodeInR = nodeMappings.get(2);
+		
 		if (nodeInL != null) {
 			getLJungData().moveNodeWithoutPositionCheck(
 					nodeInL,

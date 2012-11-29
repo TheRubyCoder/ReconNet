@@ -25,14 +25,10 @@ public class PetrinetzTest {
 
     private Transition transition;
 
-	private SimpleListener listener;
-
 	@Before
 	public void setUp() throws Exception
 	{
 		p = PetrinetComponent.getPetrinet().createPetrinet();
-		listener = new SimpleListener();
-		p.addPetrinetListener(listener);
 
         place1 = p.addPlace("place1");
         place2 = p.addPlace("place2");
@@ -49,12 +45,10 @@ public class PetrinetzTest {
 		assertEquals(place1.getName(), "place1");
 		assertTrue(p.getPlaces().contains(place1));
 		assertTrue(p.getAllGraphElement().getAllNodes().contains(place1));
-		assertTrue(listener.AddedNodes.contains(place1));
 
 		assertEquals(place2.getName(), "place2");
 		assertTrue(p.getPlaces().contains(place2));
 		assertTrue(p.getAllGraphElement().getAllNodes().contains(place2));
-		assertTrue(listener.AddedNodes.contains(place2));
 	}
 	
 	@Test
@@ -64,7 +58,6 @@ public class PetrinetzTest {
 		assertTrue(p.getTransitions().contains(transition));
 		assertTrue(p.getAllGraphElement().getAllNodes().contains(transition));
 		assertEquals(Renews.COUNT, transition.getRnw());
-		assertTrue(listener.AddedNodes.contains(transition));
 	}
 	
 	@Test
@@ -78,7 +71,6 @@ public class PetrinetzTest {
 		assertEquals(place1, edge1.getSource());
 		assertEquals(transition, edge1.getTarget());
 		assertEquals(1, edge1.getMark());
-		assertTrue(listener.AddedEdges.contains(edge1));
 
 		IArc edge2 = p.addPostArc("edge2", transition, place2);
 		assertEquals("edge2", edge2.getName());
@@ -87,7 +79,6 @@ public class PetrinetzTest {
 		assertEquals(transition, edge2.getSource());
 		assertEquals(place2, edge2.getTarget());
 		assertEquals(1, edge2.getMark());
-		assertTrue(listener.AddedEdges.contains(edge2));
 	}
 	
 	@Test

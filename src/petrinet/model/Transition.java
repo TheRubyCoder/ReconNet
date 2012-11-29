@@ -64,12 +64,10 @@ public class Transition implements INode {
 
 	public void addIncomingArc(PreArc arc) {
 		this.incomingArcs.add(arc);
-		petrinet.onNodeChanged(this, ActionType.CHANGED);
 	}
 
 	public void addOutgoingArc(PostArc arc) {
 		this.outgoingArcs.add(arc);
-		petrinet.onNodeChanged(this, ActionType.CHANGED);
 	}
 
 	/*
@@ -138,7 +136,6 @@ public class Transition implements INode {
 	 */
 	public void setRnw(IRenew renew) {
 		this.rnw = renew;
-		petrinet.onNodeChanged(this, ActionType.CHANGED);
 	}
 
 	public IRenew getRnw() {
@@ -267,9 +264,6 @@ public class Transition implements INode {
 
 		// Renew
 		this.rnw();
-
-		// fire event
-		petrinet.fireChanged(changedNodes, ActionType.CHANGED);
 
 		return changedNodes;
 	}

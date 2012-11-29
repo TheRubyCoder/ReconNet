@@ -96,7 +96,6 @@ public final class PostArc implements IArc {
 		}
 		
 		this.mark = mark;
-		petrinet.onEdgeChanged(this, ActionType.CHANGED);
 	}
 
 	/* (non-Javadoc)

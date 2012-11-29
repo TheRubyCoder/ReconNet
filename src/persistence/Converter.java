@@ -848,13 +848,28 @@ public class Converter {
 
 			// inserting arcs
 			for (petrinet.model.IArc a : arcs) {
+				
 				Arc arc = new Arc();
 
 				// This "redirects" the variable place to the node in K in case
 				// it is not already a node in K
 				if (type != RuleNet.K) {
-					INode correspondingNode = type == RuleNet.L ? rule
-							.fromLtoK(a) : rule.fromRtoK(a);
+					petrinet.model.IArc correspondingNode;
+					
+					if (a instanceof petrinet.model.PreArc) {
+						correspondingNode = 
+								type == RuleNet.L 
+								? rule .fromLtoK((petrinet.model.PreArc) a) 
+								: rule.fromRtoK((petrinet.model.PreArc) a);
+							
+					} else {
+						correspondingNode = 
+								type == RuleNet.L 
+								? rule .fromLtoK((petrinet.model.PostArc) a) 
+								: rule.fromRtoK((petrinet.model.PostArc) a);
+						
+					}
+							
 					if (correspondingNode != null) {
 						a = (petrinet.model.IArc) correspondingNode;
 					}

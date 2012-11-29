@@ -5,6 +5,11 @@ import java.util.List;
 import petrinet.model.IArc;
 import petrinet.model.INode;
 import petrinet.model.Petrinet;
+import petrinet.model.Place;
+import petrinet.model.PostArc;
+import petrinet.model.PreArc;
+import petrinet.model.Transition;
+import transformation.Rule.Net;
 
 /**
  * Interface for accessing transformation component so other components do not
@@ -18,40 +23,6 @@ public interface ITransformation {
 	 * @return
 	 */
 	public Rule createRule();
-
-	/**
-	 * Sets the mark of a node in a rule and modifies other parts of rule
-	 * accordingly
-	 * 
-	 * @param rule
-	 *            Rule in wich the node is included
-	 * @param placeId
-	 *            id of place
-	 * @param mark
-	 *            new value for mark
-	 * @return 
-	 */
-	public void setMark(Rule rule, int placeId, int mark);
-	
-	/**
-	 * Sets the name of a node in a rule and modifies other parts of the rule accordingly
-	 * @param rule
-	 * @param nodeId
-	 * @param name
-	 */
-	public void setName(Rule rule, int nodeId, String name);
-
-	/**
-	 * Transformations the petrinet like defined in rule with random morphism
-	 * 
-	 * @param petrinet
-	 *            Petrinet to transform
-	 * @param rule
-	 *            Rule to apply to petrinet
-	 * @return the transformation that was used for transforming (containing
-	 *         rule, nNet and morphism)
-	 */
-	Transformation transform(Petrinet net, Rule rule);
 
 	/**
 	 * Returns the respective representations of a node
@@ -98,6 +69,18 @@ public interface ITransformation {
 	List<IArc> getMappings(Rule rule, IArc arc);
 
 	/**
+	 * Transformations the petrinet like defined in rule with random morphism
+	 * 
+	 * @param petrinet
+	 *            Petrinet to transform
+	 * @param rule
+	 *            Rule to apply to petrinet
+	 * @return the transformation that was used for transforming (containing
+	 *         rule, nNet and morphism)
+	 */
+	Transformation transform(Petrinet net, Rule rule);
+
+	/**
 	 * Stores the session id of a rule so it can be used in
 	 * {@link ITransformation#getMappings(int, INode)}
 	 * 
@@ -106,4 +89,8 @@ public interface ITransformation {
 	 */
 	void storeSessionId(int id, Rule rule);
 
+	Net getNet(Rule rule, Place place);
+	Net getNet(Rule rule, Transition transition);
+	Net getNet(Rule rule, PreArc preArc);
+	Net getNet(Rule rule, PostArc postArc);
 }

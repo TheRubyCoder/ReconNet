@@ -1,6 +1,6 @@
 package petrinet.model;
 
-public interface IArc extends INode {
+public interface IArc {
 
 	public abstract String getName();
 

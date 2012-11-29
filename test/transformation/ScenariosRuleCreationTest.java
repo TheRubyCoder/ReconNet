@@ -24,8 +24,8 @@ public class ScenariosRuleCreationTest {
 		Petrinet r = getRuleScenario1().getR();
 
 		// user action
-		k.addPlace("P1");
-
+		getRuleScenario1().addPlaceToK("P1");
+		
 		Place firstInK = k.getPlaces().iterator().next();
 		Place firstInL = l.getPlaces().iterator().next();
 		Place firstInR = r.getPlaces().iterator().next();
@@ -48,7 +48,7 @@ public class ScenariosRuleCreationTest {
 		Petrinet r = getRuleScenario2().getR();
 
 		// user action
-		l.addPlace("P1");
+		getRuleScenario2().addPlaceToL("P1");
 
 		Place firstInK = k.getPlaces().iterator().next();
 		Place firstInL = l.getPlaces().iterator().next();
@@ -73,7 +73,7 @@ public class ScenariosRuleCreationTest {
 		Petrinet r = getRuleScenario3().getR();
 
 		// user action
-		r.addPlace("P1");
+		getRuleScenario3().addPlaceToR("P1");
 
 		Place firstInK = k.getPlaces().iterator().next();
 		Place firstInR = r.getPlaces().iterator().next();
@@ -96,10 +96,10 @@ public class ScenariosRuleCreationTest {
 		Petrinet k = getRuleScenario4().getK();
 		Petrinet l = getRuleScenario4().getL();
 		Petrinet r = getRuleScenario4().getR();
-		int id = k.getPlaces().iterator().next().getId();
+		Place place = k.getPlaces().iterator().next();
 
 		// user action
-		k.removePlace(id);
+		getRuleScenario4().removePlaceFromK(place);
 
 		// L, K and R are equal?
 		assertTrue(l.equalsPetrinet(k));
@@ -121,26 +121,23 @@ public class ScenariosRuleCreationTest {
 		Petrinet k = getRuleScenario5().getK();
 		Petrinet l = getRuleScenario5().getL();
 		Petrinet r = getRuleScenario5().getR();
-		int id = l.getPlaces().iterator().next().getId();
+		Place place = l.getPlaces().iterator().next();
 
 		// user action
-		l.removePlace(id);
+		getRuleScenario5().removePlaceFromL(place);
 
 		// L and K are equal?
-		assertTrue(l.equalsPetrinet(k));
-		// R different?
-		assertFalse(r.equalsPetrinet(k));
-		assertFalse(r.equalsPetrinet(l));
+		assertTrue(l.equalsPetrinet(k));		
+		assertTrue(r.equalsPetrinet(k));
+		assertTrue(r.equalsPetrinet(l));
 
 		// L and K are empty?
 		assertTrue(l.getPlaces().isEmpty());
 		assertTrue(k.getPlaces().isEmpty());
+		assertTrue(r.getPlaces().isEmpty());
 		assertTrue(l.getTransitions().isEmpty());
 		assertTrue(k.getTransitions().isEmpty());
-
-		// R not empty?
-		assertEquals(1, r.getPlaces().size());
-		assertEquals(0, r.getTransitions().size());
+		assertTrue(r.getTransitions().isEmpty());
 	}
 
 	/** deleting in r */
@@ -149,26 +146,24 @@ public class ScenariosRuleCreationTest {
 		Petrinet k = getRuleScenario6().getK();
 		Petrinet l = getRuleScenario6().getL();
 		Petrinet r = getRuleScenario6().getR();
-		int id = r.getPlaces().iterator().next().getId();
+		Place place = r.getPlaces().iterator().next();
 
 		// user action
-		r.removePlace(id);
+		getRuleScenario6().removePlaceFromR(place);
+		
 
 		// R and K are equal?
 		assertTrue(r.equalsPetrinet(k));
-		// L different?
-		assertFalse(l.equalsPetrinet(k));
-		assertFalse(l.equalsPetrinet(r));
+		assertTrue(l.equalsPetrinet(k));
+		assertTrue(l.equalsPetrinet(r));
 
 		// R and K are empty?
 		assertTrue(r.getPlaces().isEmpty());
 		assertTrue(k.getPlaces().isEmpty());
+		assertTrue(r.getPlaces().isEmpty());
 		assertTrue(r.getTransitions().isEmpty());
 		assertTrue(k.getTransitions().isEmpty());
-
-		// L not empty?
-		assertEquals(1, l.getPlaces().size());
-		assertEquals(0, l.getTransitions().size());
+		assertTrue(r.getTransitions().isEmpty());
 	}
 
 	/** deleting transition in "complex" k */
@@ -177,10 +172,10 @@ public class ScenariosRuleCreationTest {
 		Petrinet k = getRuleScenario7().getK();
 		Petrinet l = getRuleScenario7().getL();
 		Petrinet r = getRuleScenario7().getR();
-		int id = k.getPlaces().iterator().next().getId();
+		Place place = k.getPlaces().iterator().next();
 
 		// user action
-		k.removePlace(id);
+		getRuleScenario7().removePlaceFromK(place);
 
 		// L, K and R are equal?
 		assertTrue(l.equalsPetrinet(k));
@@ -208,35 +203,29 @@ public class ScenariosRuleCreationTest {
 		Petrinet k = getRuleScenario8().getK();
 		Petrinet l = getRuleScenario8().getL();
 		Petrinet r = getRuleScenario8().getR();
-		int id = l.getPlaces().iterator().next().getId();
+		Place place = l.getPlaces().iterator().next();
 
 		// user action
-		l.removePlace(id);
-
+		getRuleScenario8().removePlaceFromL(place);
 		// L and K are equal?
 		assertTrue(l.equalsPetrinet(k));
-		// R different?
-		assertFalse(r.equalsPetrinet(k));
-		assertFalse(r.equalsPetrinet(l));
+		assertTrue(r.equalsPetrinet(k));
+		assertTrue(r.equalsPetrinet(l));
 
-		// L and K have no places?
+		// L, K and R have no places?
 		assertTrue(l.getPlaces().isEmpty());
 		assertTrue(k.getPlaces().isEmpty());
-		
-		// R has 1 place?
-		assertEquals(1, r.getPlaces().size());
+		assertTrue(r.getPlaces().isEmpty());
 
 		// L, K and R have one transition?
 		assertEquals(1, l.getTransitions().size());
 		assertEquals(1, k.getTransitions().size());
 		assertEquals(1, r.getTransitions().size());
 
-		// L and K have no arcs?
+		// L,K and R have no arcs?
 		assertTrue(l.getArcs().isEmpty());
 		assertTrue(k.getArcs().isEmpty());
-		
-		// R has one arc?
-		assertEquals(1,r.getArcs().size());
+		assertTrue(r.getArcs().isEmpty());
 	}
 	
 	/** deleting transition in "complex" r */
@@ -245,35 +234,30 @@ public class ScenariosRuleCreationTest {
 		Petrinet k = getRuleScenario9().getK();
 		Petrinet l = getRuleScenario9().getL();
 		Petrinet r = getRuleScenario9().getR();
-		int id = r.getPlaces().iterator().next().getId();
+		Place place = r.getPlaces().iterator().next();
 
 		// user action
-		r.removePlace(id);
-
+		getRuleScenario9().removePlaceFromR(place);
+		
 		// R and K are equal?
 		assertTrue(r.equalsPetrinet(k));
-		// L different?
-		assertFalse(l.equalsPetrinet(k));
-		assertFalse(l.equalsPetrinet(r));
+		assertTrue(l.equalsPetrinet(k));
+		assertTrue(l.equalsPetrinet(r));
 
-		// R and K have no places?
+		// L, R and K have no places?
+		assertTrue(l.getPlaces().isEmpty());
 		assertTrue(r.getPlaces().isEmpty());
 		assertTrue(k.getPlaces().isEmpty());
-		
-		// L has 1 place?
-		assertEquals(1, l.getPlaces().size());
 
 		// L, K and R have one transition?
 		assertEquals(1, l.getTransitions().size());
 		assertEquals(1, k.getTransitions().size());
 		assertEquals(1, r.getTransitions().size());
 
-		// R and K have no arcs?
+		// L, R and K have no arcs?
+		assertTrue(l.getArcs().isEmpty());
 		assertTrue(r.getArcs().isEmpty());
 		assertTrue(k.getArcs().isEmpty());
-		
-		// L has one arc?
-		assertEquals(1,l.getArcs().size());
 	}
 	
 	/** changing mark in k */
@@ -282,10 +266,10 @@ public class ScenariosRuleCreationTest {
 		Petrinet k = getRuleScenario13().getK();
 		Petrinet l = getRuleScenario13().getL();
 		Petrinet r = getRuleScenario13().getR();
-		int id = k.getPlaces().iterator().next().getId();
+		Place place =  k.getPlaces().iterator().next();
 
 		// user action
-		TransformationComponent.getTransformation().setMark(getRuleScenario13(), id, 3);
+		getRuleScenario13().setMarkInK(place, 3);
 		
 		Place firstInK = k.getPlaces().iterator().next();
 		Place firstInL = l.getPlaces().iterator().next();
@@ -312,10 +296,10 @@ public class ScenariosRuleCreationTest {
 		Petrinet k = getRuleScenario14().getK();
 		Petrinet l = getRuleScenario14().getL();
 		Petrinet r = getRuleScenario14().getR();
-		int id = l.getPlaces().iterator().next().getId();
+		Place place =  l.getPlaces().iterator().next();
 
 		// user action
-		TransformationComponent.getTransformation().setMark(getRuleScenario14(), id, 3);
+		getRuleScenario14().setMarkInL(place, 3);
 
 		Place firstInK = k.getPlaces().iterator().next();
 		Place firstInL = l.getPlaces().iterator().next();
@@ -326,12 +310,10 @@ public class ScenariosRuleCreationTest {
 		assertEquals("P1", firstInL.getName());
 		assertEquals("P1", firstInR.getName());
 
-		// L and K have mark 3?
+		// R, L and K have mark 3?
 		assertEquals(3,firstInK.getMark());
 		assertEquals(3,firstInL.getMark());
-		
-		// R has mark 0
-		assertEquals(0,firstInR.getMark());
+		assertEquals(3,firstInR.getMark());
 	}
 
 	/** changing mark in r */
@@ -340,10 +322,10 @@ public class ScenariosRuleCreationTest {
 		Petrinet k = getRuleScenario15().getK();
 		Petrinet l = getRuleScenario15().getL();
 		Petrinet r = getRuleScenario15().getR();
-		int id = r.getPlaces().iterator().next().getId();
+		Place place =  r.getPlaces().iterator().next();
 
 		// user action
-		TransformationComponent.getTransformation().setMark(getRuleScenario15(), id, 3);
+		getRuleScenario15().setMarkInR(place, 3);
 
 		Place firstInK = k.getPlaces().iterator().next();
 		Place firstInL = l.getPlaces().iterator().next();
@@ -357,8 +339,6 @@ public class ScenariosRuleCreationTest {
 		// R and K have mark 3?
 		assertEquals(3,firstInK.getMark());
 		assertEquals(3,firstInR.getMark());
-		
-		// L has mark 0
-		assertEquals(0,firstInL.getMark());
+		assertEquals(3,firstInL.getMark());
 	}
 }
