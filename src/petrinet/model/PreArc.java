@@ -8,7 +8,7 @@ public final class PreArc implements IArc {
 	/**
 	 * Maximal weight
 	 */
-	private int mark;
+	private int weight;
 
 	/**
 	 * Name of the arc
@@ -31,27 +31,20 @@ public final class PreArc implements IArc {
 	private final int id;
 
 	/**
-	 * The petrinet of the arc
-	 */
-	private final Petrinet petrinet;
-
-	/**
 	 * Creates a new arc
 	 * 
 	 * @param id       Unique id
-	 * @param petrinet The petrinet of the arc
 	 * @param source   source node of arc
 	 * @param target   target node of arc
 	 * @param name     name of arc
-	 * @param mark     arc marking
+	 * @param weight   arc weight
 	 */
-	public PreArc(int id, Petrinet petrinet, Place source, Transition target, String name, int mark) {		
+	public PreArc(int id, Place source, Transition target, String name, int weight) {		
 		this.id       = id;
-		this.petrinet = petrinet;
 		this.source   = source;
 		this.target   = target;
 		this.name     = name;
-		this.mark     = mark;
+		this.weight   = weight;
 	}
 
 	/* (non-Javadoc)
@@ -79,23 +72,23 @@ public final class PreArc implements IArc {
 	}
 
 	/* (non-Javadoc)
-	 * @see petrinet.model.IArc#getMark()
+	 * @see petrinet.model.IArc#getWeight()
 	 */
 	@Override
-	public int getMark() {
-		return mark;
+	public int getWeight() {
+		return weight;
 	}
 
 	/* (non-Javadoc)
-	 * @see petrinet.model.IArc#setMark(int)
+	 * @see petrinet.model.IArc#setWeight(int)
 	 */
 	@Override
-	public void setMark(int mark) {
-		if (mark <= 0) {
+	public void setWeight(int weight) {
+		if (weight <= 0) {
 			throw new IllegalArgumentException();
 		}
 		
-		this.mark = mark;
+		this.weight = weight;
 	}
 
 	/* (non-Javadoc)
@@ -125,7 +118,7 @@ public final class PreArc implements IArc {
 
 	@Override
 	public String toString() {
-		return "PreArc [mark=" + mark + ", name=" + name + ", place=" + source
+		return "PreArc [weight=" + weight + ", name=" + name + ", place=" + source
 				+ ", transition=" + target + ", id=" + id + "]";
 	}
 

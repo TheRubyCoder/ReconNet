@@ -117,8 +117,8 @@ public class Converter {
 			petrinet.model.IArc logicalArc) {
 		// Arc and ID
 		Arc pnmlArc = new Arc();
-		pnmlArc.setId(String.valueOf(logicalArc.getId()));
-
+		pnmlArc.setId(String.valueOf(logicalArc.getId()));		
+		
 		// End of Arc -- Place
 		String arcEnd = null;
 		for (Place place : places) {
@@ -166,7 +166,16 @@ public class Converter {
 		Inscription inscription = new Inscription();
 		inscription.setText(logicalArc.getName());
 		pnmlArc.setInscription(inscription);
-
+		
+		Weight weight = new Weight();
+		weight.setText(String.valueOf(logicalArc.getWeight()));
+		
+		Toolspecific toolspecific = new Toolspecific();
+		toolspecific.setTool("ReConNet");
+		toolspecific.setVersion("1.0");
+		toolspecific.setWeight(weight);
+		pnmlArc.setToolspecific(toolspecific);
+		
 		// Add to List
 		pnmlArcs.add(pnmlArc);
 	}
@@ -313,12 +322,15 @@ public class Converter {
 
 			// create places
 			for (Place place : pnml.getNet().get(0).page.place) {
-				INode realPlace = handler.createPlace(petrinetID,
+				petrinet.model.Place realPlace = handler.createPlace(petrinetID,
 						positionToPoint2D(place.getGraphics().getPosition()));
+				
 				handler.setPlaceColor(petrinetID, realPlace, place
 						.getGraphics().getColor().toAWTColor());
+				
 				handler.setPname(petrinetID, realPlace, place.getPlaceName()
 						.getText());
+				
 				handler.setMarking(petrinetID, realPlace,
 						Integer.parseInt(place.getInitialMarking().getText()));
 
@@ -328,7 +340,7 @@ public class Converter {
 			// create transitions
 			for (Transition pnmlTransition : pnml.getNet().get(0).getPage()
 					.getTransition()) {
-				INode realTransition = handler.createTransition(petrinetID,
+				petrinet.model.Transition realTransition = handler.createTransition(petrinetID,
 						positionToPoint2D(pnmlTransition.getGraphics()
 								.getPosition()));
 
@@ -346,10 +358,31 @@ public class Converter {
 
 			// create arcs
 			for (Arc arc : pnml.getNet().get(0).getPage().getArc()) {
-				handler.createArc(petrinetID, placesAndTransis.get(arc.source),
-						placesAndTransis.get(arc.target));
-
+				int weight = 1;
+				
+				if (arc.getToolspecific() != null) {
+					weight = Integer.valueOf(arc.getToolspecific().getWeight().getText());
+				}
+				
+				if (placesAndTransis.get(arc.source) instanceof petrinet.model.Place
+				 && placesAndTransis.get(arc.target) instanceof petrinet.model.Transition) {
+					petrinet.model.PreArc preArc = handler.createPreArc(
+						petrinetID, 
+						(petrinet.model.Place) 	    placesAndTransis.get(arc.source),
+						(petrinet.model.Transition) placesAndTransis.get(arc.target)
+					);
+					
+					handler.setWeight(petrinetID, preArc, weight);	
+				} else {
+					petrinet.model.PostArc postArc = handler.createPostArc(
+						petrinetID, 
+						(petrinet.model.Transition) placesAndTransis.get(arc.source),
+						(petrinet.model.Place) 	    placesAndTransis.get(arc.target)
+					);		
+					handler.setWeight(petrinetID, postArc, weight);				
+				}
 			}
+			
 			return petrinetID;
 		} catch (EngineException e) {
 			e.printStackTrace();
@@ -376,34 +409,36 @@ public class Converter {
 					"Die ausgewählte Datei enthält ein Petrinetz, keine Regel");
 		}
 		int id = handler.createRule();
-		handler.setNodeSize(id, pnml.getNodeSize());
 
-		Net lNet = pnml.getNet().get(0);
-		Net kNet = pnml.getNet().get(1);
-		Net rNet = pnml.getNet().get(2);
-
-		// Elements of L
-		List<Place> lPlaces = lNet.getPage().getPlace();
-		List<Transition> lTransis = lNet.getPage().getTransition();
-		List<Arc> lArcs = lNet.getPage().getArc();
-
-		// Elements of K
-		List<Place> kPlaces = kNet.getPage().getPlace();
-		List<Transition> kTransis = kNet.getPage().getTransition();
-		List<Arc> kArcs = kNet.getPage().getArc();
-
-		// Elements of R
-		List<Place> rPlaces = rNet.getPage().getPlace();
-		List<Transition> rTransis = rNet.getPage().getTransition();
-		List<Arc> rArcs = rNet.getPage().getArc();
-
-		/** Contains the created INode object for each XML-id */
-		Map<String, INode> idToINodeInL = new HashMap<String, INode>();
-		/** Contains the created INode object for each XML-id */
-		Map<String, INode> idToINodeInK = new HashMap<String, INode>();
-		/** Contains the created INode object for each XML-id */
-		Map<String, INode> idToINodeInR = new HashMap<String, INode>();
 		try {
+			handler.setNodeSize(id, pnml.getNodeSize());
+	
+			Net lNet = pnml.getNet().get(0);
+			Net kNet = pnml.getNet().get(1);
+			Net rNet = pnml.getNet().get(2);
+	
+			// Elements of L
+			List<Place> lPlaces = lNet.getPage().getPlace();
+			List<Transition> lTransis = lNet.getPage().getTransition();
+			List<Arc> lArcs = lNet.getPage().getArc();
+	
+			// Elements of K
+			List<Place> kPlaces = kNet.getPage().getPlace();
+			List<Transition> kTransis = kNet.getPage().getTransition();
+			List<Arc> kArcs = kNet.getPage().getArc();
+	
+			// Elements of R
+			List<Place> rPlaces = rNet.getPage().getPlace();
+			List<Transition> rTransis = rNet.getPage().getTransition();
+			List<Arc> rArcs = rNet.getPage().getArc();
+	
+			/** Contains the created INode object for each XML-id */
+			Map<String, INode> idToINodeInL = new HashMap<String, INode>();
+			/** Contains the created INode object for each XML-id */
+			Map<String, INode> idToINodeInK = new HashMap<String, INode>();
+			/** Contains the created INode object for each XML-id */
+			Map<String, INode> idToINodeInR = new HashMap<String, INode>();
+		
 			addPlacesToRule(id, lPlaces, kPlaces, rPlaces, handler,
 					idToINodeInL, idToINodeInK, idToINodeInR);
 			addTransitionsToRule(id, lTransis, kTransis, rTransis, handler,
@@ -416,6 +451,7 @@ public class Converter {
 			PopUp.popError(e);
 			e.printStackTrace();
 		}
+		
 		return id;
 	}
 
@@ -517,7 +553,31 @@ public class Converter {
 				source = idToINodeInR.get(arc.getSource());
 				target = idToINodeInR.get(arc.getTarget());
 			}
-			handler.createArc(id, toAddto, source, target);
+
+			int weight = 1;
+			
+			if (arc.getToolspecific() != null) {
+				weight = Integer.valueOf(arc.getToolspecific().getWeight().getText());
+			} 
+
+			if (source instanceof petrinet.model.Place
+			 && target instanceof petrinet.model.Transition) {
+				petrinet.model.PreArc preArc = handler.createPreArc(
+					id, 
+					toAddto, 
+					(petrinet.model.Place) 	    source,
+					(petrinet.model.Transition) target
+				);
+				handler.setWeight(id, preArc, weight);				
+			} else {
+				petrinet.model.PostArc postArc = handler.createPostArc(
+					id, 
+					toAddto, 
+					(petrinet.model.Transition) source,
+					(petrinet.model.Place) 	    target
+				);		
+				handler.setWeight(id, postArc, weight);				
+			}
 		}
 
 	}
@@ -559,7 +619,7 @@ public class Converter {
 			} else {
 				toAddto = RuleNet.R;
 			}
-			INode createdPlace = handler.createPlace(id, toAddto,
+			petrinet.model.Place createdPlace = handler.createPlace(id, toAddto,
 					positionToPoint2D(place.getGraphics().getPosition()));
 			handler.setPlaceColor(id, createdPlace, place.getGraphics()
 					.getColor().toAWTColor());
@@ -616,7 +676,7 @@ public class Converter {
 			} else {
 				toAddto = RuleNet.R;
 			}
-			INode createdTransition = handler.createTransition(id, toAddto,
+			petrinet.model.Transition createdTransition = handler.createTransition(id, toAddto,
 					positionToPoint2D(transition.getGraphics().getPosition()));
 			handler.setTlb(id, createdTransition, transition
 					.getTransitionLabel().getText());
@@ -892,6 +952,15 @@ public class Converter {
 				Inscription inscription = new Inscription();
 				inscription.setText(a.getName());
 				arc.setInscription(inscription);
+				
+				Weight weight = new Weight();
+				weight.setText(String.valueOf(a.getWeight()));
+				
+				Toolspecific toolspecific = new Toolspecific();
+				toolspecific.setTool("ReConNet");
+				toolspecific.setVersion("1.0");
+				toolspecific.setWeight(weight);
+				arc.setToolspecific(toolspecific);
 
 				// Source and Target
 				arc.setSource(String.valueOf(a.getSource().getId()));

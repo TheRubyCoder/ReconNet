@@ -1,7 +1,10 @@
 package petrinet.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.apache.commons.collections15.BidiMap;
+import org.apache.commons.collections15.bidimap.DualHashBidiMap;
 
 /**
  * This class represents a place within a petrinet, holding information about
@@ -22,13 +25,13 @@ public class Place implements INode {
 	 */
 	private final int id;
 	/**
-	 * list of incoming arcs
+	 * bijective Map of incoming arcs
 	 */
-	private List<PostArc> incomingArcs;
+	private BidiMap<Integer, PostArc> incomingArcs;
 	/**
-	 * list of outgoing arcs
+	 * bijective Map of outgoing arcs
 	 */
-	private List<PreArc> outgoingArcs;
+	private BidiMap<Integer, PreArc> outgoingArcs;
 
 	/**
 	 * Creates a new {@link Place} without name or arcs
@@ -36,24 +39,24 @@ public class Place implements INode {
 	 */
 	public Place(int id) {
 		this.id           = id;
-		this.incomingArcs = new ArrayList<PostArc>();
-		this.outgoingArcs = new ArrayList<PreArc>();
+		this.incomingArcs = new DualHashBidiMap<Integer, PostArc>();
+		this.outgoingArcs = new DualHashBidiMap<Integer, PreArc>();
 	}
 
 	public void addIncomingArc(PostArc arc) {
-		this.incomingArcs.add(arc);
+		this.incomingArcs.put(arc.getId(), arc);
 	}
 
 	public void addOutgoingArc(PreArc arc) {
-		this.outgoingArcs.add(arc);
+		this.outgoingArcs.put(arc.getId(), arc);
 	}
 
-	public List<PostArc> getIncomingArcs() {
-		return incomingArcs;
+	public Set<PostArc> getIncomingArcs() {
+		return incomingArcs.values();
 	}
 
-	public List<PreArc> getOutgoingArcs() {
-		return outgoingArcs;
+	public Set<PreArc> getOutgoingArcs() {
+		return outgoingArcs.values();
 	}
 
 	/**
@@ -62,7 +65,7 @@ public class Place implements INode {
 	 * @return <code>false</code> if arc was not in the outgoing arcs
 	 */
 	public boolean removeOutgoingArc(PreArc arc) {
-		return outgoingArcs.remove(arc);
+		return outgoingArcs.remove(arc.getId()) != null;
 	}
 
 	/**
@@ -71,7 +74,7 @@ public class Place implements INode {
 	 * @return <code>false</code> if arc was not in the incoming arcs
 	 */
 	public boolean removeIncomingArc(PostArc arc) {
-		return incomingArcs.remove(arc);
+		return incomingArcs.remove(arc.getId()) != null;
 	}
 
 	/**
@@ -79,11 +82,11 @@ public class Place implements INode {
 	 * of incoming arcs
 	 * @return
 	 */
-	public List<Transition> getIncomingTransitions() {
-		List<Transition> in = new ArrayList<Transition>();
+	public Set<Transition> getIncomingTransitions() {
+		Set<Transition> in = new HashSet<Transition>();
 		
-		for (PostArc arc : incomingArcs) {
-			in.add(arc.getSource());
+		for (PostArc arc : incomingArcs.values()) {
+			in.add(arc.getTransition());
 		}
 		
 		return in;
@@ -94,11 +97,11 @@ public class Place implements INode {
 	 * of outgoing arcs
 	 * @return
 	 */
-	public List<Transition> getOutgoingTransitions() {
-		List<Transition> out = new ArrayList<Transition>();
+	public Set<Transition> getOutgoingTransitions() {
+		Set<Transition> out = new HashSet<Transition>();
 		
-		for (PreArc arc : outgoingArcs) {
-			out.add(arc.getTarget());
+		for (PreArc arc : outgoingArcs.values()) {
+			out.add(arc.getTransition());
 		}
 		
 		return out;
@@ -148,6 +151,10 @@ public class Place implements INode {
 	 * @see haw.wp.rcpn.Place#setMark(int)
 	 */
 	public void setMark(int mark) {
+		if (mark < 0) {
+			throw new IllegalArgumentException("mark is negative");
+		}
+		
 		this.mark = mark;
 	}
 

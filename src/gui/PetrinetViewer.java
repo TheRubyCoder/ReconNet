@@ -35,9 +35,16 @@ import petrinet.model.Place;
 import petrinet.model.Renews;
 import petrinet.model.Transition;
 import edu.uci.ics.jung.algorithms.layout.Layout;
+import edu.uci.ics.jung.graph.Graph;
+import edu.uci.ics.jung.graph.util.Context;
 import edu.uci.ics.jung.visualization.RenderContext;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.PickingGraphMousePlugin;
+import edu.uci.ics.jung.visualization.decorators.EdgeShape;
+import edu.uci.ics.jung.visualization.decorators.EdgeShape.BentLine;
+import edu.uci.ics.jung.visualization.decorators.EdgeShape.CubicCurve;
+import edu.uci.ics.jung.visualization.decorators.EdgeShape.Line;
+import edu.uci.ics.jung.visualization.decorators.EdgeShape.QuadCurve;
 import edu.uci.ics.jung.visualization.renderers.Renderer.Vertex;
 import edu.uci.ics.jung.visualization.transform.shape.GraphicsDecorator;
 import engine.attribute.ArcAttribute;
@@ -125,7 +132,9 @@ public class PetrinetViewer extends VisualizationViewer<INode, IArc> {
 				new PetrinetArcLabelTransformer(this));
 		getRenderContext().setVertexShapeTransformer(
 				new PetrinetNodeShapeTransformer(this));
+		getRenderContext().setEdgeShapeTransformer(new PetrinetArcShapeTransformer());
 	}
+	
 
 	/** Add this {@link PetrinetViewer} to the <code>component</code> */
 	void addTo(JPanel component) {
@@ -266,14 +275,18 @@ public class PetrinetViewer extends VisualizationViewer<INode, IArc> {
 	 * @see PetrinetViewer#resizeNodes(float)
 	 */
 	private void changeNodeSizeInJungData(double nodeSize) {
-		if (isN()) {
-			EngineAdapter.getPetrinetManipulation().setNodeSize(getCurrentId(),
-					nodeSize);
-		} else {
-			EngineAdapter.getRuleManipulation().setNodeSize(getCurrentId(),
-					nodeSize);
+		try {
+			if (isN()) {
+				EngineAdapter.getPetrinetManipulation().setNodeSize(getCurrentId(),
+						nodeSize);
+			} else {
+				EngineAdapter.getRuleManipulation().setNodeSize(getCurrentId(),
+						nodeSize);
+			}
+		} catch (EngineException e) {
+			PopUp.popError(e);
+			e.printStackTrace();
 		}
-
 	}
 
 	/**
@@ -316,12 +329,17 @@ public class PetrinetViewer extends VisualizationViewer<INode, IArc> {
 	 * @param point
 	 */
 	public void moveAllNodesTo(float factor, Point point) {
-		if (isN()) {
-			EngineAdapter.getPetrinetManipulation().moveAllNodesTo(
-					getCurrentId(), factor, point);
-		} else {
-			EngineAdapter.getRuleManipulation().moveAllNodesTo(getCurrentId(),
-					factor, point);
+		try {
+			if (isN()) {
+				EngineAdapter.getPetrinetManipulation().moveAllNodesTo(
+						getCurrentId(), factor, point);
+			} else {
+				EngineAdapter.getRuleManipulation().moveAllNodesTo(getCurrentId(),
+						factor, point);
+			}
+		} catch (EngineException e) {
+			PopUp.popError(e);
+			e.printStackTrace();
 		}
 	}
 
@@ -1430,6 +1448,24 @@ public class PetrinetViewer extends VisualizationViewer<INode, IArc> {
 			} else {
 				return String.valueOf(weight);
 			}
+		}
+	}
+
+	/**
+	 * Transforming Arcs Shapes. Actually just used for drawing straight or bent lines
+	 */
+	private static class PetrinetArcShapeTransformer extends
+	edu.uci.ics.jung.visualization.decorators.AbstractEdgeShapeTransformer<INode, IArc> {
+		private QuadCurve<INode, IArc>  curve = new EdgeShape.QuadCurve<INode, IArc>(); 
+		private Line<INode, IArc>      line = new EdgeShape.Line<INode, IArc>(); 
+
+		@Override
+		public Shape transform(Context<Graph<INode, IArc>, IArc> context) {			
+			if (context.graph.findEdge(context.element.getTarget(), context.element.getSource()) != null) {
+				return curve.transform(context);				
+			}
+			
+			return line.transform(context);
 		}
 	}
 

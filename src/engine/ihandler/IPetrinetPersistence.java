@@ -3,13 +3,11 @@ package engine.ihandler;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
-import petrinet.model.IArc;
-import petrinet.model.INode;
 import petrinet.model.IRenew;
-import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
-import engine.attribute.ArcAttribute;
-import engine.attribute.PlaceAttribute;
-import engine.attribute.TransitionAttribute;
+import petrinet.model.Place;
+import petrinet.model.Transition;
+import petrinet.model.PreArc;
+import petrinet.model.PostArc;
 import engine.data.JungData;
 import exceptions.EngineException;
 
@@ -24,27 +22,36 @@ import exceptions.EngineException;
  */
 
 public interface IPetrinetPersistence {
-
 	/**
-	 * Creates an Arc
+	 * Creates an PreArc
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param from Source of the Arc
-	 * @param to Target of the Arc
+	 * @param  id   		ID of the Petrinet
+	 * @param  place        Place of the Arc
+	 * @param  transition   Transition of the Arc
 	 * @throws EngineException 
 	 */
-	public IArc createArc(int id, INode from, INode to) throws EngineException;
+	public PreArc createPreArc(int id, Place place, Transition transition) throws EngineException;
+
+	/**
+	 * Creates an PostArc
+	 * 
+	 * @param  id   		ID of the Petrinet
+	 * @param  transition 	Transition of the Arc
+	 * @param  place   		Place of the Arc
+	 * @throws EngineException 
+	 */
+	public PostArc createPostArc(int id, Transition transition, Place place) throws EngineException;
 	
 	/**
 	 * 
 	 * Creates a Place
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param coordinate Point where the Place will be created
+	 * @param  id ID of the Petrinet
+	 * @param  coordinate Point where the Place will be created
 	 * @throws EngineException 
 	 * 
 	 */
-	public INode createPlace(int id, Point2D coordinate) throws EngineException;
+	public Place createPlace(int id, Point2D coordinate) throws EngineException;
 	
 	/**
 	 * 
@@ -58,52 +65,13 @@ public interface IPetrinetPersistence {
 	/**
 	 * Creates a Transition
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param coordinate Point where the Transition will be created
+	 * @param  id ID of the Petrinet
+	 * @param  coordinate Point where the Transition will be created
 	 * @return 
 	 * @throws EngineException 
 	 */
-	public INode createTransition(int id, Point2D coordinate) throws EngineException;
-	
-	/**
-	 * Gets the Attributes from an Arc
-	 * 
-	 * @param id ID of the Petrinet
-	 * @param arc which attributes are wanted
-	 * @return ArcAttribute
-	 */
-	public ArcAttribute getArcAttribute(int id, IArc arc);
-	
-	/**
-	 * Gets the JungLayout from the Petrinet
-	 * 
-	 * @param id ID of the Petrinet
-	 * @return AbstractLayout
-	 * @throws EngineException 
-	 */
-	
-	public AbstractLayout<INode, IArc> getJungLayout(int id) throws EngineException; 
-	
-	/**
-	 * Gets the Attributes from a Place
-	 * 
-	 * @param id ID of the Petrinet
-	 * @param place which attributes are wanted
-	 * @return PlaceAtrribute
-	 * @throws EngineException 
-	 */
-	public PlaceAttribute getPlaceAttribute(int id, INode place) throws EngineException;
-	
-	/**
-	 * Gets the Attributes from a Transition
-	 * 
-	 * @param id ID of the Petrinet
-	 * @param transition which attributes are wanted
-	 * @return TransitionAttribute
-	 * @throws EngineException 
-	 */
-	public TransitionAttribute getTransitionAttribute(int id, INode transition) throws EngineException;
-	
+	public Transition createTransition(int id, Point2D coordinate) throws EngineException;
+				
 	/**
 	 * Sets the Marking of a Place.
 	 * 
@@ -112,7 +80,7 @@ public interface IPetrinetPersistence {
 	 * @param marking amount of mark 
 	 * @throws EngineException 
 	 */
-	public void setMarking(int id, INode place, int marking) throws EngineException;
+	public void setMarking(int id, Place place, int marking) throws EngineException;
 	
 	/**
 	 * Sets the PName of a Place.
@@ -122,7 +90,7 @@ public interface IPetrinetPersistence {
 	 * @param pname PName
 	 * @throws EngineException 
 	 */
-	public void setPname(int id, INode place, String pname) throws EngineException;
+	public void setPname(int id, Place place, String pname) throws EngineException;
 	
 	/**
 	 * Sets the Tlb of a Transition.
@@ -132,7 +100,7 @@ public interface IPetrinetPersistence {
 	 * @param tlb TransitionLabel
 	 * @throws EngineException 
 	 */
-	public void setTlb(int id, INode transition, String tlb) throws EngineException;
+	public void setTlb(int id, Transition transition, String tlb) throws EngineException;
 	
 	/**
 	 * Sets the TName of a Transition.
@@ -142,17 +110,27 @@ public interface IPetrinetPersistence {
 	 * @param tname TName
 	 * @throws EngineException 
 	 */
-	public void setTname(int id, INode transition, String tname) throws EngineException;
+	public void setTname(int id, Transition transition, String tname) throws EngineException;
 	
 	/**
 	 * Sets the Weight of an Arc.
 	 * 
-	 * @param id ID of the Petrinet
-	 * @param arc where to set the weight
-	 * @param weight weight of the arc
+	 * @param  id ID of the Petrinet
+	 * @param  preArc where to set the weight
+	 * @param  weight weight of the arc
 	 * @throws EngineException 
 	 */
-	public void setWeight(int id, IArc arc, int weight) throws EngineException;
+	public void setWeight(int id, PreArc preArc, int weight) throws EngineException;
+	
+	/**
+	 * Sets the Weight of an Arc.
+	 * 
+	 * @param  id ID of the Petrinet
+	 * @param  postArc where to set the weight
+	 * @param  weight weight of the arc
+	 * @throws EngineException 
+	 */
+	public void setWeight(int id, PostArc postArc, int weight) throws EngineException;
 	
 	/**
 	 * 
@@ -163,7 +141,7 @@ public interface IPetrinetPersistence {
 	 * @throws EngineException 
 	 * 
 	 */
-	public void setRnw(int id, INode transition, IRenew renews) throws EngineException;
+	public void setRnw(int id, Transition transition, IRenew renews) throws EngineException;
 	
 	/**
 	 * 
@@ -175,16 +153,8 @@ public interface IPetrinetPersistence {
 	 * @throws EngineException 
 	 * 
 	 */
-	public void setPlaceColor(int id, INode place, Color color) throws EngineException;
-	
-	/**
-	 * Returns the type of the Object.
-	 * @param node to check
-	 * @return Enum composed of Place, Transition
-	 * @throws EngineException 
-	 */
-	public Enum<?> getNodeType(INode node) throws EngineException;
-	
+	public void setPlaceColor(int id, Place place, Color color) throws EngineException;
+		
 	/**
 	 * Sets the nodeSize for the JungData of petrinet with <code>id</code>
 	 * 
@@ -192,6 +162,5 @@ public interface IPetrinetPersistence {
 	 * @param id
 	 * @param nodeSize
 	 */
-	public void setNodeSize(int id, double nodeSize);
-	
+	public void setNodeSize(int id, double nodeSize);	
 }

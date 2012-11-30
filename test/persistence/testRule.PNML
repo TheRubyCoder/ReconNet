@@ -37,6 +37,11 @@
                 <inscription>
                     <text>undefined</text>
                 </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                	<weight>
+                    	<text>1</text>
+                    </weight>
+                </toolspecific>   
             </arc>
             <arc id="30" source="28" target="22">
                 <graphics>
@@ -45,6 +50,11 @@
                 <inscription>
                     <text>undefined</text>
                 </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                	<weight>
+                    	<text>1</text>
+                    </weight>
+                </toolspecific>                
             </arc>
             <place id="22">
                 <graphics>
@@ -107,6 +117,11 @@
                 <inscription>
                     <text>undefined</text>
                 </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                	<weight>
+                    	<text>1</text>
+                    </weight>
+                </toolspecific>   
             </arc>
             <arc id="30" source="28" target="22">
                 <graphics>
@@ -115,6 +130,11 @@
                 <inscription>
                     <text>undefined</text>
                 </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                	<weight>
+                    	<text>1</text>
+                    </weight>
+                </toolspecific>   
             </arc>
             <place id="21">
                 <graphics>

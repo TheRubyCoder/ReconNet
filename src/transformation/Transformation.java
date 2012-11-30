@@ -1,7 +1,6 @@
 package transformation;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import petrinet.model.IArc;
@@ -266,10 +265,15 @@ public class Transformation {
 	private boolean contactConditionFulfilled(Place place, Morphism morphism,
 			Petrinet toNet, Petrinet fromNet) {
 		
-		Place      mappedNode   = morphism.getPlaceMorphism(place);
-		List<IArc> incidentArcs = toNet.getIncidetenArcs(mappedNode.getId());
+		Place      mappedPlace   = morphism.getPlaceMorphism(place);
 		
-		for (IArc arc : incidentArcs) {
+		for (IArc arc : mappedPlace.getIncomingArcs()) {
+			if (!morphism.getArcsMorphism().containsValue(arc)) {
+				return false;
+			}
+		}
+
+		for (IArc arc : mappedPlace.getOutgoingArcs()) {
 			if (!morphism.getArcsMorphism().containsValue(arc)) {
 				return false;
 			}
@@ -286,10 +290,15 @@ public class Transformation {
 	private boolean contactConditionFulfilled(Transition transition, Morphism morphism,
 			Petrinet toNet, Petrinet fromNet) {
 		
-		INode      mappedNode   = morphism.getTransitionMorphism(transition);
-		List<IArc> incidentArcs = toNet.getIncidetenArcs(mappedNode.getId());
-		
-		for (IArc arc : incidentArcs) {
+		Transition mappedTransition = morphism.getTransitionMorphism(transition);
+
+		for (IArc arc : mappedTransition.getIncomingArcs()) {
+			if (!morphism.getArcsMorphism().containsValue(arc)) {
+				return false;
+			}
+		}
+
+		for (IArc arc : mappedTransition.getOutgoingArcs()) {
 			if (!morphism.getArcsMorphism().containsValue(arc)) {
 				return false;
 			}

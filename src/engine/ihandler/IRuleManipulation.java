@@ -346,8 +346,9 @@ public interface IRuleManipulation {
 	 * @param node
 	 *            to check
 	 * @return Enum composed of Place, Transition
+	 * @throws EngineException 
 	 */
-	public NodeTypeEnum getNodeType(@NotNull INode node);
+	public NodeTypeEnum getNodeType(@NotNull INode node) throws EngineException;
 
 	/**
 	 * Moves all petrinets of the rule.
@@ -365,8 +366,9 @@ public interface IRuleManipulation {
 	 * 
 	 * @see {@link IPetrinetManipulation#moveGraphIntoVision(int)}
 	 * @param currentId
+	 * @throws EngineException 
 	 */
-	public void moveGraphIntoVision(int currentId);
+	public void moveGraphIntoVision(int currentId) throws EngineException;
 
 	/**
 	 * Similar to {@link PetrinetViewer#moveAllNodesTo(float, Point)} but looks
@@ -375,8 +377,9 @@ public interface IRuleManipulation {
 	 * @param currentId
 	 * @param factor
 	 * @param point
+	 * @throws EngineException 
 	 */
-	public void moveAllNodesTo(int id, float factor, Point point);
+	public void moveAllNodesTo(int id, float factor, Point point) throws EngineException;
 
 	/**
 	 * Sets the nodeSize for the JungData of the petrinets of the rule with
@@ -385,8 +388,9 @@ public interface IRuleManipulation {
 	 * @see {@link JungData#setNodeSize(double)}
 	 * @param id
 	 * @param nodeSize
+	 * @throws EngineException 
 	 */
-	public void setNodeSize(int id, double nodeSize);
+	public void setNodeSize(int id, double nodeSize) throws EngineException;
 
 	/**
 	 * Returns the nodeSize of Petrinet with <code>id</code>
@@ -396,5 +400,5 @@ public interface IRuleManipulation {
 	 *             if id is wrong
 	 * @return
 	 */
-	public double getNodeSize(int id) throws NullPointerException;
+	public double getNodeSize(int id) throws EngineException;
 }

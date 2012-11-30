@@ -496,13 +496,13 @@ public class Rule {
 	 * @param weight
 	 */
 	public void setWeightInL(PreArc preArc, int weight) {
-		preArc.setMark(weight);
-		fromLtoK(preArc).setMark(weight);
+		preArc.setWeight(weight);
+		fromLtoK(preArc).setWeight(weight);
 
 		PreArc rightPreArc = fromLtoR(preArc);
 		
 		if (rightPreArc != null) {
-			rightPreArc.setMark(weight);
+			rightPreArc.setWeight(weight);
 		}
 	}
 
@@ -514,13 +514,13 @@ public class Rule {
 	 */
 	public void setWeightInK(PreArc preArc, int weight) {
 		if (fromKtoL(preArc) != null) {
-			fromKtoL(preArc).setMark(weight);
+			fromKtoL(preArc).setWeight(weight);
 		}
 		
-		preArc.setMark(weight);
+		preArc.setWeight(weight);
 		
 		if (fromKtoR(preArc) != null) {
-			fromKtoR(preArc).setMark(weight);
+			fromKtoR(preArc).setWeight(weight);
 		}
 	}
 
@@ -531,13 +531,13 @@ public class Rule {
 	 * @param weight
 	 */
 	public void setWeightInR(PreArc preArc, int weight) {
-		fromRtoK(preArc).setMark(weight);
-		preArc.setMark(weight);
+		fromRtoK(preArc).setWeight(weight);
+		preArc.setWeight(weight);
 
 		PreArc leftPreArc = fromRtoL(preArc);
 		
 		if (leftPreArc != null) {
-			leftPreArc.setMark(weight);
+			leftPreArc.setWeight(weight);
 		}
 	}
 
@@ -552,13 +552,13 @@ public class Rule {
 	 * @param weight
 	 */
 	public void setWeightInL(PostArc postArc, int weight) {
-		postArc.setMark(weight);
-		fromLtoK(postArc).setMark(weight);
+		postArc.setWeight(weight);
+		fromLtoK(postArc).setWeight(weight);
 
 		PostArc rightPostArc = fromLtoR(postArc);
 		
 		if (rightPostArc != null) {
-			rightPostArc.setMark(weight);
+			rightPostArc.setWeight(weight);
 		}
 	}
 
@@ -570,13 +570,13 @@ public class Rule {
 	 */
 	public void setWeightInK(PostArc postArc, int weight) {
 		if (fromKtoL(postArc) != null) {
-			fromKtoL(postArc).setMark(weight);
+			fromKtoL(postArc).setWeight(weight);
 		}
 		
-		postArc.setMark(weight);
+		postArc.setWeight(weight);
 		
 		if (fromKtoR(postArc) != null) {
-			fromKtoR(postArc).setMark(weight);
+			fromKtoR(postArc).setWeight(weight);
 		}
 	}
 
@@ -587,13 +587,13 @@ public class Rule {
 	 * @param weight
 	 */
 	public void setWeightInR(PostArc postArc, int weight) {
-		fromRtoK(postArc).setMark(weight);
-		postArc.setMark(weight);
+		fromRtoK(postArc).setWeight(weight);
+		postArc.setWeight(weight);
 
 		PostArc leftPostArc = fromRtoL(postArc);
 		
 		if (leftPostArc != null) {
-			leftPostArc.setMark(weight);
+			leftPostArc.setWeight(weight);
 		}
 	}
 	

@@ -40,6 +40,11 @@
         <inscription>
           <text>2</text>
         </inscription>
+        <toolspecific tool="ReConNet" version="1.0">
+            <weight>
+                <text>1</text>
+            </weight>
+        </toolspecific>   
       </arc>
     </page>
   </net>
@@ -111,6 +116,11 @@
         <inscription>
           <text>2</text>
         </inscription>
+        <toolspecific tool="ReConNet" version="1.0">
+            <weight>
+                <text>1</text>
+            </weight>
+        </toolspecific>   
       </arc>
       <arc id="3" source="1" target="2">
         <graphics>
@@ -120,6 +130,11 @@
         <inscription>
           <text>2</text>
         </inscription>
+        <toolspecific tool="ReConNet" version="1.0">
+            <weight>
+                <text>1</text>
+            </weight>
+        </toolspecific>   
       </arc>
       <arc id="7" source="6" target="2">
         <graphics>
@@ -129,6 +144,11 @@
         <inscription>
           <text>2</text>
         </inscription>
+        <toolspecific tool="ReConNet" version="1.0">
+            <weight>
+                <text>1</text>
+            </weight>
+        </toolspecific>   
       </arc>
     </page>
   </net><net type="https://pub.informatik.haw-hamburg.de/home/pub/prof/padberg/rcpn.pnt" id="n1" nettype="r">
@@ -198,6 +218,11 @@
         <inscription>
           <text>2</text>
         </inscription>
+        <toolspecific tool="ReConNet" version="1.0">
+            <weight>
+                <text>1</text>
+            </weight>
+        </toolspecific>   
       </arc>
       <arc id="5" source="4" target="6">
         <graphics>
@@ -207,6 +232,11 @@
         <inscription>
           <text>2</text>
         </inscription>
+        <toolspecific tool="ReConNet" version="1.0">
+            <weight>
+                <text>1</text>
+            </weight>
+        </toolspecific>   
       </arc>
       <arc id="7" source="6" target="2">
         <graphics>
@@ -216,6 +246,11 @@
         <inscription>
           <text>2</text>
         </inscription>
+        <toolspecific tool="ReConNet" version="1.0">
+            <weight>
+                <text>1</text>
+            </weight>
+        </toolspecific>   
       </arc>
     </page>
   </net>

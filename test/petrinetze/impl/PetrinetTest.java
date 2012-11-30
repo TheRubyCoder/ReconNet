@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 
 import petrinet.*;
 import petrinet.model.IArc;
-import petrinet.model.INode;
 import petrinet.model.Petrinet;
 import petrinet.model.Place;
 import petrinet.model.Transition;
@@ -35,13 +34,13 @@ public class PetrinetTest {
 
 
         final IArc p1t1 = p.addPreArc("p1t1", p1, t1);
-        p1t1.setMark(1);
+        p1t1.setWeight(1);
         final IArc t1p2 = p.addPostArc("t1p2", t1, p2);
-        t1p2.setMark(1);
+        t1p2.setWeight(1);
         final IArc p2t2 = p.addPreArc("p2t2", p2, t2);
-        p2t2.setMark(1);
+        p2t2.setWeight(1);
         final IArc t2p1 = p.addPostArc("t2p1", t2, p1);
-        t2p1.setMark(1);
+        t2p1.setWeight(1);
 
         final Set<Place> places = p.getPlaces();
 
@@ -126,7 +125,7 @@ public class PetrinetTest {
             t1.isActivated()
         );
 
-        a.setMark(2);
+        a.setWeight(2);
         assertFalse(
             "A transition must not be activated if at least one condition of pre is not fulfilled",
             t1.isActivated()
@@ -135,7 +134,7 @@ public class PetrinetTest {
         p1.setMark(2);
         assertTrue(t1.isActivated());
 
-        b.setMark(2);
+        b.setWeight(2);
         assertFalse(t1.isActivated());
 
         p2.setMark(2);

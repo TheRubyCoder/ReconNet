@@ -461,21 +461,31 @@ final public class JungData {
 	 */
 	public void deleteDataOfMissingElements(Petrinet petrinet) {
 		List<INode> missingNodes = new LinkedList<INode>();
-		List<IArc> missingEdges  = new LinkedList<IArc>();
+		List<IArc>  missingEdges = new LinkedList<IArc>();
+
+		Set<Place>      places      = petrinet.getPlaces();
+		Set<Transition> transitions = petrinet.getTransitions();		
+		Set<IArc> 	    arcs        = petrinet.getArcs();
 		
 		for (INode node : graph.getVertices()) {
-			if (!petrinet.getAllGraphElement().getAllNodes().contains(node)) {
+			if (node instanceof Place && !places.contains((Place) node)) {
+				missingNodes.add(node);
+				
+			} else if (node instanceof Transition && !transitions.contains((Transition) node)) {
 				missingNodes.add(node);
 			}
 		}
+		
 		for (IArc arc : graph.getEdges()) {
-			if (!petrinet.getArcs().contains(arc)) {
+			if (!arcs.contains(arc)) {
 				missingEdges.add(arc);
 			}
 		}
+		
 		for (INode missingNode : missingNodes) {
 			graph.removeVertex(missingNode);
 		}
+		
 		for (IArc arc : missingEdges) {
 			graph.removeEdge(arc);
 		}

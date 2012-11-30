@@ -1,5 +1,7 @@
 package engine.handler.petrinet;
 
+import static exceptions.Exceptions.warning;
+
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Point2D;
@@ -7,6 +9,10 @@ import java.awt.geom.Point2D;
 import petrinet.model.IArc;
 import petrinet.model.INode;
 import petrinet.model.IRenew;
+import petrinet.model.Place;
+import petrinet.model.PostArc;
+import petrinet.model.PreArc;
+import petrinet.model.Transition;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.attribute.ArcAttribute;
 import engine.attribute.PlaceAttribute;
@@ -64,9 +70,17 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	}
 
 	@Override
-	public void createArc(int id, INode from, INode to) throws EngineException {
-		petrinetManipulationBackend.createArc(id, from, to);
+	public void createArc(int id, INode from, INode to) throws EngineException {			
+		if (from instanceof Place && to instanceof Transition) {
+			petrinetManipulationBackend.createPreArc(id, (Place) from, (Transition) to);			
+		} else if (from instanceof Transition && to instanceof Place) {
+			petrinetManipulationBackend.createPostArc(id, (Transition) from, (Place) to);
+		} else {
+			warning("Pfeile dürfen nicht zwischen Stelle und Stelle bzw. zwischen Transition und Transition bestehen.");			
+		}
 	}
+	
+	
 
 	@Override
 	public void createPlace(int id, Point2D coordinate) throws EngineException {
@@ -75,11 +89,9 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 
 	@Override
 	public int createPetrinet() {
-
 		int petrinetid = petrinetManipulationBackend.createPetrinet();
 
 		return petrinetid;
-
 	}
 
 	@Override
@@ -95,13 +107,24 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 
 	@Override
 	public void deletePlace(int id, INode place) throws EngineException {
-		petrinetManipulationBackend.deletePlace(id, place);
+		if (!(place instanceof Place)) {
+			warning("node isn't a place");
+			return;
+		} 
+		
+		petrinetManipulationBackend.deletePlace(id, (Place) place);
 	}
 
 	@Override
 	public void deleteTransition(int id, INode transition)
 			throws EngineException {
-		petrinetManipulationBackend.deleteTransition(id, transition);
+		
+		if (!(transition instanceof Transition)) {
+			warning("node isn't a transition");
+			return;
+		} 
+		
+		petrinetManipulationBackend.deleteTransition(id, (Transition) transition);
 	}
 
 	@Override
@@ -129,8 +152,13 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	public PlaceAttribute getPlaceAttribute(int id, INode place)
 			throws EngineException {
 
+		if (!(place instanceof Place)) {
+			warning("node isn't a place");
+			return null;
+		} 
+		
 		PlaceAttribute attr = petrinetManipulationBackend.getPlaceAttribute(id,
-				place);
+				(Place) place);
 
 		return attr;
 
@@ -140,8 +168,13 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	public TransitionAttribute getTransitionAttribute(int id, INode transition)
 			throws EngineException {
 
+		if (!(transition instanceof Transition)) {
+			warning("node isn't a transition");
+			return null;
+		} 
+
 		TransitionAttribute attr = petrinetManipulationBackend
-				.getTransitionAttribute(id, transition);
+				.getTransitionAttribute(id, (Transition) transition);
 
 		return attr;
 
@@ -173,36 +206,72 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	@Override
 	public void setMarking(int id, INode place, int marking)
 			throws EngineException {
-		petrinetManipulationBackend.setMarking(id, place, marking);
+		
+		if (!(place instanceof Place)) {
+			warning("node isn't a place");
+			return;
+		} 
+		
+		petrinetManipulationBackend.setMarking(id, (Place) place, marking);
 	}
 
 	@Override
 	public void setPname(int id, INode place, String pname)
 			throws EngineException {
-		petrinetManipulationBackend.setPname(id, place, pname);
+
+		if (!(place instanceof Place)) {
+			warning("node isn't a place");
+			return;
+		} 
+		
+		petrinetManipulationBackend.setPname(id, (Place) place, pname);
 	}
 
 	@Override
 	public void setTlb(int id, INode transition, String tlb)
 			throws EngineException {
-		petrinetManipulationBackend.setTlb(id, transition, tlb);
+
+		if (!(transition instanceof Transition)) {
+			warning("node isn't a transition");
+			return;
+		} 
+		
+		petrinetManipulationBackend.setTlb(id, (Transition) transition, tlb);
 	}
 
 	@Override
 	public void setTname(int id, INode transition, String tname)
 			throws EngineException {
-		petrinetManipulationBackend.setTname(id, transition, tname);
+
+		if (!(transition instanceof Transition)) {
+			warning("node isn't a transition");
+			return;
+		} 
+		
+		petrinetManipulationBackend.setTname(id, (Transition) transition, tname);
 	}
 
 	@Override
 	public void setWeight(int id, IArc arc, int weight) throws EngineException {
-		petrinetManipulationBackend.setWeight(id, arc, weight);
+		if (arc instanceof PreArc) {
+			petrinetManipulationBackend.setWeight(id, (PreArc) arc, weight);
+		} else if (arc instanceof PostArc) {
+			petrinetManipulationBackend.setWeight(id, (PostArc) arc, weight);			
+		} else {
+			warning("this isn't an arc");			
+		}
 	}
 
 	@Override
 	public void setRnw(int id, INode transition, IRenew renews)
 			throws EngineException {
-		petrinetManipulationBackend.setRnw(id, transition, renews);
+
+		if (!(transition instanceof Transition)) {
+			warning("node isn't a transition");
+			return;
+		} 
+		
+		petrinetManipulationBackend.setRnw(id, (Transition) transition, renews);
 	}
 
 	@Override
@@ -218,7 +287,12 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 	public void setPlaceColor(int id, INode place, Color color)
 			throws EngineException {
 
-		petrinetManipulationBackend.setPlaceColor(id, place, color);
+		if (!(place instanceof Place)) {
+			warning("node isn't a place");
+			return;
+		} 
+		
+		petrinetManipulationBackend.setPlaceColor(id, (Place) place, color);
 
 	}
 

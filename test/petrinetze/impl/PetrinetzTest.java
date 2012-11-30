@@ -44,11 +44,9 @@ public class PetrinetzTest {
 	{
 		assertEquals(place1.getName(), "place1");
 		assertTrue(p.getPlaces().contains(place1));
-		assertTrue(p.getAllGraphElement().getAllNodes().contains(place1));
 
 		assertEquals(place2.getName(), "place2");
 		assertTrue(p.getPlaces().contains(place2));
-		assertTrue(p.getAllGraphElement().getAllNodes().contains(place2));
 	}
 	
 	@Test
@@ -56,7 +54,6 @@ public class PetrinetzTest {
 	{
 		assertEquals(transition.getName(), "transition");
 		assertTrue(p.getTransitions().contains(transition));
-		assertTrue(p.getAllGraphElement().getAllNodes().contains(transition));
 		assertEquals(Renews.COUNT, transition.getRnw());
 	}
 	
@@ -67,18 +64,16 @@ public class PetrinetzTest {
 		IArc edge1 = p.addPreArc("edge1", place1, transition);
 		assertEquals("edge1", edge1.getName());
 		assertTrue(p.getArcs().contains(edge1));
-		assertTrue(p.getAllGraphElement().getAllArcs().contains(edge1));
 		assertEquals(place1, edge1.getSource());
 		assertEquals(transition, edge1.getTarget());
-		assertEquals(1, edge1.getMark());
+		assertEquals(1, edge1.getWeight());
 
 		IArc edge2 = p.addPostArc("edge2", transition, place2);
 		assertEquals("edge2", edge2.getName());
 		assertTrue(p.getArcs().contains(edge2));
-		assertTrue(p.getAllGraphElement().getAllArcs().contains(edge2));
 		assertEquals(transition, edge2.getSource());
 		assertEquals(place2, edge2.getTarget());
-		assertEquals(1, edge2.getMark());
+		assertEquals(1, edge2.getWeight());
 	}
 	
 	@Test

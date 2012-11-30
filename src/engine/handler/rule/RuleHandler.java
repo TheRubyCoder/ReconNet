@@ -1,9 +1,11 @@
 package engine.handler.rule;
 
+import static exceptions.Exceptions.exceptionIf;
+import static exceptions.Exceptions.warning;
+
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +13,6 @@ import persistence.Persistence;
 import petrinet.model.IArc;
 import petrinet.model.INode;
 import petrinet.model.IRenew;
-import petrinet.model.Petrinet;
 import petrinet.model.Place;
 import petrinet.model.PostArc;
 import petrinet.model.PreArc;
@@ -60,173 +61,136 @@ final public class RuleHandler {
 	}
 
 	/**
-	 * Creates an Arc in the rule referenced by <code>id</code>
+	 * Creates an PreArc in the rule referenced by <code>id</code>
 	 * 
 	 * @param id
 	 *            Id of the rule
 	 * @param net
 	 *            Part of the rule the arc will be added to
-	 * @param from
-	 *            Node to start the edge at
-	 * @param to
-	 *            Target node of edge
-	 * @return Created Arc
+	 * @param place
+	 *            Place to start the edge at
+	 * @param transition
+	 *            Transition node of edge
+	 * @return Created PreArc
 	 * @throws EngineException
-	 *             if id is wrong or illegal node combination
 	 */
-	public IArc createArc(int id, RuleNet net, INode from, INode to)
+	public PreArc createPreArc(int id, RuleNet net, Place place, Transition transition)
 			throws EngineException {
 
-		RuleData ruleData = sessionManager.getRuleData(id);
-
-		if (ruleData == null) {
-			exception("createArc - id of the Rule is wrong");
-			return null;
-		} 
-	
-		Rule rule = ruleData.getRule();
+		checkIsPlace(place);
+		checkIsTransition(transition);
+		
+		RuleData ruleData = getRuleData(id);	
+		Rule     rule     = ruleData.getRule();
 
 		JungData lJungData = ruleData.getLJungData();
 		JungData kJungData = ruleData.getKJungData();
 		JungData rJungData = ruleData.getRJungData();
 
-		ensureLegalNodeCombination(net, from, to, rule);
+		ensureLegalNodeCombination(net, place, transition, rule);
 
 		// create Arc in defined map
-		if (from instanceof Place && to instanceof Transition) {
-			PreArc createdArc = null;
-			PreArc kArc       = null;
-			
-			if (net.equals(RuleNet.L)) {
-				createdArc = rule.addPreArcToL("undefined", (Place) from, (Transition) to);
-				kArc       = rule.fromLtoK((PreArc) createdArc);
-			} else if (net.equals(RuleNet.K)) {
-				createdArc = rule.addPreArcToK("undefined", (Place) from, (Transition) to);
-				kArc       = createdArc;
-			} else if (net.equals(RuleNet.R)) {
-				createdArc = rule.addPreArcToR("undefined", (Place) from, (Transition) to);		
-				kArc       = rule.fromRtoK((PreArc) createdArc);		
-			}		
+		PreArc createdArc = null;
+		PreArc kArc       = null;
+		
+		if (net.equals(RuleNet.L)) {
+			createdArc = rule.addPreArcToL("undefined", place, transition);
+			kArc       = rule.fromLtoK(createdArc);
+		} else if (net.equals(RuleNet.K)) {
+			createdArc = rule.addPreArcToK("undefined", place, transition);
+			kArc       = createdArc;
+		} else if (net.equals(RuleNet.R)) {
+			createdArc = rule.addPreArcToR("undefined", place, transition);		
+			kArc       = rule.fromRtoK(createdArc);		
+		}		
 
-			// add those arcs into the corresponding jung data
-			PreArc lArc = rule.fromKtoL(kArc);
-			PreArc rArc = rule.fromKtoR(kArc); 
-			
-			if (lArc != null) {
-				lJungData.createArc(lArc, lArc.getSource(), lArc.getTarget());
-			}
-
-			kJungData.createArc(kArc, kArc.getSource(), kArc.getTarget());
-
-			if (rArc != null) {
-				rJungData.createArc(rArc, rArc.getSource(), rArc.getTarget());
-			}
-			
-			
-			return createdArc;
-		} else if (from instanceof Transition && to instanceof Place) {
-			PostArc createdArc = null;
-			PostArc kArc       = null;
-			
-			if (net.equals(RuleNet.L)) {
-				createdArc = rule.addPostArcToL("undefined", (Transition) from, (Place) to);	
-				kArc       = rule.fromLtoK((PostArc) createdArc);			
-			} else if (net.equals(RuleNet.K)) {
-				createdArc = rule.addPostArcToK("undefined", (Transition) from, (Place) to);
-				kArc       = createdArc;				
-			} else if (net.equals(RuleNet.R)) {
-				createdArc = rule.addPostArcToR("undefined", (Transition) from, (Place) to);
-				kArc       = rule.fromRtoK((PostArc) createdArc);					
-			}
-
-			// add those arcs into the corresponding jung data
-			PostArc lArc = rule.fromKtoL(kArc);
-			PostArc rArc = rule.fromKtoR(kArc); 
-			
-			if (lArc != null) {
-				lJungData.createArc(lArc, lArc.getSource(), lArc.getTarget());
-			}
-
-			kJungData.createArc(kArc, kArc.getSource(), kArc.getTarget());
-
-			if (rArc != null) {
-				rJungData.createArc(rArc, rArc.getSource(), rArc.getTarget());
-			}
-
-			return createdArc;
-		} else {
-			exception("createArc - error");				
+		// add those arcs into the corresponding jung data
+		PreArc lArc = rule.fromKtoL(kArc);
+		PreArc rArc = rule.fromKtoR(kArc); 
+		
+		if (lArc != null) {
+			lJungData.createArc(lArc, lArc.getSource(), lArc.getTarget());
 		}
 
+		kJungData.createArc(kArc, kArc.getSource(), kArc.getTarget());
 
-		return null;
+		if (rArc != null) {
+			rJungData.createArc(rArc, rArc.getSource(), rArc.getTarget());
+		}
+		
+		return createdArc;
 	}
 
 	/**
-	 * Checks whether a combination of start and taget nodes is valid for
-	 * creating an arc in the rule
+	 * Creates an PostArc in the rule referenced by <code>id</code>
 	 * 
+	 * @param id
+	 *            Id of the rule
 	 * @param net
-	 * @param from
-	 * @param to
-	 * @param rule
-	 * @throws ShowAsWarningException
-	 *             with human friendly text message if combination is illegal
+	 *            Part of the rule the arc will be added to
+	 * @param place
+	 *            Place to start the edge at
+	 * @param transition
+	 *            Transition node of edge
+	 * @return Created PostArc
+	 * @throws EngineException
 	 */
-	private void ensureLegalNodeCombination(RuleNet net, INode from, INode to, Rule rule) {
-		if (!net.equals(RuleNet.K)) {
-			return;
-		}
+	public PostArc createPostArc(int id, RuleNet net, Transition transition, Place place)
+			throws EngineException {
+
+		checkIsPlace(place);
+		checkIsTransition(transition);
+
+		RuleData ruleData = getRuleData(id);	
+		Rule     rule     = ruleData.getRule();
+
+		JungData lJungData = ruleData.getLJungData();
+		JungData kJungData = ruleData.getKJungData();
+		JungData rJungData = ruleData.getRJungData();
+
+		ensureLegalNodeCombination(net, transition, place, rule);
+
+		// create Arc in defined map
+		PostArc createdArc = null;
+		PostArc kArc       = null;
 		
-		if (from instanceof Place) {
-			if (rule.fromKtoL((Place) from) == null) {
-				throw new ShowAsWarningException("Startknoten in L nicht verfügbar");
-			} else if (rule.fromKtoR((Place) from) == null) {
-				throw new ShowAsWarningException("Startknoten in R nicht verfügbar");
-			}			
+		if (net.equals(RuleNet.L)) {
+			createdArc = rule.addPostArcToL("undefined", transition, place);	
+			kArc       = rule.fromLtoK(createdArc);			
+		} else if (net.equals(RuleNet.K)) {
+			createdArc = rule.addPostArcToK("undefined", transition, place);
+			kArc       = createdArc;				
+		} else if (net.equals(RuleNet.R)) {
+			createdArc = rule.addPostArcToR("undefined", transition, place);
+			kArc       = rule.fromRtoK(createdArc);					
 		}
+
+		// add those arcs into the corresponding jung data
+		PostArc lArc = rule.fromKtoL(kArc);
+		PostArc rArc = rule.fromKtoR(kArc); 
 		
-		if (to instanceof Place) {
-			if (rule.fromKtoL((Place) to) == null) {
-				throw new ShowAsWarningException("Zielknoten in L nicht verfügbar");
-				
-			} else if (rule.fromKtoR((Place) to) == null) {
-				throw new ShowAsWarningException("Zielknoten in R nicht verfügbar");
-			}
+		if (lArc != null) {
+			lJungData.createArc(lArc, lArc.getSource(), lArc.getTarget());
 		}
-		
-		if (from instanceof Transition) {
-			if (rule.fromKtoL((Transition) from) == null) {
-				throw new ShowAsWarningException("Startknoten in L nicht verfügbar");
-			} else if (rule.fromKtoR((Transition) from) == null) {
-				throw new ShowAsWarningException("Startknoten in R nicht verfügbar");
-			}			
+
+		kJungData.createArc(kArc, kArc.getSource(), kArc.getTarget());
+
+		if (rArc != null) {
+			rJungData.createArc(rArc, rArc.getSource(), rArc.getTarget());
 		}
-		
-		if (to instanceof Transition) {
-			if (rule.fromKtoL((Transition) to) == null) {
-				throw new ShowAsWarningException("Zielknoten in L nicht verfügbar");
-				
-			} else if (rule.fromKtoR((Transition) to) == null) {
-				throw new ShowAsWarningException("Zielknoten in R nicht verfügbar");
-			}
-		}
+
+		return createdArc;
 	}
+
 
 	/**
 	 * @see IRuleManipulation#createPlace(int, RuleNet, Point2D)
 	 */
-	public INode createPlace(int id, RuleNet net, Point2D coordinate)
+	public Place createPlace(int id, RuleNet net, Point2D coordinate)
 			throws EngineException {
 
-		RuleData ruleData = sessionManager.getRuleData(id);
-
-		if (ruleData == null) {
-			exception("createPlace - id of the Rule is wrong");
-			return null;
-		} 
-
-		Rule rule          = ruleData.getRule();
+		RuleData ruleData = getRuleData(id);	
+		Rule     rule     = ruleData.getRule();
 		
 		JungData lJungData = ruleData.getLJungData();
 		JungData kJungData = ruleData.getKJungData();
@@ -246,9 +210,8 @@ final public class RuleHandler {
 			exception("Place too close to Node in R");
 			return null;
 		}
-
+		
 		if (net.equals(RuleNet.L)) {
-
 			// create a new Place
 			Place newPlace = rule.addPlaceToL("undefined");
 
@@ -336,9 +299,7 @@ final public class RuleHandler {
 	 * @see IRuleManipulation#createRule()
 	 */
 	public int createRule() {
-
-		Rule rule = TransformationComponent.getTransformation().createRule();
-
+		Rule 	 rule 	  = TransformationComponent.getTransformation().createRule();
 		RuleData ruleData = sessionManager.createRuleData(rule);
 
 		TransformationComponent.getTransformation().storeSessionId(
@@ -350,19 +311,12 @@ final public class RuleHandler {
 	/**
 	 * @see IRuleManipulation#createTransition(int, RuleNet, Point2D)
 	 */
-	public INode createTransition(int id, RuleNet net, Point2D coordinate)
+	public Transition createTransition(int id, RuleNet net, Point2D coordinate)
 			throws EngineException {
-
-		// get the RuleData from the id and SessionManager
-		RuleData ruleData = sessionManager.getRuleData(id);
-
-		// Test: is id valid
-		if (ruleData == null) {
-			exception("createTransition - id of the Rule is wrong");
-			return null;
-		} 
-			
-		Rule     rule      = ruleData.getRule();
+		
+		RuleData ruleData = getRuleData(id);	
+		Rule     rule     = ruleData.getRule();
+		
 		JungData lJungData = ruleData.getLJungData();
 		JungData kJungData = ruleData.getKJungData();
 		JungData rJungData = ruleData.getRJungData();
@@ -463,21 +417,15 @@ final public class RuleHandler {
 	 * @see IRuleManipulation#deleteArc(int, RuleNet, Arc)
 	 */
 	public void deleteArc(int id, RuleNet net, IArc arc) throws EngineException {
-		// get the RuleData from the id and SessionManager
-		RuleData ruleData = sessionManager.getRuleData(id);
-
-		// Test: is id valid
-		if (ruleData == null) {
-			exception("id of the Rule is wrong");
-			return;
-		} 
+		checkIsIArc(arc);
 		
-		if (net == null || arc == null) {
+		RuleData ruleData = getRuleData(id);	
+		Rule     rule     = ruleData.getRule();
+		
+		if (net == null) {
 			exception("Netz nicht erkannt");
 			return;			
 		}
-
-		Rule rule = ruleData.getRule();
 		
 		if (arc instanceof PreArc && net == RuleNet.L) {
 			rule.removePreArcFromL((PreArc) arc);
@@ -504,33 +452,27 @@ final public class RuleHandler {
 	/**
 	 * @see IRuleManipulation#deletePlace(int, RuleNet, INode)
 	 */
-	public void deletePlace(int id, RuleNet net, INode place)
+	public void deletePlace(int id, RuleNet net, Place place)
 			throws EngineException {
-
-		// get the RuleData from the id and SessionManager
-		RuleData ruleData = sessionManager.getRuleData(id);
-
-		// Test: is id valid
-		if (ruleData == null) {
-			exception("id of the Rule is wrong");
-			return;
-		} 
 		
-		if (net == null || !(place instanceof Place)) {
+		checkIsPlace(place);
+		
+		RuleData ruleData = getRuleData(id);	
+		Rule     rule     = ruleData.getRule();
+		
+		if (net == null) {
 			exception("Netz nicht erkannt");
 			return;			
 		}
-
-		Rule rule = ruleData.getRule();
 		
 		if (net == RuleNet.L) {
-			rule.removePlaceFromL((Place) place);
+			rule.removePlaceFromL(place);
 			
 		} else if (net == RuleNet.K) {
-			rule.removePlaceFromK((Place) place);
+			rule.removePlaceFromK(place);
 			
 		} else if (net == RuleNet.R) {
-			rule.removePlaceFromR((Place) place);			
+			rule.removePlaceFromR(place);			
 		} 
 
 		ruleData.deleteDataOfMissingElements(rule);
@@ -539,33 +481,27 @@ final public class RuleHandler {
 	/**
 	 * @see IRuleManipulation#deleteTransition(int, RuleNet, INode)
 	 */
-	public void deleteTransition(int id, RuleNet net, INode transition)
+	public void deleteTransition(int id, RuleNet net, Transition transition)
 			throws EngineException {
-
-		// get the RuleData from the id and SessionManager
-		RuleData ruleData = sessionManager.getRuleData(id);
-
-		// Test: is id valid
-		if (ruleData == null) {
-			exception("id of the Rule is wrong");
-			return;
-		} 
 		
-		if (net == null || !(transition instanceof Transition)) {
+		checkIsTransition(transition);
+		
+		RuleData ruleData = getRuleData(id);	
+		Rule     rule     = ruleData.getRule();
+		
+		if (net == null) {
 			exception("Netz nicht erkannt");
 			return;			
 		}
-
-		Rule rule = ruleData.getRule();
 		
 		if (net == RuleNet.L) {
-			rule.removeTransitionFromL((Transition) transition);
+			rule.removeTransitionFromL(transition);
 			
 		} else if (net == RuleNet.K) {
-			rule.removeTransitionFromK((Transition) transition);
+			rule.removeTransitionFromK(transition);
 			
 		} else if (net == RuleNet.R) {
-			rule.removeTransitionFromR((Transition) transition);			
+			rule.removeTransitionFromR(transition);			
 		} 
 
 		ruleData.deleteDataOfMissingElements(rule);
@@ -573,16 +509,13 @@ final public class RuleHandler {
 
 
 	/**
+	 * @throws EngineException 
 	 * @see IRuleManipulation#getArcAttribute(int, Arc)
 	 */
-	public ArcAttribute getArcAttribute(int id, IArc arc) {
+	public ArcAttribute getArcAttribute(int id, IArc arc) throws EngineException {
+		checkIsIArc(arc);
 
-		int weight = arc.getMark();
-
-		ArcAttribute arcAttribute = new ArcAttribute(weight);
-
-		return arcAttribute;
-
+		return new ArcAttribute(arc.getWeight());
 	}
 
 	/**
@@ -591,57 +524,37 @@ final public class RuleHandler {
 	public AbstractLayout<INode, IArc> getJungLayout(int id, RuleNet net)
 			throws EngineException {
 
-		// get the RuleData from the id and SessionManager
-		RuleData ruleData = sessionManager.getRuleData(id);
-
-		// Test: is id valid
-		if (ruleData == null) {
-			exception("getJungLayout - id of the Rule is wrong");
-			return null;
-		} 
-
-		// Rule rule = ruleData.getRule();
-		JungData jungData = null;
+		RuleData ruleData = getRuleData(id);	
 
 		if (net.equals(RuleNet.L)) {
 			// Manipulation in L
 			// Get JungData
-			jungData = ruleData.getLJungData();
+			return ruleData.getLJungData().getJungLayout();
 		} else if (net.equals(RuleNet.K)) {
 			// Manipulation in K
 			// Get JungData
-			jungData = ruleData.getKJungData();
+			return ruleData.getKJungData().getJungLayout();
 		} else if (net.equals(RuleNet.R)) {
 			// Manipulation in R
 			// Get JungData
-			jungData = ruleData.getRJungData();
-		} else {
-			exception("getJungLayout - Not given if Manipulation is in L,K or R");
-		}
+			return ruleData.getRJungData().getJungLayout();
+		} 
 		
-		return jungData.getJungLayout();
+		exception("getJungLayout - Not given if Manipulation is in L,K or R");		
+		return null;
 	}
 
 	/**
 	 * @see IRuleManipulation#getPlaceAttribute(int, INode)
 	 */
-	public PlaceAttribute getPlaceAttribute(int id, INode place)
+	public PlaceAttribute getPlaceAttribute(int id, Place place)
 			throws EngineException {
+		
+		checkIsPlace(place);
 
-		if (!this.getNodeType(place).equals(NodeTypeEnum.Place)) {
-			exception("getPlaceAttribute - the INode value is not a Place");
-			return null;
-		}
-
-
-		Place p = (Place) place;
-
-		int marking  = p.getMark();
-		String pname = p.getName();
-
-		RuleData ruleData     = sessionManager.getRuleData(id);
-		RuleNet containingNet = getContainingNet(id, place);
-		JungData petrinetData = null;
+		RuleData ruleData      = getRuleData(id);	
+		RuleNet  containingNet = getContainingNet(id, place);
+		JungData petrinetData  = null;
 		
 		switch (containingNet) {
 			case L:
@@ -658,65 +571,44 @@ final public class RuleHandler {
 		Color color = null;
 		
 		try {
-			color = petrinetData.getPlaceColor(p);
+			color = petrinetData.getPlaceColor(place);
 		} catch (IllegalArgumentException ex) {
 			color = Color.gray;
 		}
 
-		PlaceAttribute placeAttribute = new PlaceAttribute(marking, pname,
-				color);
-
-		return placeAttribute;
+		return new PlaceAttribute(
+			place.getMark(), 
+			place.getName(),
+			color
+		);
 	}
 
 	/**
 	 * @see IRuleManipulation#getTransitionAttribute(int, INode)
 	 */
-	public TransitionAttribute getTransitionAttribute(int id, INode transition)
+	public TransitionAttribute getTransitionAttribute(int id, Transition transition)
 			throws EngineException {
 
-		if (!this.getNodeType(transition).equals(NodeTypeEnum.Transition)) {
-			exception("getPlaceAttribute - the INode value is not a Transition");
-			return null;
-		}
-
-		Transition t = (Transition) transition;
-
-		String tlb   = t.getTlb();
-		String tname = t.getName();
-		IRenew rnw   = t.getRnw();
-
-		boolean isActivated = t.isActivated();
-
-		TransitionAttribute transitionAttribute = new TransitionAttribute(
-				tlb, tname, rnw, isActivated);
-
-		return transitionAttribute;
+		return new TransitionAttribute(
+			transition.getTlb(), 
+			transition.getName(), 
+			transition.getRnw(), 
+			transition.isActivated()
+		);
 	}
 
 	/**
 	 * @see IRuleManipulation#getRuleAttribute(int)
 	 */
 	public RuleAttribute getRuleAttribute(int id) throws EngineException {
-
-		// get the RuleData from the id and SessionManager
-		RuleData ruleData = sessionManager.getRuleData(id);
-
-		// Test: is id valid
-		if (ruleData == null) {
-			exception("getRuleAttribute - id of the rule is wrong");
-			return null;
-		}
-
-		// get all Id's from L, K, R
-		int lId = ruleData.getRule().getL().getId();
-		int kId = ruleData.getRule().getK().getId();
-		int rId = ruleData.getRule().getR().getId();
+		RuleData ruleData = getRuleData(id);	
 
 		// create a RuleAttribute
-		RuleAttribute ruleAttribute = new RuleAttribute(lId, kId, rId);
-
-		return ruleAttribute;
+		return new RuleAttribute(
+			ruleData.getRule().getL().getId(), 
+			ruleData.getRule().getK().getId(), 
+			ruleData.getRule().getR().getId()
+		);
 	}
 
 	/**
@@ -725,17 +617,14 @@ final public class RuleHandler {
 	public void moveNode(int id, INode node, Point2D relativePosition)
 			throws EngineException {
 
-		// get the RuleData from the id and SessionManager
-		RuleData ruleData = sessionManager.getRuleData(id);
-
-		// Test: is id valid
-		if (ruleData == null) {
-			exception("moveNode - id of the rule is wrong");
-			return;
-		}
+		RuleData ruleData = getRuleData(id);	
 		
-		// get Position
-		ruleData.moveNodeRelative(node, relativePosition);
+		try {
+		// 	get Position
+			ruleData.moveNodeRelative(node, relativePosition);
+		} catch (IllegalArgumentException e) {
+			throw new EngineException(e.getMessage());
+		}
 	}
 
 	/**
@@ -744,16 +633,8 @@ final public class RuleHandler {
 	public void save(int id, String path, String filename, String format)
 			throws EngineException {
 
-		// get the Petrinet from the id and SessionManager
-		RuleData ruleData = sessionManager.getRuleData(id);
-
-		// Test: is id valid
-		if (ruleData == null) {
-			exception("save - id of the Petrinet is wrong");
-			return;
-		}
-
-		Rule rule = ruleData.getRule();
+		RuleData ruleData = getRuleData(id);	
+		Rule     rule     = ruleData.getRule();
 
 		// Petrinet petrinet = ruleData.getPetrinet();
 		JungData jungDataL = ruleData.getLJungData();
@@ -794,105 +675,64 @@ final public class RuleHandler {
 	/**
 	 * @see IRuleManipulation#setMarking(int, INode, int)
 	 */
-	public void setMarking(int id, INode place, int marking)
+	public void setMarking(int id, Place place, int marking)
 			throws EngineException {
+		
+		checkIsPlace(place);
 
-		// get the Petrinet from the id and SessionManager
-		RuleData ruleData = sessionManager.getRuleData(id);
-
-		// Test: is id valid
-		if (ruleData == null || !(place instanceof Place)) {
-			exception("setMarking - id of the rule is wrong");
-			return;
-		}
-
-		Rule rule = ruleData.getRule();
-		Net  net  = TransformationComponent.getTransformation().getNet(rule, (Place) place);
+		RuleData ruleData = getRuleData(id);	
+		Rule     rule     = ruleData.getRule();
+		Net      net      = TransformationComponent.getTransformation().getNet(rule, place);
 		
 		if (net == Net.L) {
-			rule.setMarkInL((Place) place, marking);
+			rule.setMarkInL(place, marking);
 			
 		} else if (net == Net.K) {
-			rule.setMarkInK((Place) place, marking);
+			rule.setMarkInK(place, marking);
 			
 		} else if (net == Net.R) {
-			rule.setMarkInR((Place) place, marking); 
+			rule.setMarkInR(place, marking); 
 		} 
 	}
 
 	/**
 	 * @see IRuleManipulation#setPname(int, INode, String)
 	 */
-	public void setPname(int id, INode place, String pname)
+	public void setPname(int id, Place place, String pname)
 			throws EngineException {
-		setNodeName(id, place, pname);
-	}
-
-	/**
-	 * Sets the name of a node and its counterparts in the other parts of a rule
-	 * @throws EngineException if ruleId is wrong
-	 */
-	private void setNodeName(int ruleId, INode node, String name) throws EngineException {
-		// get the RuleData from the id and SessionManager
-		RuleData ruleData = sessionManager.getRuleData(ruleId);
-
-		// Test: is id valid
-		if (ruleData == null) {
-			exception("setPname - id of the rule is wrong");
-			return;
-		} 
 		
-		if (node instanceof Place) {
-			Net  net  = TransformationComponent.getTransformation().getNet(ruleData.getRule(), (Place) node);
+		checkIsPlace(place);
+
+		RuleData ruleData = getRuleData(id);	
+		Net      net      = TransformationComponent.getTransformation().getNet(ruleData.getRule(), place);
+
+		if (net == Net.L) {
+			ruleData.getRule().setNameInL(place, pname);
 			
-			if (net == Net.L) {
-				ruleData.getRule().setNameInL((Place) node, name);
-				
-			} else if (net == Net.K) {
-				ruleData.getRule().setNameInK((Place) node, name);
-				
-			} else if (net == Net.R) {
-				ruleData.getRule().setNameInR((Place) node, name); 
-			} 
-		} else if (node instanceof Transition) {
-			Net  net  = TransformationComponent.getTransformation().getNet(ruleData.getRule(), (Transition) node);
+		} else if (net == Net.K) {
+			ruleData.getRule().setNameInK(place, pname);
 			
-			if (net == Net.L) {
-				ruleData.getRule().setNameInL((Transition) node, name);
-				
-			} else if (net == Net.K) {
-				ruleData.getRule().setNameInK((Transition) node, name);
-				
-			} else if (net == Net.R) {
-				ruleData.getRule().setNameInR((Transition) node, name); 
-			} 
-		}
+		} else if (net == Net.R) {
+			ruleData.getRule().setNameInR(place, pname); 
+		} 
 	}
 
 
 	/**
 	 * @see IRuleManipulation#setPlaceColor(int, INode, Color)
 	 */
-	public void setPlaceColor(int id, INode place, Color color)
+	public void setPlaceColor(int id, Place place, Color color)
 			throws EngineException {
 
-		// get the RuleData from the id and SessionManager
-		RuleData ruleData = sessionManager.getRuleData(id);
+		checkIsPlace(place);
 
-		// Test: is id valid
-		if (ruleData == null) {
-			exception("setColor - id of the Rule is wrong");
-			return;
-		} 
+		RuleData ruleData  = getRuleData(id);	
+		Rule     rule      = ruleData.getRule();
 		
-		Rule rule = ruleData.getRule();
 		JungData lJungData = ruleData.getLJungData();
 		JungData kJungData = ruleData.getKJungData();
 		JungData rJungData = ruleData.getRJungData();
 		
-		if (!this.getNodeType(place).equals(NodeTypeEnum.Place)) {
-			return;
-		}
 		List<INode> mappings = TransformationComponent
 				.getTransformation().getMappings(rule, place);
 		
@@ -916,111 +756,116 @@ final public class RuleHandler {
 	/**
 	 * @see IRuleManipulation#setTlb(int, INode, String)
 	 */
-	public void setTlb(int id, INode transition, String tlb)
+	public void setTlb(int id, Transition transition, String tlb)
 			throws EngineException {
 
-		// get the RuleData from the id and SessionManager
-		RuleData ruleData = sessionManager.getRuleData(id);
-
-		// Test: is id valid
-		if (ruleData == null) {
-			exception("setTlb - id of the rule is wrong");
-			return;
-		} 
-
-		Rule rule = ruleData.getRule();
-		if (!this.getNodeType(transition).equals(NodeTypeEnum.Transition)) {
-			return;
-		}
-
-		RuleNet net = getContainingNet(id, transition);
+		checkIsTransition(transition);
+		
+		RuleData ruleData = getRuleData(id);	
+		Rule     rule     = ruleData.getRule();		
+		RuleNet  net 	  = getContainingNet(id, transition);
 		
 		if (net.equals(RuleNet.L)) {
-			rule.setTlbInL((Transition) transition, tlb);
+			rule.setTlbInL(transition, tlb);
+			
 		} else if (net.equals(RuleNet.K)) {
-			rule.setTlbInK((Transition) transition, tlb);
+			rule.setTlbInK(transition, tlb);
+			
 		} else if (net.equals(RuleNet.R)) {
-			rule.setTlbInR((Transition) transition, tlb);
+			rule.setTlbInR(transition, tlb);
 		}
 	}
 
 	/**
 	 * @see IRuleManipulation#setTname(int, INode, String)
 	 */
-	public void setTname(int id, INode transition, String tname)
+	public void setTname(int id, Transition transition, String tname)
 			throws EngineException {
-		setNodeName(id, transition, tname);
+
+		checkIsTransition(transition);
+		
+		RuleData ruleData = getRuleData(id);	
+		Net      net      = TransformationComponent.getTransformation().getNet(ruleData.getRule(), transition);
+
+		if (net == Net.L) {
+			ruleData.getRule().setNameInL(transition, tname);
+			
+		} else if (net == Net.K) {
+			ruleData.getRule().setNameInK(transition, tname);
+			
+		} else if (net == Net.R) {
+			ruleData.getRule().setNameInR(transition, tname); 
+		} 
 	}
 
 	/**
 	 * @see IRuleManipulation#setRnw(int, INode, IRenew)
 	 */
-	public void setRnw(int id, INode transition, IRenew renew)
+	public void setRnw(int id, Transition transition, IRenew renew)
 			throws EngineException {
 
-		// get the RuleData from the id and SessionManager
-		RuleData ruleData = sessionManager.getRuleData(id);
-
-		// Test: is id valid
-		if (ruleData == null) {
-			exception("setWeight - id of the Rule is wrong");
-			return;
-		}
+		checkIsTransition(transition);
 			
-		if (!this.getNodeType(transition).equals(NodeTypeEnum.Transition)) {
-			return;
-		}
-
-		Rule rule    = ruleData.getRule();
-		RuleNet net  = getContainingNet(id, transition);
+		RuleData ruleData = getRuleData(id);	
+		Rule     rule     = ruleData.getRule();
+		RuleNet  net      = getContainingNet(id, transition);
 		
 		if (net.equals(RuleNet.L)) {
-			rule.setRnwInL((Transition) transition, renew);
+			rule.setRnwInL(transition, renew);
+			
 		} else if (net.equals(RuleNet.K)) {
-			rule.setRnwInK((Transition) transition, renew);
+			rule.setRnwInK(transition, renew);
+			
 		} else if (net.equals(RuleNet.R)) {
-			rule.setRnwInR((Transition) transition, renew);
+			rule.setRnwInR(transition, renew);
 		}
 	}
 
 	/**
 	 * @see IRuleManipulation#setWeight(int, Arc, int)
 	 */
-	public void setWeight(int id, IArc arc, int weight) throws EngineException {
+	public void setWeight(int id, PreArc preArc, int weight) throws EngineException {
 
-		// get the RuleData from the id and SessionManager
-		RuleData ruleData = sessionManager.getRuleData(id);
-
-		// Test: is id valid
-		if (ruleData == null) {
-			exception("setWeight - id of the Rule is wrong");
-			return;
-		} 
-
-		Rule rule = ruleData.getRule();
-		// set new weight
-		arc.setMark(weight);
-
-		// Synchronize Arcs in the other parts of the rules
-		RuleNet net = getContainingNet(id, arc);
+		checkIsPreArc(preArc);
 		
-		if (net == RuleNet.L && arc instanceof PreArc) {
-			rule.setWeightInL((PreArc) arc, weight);
+		RuleData ruleData = getRuleData(id);	
+		Rule     rule     = ruleData.getRule();
+		
+		// Synchronize Arcs in the other parts of the rules
+		RuleNet net = getContainingNet(id, preArc);
+		
+		if (net == RuleNet.L) {
+			rule.setWeightInL(preArc, weight);
 			
-		} else if (net == RuleNet.L && arc instanceof PreArc) {
-			rule.setWeightInK((PreArc) arc, weight);
+		} else if (net == RuleNet.K) {
+			rule.setWeightInK(preArc, weight);
 			
-		} else if (net == RuleNet.L && arc instanceof PreArc) {
-			rule.setWeightInR((PreArc) arc, weight);
+		} else if (net == RuleNet.R) {
+			rule.setWeightInR(preArc, weight);			
+		}
+	}
+
+	/**
+	 * @see IRuleManipulation#setWeight(int, Arc, int)
+	 */
+	public void setWeight(int id, PostArc postArc, int weight) throws EngineException {
+
+		checkIsPostArc(postArc);
+		
+		RuleData ruleData = getRuleData(id);	
+		Rule     rule     = ruleData.getRule();
+		
+		// Synchronize Arcs in the other parts of the rules
+		RuleNet net = getContainingNet(id, postArc);
+		
+		if (net == RuleNet.L) {
+			rule.setWeightInL(postArc, weight);
 			
-		} else if (net == RuleNet.L && arc instanceof PostArc) {
-			rule.setWeightInL((PostArc) arc, weight);
+		} else if (net == RuleNet.K) {
+			rule.setWeightInK(postArc, weight);
 			
-		} else if (net == RuleNet.L && arc instanceof PostArc) {
-			rule.setWeightInK((PostArc) arc, weight);
-			
-		} else if (net == RuleNet.L && arc instanceof PostArc) {
-			rule.setWeightInR((PostArc) arc, weight);
+		} else if (net == RuleNet.R) {
+			rule.setWeightInR(postArc, weight);
 		}
 	}
 
@@ -1028,15 +873,7 @@ final public class RuleHandler {
 	 * @see IRuleManipulation#closeRule(int)
 	 */
 	public void closeRule(int id) throws EngineException {
-
-		// get the Petrinet from the id and SessionManager
-		RuleData ruleData = sessionManager.getRuleData(id);
-
-		// Test: is id valid
-		if (ruleData == null) {
-			exception("closeRule - id of the Rule is wrong");
-			return;
-		} 
+		getRuleData(id);	
 
 		if (!sessionManager.closeSessionData(id)) {
 			exception("closeRule - can not remove RuleData");
@@ -1044,14 +881,16 @@ final public class RuleHandler {
 	}
 
 	/**
+	 * @throws EngineException 
 	 * @see IRuleManipulation#getNodeType(INode)
 	 */
-	public NodeTypeEnum getNodeType(INode node) {
+	public NodeTypeEnum getNodeType(INode node) throws EngineException {
 		if (node instanceof Place) {
 			return NodeTypeEnum.Place;
 		} else if (node instanceof Transition) {
 			return NodeTypeEnum.Transition;
 		} else {
+			exception("getNodeType - wrong type");
 			return null;
 		}
 	}
@@ -1073,8 +912,8 @@ final public class RuleHandler {
 	}
 
 	// Helper Method
-	private RuleNet getContainingNet(int id, INode node) {
-		RuleData ruleData = sessionManager.getRuleData(id);
+	private RuleNet getContainingNet(int id, INode node) throws EngineException {
+		RuleData ruleData = getRuleData(id);	
 		Rule     rule     = ruleData.getRule();
 		
 		if (rule.getL().getPlaces().contains(node)
@@ -1095,8 +934,10 @@ final public class RuleHandler {
 		return null;
 	}
 
-	private RuleNet getContainingNet(int id, IArc arc) {
-		RuleData ruleData = sessionManager.getRuleData(id);
+	private RuleNet getContainingNet(int id, IArc arc) throws EngineException {
+		checkIsIArc(arc);
+		
+		RuleData ruleData = getRuleData(id);	
 		Rule     rule     = ruleData.getRule();
 		
 		if (rule.getL().getArcs().contains(arc)) {
@@ -1119,8 +960,9 @@ final public class RuleHandler {
 	 * @param id
 	 * @param relativePosition
 	 */
-	public void moveGraph(int id, Point2D relativePosition) {
-		RuleData ruleData = sessionManager.getRuleData(id);
+	public void moveGraph(int id, Point2D relativePosition) throws EngineException {
+		RuleData ruleData = getRuleData(id);	
+
 		ruleData.getLJungData().moveGraph(relativePosition);
 		ruleData.getKJungData().moveGraph(relativePosition);
 		ruleData.getRJungData().moveGraph(relativePosition);
@@ -1130,8 +972,9 @@ final public class RuleHandler {
 	 * @see {@link IRuleManipulation#moveGraphIntoVision(int)}
 	 * @param id
 	 */
-	public void moveGraphIntoVision(int id) {
-		RuleData ruleData = sessionManager.getRuleData(id);
+	public void moveGraphIntoVision(int id) throws EngineException {
+		RuleData ruleData = getRuleData(id);	
+
 		// how must k be moved?
 		Point2D.Double vectorToMoveIntoVision = ruleData.getKJungData().getVectorToMoveIntoVision();
 		// move all graphs equally to k so their relative position stay the same
@@ -1146,8 +989,9 @@ final public class RuleHandler {
 	 * @param factor
 	 * @param point
 	 */
-	public void moveAllNodesTo(int id, float factor, Point point) {
-		RuleData ruleData = sessionManager.getRuleData(id);
+	public void moveAllNodesTo(int id, float factor, Point point) throws EngineException {
+		RuleData ruleData = getRuleData(id);	
+
 		ruleData.getLJungData().moveAllNodesTo(factor, point);
 		ruleData.getKJungData().moveAllNodesTo(factor, point);
 		ruleData.getRJungData().moveAllNodesTo(factor, point);
@@ -1158,8 +1002,9 @@ final public class RuleHandler {
 	 * @param id
 	 * @param nodeSize
 	 */
-	public void setNodeSize(int id, double nodeSize) {
-		RuleData ruleData = sessionManager.getRuleData(id);
+	public void setNodeSize(int id, double nodeSize) throws EngineException {
+		RuleData ruleData = getRuleData(id);	
+
 		ruleData.getLJungData().setNodeSize(nodeSize);
 		ruleData.getKJungData().setNodeSize(nodeSize);
 		ruleData.getRJungData().setNodeSize(nodeSize);
@@ -1171,10 +1016,103 @@ final public class RuleHandler {
 	 * @param id
 	 * @return
 	 */
-	public double getNodeSize(int id) {
-		RuleData ruleData = sessionManager.getRuleData(id);
+	public double getNodeSize(int id) throws EngineException {
+		RuleData ruleData = getRuleData(id);	
+
 		// NodeSize is equal for all parts of the rule
 		return ruleData.getLJungData().getNodeSize();
 	}
 
+
+	private RuleData getRuleData(int ruleDataId) throws EngineException {
+		// get the RuleData from the id and SessionManager
+		RuleData ruleData = sessionManager.getRuleData(ruleDataId);
+
+		// Test: is id valid
+		if (ruleData == null) {
+			exception("id of the Rule is wrong");
+			return null;
+		} 
+		
+		return ruleData;
+	}
+	/**
+	 * Checks whether a combination of start and taget nodes is valid for
+	 * creating an arc in the rule
+	 * 
+	 * @param net
+	 * @param from
+	 * @param to
+	 * @param rule
+	 * @throws ShowAsWarningException
+	 *             with human friendly text message if combination is illegal
+	 */
+	private void ensureLegalNodeCombination(RuleNet net, Place from, Transition to, Rule rule) {
+		if (!net.equals(RuleNet.K)) {
+			return;
+		}
+	
+		if (rule.fromKtoL(from) == null) {
+			warning("Startknoten in L nicht verfügbar");
+		} else if (rule.fromKtoR(from) == null) {
+			warning("Startknoten in R nicht verfügbar");
+		}			
+	
+		if (rule.fromKtoL(to) == null) {
+			warning("Zielknoten in L nicht verfügbar");
+			
+		} else if (rule.fromKtoR(to) == null) {
+			warning("Zielknoten in R nicht verfügbar");
+		}
+	}
+
+	/**
+	 * Checks whether a combination of start and taget nodes is valid for
+	 * creating an arc in the rule
+	 * 
+	 * @param net
+	 * @param from
+	 * @param to
+	 * @param rule
+	 * @throws ShowAsWarningException
+	 *             with human friendly text message if combination is illegal
+	 */
+	private void ensureLegalNodeCombination(RuleNet net, Transition from, Place to, Rule rule) {
+		if (!net.equals(RuleNet.K)) {
+			return;
+		}
+	
+		if (rule.fromKtoL(from) == null) {
+			warning("Startknoten in L nicht verfügbar");
+		} else if (rule.fromKtoR(from) == null) {
+			warning("Startknoten in R nicht verfügbar");
+		}		
+	
+		if (rule.fromKtoL(to) == null) {
+			warning("Zielknoten in L nicht verfügbar");
+			
+		} else if (rule.fromKtoR(to) == null) {
+			warning("Zielknoten in R nicht verfügbar");
+		}	
+	}
+	
+	private void checkIsPlace(Place place) throws EngineException {
+		exceptionIf(!(place instanceof Place), "this isn't a place");
+	}
+	
+	private void checkIsTransition(Transition transition) throws EngineException {
+		exceptionIf(!(transition instanceof Transition), "this isn't a transition");
+	}
+	
+	private void checkIsPreArc(PreArc preArc) throws EngineException {
+		exceptionIf(!(preArc instanceof PreArc), "this isn't a preArc");
+	}
+	
+	private void checkIsPostArc(PostArc postArc) throws EngineException {
+		exceptionIf(!(postArc instanceof PostArc), "this isn't a postArc");
+	}
+	
+	private void checkIsIArc(IArc arc) throws EngineException {
+		exceptionIf(!(arc instanceof IArc), "this isn't an arc");
+	}
 }

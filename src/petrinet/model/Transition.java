@@ -1,15 +1,15 @@
 package petrinet.model;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.collections15.BidiMap;
+import org.apache.commons.collections15.bidimap.DualHashBidiMap;
 
 /**
  * This class represents a Transition within a {@link Petrinet}, holding
  * information about name, renew and label
- * 
  */
 public class Transition implements INode {
 	/**
@@ -33,41 +33,34 @@ public class Transition implements INode {
 	private String tlb = "";
 
 	/**
-	 * list of outgoing arcs
+	 * bijective Map of outgoing arcs
 	 */
-	private List<PostArc> outgoingArcs;
+	private BidiMap<Integer, PostArc> outgoingArcs;
 
 	/**
-	 * list of incoming arcs
+	 * bijective Map of incoming arcs
 	 */
-	private List<PreArc> incomingArcs;
-
-	/**
-	 * Petrinet of the transition
-	 */
-	private final Petrinet petrinet;
+	private BidiMap<Integer, PreArc> incomingArcs;
 
 	/**
 	 * Creates a new {@link Transition} with no name and no arcs
 	 * 
 	 * @param id        Id of the {@link Transition}
 	 * @param rnw       Renew of the {@link Transition}
-	 * @param petrinet  {@link Petrinet} of the {@link Transition}
 	 */
-	public Transition(int id, IRenew rnw, Petrinet petrinet) {
+	public Transition(int id, IRenew rnw) {
 		this.id           = id;
 		this.rnw          = rnw;
-		this.incomingArcs = new ArrayList<PreArc>();
-		this.outgoingArcs = new ArrayList<PostArc>();
-		this.petrinet     = petrinet;
+		this.incomingArcs = new DualHashBidiMap<Integer, PreArc>();
+		this.outgoingArcs = new DualHashBidiMap<Integer, PostArc>();
 	}
 
 	public void addIncomingArc(PreArc arc) {
-		this.incomingArcs.add(arc);
+		this.incomingArcs.put(arc.getId(), arc);
 	}
 
 	public void addOutgoingArc(PostArc arc) {
-		this.outgoingArcs.add(arc);
+		this.outgoingArcs.put(arc.getId(), arc);
 	}
 
 	/*
@@ -146,12 +139,12 @@ public class Transition implements INode {
 	 * Returns the {@link Place places} that are at the other end of outgoing
 	 * {@link IArc arcs}
 	 * 
-	 * @return Empty list if there are no outgoing arcs
+	 * @return Empty set if there are no outgoing arcs
 	 */
-	public List<Place> getOutgoingPlaces() {
-		List<Place> out = new ArrayList<Place>(outgoingArcs.size());
+	public Set<Place> getOutgoingPlaces() {
+		Set<Place> out = new HashSet<Place>();
 		
-		for (PostArc arc : outgoingArcs) {
+		for (PostArc arc : outgoingArcs.values()) {
 			out.add(arc.getTarget());
 		}
 		
@@ -162,12 +155,12 @@ public class Transition implements INode {
 	 * Returns the {@link Place places} that are at the other end of incoming
 	 * {@link IArc arcs}
 	 * 
-	 * @return Empty list if there are no incoming arcs
+	 * @return Empty set if there are no incoming arcs
 	 */
-	public List<Place> getIncomingPlaces() {
-		List<Place> in = new ArrayList<Place>(incomingArcs.size());
+	public Set<Place> getIncomingPlaces() {
+		Set<Place> in = new HashSet<Place>();
 
-		for (PreArc arc : incomingArcs) {
+		for (PreArc arc : incomingArcs.values()) {
 			in.add(arc.getSource());
 		}
 
@@ -180,9 +173,9 @@ public class Transition implements INode {
 	public Hashtable<Integer, Integer> getPre() {
 		final Hashtable<Integer, Integer> pre = new Hashtable<Integer, Integer>();
 
-		for (PreArc arc : incomingArcs) {
+		for (PreArc arc : incomingArcs.values()) {
 			Place place = arc.getSource();			
-			pre.put(Integer.valueOf(place.getId()), arc.getMark());
+			pre.put(Integer.valueOf(place.getId()), arc.getWeight());
 		}
 
 		return pre;
@@ -194,28 +187,28 @@ public class Transition implements INode {
 	public Hashtable<Integer, Integer> getPost() {
 		final Hashtable<Integer, Integer> post = new Hashtable<Integer, Integer>();
 
-		for (PostArc arc : outgoingArcs) {
+		for (PostArc arc : outgoingArcs.values()) {
 			Place place = arc.getTarget();
-			post.put(Integer.valueOf(place.getId()), arc.getMark());
+			post.put(Integer.valueOf(place.getId()), arc.getWeight());
 		}
 
 		return post;
 	}
 
-	public List<PostArc> getOutgoingArcs() {
-		return outgoingArcs;
+	public Set<PostArc> getOutgoingArcs() {
+		return outgoingArcs.values();
 	}
 
-	public List<PreArc> getIncomingArcs() {
-		return incomingArcs;
+	public Set<PreArc> getIncomingArcs() {
+		return incomingArcs.values();
 	}
 
 	boolean removeOutgoingArc(PostArc arc) {
-		return outgoingArcs.remove(arc);
+		return outgoingArcs.remove(arc.getId()) != null;
 	}
 
 	boolean removeIncomingArc(PreArc arc) {
-		return incomingArcs.remove(arc);
+		return incomingArcs.remove(arc.getId()) != null;
 	}
 
 	/**
@@ -225,10 +218,8 @@ public class Transition implements INode {
 	 * @return
 	 */
 	public boolean isActivated() {
-		for (PreArc arc : getIncomingArcs()) {
-			Place place = arc.getSource();
-
-			if (place.getMark() < arc.getMark()) {
+		for (PreArc arc : incomingArcs.values()) {
+			if (arc.getPlace().getMark() < arc.getWeight()) {
 				return false;
 			}
 		}
@@ -241,24 +232,26 @@ public class Transition implements INode {
 	/**
 	 * Fires a {@link Transition} with the <code>id</code>
 	 * 
-	 * @return Changed nodes
+	 * @return Changed places
 	 */
-	public Set<INode> fire() {
+	public Set<Place> fire() {
 		if (!this.isActivated()) {
 			throw new IllegalArgumentException();
 		}
 
 		// all changed nodes
-		Set<INode> changedNodes = new HashSet<INode>();
+		Set<Place> changedNodes = new HashSet<Place>();
 		
 		// set tokens
-		for (PreArc arc : incomingArcs) {
-			arc.getPlace().setMark(arc.getPlace().getMark() - arc.getMark());
+		for (PreArc arc : incomingArcs.values()) {
+			arc.getPlace().setMark(arc.getPlace().getMark() - arc.getWeight());
+			
 			changedNodes.add(arc.getPlace());
 		}
 
-		for (PostArc arc : outgoingArcs) {
-			arc.getPlace().setMark(arc.getPlace().getMark() + arc.getMark());
+		for (PostArc arc : outgoingArcs.values()) {
+			arc.getPlace().setMark(arc.getPlace().getMark() + arc.getWeight());
+			
 			changedNodes.add(arc.getPlace());
 		}
 

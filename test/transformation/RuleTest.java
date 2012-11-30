@@ -1189,8 +1189,8 @@ public class RuleTest {
         
         rule.setWeightInL(preArc, 97);
 
-        assertEquals(97, preArc.getMark());
-        assertEquals(97, rule.fromLtoK(preArc).getMark());
+        assertEquals(97, preArc.getWeight());
+        assertEquals(97, rule.fromLtoK(preArc).getWeight());
     }
 
     @Test
@@ -1201,9 +1201,9 @@ public class RuleTest {
         
         rule.setWeightInK(otherPreArc, 97);
 
-        assertEquals(97, preArc.getMark());
-        assertEquals(97, rule.fromKtoL(otherPreArc).getMark());
-        assertEquals(97, otherPreArc.getMark());
+        assertEquals(97, preArc.getWeight());
+        assertEquals(97, rule.fromKtoL(otherPreArc).getWeight());
+        assertEquals(97, otherPreArc.getWeight());
     }
 
 
@@ -1215,10 +1215,10 @@ public class RuleTest {
         
         rule.setWeightInL(otherPreArc, 97);
 
-        assertEquals(97, otherPreArc.getMark());
-        assertEquals(97, preArc.getMark());
-        assertEquals(97, rule.fromLtoK(otherPreArc).getMark());
-        assertEquals(97, rule.fromLtoR(otherPreArc).getMark());
+        assertEquals(97, otherPreArc.getWeight());
+        assertEquals(97, preArc.getWeight());
+        assertEquals(97, rule.fromLtoK(otherPreArc).getWeight());
+        assertEquals(97, rule.fromLtoR(otherPreArc).getWeight());
     }
 
     @Test
@@ -1228,9 +1228,9 @@ public class RuleTest {
         
         rule.setWeightInK(preArc, 97);
 
-        assertEquals(97, rule.fromKtoL(preArc).getMark());
-        assertEquals(97, preArc.getMark());
-        assertEquals(97, rule.fromKtoR(preArc).getMark());
+        assertEquals(97, rule.fromKtoL(preArc).getWeight());
+        assertEquals(97, preArc.getWeight());
+        assertEquals(97, rule.fromKtoR(preArc).getWeight());
     }
 
     @Test
@@ -1241,10 +1241,10 @@ public class RuleTest {
         
         rule.setWeightInR(otherPreArc, 97);
 
-        assertEquals(97, rule.fromRtoL(otherPreArc).getMark());
-        assertEquals(97, preArc.getMark());
-        assertEquals(97, rule.fromRtoK(otherPreArc).getMark());
-        assertEquals(97, otherPreArc.getMark());
+        assertEquals(97, rule.fromRtoL(otherPreArc).getWeight());
+        assertEquals(97, preArc.getWeight());
+        assertEquals(97, rule.fromRtoK(otherPreArc).getWeight());
+        assertEquals(97, otherPreArc.getWeight());
     }
 
     @Test
@@ -1254,8 +1254,8 @@ public class RuleTest {
         
         rule.setWeightInR(preArc, 97);
 
-        assertEquals(97, rule.fromRtoK(preArc).getMark());
-        assertEquals(97, preArc.getMark());
+        assertEquals(97, rule.fromRtoK(preArc).getWeight());
+        assertEquals(97, preArc.getWeight());
     }
 
     @Test
@@ -1266,9 +1266,9 @@ public class RuleTest {
         
         rule.setWeightInK(otherPreArc, 97);
 
-        assertEquals(97, otherPreArc.getMark());
-        assertEquals(97, rule.fromKtoR(otherPreArc).getMark());
-        assertEquals(97, preArc.getMark());
+        assertEquals(97, otherPreArc.getWeight());
+        assertEquals(97, rule.fromKtoR(otherPreArc).getWeight());
+        assertEquals(97, preArc.getWeight());
     }
     
 
@@ -1280,8 +1280,8 @@ public class RuleTest {
         
         rule.setWeightInL(postArc, 97);
 
-        assertEquals(97, postArc.getMark());
-        assertEquals(97, rule.fromLtoK(postArc).getMark());
+        assertEquals(97, postArc.getWeight());
+        assertEquals(97, rule.fromLtoK(postArc).getWeight());
     }
 
     @Test
@@ -1292,9 +1292,9 @@ public class RuleTest {
         
         rule.setWeightInK(otherPostArc, 97);
 
-        assertEquals(97, postArc.getMark());
-        assertEquals(97, rule.fromKtoL(otherPostArc).getMark());
-        assertEquals(97, otherPostArc.getMark());
+        assertEquals(97, postArc.getWeight());
+        assertEquals(97, rule.fromKtoL(otherPostArc).getWeight());
+        assertEquals(97, otherPostArc.getWeight());
     }
 
 
@@ -1306,10 +1306,10 @@ public class RuleTest {
         
         rule.setWeightInL(otherPostArc, 97);
 
-        assertEquals(97, otherPostArc.getMark());
-        assertEquals(97, postArc.getMark());
-        assertEquals(97, rule.fromLtoK(otherPostArc).getMark());
-        assertEquals(97, rule.fromLtoR(otherPostArc).getMark());
+        assertEquals(97, otherPostArc.getWeight());
+        assertEquals(97, postArc.getWeight());
+        assertEquals(97, rule.fromLtoK(otherPostArc).getWeight());
+        assertEquals(97, rule.fromLtoR(otherPostArc).getWeight());
     }
 
     @Test
@@ -1319,9 +1319,9 @@ public class RuleTest {
         
         rule.setWeightInK(postArc, 97);
 
-        assertEquals(97, rule.fromKtoL(postArc).getMark());
-        assertEquals(97, postArc.getMark());
-        assertEquals(97, rule.fromKtoR(postArc).getMark());
+        assertEquals(97, rule.fromKtoL(postArc).getWeight());
+        assertEquals(97, postArc.getWeight());
+        assertEquals(97, rule.fromKtoR(postArc).getWeight());
     }
 
     @Test
@@ -1332,10 +1332,10 @@ public class RuleTest {
         
         rule.setWeightInR(otherPostArc, 97);
 
-        assertEquals(97, rule.fromRtoL(otherPostArc).getMark());
-        assertEquals(97, postArc.getMark());
-        assertEquals(97, rule.fromRtoK(otherPostArc).getMark());
-        assertEquals(97, otherPostArc.getMark());
+        assertEquals(97, rule.fromRtoL(otherPostArc).getWeight());
+        assertEquals(97, postArc.getWeight());
+        assertEquals(97, rule.fromRtoK(otherPostArc).getWeight());
+        assertEquals(97, otherPostArc.getWeight());
     }
 
     @Test
@@ -1345,8 +1345,8 @@ public class RuleTest {
         
         rule.setWeightInR(postArc, 97);
 
-        assertEquals(97, rule.fromRtoK(postArc).getMark());
-        assertEquals(97, postArc.getMark());
+        assertEquals(97, rule.fromRtoK(postArc).getWeight());
+        assertEquals(97, postArc.getWeight());
     }
 
     @Test
@@ -1357,9 +1357,9 @@ public class RuleTest {
         
         rule.setWeightInK(otherPostArc, 97);
 
-        assertEquals(97, otherPostArc.getMark());
-        assertEquals(97, rule.fromKtoR(otherPostArc).getMark());
-        assertEquals(97, postArc.getMark());
+        assertEquals(97, otherPostArc.getWeight());
+        assertEquals(97, rule.fromKtoR(otherPostArc).getWeight());
+        assertEquals(97, postArc.getWeight());
     }
 }
 

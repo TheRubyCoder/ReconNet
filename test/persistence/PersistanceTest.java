@@ -113,25 +113,25 @@ public class PersistanceTest {
 		// try {
 
 		int id = handler.createRule();
-		INode place1 = handler.createPlace(id, RuleNet.K, new Point2D.Double(
+		petrinet.model.Place place1 = handler.createPlace(id, RuleNet.K, new Point2D.Double(
 				10, 10));
-		INode place3 = handler.createPlace(id, RuleNet.R, new Point2D.Double(
+		petrinet.model.Place place3 = handler.createPlace(id, RuleNet.R, new Point2D.Double(
 				10, 1000));
-
+/*
 		System.out.println("size:"
 				+ handler.getJungLayout(id, RuleNet.K).getGraph().getVertices()
-						.size());
+						.size());*/
 
 		handler.setPlaceColor(id, place1, new java.awt.Color(255, 0, 0));
 		handler.setPlaceColor(id, place3, new java.awt.Color(0, 255, 0));
 
-		INode trans2 = handler.createTransition(id, RuleNet.R,
+		petrinet.model.Transition trans2 = handler.createTransition(id, RuleNet.R,
 				new Point2D.Double(10, 500));
 
 		/** TODO: map place 1 to INode in R */
 
-		handler.createArc(id, RuleNet.R, place1, trans2);
-		handler.createArc(id, RuleNet.R, trans2, place3);
+		handler.createPreArc(id, RuleNet.R, place1, trans2);
+		handler.createPostArc(id, RuleNet.R, trans2, place3);
 
 		handlerSave.save(id, "test", "rule_save_test", "pnml");
 

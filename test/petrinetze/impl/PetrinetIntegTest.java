@@ -26,17 +26,17 @@ public class PetrinetIntegTest {
 		Transition t1 = net.addTransition("ttt");
 		Transition t2 = net.addTransition("uuu");
 		IArc a4 = net.addPreArc("dt", p2, t2);
-		a4.setMark(5);
+		a4.setWeight(5);
 		
 		IArc a1 = net.addPreArc("at", p1, t1);
-		a1.setMark(2);
+		a1.setWeight(2);
 		
 		IArc a5 = net.addPostArc("at", t2, p4);
-		a1.setMark(2);
+		a1.setWeight(2);
 		
 		IArc a2 = net.addPostArc("bt", t1, p2);
 		IArc a3 = net.addPostArc("ct", t1, p3);
-		a3.setMark(3);
+		a3.setWeight(3);
 		
 		for (IArc a : net.getArcs()) {
 			System.out.println("Arc ID: " + a.getId() + " Name: " + a.getName());

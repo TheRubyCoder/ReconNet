@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import petrinet.model.IArc;
-import petrinet.model.INode;
 import petrinet.model.Petrinet;
 import petrinet.model.Place;
 import petrinet.model.PostArc;

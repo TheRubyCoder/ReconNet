@@ -14,9 +14,9 @@ public interface IArc {
 	/**
 	 * @return Maximum weight
 	 */
-	public abstract int getMark();
+	public abstract int getWeight();
 
-	public abstract void setMark(int mark);
+	public abstract void setWeight(int weight);
 
 	/**
 	 * @return Den Startknoten der Kante.

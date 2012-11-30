@@ -26,6 +26,11 @@ public class Arc {
 	String target;
 	
 	/**
+	 * Toolspecific information
+	 */
+	private Toolspecific toolspecific;
+	
+	/**
 	 * Information about the arcs graphics (sub xml node)
 	 */
 	Graphics graphics;
@@ -52,6 +57,7 @@ public class Arc {
 	public void setId(String id) {
 		this.id = id;
 	}
+	
 	@XmlAttribute
 	public String getSource() {
 		return source;
@@ -60,6 +66,7 @@ public class Arc {
 	public void setSource(String source) {
 		this.source = source;
 	}
+	
 	@XmlAttribute
 	public String getTarget() {
 		return target;
@@ -68,6 +75,16 @@ public class Arc {
 	public void setTarget(String target) {
 		this.target = target;
 	}
+	
+	@XmlElement
+	public Toolspecific getToolspecific() {
+		return toolspecific;
+	}
+
+	public void setToolspecific(Toolspecific toolspecific) {
+		this.toolspecific = toolspecific;
+	}
+	
 	@XmlElement
 	public Graphics getGraphics() {
 		return graphics;

@@ -34,6 +34,11 @@
         <inscription>
           <text>2</text>
         </inscription>
+        <toolspecific tool="ReConNet" version="1.0">
+            <weight>
+                <text>1</text>
+            </weight>
+        </toolspecific>   
       </arc>
     </page>
   </net>

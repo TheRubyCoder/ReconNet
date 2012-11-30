@@ -3,15 +3,11 @@ package engine.handler.rule;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
-import petrinet.model.IArc;
-import petrinet.model.INode;
 import petrinet.model.IRenew;
-import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
-import engine.attribute.ArcAttribute;
-import engine.attribute.PlaceAttribute;
-import engine.attribute.RuleAttribute;
-import engine.attribute.TransitionAttribute;
-import engine.handler.NodeTypeEnum;
+import petrinet.model.Place;
+import petrinet.model.PostArc;
+import petrinet.model.PreArc;
+import petrinet.model.Transition;
 import engine.handler.RuleNet;
 import engine.ihandler.IRulePersistence;
 import exceptions.EngineException;
@@ -47,164 +43,92 @@ public class RulePersistence implements IRulePersistence {
 	}
 
 	@Override
-	public IArc createArc(int id, RuleNet net, INode from, INode to)
+	public PreArc createPreArc(int id, RuleNet net, Place place, Transition transition)
 			throws EngineException {
 
-		IArc arc = ruleManipulationBackend.createArc(id, net, from, to);
-
-		return arc;
-
+		return ruleManipulationBackend.createPreArc(id, net, place, transition);
 	}
 
 	@Override
-	public INode createPlace(int id, RuleNet net, Point2D coordinate)
+	public PostArc createPostArc(int id, RuleNet net, Transition transition, Place place)
 			throws EngineException {
 
-		INode place = ruleManipulationBackend.createPlace(id, net, coordinate);
+		return ruleManipulationBackend.createPostArc(id, net, transition, place);
+	}
 
-		return place;
+	@Override
+	public Place createPlace(int id, RuleNet net, Point2D coordinate)
+			throws EngineException {
 
+		return ruleManipulationBackend.createPlace(id, net, coordinate);
 	}
 
 	@Override
 	public int createRule() {
-
-		int id = ruleManipulationBackend.createRule();
-
-		return id;
-
+		return ruleManipulationBackend.createRule();
 	}
 
 	@Override
-	public INode createTransition(int id, RuleNet net, Point2D coordinate)
+	public Transition createTransition(int id, RuleNet net, Point2D coordinate)
 			throws EngineException {
 
-		INode transition = ruleManipulationBackend.createTransition(id, net,
-				coordinate);
-
-		return transition;
-
+		return ruleManipulationBackend.createTransition(id, net, coordinate);
 	}
 
 	@Override
-	public ArcAttribute getArcAttribute(int id, IArc arc) {
-
-		ArcAttribute attr = ruleManipulationBackend.getArcAttribute(id, arc);
-
-		return attr;
-
-	}
-
-	@Override
-	public AbstractLayout<INode, IArc> getJungLayout(int id, RuleNet net)
-			throws EngineException {
-
-		AbstractLayout<INode, IArc> layout = ruleManipulationBackend
-				.getJungLayout(id, net);
-
-		return layout;
-
-	}
-
-	@Override
-	public PlaceAttribute getPlaceAttribute(int id, INode place)
-			throws EngineException {
-
-		PlaceAttribute attr = ruleManipulationBackend.getPlaceAttribute(id,
-				place);
-
-		return attr;
-
-	}
-
-	@Override
-	public TransitionAttribute getTransitionAttribute(int id, INode transition)
-			throws EngineException {
-
-		TransitionAttribute attr = ruleManipulationBackend
-				.getTransitionAttribute(id, transition);
-
-		return attr;
-
-	}
-
-	@Override
-	public RuleAttribute getRuleAttribute(int id) throws EngineException {
-
-		RuleAttribute attr = ruleManipulationBackend.getRuleAttribute(id);
-
-		return attr;
-
-	}
-
-	@Override
-	public void setMarking(int id, INode place, int marking)
+	public void setMarking(int id, Place place, int marking)
 			throws EngineException {
 
 		ruleManipulationBackend.setMarking(id, place, marking);
-
 	}
 
 	@Override
-	public void setPname(int id, INode place, String pname)
+	public void setPname(int id, Place place, String pname)
 			throws EngineException {
 
 		ruleManipulationBackend.setPname(id, place, pname);
-
 	}
 
 	@Override
-	public void setTlb(int id, INode transition, String tlb)
+	public void setTlb(int id, Transition transition, String tlb)
 			throws EngineException {
 
 		ruleManipulationBackend.setTlb(id, transition, tlb);
-
 	}
 
 	@Override
-	public void setTname(int id, INode transition, String tname)
+	public void setTname(int id, Transition transition, String tname)
 			throws EngineException {
 
 		ruleManipulationBackend.setTname(id, transition, tname);
-
 	}
 
 	@Override
-	public void setWeight(int id, IArc arc, int weight) throws EngineException {
-
-		ruleManipulationBackend.setWeight(id, arc, weight);
-
+	public void setWeight(int id, PreArc preArc, int weight) throws EngineException {
+		ruleManipulationBackend.setWeight(id, preArc, weight);
 	}
 
 	@Override
-	public NodeTypeEnum getNodeType(INode node) {
-
-		NodeTypeEnum type = ruleManipulationBackend.getNodeType(node);
-
-		return type;
-
+	public void setWeight(int id, PostArc postArc, int weight) throws EngineException {
+		ruleManipulationBackend.setWeight(id, postArc, weight);
 	}
 
 	@Override
-	public void setRnw(int id, INode transition, IRenew renews)
+	public void setRnw(int id, Transition transition, IRenew renews)
 			throws EngineException {
 
 		ruleManipulationBackend.setRnw(id, transition, renews);
-
 	}
 
 	@Override
-	public void setPlaceColor(int id, INode place, Color color)
+	public void setPlaceColor(int id, Place place, Color color)
 			throws EngineException {
 
 		ruleManipulationBackend.setPlaceColor(id, place, color);
-
 	}
 
 	@Override
-	public void setNodeSize(int id, double nodeSize) {
-
+	public void setNodeSize(int id, double nodeSize) throws EngineException {
 		ruleManipulationBackend.setNodeSize(id, nodeSize);
 	}
-
 }

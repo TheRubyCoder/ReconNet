@@ -3,19 +3,15 @@ package engine.ihandler;
 import java.awt.Color;
 import java.awt.geom.Point2D;
 
-import petrinet.model.IArc;
-import petrinet.model.INode;
 import petrinet.model.IRenew;
+import petrinet.model.Place;
+import petrinet.model.PostArc;
+import petrinet.model.PreArc;
+import petrinet.model.Transition;
 
 import com.sun.istack.NotNull;
 
-import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
-import engine.attribute.ArcAttribute;
-import engine.attribute.PlaceAttribute;
-import engine.attribute.RuleAttribute;
-import engine.attribute.TransitionAttribute;
 import engine.data.JungData;
-import engine.handler.NodeTypeEnum;
 import engine.handler.RuleNet;
 import exceptions.EngineException;
 
@@ -32,16 +28,26 @@ import exceptions.EngineException;
 public interface IRulePersistence {
 
 	/**
-	 * 
-	 * Creates an Arc
+	 * Creates an PreArc
 	 * 
 	 * @param id ID of the Rule
-	 * @param from Source of the Arc
-	 * @param to Target of the Arc
-	 * @return the new Arc
+	 * @param place Place of the Arc
+	 * @param transition Transition of the Arc
+	 * @return the new PreArc
 	 * 
 	 */
-	public IArc createArc(@NotNull int id,RuleNet net, @NotNull INode from, @NotNull INode to) throws EngineException ;
+	public PreArc createPreArc(@NotNull int id, RuleNet net, @NotNull Place place, @NotNull Transition transition) throws EngineException;
+
+	/**
+	 * Creates an PostArc
+	 * 
+	 * @param id ID of the Rule
+	 * @param transition Transition of the Arc
+	 * @param  place Place of the Arc
+	 * @return the new PostArc
+	 * 
+	 */
+	public PostArc createPostArc(@NotNull int id, RuleNet net, @NotNull Transition transition, @NotNull Place place) throws EngineException;
 	
 	/**
 	 * 
@@ -52,7 +58,7 @@ public interface IRulePersistence {
 	 * @return the new Place
 	 * 
 	 */
-	public INode createPlace(@NotNull int id, @NotNull RuleNet net, @NotNull Point2D coordinate) throws EngineException ;
+	public Place createPlace(@NotNull int id, @NotNull RuleNet net, @NotNull Point2D coordinate) throws EngineException ;
 	
 	/**
 	 * 
@@ -73,54 +79,8 @@ public interface IRulePersistence {
 	 * @return the new Transition 
 	 * 
 	 */
-	public INode createTransition(@NotNull int id, @NotNull RuleNet net, @NotNull Point2D coordinate) throws EngineException;
-	
-	/**
-	 * Gets the Attributes from an Arc
-	 * 
-	 * @param id ID of the Rule
-	 * @param arc which attributes are wanted
-	 * @return ArcAttribute
-	 */
-	public ArcAttribute getArcAttribute(@NotNull int id, @NotNull IArc arc) throws EngineException ;
-	
-	/**
-	 * Gets the JungLayout from the Rule
-	 * 
-	 * @param id ID of the Rule
-	 * @return AbstractLayout
-	 */
-	public AbstractLayout<INode, IArc> getJungLayout(@NotNull int id, @NotNull RuleNet net) throws EngineException ;
-	
-	/**
-	 * Gets the Attributes from a Place
-	 * 
-	 * @param id ID of the Rule
-	 * @param place which attributes are wanted
-	 * @return PlaceAtrribute
-	 * @throws EngineException 
-	 */
-	public PlaceAttribute getPlaceAttribute(@NotNull int id, @NotNull INode place) throws EngineException;
-	
-	/**
-	 * Gets the Attributes from a Transition
-	 * 
-	 * @param id ID of the Rule
-	 * @param transition which attributes are wanted
-	 * @return TransitionAttribute 
-	 * @throws EngineException 
-	 */
-	public TransitionAttribute getTransitionAttribute(@NotNull int id, @NotNull INode transition) throws EngineException;
-	
-	/**
-	 * Gets the Attributes from a Rule
-	 * 
-	 * @param id ID of the Rule
-	 * @return RuleAttribute or it throws a EngineException
-	 * @throws EngineException 
-	 */
-	public RuleAttribute getRuleAttribute(@NotNull int id) throws EngineException;
-	
+	public Transition createTransition(@NotNull int id, @NotNull RuleNet net, @NotNull Point2D coordinate) throws EngineException;
+
 	/**
 	 * Sets the Marking of a Place.
 	 * 
@@ -129,7 +89,7 @@ public interface IRulePersistence {
 	 * @param marking amount of mark 
 	 * @throws EngineException 
 	 */
-	public void setMarking(@NotNull int id, @NotNull INode place, @NotNull int marking) throws EngineException;
+	public void setMarking(@NotNull int id, @NotNull Place place, @NotNull int marking) throws EngineException;
 	
 	/**
 	 * Sets the PName of a Place.
@@ -139,7 +99,7 @@ public interface IRulePersistence {
 	 * @param pname PName
 	 * @throws EngineException 
 	 */
-	public void setPname(@NotNull int id, @NotNull INode place, @NotNull String pname) throws EngineException;
+	public void setPname(@NotNull int id, @NotNull Place place, @NotNull String pname) throws EngineException;
 	
 	/**
 	 * Sets the Tlb of a Transition.
@@ -149,7 +109,7 @@ public interface IRulePersistence {
 	 * @param tlb TransitionLabel
 	 * @throws EngineException 
 	 */
-	public void setTlb(@NotNull int id, @NotNull INode transition, @NotNull String tlb) throws EngineException;
+	public void setTlb(@NotNull int id, @NotNull Transition transition, @NotNull String tlb) throws EngineException;
 	
 	/**
 	 * Sets the TName of a Transition.
@@ -159,27 +119,38 @@ public interface IRulePersistence {
 	 * @param tname TName
 	 * @throws EngineException 
 	 */
-	public void setTname(@NotNull int id, @NotNull INode transition, @NotNull String tname) throws EngineException;
+	public void setTname(@NotNull int id, @NotNull Transition transition, @NotNull String tname) throws EngineException;
 	
 	/**
-	 * Sets the Weight of an Arc.
+	 * Sets the Weight of a PreArc.
 	 * 
-	 * @param id ID of the Rule
-	 * @param arc where to set the weight
-	 * @param weight weight of the arc
+	 * @param  id ID of the Rule
+	 * @param  preArc where to set the weight
+	 * @param  weight weight of the arc
 	 * @throws EngineException 
 	 */
-	public void setWeight(@NotNull int id, @NotNull IArc arc, @NotNull int weight) throws EngineException;
+	public void setWeight(@NotNull int id, @NotNull PreArc preArc, @NotNull int weight) throws EngineException;
+
+	/**
+	 * Sets the Weight of a PostArc.
+	 * 
+	 * @param  id ID of the Rule
+	 * @param  postArc where to set the weight
+	 * @param  weight weight of the arc
+	 * @throws EngineException 
+	 */
+	public void setWeight(@NotNull int id, @NotNull PostArc postArc, @NotNull int weight) throws EngineException;
 	
 	/**
 	 * 
 	 * Sets a Strings as RNW.
 	 * 
 	 * @param id ID of the Rule
+	 * @param transition 
 	 * @param rnw String as RNW
 	 * 
 	 */
-	public void setRnw(int id, INode transition, IRenew renews) throws EngineException;
+	public void setRnw(int id, Transition transition, IRenew renews) throws EngineException;
 
 	/**
 	 * 
@@ -190,21 +161,14 @@ public interface IRulePersistence {
 	 * @param color new Color
 	 * 
 	 */
-	public void setPlaceColor(int id, INode place, Color color) throws EngineException;
-
-	/**
-	 * Returns the type of the Object.
-	 * @param node to check
-	 * @return Enum composed of Place, Transition
-	 */
-	public NodeTypeEnum getNodeType(@NotNull INode node);
+	public void setPlaceColor(int id, Place place, Color color) throws EngineException;
 	
 	/**
 	 * Sets the nodeSize for the JungData of the petrinets of the rule with <code>id</code>
 	 * @see {@link JungData#setNodeSize(double)}
 	 * @param id
 	 * @param nodeSize
+	 * @throws EngineException 
 	 */
-	public void setNodeSize(int id, double nodeSize);
-	
+	public void setNodeSize(int id, double nodeSize) throws EngineException;	
 }

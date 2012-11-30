@@ -12,6 +12,8 @@ import org.junit.Test;
 
 import petrinet.model.IArc;
 import petrinet.model.INode;
+import petrinet.model.Place;
+import petrinet.model.Transition;
 import engine.handler.petrinet.PetrinetManipulation;
 import engine.handler.petrinet.PetrinetPersistence;
 import engine.ihandler.IPetrinetManipulation;
@@ -35,10 +37,10 @@ public class PetrinetHandlerTest {
 	private Point2D pointPlace3 = null;
 	private Point2D pointPlace4 = null;
 
-	private INode place1 = null;
-	private INode place2 = null;
-	private INode place3 = null;
-	private INode place4 = null;
+	private Place place1 = null;
+	private Place place2 = null;
+	private Place place3 = null;
+	private Place place4 = null;
 
 	// Transitions & Places **************************************************
 	private Point2D pointTransition1 = null;
@@ -46,10 +48,10 @@ public class PetrinetHandlerTest {
 	private Point2D pointTransition3 = null;
 	private Point2D pointTransition4 = null;
 
-	private INode transition1 = null;
-	private INode transition2 = null;
-	private INode transition3 = null;
-	private INode transition4 = null;
+	private Transition transition1 = null;
+	private Transition transition2 = null;
+	private Transition transition3 = null;
+	private Transition transition4 = null;
 
 	// Arcs ******************************************************************
 	private IArc arc1;
@@ -176,33 +178,43 @@ public class PetrinetHandlerTest {
 
 		// id is wrong
 		try {
-
-			petrinetHandler.createArc(-1, transition4, place4);
-
+			petrinetHandler.createPreArc(-1, place4, transition4);
 			fail("testCreateArc: id is wrong");
-
+		} catch (Exception e) {
+			assertTrue(true);
+		}
+		try {
+			petrinetHandler.createPostArc(-1, transition4, place4);
+			fail("testCreateArc: id is wrong");
 		} catch (Exception e) {
 			assertTrue(true);
 		}
 
 		// from is wrong
 		try {
-
-			petrinetHandler.createArc(idPetrinet, null, place4);
-
+			petrinetHandler.createPreArc(idPetrinet, null, transition4);
 			fail("testCreateArc: from is wrong");
-
+		} catch (EngineException e) {
+			assertTrue(true);
+		}
+		
+		try {
+			petrinetHandler.createPostArc(idPetrinet, null, place4);
+			fail("testCreateArc: from is wrong");
 		} catch (EngineException e) {
 			assertTrue(true);
 		}
 
 		// to is wrong
 		try {
-
-			petrinetHandler.createArc(idPetrinet, place4, null);
-
+			petrinetHandler.createPreArc(idPetrinet, place4, null);
 			fail("testCreateArc: to is wrong");
-
+		} catch (EngineException e) {
+			assertTrue(true);
+		}
+		try {
+			petrinetHandler.createPostArc(idPetrinet, transition4, null);
+			fail("testCreateArc: to is wrong");
 		} catch (EngineException e) {
 			assertTrue(true);
 		}
@@ -220,7 +232,6 @@ public class PetrinetHandlerTest {
 
 		// test
 		try {
-
 			petrinetHandler2.deleteArc(idPetrinet, arc1);
 			petrinetHandler2.deleteArc(idPetrinet, arc2);
 			petrinetHandler2.deleteArc(idPetrinet, arc3);
@@ -230,49 +241,34 @@ public class PetrinetHandlerTest {
 			petrinetHandler2.deleteArc(idPetrinet, arc7);
 			petrinetHandler2.deleteArc(idPetrinet, arc8);
 			petrinetHandler2.deleteArc(idPetrinet, arc9);
-
 		} catch (EngineException e) {
-
 			// if you this test.. something is wrong..!
 			fail("testDeleteArc");
-
 		}
 
 		// delete one item two times
 		try {
-
 			petrinetHandler2.deleteArc(idPetrinet, arc1);
-
 			fail("testDeleteArc: delete one item two times");
-
 		} catch (EngineException e) {
 			assertTrue(true);
 		}
 
 		// wrong id
 		try {
-
 			petrinetHandler2.deleteArc(-1, arc1);
-
 			fail("testDeleteArc: wrong id");
-
 		} catch (Exception e) {
 			assertTrue(true);
 		}
 
 		// wrong Arc
 		try {
-
 			petrinetHandler2.deleteArc(idPetrinet, null);
-
 			fail("testDeleteArc: wrong Arc");
-
 		} catch (EngineException e) {
-			fail("No EngineException expected");
-		} catch (NullPointerException e) {
 			assertTrue(true);
 		}
-
 	}
 
 	@Test
@@ -398,15 +394,15 @@ public class PetrinetHandlerTest {
 	private void initArc() {
 		try {
 
-			arc1 = petrinetHandler.createArc(idPetrinet, place1, transition1);
-			arc2 = petrinetHandler.createArc(idPetrinet, place2, transition1);
-			arc3 = petrinetHandler.createArc(idPetrinet, place3, transition1);
-			arc4 = petrinetHandler.createArc(idPetrinet, place4, transition1);
-			arc5 = petrinetHandler.createArc(idPetrinet, transition1, place1);
-			arc6 = petrinetHandler.createArc(idPetrinet, transition2, place2);
-			arc7 = petrinetHandler.createArc(idPetrinet, transition3, place2);
-			arc8 = petrinetHandler.createArc(idPetrinet, transition3, place3);
-			arc9 = petrinetHandler.createArc(idPetrinet, transition4, place4);
+			arc1 = petrinetHandler.createPreArc(idPetrinet, place1, transition1);
+			arc2 = petrinetHandler.createPreArc(idPetrinet, place2, transition1);
+			arc3 = petrinetHandler.createPreArc(idPetrinet, place3, transition1);
+			arc4 = petrinetHandler.createPreArc(idPetrinet, place4, transition1);
+			arc5 = petrinetHandler.createPostArc(idPetrinet, transition1, place1);
+			arc6 = petrinetHandler.createPostArc(idPetrinet, transition2, place2);
+			arc7 = petrinetHandler.createPostArc(idPetrinet, transition3, place2);
+			arc8 = petrinetHandler.createPostArc(idPetrinet, transition3, place3);
+			arc9 = petrinetHandler.createPostArc(idPetrinet, transition4, place4);
 
 		} catch (EngineException e) {
 

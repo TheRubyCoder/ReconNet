@@ -1,7 +1,6 @@
 package petrinet.model;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -13,8 +12,6 @@ import java.util.Random;
 import java.util.Set;
 
 import petrinet.model.rnw.Identity;
-
-import exceptions.ShowAsWarningException;
 
 /**
  * The petrinet compose {@link Place places}, {@link Transition transitions} and
@@ -76,15 +73,16 @@ final public class Petrinet {
 	 */
 	public PostArc addPostArc(String name, Transition transition, Place place) {
 		if (name == null || place == null || transition == null) {
-			System.out.println(name);
-			System.out.println(place);
-			System.out.println(transition);
-			System.out.println(this);
 			throw new IllegalArgumentException();
+		}
+		
+		if (transition.getOutgoingPlaces().contains(place)
+		 || place.getIncomingTransitions().contains(transition)) {
+			throw new IllegalArgumentException("arc already exists");			
 		}
 
 		int           id  = UUID.getaID();		
-		final PostArc arc = new PostArc(id, this, transition, place, name, 1);
+		final PostArc arc = new PostArc(id, transition, place, name, 1);
 
 		transition.addOutgoingArc(arc);
 		place.addIncomingArc(arc);
@@ -107,9 +105,14 @@ final public class Petrinet {
 		if (name == null || place == null || transition == null) {
 			throw new IllegalArgumentException();
 		}
+		
+		if (transition.getIncomingPlaces().contains(place)
+		 || place.getOutgoingTransitions().contains(transition)) {
+			throw new IllegalArgumentException("arc already exists");			
+		}
 
 		int          id  = UUID.getaID();		
-		final PreArc arc = new PreArc(id, this, place, transition, name, 1);
+		final PreArc arc = new PreArc(id, place, transition, name, 1);
 
 		place.addOutgoingArc(arc);
 		transition.addIncomingArc(arc);
@@ -181,6 +184,7 @@ final public class Petrinet {
 		}
 		
 		arc.getTransition().removeOutgoingArc(arc);
+		arc.getPlace().removeIncomingArc(arc);
 
 		postArcs.remove(arc.getId());
 	}
@@ -195,6 +199,7 @@ final public class Petrinet {
 			throw new IllegalArgumentException();
 		}
 
+		arc.getPlace().removeOutgoingArc(arc);
 		arc.getTransition().removeIncomingArc(arc);
 
 		preArcs.remove(arc.getId());
@@ -286,16 +291,19 @@ final public class Petrinet {
 			throw new IllegalArgumentException();
 		}
 
-		// remove outgoing arcs
-		for (PreArc arc : place.getOutgoingArcs()) {
-			removeArc(arc);
-		}
+		final List<PostArc> inArcs  = new LinkedList<PostArc>(place.getIncomingArcs());
+		final List<PreArc>  outArcs = new LinkedList<PreArc>(place.getOutgoingArcs());
 
 		// remove incoming arcs
-		for (PostArc arc :  place.getIncomingArcs()) {
+		for (PostArc arc : inArcs) {
 			removeArc(arc);
 		}
 
+		// remove outgoing arcs
+		for (PreArc arc : outArcs) {
+			removeArc(arc);
+		}
+		
 		places.remove(id);
 	}
 	
@@ -319,7 +327,7 @@ final public class Petrinet {
 		}		
 		
 		int        id         = UUID.gettID();
-		Transition transition = new Transition(id, rnw, this);
+		Transition transition = new Transition(id, rnw);
 		
 		transition.setName(name);
 		transitions.put(id, transition);
@@ -423,132 +431,6 @@ final public class Petrinet {
 
 	
 	
-	
-	
-	
-
-
-	/**
-	 * Checks whether a node or arc is part of this petrinet
-	 */
-	public boolean contains(INode node) {
-		return getPlaces().contains(node)
-			|| getTransitions().contains(node);
-	}
-	
-	
-	
-	
-	
-	/**
-	 * removes any element of this petrinet that has the <code>id</code>
-	 * 
-	 * @param id
-	 *            Id of the element that will be removed
-	 * @return Collection<Integer> of integers with ids of elements that has
-	 *         been removed
-	 * @example A place with id 1 has two arcs with id 2 and 3 attached. When
-	 *          the place is removed the return value will be [1,2,3]
-	 */
-	public Collection<Integer> removeElement(int id) {
-		List<Integer> result = new ArrayList<Integer>();
-		
-		if (getNodeType(id) == ElementType.ARC) {
-			result.add(id);
-
-			PreArc  preArc  = preArcs.get(id);
-			PostArc postArc = postArcs.get(id);
-			
-			if (preArc != null) {
-				removeArc(preArc);
-			} else if (postArc != null) {
-				removeArc(postArc);
-			}
-		} else if (getNodeType(id) == ElementType.PLACE) {
-			Place place = getPlace(id);
-
-			Collection<IArc> copyOfStartArcs = new ArrayList<IArc>(
-					place.getOutgoingArcs());
-			Collection<IArc> copyOfEndArcs = new ArrayList<IArc>(
-					place.getIncomingArcs());
-			for (IArc arc : copyOfStartArcs) {
-				result.addAll(removeElement(arc.getId()));
-			}
-			for (IArc arc : copyOfEndArcs) {
-				result.addAll(removeElement(arc.getId()));
-			}
-
-			result.add(place.getId());
-			places.remove(place.getId());
-		} else if (getNodeType(id) == ElementType.TRANSITION) {
-			Transition transition = getTransition(id);
-			result.add(transition.getId());
-			Collection<IArc> copyOfStartArcs = new ArrayList<IArc>(
-					transition.getOutgoingArcs());
-			Collection<IArc> copyOfEndArcs = new ArrayList<IArc>(
-					transition.getIncomingArcs());
-			for (IArc arc : copyOfStartArcs) {
-				result.addAll(removeElement(arc.getId()));
-			}
-			for (IArc arc : copyOfEndArcs) {
-				result.addAll(removeElement(arc.getId()));
-			}
-
-			transitions.remove(transition.getId());
-		}
-
-		return result;
-	}
-
-	/**
-	 * Just like {@link Petrinet#removeElement(int)} but does <b>not</b>
-	 * remove any element. It just returns the approriate Collection<Integer>
-	 * without altering the petrinet
-	 */
-	public Collection<Integer> peekRemoveElement(int id) {
-		List<Integer> result = new ArrayList<Integer>();
-		result.add(id);
-		if (getNodeType(id) == ElementType.ARC) {
-			result.add(id);
-
-		} else if (getNodeType(id) == ElementType.PLACE) {
-			Place place = getPlace(id);
-
-			Collection<IArc> copyOfStartArcs = new ArrayList<IArc>(
-					place.getOutgoingArcs());
-			Collection<IArc> copyOfEndArcs = new ArrayList<IArc>(
-					place.getIncomingArcs());
-			for (IArc arc : copyOfStartArcs) {
-				result.addAll(peekRemoveElement(arc.getId()));
-			}
-			for (IArc arc : copyOfEndArcs) {
-				result.addAll(peekRemoveElement(arc.getId()));
-			}
-
-			result.add(place.getId());
-		} else if (getNodeType(id) == ElementType.TRANSITION) {
-			Transition transition = getTransition(id);
-			result.add(transition.getId());
-			Collection<IArc> copyOfStartArcs = new ArrayList<IArc>(
-					transition.getOutgoingArcs());
-			Collection<IArc> copyOfEndArcs = new ArrayList<IArc>(
-					transition.getIncomingArcs());
-			for (IArc arc : copyOfStartArcs) {
-				result.addAll(peekRemoveElement(arc.getId()));
-			}
-			for (IArc arc : copyOfEndArcs) {
-				result.addAll(peekRemoveElement(arc.getId()));
-			}
-
-		}
-
-		return result;
-	}
-
-
-	
-	
-	
 	/**
 	 * Fires a random active {@link Transition}
 	 * 
@@ -556,7 +438,7 @@ final public class Petrinet {
 	 * @throws IllegalStateException
 	 *             if no {@link Transition} is active
 	 */
-	public Set<INode> fire() {
+	public Set<Place> fire() {
 		List<Transition> active = new ArrayList<Transition>(
 			getActivatedTransitions()
 		);
@@ -580,7 +462,7 @@ final public class Petrinet {
 	 *            Id of the {@link Transition} that will be fired
 	 * @return Changed nodes
 	 */
-	public Set<INode> fire(int id) {
+	public Set<Place> fire(int id) {
 		Transition transition = transitions.get(id);
 
 		return transition.fire();
@@ -736,82 +618,6 @@ final public class Petrinet {
 
 	public int getId() {
 		return this.id;
-	}
-
-	public IGraphElement getAllGraphElement() {
-		final Set<INode> nodes = new HashSet<INode>();
-		final Set<IArc>  arcs  = new HashSet<IArc>();
-
-		nodes.addAll(places.values());
-		nodes.addAll(transitions.values());		
-		arcs.addAll(getArcs());
-
-		GraphElement graphElements = new GraphElement();
-		
-		graphElements.setNodes(nodes);
-		graphElements.setArcs(arcs);
-
-		return graphElements;
-	}
-
-
-	/**
-	 * Returns the {@link INode} with <code>id</code>
-	 * 
-	 * @param id
-	 *            Id of the {@link INode}
-	 * @return <code>null</code> if {@link INode} is not in this petrinet
-	 */
-	public INode getNode(int id) {
-		Transition transition = getTransition(id);
-		
-		return transition != null ? transition : getPlace(id);
-	}
-
-	/**
-	 * Returns all incident arcs to a node referenced by its <code>id</code>
-	 * 
-	 * @param nodeId
-	 *            Id of the references node
-	 * @return Empty List of there is no node with that <code>id</code>
-	 */
-	public List<IArc> getIncidetenArcs(int nodeId) {
-		LinkedList<IArc> arcs = new LinkedList<IArc>();
-		ElementType nodeType = getNodeType(nodeId);
-		if (nodeType == ElementType.PLACE) {
-			Place place = getPlace(nodeId);
-			arcs.addAll(place.getOutgoingArcs());
-			arcs.addAll(place.getIncomingArcs());
-		} else if (nodeType == ElementType.TRANSITION) {
-			Transition transition = getTransition(nodeId);
-			arcs.addAll(transition.getOutgoingArcs());
-			arcs.addAll(transition.getIncomingArcs());
-		} else {
-			// ARC or INVALID -> skip to return empty arc list
-		}
-		return arcs;
-	}
-
-	/**
-	 * Returns the {@link ElementType type} of the node referenced by
-	 * <code>nodeId</code>
-	 * 
-	 * @param nodeId
-	 *            Id of the node
-	 * @return {@link ElementType#INVALID} if node is not in this petrinet
-	 */
-	public ElementType getNodeType(int nodeId) {
-		if (preArcs.get(nodeId) != null || postArcs.get(nodeId) != null) {
-			return ElementType.ARC;			
-			
-		} else if (places.get(nodeId) != null) {			
-			return ElementType.PLACE;		
-			
-		} else if (transitions.get(nodeId) != null) {			
-			return ElementType.TRANSITION;			
-		}
-		
-		return ElementType.INVALID;
 	}
 
 	public boolean equalsPetrinet(Petrinet petrinet) {
