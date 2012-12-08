@@ -16,10 +16,10 @@ public class TransformationAdapter {
 	
 	
 	/**
-	 * Transformations the petrinet like defined in rule with random morphism
+	 * Transformations the petrinet like defined in rule with random match
 	 * @param petrinet Petrinet to transform
 	 * @param rule Rule to apply to petrinet
-	 * @return the transformation that was used for transforming (containing rule, nNet and morphism)
+	 * @return the transformation that was used for transforming (containing rule, nNet and match)
 	 */
 	public static Transformation transform(Petrinet net, Rule rule)
 	{

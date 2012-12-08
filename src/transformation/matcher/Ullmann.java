@@ -1,4 +1,4 @@
-package transformation;
+package transformation.matcher;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,32 +14,35 @@ import petrinet.model.IArc;
 import petrinet.model.INode;
 import petrinet.model.Petrinet;
 import petrinet.model.Place;
+import petrinet.model.PostArc;
+import petrinet.model.PreArc;
 import petrinet.model.Transition;
+import transformation.Match;
 
 //Will not be documented any further as it may be reimplemented by Mathias soon
 /**
- * Finds Morphisms between two petrinets in a not deterministic way
+ * Finds Matchs between two petrinets in a not deterministic way
  */
-public class MorphismFactory {
+public class Ullmann {
 
 	/**
-	 * Finds a morphism between two petrinets.<br/>
+	 * Finds a match between two petrinets.<br/>
 	 * Not deterministic.
 	 * 
 	 * @param from
-	 *            the Petrinet from which this morphism starts.
+	 *            the Petrinet from which this match starts.
 	 * @param to
-	 *            the Petrinet into which this morphism maps to.
-	 * @return the new morphism<br/>
-	 *         Empty morphism is fromNet is empty<br/>
-	 *         <tt>null</tt> if no morphism found
+	 *            the Petrinet into which this match maps to.
+	 * @return the new match<br/>
+	 *         Empty match is fromNet is empty<br/>
+	 *         <tt>null</tt> if no match found
 	 * 
 	 */
-	public static Morphism createMorphism(Petrinet from, Petrinet to) {
-		return new MorphismFactory(from, to).getMorphism();
+	public static Match createMatch(Petrinet from, Petrinet to) {
+		return new Ullmann(from, to).getMatch();
 	}
 
-	/** "from" petrinet of the morphism to find */
+	/** "from" petrinet of the match to find */
 	private final Petrinet fromNet;
 	/** Matrix that represents pre of "from" matrix */
 	private final Matrix fromNetPre;
@@ -50,7 +53,7 @@ public class MorphismFactory {
 	/** Number of transitions in "from" net */
 	private final int numTransitionsFromNet;
 
-	/** "to" petrinet of the morphism to find */
+	/** "to" petrinet of the match to find */
 	private final Petrinet toNet;
 	/** Matrix that represents pre of "to" matrix */
 	private final Matrix toNetPre;
@@ -131,9 +134,10 @@ public class MorphismFactory {
 
 	private Map<Place, Place> places;
 	private Map<Transition, Transition> transitions;
-	private Map<IArc, IArc> edges;
+	private Map<PreArc, PreArc> preArcs;
+	private Map<PostArc, PostArc> postArcs;
 
-	private MorphismFactory(Petrinet from, Petrinet to) {
+	private Ullmann(Petrinet from, Petrinet to) {
 		fromNet = from;
 		toNet = to;
 		fromNetPre = new Matrix(fromNet.getPre().getPreAsArray());
@@ -154,24 +158,28 @@ public class MorphismFactory {
 
 	/**
 	 * 
-	 * @return Empty morphism is fromNet is empty<br/>
-	 *         <tt>null</tt> if no morphism found
+	 * @return Empty match is fromNet is empty<br/>
+	 *         <tt>null</tt> if no match found
 	 */
-	private Morphism getMorphism() {
-		// L was empty? Not too bad. Lets return an empty morphism
+	private Match getMatch() {
+		// L was empty? Not too bad. Lets return an empty match
 		if (fromNet.isEmpty()) {
-			Morphism emptyMorphism = new Morphism(fromNet, toNet,
-					new HashMap<Place, Place>(),
-					new HashMap<Transition, Transition>(),
-					new HashMap<IArc, IArc>());
-			return emptyMorphism;
+			Match emptyMatch = new Match(
+				fromNet, toNet,
+				new HashMap<Place, Place>(),
+				new HashMap<Transition, Transition>(),
+				new HashMap<PreArc, PreArc>(),
+				new HashMap<PostArc, PostArc>()
+			);
+			
+			return emptyMatch;
 		} else {
-			boolean successful = findMorphism();
-			// found usual morphism? Great. Lets return it.
+			boolean successful = findMatch();
+			// found usual match? Great. Lets return it.
 			if (successful) {
-				return new Morphism(fromNet, toNet, places, transitions, edges);
+				return new Match(fromNet, toNet, places, transitions, preArcs, postArcs);
 			} else {
-				// Failed although L was not empty? No morphism found. Return
+				// Failed although L was not empty? No match found. Return
 				// null
 				return null;
 			}
@@ -337,7 +345,7 @@ public class MorphismFactory {
 		return new Container(places, transitions);
 	}
 
-	private boolean findMorphism() {
+	private boolean findMatch() {
 		final int numVertices = numPlacesFromNet + numTransitionsFromNet;
 
 		final BoolMatrix[] m_places = new BoolMatrix[numVertices];
@@ -515,7 +523,7 @@ public class MorphismFactory {
 		}
 
 		if (currentRow < 0) {
-			// Kein Morphismus vorhanden
+			// Kein Matchus vorhanden
 			return false;
 		} else {
 			assert currentRow == numVertices;
@@ -525,9 +533,11 @@ public class MorphismFactory {
 			// m_places[temp],
 			// m_transitions[temp]);
 
-			places = createPlacesMap(m_places[temp]);
+			places      = createPlacesMap(m_places[temp]);
 			transitions = createTransitionsMap(m_transitions[temp]);
-			edges = createEdgesMap();
+			
+			createBothArcsMaps();
+			
 			return true;
 		}
 	}
@@ -664,9 +674,10 @@ public class MorphismFactory {
 		return Collections.unmodifiableMap(result);
 	}
 
-	private Map<IArc, IArc> createEdgesMap() {
-		Map<IArc, IArc> result = new HashMap<IArc, IArc>();
-
+	private void createBothArcsMaps() {
+		Map<PreArc, PreArc> resultPreArcs = new HashMap<PreArc, PreArc>();
+		Map<PostArc, PostArc> resultPostArcs = new HashMap<PostArc, PostArc>();
+		
 		Set<IArc> arcsA = fromNet.getArcs();
 		Set<IArc> arcsB = toNet.getArcs();
 
@@ -691,7 +702,12 @@ public class MorphismFactory {
 				transB = transitions.get(arcA.getTarget());
 				for (IArc arcB : arcsB_p_to_t) {
 					if (arcB.getSource() == placeB && arcB.getTarget() == transB) {
-						result.put(arcA, arcB);
+						if (arcA instanceof PreArc && arcB instanceof PreArc) {
+							resultPreArcs.put((PreArc) arcA, (PreArc) arcB);
+						} else if (arcA instanceof PostArc && arcB instanceof PostArc) {
+							resultPostArcs.put((PostArc) arcA, (PostArc) arcB);							
+						}
+												
 						break;
 					}
 				}
@@ -700,14 +716,21 @@ public class MorphismFactory {
 				placeB = places.get(arcA.getTarget());
 				for (IArc arcB : arcsB_t_to_p) {
 					if (arcB.getSource() == transB && arcB.getTarget() == placeB) {
-						result.put(arcA, arcB);
+						
+						if (arcA instanceof PreArc && arcB instanceof PreArc) {
+							resultPreArcs.put((PreArc) arcA, (PreArc) arcB);
+						} else if (arcA instanceof PostArc && arcB instanceof PostArc) {
+							resultPostArcs.put((PostArc) arcA, (PostArc) arcB);							
+						}
+						
 						break;
 					}
 				}
 			}
 		}
 
-		return Collections.unmodifiableMap(result);
+		preArcs  = Collections.unmodifiableMap(resultPreArcs);
+		postArcs = Collections.unmodifiableMap(resultPostArcs);
 	}
 
 	static class BoolMatrix {
@@ -837,5 +860,40 @@ public class MorphismFactory {
 		}
 
 	}
+	
+	class Matrix {
 
+		/** Matrix is internally realized as a nested array */
+		private final int[][] matrix;
+		
+		
+		public Matrix(int[][] matrix) {
+			this.matrix = matrix;
+		}
+		
+		
+		public int getNumRows() {
+			return matrix.length;
+		}
+
+		public int getNumCols() {
+			if(matrix.length == 0) {
+				return 0;
+			}
+			
+			return matrix[0].length;
+		}
+
+		/**
+		 * Returns the value at given position
+		 * @param row index of row of position
+		 * @param column index of column of position
+		 * @return value
+		 * @throws ArrayIndexOutOfBoundsException if <tt>row</tt> or <tt>column</tt> bigger than matrix
+		 */
+		public int get(int row, int column) {
+			return matrix[row][column];
+		}
+
+	}
 }

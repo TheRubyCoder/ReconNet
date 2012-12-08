@@ -1,5 +1,7 @@
 package petrinet.model;
 
+import java.util.Set;
+
 /**
  * Marker interface for JUNG layouting
  */

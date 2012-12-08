@@ -13,6 +13,8 @@ import org.junit.Test;
 import petrinet.model.IArc;
 import petrinet.model.Petrinet;
 import petrinet.model.Place;
+import petrinet.model.PreArc;
+import transformation.matcher.*;
 import data.MorphismData;
 
 /**
@@ -42,9 +44,9 @@ public class MorphismPlacesTest {
 		Place targetPlace;
 		// try 100 morphism and count them
 		for (int i = 0; i < morphismCount; i++) {
-			Morphism morphism = MorphismFactory.createMorphism(placesFromNet,
-					placesToNet);
-			targetPlace = morphism.getPlaceMorphism(fromPlace);
+			Match match = new VF2(placesFromNet, placesToNet).getMatch(); 
+					//Ullmann.createMatch(placesFromNet, placesToNet);
+			targetPlace = match.getPlace(fromPlace);
 
 			if (counter.containsKey(targetPlace)) {
 				counter.put(targetPlace, counter.get(targetPlace) + 1);
@@ -100,19 +102,16 @@ public class MorphismPlacesTest {
 
 	@Test
 	public void testStupidMethodToGetCodeCoverageForGetters() {
-		Morphism morphism = MorphismFactory.createMorphism(placesFromNet,
-				placesToNet);
-		IArc arc = placesFromNet.getArcs().iterator().next();
-		morphism.getArcMorphism(arc);
+		//Match  match  = Ullmann.createMatch(placesFromNet, placesToNet);
+		Match match = new VF2(placesFromNet, placesToNet).getMatch(); 
 
-		morphism.getArcsMorphism();
-
-		morphism.getFrom();
-
-		morphism.getPlacesMorphism();
-
-		morphism.getTo();
-
-		morphism.getTransitionsMorphism();
+		match.getPreArc(placesFromNet.getPreArcs().iterator().next());
+		match.getPreArcs();
+		match.getPostArc(placesFromNet.getPostArcs().iterator().next());
+		match.getPostArcs();
+		match.getSource();
+		match.getPlaces();
+		match.getTarget();
+		match.getTransitions();
 	}
 }

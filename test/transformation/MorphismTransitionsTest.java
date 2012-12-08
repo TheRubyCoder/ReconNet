@@ -14,6 +14,8 @@ import petrinet.model.Petrinet;
 import petrinet.model.Transition;
 import data.MorphismData;
 
+import transformation.matcher.*;
+
 /**
  * Testing the morphism of places like specified in
  * "../additional/images/Isomorphism_transitions.png"
@@ -41,9 +43,10 @@ public class MorphismTransitionsTest {
 		Transition targetTransition;
 		// try 100 morphism and count them
 		for (int i = 0; i < 20; i++) {
-			Morphism morphism = MorphismFactory.createMorphism(
-					transitionFromNet, transitionToNet);
-			targetTransition = morphism.getTransitionMorphism(fromTransition);
+			//Match match = Ullmann.createMatch(transitionFromNet, transitionToNet);
+			Match match = new VF2(transitionFromNet, transitionToNet).getMatch();
+			
+			targetTransition = match.getTransition(fromTransition);
 
 			if (counter.containsKey(targetTransition)) {
 				counter.put(targetTransition, counter.get(targetTransition) + 1);

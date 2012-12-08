@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import petrinet.model.Petrinet;
 import petrinet.model.Place;
-import transformation.Morphism;
+import transformation.Match;
 import transformation.Rule;
 import transformation.Transformation;
 import transformation.TransformationComponent;
@@ -62,15 +62,15 @@ public class Rule2Test {
 	@Test
 	public void testRightMorphism() {
 		// Has only 1 place been mapped?
-		Morphism morphism = transformation.getMorphism();
-		System.out.println("MORPISM::PLACES::" + morphism.getPlacesMorphism());
-		assertEquals(2, transformation.getMorphism().getPlacesMorphism().size());
+		Match morphism = transformation.getMatch();
+		System.out.println("MORPISM::PLACES::" + morphism.getPlaces());
+		assertEquals(2, transformation.getMatch().getPlaces().size());
 		// Have 5 transitions been mapped?
-		assertEquals(10, transformation.getMorphism().getTransitionsMorphism()
+		assertEquals(10, transformation.getMatch().getTransitions()
 				.size());
 
 		// Right place matched?
-		int idOfMatchedPlace = transformation.getMorphism().getPlacesMorphism()
+		int idOfMatchedPlace = transformation.getMatch().getPlaces()
 				.values().iterator().next().getId();
 		assertEquals(Rule2Data.getIdOfMatchedPlace(), idOfMatchedPlace);
 	}

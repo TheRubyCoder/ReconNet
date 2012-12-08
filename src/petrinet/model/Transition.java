@@ -62,7 +62,52 @@ public class Transition implements INode {
 	public void addOutgoingArc(PostArc arc) {
 		this.outgoingArcs.put(arc.getId(), arc);
 	}
-
+	
+	public boolean hasIncomingArc(Place source) {
+		for (PreArc arc : this.incomingArcs.values()) {
+			if (arc.getPlace().equals(source)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public PreArc getIncomingArc(Place source) {
+		for (PreArc arc : this.incomingArcs.values()) {
+			if (arc.getPlace().equals(source)) {
+				return arc;
+			}
+		}
+		
+		return null;
+	}
+	
+	public boolean hasOutgoingArc(Place target) {
+		for (PostArc arc : this.outgoingArcs.values()) {
+			if (arc.getPlace().equals(target)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public PostArc getOutgoingArc(Place target) {
+		for (PostArc arc : this.outgoingArcs.values()) {
+			if (arc.getPlace().equals(target)) {
+				return arc;
+			}
+		}
+		
+		return null;
+	}
+	
+	
+	
+	
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 

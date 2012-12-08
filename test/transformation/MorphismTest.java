@@ -18,10 +18,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import petrinet.PetrinetComponent;
-import petrinet.model.IArc;
 import petrinet.model.Petrinet;
 import petrinet.model.Place;
+import petrinet.model.PostArc;
+import petrinet.model.PreArc;
 import petrinet.model.Transition;
+
+import transformation.matcher.*;
 
 /**
  *
@@ -34,13 +37,15 @@ public class MorphismTest {
     
     private static Place[] from_p, to_p;
     private static Transition[] from_t, to_t;
-    private static IArc[] from_a, to_a;
+    private static PreArc[] from_pre_a, to_pre_a;
+    private static PostArc[] from_post_a, to_post_a;
     
-    private Morphism testObject;
+    private Match testObject;
     
     private static Map<Place, Place> expectedPlaceMap;
     private static Map<Transition, Transition> expectedTransitionMap;
-    private static Map<IArc, IArc> expectedArcMap;
+    private static Map<PreArc, PreArc> expectedPreArcMap;
+    private static Map<PostArc, PostArc> expectedPostArcMap;
 
     
     
@@ -58,21 +63,28 @@ public class MorphismTest {
     	setupPetrinetTo();
     	setupExpectedResults();
     	
-    	testObject = MorphismFactory.createMorphism(fromPn, toPn);
+    	testObject = new VF2(fromPn, toPn).getMatch();
     }
 
     @After
     public void tearDown() {
     }
 
-    
+
+    @Test
+    public void testEqualMatches() {
+    	Match matchA = new VF2(fromPn, toPn).getMatch();
+    	Match matchB = Ullmann.createMatch(fromPn, toPn);
+    	
+        assertEquals(matchA, matchB);
+    }
 
     /**
      * Test of places method, of class Morphism.
      */
     @Test
     public void testPlaces() {
-        assertEquals(expectedPlaceMap, testObject.getPlacesMorphism());
+        assertEquals(expectedPlaceMap, testObject.getPlaces());
     }
 
     /**
@@ -80,7 +92,7 @@ public class MorphismTest {
      */
     @Test
     public void testTransitions() {
-        assertEquals(expectedTransitionMap, testObject.getTransitionsMorphism());
+        assertEquals(expectedTransitionMap, testObject.getTransitions());
     }
 
     /**
@@ -88,7 +100,8 @@ public class MorphismTest {
      */
     @Test
     public void testEdges() {
-        assertEquals(expectedArcMap, testObject.getArcsMorphism());
+        assertEquals(expectedPreArcMap, testObject.getPreArcs());
+        assertEquals(expectedPostArcMap, testObject.getPostArcs());
     }
 
     /**
@@ -97,7 +110,7 @@ public class MorphismTest {
     @Test
     public void testMorph_Transition() {
     	for (Map.Entry<Transition, Transition> entry : expectedTransitionMap.entrySet()) {
-    		assertEquals(entry.getValue(), testObject.getTransitionMorphism(entry.getKey()));
+    		assertEquals(entry.getValue(), testObject.getTransition(entry.getKey()));
     	}
     }
 
@@ -107,7 +120,7 @@ public class MorphismTest {
     @Test
     public void testMorph_Place() {
     	for (Map.Entry<Place, Place> entry : expectedPlaceMap.entrySet()) {
-    		assertEquals(entry.getValue(), testObject.getPlaceMorphism(entry.getKey()));
+    		assertEquals(entry.getValue(), testObject.getPlace(entry.getKey()));
     	}
     }
 
@@ -116,8 +129,12 @@ public class MorphismTest {
      */
     @Test
     public void testMorph_Arc() {
-    	for (Map.Entry<IArc, IArc> entry : expectedArcMap.entrySet()) {
-    		assertEquals(entry.getValue(), testObject.getArcMorphism(entry.getKey()));
+    	for (Map.Entry<PreArc, PreArc> entry : expectedPreArcMap.entrySet()) {
+    		assertEquals(entry.getValue(), testObject.getPreArc(entry.getKey()));
+    	}
+    	
+    	for (Map.Entry<PostArc, PostArc> entry : expectedPostArcMap.entrySet()) {
+    		assertEquals(entry.getValue(), testObject.getPostArc(entry.getKey()));
     	}
     }
 
@@ -126,7 +143,7 @@ public class MorphismTest {
      */
     @Test
     public void testFrom() {
-    	assertEquals(fromPn, testObject.getFrom());
+    	assertEquals(fromPn, testObject.getSource());
     }
 
     /**
@@ -134,7 +151,7 @@ public class MorphismTest {
      */
     @Test
     public void testTo() {
-        assertEquals(toPn, testObject.getTo());
+        assertEquals(toPn, testObject.getTarget());
     }
     
     
@@ -143,7 +160,8 @@ public class MorphismTest {
 
     	from_p = new Place[6];
     	from_t = new Transition[2];
-    	from_a = new IArc[4];
+    	from_pre_a  = new PreArc[2];
+    	from_post_a = new PostArc[2];
 
     	from_p[0] = fromPn.addPlace("Wecker Ein");
     	from_p[1] = fromPn.addPlace("");
@@ -156,10 +174,11 @@ public class MorphismTest {
     	from_t[0] = fromPn.addTransition("");
     	from_t[1] = fromPn.addTransition("");
     	
-    	from_a[0] = fromPn.addPreArc("", from_p[0], from_t[0]);
-    	from_a[1] = fromPn.addPostArc("", from_t[0], from_p[1]);
-    	from_a[2] = fromPn.addPreArc("",from_p[4], from_t[1]);
-    	from_a[3] = fromPn.addPostArc("", from_t[1], from_p[5]);
+    	from_pre_a[0] = fromPn.addPreArc("", from_p[0], from_t[0]);
+    	from_pre_a[1] = fromPn.addPreArc("",from_p[4], from_t[1]);
+    	
+    	from_post_a[0] = fromPn.addPostArc("", from_t[0], from_p[1]);
+    	from_post_a[1] = fromPn.addPostArc("", from_t[1], from_p[5]);
     }
 
     
@@ -168,7 +187,8 @@ public class MorphismTest {
     	
     	to_p = new Place[10];
     	to_t = new Transition[9];
-    	to_a = new IArc[18];
+    	to_pre_a  = new PreArc[9];
+    	to_post_a = new PostArc[9];
     	
     	to_p[0] = toPn.addPlace("Wecker Ein");
     	to_p[1] = toPn.addPlace("Aufstehen");
@@ -193,31 +213,33 @@ public class MorphismTest {
     	to_t[7] = toPn.addTransition("");
     	to_t[8] = toPn.addTransition("");
 
-    	to_a[0] = toPn.addPreArc("", to_p[0], to_t[0]);
-    	to_a[1] = toPn.addPostArc("", to_t[0], to_p[2]);
-    	to_a[2] = toPn.addPreArc("", to_p[2], to_t[4]);
-    	to_a[3] = toPn.addPostArc("", to_t[4], to_p[5]);
-    	to_a[4] = toPn.addPreArc("", to_p[5], to_t[3]);
-    	to_a[5] = toPn.addPostArc("", to_t[3], to_p[2]);
-    	to_a[6] = toPn.addPreArc("", to_p[5], to_t[5]);
-    	to_a[7] = toPn.addPostArc("", to_t[5], to_p[6]);
-    	to_a[8] = toPn.addPreArc("", to_p[1], to_t[1]);
-    	to_a[9] = toPn.addPostArc("", to_t[1], to_p[3]);
-    	to_a[10] = toPn.addPreArc("", to_p[1], to_t[2]);
-    	to_a[11] = toPn.addPostArc("", to_t[2], to_p[9]);
-    	to_a[12] = toPn.addPreArc("", to_p[4], to_t[8]);
-    	to_a[13] = toPn.addPostArc("", to_t[8], to_p[9]);
-    	to_a[14] = toPn.addPreArc("", to_p[9], to_t[6]);
-    	to_a[15] = toPn.addPostArc("", to_t[6], to_p[7]);
-    	to_a[16] = toPn.addPreArc("", to_p[9], to_t[7]);
-    	to_a[17] = toPn.addPostArc("", to_t[7], to_p[8]);
+    	to_pre_a[0] = toPn.addPreArc("", to_p[0], to_t[0]);
+    	to_pre_a[1] = toPn.addPreArc("", to_p[2], to_t[4]);
+    	to_pre_a[2] = toPn.addPreArc("", to_p[5], to_t[3]);
+    	to_pre_a[3] = toPn.addPreArc("", to_p[5], to_t[5]);
+    	to_pre_a[4] = toPn.addPreArc("", to_p[1], to_t[1]);
+    	to_pre_a[5] = toPn.addPreArc("", to_p[1], to_t[2]);
+    	to_pre_a[6] = toPn.addPreArc("", to_p[4], to_t[8]);
+    	to_pre_a[7] = toPn.addPreArc("", to_p[9], to_t[6]);
+    	to_pre_a[8] = toPn.addPreArc("", to_p[9], to_t[7]);
+    	
+    	to_post_a[0] = toPn.addPostArc("", to_t[0], to_p[2]);
+    	to_post_a[1] = toPn.addPostArc("", to_t[4], to_p[5]);
+    	to_post_a[2] = toPn.addPostArc("", to_t[3], to_p[2]);
+    	to_post_a[3] = toPn.addPostArc("", to_t[5], to_p[6]);
+    	to_post_a[4] = toPn.addPostArc("", to_t[1], to_p[3]);    	
+    	to_post_a[5] = toPn.addPostArc("", to_t[2], to_p[9]);
+    	to_post_a[6] = toPn.addPostArc("", to_t[8], to_p[9]);
+    	to_post_a[7] = toPn.addPostArc("", to_t[6], to_p[7]);
+    	to_post_a[8] = toPn.addPostArc("", to_t[7], to_p[8]);
     }
     
     
     private void setupExpectedResults() {
-    	expectedPlaceMap = new HashMap<Place, Place>();
+    	expectedPlaceMap      = new HashMap<Place, Place>();
     	expectedTransitionMap = new HashMap<Transition, Transition>();
-    	expectedArcMap = new HashMap<IArc, IArc>();
+    	expectedPreArcMap     = new HashMap<PreArc, PreArc>();
+    	expectedPostArcMap    = new HashMap<PostArc, PostArc>();
     	
     	expectedPlaceMap.put(from_p[0], to_p[0]);
     	expectedPlaceMap.put(from_p[1], to_p[2]);
@@ -229,10 +251,11 @@ public class MorphismTest {
     	expectedTransitionMap.put(from_t[0], to_t[0]);
     	expectedTransitionMap.put(from_t[1], to_t[5]);
     	
-    	expectedArcMap.put(from_a[0], to_a[0]);
-    	expectedArcMap.put(from_a[1], to_a[1]);
-    	expectedArcMap.put(from_a[2], to_a[6]);
-    	expectedArcMap.put(from_a[3], to_a[7]);
+    	expectedPreArcMap.put(from_pre_a[0], to_pre_a[0]);
+    	expectedPreArcMap.put(from_pre_a[1], to_pre_a[3]);
+    	
+    	expectedPostArcMap.put(from_post_a[0], to_post_a[0]);
+    	expectedPostArcMap.put(from_post_a[1], to_post_a[3]);
     }
     
 }

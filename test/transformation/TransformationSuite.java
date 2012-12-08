@@ -19,7 +19,8 @@ import transformation.rules.*;
 	Rule3Test.class, 
 //	Rule2Test.class, // Nullpointer in morphism finding
 	Rule1Test.class,
-	ScenariosRuleCreationTest.class 
+	ScenariosRuleCreationTest.class ,
+	VF2Test.class 
 	}
 )
 

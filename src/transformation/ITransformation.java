@@ -69,14 +69,14 @@ public interface ITransformation {
 	List<IArc> getMappings(Rule rule, IArc arc);
 
 	/**
-	 * Transformations the petrinet like defined in rule with random morphism
+	 * Transformations the petrinet like defined in rule with random match
 	 * 
 	 * @param petrinet
 	 *            Petrinet to transform
 	 * @param rule
 	 *            Rule to apply to petrinet
 	 * @return the transformation that was used for transforming (containing
-	 *         rule, nNet and morphism)
+	 *         rule, nNet and match)
 	 */
 	Transformation transform(Petrinet net, Rule rule);
 

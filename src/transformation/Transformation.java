@@ -3,24 +3,38 @@ package transformation;
 import java.util.HashSet;
 import java.util.Set;
 
-import petrinet.model.IArc;
 import petrinet.model.INode;
 import petrinet.model.Petrinet;
 import petrinet.model.Place;
 import petrinet.model.PostArc;
 import petrinet.model.PreArc;
 import petrinet.model.Transition;
+import transformation.matcher.*;
 import exceptions.EngineException;
 
 /**
  * An Transformation on a Petrinet<br/>
- * The Transformation applies a rule on an petrinet under a certain morphism
+ * The Transformation applies a rule on an petrinet under a certain match
  */
 public class Transformation {
+	protected final static class CheckContactConditionFulfilledMatchVisitor implements VF2.MatchVisitor {		
+		private Petrinet petrinet;
+		private Rule     rule;
+				
+		public CheckContactConditionFulfilledMatchVisitor(Petrinet petrinet, Rule rule) {
+			this.petrinet = petrinet;
+			this.rule     = rule;			
+		}
+
+		@Override
+		public boolean visit(Match match) {
+			return contactConditionFulfilled(this.petrinet, this.rule, match);
+		}		
+	}
 
 	private final Petrinet petrinet;
-	private final Morphism morphism;
 	private final Rule     rule;
+	private final Match    match;
 	
 	// New for Engine
 	private Set<Place> addedPlaces   = null;
@@ -39,51 +53,54 @@ public class Transformation {
 	 * Constructor for the class Transformation
 	 * 
 	 * @param net    the petrinet to transform
-	 * @param morph  the morphism to use
+	 * @param morph  the match to use
 	 * @param rule   the rule that should apply
 	 */
-	private Transformation(Petrinet petrinet, Morphism morphism, Rule rule) {
+	private Transformation(Petrinet petrinet, Match match, Rule rule) {
 		this.petrinet = petrinet;
-		this.morphism = morphism;
+		this.match    = match;
 		this.rule     = rule;
 	}
 
 	/**
 	 * Creates a new Transformation with given parameters
 	 * 
-	 * @param petrinet   Petrinet to transform
-	 * @param morphism   Morphism to use the rule under
-	 * @param rule       Rule to apply to petrinet
+	 * @param  petrinet   Petrinet to transform
+	 * @param  match      Match to use the rule under
+	 * @param  rule       Rule to apply to petrinet
 	 * @return the transformation
 	 */
 	static Transformation createTransformation(Petrinet petrinet,
-			Morphism morphism, Rule rule) {
+			Match match, Rule rule) {
 		
-		return new Transformation(petrinet, morphism, rule);
+		return new Transformation(petrinet, match, rule);
 	}
 
 	/**
 	 * Creates a new Transformation with given parameters
 	 * 
 	 * @param petrinet   Petrinet to transform
-	 * @param morphism   Morphism to use the rule under
+	 * @param match      Match to use the rule under
 	 * @param rule       Rule to apply to petrinet
 	 * 
 	 * @return the transformation<br/>
-	 *         <tt>null</tt>if no Morphism found
+	 *         <tt>null</tt>if no Match found
 	 */
-	static Transformation createTransformationWithAnyMorphism(
+	static Transformation createTransformationWithAnyMatch(
 			Petrinet petrinet, Rule rule) {
-
-		Morphism tempMorphism = MorphismFactory.createMorphism(rule.getL(),
-				petrinet);
 		
-		// no Morphism found?
-		if (tempMorphism == null) {
+		VF2.MatchVisitor visitor = new CheckContactConditionFulfilledMatchVisitor(petrinet, rule);
+		
+		//Match match = Ullmann.createMatch(rule.getL(), petrinet);
+		Match match = new VF2(rule.getL(), petrinet).getMatch(visitor);
+
+		
+		// no Match found?
+		if (match == null) {
 			return null;			
 		}
 		
-		return new Transformation(petrinet, tempMorphism, rule);
+		return new Transformation(petrinet, match, rule);
 	}
 
 	/**
@@ -97,12 +114,12 @@ public class Transformation {
 	}
 
 	/**
-	 * Returns the Morphism of this transformation.
+	 * Returns the Match of this transformation.
 	 * 
-	 * @return the Morphism of this transformation.
+	 * @return the Match of this transformation.
 	 */
-	public Morphism getMorphism() {
-		return morphism;
+	public Match getMatch() {
+		return match;
 	}
 
 	/**
@@ -116,14 +133,14 @@ public class Transformation {
 
 	/**
 	 * This will transform the petrinet using the Rule returned by getRule() and
-	 * the Morphism returned by getMorphism().
+	 * the Match returned by getMatch().
 	 * 
 	 * @return the Transformation that was used (<tt>this</tt>)
 	 * @throws EngineException
 	 *             When contact condition is not fulfilled
 	 */
 	Transformation transform() throws EngineException {
-		if (!contactConditionFulfilled(getPetrinet(), getRule(), getMorphism())) {
+		if (!contactConditionFulfilled(getPetrinet(), getRule(), getMatch())) {
 			throw new EngineException("Kontaktbedingung verletzt");
 		}
 
@@ -145,32 +162,32 @@ public class Transformation {
 		for (Place placeToAdd : rule.getPlacesToAdd()) {			
 			Place newPlace = petrinet.addPlace(placeToAdd.getName());
 			addedPlaces.add(newPlace);
-			morphism.getPlacesMorphism().put(rule.fromRtoK(placeToAdd), newPlace);
+			match.getPlaces().put(rule.fromRtoK(placeToAdd), newPlace);
 		}
 
 		// Add new transitions, map k to these new Places
 		for (Transition transitionToAdd : rule.getTransitionsToAdd()) {			
 			Transition newTransition = petrinet.addTransition(transitionToAdd.getName(), transitionToAdd.getRnw());			
 			addedTransitions.add(newTransition);
-			morphism.getTransitionsMorphism().put(rule.fromRtoK(transitionToAdd), newTransition);
+			match.getTransitions().put(rule.fromRtoK(transitionToAdd), newTransition);
 		}
 
 		// map remaining old K places to the match of L
 		for (Place place : kNet.getPlaces()) {
-			if (morphism.getPlacesMorphism().get(place) == null) {
-				morphism.getPlacesMorphism().put(
+			if (match.getPlaces().get(place) == null) {
+				match.getPlaces().put(
 					place,
-					morphism.getPlaceMorphism(rule.fromKtoL(place))
+					match.getPlace(rule.fromKtoL(place))
 				);
 			}
 		}
 
 		// map remaining old K transitions to the match of L
 		for (Transition transition : kNet.getTransitions()) {
-			if (morphism.getTransitionsMorphism().get(transition) == null) {
-				morphism.getTransitionsMorphism().put(
+			if (match.getTransitions().get(transition) == null) {
+				match.getTransitions().put(
 					transition,
-					morphism.getTransitionMorphism(rule.fromKtoL(transition))
+					match.getTransition(rule.fromKtoL(transition))
 				);
 			}
 		}
@@ -179,40 +196,40 @@ public class Transformation {
 		for (PreArc preArcToAdd : rule.getPreArcsToAdd()) {	
 			PreArc newPreArc = petrinet.addPreArc(
 				preArcToAdd.getName(),
-				morphism.getPlaceMorphism(rule.fromRtoK(preArcToAdd.getPlace())),
-				morphism.getTransitionMorphism(rule.fromRtoK(preArcToAdd.getTransition()))
+				match.getPlace(rule.fromRtoK(preArcToAdd.getPlace())),
+				match.getTransition(rule.fromRtoK(preArcToAdd.getTransition()))
 			);
 			addedPreArcs.add(newPreArc);
-			morphism.getArcsMorphism().put(preArcToAdd, newPreArc);
+			match.getPreArcs().put(preArcToAdd, newPreArc);
 		}
 
 		// Add new postArcs, map k preArcs to these
 		for (PostArc postArcToAdd : rule.getPostArcsToAdd()) {	
 			PostArc newPostArc = petrinet.addPostArc(
 				postArcToAdd.getName(),
-				morphism.getTransitionMorphism(rule.fromRtoK(postArcToAdd.getTransition())),
-				morphism.getPlaceMorphism(rule.fromRtoK(postArcToAdd.getPlace()))
+				match.getTransition(rule.fromRtoK(postArcToAdd.getTransition())),
+				match.getPlace(rule.fromRtoK(postArcToAdd.getPlace()))
 			);
 			addedPostArcs.add(newPostArc);
-			morphism.getArcsMorphism().put(postArcToAdd, newPostArc);
+			match.getPostArcs().put(postArcToAdd, newPostArc);
 		}
 
 		// map remaining old K preArcs to the match of L
 		for (PreArc preArc : kNet.getPreArcs()) {
-			if (morphism.getArcsMorphism().get(preArc) == null) {
-				morphism.getArcsMorphism().put(
+			if (match.getPreArcs().get(preArc) == null) {
+				match.getPreArcs().put(
 					preArc,
-					morphism.getArcMorphism(rule.fromKtoL(preArc))
+					match.getPreArc(rule.fromKtoL(preArc))
 				);
 			}
 		}
 
 		// map remaining old K postArcs to the match of L
 		for (PostArc postArc : kNet.getPostArcs()) {
-			if (morphism.getArcsMorphism().get(postArc) == null) {
-				morphism.getArcsMorphism().put(
+			if (match.getPostArcs().get(postArc) == null) {
+				match.getPostArcs().put(
 					postArc,
-					morphism.getArcMorphism(rule.fromKtoL(postArc))
+					match.getPostArc(rule.fromKtoL(postArc))
 				);
 			}
 		}
@@ -220,21 +237,21 @@ public class Transformation {
 
 		// Delete K - R Places
 		for (Place placeToDelete : rule.getPlacesToDelete()) {
-			Place deletedPlace = morphism.getPlaceMorphism(rule.fromLtoK(placeToDelete));
+			Place deletedPlace = match.getPlace(rule.fromLtoK(placeToDelete));
 			deletedPlaces.add(deletedPlace);				
 			petrinet.removePlace(deletedPlace);				
 		}
 
 		// Delete K - R Transitions
 		for (Transition transitionToDelete : rule.getTransitionsToDelete()) {
-			Transition deletedTransition = morphism.getTransitionMorphism(rule.fromLtoK(transitionToDelete));
+			Transition deletedTransition = match.getTransition(rule.fromLtoK(transitionToDelete));
 			deletedTransitions.add(deletedTransition);				
 			petrinet.removeTransition(deletedTransition);				
 		}
 		
 		// Deleted K - R PreArcs
 		for (PreArc preArcToDelete : rule.getPreArcsToDelete()) {
-			PreArc deletedArc = (PreArc) morphism.getArcMorphism(rule.fromLtoK(preArcToDelete));
+			PreArc deletedArc = match.getPreArc(rule.fromLtoK(preArcToDelete));
 
 			deletedPreArcs.add(deletedArc);	
 			
@@ -245,7 +262,7 @@ public class Transformation {
 		
 		// Deleted K - R PostArcs
 		for (PostArc postArcToDelete : rule.getPostArcsToDelete()) {	
-			PostArc deletedArc = (PostArc) morphism.getArcMorphism(rule.fromLtoK(postArcToDelete));	
+			PostArc deletedArc = match.getPostArc(rule.fromLtoK(postArcToDelete));	
 
 			deletedPostArcs.add(deletedArc);	
 			
@@ -260,21 +277,21 @@ public class Transformation {
 	/**
 	 * Returns <tt>true</tt> if the contact condition for <tt>node</tt> is
 	 * fulfilled. Which means: Are all incident Arcs of <tt>node</tt> also
-	 * mapped in the morphism?
+	 * mapped in the match?
 	 */
-	private boolean contactConditionFulfilled(Place place, Morphism morphism,
+	private static boolean contactConditionFulfilled(Place place, Match match,
 			Petrinet toNet, Petrinet fromNet) {
 		
-		Place      mappedPlace   = morphism.getPlaceMorphism(place);
+		Place mappedPlace = match.getPlace(place);
 		
-		for (IArc arc : mappedPlace.getIncomingArcs()) {
-			if (!morphism.getArcsMorphism().containsValue(arc)) {
+		for (PostArc arc : mappedPlace.getIncomingArcs()) {
+			if (!match.getPostArcs().containsValue(arc)) {
 				return false;
 			}
 		}
 
-		for (IArc arc : mappedPlace.getOutgoingArcs()) {
-			if (!morphism.getArcsMorphism().containsValue(arc)) {
+		for (PreArc arc : mappedPlace.getOutgoingArcs()) {
+			if (!match.getPreArcs().containsValue(arc)) {
 				return false;
 			}
 		}
@@ -285,21 +302,21 @@ public class Transformation {
 	/**
 	 * Returns <tt>true</tt> if the contact condition for <tt>node</tt> is
 	 * fulfilled. Which means: Are all incident Arcs of <tt>node</tt> also
-	 * mapped in the morphism?
+	 * mapped in the match?
 	 */
-	private boolean contactConditionFulfilled(Transition transition, Morphism morphism,
+	private static boolean contactConditionFulfilled(Transition transition, Match match,
 			Petrinet toNet, Petrinet fromNet) {
 		
-		Transition mappedTransition = morphism.getTransitionMorphism(transition);
+		Transition mappedTransition = match.getTransition(transition);
 
-		for (IArc arc : mappedTransition.getIncomingArcs()) {
-			if (!morphism.getArcsMorphism().containsValue(arc)) {
+		for (PreArc arc : mappedTransition.getIncomingArcs()) {
+			if (!match.getPreArcs().containsValue(arc)) {
 				return false;
 			}
 		}
 
-		for (IArc arc : mappedTransition.getOutgoingArcs()) {
-			if (!morphism.getArcsMorphism().containsValue(arc)) {
+		for (PostArc arc : mappedTransition.getOutgoingArcs()) {
+			if (!match.getPostArcs().containsValue(arc)) {
 				return false;
 			}
 		}
@@ -311,23 +328,23 @@ public class Transformation {
 	 * Returns <tt>true</tt> if the contact condition for all Nodes in K-R is
 	 * fulfilled.
 	 * 
-	 * @see   {link {@link Transformation#contactConditionFulfilled(INode, Morphism, Petrinet)}
+	 * @see   {link {@link Transformation#contactConditionFulfilled(INode, Match, Petrinet)}
 	 * @param petrinet
 	 * @param rule
-	 * @param morphism
+	 * @param match
 	 * @return
 	 */
-	private boolean contactConditionFulfilled(Petrinet petrinet, Rule rule,
-			Morphism morphism) {
+	private static boolean contactConditionFulfilled(Petrinet petrinet, Rule rule,
+			Match match) {
 
 		for (Place place : rule.getPlacesToDelete()) {
-			if (!contactConditionFulfilled(place, getMorphism(), getPetrinet(), getRule().getL())) {
+			if (!contactConditionFulfilled(place, match, petrinet, rule.getL())) {
 				return false;
 			}
 		}
 
 		for (Transition transition : rule.getTransitionsToDelete()) {
-			if (!contactConditionFulfilled(transition, getMorphism(), getPetrinet(), getRule().getL())) {
+			if (!contactConditionFulfilled(transition, match, petrinet, rule.getL())) {
 				return false;
 			}
 		}

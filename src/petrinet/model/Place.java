@@ -59,6 +59,48 @@ public class Place implements INode {
 		return outgoingArcs.values();
 	}
 
+	
+	public boolean hasIncomingArc(Transition source) {
+		for (PostArc arc : this.incomingArcs.values()) {
+			if (arc.getTransition().equals(source)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public PostArc getIncomingArc(Transition source) {
+		for (PostArc arc : this.incomingArcs.values()) {
+			if (arc.getTransition().equals(source)) {
+				return arc;
+			}
+		}
+		
+		return null;
+	}
+	
+	public boolean hasOutgoingArc(Transition target) {
+		for (PreArc arc : this.outgoingArcs.values()) {
+			if (arc.getTransition().equals(target)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public PreArc getOutgoingArc(Transition target) {
+		for (PreArc arc : this.outgoingArcs.values()) {
+			if (arc.getTransition().equals(target)) {
+				return arc;
+			}
+		}
+		
+		return null;
+	}
+	
+	
 	/**
 	 * Removes a single arc from the outgoing arcs
 	 * @param arc
