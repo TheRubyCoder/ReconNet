@@ -162,11 +162,11 @@ public final class VF2 {
 //System.out.println(message);
 	}
 
-	public Match getMatch(Match partialMatch) {
-		return getMatch(partialMatch, new DefaultMatchVisitor());
+	public Match getMatch(boolean isStrictMatch, Match partialMatch) {
+		return getMatch(isStrictMatch, partialMatch, new DefaultMatchVisitor());
 	}
 	
-	public Match getMatch(Match partialMatch, MatchVisitor visitor) {
+	public Match getMatch(boolean isStrictMatch, Match partialMatch, MatchVisitor visitor) {
 		if (source.getPlaces().size() > target.getPlaces().size()
 	     || source.getTransitions().size() > target.getTransitions().size()) {
 			return null;
@@ -174,7 +174,7 @@ public final class VF2 {
 
 		init();
 
-		if (!generateSemanticPlaces() || !generateSemanticTransitions()) {
+		if (!generateSemanticPlaces(isStrictMatch) || !generateSemanticTransitions()) {
 			return null;
 		}
 		
@@ -216,11 +216,11 @@ public final class VF2 {
 		return null;
 	}
 
-	public Match getMatch() {
-		return getMatch(new DefaultMatchVisitor());
+	public Match getMatch(boolean isStrictMatch) {
+		return getMatch(isStrictMatch, new DefaultMatchVisitor());
 	}
 
-	public Match getMatch(MatchVisitor visitor) {
+	public Match getMatch(boolean isStrictMatch, MatchVisitor visitor) {
 		if (source.getPlaces().size() > target.getPlaces().size()
 	     || source.getTransitions().size() > target.getTransitions().size()) {
 			return null;
@@ -228,7 +228,7 @@ public final class VF2 {
 
 		init();
 
-		if (!generateSemanticPlaces() || !generateSemanticTransitions()) {
+		if (!generateSemanticPlaces(isStrictMatch) || !generateSemanticTransitions()) {
 			return null;
 		}
 
@@ -1347,13 +1347,13 @@ public final class VF2 {
 	}
 
 
-	private boolean generateSemanticPlaces() {
+	private boolean generateSemanticPlaces(boolean isStrictMatch) {
 		for (int sourcePlaceIndex = 0; sourcePlaceIndex < sourcePlaces.length; sourcePlaceIndex++) {
 			Place   sourcePlace        = sourcePlaces[sourcePlaceIndex];
 			boolean hasSupportingPlace = false;
 
 			for (int targetPlaceIndex = 0; targetPlaceIndex < targetPlaces.length; targetPlaceIndex++) {
-				if (isSemanticEqual(sourcePlace, targetPlaces[targetPlaceIndex])) {
+				if (isSemanticEqual(sourcePlace, targetPlaces[targetPlaceIndex], isStrictMatch)) {
 					hasSupportingPlace = true;
 					semanticEqualPlaces[sourcePlaceIndex][targetPlaceIndex] = true;
 				} else {
@@ -1401,8 +1401,9 @@ public final class VF2 {
 		    && source.getName().equals(target.getName());
 	}
 
-	private boolean isSemanticEqual(Place source, Place target) {
+	private boolean isSemanticEqual(Place source, Place target, boolean isStrictMatch) {
 		return source.getMark() <= target.getMark()
+			&& (!isStrictMatch || (source.getMark() == target.getMark())) 
 		    && source.getIncomingArcs().size() <= target.getIncomingArcs().size()
 	   	    && source.getOutgoingArcs().size() <= target.getOutgoingArcs().size()
 	   		&& source.getName().equals(target.getName());

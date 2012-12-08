@@ -44,7 +44,7 @@ public class MorphismPlacesTest {
 		Place targetPlace;
 		// try 100 morphism and count them
 		for (int i = 0; i < morphismCount; i++) {
-			Match match = new VF2(placesFromNet, placesToNet).getMatch(); 
+			Match match = new VF2(placesFromNet, placesToNet).getMatch(false); 
 					//Ullmann.createMatch(placesFromNet, placesToNet);
 			targetPlace = match.getPlace(fromPlace);
 
@@ -103,7 +103,7 @@ public class MorphismPlacesTest {
 	@Test
 	public void testStupidMethodToGetCodeCoverageForGetters() {
 		//Match  match  = Ullmann.createMatch(placesFromNet, placesToNet);
-		Match match = new VF2(placesFromNet, placesToNet).getMatch(); 
+		Match match = new VF2(placesFromNet, placesToNet).getMatch(false); 
 
 		match.getPreArc(placesFromNet.getPreArcs().iterator().next());
 		match.getPreArcs();

@@ -92,7 +92,7 @@ public class Transformation {
 		VF2.MatchVisitor visitor = new CheckContactConditionFulfilledMatchVisitor(petrinet, rule);
 		
 		//Match match = Ullmann.createMatch(rule.getL(), petrinet);
-		Match match = new VF2(rule.getL(), petrinet).getMatch(visitor);
+		Match match = new VF2(rule.getL(), petrinet).getMatch(false, visitor);
 
 		
 		// no Match found?

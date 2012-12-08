@@ -63,7 +63,7 @@ public class MorphismTest {
     	setupPetrinetTo();
     	setupExpectedResults();
     	
-    	testObject = new VF2(fromPn, toPn).getMatch();
+    	testObject = new VF2(fromPn, toPn).getMatch(false);
     }
 
     @After
@@ -73,7 +73,7 @@ public class MorphismTest {
 
     @Test
     public void testEqualMatches() {
-    	Match matchA = new VF2(fromPn, toPn).getMatch();
+    	Match matchA = new VF2(fromPn, toPn).getMatch(false);
     	Match matchB = Ullmann.createMatch(fromPn, toPn);
     	
         assertEquals(matchA, matchB);

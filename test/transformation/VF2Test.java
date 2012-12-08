@@ -94,7 +94,7 @@ public class VF2Test {
 		VF2 vf2 = new VF2(source, target);
 
 		VF2TestMatchVisitor visitor = new VF2TestMatchVisitor();		
-		vf2.getMatch(visitor);	
+		vf2.getMatch(false, visitor);	
 		
 		
 		long variations = getVariationsCount(target.getPlaces().size(), source.getPlaces().size()) *
@@ -142,7 +142,7 @@ public class VF2Test {
 		for (int i = 0; i < rounds; i++) {
 			VF2 matcher = new VF2(source, target, new Random(randomSeed++));
 			
-			Match match = matcher.getMatch();
+			Match match = matcher.getMatch(false);
 			
 			assertNotNull(match);
 			
