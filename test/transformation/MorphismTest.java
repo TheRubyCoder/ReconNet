@@ -5,7 +5,7 @@
 
 package transformation;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 //import static org.junit.Assert.fail;
 
 import java.util.HashMap;
@@ -25,6 +25,7 @@ import petrinet.model.PreArc;
 import petrinet.model.Transition;
 
 import transformation.matcher.*;
+import transformation.matcher.VF2.MatchException;
 
 /**
  *
@@ -63,20 +64,29 @@ public class MorphismTest {
     	setupPetrinetTo();
     	setupExpectedResults();
     	
-    	testObject = new VF2(fromPn, toPn).getMatch(false);
+    	try {
+			testObject = VF2.getInstance(fromPn, toPn).getMatch(false);
+		} catch (MatchException e) {
+			fail();
+		}
     }
 
-    @After
+	@After
     public void tearDown() {
     }
 
 
     @Test
     public void testEqualMatches() {
-    	Match matchA = new VF2(fromPn, toPn).getMatch(false);
-    	Match matchB = Ullmann.createMatch(fromPn, toPn);
-    	
-        assertEquals(matchA, matchB);
+    	Match matchA;
+		try {
+			matchA = VF2.getInstance(fromPn, toPn).getMatch(false);
+	    	Match matchB = Ullmann.createMatch(fromPn, toPn);
+	    	
+	        assertEquals(matchA, matchB);
+		} catch (MatchException e) {
+			fail();
+		}
     }
 
     /**

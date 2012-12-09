@@ -3,9 +3,9 @@ package transformation;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -20,6 +20,7 @@ import petrinet.model.Petrinet;
 import petrinet.model.Place;
 import petrinet.model.Transition;
 import transformation.matcher.VF2;
+import transformation.matcher.VF2.MatchException;
 import transformation.matcher.VF2.*;
 
 /**
@@ -28,7 +29,7 @@ import transformation.matcher.VF2.*;
  */
 
 public class VF2Test {
-	class VF2TestMatchVisitor implements MatchVisitor {
+	class NoTwiceMatchesMatchVisitor implements MatchVisitor {
 		private Set<Match> matches = new HashSet<Match>();
 		private int matchesCount = 0;
 		
@@ -36,7 +37,7 @@ public class VF2Test {
 			matches.add(match);
 			
 			matchesCount++;
-			
+
 			assertEquals(matches.size(), matchesCount);
 			
 			return false;
@@ -47,11 +48,32 @@ public class VF2Test {
 		}
 	}
 	
+	class MatchesCountsMatchVisitor implements MatchVisitor {
+		private Map<Match, Integer> matchesCounts = new HashMap<Match, Integer>();
+		
+		public boolean visit(Match match) {		
+			Integer count = matchesCounts.get(match); 
+			
+			if (count != null) {
+				matchesCounts.put(match, count + 1);
+			} else {
+				matchesCounts.put(match, 1);				
+			}
+	
+			return true;
+		}	
+		
+		public Map<Match, Integer> getMatchesCounts() {
+			return matchesCounts;
+		}
+	}
+	
 	private final Random RANDOM = new Random(55152213); 
 	
     @BeforeClass
     public static void setUpClass() throws Exception {
     }
+    
 
 	
 	@Test
@@ -91,113 +113,111 @@ public class VF2Test {
 	}
 	
 	private void testMorphismCount(Petrinet source, Petrinet target) {
-		VF2 vf2 = new VF2(source, target);
+		VF2 vf2 = VF2.getInstance(source, target);
 
-		VF2TestMatchVisitor visitor = new VF2TestMatchVisitor();		
-		vf2.getMatch(false, visitor);	
+		NoTwiceMatchesMatchVisitor visitor = new NoTwiceMatchesMatchVisitor();		
 		
-		
-		long variations = getVariationsCount(target.getPlaces().size(), source.getPlaces().size()) *
-				getVariationsCount(target.getTransitions().size(), source.getTransitions().size());
-		
-		assertEquals(
-			visitor.getMatchesCount(),
-			variations
-		);		
+		try {
+			assertNotNull(vf2.getMatch(false, visitor));
+			fail();
+		} catch (MatchException e) {
+			long variations = getVariationsCount(target.getPlaces().size(), source.getPlaces().size()) *
+					getVariationsCount(target.getTransitions().size(), source.getTransitions().size());
+			
+			assertEquals(
+				visitor.getMatchesCount(),
+				variations
+			);	
+		}
 	}
+	/*
+	@Test
+	public void testStack() {
+		final Petrinet source = new Petrinet();	
+		final Petrinet target = new Petrinet();		
+		
+		Place previousPlace = source.addPlace("a");
 
+		for (int i = 0; i < 1000; i++) {
+			Transition transition = source.addTransition("");
+			Place      place      = source.addPlace("");
+			source.addPreArc("", previousPlace, transition);
+			source.addPostArc("", transition, previousPlace);
+		}
+
+		previousPlace = target.addPlace("");
+		
+		for (int i = 0; i < 1000; i++) {
+			Transition transition = target.addTransition("");
+			Place      place      = target.addPlace("");
+			target.addPreArc("", previousPlace, transition);
+			target.addPostArc("", transition, previousPlace);
+		}
+
+
+		long      randomSeed              = 1135113;
+		
+		VF2 matcher = VF2.getInstance(source, target, new Random(randomSeed++));
+		try {
+			System.out.println(System.currentTimeMillis());
+			assertNotNull(matcher.getMatch(false));
+			System.out.println(System.currentTimeMillis());
+		} catch (MatchException e) {
+			System.out.println(System.currentTimeMillis());
+			fail();
+		}
+		
+	}
+*/
 
 	@Test
 	public void testNondeterminism_1() {
-		int[] sourceLayersNodes  = {1,1,3,3};		
+		int[] sourceLayersNodes  = {1,1,1,2};		
 		int[] targetLayersNodes1 = sourceLayersNodes;	
-		int[] targetLayersNodes2 = {1,8,3,3};
+		int[] targetLayersNodes2 = {1,8,1,2};
 		
-		Petrinet source = new Petrinet();	
-		Petrinet target = new Petrinet();		
+		final Petrinet source = new Petrinet();	
+		final Petrinet target = new Petrinet();		
 
-		Map<Integer, Set<INode>> sourceLayers = buildTreePetrinetComponent(source, sourceLayersNodes);
-		Map<Integer, Set<INode>> targetLayers = buildTreePetrinetComponent(target, targetLayersNodes2); 
-			
-		for (int i = 0; i < 2; i++) {
-			for (Map.Entry<Integer, Set<INode>> entry : buildTreePetrinetComponent(target, targetLayersNodes1).entrySet()) {
-				targetLayers.get(entry.getKey()).addAll(entry.getValue());
-			}
-		}
-/*
-		System.out.println(source);
-		System.out.println(sourceLayers);
-		System.out.println(target);
-		System.out.println(targetLayers);
+		buildTreePetrinetComponent(source, sourceLayersNodes); 
+		buildTreePetrinetComponent(target, targetLayersNodes1);
+		buildTreePetrinetComponent(target, targetLayersNodes2); 
+		buildTreePetrinetComponent(target, targetLayersNodes1);	
 
-		System.out.println(target.getPlaces().size());
-		System.out.println(target.getTransitions().size());
-		*/
-				
-		long      randomSeed                 = 156135113;
-		final int rounds                     = 2000;
-
-		Map<INode, Integer> nodesCount = new HashMap<INode, Integer>();
+		MatchesCountsMatchVisitor visitor = new MatchesCountsMatchVisitor();	
+		long      randomSeed              = 113513;
+		final int rounds                  = 2000;
+		
 		
 		for (int i = 0; i < rounds; i++) {
-			VF2 matcher = new VF2(source, target, new Random(randomSeed++));
-			
-			Match match = matcher.getMatch(false);
-			
-			assertNotNull(match);
-			
-			for (Map.Entry<Integer, Set<INode>> layer : sourceLayers.entrySet()) {
-				for (INode node : layer.getValue()) {
-					INode   matchedNode;
-					
-					if (node instanceof Place) {
-						matchedNode = match.getPlace((Place) node);
-					} else {
-						matchedNode = match.getTransition((Transition) node);					
-					}
-	
-					if (nodesCount.get(matchedNode) != null) {
-						nodesCount.put(matchedNode, nodesCount.get(matchedNode) + 1);
-					} else  {
-						nodesCount.put(matchedNode, 1);
-					}
-					
-				}				
+			VF2 matcher = VF2.getInstance(source, target, new Random(randomSeed++));	
+			try {
+				assertNotNull(matcher.getMatch(false, visitor));
+			} catch (MatchException e) {
+				assertTrue(false);
 			}
-		}
-		
+		}		
 
 		final int allowedDeviationInPercent = 20;
+
+		int minMatched = Integer.MAX_VALUE;
+		int maxMatched = Integer.MIN_VALUE;
 		
-
-		for (Map.Entry<Integer, Set<INode>> layer : targetLayers.entrySet()) {			
-			//System.out.println("Ebene: " + layer.getKey());
-
-			int matchedSum = 0;
-			int minMatched = Integer.MAX_VALUE;
-			int maxMatched = Integer.MIN_VALUE;
-			
-			for (INode node : layer.getValue()) {				
-				assertNotNull(nodesCount.get(node));
-				
-				int matched = nodesCount.get(node);
-				
-				//System.out.println(node + " -> " + matched);
-				
-				matchedSum += matched;
-				minMatched = Math.min(minMatched, matched);
-				maxMatched = Math.max(minMatched, matched);	
-			}				
-			
-			if (layer.getKey() == sourceLayersNodes.length - 1) {
-				int idealMatched = matchedSum / layer.getValue().size();
-				
-				final int lowerBorder = (idealMatched / 100) * (100 - allowedDeviationInPercent);
-				final int upperBorder = (idealMatched / 100) * (100 + allowedDeviationInPercent);
-	
-				assertTrue(lowerBorder <= minMatched && maxMatched <= upperBorder);
-			}
+		for (Integer matched : visitor.getMatchesCounts().values()) {		
+			minMatched = Math.min(minMatched, matched);
+			maxMatched = Math.max(maxMatched, matched);
+			//System.out.println(matched);
 		}
+		
+		final int idealMatched = rounds / visitor.getMatchesCounts().size();
+		
+		final int lowerBorder = (int) (idealMatched * (1 - allowedDeviationInPercent / 100.0));
+		final int upperBorder = (int) (idealMatched * (1 + allowedDeviationInPercent / 100.0));
+
+		//System.out.println("--");
+	//	System.out.println(lowerBorder + " <= " + minMatched + " | " + idealMatched + " | " + maxMatched + " <= " + upperBorder);
+
+		assertTrue(lowerBorder <= minMatched && maxMatched <= upperBorder);
 	}
 	
 	private Map<Integer, Set<INode>> buildTreePetrinetComponent(Petrinet petrinet, int[] layerNodesCounts) {

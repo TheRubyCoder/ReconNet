@@ -2,8 +2,10 @@ package transformation.matcher;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import petrinet.model.Petrinet;
 import petrinet.model.Place;
@@ -13,6 +15,7 @@ import petrinet.model.Transition;
 import transformation.Match;
 
 public final class VF2 {
+	private final MatchVisitor ACCEPT_FIRST_MATCH_VISITOR = new AcceptFirstMatchVisitor();
 	private final Random RANDOM;
 	private final int    CORE_NULL_NODE     = Integer.MAX_VALUE;
 	private final int    SET_NULL_VALUE     = 0;
@@ -24,12 +27,14 @@ public final class VF2 {
 	private final int    INDEX_SOURCE_CANDIDATE = 0;
 	private final int    INDEX_TARGET_CANDIDATE = 1;
 
-	private final byte   NEXT_TERMINAL_OUT = 0;
-	private final byte   NEXT_TERMINAL_IN  = 1;
-	private final byte   NEXT_NEW          = 2;
+	private final byte   NEXT_CANDIDATE_TERMINAL_OUT = 0;
+	private final byte   NEXT_CANDIDATE_TERMINAL_IN  = 1;
+	private final byte   NEXT_CANDIDATE_NEW          = 2;
 
-	private Petrinet source;
-	private Petrinet target;
+	private final int[]  CORE_NULL_NODE_CANDIDATE = {CORE_NULL_NODE, CORE_NULL_NODE};
+
+	private final Petrinet source;
+	private final Petrinet target;
 
 	private boolean[][]  semanticEqualPlaces;
 	private boolean[][]  semanticEqualTransitions;
@@ -72,26 +77,37 @@ public final class VF2 {
 	private int outSourceTransitionsCount;
 	private int outTargetPlacesCount;
 	private int outTargetTransitionsCount;
-	
-	private Match lastMatch;
-	
-	public VF2(Petrinet source, Petrinet target, Random random) {
+
+	private Match 		 lastMatch;
+	private MatchVisitor matchVisitor;
+
+	private VF2(Petrinet source, Petrinet target, Random random) {
 		this.source = source;
 		this.target = target;
 		this.RANDOM = random;
 	}
 
-	public VF2(Petrinet source, Petrinet target) {
-		this.source = source;
-		this.target = target;
-		this.RANDOM = new Random();
+	public static VF2 getInstance(Petrinet source, Petrinet target) {
+		return  getInstance(source, target, new Random());
 	}
 
-	private void init() {
+	public static VF2 getInstance(Petrinet source, Petrinet target, Random random) {
+		if (source == null || target == null || random == null) {
+			throw new IllegalArgumentException();
+		}
+
+		return new VF2(source, target, random);
+	}
+
+	private void initialize(boolean isStrictMatch, Set<Place> arcRestrictedSourcePlaces) throws MatchException {
 		int sourcePlacesCount      = source.getPlaces().size();
 		int sourceTransitionsCount = source.getTransitions().size();
 		int targetPlacesCount      = target.getPlaces().size();
 		int targetTransitionsCount = target.getTransitions().size();
+
+		if (sourcePlacesCount > targetPlacesCount || sourceTransitionsCount > targetTransitionsCount) {
+			throw new MatchException();
+		}
 
 		semanticEqualPlaces        = new boolean[sourcePlacesCount][targetPlacesCount];
 		semanticEqualTransitions   = new boolean[sourceTransitionsCount][targetTransitionsCount];
@@ -134,8 +150,9 @@ public final class VF2 {
 		outSourceTransitionsCount  = 0;
 		outTargetPlacesCount 	   = 0;
 		outTargetTransitionsCount  = 0;
-		
+
 		lastMatch 				   = null;
+		matchVisitor               = null;
 
 		initPlacesArray(sourcePlaces, source);
 		initTransitionsArray(sourceTransitions, source);
@@ -156,665 +173,276 @@ public final class VF2 {
 		Arrays.fill(coreSourceTransitions, CORE_NULL_NODE);
 		Arrays.fill(coreTargetPlaces, CORE_NULL_NODE);
 		Arrays.fill(coreTargetTransitions, CORE_NULL_NODE);
+
+		if (!generateSemanticPlaces(isStrictMatch, arcRestrictedSourcePlaces) || !generateSemanticTransitions()) {
+			throw new MatchException();
+		}
 	}
 
-	private void debug(Object message) {
-//System.out.println(message);
+	public Match getMatch(boolean isStrictMatch) throws MatchException {
+		return getMatch(isStrictMatch, new HashSet<Place>(), ACCEPT_FIRST_MATCH_VISITOR);
 	}
 
-	public Match getMatch(boolean isStrictMatch, Match partialMatch) {
-		return getMatch(isStrictMatch, partialMatch, new DefaultMatchVisitor());
+	public Match getMatch(boolean isStrictMatch, Set<Place> arcRestrictedSourcePlaces) throws MatchException {
+		return getMatch(isStrictMatch, arcRestrictedSourcePlaces, ACCEPT_FIRST_MATCH_VISITOR);
 	}
-	
-	public Match getMatch(boolean isStrictMatch, Match partialMatch, MatchVisitor visitor) {
-		if (source.getPlaces().size() > target.getPlaces().size()
-	     || source.getTransitions().size() > target.getTransitions().size()) {
-			return null;
+
+	public Match getMatch(boolean isStrictMatch, MatchVisitor visitor) throws MatchException {
+		return getMatch(isStrictMatch, new HashSet<Place>(), visitor);
+	}
+
+	public Match getMatch(boolean isStrictMatch, Set<Place> arcRestrictedSourcePlaces, MatchVisitor visitor) throws MatchException {
+		if (arcRestrictedSourcePlaces == null || visitor == null) {
+			throw new MatchException();
 		}
 
-		init();
+		initialize(isStrictMatch, arcRestrictedSourcePlaces);
+		matchVisitor = visitor;
 
-		if (!generateSemanticPlaces(isStrictMatch) || !generateSemanticTransitions()) {
-			return null;
+		if (!match()) {
+			throw new MatchException();
 		}
-		
+
+		return lastMatch;
+	}
+
+	public Match getMatch(boolean isStrictMatch, Match partialMatch) throws MatchException {
+		return getMatch(isStrictMatch, partialMatch, new HashSet<Place>(), ACCEPT_FIRST_MATCH_VISITOR);
+	}
+
+	public Match getMatch(boolean isStrictMatch, Match partialMatch, Set<Place> arcRestrictedSourcePlaces) throws MatchException {
+		return getMatch(isStrictMatch, partialMatch, arcRestrictedSourcePlaces, ACCEPT_FIRST_MATCH_VISITOR);
+	}
+
+	public Match getMatch(boolean isStrictMatch, Match partialMatch, MatchVisitor visitor) throws MatchException {
+		return getMatch(isStrictMatch, partialMatch, new HashSet<Place>(), ACCEPT_FIRST_MATCH_VISITOR);
+	}
+
+	public Match getMatch(boolean isStrictMatch, Match partialMatch, Set<Place> arcRestrictedSourcePlaces, MatchVisitor visitor) throws MatchException {
+		if (partialMatch == null || arcRestrictedSourcePlaces == null || visitor == null) {
+			throw new MatchException();
+		}
+
+		initialize(isStrictMatch, arcRestrictedSourcePlaces);
+		matchVisitor = visitor;
+
 		for (Map.Entry<Place, Place> mapping : partialMatch.getPlaces().entrySet()) {
-			if (sourcePlacesIndexes.get(mapping.getKey()) == null
-			 || targetPlacesIndexes.get(mapping.getValue()) == null) {
-				return null;
+			Integer sourceIndex = sourcePlacesIndexes.get(mapping.getKey());
+			Integer targetIndex = targetPlacesIndexes.get(mapping.getValue());
+
+			if (sourceIndex == null || targetIndex == null || !isPlaceFeasible(sourceIndex, targetIndex)) {
+				throw new MatchException();
 			}
-			
-			if (!semanticEqualPlaces[sourcePlacesIndexes.get(mapping.getKey())][targetPlacesIndexes.get(mapping.getValue())]
-			|| !isPlaceFeasible(sourcePlacesIndexes.get(mapping.getKey()), targetPlacesIndexes.get(mapping.getValue()))) {
-				return null;				
-			}
-			
-			addPlacePair(sourcePlacesIndexes.get(mapping.getKey()), targetPlacesIndexes.get(mapping.getValue()));
+
+			addPlacePair(sourceIndex, targetIndex);
 		}
-		
+
 		for (Map.Entry<Transition, Transition> mapping : partialMatch.getTransitions().entrySet()) {
-			if (sourceTransitionsIndexes.get(mapping.getKey()) == null
-			 || targetTransitionsIndexes.get(mapping.getValue()) == null) {
-				return null;
+			Integer sourceIndex = sourceTransitionsIndexes.get(mapping.getKey());
+			Integer targetIndex = targetTransitionsIndexes.get(mapping.getValue());
+
+			if (sourceIndex == null || targetIndex == null || !isTransitionFeasible(sourceIndex, targetIndex)) {
+				throw new MatchException();
 			}
-			
-			if (!semanticEqualTransitions[sourceTransitionsIndexes.get(mapping.getKey())][targetTransitionsIndexes.get(mapping.getValue())]
-			|| !isTransitionFeasible(sourceTransitionsIndexes.get(mapping.getKey()), targetTransitionsIndexes.get(mapping.getValue()))) {
-				return null;				
-			}
-			
-			addTransitionPair(sourceTransitionsIndexes.get(mapping.getKey()), targetTransitionsIndexes.get(mapping.getValue()));
+
+			addTransitionPair(sourceIndex, targetIndex);
 		}
 
 		assert partialMatch.getPlaces().size()      == coreSourcePlacesCount;
 		assert partialMatch.getTransitions().size() == coreSourceTransitionsCount;
+		assert partialMatch.getPlaces().size()      == coreTargetPlacesCount;
+		assert partialMatch.getTransitions().size() == coreTargetTransitionsCount;
 
-		if (match(visitor)) {
-			return lastMatch;
+		if (!match()) {
+			throw new MatchException();
 		}
 
-		return null;
+		return lastMatch;
 	}
 
-	public Match getMatch(boolean isStrictMatch) {
-		return getMatch(isStrictMatch, new DefaultMatchVisitor());
-	}
-
-	public Match getMatch(boolean isStrictMatch, MatchVisitor visitor) {
-		if (source.getPlaces().size() > target.getPlaces().size()
-	     || source.getTransitions().size() > target.getTransitions().size()) {
-			return null;
-		}
-
-		init();
-
-		if (!generateSemanticPlaces(isStrictMatch) || !generateSemanticTransitions()) {
-			return null;
-		}
-
-		if (match(visitor)) {
-			return lastMatch;
-		}
-
-		return null;
-	}
-
-	private Match getBuildMatch() {
+	private boolean match() {
 		assert assertValidState();
-		
-		Map<Place, Place>           places      = asMap(coreSourcePlaces, sourcePlaces, targetPlaces);
-		Map<Transition, Transition> transitions = asMap(coreSourceTransitions, sourceTransitions, targetTransitions);
-		Map<PreArc, PreArc> 		preArcs 	= new HashMap<PreArc, PreArc>();
-		Map<PostArc, PostArc> 		postArcs 	= new HashMap<PostArc, PostArc>();
 
-		for (Map.Entry<Transition, Transition> mapping : transitions.entrySet()) {
-			for (PreArc arc : mapping.getKey().getIncomingArcs()) {
-				preArcs.put(arc, mapping.getValue().getIncomingArc(places.get(arc.getPlace())));
-			}
-
-			for (PostArc arc : mapping.getKey().getOutgoingArcs()) {
-				postArcs.put(arc, mapping.getValue().getOutgoingArc(places.get(arc.getPlace())));
-			}
-		}
-
-		return new Match(source, target, places, transitions, preArcs, postArcs);
-	}
-
-	private boolean match(MatchVisitor visitor) {
-		assert assertValidState();
-		
-		if (coreSourcePlaces.length == coreSourcePlacesCount
-		 && coreSourceTransitions.length == coreSourceTransitionsCount) {
+		if (coreSourcePlacesCount      == coreSourcePlaces.length
+		 && coreSourceTransitionsCount == coreSourceTransitions.length) {
 			lastMatch = getBuildMatch();
-			
-			return visitor.visit(lastMatch);
+
+			return matchVisitor.visit(lastMatch);
 		}
-		
+
 		assert coreNodesCount != coreSourcePlaces.length + coreSourceTransitions.length;
 
 		if (hasNextOutCandidatePairs()) {
-			return matchByOut(visitor);
+			if (isMatchByPlacePairs(getNextOutPlaceCandidatePairsCount(), getNextOutTransitionCandidatePairsCount())) {
+				return matchByPlace(NEXT_CANDIDATE_TERMINAL_OUT);
+			} else {
+				return matchByTransition(NEXT_CANDIDATE_TERMINAL_OUT);
+			}
+
 		} else if (hasNextInCandidatePairs()) {
-			return matchByIn(visitor);
+			if (isMatchByPlacePairs(getNextInPlaceCandidatePairsCount(), getNextInTransitionCandidatePairsCount())) {
+				return matchByPlace(NEXT_CANDIDATE_TERMINAL_IN);
+			} else {
+				return matchByTransition(NEXT_CANDIDATE_TERMINAL_IN);
+			}
+
 		} else {
-			return matchByNew(visitor);
+			if (getNextPlaceCandidatePairsCount() > getNextTransitionCandidatePairsCount()
+			|| (getNextPlaceCandidatePairsCount() == getNextTransitionCandidatePairsCount() && RANDOM.nextInt(2) == 0)) {
+				return matchByPlace(NEXT_CANDIDATE_NEW);
+			} else {
+				return matchByTransition(NEXT_CANDIDATE_NEW);
+			}
 		}
 	}
-	
-	private boolean matchByOut(MatchVisitor visitor) {
-		assert hasNextOutCandidatePairs();
-		
-		if (matchByPlacePairs(getNextOutPlaceCandidatePairsCount(), getNextOutTransitionCandidatePairsCount())) {
-			return matchByPlace(visitor, NEXT_TERMINAL_OUT);			
-		} else {
-			return matchByTransition(visitor, NEXT_TERMINAL_OUT);
-		}
-	}
-	
-	private boolean matchByIn(MatchVisitor visitor) {
-		assert hasNextInCandidatePairs();
-		
-		if (matchByPlacePairs(getNextInPlaceCandidatePairsCount(), getNextInTransitionCandidatePairsCount())) {
-			return matchByPlace(visitor, NEXT_TERMINAL_IN);			
-		} else {
-			return matchByTransition(visitor, NEXT_TERMINAL_IN);
-		}
-	}
-	
-	private boolean matchByNew(MatchVisitor visitor) {
-		assert hasNextPlaceCandidatePairs() || hasNextTransitionCandidatePairs();
-		
-		//if (matchByPlacePairs(getNextPlaceCandidatePairsCount(), getNextTransitionCandidatePairsCount())) {		
-		if (getNextPlaceCandidatePairsCount() > getNextTransitionCandidatePairsCount()
-		|| (getNextPlaceCandidatePairsCount() == getNextTransitionCandidatePairsCount() && RANDOM.nextInt(2) == 0)) {
-			return matchByPlace(visitor, NEXT_NEW);			
-		} else {
-			return matchByTransition(visitor, NEXT_NEW);
-		}
-	}
-	
-	private boolean matchByPlacePairs(int placePairs, int transitionPairs) {
-		return placePairs > 0 && (transitionPairs == 0 || RANDOM.nextInt(placePairs + transitionPairs) < placePairs);
+
+	private boolean isMatchByPlacePairs(int placePairsCount, int transitionPairsCount) {
+		return placePairsCount > 0 && (transitionPairsCount == 0 
+            || RANDOM.nextInt(placePairsCount + transitionPairsCount) < placePairsCount);
 	}
 
-	private boolean matchByTransition(MatchVisitor visitor, byte next) {
-		int[] lastPair = {CORE_NULL_NODE, CORE_NULL_NODE};
+	private boolean matchByPlace(byte nextCandidateSet) {
+		int[] lastPair    = getNextPlaceCandidatePair(CORE_NULL_NODE_CANDIDATE, nextCandidateSet);
+		int   sourceIndex = lastPair[INDEX_SOURCE_CANDIDATE];
+		int   targetIndex = lastPair[INDEX_TARGET_CANDIDATE];
 
-		boolean areOutExhausted = false;
+		while (sourceIndex != CORE_NULL_NODE && targetIndex != CORE_NULL_NODE) {
+			if (isPlaceFeasible(sourceIndex, targetIndex)) {
+				addPlacePair(sourceIndex, targetIndex);
 
-		debug(coreNodesCount + ": " + next +" - source - places: " + Arrays.toString(outSourcePlaces));
-		debug(coreNodesCount + ": " + next +" - source - transition: " + Arrays.toString(outSourceTransitions));
-		debug(coreNodesCount + ": " + next +" - target - places: " + Arrays.toString(outTargetPlaces));
-		debug(coreNodesCount + ": " + next +" - target - transition: " + Arrays.toString(outTargetTransitions));
-
-		while (areOutExhausted == false) {
-			lastPair = getNextTransitionCandidatePair(lastPair, next);
-
-			debug(coreNodesCount + ": " + next +" - candidate - transition: " + Arrays.toString(lastPair));
-
-			if (lastPair[INDEX_SOURCE_CANDIDATE] == CORE_NULL_NODE || lastPair[INDEX_TARGET_CANDIDATE] == CORE_NULL_NODE) {
-				debug(coreNodesCount + ": " + next +" - Transitions : exhausted");
-				areOutExhausted = true;
-			} else if (
-				   semanticEqualTransitions[lastPair[INDEX_SOURCE_CANDIDATE]][lastPair[INDEX_TARGET_CANDIDATE]]
-				&& isTransitionFeasible(lastPair[INDEX_SOURCE_CANDIDATE], lastPair[INDEX_TARGET_CANDIDATE])) {
-
-				debug(coreNodesCount + ": " + next +" - add - Transition : " + Arrays.toString(lastPair));
-
-				addTransitionPair(
-					lastPair[INDEX_SOURCE_CANDIDATE],
-					lastPair[INDEX_TARGET_CANDIDATE]
-				);
-
-				if (match(visitor)) {
+				if (match()) {
 					return true;
 				}
 
-				backtrackTransitionPair(
-					lastPair[INDEX_SOURCE_CANDIDATE],
-					lastPair[INDEX_TARGET_CANDIDATE]
-				);
-
-				debug(coreNodesCount + ": " + next +" - Backtrack - Transition : " + Arrays.toString(lastPair));
+				backtrackPlacePair(sourceIndex, targetIndex);
 			}
-		}
 
-		debug(coreNodesCount + ": " + next +" - Both : exhausted");
+			lastPair    = getNextPlaceCandidatePair(lastPair, nextCandidateSet);
+			sourceIndex = lastPair[INDEX_SOURCE_CANDIDATE];
+			targetIndex = lastPair[INDEX_TARGET_CANDIDATE];
+		}
 
 		return false;
 	}
 
-	private boolean matchByPlace(MatchVisitor visitor, byte next) {
-		int[] lastPair      = {CORE_NULL_NODE, CORE_NULL_NODE};
+	private boolean matchByTransition(byte nextCandidateSet) {
+		int[] lastPair    = getNextTransitionCandidatePair(CORE_NULL_NODE_CANDIDATE, nextCandidateSet);
+		int   sourceIndex = lastPair[INDEX_SOURCE_CANDIDATE];
+		int   targetIndex = lastPair[INDEX_TARGET_CANDIDATE];
 
-		boolean areOutExhausted      = false;
+		while (sourceIndex != CORE_NULL_NODE && targetIndex != CORE_NULL_NODE) {
+			if (isTransitionFeasible(sourceIndex, targetIndex)) {
+				addTransitionPair(sourceIndex, targetIndex);
 
-		debug(coreNodesCount + ": " + next +" - source - places: " + Arrays.toString(outSourcePlaces));
-		debug(coreNodesCount + ": " + next +" - source - transition: " + Arrays.toString(outSourceTransitions));
-		debug(coreNodesCount + ": " + next +" - target - places: " + Arrays.toString(outTargetPlaces));
-		debug(coreNodesCount + ": " + next +" - target - transition: " + Arrays.toString(outTargetTransitions));
-
-		while (areOutExhausted == false) {
-			lastPair = getNextPlaceCandidatePair(lastPair, next);
-
-			debug(coreNodesCount + ": " + next +" - candidate - Place: " + Arrays.toString(lastPair));
-
-			if (lastPair[INDEX_SOURCE_CANDIDATE] == CORE_NULL_NODE || lastPair[INDEX_TARGET_CANDIDATE] == CORE_NULL_NODE) {
-				debug(coreNodesCount + ": " + next +" - Places : exhausted");
-				areOutExhausted = true;
-			} else if (semanticEqualPlaces[lastPair[INDEX_SOURCE_CANDIDATE]][lastPair[INDEX_TARGET_CANDIDATE]]
-					&& isPlaceFeasible(lastPair[INDEX_SOURCE_CANDIDATE], lastPair[INDEX_TARGET_CANDIDATE])) {
-
-				debug(coreNodesCount + ": " + next +" - add - Place : " + Arrays.toString(lastPair));
-
-				addPlacePair(
-					lastPair[INDEX_SOURCE_CANDIDATE],
-					lastPair[INDEX_TARGET_CANDIDATE]
-				);
-
-				if (match(visitor)) {
+				if (match()) {
 					return true;
 				}
 
-				backtrackPlacePair(
-					lastPair[INDEX_SOURCE_CANDIDATE],
-					lastPair[INDEX_TARGET_CANDIDATE]
-				);
-
-				debug(coreNodesCount + ": " + next +" - Backtrack - Place : " + Arrays.toString(lastPair));
+				backtrackTransitionPair(sourceIndex, targetIndex);
 			}
-		}
 
-		debug(coreNodesCount + ": " + next +" - Both : exhausted");
+			lastPair    = getNextTransitionCandidatePair(lastPair, nextCandidateSet);
+			sourceIndex = lastPair[INDEX_SOURCE_CANDIDATE];
+			targetIndex = lastPair[INDEX_TARGET_CANDIDATE];
+		}
 
 		return false;
 	}
 
+	private int[] getNextPlaceCandidatePair(int[] previousCancidatePair, byte nextCandidateSet) {
+		assert nextCandidateSet == NEXT_CANDIDATE_TERMINAL_OUT
+			|| nextCandidateSet == NEXT_CANDIDATE_TERMINAL_IN
+			|| nextCandidateSet == NEXT_CANDIDATE_NEW;
 
-	private boolean hasNextOutCandidatePairs() {
-		return hasNextOutPlaceCandidatePairs() || hasNextOutTransitionCandidatePairs();
-	}
-	
-	private boolean hasNextOutPlaceCandidatePairs() {
-		return outSourcePlacesCount > coreSourcePlacesCount && outTargetPlacesCount > coreTargetPlacesCount;
-	}
-	
-	private int getNextOutPlaceCandidatePairsCount() {
-		if (!hasNextOutPlaceCandidatePairs()) {
-			return 0;
-		}
-		
-		return outTargetPlacesCount - coreTargetPlacesCount;
-	}
-	
-	private boolean hasNextOutTransitionCandidatePairs() {
-		return outSourceTransitionsCount > coreSourceTransitionsCount && outTargetTransitionsCount > coreTargetTransitionsCount;
-	}
-	
-	private int getNextOutTransitionCandidatePairsCount() {
-		if (!hasNextOutTransitionCandidatePairs()) {
-			return 0;
-		}
-		
-		return outTargetTransitionsCount - coreTargetTransitionsCount;
-	}
-	
+		assert previousCancidatePair.length == 2;
 
-	private boolean hasNextInCandidatePairs() {
-		return hasNextInPlaceCandidatePairs() || hasNextInTransitionCandidatePairs();
-	}
+		int previousSourceIndex = previousCancidatePair[INDEX_SOURCE_CANDIDATE];
+		int previousTargetIndex = previousCancidatePair[INDEX_TARGET_CANDIDATE];
 
-	private boolean hasNextInPlaceCandidatePairs() {
-		return inSourcePlacesCount > coreSourcePlacesCount && inTargetPlacesCount > coreTargetPlacesCount;
-	}
-	
-	private int getNextInPlaceCandidatePairsCount() {
-		if (!hasNextInPlaceCandidatePairs()) {
-			return 0;
+		if (previousSourceIndex != CORE_NULL_NODE && previousTargetIndex >= coreTargetPlaces.length - 1) {
+			return CORE_NULL_NODE_CANDIDATE;
 		}
-		
-		return inTargetPlacesCount - coreTargetPlacesCount;
-	}
 
-	private boolean hasNextInTransitionCandidatePairs() {
-		return inSourceTransitionsCount > coreSourceTransitionsCount && inTargetTransitionsCount > coreTargetTransitionsCount;
-	}
-	
-	private int getNextInTransitionCandidatePairsCount() {
-		if (!hasNextInTransitionCandidatePairs()) {
-			return 0;
-		}
-		
-		return inTargetTransitionsCount - coreTargetTransitionsCount;
-	}
+		int sourceIndex = previousSourceIndex;
+		int targetIndex = sourceIndex == CORE_NULL_NODE ? 0 : previousTargetIndex + 1;
 
-	private boolean hasNextPlaceCandidatePairs() {		
-		return coreSourcePlaces.length > coreSourcePlacesCount && coreTargetPlaces.length > coreTargetPlacesCount;		
-	}
-	
-	private int getNextPlaceCandidatePairsCount() {
-		if (!hasNextPlaceCandidatePairs()) {
-			return 0;
+		if (sourceIndex == CORE_NULL_NODE) {
+			if (nextCandidateSet == NEXT_CANDIDATE_TERMINAL_OUT) {
+				sourceIndex = getNextUnmatchedNodeIndex(coreSourcePlaces, outSourcePlaces, 0);
+			} else if (nextCandidateSet == NEXT_CANDIDATE_TERMINAL_IN) {
+				sourceIndex = getNextUnmatchedNodeIndex(coreSourcePlaces, inSourcePlaces, 0);
+			} else if (sourceIndex == CORE_NULL_NODE) {
+				sourceIndex = getNextUnmatchedNodeIndex(coreSourcePlaces, 0);
+			}
 		}
-		
-		return coreTargetPlaces.length - coreTargetPlacesCount;
-	}
 
-	private boolean hasNextTransitionCandidatePairs() {
-		return coreSourceTransitions.length > coreSourceTransitionsCount && coreTargetTransitions.length > coreTargetTransitionsCount;
-	}
-	
-	private int getNextTransitionCandidatePairsCount() {
-		if (!hasNextTransitionCandidatePairs()) {
-			return 0;
-		}
-		
-		return coreTargetTransitions.length - coreTargetTransitionsCount;
-	}
-	
-	
-	private int[] getNextTransitionCandidatePair(int[] previousCancidatePair, byte next) {
-		assert next == NEXT_TERMINAL_OUT || next == NEXT_TERMINAL_IN || next == NEXT_NEW;
-		
-		if (next == NEXT_TERMINAL_OUT) {
-			return getNextOutTransitionCandidatePair(previousCancidatePair);
-		} else if (next == NEXT_TERMINAL_IN) {
-			return getNextInTransitionCandidatePair(previousCancidatePair);			
+		if (nextCandidateSet == NEXT_CANDIDATE_TERMINAL_OUT) {
+			targetIndex = getNextUnmatchedNodeIndex(coreTargetPlaces, outTargetPlaces, targetIndex);
+		} else if (nextCandidateSet == NEXT_CANDIDATE_TERMINAL_IN) {
+			targetIndex = getNextUnmatchedNodeIndex(coreTargetPlaces, inTargetPlaces, targetIndex);
 		} else {
-			return getNextNewTransitionCandidatePair(previousCancidatePair);			
+			targetIndex = getNextUnmatchedNodeIndex(coreTargetPlaces, targetIndex);
 		}
+
+		if (sourceIndex == CORE_NULL_NODE || targetIndex == CORE_NULL_NODE) {
+			return CORE_NULL_NODE_CANDIDATE;
+		}
+
+		assert sourceIndex != CORE_NULL_NODE;
+		assert targetIndex != CORE_NULL_NODE;
+
+		return new int[] {sourceIndex, targetIndex};
 	}
-	
-	private int[] getNextPlaceCandidatePair(int[] previousCancidatePair, byte next) {
-		assert next == NEXT_TERMINAL_OUT || next == NEXT_TERMINAL_IN || next == NEXT_NEW;
-		
-		if (next == NEXT_TERMINAL_OUT) {
-			return getNextOutPlaceCandidatePair(previousCancidatePair);
-		} else if (next == NEXT_TERMINAL_IN) {
-			return getNextInPlaceCandidatePair(previousCancidatePair);			
+
+	private int[] getNextTransitionCandidatePair(int[] previousCancidatePair, byte nextCandidateSet) {
+		assert nextCandidateSet == NEXT_CANDIDATE_TERMINAL_OUT
+			|| nextCandidateSet == NEXT_CANDIDATE_TERMINAL_IN
+			|| nextCandidateSet == NEXT_CANDIDATE_NEW;
+
+		assert previousCancidatePair.length == 2;
+
+		int previousSourceIndex = previousCancidatePair[INDEX_SOURCE_CANDIDATE];
+		int previousTargetIndex = previousCancidatePair[INDEX_TARGET_CANDIDATE];
+
+		if (previousSourceIndex != CORE_NULL_NODE && previousTargetIndex >= coreTargetTransitions.length - 1) {
+			return CORE_NULL_NODE_CANDIDATE;
+		}
+
+		int sourceIndex = previousSourceIndex;
+		int targetIndex = sourceIndex == CORE_NULL_NODE ? 0 : previousTargetIndex + 1;
+
+		if (sourceIndex == CORE_NULL_NODE) {
+			if (nextCandidateSet == NEXT_CANDIDATE_TERMINAL_OUT) {
+				sourceIndex = getNextUnmatchedNodeIndex(coreSourceTransitions, outSourceTransitions, 0);
+			} else if (nextCandidateSet == NEXT_CANDIDATE_TERMINAL_IN) {
+				sourceIndex = getNextUnmatchedNodeIndex(coreSourceTransitions, inSourceTransitions, 0);
+			} else if (sourceIndex == CORE_NULL_NODE) {
+				sourceIndex = getNextUnmatchedNodeIndex(coreSourceTransitions, 0);
+			}
+		}
+
+		if (nextCandidateSet == NEXT_CANDIDATE_TERMINAL_OUT) {
+			targetIndex = getNextUnmatchedNodeIndex(coreTargetTransitions, outTargetTransitions, targetIndex);
+		} else if (nextCandidateSet == NEXT_CANDIDATE_TERMINAL_IN) {
+			targetIndex = getNextUnmatchedNodeIndex(coreTargetTransitions, inTargetTransitions, targetIndex);
 		} else {
-			return getNextNewPlaceCandidatePair(previousCancidatePair);			
-		}
-	}
-
-	private int[] getNextOutTransitionCandidatePair(int[] previousCancidatePair) {
-		assert previousCancidatePair.length == 2;
-		
-		int previousSourceIndex = previousCancidatePair[INDEX_SOURCE_CANDIDATE];
-		int previousTargetIndex = previousCancidatePair[INDEX_TARGET_CANDIDATE];
-
-		int[] pair = {CORE_NULL_NODE, CORE_NULL_NODE};
-
-		if (!hasNextOutTransitionCandidatePairs()
-		 || (previousSourceIndex != CORE_NULL_NODE && previousSourceIndex == coreTargetTransitions.length - 1)) {
-			return pair;
+			targetIndex = getNextUnmatchedNodeIndex(coreTargetTransitions, targetIndex);
 		}
 
-		int sourceIndex = previousSourceIndex;
-		int targetIndex = previousTargetIndex + 1;
-
-		if (sourceIndex == CORE_NULL_NODE) {
-			sourceIndex = 0;
-			targetIndex = 0;
-			
-			for (; sourceIndex < coreSourceTransitions.length; sourceIndex++) {
-				if (outSourceTransitions[sourceIndex]  != SET_NULL_VALUE
-				 && coreSourceTransitions[sourceIndex] == CORE_NULL_NODE) {
-					break;
-				}
-			}
-		}
-		
-		for (; targetIndex < coreTargetTransitions.length; targetIndex++) {
-			if (outTargetTransitions[targetIndex]  != SET_NULL_VALUE
-			 && coreTargetTransitions[targetIndex] == CORE_NULL_NODE) {
-				break;
-			}
+		if (sourceIndex == CORE_NULL_NODE || targetIndex == CORE_NULL_NODE) {
+			return CORE_NULL_NODE_CANDIDATE;
 		}
 
 		assert sourceIndex != CORE_NULL_NODE;
 		assert targetIndex != CORE_NULL_NODE;
 
-		if (sourceIndex >= coreSourceTransitions.length || targetIndex >= coreTargetTransitions.length) {
-			return pair;
-		}
-
-		pair[INDEX_SOURCE_CANDIDATE] = sourceIndex;
-		pair[INDEX_TARGET_CANDIDATE] = targetIndex;
-
-		return pair;
+		return new int[] {sourceIndex, targetIndex};
 	}
 
-	private int[] getNextInTransitionCandidatePair(int[] previousCancidatePair) {
-		assert previousCancidatePair.length == 2;
-		
-		int previousSourceIndex = previousCancidatePair[INDEX_SOURCE_CANDIDATE];
-		int previousTargetIndex = previousCancidatePair[INDEX_TARGET_CANDIDATE];
-
-		int[] pair = {CORE_NULL_NODE, CORE_NULL_NODE};
-
-		if (!hasNextInTransitionCandidatePairs()
-		 || (previousSourceIndex != CORE_NULL_NODE && previousSourceIndex == coreTargetTransitions.length - 1)) {
-			return pair;
-		}
-
-		int sourceIndex = previousSourceIndex;
-		int targetIndex = previousTargetIndex + 1;
-
-		if (sourceIndex == CORE_NULL_NODE) {
-			sourceIndex = 0;
-			targetIndex = 0;
-			
-			for (; sourceIndex < coreSourceTransitions.length; sourceIndex++) {
-				if (inSourceTransitions[sourceIndex]  != SET_NULL_VALUE
-				 && coreSourceTransitions[sourceIndex] == CORE_NULL_NODE) {
-					break;
-				}
-			}
-		}
-
-		for (; targetIndex < coreTargetTransitions.length; targetIndex++) {
-			if (inTargetTransitions[targetIndex]  != SET_NULL_VALUE
-			 && coreTargetTransitions[targetIndex] == CORE_NULL_NODE) {
-				break;
-			}
-		}
-		
+	private void addTransitionPair(int sourceIndex, int targetIndex) {
 		assert sourceIndex != CORE_NULL_NODE;
 		assert targetIndex != CORE_NULL_NODE;
 
-		if (sourceIndex >= coreSourceTransitions.length || targetIndex >= coreTargetTransitions.length) {
-			return pair;
-		}
-
-		pair[INDEX_SOURCE_CANDIDATE] = sourceIndex;
-		pair[INDEX_TARGET_CANDIDATE] = targetIndex;
-
-		return pair;
-	}
-
-
-
-	private int[] getNextNewTransitionCandidatePair(int[] previousCancidatePair) {
-		assert previousCancidatePair.length == 2;
-		
-		int previousSourceIndex = previousCancidatePair[INDEX_SOURCE_CANDIDATE];
-		int previousTargetIndex = previousCancidatePair[INDEX_TARGET_CANDIDATE];
-
-		int[] pair = {CORE_NULL_NODE, CORE_NULL_NODE};
-
-		if (previousSourceIndex != CORE_NULL_NODE && previousSourceIndex == coreTargetTransitions.length - 1) {
-			return pair;
-		}
-
-		int sourceIndex = previousSourceIndex;
-		int targetIndex = previousTargetIndex + 1;
-
-		if (sourceIndex == CORE_NULL_NODE) {
-			sourceIndex = 0;
-			targetIndex = 0;
-			
-			for (; sourceIndex < coreSourceTransitions.length; sourceIndex++) {
-				if (coreSourceTransitions[sourceIndex] == CORE_NULL_NODE) {
-					break;
-				}
-			}
-
-		}
-
-		for (; targetIndex < coreTargetTransitions.length; targetIndex++) {
-			if (coreTargetTransitions[targetIndex] == CORE_NULL_NODE) {
-				break;
-			}
-		}
-		
-		assert sourceIndex != CORE_NULL_NODE;
-		assert targetIndex != CORE_NULL_NODE;
-
-		if (sourceIndex >= coreSourceTransitions.length || targetIndex >= coreTargetTransitions.length) {
-			return pair;
-		}
-
-		pair[INDEX_SOURCE_CANDIDATE] = sourceIndex;
-		pair[INDEX_TARGET_CANDIDATE] = targetIndex;
-
-		return pair;
-	}
-
-
-	private int[] getNextOutPlaceCandidatePair(int[] previousCancidatePair) {
-		assert previousCancidatePair.length == 2;
-		
-		int previousSourceIndex = previousCancidatePair[INDEX_SOURCE_CANDIDATE];
-		int previousTargetIndex = previousCancidatePair[INDEX_TARGET_CANDIDATE];
-
-		int[] pair = {CORE_NULL_NODE, CORE_NULL_NODE};
-
-		if (!hasNextOutPlaceCandidatePairs()
-		 || (previousSourceIndex != CORE_NULL_NODE && previousSourceIndex == coreTargetPlaces.length - 1)) {
-			return pair;
-		}
-
-		int sourceIndex = previousSourceIndex;
-		int targetIndex = previousTargetIndex + 1;
-
-		if (sourceIndex == CORE_NULL_NODE) {
-			sourceIndex = 0;
-			targetIndex = 0;
-			
-			for (; sourceIndex < coreSourcePlaces.length; sourceIndex++) {
-				if (outSourcePlaces[sourceIndex]  != SET_NULL_VALUE
-				 && coreSourcePlaces[sourceIndex] == CORE_NULL_NODE) {
-					break;
-				}
-			}
-
-		}
-
-		for (; targetIndex < coreTargetPlaces.length; targetIndex++) {
-			if (outTargetPlaces[targetIndex]  != SET_NULL_VALUE
-			 && coreTargetPlaces[targetIndex] == CORE_NULL_NODE) {
-				break;
-			}
-		}
-		
-		assert sourceIndex != CORE_NULL_NODE;
-		assert targetIndex != CORE_NULL_NODE;
-
-		if (sourceIndex >= coreSourcePlaces.length || targetIndex >= coreTargetPlaces.length) {
-			return pair;
-		}
-
-		pair[INDEX_SOURCE_CANDIDATE] = sourceIndex;
-		pair[INDEX_TARGET_CANDIDATE] = targetIndex;
-
-		return pair;
-	}
-
-	private int[] getNextInPlaceCandidatePair(int[] previousCancidatePair) {
-		assert previousCancidatePair.length == 2;
-		
-		int previousSourceIndex = previousCancidatePair[INDEX_SOURCE_CANDIDATE];
-		int previousTargetIndex = previousCancidatePair[INDEX_TARGET_CANDIDATE];
-
-		int[] pair = {CORE_NULL_NODE, CORE_NULL_NODE};
-
-		if (!hasNextInPlaceCandidatePairs()
-		 || (previousSourceIndex != CORE_NULL_NODE && previousSourceIndex == coreTargetPlaces.length - 1)) {
-			return pair;
-		}
-
-		int sourceIndex = previousSourceIndex;
-		int targetIndex = previousTargetIndex + 1;
-
-		if (sourceIndex == CORE_NULL_NODE) {
-			sourceIndex = 0;
-			targetIndex = 0;
-			
-			for (; sourceIndex < coreSourcePlaces.length; sourceIndex++) {
-				if (inSourcePlaces[sourceIndex]  != SET_NULL_VALUE && coreSourcePlaces[sourceIndex] == CORE_NULL_NODE) {
-					break;
-				}
-			}
-
-		}
-
-		for (; targetIndex < coreTargetPlaces.length; targetIndex++) {
-			if (inTargetPlaces[targetIndex] != SET_NULL_VALUE && coreTargetPlaces[targetIndex] == CORE_NULL_NODE) {
-				break;
-			}
-		}
-		
-		assert sourceIndex != CORE_NULL_NODE;
-		assert targetIndex != CORE_NULL_NODE;
-
-		if (sourceIndex >= coreSourcePlaces.length || targetIndex >= coreTargetPlaces.length) {
-			return pair;
-		}
-
-		pair[INDEX_SOURCE_CANDIDATE] = sourceIndex;
-		pair[INDEX_TARGET_CANDIDATE] = targetIndex;
-
-		return pair;
-	}
-
-
-
-	private int[] getNextNewPlaceCandidatePair(int[] previousCancidatePair) {
-		assert previousCancidatePair.length == 2;
-		
-		int previousSourceIndex = previousCancidatePair[INDEX_SOURCE_CANDIDATE];
-		int previousTargetIndex = previousCancidatePair[INDEX_TARGET_CANDIDATE];
-
-		int[] pair = {CORE_NULL_NODE, CORE_NULL_NODE};
-
-		if (previousSourceIndex != CORE_NULL_NODE && previousSourceIndex == coreTargetPlaces.length - 1) {
-			return pair;
-		}
-
-		int sourceIndex = previousSourceIndex;
-		int targetIndex = previousTargetIndex + 1;
-
-		if (sourceIndex == CORE_NULL_NODE) {
-			sourceIndex = 0;
-			targetIndex = 0;
-			
-			for (; sourceIndex < coreSourcePlaces.length; sourceIndex++) {
-				if (coreSourcePlaces[sourceIndex] == CORE_NULL_NODE) {
-					break;
-				}
-			}
-		}
-
-		for (; targetIndex < coreTargetPlaces.length; targetIndex++) {
-			if (coreTargetPlaces[targetIndex] == CORE_NULL_NODE) {
-				break;
-			}
-		}
-		
-		assert sourceIndex != CORE_NULL_NODE;
-		assert targetIndex != CORE_NULL_NODE;
-
-		if (sourceIndex >= coreSourcePlaces.length ||  targetIndex >= coreTargetPlaces.length) {
-			return pair;
-		}
-
-		pair[INDEX_SOURCE_CANDIDATE] = sourceIndex;
-		pair[INDEX_TARGET_CANDIDATE] = targetIndex;
-
-		return pair;
-	}
-
-
-
-
-
-
-
-	private void addTransitionPair(int sourceIndex, int targetIndex) {		
-		assert sourceIndex != CORE_NULL_NODE;
-		assert targetIndex != CORE_NULL_NODE;
-		
 		coreSourceTransitionsCount++;
 		coreTargetTransitionsCount++;
 		coreNodesCount++;
@@ -849,37 +477,37 @@ public final class VF2 {
 		Transition target = targetTransitions[targetIndex];
 
 		for (PreArc arc : source.getIncomingArcs()) {
-			int sourcePlaceIndex = sourcePlacesIndexes.get(arc.getPlace());
+			int placeIndex = sourcePlacesIndexes.get(arc.getPlace());
 
-			if (inSourcePlaces[sourcePlaceIndex] == SET_NULL_VALUE) {
-				inSourcePlaces[sourcePlaceIndex] = coreNodesCount;
+			if (inSourcePlaces[placeIndex] == SET_NULL_VALUE) {
+				inSourcePlaces[placeIndex] = coreNodesCount;
 				inSourcePlacesCount++;
 			}
 		}
 
 		for (PostArc arc : source.getOutgoingArcs()) {
-			int sourcePlaceIndex = sourcePlacesIndexes.get(arc.getPlace());
+			int placeIndex = sourcePlacesIndexes.get(arc.getPlace());
 
-			if (outSourcePlaces[sourcePlaceIndex] == SET_NULL_VALUE) {
-				outSourcePlaces[sourcePlaceIndex] = coreNodesCount;
+			if (outSourcePlaces[placeIndex] == SET_NULL_VALUE) {
+				outSourcePlaces[placeIndex] = coreNodesCount;
 				outSourcePlacesCount++;
 			}
 		}
 
 		for (PreArc arc : target.getIncomingArcs()) {
-			int targetPlaceIndex = targetPlacesIndexes.get(arc.getPlace());
+			int placeIndex = targetPlacesIndexes.get(arc.getPlace());
 
-			if (inTargetPlaces[targetPlaceIndex] == SET_NULL_VALUE) {
-				inTargetPlaces[targetPlaceIndex] = coreNodesCount;
+			if (inTargetPlaces[placeIndex] == SET_NULL_VALUE) {
+				inTargetPlaces[placeIndex] = coreNodesCount;
 				inTargetPlacesCount++;
 			}
 		}
 
 		for (PostArc arc : target.getOutgoingArcs()) {
-			int targetPlaceIndex = targetPlacesIndexes.get(arc.getPlace());
+			int placeIndex = targetPlacesIndexes.get(arc.getPlace());
 
-			if (outTargetPlaces[targetPlaceIndex] == SET_NULL_VALUE) {
-				outTargetPlaces[targetPlaceIndex] = coreNodesCount;
+			if (outTargetPlaces[placeIndex] == SET_NULL_VALUE) {
+				outTargetPlaces[placeIndex] = coreNodesCount;
 				outTargetPlacesCount++;
 			}
 		}
@@ -887,10 +515,10 @@ public final class VF2 {
 		assert assertValidState();
 	}
 
-	private void backtrackTransitionPair(int sourceIndex, int targetIndex) {		
+	private void backtrackTransitionPair(int sourceIndex, int targetIndex) {
 		assert sourceIndex != CORE_NULL_NODE;
 		assert targetIndex != CORE_NULL_NODE;
-		
+
 		Transition source = sourceTransitions[sourceIndex];
 		Transition target = targetTransitions[targetIndex];
 
@@ -916,37 +544,37 @@ public final class VF2 {
 		}
 
 		for (PreArc arc : source.getIncomingArcs()) {
-			int sourcePlaceIndex = sourcePlacesIndexes.get(arc.getPlace());
+			int placeIndex = sourcePlacesIndexes.get(arc.getPlace());
 
-			if (inSourcePlaces[sourcePlaceIndex] == coreNodesCount) {
-				inSourcePlaces[sourcePlaceIndex] = SET_NULL_VALUE;
+			if (inSourcePlaces[placeIndex] == coreNodesCount) {
+				inSourcePlaces[placeIndex] = SET_NULL_VALUE;
 				inSourcePlacesCount--;
 			}
 		}
 
 		for (PostArc arc : source.getOutgoingArcs()) {
-			int sourcePlaceIndex = sourcePlacesIndexes.get(arc.getPlace());
+			int placeIndex = sourcePlacesIndexes.get(arc.getPlace());
 
-			if (outSourcePlaces[sourcePlaceIndex] == coreNodesCount) {
-				outSourcePlaces[sourcePlaceIndex] = SET_NULL_VALUE;
+			if (outSourcePlaces[placeIndex] == coreNodesCount) {
+				outSourcePlaces[placeIndex] = SET_NULL_VALUE;
 				outSourcePlacesCount--;
 			}
 		}
 
 		for (PreArc arc : target.getIncomingArcs()) {
-			int targetPlaceIndex = targetPlacesIndexes.get(arc.getPlace());
+			int placeIndex = targetPlacesIndexes.get(arc.getPlace());
 
-			if (inTargetPlaces[targetPlaceIndex] == coreNodesCount) {
-				inTargetPlaces[targetPlaceIndex] = SET_NULL_VALUE;
+			if (inTargetPlaces[placeIndex] == coreNodesCount) {
+				inTargetPlaces[placeIndex] = SET_NULL_VALUE;
 				inTargetPlacesCount--;
 			}
 		}
 
 		for (PostArc arc : target.getOutgoingArcs()) {
-			int targetPlaceIndex = targetPlacesIndexes.get(arc.getPlace());
+			int placeIndex = targetPlacesIndexes.get(arc.getPlace());
 
-			if (outTargetPlaces[targetPlaceIndex] == coreNodesCount) {
-				outTargetPlaces[targetPlaceIndex] = SET_NULL_VALUE;
+			if (outTargetPlaces[placeIndex] == coreNodesCount) {
+				outTargetPlaces[placeIndex] = SET_NULL_VALUE;
 				outTargetPlacesCount--;
 			}
 		}
@@ -961,10 +589,10 @@ public final class VF2 {
 		assert assertValidState();
 	}
 
-	private void addPlacePair(int sourceIndex, int targetIndex) {				
+	private void addPlacePair(int sourceIndex, int targetIndex) {
 		assert sourceIndex != CORE_NULL_NODE;
 		assert targetIndex != CORE_NULL_NODE;
-		
+
 		coreSourcePlacesCount++;
 		coreTargetPlacesCount++;
 		coreNodesCount++;
@@ -991,43 +619,43 @@ public final class VF2 {
 		}
 
 		coreSourcePlaces[sourceIndex] = targetIndex;
-		coreTargetPlaces[targetIndex] = sourceIndex;		
+		coreTargetPlaces[targetIndex] = sourceIndex;
 
 		Place source = sourcePlaces[sourceIndex];
 		Place target = targetPlaces[targetIndex];
 
 		for (PostArc arc : source.getIncomingArcs()) {
-			int sourceTransitionIndex = sourceTransitionsIndexes.get(arc.getTransition());
+			int transitionIndex = sourceTransitionsIndexes.get(arc.getTransition());
 
-			if (inSourceTransitions[sourceTransitionIndex] == SET_NULL_VALUE) {
-				inSourceTransitions[sourceTransitionIndex] = coreNodesCount;
+			if (inSourceTransitions[transitionIndex] == SET_NULL_VALUE) {
+				inSourceTransitions[transitionIndex] = coreNodesCount;
 				inSourceTransitionsCount++;
 			}
 		}
 
 		for (PreArc arc : source.getOutgoingArcs()) {
-			int sourceTransitionIndex = sourceTransitionsIndexes.get(arc.getTransition());
+			int transitionIndex = sourceTransitionsIndexes.get(arc.getTransition());
 
-			if (outSourceTransitions[sourceTransitionIndex] == SET_NULL_VALUE) {
-				outSourceTransitions[sourceTransitionIndex] = coreNodesCount;
+			if (outSourceTransitions[transitionIndex] == SET_NULL_VALUE) {
+				outSourceTransitions[transitionIndex] = coreNodesCount;
 				outSourceTransitionsCount++;
 			}
 		}
 
 		for (PostArc arc : target.getIncomingArcs()) {
-			int targetTransitionIndex = targetTransitionsIndexes.get(arc.getTransition());
+			int transitionIndex = targetTransitionsIndexes.get(arc.getTransition());
 
-			if (inTargetTransitions[targetTransitionIndex] == SET_NULL_VALUE) {
-				inTargetTransitions[targetTransitionIndex] = coreNodesCount;
+			if (inTargetTransitions[transitionIndex] == SET_NULL_VALUE) {
+				inTargetTransitions[transitionIndex] = coreNodesCount;
 				inTargetTransitionsCount++;
 			}
 		}
 
 		for (PreArc arc : target.getOutgoingArcs()) {
-			int targetTransitionIndex = targetTransitionsIndexes.get(arc.getTransition());
+			int transitionIndex = targetTransitionsIndexes.get(arc.getTransition());
 
-			if (outTargetTransitions[targetTransitionIndex] == SET_NULL_VALUE) {
-				outTargetTransitions[targetTransitionIndex] = coreNodesCount;
+			if (outTargetTransitions[transitionIndex] == SET_NULL_VALUE) {
+				outTargetTransitions[transitionIndex] = coreNodesCount;
 				outTargetTransitionsCount++;
 			}
 		}
@@ -1035,10 +663,10 @@ public final class VF2 {
 		assert assertValidState();
 	}
 
-	private void backtrackPlacePair(int sourceIndex, int targetIndex) {		
+	private void backtrackPlacePair(int sourceIndex, int targetIndex) {
 		assert sourceIndex != CORE_NULL_NODE;
 		assert targetIndex != CORE_NULL_NODE;
-		
+
 		Place source = sourcePlaces[sourceIndex];
 		Place target = targetPlaces[targetIndex];
 
@@ -1063,37 +691,37 @@ public final class VF2 {
 		}
 
 		for (PostArc arc : source.getIncomingArcs()) {
-			int sourceTransitionIndex = sourceTransitionsIndexes.get(arc.getTransition());
+			int transitionIndex = sourceTransitionsIndexes.get(arc.getTransition());
 
-			if (inSourceTransitions[sourceTransitionIndex] == coreNodesCount) {
-				inSourceTransitions[sourceTransitionIndex] = SET_NULL_VALUE;
+			if (inSourceTransitions[transitionIndex] == coreNodesCount) {
+				inSourceTransitions[transitionIndex] = SET_NULL_VALUE;
 				inSourceTransitionsCount--;
 			}
 		}
 
 		for (PreArc arc : source.getOutgoingArcs()) {
-			int sourceTransitionIndex = sourceTransitionsIndexes.get(arc.getTransition());
+			int transitionIndex = sourceTransitionsIndexes.get(arc.getTransition());
 
-			if (outSourceTransitions[sourceTransitionIndex] == coreNodesCount) {
-				outSourceTransitions[sourceTransitionIndex] = SET_NULL_VALUE;
+			if (outSourceTransitions[transitionIndex] == coreNodesCount) {
+				outSourceTransitions[transitionIndex] = SET_NULL_VALUE;
 				outSourceTransitionsCount--;
 			}
 		}
 
 		for (PostArc arc : target.getIncomingArcs()) {
-			int targetTransitionIndex = targetTransitionsIndexes.get(arc.getTransition());
+			int transitionIndex = targetTransitionsIndexes.get(arc.getTransition());
 
-			if (inTargetTransitions[targetTransitionIndex] == coreNodesCount) {
-				inTargetTransitions[targetTransitionIndex] = SET_NULL_VALUE;
+			if (inTargetTransitions[transitionIndex] == coreNodesCount) {
+				inTargetTransitions[transitionIndex] = SET_NULL_VALUE;
 				inTargetTransitionsCount--;
 			}
 		}
 
 		for (PreArc arc : target.getOutgoingArcs()) {
-			int targetTransitionIndex = targetTransitionsIndexes.get(arc.getTransition());
+			int transitionIndex = targetTransitionsIndexes.get(arc.getTransition());
 
-			if (outTargetTransitions[targetTransitionIndex] == coreNodesCount) {
-				outTargetTransitions[targetTransitionIndex] = SET_NULL_VALUE;
+			if (outTargetTransitions[transitionIndex] == coreNodesCount) {
+				outTargetTransitions[transitionIndex] = SET_NULL_VALUE;
 				outTargetTransitionsCount--;
 			}
 		}
@@ -1108,10 +736,14 @@ public final class VF2 {
 		assert assertValidState();
 	}
 
-	private boolean isPlaceFeasible(int sourceIndex, int targetIndex) {		
+	private boolean isPlaceFeasible(int sourceIndex, int targetIndex) {
 		assert sourceIndex != CORE_NULL_NODE;
 		assert targetIndex != CORE_NULL_NODE;
-		
+
+		if (!semanticEqualPlaces[sourceIndex][targetIndex]) {
+			return false;
+		}
+
 		Place source = sourcePlaces[sourceIndex];
 		Place target = targetPlaces[targetIndex];
 
@@ -1146,8 +778,8 @@ public final class VF2 {
 			Map<Transition, Integer> sourceTransitionsIndexes,
 			int[] coreSourceTransitions, int[] inSourceTransitions,
 			int[] outSourceTransitions, Transition[] targetTransitions,
-			int[] cardinality) {	
-		
+			int[] cardinality) {
+
 		assert cardinality.length == 3;
 
 		for (PreArc arc : source.getOutgoingArcs()) {
@@ -1157,20 +789,17 @@ public final class VF2 {
 			if (targetTransitionIndex != CORE_NULL_NODE) {
 				Transition targetTransition = targetTransitions[targetTransitionIndex];
 
-				if (!target.hasOutgoingArc(targetTransition)) {
-					return false;
-				}
-
-				if (!isSemanticEqual(arc, target.getOutgoingArc(targetTransition))) {
+				if (!target.hasOutgoingArc(targetTransition)
+						|| !isSemanticEqual(arc, target.getOutgoingArc(targetTransition))) {
 					return false;
 				}
 			} else {
-				if (inSourceTransitions[sourceTransitionIndex] > SET_NULL_VALUE) {
-					cardinality[INDEX_TERMINAL_IN]++;
-				}
-
 				if (outSourceTransitions[sourceTransitionIndex] > SET_NULL_VALUE) {
 					cardinality[INDEX_TERMINAL_OUT]++;
+				}
+
+				if (inSourceTransitions[sourceTransitionIndex] > SET_NULL_VALUE) {
+					cardinality[INDEX_TERMINAL_IN]++;
 				}
 
 				if (inSourceTransitions[sourceTransitionIndex] == SET_NULL_VALUE
@@ -1200,20 +829,17 @@ public final class VF2 {
 			if (targetTransitionIndex != CORE_NULL_NODE) {
 				Transition targetTransition = targetTransitions[targetTransitionIndex];
 
-				if (!target.hasIncomingArc(targetTransition)) {
-					return false;
-				}
-
-				if (!isSemanticEqual(arc, target.getIncomingArc(targetTransition))) {
+				if (!target.hasIncomingArc(targetTransition)
+						|| !isSemanticEqual(arc, target.getIncomingArc(targetTransition))) {
 					return false;
 				}
 			} else {
-				if (inSourceTransitions[sourceTransitionIndex] > SET_NULL_VALUE) {
-					cardinality[INDEX_TERMINAL_IN]++;
-				}
-
 				if (outSourceTransitions[sourceTransitionIndex] > SET_NULL_VALUE) {
 					cardinality[INDEX_TERMINAL_OUT]++;
+				}
+
+				if (inSourceTransitions[sourceTransitionIndex] > SET_NULL_VALUE) {
+					cardinality[INDEX_TERMINAL_IN]++;
 				}
 
 				if (inSourceTransitions[sourceTransitionIndex] == SET_NULL_VALUE
@@ -1231,7 +857,11 @@ public final class VF2 {
 	private boolean isTransitionFeasible(int sourceIndex, int targetIndex) {
 		assert sourceIndex != CORE_NULL_NODE;
 		assert targetIndex != CORE_NULL_NODE;
-		
+
+		if (!semanticEqualTransitions[sourceIndex][targetIndex]) {
+			return false;
+		}
+
 		Transition source = sourceTransitions[sourceIndex];
 		Transition target = targetTransitions[targetIndex];
 
@@ -1277,20 +907,17 @@ public final class VF2 {
 			if (targetPlaceIndex != CORE_NULL_NODE) {
 				Place targetPlace = targetPlaces[targetPlaceIndex];
 
-				if (!target.hasOutgoingArc(targetPlace)) {
-					return false;
-				}
-
-				if (!isSemanticEqual(arc, target.getOutgoingArc(targetPlace))) {
+				if (!target.hasOutgoingArc(targetPlace)
+						|| !isSemanticEqual(arc, target.getOutgoingArc(targetPlace))) {
 					return false;
 				}
 			} else {
-				if (inSourcePlaces[sourcePlaceIndex] > SET_NULL_VALUE) {
-					cardinality[INDEX_TERMINAL_IN]++;
-				}
-
 				if (outSourcePlaces[sourcePlaceIndex] > SET_NULL_VALUE) {
 					cardinality[INDEX_TERMINAL_OUT]++;
+				}
+
+				if (inSourcePlaces[sourcePlaceIndex] > SET_NULL_VALUE) {
+					cardinality[INDEX_TERMINAL_IN]++;
 				}
 
 				if (inSourcePlaces[sourcePlaceIndex] == SET_NULL_VALUE
@@ -1310,7 +937,7 @@ public final class VF2 {
 			int[] coreSourcePlaces, int[] inSourcePlaces,
 			int[] outSourcePlaces, Place[] targetPlaces,
 			int[] cardinality) {
-		
+
 		assert cardinality.length == 3;
 
 		for (PreArc arc : source.getIncomingArcs()) {
@@ -1320,20 +947,17 @@ public final class VF2 {
 			if (targetPlaceIndex != CORE_NULL_NODE) {
 				Place targetPlace = targetPlaces[targetPlaceIndex];
 
-				if (!target.hasIncomingArc(targetPlace)) {
-					return false;
-				}
-
-				if (!isSemanticEqual(arc, target.getIncomingArc(targetPlace))) {
+				if (!target.hasIncomingArc(targetPlace)
+						|| !isSemanticEqual(arc, target.getIncomingArc(targetPlace))) {
 					return false;
 				}
 			} else {
-				if (inSourcePlaces[sourcePlaceIndex] > SET_NULL_VALUE) {
-					cardinality[INDEX_TERMINAL_IN]++;
-				}
-
 				if (outSourcePlaces[sourcePlaceIndex] > SET_NULL_VALUE) {
 					cardinality[INDEX_TERMINAL_OUT]++;
+				}
+
+				if (inSourcePlaces[sourcePlaceIndex] > SET_NULL_VALUE) {
+					cardinality[INDEX_TERMINAL_IN]++;
 				}
 
 				if (inSourcePlaces[sourcePlaceIndex] == SET_NULL_VALUE
@@ -1347,13 +971,14 @@ public final class VF2 {
 	}
 
 
-	private boolean generateSemanticPlaces(boolean isStrictMatch) {
+	private boolean generateSemanticPlaces(boolean isStrictMatch, Set<Place> arcRestrictedSourcePlaces) {
 		for (int sourcePlaceIndex = 0; sourcePlaceIndex < sourcePlaces.length; sourcePlaceIndex++) {
 			Place   sourcePlace        = sourcePlaces[sourcePlaceIndex];
 			boolean hasSupportingPlace = false;
+			boolean isArcRestricted    = arcRestrictedSourcePlaces.contains(sourcePlace);
 
 			for (int targetPlaceIndex = 0; targetPlaceIndex < targetPlaces.length; targetPlaceIndex++) {
-				if (isSemanticEqual(sourcePlace, targetPlaces[targetPlaceIndex], isStrictMatch)) {
+				if (isSemanticEqual(sourcePlace, targetPlaces[targetPlaceIndex], isStrictMatch, isArcRestricted)) {
 					hasSupportingPlace = true;
 					semanticEqualPlaces[sourcePlaceIndex][targetPlaceIndex] = true;
 				} else {
@@ -1401,11 +1026,14 @@ public final class VF2 {
 		    && source.getName().equals(target.getName());
 	}
 
-	private boolean isSemanticEqual(Place source, Place target, boolean isStrictMatch) {
+	private boolean isSemanticEqual(Place source, Place target, boolean isStrictMatch, boolean isArcRestricted) {
 		return source.getMark() <= target.getMark()
-			&& (!isStrictMatch || (source.getMark() == target.getMark())) 
-		    && source.getIncomingArcs().size() <= target.getIncomingArcs().size()
-	   	    && source.getOutgoingArcs().size() <= target.getOutgoingArcs().size()
+			&& (!isStrictMatch || (source.getMark() == target.getMark()))
+		    && ((isArcRestricted && source.getIncomingArcs().size() == target.getIncomingArcs().size()
+			  		&& source.getOutgoingArcs().size() == target.getOutgoingArcs().size())
+			  || (!isArcRestricted && source.getIncomingArcs().size() <= target.getIncomingArcs().size()
+	   	    		&& source.getOutgoingArcs().size() <= target.getOutgoingArcs().size())
+	   	       )
 	   		&& source.getName().equals(target.getName());
 	}
 
@@ -1414,7 +1042,11 @@ public final class VF2 {
 			&& source.getTlb().equals(target.getTlb())
 		    && source.getRnw().equals(target.getRnw())
 		    && source.getIncomingArcs().size() == target.getIncomingArcs().size()
-		    && source.getOutgoingArcs().size() == target.getOutgoingArcs().size();
+		    && source.getOutgoingArcs().size() == target.getOutgoingArcs().size()
+	    	/*&& getAccumulatedPreArcsWeight(source.getIncomingArcs()) ==
+	    		getAccumulatedPreArcsWeight(target.getIncomingArcs())
+			&& getAccumulatedPostArcsWeight(source.getOutgoingArcs()) ==
+				getAccumulatedPostArcsWeight(target.getOutgoingArcs())*/;
 
 		if (!isSemanticEqual) {
 			return false;
@@ -1423,10 +1055,165 @@ public final class VF2 {
 		return true;
 	}
 
+	private int getAccumulatedPreArcsWeight(Set<PreArc> preArcs) {
+		int weight = 0;
+
+		for (PreArc arc : preArcs) {
+			weight += arc.getWeight();
+		}
+
+		return weight;
+	}
+
+	private int getAccumulatedPostArcsWeight(Set<PostArc> postArcs) {
+		int weight = 0;
+
+		for (PostArc arc : postArcs) {
+			weight += arc.getWeight();
+		}
+
+		return weight;
+	}
+
+	private Match getBuildMatch() {
+		assert assertValidState();
+
+		Map<Place, Place>           places      = asMap(coreSourcePlaces, sourcePlaces, targetPlaces);
+		Map<Transition, Transition> transitions = asMap(coreSourceTransitions, sourceTransitions, targetTransitions);
+		Map<PreArc, PreArc> 		preArcs 	= new HashMap<PreArc, PreArc>();
+		Map<PostArc, PostArc> 		postArcs 	= new HashMap<PostArc, PostArc>();
+
+		for (Map.Entry<Transition, Transition> mapping : transitions.entrySet()) {
+			for (PreArc arc : mapping.getKey().getIncomingArcs()) {
+				preArcs.put(arc, mapping.getValue().getIncomingArc(places.get(arc.getPlace())));
+				assert preArcs.get(arc) != null;
+			}
+
+			for (PostArc arc : mapping.getKey().getOutgoingArcs()) {
+				postArcs.put(arc, mapping.getValue().getOutgoingArc(places.get(arc.getPlace())));
+				assert postArcs.get(arc) != null;
+			}
+		}
+
+		assert source.getPlaces().size()      == places.size();
+		assert source.getTransitions().size() == transitions.size();
+		assert source.getPreArcs().size()     == preArcs.size();
+		assert source.getPostArcs().size()    == postArcs.size();
+
+		return new Match(source, target, places, transitions, preArcs, postArcs);
+	}
+
+
+	private boolean hasNextOutCandidatePairs() {
+		return hasNextOutPlaceCandidatePairs() || hasNextOutTransitionCandidatePairs();
+	}
+
+	private boolean hasNextOutPlaceCandidatePairs() {
+		return outSourcePlacesCount > coreSourcePlacesCount && outTargetPlacesCount > coreTargetPlacesCount;
+	}
+
+	private int getNextOutPlaceCandidatePairsCount() {
+		if (!hasNextOutPlaceCandidatePairs()) {
+			return 0;
+		}
+
+		return outTargetPlacesCount - coreTargetPlacesCount;
+	}
+
+	private boolean hasNextOutTransitionCandidatePairs() {
+		return outSourceTransitionsCount > coreSourceTransitionsCount && outTargetTransitionsCount > coreTargetTransitionsCount;
+	}
+
+	private int getNextOutTransitionCandidatePairsCount() {
+		if (!hasNextOutTransitionCandidatePairs()) {
+			return 0;
+		}
+
+		return outTargetTransitionsCount - coreTargetTransitionsCount;
+	}
+
+	private boolean hasNextInCandidatePairs() {
+		return hasNextInPlaceCandidatePairs() || hasNextInTransitionCandidatePairs();
+	}
+
+	private boolean hasNextInPlaceCandidatePairs() {
+		return inSourcePlacesCount > coreSourcePlacesCount && inTargetPlacesCount > coreTargetPlacesCount;
+	}
+
+	private int getNextInPlaceCandidatePairsCount() {
+		if (!hasNextInPlaceCandidatePairs()) {
+			return 0;
+		}
+
+		return inTargetPlacesCount - coreTargetPlacesCount;
+	}
+
+	private boolean hasNextInTransitionCandidatePairs() {
+		return inSourceTransitionsCount > coreSourceTransitionsCount && inTargetTransitionsCount > coreTargetTransitionsCount;
+	}
+
+	private int getNextInTransitionCandidatePairsCount() {
+		if (!hasNextInTransitionCandidatePairs()) {
+			return 0;
+		}
+
+		return inTargetTransitionsCount - coreTargetTransitionsCount;
+	}
+
+	private boolean hasNextPlaceCandidatePairs() {
+		return coreSourcePlaces.length > coreSourcePlacesCount && coreTargetPlaces.length > coreTargetPlacesCount;
+	}
+
+	private int getNextPlaceCandidatePairsCount() {
+		if (!hasNextPlaceCandidatePairs()) {
+			return 0;
+		}
+
+		return coreTargetPlaces.length - coreTargetPlacesCount;
+	}
+
+	private boolean hasNextTransitionCandidatePairs() {
+		return coreSourceTransitions.length > coreSourceTransitionsCount && coreTargetTransitions.length > coreTargetTransitionsCount;
+	}
+
+	private int getNextTransitionCandidatePairsCount() {
+		if (!hasNextTransitionCandidatePairs()) {
+			return 0;
+		}
+
+		return coreTargetTransitions.length - coreTargetTransitionsCount;
+	}
+
+
+	private int getNextUnmatchedNodeIndex(int[] core, int[] terminalSet, int startIndex) {
+		assert core.length == terminalSet.length && startIndex >= 0;
+
+		for (int index = startIndex; index < core.length; index++) {
+			if (terminalSet[index]  != SET_NULL_VALUE && core[index] == CORE_NULL_NODE) {
+				return index;
+			}
+		}
+
+		return CORE_NULL_NODE;
+	}
+
+	private int getNextUnmatchedNodeIndex(int[] core, int startIndex) {
+		for (int index = startIndex; index < core.length; index++) {
+			if (core[index] == CORE_NULL_NODE) {
+				return index;
+			}
+		}
+
+		return CORE_NULL_NODE;
+	}
+
 
 	private boolean assertValidState() {
 		assert coreNodesCount == coreSourcePlacesCount + coreSourceTransitionsCount;
 		assert coreNodesCount == coreTargetPlacesCount + coreTargetTransitionsCount;
+
+		assert coreSourcePlacesCount      == coreTargetPlacesCount;
+		assert coreSourceTransitionsCount == coreTargetTransitionsCount;
 
 		assert getUnequalCount(coreSourcePlaces, CORE_NULL_NODE)      == coreSourcePlacesCount;
 		assert getUnequalCount(coreSourceTransitions, CORE_NULL_NODE) == coreSourceTransitionsCount;
@@ -1443,32 +1230,39 @@ public final class VF2 {
 		assert getUnequalCount(outTargetPlaces, SET_NULL_VALUE)       == outTargetPlacesCount;
 		assert getUnequalCount(outTargetTransitions, SET_NULL_VALUE)  == outTargetTransitionsCount;
 
-		assert inSourcePlacesCount >= coreSourcePlacesCount;
-		assert inSourceTransitionsCount >= coreSourceTransitionsCount;
-		assert outSourcePlacesCount >= coreSourcePlacesCount;
+		assert inSourcePlacesCount       >= coreSourcePlacesCount;
+		assert inSourceTransitionsCount  >= coreSourceTransitionsCount;
+		assert outSourcePlacesCount      >= coreSourcePlacesCount;
 		assert outSourceTransitionsCount >= coreSourceTransitionsCount;
 
-		assert inTargetPlacesCount >= coreTargetPlacesCount;
-		assert inTargetTransitionsCount >= coreTargetTransitionsCount;
-		assert outTargetPlacesCount >= coreTargetPlacesCount;
+		assert inTargetPlacesCount 		 >= coreTargetPlacesCount;
+		assert inTargetTransitionsCount  >= coreTargetTransitionsCount;
+		assert outTargetPlacesCount 	 >= coreTargetPlacesCount;
 		assert outTargetTransitionsCount >= coreTargetTransitionsCount;
 
-		for (int index : sourcePlacesIndexes.values()) {
-			assert index == sourcePlacesIndexes.get(sourcePlaces[index]);
+		assert sourcePlacesIndexes.size() 	   == sourcePlaces.length;
+		assert sourceTransitionsIndexes.size() == sourceTransitions.length;
+		assert targetPlacesIndexes.size() 	   == targetPlaces.length;
+		assert targetTransitionsIndexes.size() == targetTransitions.length;
+
+		assert matchVisitor instanceof MatchVisitor;
+
+		for (Place place : sourcePlacesIndexes.keySet()) {
+			assert sourcePlaces[sourcePlacesIndexes.get(place)].equals(place);
 		}
 
-		for (int index : sourceTransitionsIndexes.values()) {
-			assert index == sourceTransitionsIndexes.get(sourceTransitions[index]);
+		for (Transition transition : sourceTransitionsIndexes.keySet()) {
+			assert sourceTransitions[sourceTransitionsIndexes.get(transition)].equals(transition);
 		}
 
-		for (int index : targetPlacesIndexes.values()) {
-			assert index == targetPlacesIndexes.get(targetPlaces[index]);
+		for (Place place : targetPlacesIndexes.keySet()) {
+			assert targetPlaces[targetPlacesIndexes.get(place)].equals(place);
 		}
 
-		for (int index : targetTransitionsIndexes.values()) {
-			assert index == targetTransitionsIndexes.get(targetTransitions[index]);
+		for (Transition transition : targetTransitionsIndexes.keySet()) {
+			assert targetTransitions[targetTransitionsIndexes.get(transition)].equals(transition);
 		}
-		
+
 		return true;
 	}
 
@@ -1569,8 +1363,20 @@ public final class VF2 {
 	public interface MatchVisitor {
 		public boolean visit(Match match);
 	}
-	
-	private final class DefaultMatchVisitor implements MatchVisitor {		
+
+	public final class MatchException extends Exception {
+		private static final long serialVersionUID = 6792173074685670051L;
+
+		public MatchException() {
+			super();
+		}
+
+		public MatchException(String arg0) {
+			super(arg0);
+		}
+	}
+
+	private final class AcceptFirstMatchVisitor implements MatchVisitor {
 		public boolean visit(Match match) {
 			return true;
 		}

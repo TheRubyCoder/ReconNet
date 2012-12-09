@@ -10,6 +10,7 @@ import petrinet.model.PostArc;
 import petrinet.model.PreArc;
 import petrinet.model.Transition;
 import transformation.matcher.*;
+import transformation.matcher.VF2.MatchException;
 import exceptions.EngineException;
 
 /**
@@ -28,7 +29,8 @@ public class Transformation {
 
 		@Override
 		public boolean visit(Match match) {
-			return contactConditionFulfilled(this.petrinet, this.rule, match);
+			return true;
+		//	return contactConditionFulfilled(this.petrinet, this.rule, match);
 		}		
 	}
 
@@ -89,18 +91,16 @@ public class Transformation {
 	static Transformation createTransformationWithAnyMatch(
 			Petrinet petrinet, Rule rule) {
 		
-		VF2.MatchVisitor visitor = new CheckContactConditionFulfilledMatchVisitor(petrinet, rule);
+		//VF2.MatchVisitor visitor = new CheckContactConditionFulfilledMatchVisitor(petrinet, rule);
 		
 		//Match match = Ullmann.createMatch(rule.getL(), petrinet);
-		Match match = new VF2(rule.getL(), petrinet).getMatch(false, visitor);
-
 		
-		// no Match found?
-		if (match == null) {
-			return null;			
-		}
-		
-		return new Transformation(petrinet, match, rule);
+		try {
+			Match match = VF2.getInstance(rule.getL(), petrinet).getMatch(false, rule.getPlacesToDelete());
+			return new Transformation(petrinet, match, rule);			
+		} catch (MatchException e) {
+			return null;
+		}		
 	}
 
 	/**
