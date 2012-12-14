@@ -227,7 +227,6 @@ final public class Petrinet {
 	
 	
 	
-	
 	/**
 	 * Adds a new {@link Place} to the petrinet
 	 * 
