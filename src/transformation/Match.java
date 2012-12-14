@@ -233,4 +233,16 @@ public class Match {
 			return false;
 		return true;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Match [source=" + source + ", target=" + target + ", places="
+				+ places + ", transitions=" + transitions + ", preArcs="
+				+ preArcs + ", postArcs=" + postArcs + "]";
+	}
+	
+	
 }

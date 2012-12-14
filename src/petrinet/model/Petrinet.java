@@ -428,7 +428,6 @@ final public class Petrinet {
 
 		transitions.remove(id);
 	}
-
 	
 	
 	/**
