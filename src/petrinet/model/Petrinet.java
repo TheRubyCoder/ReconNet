@@ -72,7 +72,9 @@ final public class Petrinet {
 	 * @throws IllegalArgumentException
 	 */
 	public PostArc addPostArc(String name, Transition transition, Place place) {
-		if (name == null || place == null || transition == null) {
+		if (name == null || place == null || transition == null
+		|| !place.equals(places.get(place.getId()))
+		|| !transition.equals(transitions.get(transition.getId()))) {
 			throw new IllegalArgumentException();
 		}
 		
@@ -102,7 +104,9 @@ final public class Petrinet {
 	 * @throws IllegalArgumentException
 	 */
 	public PreArc addPreArc(String name, Place place, Transition transition) {
-		if (name == null || place == null || transition == null) {
+		if (name == null || place == null || transition == null
+		|| !place.equals(places.get(place.getId()))
+		|| !transition.equals(transitions.get(transition.getId()))) {
 			throw new IllegalArgumentException();
 		}
 		
@@ -222,6 +226,7 @@ final public class Petrinet {
 
 		throw new IllegalArgumentException();
 	}
+	
 	
 	
 	

@@ -5,19 +5,25 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.nio.ByteBuffer;
+import java.security.SecureRandom;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import org.apache.commons.math3.random.*;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+
+import cern.colt.Arrays;
 
 import petrinet.model.INode;
 import petrinet.model.Petrinet;
@@ -27,7 +33,6 @@ import petrinet.model.PreArc;
 import petrinet.model.Renews;
 import petrinet.model.Transition;
 import transformation.matcher.VF2;
-import transformation.matcher.VF2.MatchException;
 import transformation.matcher.VF2.*;
 
 /**
@@ -87,7 +92,7 @@ public class VF2Test {
     	source  = new Petrinet();
     	target  = new Petrinet();
     }
-    /*
+    
     @Test 
     public void testRandomPetrinets() {
     	String[] placeNames      = {"p_1", "p_2", "p_3", "p_4", "p_5", "p_6", "p_7", "p_8", "p_9"};
@@ -231,7 +236,7 @@ public class VF2Test {
     		testNoMatch(source, target, true); 		
     	}
     }
-*/
+
     @Test
     public void testArcRestrictedMatch() {
 		Set<Place> arcRestrictedPlaces = new HashSet<Place>();		
@@ -449,7 +454,7 @@ public class VF2Test {
 	}
 	
 	@Test
-	public void testNondeterminism_1() {
+	public void testNondeterminism1() {
 		int[] sourceLayersNodes  = {1,1,2};		
 		int[] targetLayersNodes1 = sourceLayersNodes;	
 		int[] targetLayersNodes2 = {1,8,2};
@@ -459,21 +464,26 @@ public class VF2Test {
 
 		buildTreePetrinetComponent(source, sourceLayersNodes); 
 		buildTreePetrinetComponent(target, targetLayersNodes1);
-		buildTreePetrinetComponent(target, targetLayersNodes1);	
-		buildTreePetrinetComponent(target, targetLayersNodes2); 
+		buildTreePetrinetComponent(target, targetLayersNodes1);
+		buildTreePetrinetComponent(target, targetLayersNodes2);
+		
+		MatchesCountsMatchVisitor visitor = new MatchesCountsMatchVisitor();
+		RandomGenerator           random  = new Well19937c(9092862831406672017L);	
+		final int 				  rounds  = 20000;
 
-		MatchesCountsMatchVisitor visitor = new MatchesCountsMatchVisitor();	
-		long      randomSeed              = 1131513;
-		final int rounds                  = 2000;
+		for (int i = 0; i < 1000; i++) {
+			random.nextInt();
+		}
+
+		for (int i = 0; i < rounds; i++) {	
+			VF2 matcher = VF2.getInstance(source, target, random);	
 			
-		for (int i = 0; i < rounds; i++) {
-			VF2 matcher = VF2.getInstance(source, target, new Random(randomSeed++));	
 			try {
 				assertNotNull(matcher.getMatch(false, visitor));
 			} catch (MatchException e) {
 				assertTrue(false);
 			}
-		}		
+		}	
 
 		final int allowedDeviationInPercent = 20;
 
@@ -483,7 +493,7 @@ public class VF2Test {
 		for (Integer matched : visitor.getMatchesCounts().values()) {		
 			minMatched = Math.min(minMatched, matched);
 			maxMatched = Math.max(maxMatched, matched);
-		//	System.out.println(matched);
+			//System.out.println(matched);
 		}
 		
 		final int idealMatched = rounds / visitor.getMatchesCounts().size();
@@ -496,7 +506,6 @@ public class VF2Test {
 
 		//assertTrue(lowerBorder <= minMatched && maxMatched <= upperBorder);
 	}
-	
 
 	@Test
 	public void testCountWithoutArcsMatch1() {
@@ -1100,12 +1109,12 @@ public class VF2Test {
 		} catch (IllegalArgumentException e) {}
 
 		try {
-			VF2.getInstance(null, target, new Random());
+			VF2.getInstance(null, target, new JDKRandomGenerator());
 			fail();
 		} catch (IllegalArgumentException e) {}
 
 		try {
-			VF2.getInstance(source, null, new Random());
+			VF2.getInstance(source, null, new JDKRandomGenerator());
 			fail();
 		} catch (IllegalArgumentException e) {}
 
