@@ -20,9 +20,12 @@
         <dependency org="com.sun.xml.bind" name="jaxb-impl" rev="2.2.2-promoted-b99">
     		<artifact name="jaxb-impl" type="jar" />
 		</dependency>
-        
-        
 		
+		<dependency org="org.apache.commons" name="commons-math3" rev="3.0">
+		    <artifact name="commons-math3" ext="jar"/>
+		</dependency>
+
+
 		<!--  tools -->		
 		<dependency org="junit" name="junit" rev="4.8.2"/>
 		<dependency org="emma" name="emma" rev="2.1.5320" />
