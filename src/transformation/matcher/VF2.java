@@ -1978,13 +1978,16 @@ public final class VF2 {
 	}
 	
 	private static RandomGenerator getDefaultRandomGenerator() {
-		int[] seed = new int[1391];
+		/*int[] seed = new int[1391];
 		
 		SecureRandom secureRandom = new SecureRandom();
 		
 		for (int index = 0; index < seed.length; index++) {
 			seed[index] = ByteBuffer.wrap(secureRandom.generateSeed(4)).getInt();
-		}
+		}*/
+
+		SecureRandom secureRandom = new SecureRandom();
+		long seed = ByteBuffer.wrap(secureRandom.generateSeed(8)).getLong();
 		
 		RandomGenerator defaultRandom = new Well44497b(seed);
 		
