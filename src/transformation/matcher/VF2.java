@@ -2,7 +2,6 @@ package transformation.matcher;
 
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
-import java.util.Random;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.HashMap;
@@ -48,7 +47,7 @@ public final class VF2 {
 	private static final RandomGenerator DEFAULT_RANDOM = getDefaultRandomGenerator();
 	
 	/**
-	 * Indicates an unmatched node in the core arrays (coreSource.., soreTarget...). 
+	 * Indicates a not matched node in the core arrays (coreSource.., soreTarget...). 
 	 */
 	private final int CORE_NULL_NODE = Integer.MAX_VALUE;
 	
@@ -84,13 +83,14 @@ public final class VF2 {
 	 */
 	private final Petrinet target;
 
+
 	/**
 	 * Matrix, which indicates the semantic equality of 2 arbitrary places. Semantic equality concerns the 
 	 * marking and other place "labels". Structurally equality is checked first by execution of the matcher. 
 	 * Therefore this matrix gives no clue about structural equality. Changes of this array are only allowed
 	 * by the intialize method.
 	 */
-	private boolean[][] semanticEqualPlaces;
+	private boolean[][] semanticMatrixPlace;
 
 	/**
 	 * Matrix, which indicates the semantic equality of 2 arbitrary transitions. Semantic equality concerns 
@@ -98,7 +98,7 @@ public final class VF2 {
 	 * Therefore this matrix gives no clue about structural equality. Changes of this array are only allowed
 	 * by the intialize method.
 	 */
-	private boolean[][] semanticEqualTransitions;
+	private boolean[][] semanticMatrixTransition;
 
 	/**
 	 * Array over all places of the source petrinet. The index of a place in this array is the value, which is 
@@ -154,6 +154,14 @@ public final class VF2 {
 	 */
 	private Map<Transition, Integer> targetTransitionsIndexes;
 
+
+	/**
+	 * indicates for a source place whether the target place has to have the exact the same number of 
+	 * pre arcs and post arcs  
+	 */
+	private boolean[] arcRestrictedSourcePlaces;
+	
+	
 	/**
 	 * Number of nodes, which were mapped so far. This includes places and transitions.
 	 * This number is equivalent to the recursion depth and is used by the terminal sets.
@@ -315,6 +323,7 @@ public final class VF2 {
 	 * Match visitor, which will be called, if a match is found. 
 	 */
 	private MatchVisitor matchVisitor;
+	
 
 	private VF2(Petrinet source, Petrinet target, RandomGenerator random) {
 		this.source = source;
@@ -357,15 +366,17 @@ public final class VF2 {
 		return new VF2(source, target, random);
 	}
 
+	
+
 	/**
 	 * initializes all local variables with the current state of source and target.
 	 * 
-	 * @param  isStrictMatch              indicates, that the marking of places in source and target have to be equal
-	 * @param  arcRestrictedSourcePlaces  places in source, where the places in target have to 
-	 *                                    have exact the same number of pre arcs and post arcs  
-	 * @throws MatchException 		      if no match can be found
+	 * @param  isStrictMatch              	 indicates, that the marking of places in source and target have to be equal
+	 * @param  arcRestrictedSourcePlacesSet  places in source, where the places in target have to 
+	 *                                  	 have exact the same number of pre arcs and post arcs  
+	 * @throws MatchException 		      	 if no match can be found
 	 */
-	private void initialize(boolean isStrictMatch, Set<Place> arcRestrictedSourcePlaces) throws MatchException {
+	private void initialize(boolean isStrictMatch, Set<Place> arcRestrictedSourcePlacesSet) throws MatchException {
 		int sourcePlacesCount      = source.getPlaces().size();
 		int sourceTransitionsCount = source.getTransitions().size();
 		int targetPlacesCount      = target.getPlaces().size();
@@ -375,9 +386,11 @@ public final class VF2 {
 			throw new MatchException();
 		}
 
-		semanticEqualPlaces        = new boolean[sourcePlacesCount][targetPlacesCount];
-		semanticEqualTransitions   = new boolean[sourceTransitionsCount][targetTransitionsCount];
+		semanticMatrixPlace        = new boolean[sourcePlacesCount][targetPlacesCount];
+		semanticMatrixTransition   = new boolean[sourceTransitionsCount][targetTransitionsCount];
 
+		arcRestrictedSourcePlaces  = new boolean[sourcePlacesCount];
+		
 		sourcePlaces               = new Place[sourcePlacesCount];
 		sourceTransitions          = new Transition[sourceTransitionsCount];
 		targetPlaces               = new Place[targetPlacesCount];
@@ -440,9 +453,9 @@ public final class VF2 {
 		Arrays.fill(coreSourceTransitions, CORE_NULL_NODE);
 		Arrays.fill(coreTargetPlaces, CORE_NULL_NODE);
 		Arrays.fill(coreTargetTransitions, CORE_NULL_NODE);
-
-		if (!generateSemanticPlaces(isStrictMatch, arcRestrictedSourcePlaces) 
-		 || !generateSemanticTransitions()) {
+		
+		if (!generateSemanticMatrixPlaces(isStrictMatch, arcRestrictedSourcePlacesSet) 
+		 || !generateSemanticMatrixTransitions()) {
 			throw new MatchException();
 		}
 	}
@@ -590,7 +603,7 @@ public final class VF2 {
 			Integer sourceIndex = sourcePlacesIndexes.get(mapping.getKey());
 			Integer targetIndex = targetPlacesIndexes.get(mapping.getValue());
 
-			if (sourceIndex == null || targetIndex == null || !isPlaceFeasible(sourceIndex, targetIndex)) {
+			if (sourceIndex == null || targetIndex == null || !isFeasiblePlace(sourceIndex, targetIndex)) {
 				throw new MatchException();
 			}
 
@@ -601,7 +614,7 @@ public final class VF2 {
 			Integer sourceIndex = sourceTransitionsIndexes.get(mapping.getKey());
 			Integer targetIndex = targetTransitionsIndexes.get(mapping.getValue());
 
-			if (sourceIndex == null || targetIndex == null || !isTransitionFeasible(sourceIndex, targetIndex)) {
+			if (sourceIndex == null || targetIndex == null || !isFeasibleTransition(sourceIndex, targetIndex)) {
 				throw new MatchException();
 			}
 
@@ -631,7 +644,7 @@ public final class VF2 {
 		if (corePlacesCount      == coreSourcePlaces.length
 		 && coreTransitionsCount == coreSourceTransitions.length) {
 			lastMatch   = null;
-			Match match = getBuildMatch();
+			Match match = buildMatch();
 
 			if (matchVisitor.visit(match)) {
 				lastMatch = match;
@@ -643,25 +656,25 @@ public final class VF2 {
 
 		assert coreNodesCount != coreSourcePlaces.length + coreSourceTransitions.length;
 
-		if (hasNextOutCandidatePairs()) {
-			if (isMatchByPlacePairs(getNextOutPlaceCandidatePairsCount(), getNextOutTransitionCandidatePairsCount())) {
-				return matchByPlace(NEXT_CANDIDATE_SET.TERMINAL_OUT);
+		if (hasOutPairs()) {
+			if (isMatchByPlacePairs(getOutPlacePairsCount(), getOutTransitionPairsCount())) {
+				return matchPlace(NEXT_CANDIDATE_SET.TERMINAL_OUT);
 			} else {
-				return matchByTransition(NEXT_CANDIDATE_SET.TERMINAL_OUT);
+				return matchTransition(NEXT_CANDIDATE_SET.TERMINAL_OUT);
 			}
 
-		} else if (hasNextInCandidatePairs()) {
-			if (isMatchByPlacePairs(getNextInPlaceCandidatePairsCount(), getNextInTransitionCandidatePairsCount())) {
-				return matchByPlace(NEXT_CANDIDATE_SET.TERMINAL_IN);
+		} else if (hasInPairs()) {
+			if (isMatchByPlacePairs(getInPlacePairsCount(), getInTransitionPairsCount())) {
+				return matchPlace(NEXT_CANDIDATE_SET.TERMINAL_IN);
 			} else {
-				return matchByTransition(NEXT_CANDIDATE_SET.TERMINAL_IN);
+				return matchTransition(NEXT_CANDIDATE_SET.TERMINAL_IN);
 			}
 
 		} else {
-			if (isMatchByPlacePairs(getNextPlaceCandidatePairsCount(), getNextTransitionCandidatePairsCount())) {
-				return matchByPlace(NEXT_CANDIDATE_SET.NEW);
+			if (isMatchByPlacePairs(getPlacePairsCount(), getTransitionPairsCount())) {
+				return matchPlace(NEXT_CANDIDATE_SET.NEW);
 			} else {
-				return matchByTransition(NEXT_CANDIDATE_SET.NEW);
+				return matchTransition(NEXT_CANDIDATE_SET.NEW);
 			}
 		}
 	}
@@ -686,16 +699,16 @@ public final class VF2 {
 	 *   
 	 * @return true, if a valid match was found
 	 */
-	private boolean matchByPlace(NEXT_CANDIDATE_SET nextCandidateSet) {
-		int sourceIndex = getFirstUnmatchedSourcePlaceIndex(nextCandidateSet);
-		int targetIndex = getNextUnmatchedTargetPlaceIndex(CORE_NULL_NODE, nextCandidateSet);
+	private boolean matchPlace(NEXT_CANDIDATE_SET nextCandidateSet) {
+		int sourceIndex = getFirstNotMatchedSourcePlaceIndex(nextCandidateSet);
+		int targetIndex = getNextNotMatchedTargetPlaceIndex(CORE_NULL_NODE, nextCandidateSet);
 		
 		if (sourceIndex == CORE_NULL_NODE || targetIndex == CORE_NULL_NODE) {
 			return false;
 		}
 		
 		while (targetIndex != CORE_NULL_NODE) {			
-			if (isPlaceFeasible(sourceIndex, targetIndex)) {
+			if (isFeasiblePlace(sourceIndex, targetIndex)) {
 				addPlacePair(sourceIndex, targetIndex);
 
 				if (match()) {
@@ -705,7 +718,7 @@ public final class VF2 {
 				backtrackPlacePair(sourceIndex, targetIndex);
 			}
 
-			targetIndex = getNextUnmatchedTargetPlaceIndex(targetIndex, nextCandidateSet);	
+			targetIndex = getNextNotMatchedTargetPlaceIndex(targetIndex, nextCandidateSet);	
 		}
 
 		return false;
@@ -718,9 +731,9 @@ public final class VF2 {
 	 *   
 	 * @return true, if a valid match was found
 	 */
-	private boolean matchByTransition(NEXT_CANDIDATE_SET nextCandidateSet) {
-		int sourceIndex = getFirstUnmatchedSourceTransitionIndex(nextCandidateSet);
-		int targetIndex = getNextUnmatchedTargetTransitionIndex(CORE_NULL_NODE, nextCandidateSet);
+	private boolean matchTransition(NEXT_CANDIDATE_SET nextCandidateSet) {
+		int sourceIndex = getFirstNotMatchedSourceTransitionIndex(nextCandidateSet);
+		int targetIndex = getNextNotMatchedTargetTransitionIndex(CORE_NULL_NODE, nextCandidateSet);
 		
 		if (sourceIndex == CORE_NULL_NODE || targetIndex == CORE_NULL_NODE) {
 			return false;
@@ -728,7 +741,7 @@ public final class VF2 {
 		
 		
 		while (targetIndex != CORE_NULL_NODE) {			
-			if (isTransitionFeasible(sourceIndex, targetIndex)) {
+			if (isFeasibleTransition(sourceIndex, targetIndex)) {
 				addTransitionPair(sourceIndex, targetIndex);
 
 				if (match()) {
@@ -738,100 +751,100 @@ public final class VF2 {
 				backtrackTransitionPair(sourceIndex, targetIndex);
 			}
 
-			targetIndex = getNextUnmatchedTargetTransitionIndex(targetIndex, nextCandidateSet);	
+			targetIndex = getNextNotMatchedTargetTransitionIndex(targetIndex, nextCandidateSet);	
 		}
 
 		return false;
 	}
 
 	/**
-	 * gets the index of the first unmatched source place, which fulfills the condition implied by the 
+	 * gets the index of the first not matched source place, which fulfills the condition implied by the 
 	 * given candidate set. 
 	 *                            							  
 	 * @param  nextCandidateSet     the candidate set, to be searched
 	 * 
-	 * @return index of the first unmatched place or CORE_NULL_NODE, if no unmatched place exists 
+	 * @return index of the first not matched place or CORE_NULL_NODE, if no not matched place exists 
 	 */
-	private int getFirstUnmatchedSourcePlaceIndex(NEXT_CANDIDATE_SET nextCandidateSet) {	
+	private int getFirstNotMatchedSourcePlaceIndex(NEXT_CANDIDATE_SET nextCandidateSet) {	
 		assert nextCandidateSet != null;
 		
 		if (nextCandidateSet == NEXT_CANDIDATE_SET.TERMINAL_OUT) {
-			return getUnmatchedNodeIndex(coreSourcePlaces, outSourcePlaces, 0);
+			return getNotMatchedNodeIndex(coreSourcePlaces, outSourcePlaces, 0);
 		} else if (nextCandidateSet == NEXT_CANDIDATE_SET.TERMINAL_IN) {
-			return getUnmatchedNodeIndex(coreSourcePlaces, inSourcePlaces, 0);
+			return getNotMatchedNodeIndex(coreSourcePlaces, inSourcePlaces, 0);
 		} else {
-			return getUnmatchedNodeIndex(coreSourcePlaces, 0);
+			return getNotMatchedNodeIndex(coreSourcePlaces, 0);
 		}		
 	}
 
 
 	/**
-	 * gets the index of the next unmatched target place, which fulfills the condition implied by the 
+	 * gets the index of the next not matched target place, which fulfills the condition implied by the 
 	 * given candidate set. 
 	 * 
-	 * @param  previousTargetIndex  index of the previously found place, from which a new unmatched one 
+	 * @param  previousTargetIndex  index of the previously found place, from which a new not matched one 
 	 *   							should be searched or CORE_NULL_NODE to indicate, that a new search is to be started                                							  
 	 * @param  nextCandidateSet     the candidate set, to be searched
 	 * 
-	 * @return index of the next unmatched place (> previousTargetIndex) or CORE_NULL_NODE, 
+	 * @return index of the next not matched place (> previousTargetIndex) or CORE_NULL_NODE, 
 	 *         if all places are exhausted
 	 */
-	private int getNextUnmatchedTargetPlaceIndex(int previousTargetIndex, NEXT_CANDIDATE_SET nextCandidateSet) {
+	private int getNextNotMatchedTargetPlaceIndex(int previousTargetIndex, NEXT_CANDIDATE_SET nextCandidateSet) {
 		assert nextCandidateSet != null;
 		
 		int searchStartIndex = (previousTargetIndex == CORE_NULL_NODE) ? 0 : previousTargetIndex + 1;
 
 		if (nextCandidateSet == NEXT_CANDIDATE_SET.TERMINAL_OUT) {
-			return getUnmatchedNodeIndex(coreTargetPlaces, outTargetPlaces, searchStartIndex);
+			return getNotMatchedNodeIndex(coreTargetPlaces, outTargetPlaces, searchStartIndex);
 		} else if (nextCandidateSet == NEXT_CANDIDATE_SET.TERMINAL_IN) {
-			return getUnmatchedNodeIndex(coreTargetPlaces, inTargetPlaces, searchStartIndex);
+			return getNotMatchedNodeIndex(coreTargetPlaces, inTargetPlaces, searchStartIndex);
 		} else {
-			return getUnmatchedNodeIndex(coreTargetPlaces, searchStartIndex);
+			return getNotMatchedNodeIndex(coreTargetPlaces, searchStartIndex);
 		}	
 	}
 
 	/**
-	 * gets the index of the first unmatched source transition, which fulfills the condition implied by the 
+	 * gets the index of the first not matched source transition, which fulfills the condition implied by the 
 	 * given candidate set. 
 	 *                            							  
 	 * @param  nextCandidateSet     the candidate set, to be searched
 	 * 
-	 * @return index of the first unmatched transition or CORE_NULL_NODE, if no unmatched transition exists 
+	 * @return index of the first not matched transition or CORE_NULL_NODE, if no not matched transition exists 
 	 */
-	private int getFirstUnmatchedSourceTransitionIndex(NEXT_CANDIDATE_SET nextCandidateSet) {	
+	private int getFirstNotMatchedSourceTransitionIndex(NEXT_CANDIDATE_SET nextCandidateSet) {	
 		assert nextCandidateSet != null;
 		
 		if (nextCandidateSet == NEXT_CANDIDATE_SET.TERMINAL_OUT) {
-			return getUnmatchedNodeIndex(coreSourceTransitions, outSourceTransitions, 0);
+			return getNotMatchedNodeIndex(coreSourceTransitions, outSourceTransitions, 0);
 		} else if (nextCandidateSet == NEXT_CANDIDATE_SET.TERMINAL_IN) {
-			return getUnmatchedNodeIndex(coreSourceTransitions, inSourceTransitions, 0);
+			return getNotMatchedNodeIndex(coreSourceTransitions, inSourceTransitions, 0);
 		} else {
-			return getUnmatchedNodeIndex(coreSourceTransitions, 0);
+			return getNotMatchedNodeIndex(coreSourceTransitions, 0);
 		}		
 	}
 
 	/**
-	 * gets the index of the next unmatched target transition, which fulfills the condition implied by the 
+	 * gets the index of the next not matched target transition, which fulfills the condition implied by the 
 	 * given candidate set. 
 	 * 
-	 * @param  previousTargetIndex  index of the previously found transition, from which a new unmatched one 
+	 * @param  previousTargetIndex  index of the previously found transition, from which a new not matched one 
 	 *   							should be searched or CORE_NULL_NODE to indicate, that a new search is to be started                                							  
 	 * @param  nextCandidateSet     the candidate set, to be searched
 	 * 
-	 * @return index of the next unmatched transition (> previousTargetIndex) or CORE_NULL_NODE, 
+	 * @return index of the next not matched transition (> previousTargetIndex) or CORE_NULL_NODE, 
 	 *         if all transitions are exhausted
 	 */
-	private int getNextUnmatchedTargetTransitionIndex(int previousTargetIndex, NEXT_CANDIDATE_SET nextCandidateSet) {
+	private int getNextNotMatchedTargetTransitionIndex(int previousTargetIndex, NEXT_CANDIDATE_SET nextCandidateSet) {
 		assert nextCandidateSet != null;
 		
 		int searchStartIndex = (previousTargetIndex == CORE_NULL_NODE) ? 0 : previousTargetIndex + 1;
 
 		if (nextCandidateSet == NEXT_CANDIDATE_SET.TERMINAL_OUT) {
-			return getUnmatchedNodeIndex(coreTargetTransitions, outTargetTransitions, searchStartIndex);
+			return getNotMatchedNodeIndex(coreTargetTransitions, outTargetTransitions, searchStartIndex);
 		} else if (nextCandidateSet == NEXT_CANDIDATE_SET.TERMINAL_IN) {
-			return getUnmatchedNodeIndex(coreTargetTransitions, inTargetTransitions, searchStartIndex);
+			return getNotMatchedNodeIndex(coreTargetTransitions, inTargetTransitions, searchStartIndex);
 		} else {
-			return getUnmatchedNodeIndex(coreTargetTransitions, searchStartIndex);
+			return getNotMatchedNodeIndex(coreTargetTransitions, searchStartIndex);
 		}	
 	}
 
@@ -1154,18 +1167,18 @@ public final class VF2 {
 	}
 
 	/**
-	 * checks if the given place combination is semantic and structural valid 
+	 * checks whether the given place combination is semantic and structural valid 
 	 * with the current partial match.
 	 * 
 	 * @param  sourceIndex  index of the source place (from the source petrinet)
 	 * @param  targetIndex  index of the target place (from the target petrinet)
 	 * @return true, if the combination is valid
 	 */
-	private boolean isPlaceFeasible(int sourceIndex, int targetIndex) {
+	private boolean isFeasiblePlace(int sourceIndex, int targetIndex) {
 		assert sourceIndex != CORE_NULL_NODE;
 		assert targetIndex != CORE_NULL_NODE;
 
-		if (!semanticEqualPlaces[sourceIndex][targetIndex]) {
+		if (!semanticMatrixPlace[sourceIndex][targetIndex]) {
 			return false;
 		}
 
@@ -1176,158 +1189,211 @@ public final class VF2 {
 	    int[] sourceSuccCardinality = new int[3];
 	    int[] targetPredCardinality = new int[3];
 	    int[] targetSuccCardinality = new int[3];
-
-		if (isPlaceFeasibleSynPred(source, target, sourceTransitionsIndexes,
-				coreSourceTransitions, inSourceTransitions,
-				outSourceTransitions, targetTransitions, sourcePredCardinality)
-		 && isPlaceFeasibleSynPred(target, source,
-				targetTransitionsIndexes, coreTargetTransitions,
-				inTargetTransitions, outTargetTransitions,
-				sourceTransitions, targetPredCardinality)
-		 && isPlaceFeasibleSynSucc(source, target,
-				sourceTransitionsIndexes, coreSourceTransitions,
-				inSourceTransitions, outSourceTransitions,
-				targetTransitions, sourceSuccCardinality)
-		 && isPlaceFeasibleSynSucc(target, source,
-				targetTransitionsIndexes, coreTargetTransitions,
-				inTargetTransitions, outTargetTransitions,
-				sourceTransitions, targetSuccCardinality)
-		 && sourcePredCardinality[INDEX_TERMINAL_OUT] <= targetPredCardinality[INDEX_TERMINAL_OUT]
-		 && sourcePredCardinality[INDEX_TERMINAL_IN]  <= targetPredCardinality[INDEX_TERMINAL_IN]
-		 && sourcePredCardinality[INDEX_NEW_PAIR]     <= targetPredCardinality[INDEX_NEW_PAIR]
-		 && sourceSuccCardinality[INDEX_TERMINAL_OUT] <= targetSuccCardinality[INDEX_TERMINAL_OUT]
-		 && sourceSuccCardinality[INDEX_TERMINAL_IN]  <= targetSuccCardinality[INDEX_TERMINAL_IN]
-		 && sourceSuccCardinality[INDEX_NEW_PAIR]     <= targetSuccCardinality[INDEX_NEW_PAIR]) {
-			return true;
+	    
+	    
+	    
+		if (!isRulePredPlace(source, target, sourcePredCardinality,  targetPredCardinality)
+		 || !isRuleSuccPlace(source, target, sourceSuccCardinality,  targetSuccCardinality)) {
+			return false;
 		}
 
-		return false;
+	    if (arcRestrictedSourcePlaces[sourceIndex]) {	    
+	    	return sourcePredCardinality[INDEX_TERMINAL_IN]  == targetPredCardinality[INDEX_TERMINAL_IN]
+	    		&& sourceSuccCardinality[INDEX_TERMINAL_IN]  == targetSuccCardinality[INDEX_TERMINAL_IN]
+						 
+	    		&& sourcePredCardinality[INDEX_TERMINAL_OUT] == targetPredCardinality[INDEX_TERMINAL_OUT]
+	    		&& sourceSuccCardinality[INDEX_TERMINAL_OUT] == targetSuccCardinality[INDEX_TERMINAL_OUT]
+						 
+	    		&& sourcePredCardinality[INDEX_NEW_PAIR]     == targetPredCardinality[INDEX_NEW_PAIR]
+	    		&& sourceSuccCardinality[INDEX_NEW_PAIR]     == targetSuccCardinality[INDEX_NEW_PAIR];	    	
+	    	
+	    } else {
+	    	return sourcePredCardinality[INDEX_TERMINAL_IN]  <= targetPredCardinality[INDEX_TERMINAL_IN]
+	    		&& sourceSuccCardinality[INDEX_TERMINAL_IN]  <= targetSuccCardinality[INDEX_TERMINAL_IN]
+						 
+	    		&& sourcePredCardinality[INDEX_TERMINAL_OUT] <= targetPredCardinality[INDEX_TERMINAL_OUT]
+	    		&& sourceSuccCardinality[INDEX_TERMINAL_OUT] <= targetSuccCardinality[INDEX_TERMINAL_OUT]
+						 
+	    		&& sourcePredCardinality[INDEX_NEW_PAIR]     <= targetPredCardinality[INDEX_NEW_PAIR]
+	    		&& sourceSuccCardinality[INDEX_NEW_PAIR]     <= targetSuccCardinality[INDEX_NEW_PAIR];
+
+	    }
 	}
 
+
+
 	/**
-	 * checks if the matched successors transitions for a preimage place are also matched for 
-	 * a image place. If they aren't the cardinality array is changed accordingly.
+	 * checks whether the matched predecessors transitions for a source place are also matched for 
+	 * a target place and vice versa. If they aren't the cardinality array is changed accordingly.
 	 * 
-	 * @param  preimage					   place, that is checked
-	 * @param  image					   place, that is to be matched
-	 * @param  preimageTransitionsIndexes   
-	 * @param  corePreimageTransitions
-	 * @param  inPreimageTransitions
-	 * @param  outPreimageTransitions
-	 * @param  imageTransitions
-	 * @param  cardinality                 cardinalities of the terminal sets, for the 
-	 * 									   adjacent transitions of the preimage place,
-	 *                                     the value of this array is changed during the execution   
-	 * @return true, if they are potentially compatible
+	 * @param source				place in N1, match source
+	 * @param target				place in N2, match target
+	 * @param sourceCardinality   	cardinalities of the terminal sets, for the 
+	 * 								adjacent transitions of the source place,
+	 *                      		the values of this array are changed during the execution   
+	 * @param targetCardinality   	cardinalities of the terminal sets, for the 
+	 * 								adjacent transitions of the target place,
+	 *                      		the values of this array are changed during the execution   
+	 * @return true, if the rule is satisfied
 	 */
-	private boolean isPlaceFeasibleSynSucc(Place preimage, Place image,
-			Map<Transition, Integer> preimageTransitionsIndexes,
-			int[] corePreimageTransitions, int[] inPreimageTransitions,
-			int[] outPreimageTransitions, Transition[] imageTransitions,
-			int[] cardinality) {
+	private boolean isRulePredPlace(Place source, Place target,
+			int[] sourceCardinality, int[] targetCardinality) {
 
-		assert cardinality.length == 3;
+		assert sourceCardinality.length == 3;
+		assert targetCardinality.length == 3;
 
-		for (PreArc arc : preimage.getOutgoingArcs()) {
-			int preimageTransitionIndex = preimageTransitionsIndexes.get(arc.getTransition());
-			int imageTransitionIndex    = corePreimageTransitions[preimageTransitionIndex];
+		// check from N1 to N2
+		for (PostArc arc : source.getIncomingArcs()) {
+			int sourceTransitionIndex = sourceTransitionsIndexes.get(arc.getTransition());
+			int targetTransitionIndex = coreSourceTransitions[sourceTransitionIndex];
 
-			if (imageTransitionIndex != CORE_NULL_NODE) {
-				Transition imageTransition = imageTransitions[imageTransitionIndex];
+			if (targetTransitionIndex != CORE_NULL_NODE) {
+				Transition targetTransition = targetTransitions[targetTransitionIndex];
 
-				if (!image.hasOutgoingArc(imageTransition)
-						|| !isSemanticEqual(arc, image.getOutgoingArc(imageTransition))) {
+				if (!target.hasIncomingArc(targetTransition)
+						|| !isSemanticEqual(arc, target.getIncomingArc(targetTransition))) {
 					return false;
 				}
 			} else {
-				if (outPreimageTransitions[preimageTransitionIndex] > SET_NULL_VALUE) {
-					cardinality[INDEX_TERMINAL_OUT]++;
+				if (outSourceTransitions[sourceTransitionIndex] > SET_NULL_VALUE) {
+					sourceCardinality[INDEX_TERMINAL_OUT]++;
 				}
 
-				if (inPreimageTransitions[preimageTransitionIndex] > SET_NULL_VALUE) {
-					cardinality[INDEX_TERMINAL_IN]++;
+				if (inSourceTransitions[sourceTransitionIndex] > SET_NULL_VALUE) {
+					sourceCardinality[INDEX_TERMINAL_IN]++;
 				}
 
-				if (inPreimageTransitions[preimageTransitionIndex] == SET_NULL_VALUE
-						&& outPreimageTransitions[preimageTransitionIndex] == SET_NULL_VALUE) {
-					cardinality[INDEX_NEW_PAIR]++;
+				if (inSourceTransitions[sourceTransitionIndex] == SET_NULL_VALUE
+						&& outSourceTransitions[sourceTransitionIndex] == SET_NULL_VALUE) {
+					sourceCardinality[INDEX_NEW_PAIR]++;
 				}
 			}
 		}
 
+		// check from N2 to N1
+		for (PostArc arc : target.getIncomingArcs()) {
+			int targetTransitionIndex = targetTransitionsIndexes.get(arc.getTransition());
+			int sourceTransitionIndex = coreTargetTransitions[targetTransitionIndex];
+
+			if (sourceTransitionIndex != CORE_NULL_NODE) {
+				Transition sourceTransition = sourceTransitions[sourceTransitionIndex];
+
+				if (!source.hasIncomingArc(sourceTransition)
+						|| !isSemanticEqual(arc, source.getIncomingArc(sourceTransition))) {
+					return false;
+				}
+			} else {
+				if (outTargetTransitions[targetTransitionIndex] > SET_NULL_VALUE) {
+					targetCardinality[INDEX_TERMINAL_OUT]++;
+				}
+
+				if (inTargetTransitions[targetTransitionIndex] > SET_NULL_VALUE) {
+					targetCardinality[INDEX_TERMINAL_IN]++;
+				}
+
+				if (inTargetTransitions[targetTransitionIndex] == SET_NULL_VALUE
+						&& outTargetTransitions[targetTransitionIndex] == SET_NULL_VALUE) {
+					targetCardinality[INDEX_NEW_PAIR]++;
+				}
+			}
+		}
+		
+		return true;
+	}
+
+	/**
+	 * checks whether the matched predecessors transitions for a source place are also matched for 
+	 * a target place and vice versa. If they aren't the cardinality array is changed accordingly.
+	 * 
+	 * @param source				place in N1, match source
+	 * @param target				place in N2, match target
+	 * @param sourceCardinality   	cardinalities of the terminal sets, for the 
+	 * 								adjacent transitions of the source place,
+	 *                      		the values of this array are changed during the execution   
+	 * @param targetCardinality   	cardinalities of the terminal sets, for the 
+	 * 								adjacent transitions of the target place,
+	 *                      		the values of this array are changed during the execution   
+	 * @return true, if the rule is satisfied
+	 */
+	private boolean isRuleSuccPlace(Place source, Place target,
+			int[] sourceCardinality, int[] targetCardinality) {
+
+		assert sourceCardinality.length == 3;
+		assert targetCardinality.length == 3;
+
+		// check from N1 to N2
+		for (PreArc arc : source.getOutgoingArcs()) {
+			int sourceTransitionIndex = sourceTransitionsIndexes.get(arc.getTransition());
+			int targetTransitionIndex = coreSourceTransitions[sourceTransitionIndex];
+
+			if (targetTransitionIndex != CORE_NULL_NODE) {
+				Transition targetTransition = targetTransitions[targetTransitionIndex];
+
+				if (!target.hasOutgoingArc(targetTransition)
+						|| !isSemanticEqual(arc, target.getOutgoingArc(targetTransition))) {
+					return false;
+				}
+			} else {
+				if (outSourceTransitions[sourceTransitionIndex] > SET_NULL_VALUE) {
+					sourceCardinality[INDEX_TERMINAL_OUT]++;
+				}
+
+				if (inSourceTransitions[sourceTransitionIndex] > SET_NULL_VALUE) {
+					sourceCardinality[INDEX_TERMINAL_IN]++;
+				}
+
+				if (inSourceTransitions[sourceTransitionIndex] == SET_NULL_VALUE
+						&& outSourceTransitions[sourceTransitionIndex] == SET_NULL_VALUE) {
+					sourceCardinality[INDEX_NEW_PAIR]++;
+				}
+			}
+		}
+
+		// check from N2 to N1
+		for (PreArc arc : target.getOutgoingArcs()) {
+			int targetTransitionIndex = targetTransitionsIndexes.get(arc.getTransition());
+			int sourceTransitionIndex = coreTargetTransitions[targetTransitionIndex];
+
+			if (sourceTransitionIndex != CORE_NULL_NODE) {
+				Transition sourceTransition = sourceTransitions[sourceTransitionIndex];
+
+				if (!source.hasOutgoingArc(sourceTransition)
+						|| !isSemanticEqual(arc, source.getOutgoingArc(sourceTransition))) {
+					return false;
+				}
+			} else {
+				if (outTargetTransitions[targetTransitionIndex] > SET_NULL_VALUE) {
+					targetCardinality[INDEX_TERMINAL_OUT]++;
+				}
+
+				if (inTargetTransitions[targetTransitionIndex] > SET_NULL_VALUE) {
+					targetCardinality[INDEX_TERMINAL_IN]++;
+				}
+
+				if (inTargetTransitions[targetTransitionIndex] == SET_NULL_VALUE
+						&& outTargetTransitions[targetTransitionIndex] == SET_NULL_VALUE) {
+					targetCardinality[INDEX_NEW_PAIR]++;
+				}
+			}
+		}
+		
 		return true;
 	}
 
 
 	/**
-	 * checks if the matched predecessors transitions for a preimage place are also matched for 
-	 * a image place. If they aren't the cardinality array is changed accordingly.
-	 * 
-	 * @param  preimage					   place, that is checked
-	 * @param  image					   place, that is to be matched
-	 * @param  preimageTransitionsIndexes   
-	 * @param  corePreimageTransitions
-	 * @param  inPreimageTransitions
-	 * @param  outPreimageTransitions
-	 * @param  imageTransitions
-	 * @param  cardinality                 cardinalities of the terminal sets, for the 
-	 * 									   adjacent transitions of the preimage place,
-	 *                                     the value of this array is changed during the execution   
-	 * @return true, if they are potentially compatible
-	 */
-	private boolean isPlaceFeasibleSynPred(Place preimage, Place image,
-			Map<Transition, Integer> preimageTransitionsIndexes,
-			int[] corePreimageTransitions, int[] inPreimageTransitions,
-			int[] outPreimageTransitions, Transition[] imageTransitions,
-			int[] cardinality) {
-
-		assert cardinality.length == 3;
-
-		for (PostArc arc : preimage.getIncomingArcs()) {
-			int preimageTransitionIndex = preimageTransitionsIndexes.get(arc.getTransition());
-			int imageTransitionIndex    = corePreimageTransitions[preimageTransitionIndex];
-
-			if (imageTransitionIndex != CORE_NULL_NODE) {
-				Transition imageTransition = imageTransitions[imageTransitionIndex];
-
-				if (!image.hasIncomingArc(imageTransition)
-						|| !isSemanticEqual(arc, image.getIncomingArc(imageTransition))) {
-					return false;
-				}
-			} else {
-				if (outPreimageTransitions[preimageTransitionIndex] > SET_NULL_VALUE) {
-					cardinality[INDEX_TERMINAL_OUT]++;
-				}
-
-				if (inPreimageTransitions[preimageTransitionIndex] > SET_NULL_VALUE) {
-					cardinality[INDEX_TERMINAL_IN]++;
-				}
-
-				if (inPreimageTransitions[preimageTransitionIndex] == SET_NULL_VALUE
-						&& outPreimageTransitions[preimageTransitionIndex] == SET_NULL_VALUE) {
-					cardinality[INDEX_NEW_PAIR]++;
-				}
-			}
-		}
-
-		return true;
-	}
-
-
-
-	/**
-	 * checks if the given transition combination is semantic and structural valid 
+	 * checks whether the given transition combination is semantic and structural valid 
 	 * with the current partial match.
 	 * 
 	 * @param  sourceIndex  index of the source transition (from the source petrinet)
 	 * @param  targetIndex  index of the target transition (from the target petrinet)
 	 * @return true, if the combination is valid
 	 */
-	private boolean isTransitionFeasible(int sourceIndex, int targetIndex) {
+	private boolean isFeasibleTransition(int sourceIndex, int targetIndex) {
 		assert sourceIndex != CORE_NULL_NODE;
 		assert targetIndex != CORE_NULL_NODE;
 
-		if (!semanticEqualTransitions[sourceIndex][targetIndex]) {
+		if (!semanticMatrixTransition[sourceIndex][targetIndex]) {
 			return false;
 		}
 
@@ -1339,26 +1405,16 @@ public final class VF2 {
 	    int[] targetPredCardinality = new int[3];
 	    int[] targetSuccCardinality = new int[3];
 
-		if (isTransitionFeasibleSynPred(source, target, sourcePlacesIndexes,
-				coreSourcePlaces, inSourcePlaces,
-				outSourcePlaces, targetPlaces, sourcePredCardinality)
-		 && isTransitionFeasibleSynPred(target, source,
-				targetPlacesIndexes, coreTargetPlaces,
-				inTargetPlaces, outTargetPlaces,
-				sourcePlaces, targetPredCardinality)
-		 && isTransitionFeasibleSynSucc(source, target,
-				sourcePlacesIndexes, coreSourcePlaces,
-				inSourcePlaces, outSourcePlaces,
-				targetPlaces, sourceSuccCardinality)
-		 && isTransitionFeasibleSynSucc(target, source,
-				targetPlacesIndexes, coreTargetPlaces,
-				inTargetPlaces, outTargetPlaces,
-				sourcePlaces, targetSuccCardinality)
-		 && sourcePredCardinality[INDEX_TERMINAL_OUT] == targetPredCardinality[INDEX_TERMINAL_OUT]
+		if (isRulePredTransition(source, target, sourcePredCardinality, targetPredCardinality)
+		 && isRuleSuccTransition(source, target, sourceSuccCardinality, targetSuccCardinality)
+		 
 		 && sourcePredCardinality[INDEX_TERMINAL_IN]  == targetPredCardinality[INDEX_TERMINAL_IN]
-		 && sourcePredCardinality[INDEX_NEW_PAIR]     == targetPredCardinality[INDEX_NEW_PAIR]
-		 && sourceSuccCardinality[INDEX_TERMINAL_OUT] == targetSuccCardinality[INDEX_TERMINAL_OUT]
 		 && sourceSuccCardinality[INDEX_TERMINAL_IN]  == targetSuccCardinality[INDEX_TERMINAL_IN]
+				 
+		 && sourcePredCardinality[INDEX_TERMINAL_OUT] == targetPredCardinality[INDEX_TERMINAL_OUT]
+		 && sourceSuccCardinality[INDEX_TERMINAL_OUT] == targetSuccCardinality[INDEX_TERMINAL_OUT]
+				 
+		 && sourcePredCardinality[INDEX_NEW_PAIR]     == targetPredCardinality[INDEX_NEW_PAIR]
 		 && sourceSuccCardinality[INDEX_NEW_PAIR]     == targetSuccCardinality[INDEX_NEW_PAIR]) {
 			return true;
 		}
@@ -1366,136 +1422,191 @@ public final class VF2 {
 		return false;
 	}
 
+
 	/**
-	 * checks if the matched successors places for a preimage transition are also matched for 
-	 * a image transition. If they aren't the cardinality array is changed accordingly.
+	 * checks whether the matched predecessors places for a source transition are also matched for 
+	 * a target transition and vice versa. If they aren't the cardinality array is changed accordingly.
 	 * 
-	 * @param preimage				transition, that is checked
-	 * @param image					transition, that is to be matched 
-	 * @param preimagePlacesIndexes 
-	 * @param corePreimagePlaces
-	 * @param inPreimagePlaces
-	 * @param outPreimagePlaces
-	 * @param imagePlaces
-	 * @param  cardinality          cardinalities of the terminal sets, for the 
-	 * 								adjacent transitions of the preimage place,
-	 *                              the value of this array is changed during the execution   
-	 * @return true, if they are potentially compatible
+	 * @param source				transition in N1, match source
+	 * @param target				transition in N2, match target
+	 * @param sourceCardinality   	cardinalities of the terminal sets, for the 
+	 * 								adjacent places of the source transition,
+	 *                      		the values of this array are changed during the execution   
+	 * @param targetCardinality   	cardinalities of the terminal sets, for the 
+	 * 								adjacent places of the source transition,
+	 *                      		the values of this array are changed during the execution   
+	 * @return true, if the rule is satisfied
 	 */
-	private boolean isTransitionFeasibleSynSucc(Transition preimage, Transition image,
-			Map<Place, Integer> preimagePlacesIndexes,
-			int[] corePreimagePlaces, int[] inPreimagePlaces,
-			int[] outPreimagePlaces, Place[] imagePlaces,
-			int[] cardinality) {
+	private boolean isRulePredTransition(Transition source, Transition target,
+			int[] sourceCardinality, int[] targetCardinality) {
 
-		assert cardinality.length == 3;
+		assert sourceCardinality.length == 3;
+		assert targetCardinality.length == 3;
 
-		for (PostArc arc : preimage.getOutgoingArcs()) {
-			int preimagePlaceIndex = preimagePlacesIndexes.get(arc.getPlace());
-			int imagePlaceIndex    = corePreimagePlaces[preimagePlaceIndex];
+		// check from N1 to N2
+		for (PreArc arc : source.getIncomingArcs()) {
+			int sourcePlaceIndex = sourcePlacesIndexes.get(arc.getPlace());
+			int targetPlaceIndex = coreSourcePlaces[sourcePlaceIndex];
 
-			if (imagePlaceIndex != CORE_NULL_NODE) {
-				Place imagePlace = imagePlaces[imagePlaceIndex];
+			if (targetPlaceIndex != CORE_NULL_NODE) {
+				Place targetPlace = targetPlaces[targetPlaceIndex];
 
-				if (!image.hasOutgoingArc(imagePlace)
-						|| !isSemanticEqual(arc, image.getOutgoingArc(imagePlace))) {
+				if (!target.hasIncomingArc(targetPlace)
+						|| !isSemanticEqual(arc, target.getIncomingArc(targetPlace))) {
 					return false;
 				}
 			} else {
-				if (outPreimagePlaces[preimagePlaceIndex] > SET_NULL_VALUE) {
-					cardinality[INDEX_TERMINAL_OUT]++;
+				if (outSourcePlaces[sourcePlaceIndex] > SET_NULL_VALUE) {
+					sourceCardinality[INDEX_TERMINAL_OUT]++;
 				}
 
-				if (inPreimagePlaces[preimagePlaceIndex] > SET_NULL_VALUE) {
-					cardinality[INDEX_TERMINAL_IN]++;
+				if (inSourcePlaces[sourcePlaceIndex] > SET_NULL_VALUE) {
+					sourceCardinality[INDEX_TERMINAL_IN]++;
 				}
 
-				if (inPreimagePlaces[preimagePlaceIndex] == SET_NULL_VALUE
-						&& outPreimagePlaces[preimagePlaceIndex] == SET_NULL_VALUE) {
-					cardinality[INDEX_NEW_PAIR]++;
+				if (inSourcePlaces[sourcePlaceIndex] == SET_NULL_VALUE
+						&& outSourcePlaces[sourcePlaceIndex] == SET_NULL_VALUE) {
+					sourceCardinality[INDEX_NEW_PAIR]++;
 				}
 			}
 		}
 
-		return true;
-	}
+		// check from N2 to N1
+		for (PreArc arc : target.getIncomingArcs()) {
+			int targetPlaceIndex = targetPlacesIndexes.get(arc.getPlace());
+			int sourcePlaceIndex = coreTargetPlaces[targetPlaceIndex];
 
+			if (sourcePlaceIndex != CORE_NULL_NODE) {
+				Place sourcePlace = sourcePlaces[sourcePlaceIndex];
 
-	/**
-	 * checks if the matched predecessors places for a preimage transition are also matched for 
-	 * a image transition. If they aren't the cardinality array is changed accordingly.
-	 * 
-	 * @param preimage				transition, that is checked
-	 * @param image					transition, that is to be matched 
-	 * @param preimagePlacesIndexes 
-	 * @param corePreimagePlaces
-	 * @param inPreimagePlaces
-	 * @param outPreimagePlaces
-	 * @param imagePlaces
-	 * @param  cardinality          cardinalities of the terminal sets, for the 
-	 * 								adjacent transitions of the preimage place,
-	 *                              the value of this array is changed during the execution   
-	 * @return true, if they are potentially compatible
-	 */
-	private boolean isTransitionFeasibleSynPred(Transition preimage, Transition image,
-			Map<Place, Integer> preimagePlacesIndexes,
-			int[] corePreimagePlaces, int[] inPreimagePlaces,
-			int[] outPreimagePlaces, Place[] imagePlaces,
-			int[] cardinality) {
-
-		assert cardinality.length == 3;
-
-		for (PreArc arc : preimage.getIncomingArcs()) {
-			int preimagePlaceIndex = preimagePlacesIndexes.get(arc.getPlace());
-			int imagePlaceIndex    = corePreimagePlaces[preimagePlaceIndex];
-
-			if (imagePlaceIndex != CORE_NULL_NODE) {
-				Place imagePlace = imagePlaces[imagePlaceIndex];
-
-				if (!image.hasIncomingArc(imagePlace)
-						|| !isSemanticEqual(arc, image.getIncomingArc(imagePlace))) {
+				if (!source.hasIncomingArc(sourcePlace)
+						|| !isSemanticEqual(arc, source.getIncomingArc(sourcePlace))) {
 					return false;
 				}
 			} else {
-				if (outPreimagePlaces[preimagePlaceIndex] > SET_NULL_VALUE) {
-					cardinality[INDEX_TERMINAL_OUT]++;
+				if (outTargetPlaces[targetPlaceIndex] > SET_NULL_VALUE) {
+					targetCardinality[INDEX_TERMINAL_OUT]++;
 				}
 
-				if (inPreimagePlaces[preimagePlaceIndex] > SET_NULL_VALUE) {
-					cardinality[INDEX_TERMINAL_IN]++;
+				if (inTargetPlaces[targetPlaceIndex] > SET_NULL_VALUE) {
+					targetCardinality[INDEX_TERMINAL_IN]++;
 				}
 
-				if (inPreimagePlaces[preimagePlaceIndex] == SET_NULL_VALUE
-						&& outPreimagePlaces[preimagePlaceIndex] == SET_NULL_VALUE) {
-					cardinality[INDEX_NEW_PAIR]++;
+				if (inTargetPlaces[targetPlaceIndex] == SET_NULL_VALUE
+						&& outTargetPlaces[targetPlaceIndex] == SET_NULL_VALUE) {
+					targetCardinality[INDEX_NEW_PAIR]++;
+				}
+			}
+		}
+		
+		return true;
+	}
+
+	/**
+	 * checks whether the matched successors places for a source transition are also matched for 
+	 * a target transition and vice versa. If they aren't the cardinality array is changed accordingly.
+	 * 
+	 * @param source				transition in N1, match source
+	 * @param target				transition in N2, match target
+	 * @param sourceCardinality   	cardinalities of the terminal sets, for the 
+	 * 								adjacent places of the source transition,
+	 *                      		the values of this array are changed during the execution   
+	 * @param targetCardinality   	cardinalities of the terminal sets, for the 
+	 * 								adjacent places of the source transition,
+	 *                      		the values of this array are changed during the execution  
+	 * @return true, if the rule is satisfied
+	 */
+	private boolean isRuleSuccTransition(Transition source, Transition target,
+			int[] sourceCardinality, int[] targetCardinality) {
+
+		assert sourceCardinality.length == 3;
+		assert targetCardinality.length == 3;
+
+		// check from N1 to N2
+		for (PostArc arc : source.getOutgoingArcs()) {
+			int sourcePlaceIndex = sourcePlacesIndexes.get(arc.getPlace());
+			int targetPlaceIndex = coreSourcePlaces[sourcePlaceIndex];
+
+			if (targetPlaceIndex != CORE_NULL_NODE) {
+				Place targetPlace = targetPlaces[targetPlaceIndex];
+
+				if (!target.hasOutgoingArc(targetPlace)
+						|| !isSemanticEqual(arc, target.getOutgoingArc(targetPlace))) {
+					return false;
+				}
+			} else {
+				if (outSourcePlaces[sourcePlaceIndex] > SET_NULL_VALUE) {
+					sourceCardinality[INDEX_TERMINAL_OUT]++;
+				}
+
+				if (inSourcePlaces[sourcePlaceIndex] > SET_NULL_VALUE) {
+					sourceCardinality[INDEX_TERMINAL_IN]++;
+				}
+
+				if (inSourcePlaces[sourcePlaceIndex] == SET_NULL_VALUE
+						&& outSourcePlaces[sourcePlaceIndex] == SET_NULL_VALUE) {
+					sourceCardinality[INDEX_NEW_PAIR]++;
 				}
 			}
 		}
 
+		// check from N2 to N1
+		for (PostArc arc : target.getOutgoingArcs()) {
+			int targetPlaceIndex = targetPlacesIndexes.get(arc.getPlace());
+			int sourcePlaceIndex = coreTargetPlaces[targetPlaceIndex];
+
+			if (sourcePlaceIndex != CORE_NULL_NODE) {
+				Place sourcePlace = sourcePlaces[sourcePlaceIndex];
+
+				if (!source.hasOutgoingArc(sourcePlace)
+						|| !isSemanticEqual(arc, source.getOutgoingArc(sourcePlace))) {
+					return false;
+				}
+			} else {
+				if (outTargetPlaces[targetPlaceIndex] > SET_NULL_VALUE) {
+					targetCardinality[INDEX_TERMINAL_OUT]++;
+				}
+
+				if (inTargetPlaces[targetPlaceIndex] > SET_NULL_VALUE) {
+					targetCardinality[INDEX_TERMINAL_IN]++;
+				}
+
+				if (inTargetPlaces[targetPlaceIndex] == SET_NULL_VALUE
+						&& outTargetPlaces[targetPlaceIndex] == SET_NULL_VALUE) {
+					targetCardinality[INDEX_NEW_PAIR]++;
+				}
+			}
+		}
+		
 		return true;
 	}
+
+	
+	
 
 
 	/**
 	 * initializes the semantic equality array for places. 
 	 * 
-	 * @param  isStrictMatch              indicates, that the marking of places in source and target have to be equal
-	 * @param  arcRestrictedSourcePlaces  places in source, where the places in target have to 
-	 *                                    have exact the same number of pre arcs and post arcs  
+	 * @param  isStrictMatch                 indicates, that the marking of places in source and target have to be equal
+	 * @param  arcRestrictedSourcePlacesSet  places in source, where the places in target have to 
+	 *                                       have exact the same number of pre arcs and post arcs  
 	 * @return true, if a match is semantically possible
 	 */
-	private boolean generateSemanticPlaces(boolean isStrictMatch, Set<Place> arcRestrictedSourcePlaces) {
+	private boolean generateSemanticMatrixPlaces(boolean isStrictMatch, Set<Place> arcRestrictedSourcePlacesSet) {
 		for (int sourcePlaceIndex = 0; sourcePlaceIndex < sourcePlaces.length; sourcePlaceIndex++) {
 			Place   sourcePlace        = sourcePlaces[sourcePlaceIndex];
 			boolean hasSupportingPlace = false;
-			boolean isArcRestricted    = arcRestrictedSourcePlaces.contains(sourcePlace);
+			boolean isArcRestricted    = arcRestrictedSourcePlacesSet.contains(sourcePlace);
+			
+			arcRestrictedSourcePlaces[sourcePlaceIndex] = isArcRestricted;
 
 			for (int targetPlaceIndex = 0; targetPlaceIndex < targetPlaces.length; targetPlaceIndex++) {
 				if (isSemanticEqual(sourcePlace, targetPlaces[targetPlaceIndex], isStrictMatch, isArcRestricted)) {
 					hasSupportingPlace = true;
-					semanticEqualPlaces[sourcePlaceIndex][targetPlaceIndex] = true;
+					semanticMatrixPlace[sourcePlaceIndex][targetPlaceIndex] = true;
 				} else {
-					semanticEqualPlaces[sourcePlaceIndex][targetPlaceIndex] = false;
+					semanticMatrixPlace[sourcePlaceIndex][targetPlaceIndex] = false;
 				}
 			}
 
@@ -1512,7 +1623,7 @@ public final class VF2 {
 	 *   
 	 * @return true, if a match is semantically possible
 	 */
-	private boolean generateSemanticTransitions() {
+	private boolean generateSemanticMatrixTransitions() {
 		for (int sourceTransitionIndex = 0; sourceTransitionIndex < sourceTransitions.length; sourceTransitionIndex++) {
 			Transition sourceTransition        = sourceTransitions[sourceTransitionIndex];
 			boolean    hasSupportingTransition = false;
@@ -1520,9 +1631,9 @@ public final class VF2 {
 			for (int targetTransitionIndex = 0; targetTransitionIndex < targetTransitions.length; targetTransitionIndex++) {
 				if (isSemanticEqual(sourceTransition, targetTransitions[targetTransitionIndex])) {
 					hasSupportingTransition = true;
-					semanticEqualTransitions[sourceTransitionIndex][targetTransitionIndex] = true;
+					semanticMatrixTransition[sourceTransitionIndex][targetTransitionIndex] = true;
 				} else {
-					semanticEqualTransitions[sourceTransitionIndex][targetTransitionIndex] = false;
+					semanticMatrixTransition[sourceTransitionIndex][targetTransitionIndex] = false;
 				}
 			}
 
@@ -1580,11 +1691,11 @@ public final class VF2 {
 			&& source.getOutgoingArcs().size() == target.getOutgoingArcs().size()
 	        && source.getName().equals(target.getName())
 			&& source.getTlb().equals(target.getTlb())
-		    && source.getRnw().equals(target.getRnw())
-	    	&& getAccumulatedPreArcsWeight(source.getIncomingArcs()) ==
+		    && source.getRnw().equals(target.getRnw());
+	    	/*&& getAccumulatedPreArcsWeight(source.getIncomingArcs()) ==
 	    		getAccumulatedPreArcsWeight(target.getIncomingArcs())
 			&& getAccumulatedPostArcsWeight(source.getOutgoingArcs()) ==
-				getAccumulatedPostArcsWeight(target.getOutgoingArcs());
+				getAccumulatedPostArcsWeight(target.getOutgoingArcs());*/
 
 		if (!isSemanticEqual) {
 			return false;
@@ -1618,7 +1729,7 @@ public final class VF2 {
 	 * 
 	 * @return the build match
 	 */
-	private Match getBuildMatch() {
+	private Match buildMatch() {
 		assert assertValidState();
 
 		Map<Place, Place>           places      = asMap(coreSourcePlaces, sourcePlaces, targetPlaces);
@@ -1652,8 +1763,9 @@ public final class VF2 {
 	 * 
 	 * @return true, if pairs exists
 	 */
-	private boolean hasNextOutCandidatePairs() {
-		return hasNextOutPlaceCandidatePairs() || hasNextOutTransitionCandidatePairs();
+	private boolean hasOutPairs() {
+		return hasOutPlacePairs() 
+			|| hasOutTransitionPairs();
 	}
 
 	/**
@@ -1661,8 +1773,9 @@ public final class VF2 {
 	 * 
 	 * @return true, if pairs exists
 	 */
-	private boolean hasNextOutPlaceCandidatePairs() {
-		return outSourcePlacesCount > corePlacesCount && outTargetPlacesCount > corePlacesCount;
+	private boolean hasOutPlacePairs() {
+		return outSourcePlacesCount > corePlacesCount 
+			&& outTargetPlacesCount > corePlacesCount;
 	}
 
 	/**
@@ -1670,8 +1783,8 @@ public final class VF2 {
 	 * 
 	 * @return number of place pairs
 	 */
-	private int getNextOutPlaceCandidatePairsCount() {
-		if (!hasNextOutPlaceCandidatePairs()) {
+	private int getOutPlacePairsCount() {
+		if (!hasOutPlacePairs()) {
 			return 0;
 		}
 
@@ -1683,8 +1796,9 @@ public final class VF2 {
 	 * 
 	 * @return true, if pairs exists
 	 */
-	private boolean hasNextOutTransitionCandidatePairs() {
-		return outSourceTransitionsCount > coreTransitionsCount && outTargetTransitionsCount > coreTransitionsCount;
+	private boolean hasOutTransitionPairs() {
+		return outSourceTransitionsCount > coreTransitionsCount 
+			&& outTargetTransitionsCount > coreTransitionsCount;
 	}
 
 	/**
@@ -1692,8 +1806,8 @@ public final class VF2 {
 	 * 
 	 * @return number of place pairs
 	 */
-	private int getNextOutTransitionCandidatePairsCount() {
-		if (!hasNextOutTransitionCandidatePairs()) {
+	private int getOutTransitionPairsCount() {
+		if (!hasOutTransitionPairs()) {
 			return 0;
 		}
 
@@ -1705,8 +1819,9 @@ public final class VF2 {
 	 * 
 	 * @return true, if pairs exists
 	 */
-	private boolean hasNextInCandidatePairs() {
-		return hasNextInPlaceCandidatePairs() || hasNextInTransitionCandidatePairs();
+	private boolean hasInPairs() {
+		return hasInPlacePairs() 
+			|| hasInTransitionPairs();
 	}
 
 	/**
@@ -1714,8 +1829,9 @@ public final class VF2 {
 	 * 
 	 * @return true, if pairs exists
 	 */
-	private boolean hasNextInPlaceCandidatePairs() {
-		return inSourcePlacesCount > corePlacesCount && inTargetPlacesCount > corePlacesCount;
+	private boolean hasInPlacePairs() {
+		return inSourcePlacesCount > corePlacesCount 
+			&& inTargetPlacesCount > corePlacesCount;
 	}
 
 	/**
@@ -1723,8 +1839,8 @@ public final class VF2 {
 	 * 
 	 * @return number of place pairs
 	 */
-	private int getNextInPlaceCandidatePairsCount() {
-		if (!hasNextInPlaceCandidatePairs()) {
+	private int getInPlacePairsCount() {
+		if (!hasInPlacePairs()) {
 			return 0;
 		}
 
@@ -1736,8 +1852,9 @@ public final class VF2 {
 	 * 
 	 * @return true, if pairs exists
 	 */
-	private boolean hasNextInTransitionCandidatePairs() {
-		return inSourceTransitionsCount > coreTransitionsCount && inTargetTransitionsCount > coreTransitionsCount;
+	private boolean hasInTransitionPairs() {
+		return inSourceTransitionsCount > coreTransitionsCount 
+			&& inTargetTransitionsCount > coreTransitionsCount;
 	}
 
 	/**
@@ -1745,8 +1862,8 @@ public final class VF2 {
 	 * 
 	 * @return number of place pairs
 	 */
-	private int getNextInTransitionCandidatePairsCount() {
-		if (!hasNextInTransitionCandidatePairs()) {
+	private int getInTransitionPairsCount() {
+		if (!hasInTransitionPairs()) {
 			return 0;
 		}
 
@@ -1758,8 +1875,9 @@ public final class VF2 {
 	 * 
 	 * @return true, if pairs exists
 	 */
-	private boolean hasNextPlaceCandidatePairs() {
-		return coreSourcePlaces.length > corePlacesCount && coreTargetPlaces.length > corePlacesCount;
+	private boolean hasPlacePairs() {
+		return coreSourcePlaces.length > corePlacesCount 
+			&& coreTargetPlaces.length > corePlacesCount;
 	}
 
 	/**
@@ -1767,8 +1885,8 @@ public final class VF2 {
 	 * 
 	 * @return number of place pairs
 	 */
-	private int getNextPlaceCandidatePairsCount() {
-		if (!hasNextPlaceCandidatePairs()) {
+	private int getPlacePairsCount() {
+		if (!hasPlacePairs()) {
 			return 0;
 		}
 
@@ -1780,8 +1898,9 @@ public final class VF2 {
 	 * 
 	 * @return true, if pairs exists
 	 */
-	private boolean hasNextTransitionCandidatePairs() {
-		return coreSourceTransitions.length > coreTransitionsCount && coreTargetTransitions.length > coreTransitionsCount;
+	private boolean hasTransitionPairs() {
+		return coreSourceTransitions.length > coreTransitionsCount 
+			&& coreTargetTransitions.length > coreTransitionsCount;
 	}
 
 	/**
@@ -1789,8 +1908,8 @@ public final class VF2 {
 	 * 
 	 * @return number of place pairs
 	 */
-	private int getNextTransitionCandidatePairsCount() {
-		if (!hasNextTransitionCandidatePairs()) {
+	private int getTransitionPairsCount() {
+		if (!hasTransitionPairs()) {
 			return 0;
 		}
 
@@ -1807,7 +1926,7 @@ public final class VF2 {
 	 * 
 	 * @return index, if one exists, CORE_NULL_NODE otherwise
 	 */
-	private int getUnmatchedNodeIndex(int[] core, int[] terminalSet, int startIndex) {		
+	private int getNotMatchedNodeIndex(int[] core, int[] terminalSet, int startIndex) {		
 		assert core.length == terminalSet.length && startIndex >= 0;
 
 		for (int index = startIndex; index < core.length; index++) {
@@ -1827,7 +1946,7 @@ public final class VF2 {
 	 * 
 	 * @return index, if one exists, CORE_NULL_NODE otherwise
 	 */
-	private int getUnmatchedNodeIndex(int[] core, int startIndex) {
+	private int getNotMatchedNodeIndex(int[] core, int startIndex) {
 		assert startIndex >= 0;
 		
 		for (int index = startIndex; index < core.length; index++) {
@@ -2008,17 +2127,17 @@ public final class VF2 {
 		builder.append(Arrays.toString(targetPlaces) + "\n");
 		builder.append(Arrays.toString(targetTransitions) + "\n");
 
-		if (semanticEqualPlaces != null) {
+		if (semanticMatrixPlace != null) {
 			builder.append("Semantic Places\n");
-			for (int index = 0; index < semanticEqualPlaces.length; index++) {
-				builder.append(Arrays.toString(semanticEqualPlaces[index]) + "\n");
+			for (int index = 0; index < semanticMatrixPlace.length; index++) {
+				builder.append(Arrays.toString(semanticMatrixPlace[index]) + "\n");
 			}
 		}
 
-		if (semanticEqualTransitions != null) {
+		if (semanticMatrixTransition != null) {
 			builder.append("Semantic Transitions\n");
-			for (int index = 0; index < semanticEqualTransitions.length; index++) {
-				builder.append(Arrays.toString(semanticEqualTransitions[index]) + "\n");
+			for (int index = 0; index < semanticMatrixTransition.length; index++) {
+				builder.append(Arrays.toString(semanticMatrixTransition[index]) + "\n");
 			}
 		}
 
