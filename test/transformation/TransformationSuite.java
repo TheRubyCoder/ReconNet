@@ -20,7 +20,7 @@ import transformation.rules.*;
 //	Rule2Test.class, // Nullpointer in morphism finding
 	Rule1Test.class,
 	ScenariosRuleCreationTest.class ,
-	VF2Test.class 
+	PNVF2Test.class 
 	}
 )
 

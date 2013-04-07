@@ -25,7 +25,7 @@ import petrinet.model.PreArc;
 import petrinet.model.Transition;
 
 import transformation.matcher.*;
-import transformation.matcher.VF2.MatchException;
+import transformation.matcher.PNVF2.MatchException;
 
 /**
  *
@@ -65,7 +65,7 @@ public class MorphismTest {
     	setupExpectedResults();
     	
     	try {
-			testObject = VF2.getInstance(fromPn, toPn).getMatch(false);
+			testObject = PNVF2.getInstance(fromPn, toPn).getMatch(false);
 		} catch (MatchException e) {
 			fail();
 		}
@@ -80,7 +80,7 @@ public class MorphismTest {
     public void testEqualMatches() {
     	Match matchA;
 		try {
-			matchA = VF2.getInstance(fromPn, toPn).getMatch(false);
+			matchA = PNVF2.getInstance(fromPn, toPn).getMatch(false);
 	    	Match matchB = Ullmann.createMatch(fromPn, toPn);
 	    	
 	        assertEquals(matchA, matchB);

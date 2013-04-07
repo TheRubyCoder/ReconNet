@@ -26,14 +26,14 @@ import transformation.Match;
  * @see <a href="http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=797762">VF: Performance evaluation of the VF graph matching algorithm</a>
  * @see <a href="http://nerone.diiie.unisa.it/zope/mivia/databases/db_database/1/papers/vf-algorithm.pdf">VF2: An Improved Algorithm for Matching Large Graphs</a>
  * @see <a href="http://ieeexplore.ieee.org/xpl/articleDetails.jsp?arnumber=1323804">VF2: A (Sub)Graph Isomorphism Algorithm for Matching Large Graphs</a>
- * @see <a href="http://amalfi.dis.unina.it/graph/db/vflib-2.0/">VF*: vflib-2.0 in C++</a>
+ * @see <a href="http://mivia.unisa.it/datasets/graph-database/vflib-graph-matching-library-version-2-0/">VF*: vflib-2.0 in C++</a>
  */
-public final class VF2 {
+public final class PNVF2 {
 	/**
 	 * The default MatchVisitor, which is used when no specific one is given.
 	 * This visitor accepts the first found match and finishes the matching process.
 	 */
-	private final MatchVisitor ACCEPT_FIRST_MATCH_VISITOR = new AcceptFirstMatchVisitor();
+	private final MatchVisitor ACCEPT_FIRST = new AcceptFirst();
 
 	/**
 	 * This PRNG is used to realize the nondeterminism of the matching process. 
@@ -71,17 +71,23 @@ public final class VF2 {
 	 * Index of new nodes count in the array that is returned from the feasibility test sub-methods.
 	 */
 	private final byte INDEX_NEW_PAIR = 2;
+	
+	/**
+	 * indicates whether the matcher is current in use, 
+	 * the value will be set to true before the method match is called and will be set to false when match is finished
+	 */
+	private boolean isMatching = false;
 
 	/**
 	 * Petrinet, which is to be found in the target net. The source net can be of the same size 
 	 * (graph isomorphism) or smaller (subgraph isomorphism). Size means the number of places and transitions.
 	 */
-	private final Petrinet source;
+	private final Petrinet SOURCE;
 	
 	/**
 	 * Petrinet in which a (subgraph) isomorphism is to be found.
 	 */
-	private final Petrinet target;
+	private final Petrinet TARGET;
 
 
 	/**
@@ -90,7 +96,7 @@ public final class VF2 {
 	 * Therefore this matrix gives no clue about structural equality. Changes of this array are only allowed
 	 * by the intialize method.
 	 */
-	private boolean[][] semanticMatrixPlace;
+	private boolean[][] semanticMatrixPlaces;
 
 	/**
 	 * Matrix, which indicates the semantic equality of 2 arbitrary transitions. Semantic equality concerns 
@@ -98,26 +104,26 @@ public final class VF2 {
 	 * Therefore this matrix gives no clue about structural equality. Changes of this array are only allowed
 	 * by the intialize method.
 	 */
-	private boolean[][] semanticMatrixTransition;
+	private boolean[][] semanticMatrixTransitions;
 
 	/**
 	 * Array over all places of the source petrinet. The index of a place in this array is the value, which is 
 	 * used in the core-/out- and in-arrays. Furthermore, the order of places in this array realizes the 
-	 * order relation, which is needed by vf2. Changes of this array are only allowed by the intialize method.
+	 * order relation, which is needed by PNVF2. Changes of this array are only allowed by the intialize method.
 	 */
 	private Place[]  sourcePlaces;
 
 	/**
 	 * Array over all places of the target petrinet. The index of a place in this array is the value, which is 
 	 * used in the core-/out- and in-arrays. Furthermore, the order of places in this array realizes the 
-	 * order relation, which is needed by vf2. Changes of this array are only allowed by the intialize method.
+	 * order relation, which is needed by PNVF2. Changes of this array are only allowed by the intialize method.
 	 */
 	private Place[] targetPlaces;
 
 	/**
 	 * Array over all transitions of the source petrinet. The index of a transition in this array is the value, 
 	 * which is used in the core-/out- and in-arrays. Furthermore, the order of transitions in this array 
-	 * realizes the order relation, which is needed by vf2. Changes of this array are only allowed by 
+	 * realizes the order relation, which is needed by PNVF2. Changes of this array are only allowed by 
 	 * the intialize method.
 	 */
 	private Transition[] sourceTransitions;
@@ -125,7 +131,7 @@ public final class VF2 {
 	/**
 	 * Array over all transitions of the target petrinet. The index of a transition in this array is the value, 
 	 * which is used in the core-/out- and in-arrays. Furthermore, the order of transitions in this array 
-	 * realizes the order relation, which is needed by vf2. Changes of this array are only allowed 
+	 * realizes the order relation, which is needed by PNVF2. Changes of this array are only allowed 
 	 * by the intialize method.
 	 */
 	private Transition[] targetTransitions;
@@ -166,7 +172,7 @@ public final class VF2 {
 	 * Number of nodes, which were mapped so far. This includes places and transitions.
 	 * This number is equivalent to the recursion depth and is used by the terminal sets.
 	 */
-	private int coreNodesCount;
+	private int coreMatchedNodesCount;
 
 	/**
 	 * Mapping of source petrinet places to target petrinet places. The index of a source place is equivalent 
@@ -200,13 +206,13 @@ public final class VF2 {
 	 * Number of places, which were mapped so far. This value corresponds to the number of places in coreSourcePlaces
 	 * and coreTargetPlaces, which are not equal to CORE_NULL_NODE. 
 	 */
-	private int corePlacesCount;
+	private int coreMatchedPlacesCount;
 
 	/**
 	 * Number of transitions, which were mapped so far. This value corresponds to the number of places in 
 	 * coreSourceTransitions and coreTargetTransitions, which are not equal to CORE_NULL_NODE. 
 	 */
-	private int coreTransitionsCount;
+	private int coreMatchedTransitionsCount;
 
 	/**
 	 * "Out terminal set" of the source petrinet places. The index of a place is equivalent to the corresponding index in 
@@ -325,14 +331,14 @@ public final class VF2 {
 	private MatchVisitor matchVisitor;
 	
 
-	private VF2(Petrinet source, Petrinet target, RandomGenerator random) {
-		this.source = source;
-		this.target = target;
+	private PNVF2(Petrinet source, Petrinet target, RandomGenerator random) {
+		this.SOURCE = source;
+		this.TARGET = target;
 		this.RANDOM = random;
 	}
 
 	/**
-	 * Gets an instance of VF2 to search for matches from source in target.
+	 * Gets an instance of PNVF2 to search for matches from source in target.
 	 * This instance uses a shared PRNG with other instances. The given petrinets can be modified later, 
 	 * as long as no matching process is in progress (getMatch). 
 	 * But it is forbidden to change the nets by a match visitor.
@@ -342,13 +348,13 @@ public final class VF2 {
 	 * @return 
 	 * @throws IllegalArgumentException if a parameter is null
 	 */
-	public static VF2 getInstance(Petrinet source, Petrinet target) {
+	public static PNVF2 getInstance(Petrinet source, Petrinet target) {
 		return getInstance(source, target, DEFAULT_RANDOM);
 	}
 
 
 	/**
-	 * Gets an instance of VF2 to search for matches from source in target.
+	 * Gets an instance of PNVF2 to search for matches from source in target.
 	 * The given petrinets can be modified later, as long as no matching process is in progress (getMatch). 
 	 * But it is forbidden to change the nets by a match visitor.
 	 *   
@@ -358,12 +364,12 @@ public final class VF2 {
 	 * @return 
 	 * @throws IllegalArgumentException if a parameter is null
 	 */
-	public static VF2 getInstance(Petrinet source, Petrinet target, RandomGenerator random) {
+	public static PNVF2 getInstance(Petrinet source, Petrinet target, RandomGenerator random) {
 		if (source == null || target == null || random == null) {
 			throw new IllegalArgumentException();
 		}
 
-		return new VF2(source, target, random);
+		return new PNVF2(source, target, random);
 	}
 
 	
@@ -377,17 +383,17 @@ public final class VF2 {
 	 * @throws MatchException 		      	 if no match can be found
 	 */
 	private void initialize(boolean isStrictMatch, Set<Place> arcRestrictedSourcePlacesSet) throws MatchException {
-		int sourcePlacesCount      = source.getPlaces().size();
-		int sourceTransitionsCount = source.getTransitions().size();
-		int targetPlacesCount      = target.getPlaces().size();
-		int targetTransitionsCount = target.getTransitions().size();
+		int sourcePlacesCount      = SOURCE.getPlaces().size();
+		int sourceTransitionsCount = SOURCE.getTransitions().size();
+		int targetPlacesCount      = TARGET.getPlaces().size();
+		int targetTransitionsCount = TARGET.getTransitions().size();
 
 		if (sourcePlacesCount > targetPlacesCount || sourceTransitionsCount > targetTransitionsCount) {
 			throw new MatchException();
 		}
 
-		semanticMatrixPlace        = new boolean[sourcePlacesCount][targetPlacesCount];
-		semanticMatrixTransition   = new boolean[sourceTransitionsCount][targetTransitionsCount];
+		semanticMatrixPlaces        = new boolean[sourcePlacesCount][targetPlacesCount];
+		semanticMatrixTransitions   = new boolean[sourceTransitionsCount][targetTransitionsCount];
 
 		arcRestrictedSourcePlaces  = new boolean[sourcePlacesCount];
 		
@@ -401,14 +407,14 @@ public final class VF2 {
 		targetPlacesIndexes        = new HashMap<Place, Integer>();
 		targetTransitionsIndexes   = new HashMap<Transition, Integer>();
 
-		coreNodesCount             = 0;
+		coreMatchedNodesCount             = 0;
 
 		coreSourcePlaces 	  	   = new int[sourcePlacesCount];
 		coreSourceTransitions 	   = new int[sourceTransitionsCount];
 		coreTargetPlaces      	   = new int[targetPlacesCount];
 		coreTargetTransitions 	   = new int[targetTransitionsCount];
-		corePlacesCount 	       = 0;
-		coreTransitionsCount       = 0;
+		coreMatchedPlacesCount 	       = 0;
+		coreMatchedTransitionsCount       = 0;
 
 		outSourcePlaces 	  	   = new int[sourcePlacesCount];
 		outSourceTransitions  	   = new int[sourceTransitionsCount];
@@ -431,10 +437,10 @@ public final class VF2 {
 		lastMatch 				   = null;
 		matchVisitor               = null;
 
-		initPlacesArray(sourcePlaces, source);
-		initTransitionsArray(sourceTransitions, source);
-		initPlacesArray(targetPlaces, target);
-		initTransitionsArray(targetTransitions, target);
+		initPlacesArray(sourcePlaces, SOURCE);
+		initTransitionsArray(sourceTransitions, SOURCE);
+		initPlacesArray(targetPlaces, TARGET);
+		initTransitionsArray(targetTransitions, TARGET);
 
 		// shuffle arrays to improve the nondeterminism
 		// the order of the nodes isn't important for the correctness 
@@ -454,8 +460,8 @@ public final class VF2 {
 		Arrays.fill(coreTargetPlaces, CORE_NULL_NODE);
 		Arrays.fill(coreTargetTransitions, CORE_NULL_NODE);
 		
-		if (!generateSemanticMatrixPlaces(isStrictMatch, arcRestrictedSourcePlacesSet) 
-		 || !generateSemanticMatrixTransitions()) {
+		if (!genSemanticMatrixPlaces(isStrictMatch, arcRestrictedSourcePlacesSet) 
+		 || !genSemanticMatrixTransitions()) {
 			throw new MatchException();
 		}
 	}
@@ -468,7 +474,7 @@ public final class VF2 {
 	 * @throws MatchException if no match can be found
 	 */
 	public Match getMatch(boolean isStrictMatch) throws MatchException {
-		return getMatch(isStrictMatch, new HashSet<Place>(), ACCEPT_FIRST_MATCH_VISITOR);
+		return getMatch(isStrictMatch, new HashSet<Place>(), ACCEPT_FIRST);
 	}
 
 	/**
@@ -482,7 +488,7 @@ public final class VF2 {
 	 * @throws IllegalArgumentException   if a parameter is null
 	 */
 	public Match getMatch(boolean isStrictMatch, Set<Place> arcRestrictedSourcePlaces) throws MatchException {
-		return getMatch(isStrictMatch, arcRestrictedSourcePlaces, ACCEPT_FIRST_MATCH_VISITOR);
+		return getMatch(isStrictMatch, arcRestrictedSourcePlaces, ACCEPT_FIRST);
 	}
 
 	/**
@@ -513,18 +519,23 @@ public final class VF2 {
 	 * @throws IllegalArgumentException  if a parameter is null
 	 */
 	public Match getMatch(boolean isStrictMatch, Set<Place> arcRestrictedSourcePlaces, MatchVisitor visitor) throws MatchException {
-		if (arcRestrictedSourcePlaces == null || visitor == null) {
+		if (arcRestrictedSourcePlaces == null || visitor == null || isMatching == true) {
 			throw new IllegalArgumentException();
 		}
 
+		isMatching 	 = true;
 		initialize(isStrictMatch, arcRestrictedSourcePlaces);
 		matchVisitor = visitor;
 
-		if (!match()) {
+		boolean wasMatchFound = match(); 
+		Match foundMatch      = lastMatch;
+		isMatching 			  = false;
+		
+		if (!wasMatchFound) {
 			throw new MatchException();
 		}
 
-		return lastMatch;
+		return foundMatch;
 	}
 
 	/**
@@ -539,7 +550,7 @@ public final class VF2 {
 	 * @throws IllegalArgumentException  if a parameter is null
 	 */
 	public Match getMatch(boolean isStrictMatch, Match partialMatch) throws MatchException {
-		return getMatch(isStrictMatch, partialMatch, new HashSet<Place>(), ACCEPT_FIRST_MATCH_VISITOR);
+		return getMatch(isStrictMatch, partialMatch, new HashSet<Place>(), ACCEPT_FIRST);
 	}
 
 	/**
@@ -556,7 +567,7 @@ public final class VF2 {
 	 * @throws IllegalArgumentException  if a parameter is null
 	 */
 	public Match getMatch(boolean isStrictMatch, Match partialMatch, Set<Place> arcRestrictedSourcePlaces) throws MatchException {
-		return getMatch(isStrictMatch, partialMatch, arcRestrictedSourcePlaces, ACCEPT_FIRST_MATCH_VISITOR);
+		return getMatch(isStrictMatch, partialMatch, arcRestrictedSourcePlaces, ACCEPT_FIRST);
 	}
 
 	/**
@@ -592,10 +603,11 @@ public final class VF2 {
 	 * @throws IllegalArgumentException  if a parameter is null
 	 */
 	public Match getMatch(boolean isStrictMatch, Match partialMatch, Set<Place> arcRestrictedSourcePlaces, MatchVisitor visitor) throws MatchException {
-		if (partialMatch == null || arcRestrictedSourcePlaces == null || visitor == null) {
+		if (partialMatch == null || arcRestrictedSourcePlaces == null || visitor == null || isMatching == true) {
 			throw new IllegalArgumentException();
 		}
-
+		
+		isMatching 	 = true;
 		initialize(isStrictMatch, arcRestrictedSourcePlaces);
 		matchVisitor = visitor;
 
@@ -621,14 +633,18 @@ public final class VF2 {
 			addTransitionPair(sourceIndex, targetIndex);
 		}
 
-		assert partialMatch.getPlaces().size()      == corePlacesCount;
-		assert partialMatch.getTransitions().size() == coreTransitionsCount;
+		assert partialMatch.getPlaces().size()      == coreMatchedPlacesCount;
+		assert partialMatch.getTransitions().size() == coreMatchedTransitionsCount;
 
-		if (!match()) {
+		boolean wasMatchFound = match(); 
+		Match foundMatch      = lastMatch;
+		isMatching 			  = false;
+		
+		if (!wasMatchFound) {
 			throw new MatchException();
 		}
 
-		return lastMatch;
+		return foundMatch;
 	}
 
 	/**
@@ -641,8 +657,8 @@ public final class VF2 {
 	private boolean match() {
 		assert assertValidState();
 
-		if (corePlacesCount      == coreSourcePlaces.length
-		 && coreTransitionsCount == coreSourceTransitions.length) {
+		if (coreMatchedPlacesCount      == coreSourcePlaces.length
+		 && coreMatchedTransitionsCount == coreSourceTransitions.length) {
 			lastMatch   = null;
 			Match match = buildMatch();
 
@@ -654,27 +670,27 @@ public final class VF2 {
 			}
 		}
 
-		assert coreNodesCount != coreSourcePlaces.length + coreSourceTransitions.length;
+		assert coreMatchedNodesCount != coreSourcePlaces.length + coreSourceTransitions.length;
 
 		if (hasOutPairs()) {
-			if (isMatchByPlacePairs(getOutPlacePairsCount(), getOutTransitionPairsCount())) {
-				return matchPlace(NEXT_CANDIDATE_SET.TERMINAL_OUT);
+			if (isMatchPlacePairs(getOutPlacePairsCount(), getOutTransitionPairsCount())) {
+				return matchPlace(CandidateSet.TERMINAL_OUT);
 			} else {
-				return matchTransition(NEXT_CANDIDATE_SET.TERMINAL_OUT);
+				return matchTransition(CandidateSet.TERMINAL_OUT);
 			}
 
 		} else if (hasInPairs()) {
-			if (isMatchByPlacePairs(getInPlacePairsCount(), getInTransitionPairsCount())) {
-				return matchPlace(NEXT_CANDIDATE_SET.TERMINAL_IN);
+			if (isMatchPlacePairs(getInPlacePairsCount(), getInTransitionPairsCount())) {
+				return matchPlace(CandidateSet.TERMINAL_IN);
 			} else {
-				return matchTransition(NEXT_CANDIDATE_SET.TERMINAL_IN);
+				return matchTransition(CandidateSet.TERMINAL_IN);
 			}
 
 		} else {
-			if (isMatchByPlacePairs(getPlacePairsCount(), getTransitionPairsCount())) {
-				return matchPlace(NEXT_CANDIDATE_SET.NEW);
+			if (isMatchPlacePairs(getPlacePairsCount(), getTransitionPairsCount())) {
+				return matchPlace(CandidateSet.NEW);
 			} else {
-				return matchTransition(NEXT_CANDIDATE_SET.NEW);
+				return matchTransition(CandidateSet.NEW);
 			}
 		}
 	}
@@ -687,7 +703,7 @@ public final class VF2 {
 	 * @param  transitionPairsCount  number of potential transition candidate pairs
 	 * @return true, if the place pairs should be used
 	 */
-	private boolean isMatchByPlacePairs(int placePairsCount, int transitionPairsCount) {
+	private boolean isMatchPlacePairs(int placePairsCount, int transitionPairsCount) {
 		return placePairsCount > 0 && (transitionPairsCount == 0 
             || RANDOM.nextInt(placePairsCount + transitionPairsCount) < placePairsCount);
 	}
@@ -699,9 +715,9 @@ public final class VF2 {
 	 *   
 	 * @return true, if a valid match was found
 	 */
-	private boolean matchPlace(NEXT_CANDIDATE_SET nextCandidateSet) {
-		int sourceIndex = getFirstNotMatchedSourcePlaceIndex(nextCandidateSet);
-		int targetIndex = getNextNotMatchedTargetPlaceIndex(CORE_NULL_NODE, nextCandidateSet);
+	private boolean matchPlace(CandidateSet nextCandidateSet) {
+		int sourceIndex = getFirstFreeSourcePlaceIndex(nextCandidateSet);
+		int targetIndex = getNextFreeTargetPlaceIndex(nextCandidateSet, CORE_NULL_NODE);
 		
 		if (sourceIndex == CORE_NULL_NODE || targetIndex == CORE_NULL_NODE) {
 			return false;
@@ -718,7 +734,7 @@ public final class VF2 {
 				backtrackPlacePair(sourceIndex, targetIndex);
 			}
 
-			targetIndex = getNextNotMatchedTargetPlaceIndex(targetIndex, nextCandidateSet);	
+			targetIndex = getNextFreeTargetPlaceIndex(nextCandidateSet, targetIndex);	
 		}
 
 		return false;
@@ -731,9 +747,9 @@ public final class VF2 {
 	 *   
 	 * @return true, if a valid match was found
 	 */
-	private boolean matchTransition(NEXT_CANDIDATE_SET nextCandidateSet) {
-		int sourceIndex = getFirstNotMatchedSourceTransitionIndex(nextCandidateSet);
-		int targetIndex = getNextNotMatchedTargetTransitionIndex(CORE_NULL_NODE, nextCandidateSet);
+	private boolean matchTransition(CandidateSet nextCandidateSet) {
+		int sourceIndex = getFirstFreeSourceTransitionIndex(nextCandidateSet);
+		int targetIndex = getNextFreeTargetTransitionIndex(nextCandidateSet, CORE_NULL_NODE);
 		
 		if (sourceIndex == CORE_NULL_NODE || targetIndex == CORE_NULL_NODE) {
 			return false;
@@ -751,7 +767,7 @@ public final class VF2 {
 				backtrackTransitionPair(sourceIndex, targetIndex);
 			}
 
-			targetIndex = getNextNotMatchedTargetTransitionIndex(targetIndex, nextCandidateSet);	
+			targetIndex = getNextFreeTargetTransitionIndex(nextCandidateSet, targetIndex);	
 		}
 
 		return false;
@@ -765,15 +781,15 @@ public final class VF2 {
 	 * 
 	 * @return index of the first not matched place or CORE_NULL_NODE, if no not matched place exists 
 	 */
-	private int getFirstNotMatchedSourcePlaceIndex(NEXT_CANDIDATE_SET nextCandidateSet) {	
+	private int getFirstFreeSourcePlaceIndex(CandidateSet nextCandidateSet) {	
 		assert nextCandidateSet != null;
 		
-		if (nextCandidateSet == NEXT_CANDIDATE_SET.TERMINAL_OUT) {
-			return getNotMatchedNodeIndex(coreSourcePlaces, outSourcePlaces, 0);
-		} else if (nextCandidateSet == NEXT_CANDIDATE_SET.TERMINAL_IN) {
-			return getNotMatchedNodeIndex(coreSourcePlaces, inSourcePlaces, 0);
+		if (nextCandidateSet == CandidateSet.TERMINAL_OUT) {
+			return getFreeNodeIndex(coreSourcePlaces, outSourcePlaces, 0);
+		} else if (nextCandidateSet == CandidateSet.TERMINAL_IN) {
+			return getFreeNodeIndex(coreSourcePlaces, inSourcePlaces, 0);
 		} else {
-			return getNotMatchedNodeIndex(coreSourcePlaces, 0);
+			return getFreeNodeIndex(coreSourcePlaces, 0);
 		}		
 	}
 
@@ -781,25 +797,25 @@ public final class VF2 {
 	/**
 	 * gets the index of the next not matched target place, which fulfills the condition implied by the 
 	 * given candidate set. 
-	 * 
-	 * @param  previousTargetIndex  index of the previously found place, from which a new not matched one 
-	 *   							should be searched or CORE_NULL_NODE to indicate, that a new search is to be started                                							  
+	 *                              							  
 	 * @param  nextCandidateSet     the candidate set, to be searched
+	 * @param  previousTargetIndex  index of the previously found place, from which a new not matched one 
+	 *   							should be searched or CORE_NULL_NODE to indicate, that a new search is to be started   
 	 * 
 	 * @return index of the next not matched place (> previousTargetIndex) or CORE_NULL_NODE, 
 	 *         if all places are exhausted
 	 */
-	private int getNextNotMatchedTargetPlaceIndex(int previousTargetIndex, NEXT_CANDIDATE_SET nextCandidateSet) {
+	private int getNextFreeTargetPlaceIndex(CandidateSet nextCandidateSet, int previousTargetIndex) {
 		assert nextCandidateSet != null;
 		
 		int searchStartIndex = (previousTargetIndex == CORE_NULL_NODE) ? 0 : previousTargetIndex + 1;
 
-		if (nextCandidateSet == NEXT_CANDIDATE_SET.TERMINAL_OUT) {
-			return getNotMatchedNodeIndex(coreTargetPlaces, outTargetPlaces, searchStartIndex);
-		} else if (nextCandidateSet == NEXT_CANDIDATE_SET.TERMINAL_IN) {
-			return getNotMatchedNodeIndex(coreTargetPlaces, inTargetPlaces, searchStartIndex);
+		if (nextCandidateSet == CandidateSet.TERMINAL_OUT) {
+			return getFreeNodeIndex(coreTargetPlaces, outTargetPlaces, searchStartIndex);
+		} else if (nextCandidateSet == CandidateSet.TERMINAL_IN) {
+			return getFreeNodeIndex(coreTargetPlaces, inTargetPlaces, searchStartIndex);
 		} else {
-			return getNotMatchedNodeIndex(coreTargetPlaces, searchStartIndex);
+			return getFreeNodeIndex(coreTargetPlaces, searchStartIndex);
 		}	
 	}
 
@@ -811,40 +827,40 @@ public final class VF2 {
 	 * 
 	 * @return index of the first not matched transition or CORE_NULL_NODE, if no not matched transition exists 
 	 */
-	private int getFirstNotMatchedSourceTransitionIndex(NEXT_CANDIDATE_SET nextCandidateSet) {	
+	private int getFirstFreeSourceTransitionIndex(CandidateSet nextCandidateSet) {	
 		assert nextCandidateSet != null;
 		
-		if (nextCandidateSet == NEXT_CANDIDATE_SET.TERMINAL_OUT) {
-			return getNotMatchedNodeIndex(coreSourceTransitions, outSourceTransitions, 0);
-		} else if (nextCandidateSet == NEXT_CANDIDATE_SET.TERMINAL_IN) {
-			return getNotMatchedNodeIndex(coreSourceTransitions, inSourceTransitions, 0);
+		if (nextCandidateSet == CandidateSet.TERMINAL_OUT) {
+			return getFreeNodeIndex(coreSourceTransitions, outSourceTransitions, 0);
+		} else if (nextCandidateSet == CandidateSet.TERMINAL_IN) {
+			return getFreeNodeIndex(coreSourceTransitions, inSourceTransitions, 0);
 		} else {
-			return getNotMatchedNodeIndex(coreSourceTransitions, 0);
+			return getFreeNodeIndex(coreSourceTransitions, 0);
 		}		
 	}
 
 	/**
 	 * gets the index of the next not matched target transition, which fulfills the condition implied by the 
 	 * given candidate set. 
-	 * 
-	 * @param  previousTargetIndex  index of the previously found transition, from which a new not matched one 
-	 *   							should be searched or CORE_NULL_NODE to indicate, that a new search is to be started                                							  
+	 *                             							  
 	 * @param  nextCandidateSet     the candidate set, to be searched
+	 * @param  previousTargetIndex  index of the previously found transition, from which a new not matched one 
+	 *   							should be searched or CORE_NULL_NODE to indicate, that a new search is to be started    
 	 * 
 	 * @return index of the next not matched transition (> previousTargetIndex) or CORE_NULL_NODE, 
 	 *         if all transitions are exhausted
 	 */
-	private int getNextNotMatchedTargetTransitionIndex(int previousTargetIndex, NEXT_CANDIDATE_SET nextCandidateSet) {
+	private int getNextFreeTargetTransitionIndex(CandidateSet nextCandidateSet, int previousTargetIndex) {
 		assert nextCandidateSet != null;
 		
 		int searchStartIndex = (previousTargetIndex == CORE_NULL_NODE) ? 0 : previousTargetIndex + 1;
 
-		if (nextCandidateSet == NEXT_CANDIDATE_SET.TERMINAL_OUT) {
-			return getNotMatchedNodeIndex(coreTargetTransitions, outTargetTransitions, searchStartIndex);
-		} else if (nextCandidateSet == NEXT_CANDIDATE_SET.TERMINAL_IN) {
-			return getNotMatchedNodeIndex(coreTargetTransitions, inTargetTransitions, searchStartIndex);
+		if (nextCandidateSet == CandidateSet.TERMINAL_OUT) {
+			return getFreeNodeIndex(coreTargetTransitions, outTargetTransitions, searchStartIndex);
+		} else if (nextCandidateSet == CandidateSet.TERMINAL_IN) {
+			return getFreeNodeIndex(coreTargetTransitions, inTargetTransitions, searchStartIndex);
 		} else {
-			return getNotMatchedNodeIndex(coreTargetTransitions, searchStartIndex);
+			return getFreeNodeIndex(coreTargetTransitions, searchStartIndex);
 		}	
 	}
 
@@ -859,26 +875,26 @@ public final class VF2 {
 		assert sourceIndex != CORE_NULL_NODE && coreSourceTransitions[sourceIndex] == CORE_NULL_NODE;
 		assert targetIndex != CORE_NULL_NODE && coreTargetTransitions[targetIndex] == CORE_NULL_NODE;
 
-		coreTransitionsCount++;
-		coreNodesCount++;
+		coreMatchedTransitionsCount++;
+		coreMatchedNodesCount++;
 
 		if (outSourceTransitions[sourceIndex] == SET_NULL_VALUE) {
-			outSourceTransitions[sourceIndex] = coreNodesCount;
+			outSourceTransitions[sourceIndex] = coreMatchedNodesCount;
 			outSourceTransitionsCount++;
 		}
 
 		if (inSourceTransitions[sourceIndex] == SET_NULL_VALUE) {
-			inSourceTransitions[sourceIndex] = coreNodesCount;
+			inSourceTransitions[sourceIndex] = coreMatchedNodesCount;
 			inSourceTransitionsCount++;
 		}
 
 		if (outTargetTransitions[targetIndex] == SET_NULL_VALUE) {
-			outTargetTransitions[targetIndex] = coreNodesCount;
+			outTargetTransitions[targetIndex] = coreMatchedNodesCount;
 			outTargetTransitionsCount++;
 		}
 
 		if (inTargetTransitions[targetIndex] == SET_NULL_VALUE) {
-			inTargetTransitions[targetIndex] = coreNodesCount;
+			inTargetTransitions[targetIndex] = coreMatchedNodesCount;
 			inTargetTransitionsCount++;
 		}
 
@@ -893,7 +909,7 @@ public final class VF2 {
 			int placeIndex = sourcePlacesIndexes.get(arc.getPlace());
 
 			if (outSourcePlaces[placeIndex] == SET_NULL_VALUE) {
-				outSourcePlaces[placeIndex] = coreNodesCount;
+				outSourcePlaces[placeIndex] = coreMatchedNodesCount;
 				outSourcePlacesCount++;
 			}
 		}
@@ -902,7 +918,7 @@ public final class VF2 {
 			int placeIndex = sourcePlacesIndexes.get(arc.getPlace());
 
 			if (inSourcePlaces[placeIndex] == SET_NULL_VALUE) {
-				inSourcePlaces[placeIndex] = coreNodesCount;
+				inSourcePlaces[placeIndex] = coreMatchedNodesCount;
 				inSourcePlacesCount++;
 			}
 		}
@@ -911,7 +927,7 @@ public final class VF2 {
 			int placeIndex = targetPlacesIndexes.get(arc.getPlace());
 
 			if (outTargetPlaces[placeIndex] == SET_NULL_VALUE) {
-				outTargetPlaces[placeIndex] = coreNodesCount;
+				outTargetPlaces[placeIndex] = coreMatchedNodesCount;
 				outTargetPlacesCount++;
 			}
 		}
@@ -920,7 +936,7 @@ public final class VF2 {
 			int placeIndex = targetPlacesIndexes.get(arc.getPlace());
 
 			if (inTargetPlaces[placeIndex] == SET_NULL_VALUE) {
-				inTargetPlaces[placeIndex] = coreNodesCount;
+				inTargetPlaces[placeIndex] = coreMatchedNodesCount;
 				inTargetPlacesCount++;
 			}
 		}
@@ -942,31 +958,10 @@ public final class VF2 {
 		Transition source = sourceTransitions[sourceIndex];
 		Transition target = targetTransitions[targetIndex];
 
-		if (outSourceTransitions[sourceIndex] == coreNodesCount) {
-			outSourceTransitions[sourceIndex] = SET_NULL_VALUE;
-			outSourceTransitionsCount--;
-		}
-
-		if (inSourceTransitions[sourceIndex] == coreNodesCount) {
-			inSourceTransitions[sourceIndex] = SET_NULL_VALUE;
-			inSourceTransitionsCount--;
-
-		}
-
-		if (outTargetTransitions[targetIndex] == coreNodesCount) {
-			outTargetTransitions[targetIndex] = SET_NULL_VALUE;
-			outTargetTransitionsCount--;
-		}
-
-		if (inTargetTransitions[targetIndex] == coreNodesCount) {
-			inTargetTransitions[targetIndex] = SET_NULL_VALUE;
-			inTargetTransitionsCount--;
-		}
-
 		for (PostArc arc : source.getOutgoingArcs()) {
 			int placeIndex = sourcePlacesIndexes.get(arc.getPlace());
 
-			if (outSourcePlaces[placeIndex] == coreNodesCount) {
+			if (outSourcePlaces[placeIndex] == coreMatchedNodesCount) {
 				outSourcePlaces[placeIndex] = SET_NULL_VALUE;
 				outSourcePlacesCount--;
 			}
@@ -975,7 +970,7 @@ public final class VF2 {
 		for (PreArc arc : source.getIncomingArcs()) {
 			int placeIndex = sourcePlacesIndexes.get(arc.getPlace());
 
-			if (inSourcePlaces[placeIndex] == coreNodesCount) {
+			if (inSourcePlaces[placeIndex] == coreMatchedNodesCount) {
 				inSourcePlaces[placeIndex] = SET_NULL_VALUE;
 				inSourcePlacesCount--;
 			}
@@ -984,7 +979,7 @@ public final class VF2 {
 		for (PostArc arc : target.getOutgoingArcs()) {
 			int placeIndex = targetPlacesIndexes.get(arc.getPlace());
 
-			if (outTargetPlaces[placeIndex] == coreNodesCount) {
+			if (outTargetPlaces[placeIndex] == coreMatchedNodesCount) {
 				outTargetPlaces[placeIndex] = SET_NULL_VALUE;
 				outTargetPlacesCount--;
 			}
@@ -993,7 +988,7 @@ public final class VF2 {
 		for (PreArc arc : target.getIncomingArcs()) {
 			int placeIndex = targetPlacesIndexes.get(arc.getPlace());
 
-			if (inTargetPlaces[placeIndex] == coreNodesCount) {
+			if (inTargetPlaces[placeIndex] == coreMatchedNodesCount) {
 				inTargetPlaces[placeIndex] = SET_NULL_VALUE;
 				inTargetPlacesCount--;
 			}
@@ -1002,8 +997,29 @@ public final class VF2 {
 		coreSourceTransitions[sourceIndex] = CORE_NULL_NODE;
 		coreTargetTransitions[targetIndex] = CORE_NULL_NODE;
 
-		coreTransitionsCount--;
-		coreNodesCount--;
+		if (outSourceTransitions[sourceIndex] == coreMatchedNodesCount) {
+			outSourceTransitions[sourceIndex] = SET_NULL_VALUE;
+			outSourceTransitionsCount--;
+		}
+
+		if (inSourceTransitions[sourceIndex] == coreMatchedNodesCount) {
+			inSourceTransitions[sourceIndex] = SET_NULL_VALUE;
+			inSourceTransitionsCount--;
+
+		}
+
+		if (outTargetTransitions[targetIndex] == coreMatchedNodesCount) {
+			outTargetTransitions[targetIndex] = SET_NULL_VALUE;
+			outTargetTransitionsCount--;
+		}
+
+		if (inTargetTransitions[targetIndex] == coreMatchedNodesCount) {
+			inTargetTransitions[targetIndex] = SET_NULL_VALUE;
+			inTargetTransitionsCount--;
+		}
+
+		coreMatchedTransitionsCount--;
+		coreMatchedNodesCount--;
 
 		assert assertValidState();
 	}
@@ -1019,26 +1035,26 @@ public final class VF2 {
 		assert sourceIndex != CORE_NULL_NODE && coreSourcePlaces[sourceIndex] == CORE_NULL_NODE;
 		assert targetIndex != CORE_NULL_NODE && coreTargetPlaces[targetIndex] == CORE_NULL_NODE;
 
-		corePlacesCount++;
-		coreNodesCount++;
+		coreMatchedPlacesCount++;
+		coreMatchedNodesCount++;
 
 		if (outSourcePlaces[sourceIndex] == SET_NULL_VALUE) {
-			outSourcePlaces[sourceIndex] = coreNodesCount;
+			outSourcePlaces[sourceIndex] = coreMatchedNodesCount;
 			outSourcePlacesCount++;
 		}
 
 		if (inSourcePlaces[sourceIndex] == SET_NULL_VALUE) {
-			inSourcePlaces[sourceIndex] = coreNodesCount;
+			inSourcePlaces[sourceIndex] = coreMatchedNodesCount;
 			inSourcePlacesCount++;
 		}
 
 		if (outTargetPlaces[targetIndex] == SET_NULL_VALUE) {
-			outTargetPlaces[targetIndex] = coreNodesCount;
+			outTargetPlaces[targetIndex] = coreMatchedNodesCount;
 			outTargetPlacesCount++;
 		}
 
 		if (inTargetPlaces[targetIndex] == SET_NULL_VALUE) {
-			inTargetPlaces[targetIndex] = coreNodesCount;
+			inTargetPlaces[targetIndex] = coreMatchedNodesCount;
 			inTargetPlacesCount++;
 		}
 
@@ -1052,7 +1068,7 @@ public final class VF2 {
 			int transitionIndex = sourceTransitionsIndexes.get(arc.getTransition());
 
 			if (outSourceTransitions[transitionIndex] == SET_NULL_VALUE) {
-				outSourceTransitions[transitionIndex] = coreNodesCount;
+				outSourceTransitions[transitionIndex] = coreMatchedNodesCount;
 				outSourceTransitionsCount++;
 			}
 		}
@@ -1061,7 +1077,7 @@ public final class VF2 {
 			int transitionIndex = sourceTransitionsIndexes.get(arc.getTransition());
 
 			if (inSourceTransitions[transitionIndex] == SET_NULL_VALUE) {
-				inSourceTransitions[transitionIndex] = coreNodesCount;
+				inSourceTransitions[transitionIndex] = coreMatchedNodesCount;
 				inSourceTransitionsCount++;
 			}
 		}
@@ -1070,7 +1086,7 @@ public final class VF2 {
 			int transitionIndex = targetTransitionsIndexes.get(arc.getTransition());
 
 			if (outTargetTransitions[transitionIndex] == SET_NULL_VALUE) {
-				outTargetTransitions[transitionIndex] = coreNodesCount;
+				outTargetTransitions[transitionIndex] = coreMatchedNodesCount;
 				outTargetTransitionsCount++;
 			}
 		}
@@ -1079,7 +1095,7 @@ public final class VF2 {
 			int transitionIndex = targetTransitionsIndexes.get(arc.getTransition());
 
 			if (inTargetTransitions[transitionIndex] == SET_NULL_VALUE) {
-				inTargetTransitions[transitionIndex] = coreNodesCount;
+				inTargetTransitions[transitionIndex] = coreMatchedNodesCount;
 				inTargetTransitionsCount++;
 			}
 		}
@@ -1101,30 +1117,10 @@ public final class VF2 {
 		Place source = sourcePlaces[sourceIndex];
 		Place target = targetPlaces[targetIndex];
 
-		if (outSourcePlaces[sourceIndex] == coreNodesCount) {
-			outSourcePlaces[sourceIndex] = SET_NULL_VALUE;
-			outSourcePlacesCount--;
-		}
-
-		if (inSourcePlaces[sourceIndex] == coreNodesCount) {
-			inSourcePlaces[sourceIndex] = SET_NULL_VALUE;
-			inSourcePlacesCount--;
-		}
-
-		if (outTargetPlaces[targetIndex] == coreNodesCount) {
-			outTargetPlaces[targetIndex] = SET_NULL_VALUE;
-			outTargetPlacesCount--;
-		}
-
-		if (inTargetPlaces[targetIndex] == coreNodesCount) {
-			inTargetPlaces[targetIndex] = SET_NULL_VALUE;
-			inTargetPlacesCount--;
-		}
-
 		for (PreArc arc : source.getOutgoingArcs()) {
 			int transitionIndex = sourceTransitionsIndexes.get(arc.getTransition());
 
-			if (outSourceTransitions[transitionIndex] == coreNodesCount) {
+			if (outSourceTransitions[transitionIndex] == coreMatchedNodesCount) {
 				outSourceTransitions[transitionIndex] = SET_NULL_VALUE;
 				outSourceTransitionsCount--;
 			}
@@ -1133,7 +1129,7 @@ public final class VF2 {
 		for (PostArc arc : source.getIncomingArcs()) {
 			int transitionIndex = sourceTransitionsIndexes.get(arc.getTransition());
 
-			if (inSourceTransitions[transitionIndex] == coreNodesCount) {
+			if (inSourceTransitions[transitionIndex] == coreMatchedNodesCount) {
 				inSourceTransitions[transitionIndex] = SET_NULL_VALUE;
 				inSourceTransitionsCount--;
 			}
@@ -1142,7 +1138,7 @@ public final class VF2 {
 		for (PreArc arc : target.getOutgoingArcs()) {
 			int transitionIndex = targetTransitionsIndexes.get(arc.getTransition());
 
-			if (outTargetTransitions[transitionIndex] == coreNodesCount) {
+			if (outTargetTransitions[transitionIndex] == coreMatchedNodesCount) {
 				outTargetTransitions[transitionIndex] = SET_NULL_VALUE;
 				outTargetTransitionsCount--;
 			}
@@ -1151,7 +1147,7 @@ public final class VF2 {
 		for (PostArc arc : target.getIncomingArcs()) {
 			int transitionIndex = targetTransitionsIndexes.get(arc.getTransition());
 
-			if (inTargetTransitions[transitionIndex] == coreNodesCount) {
+			if (inTargetTransitions[transitionIndex] == coreMatchedNodesCount) {
 				inTargetTransitions[transitionIndex] = SET_NULL_VALUE;
 				inTargetTransitionsCount--;
 			}
@@ -1159,9 +1155,29 @@ public final class VF2 {
 
 		coreSourcePlaces[sourceIndex] = CORE_NULL_NODE;
 		coreTargetPlaces[targetIndex] = CORE_NULL_NODE;
+		
+		if (outSourcePlaces[sourceIndex] == coreMatchedNodesCount) {
+			outSourcePlaces[sourceIndex] = SET_NULL_VALUE;
+			outSourcePlacesCount--;
+		}
 
-		corePlacesCount--;
-		coreNodesCount--;
+		if (inSourcePlaces[sourceIndex] == coreMatchedNodesCount) {
+			inSourcePlaces[sourceIndex] = SET_NULL_VALUE;
+			inSourcePlacesCount--;
+		}
+
+		if (outTargetPlaces[targetIndex] == coreMatchedNodesCount) {
+			outTargetPlaces[targetIndex] = SET_NULL_VALUE;
+			outTargetPlacesCount--;
+		}
+
+		if (inTargetPlaces[targetIndex] == coreMatchedNodesCount) {
+			inTargetPlaces[targetIndex] = SET_NULL_VALUE;
+			inTargetPlacesCount--;
+		}
+
+		coreMatchedPlacesCount--;
+		coreMatchedNodesCount--;
 
 		assert assertValidState();
 	}
@@ -1178,7 +1194,7 @@ public final class VF2 {
 		assert sourceIndex != CORE_NULL_NODE;
 		assert targetIndex != CORE_NULL_NODE;
 
-		if (!semanticMatrixPlace[sourceIndex][targetIndex]) {
+		if (!semanticMatrixPlaces[sourceIndex][targetIndex]) {
 			return false;
 		}
 
@@ -1393,7 +1409,7 @@ public final class VF2 {
 		assert sourceIndex != CORE_NULL_NODE;
 		assert targetIndex != CORE_NULL_NODE;
 
-		if (!semanticMatrixTransition[sourceIndex][targetIndex]) {
+		if (!semanticMatrixTransitions[sourceIndex][targetIndex]) {
 			return false;
 		}
 
@@ -1593,7 +1609,7 @@ public final class VF2 {
 	 *                                       have exact the same number of pre arcs and post arcs  
 	 * @return true, if a match is semantically possible
 	 */
-	private boolean generateSemanticMatrixPlaces(boolean isStrictMatch, Set<Place> arcRestrictedSourcePlacesSet) {
+	private boolean genSemanticMatrixPlaces(boolean isStrictMatch, Set<Place> arcRestrictedSourcePlacesSet) {
 		for (int sourcePlaceIndex = 0; sourcePlaceIndex < sourcePlaces.length; sourcePlaceIndex++) {
 			Place   sourcePlace        = sourcePlaces[sourcePlaceIndex];
 			boolean hasSupportingPlace = false;
@@ -1604,9 +1620,9 @@ public final class VF2 {
 			for (int targetPlaceIndex = 0; targetPlaceIndex < targetPlaces.length; targetPlaceIndex++) {
 				if (isSemanticEqual(sourcePlace, targetPlaces[targetPlaceIndex], isStrictMatch, isArcRestricted)) {
 					hasSupportingPlace = true;
-					semanticMatrixPlace[sourcePlaceIndex][targetPlaceIndex] = true;
+					semanticMatrixPlaces[sourcePlaceIndex][targetPlaceIndex] = true;
 				} else {
-					semanticMatrixPlace[sourcePlaceIndex][targetPlaceIndex] = false;
+					semanticMatrixPlaces[sourcePlaceIndex][targetPlaceIndex] = false;
 				}
 			}
 
@@ -1623,7 +1639,7 @@ public final class VF2 {
 	 *   
 	 * @return true, if a match is semantically possible
 	 */
-	private boolean generateSemanticMatrixTransitions() {
+	private boolean genSemanticMatrixTransitions() {
 		for (int sourceTransitionIndex = 0; sourceTransitionIndex < sourceTransitions.length; sourceTransitionIndex++) {
 			Transition sourceTransition        = sourceTransitions[sourceTransitionIndex];
 			boolean    hasSupportingTransition = false;
@@ -1631,9 +1647,9 @@ public final class VF2 {
 			for (int targetTransitionIndex = 0; targetTransitionIndex < targetTransitions.length; targetTransitionIndex++) {
 				if (isSemanticEqual(sourceTransition, targetTransitions[targetTransitionIndex])) {
 					hasSupportingTransition = true;
-					semanticMatrixTransition[sourceTransitionIndex][targetTransitionIndex] = true;
+					semanticMatrixTransitions[sourceTransitionIndex][targetTransitionIndex] = true;
 				} else {
-					semanticMatrixTransition[sourceTransitionIndex][targetTransitionIndex] = false;
+					semanticMatrixTransitions[sourceTransitionIndex][targetTransitionIndex] = false;
 				}
 			}
 
@@ -1749,12 +1765,12 @@ public final class VF2 {
 			}
 		}
 
-		assert source.getPlaces().size()      == places.size();
-		assert source.getTransitions().size() == transitions.size();
-		assert source.getPreArcs().size()     == preArcs.size();
-		assert source.getPostArcs().size()    == postArcs.size();
+		assert SOURCE.getPlaces().size()      == places.size();
+		assert SOURCE.getTransitions().size() == transitions.size();
+		assert SOURCE.getPreArcs().size()     == preArcs.size();
+		assert SOURCE.getPostArcs().size()    == postArcs.size();
 
-		return new Match(source, target, places, transitions, preArcs, postArcs);
+		return new Match(SOURCE, TARGET, places, transitions, preArcs, postArcs);
 	}
 
 
@@ -1774,8 +1790,8 @@ public final class VF2 {
 	 * @return true, if pairs exists
 	 */
 	private boolean hasOutPlacePairs() {
-		return outSourcePlacesCount > corePlacesCount 
-			&& outTargetPlacesCount > corePlacesCount;
+		return outSourcePlacesCount > coreMatchedPlacesCount 
+			&& outTargetPlacesCount > coreMatchedPlacesCount;
 	}
 
 	/**
@@ -1788,7 +1804,7 @@ public final class VF2 {
 			return 0;
 		}
 
-		return outTargetPlacesCount - corePlacesCount;
+		return outTargetPlacesCount - coreMatchedPlacesCount;
 	}
 
 	/**
@@ -1797,8 +1813,8 @@ public final class VF2 {
 	 * @return true, if pairs exists
 	 */
 	private boolean hasOutTransitionPairs() {
-		return outSourceTransitionsCount > coreTransitionsCount 
-			&& outTargetTransitionsCount > coreTransitionsCount;
+		return outSourceTransitionsCount > coreMatchedTransitionsCount 
+			&& outTargetTransitionsCount > coreMatchedTransitionsCount;
 	}
 
 	/**
@@ -1811,7 +1827,7 @@ public final class VF2 {
 			return 0;
 		}
 
-		return outTargetTransitionsCount - coreTransitionsCount;
+		return outTargetTransitionsCount - coreMatchedTransitionsCount;
 	}
 
 	/**
@@ -1830,8 +1846,8 @@ public final class VF2 {
 	 * @return true, if pairs exists
 	 */
 	private boolean hasInPlacePairs() {
-		return inSourcePlacesCount > corePlacesCount 
-			&& inTargetPlacesCount > corePlacesCount;
+		return inSourcePlacesCount > coreMatchedPlacesCount 
+			&& inTargetPlacesCount > coreMatchedPlacesCount;
 	}
 
 	/**
@@ -1844,7 +1860,7 @@ public final class VF2 {
 			return 0;
 		}
 
-		return inTargetPlacesCount - corePlacesCount;
+		return inTargetPlacesCount - coreMatchedPlacesCount;
 	}
 
 	/**
@@ -1853,8 +1869,8 @@ public final class VF2 {
 	 * @return true, if pairs exists
 	 */
 	private boolean hasInTransitionPairs() {
-		return inSourceTransitionsCount > coreTransitionsCount 
-			&& inTargetTransitionsCount > coreTransitionsCount;
+		return inSourceTransitionsCount > coreMatchedTransitionsCount 
+			&& inTargetTransitionsCount > coreMatchedTransitionsCount;
 	}
 
 	/**
@@ -1867,7 +1883,7 @@ public final class VF2 {
 			return 0;
 		}
 
-		return inTargetTransitionsCount - coreTransitionsCount;
+		return inTargetTransitionsCount - coreMatchedTransitionsCount;
 	}
 
 	/**
@@ -1876,8 +1892,8 @@ public final class VF2 {
 	 * @return true, if pairs exists
 	 */
 	private boolean hasPlacePairs() {
-		return coreSourcePlaces.length > corePlacesCount 
-			&& coreTargetPlaces.length > corePlacesCount;
+		return coreSourcePlaces.length > coreMatchedPlacesCount 
+			&& coreTargetPlaces.length > coreMatchedPlacesCount;
 	}
 
 	/**
@@ -1890,7 +1906,7 @@ public final class VF2 {
 			return 0;
 		}
 
-		return coreTargetPlaces.length - corePlacesCount;
+		return coreTargetPlaces.length - coreMatchedPlacesCount;
 	}
 
 	/**
@@ -1899,8 +1915,8 @@ public final class VF2 {
 	 * @return true, if pairs exists
 	 */
 	private boolean hasTransitionPairs() {
-		return coreSourceTransitions.length > coreTransitionsCount 
-			&& coreTargetTransitions.length > coreTransitionsCount;
+		return coreSourceTransitions.length > coreMatchedTransitionsCount 
+			&& coreTargetTransitions.length > coreMatchedTransitionsCount;
 	}
 
 	/**
@@ -1913,7 +1929,7 @@ public final class VF2 {
 			return 0;
 		}
 
-		return coreTargetTransitions.length - coreTransitionsCount;
+		return coreTargetTransitions.length - coreMatchedTransitionsCount;
 	}
 
 
@@ -1926,7 +1942,7 @@ public final class VF2 {
 	 * 
 	 * @return index, if one exists, CORE_NULL_NODE otherwise
 	 */
-	private int getNotMatchedNodeIndex(int[] core, int[] terminalSet, int startIndex) {		
+	private int getFreeNodeIndex(int[] core, int[] terminalSet, int startIndex) {		
 		assert core.length == terminalSet.length && startIndex >= 0;
 
 		for (int index = startIndex; index < core.length; index++) {
@@ -1946,7 +1962,7 @@ public final class VF2 {
 	 * 
 	 * @return index, if one exists, CORE_NULL_NODE otherwise
 	 */
-	private int getNotMatchedNodeIndex(int[] core, int startIndex) {
+	private int getFreeNodeIndex(int[] core, int startIndex) {
 		assert startIndex >= 0;
 		
 		for (int index = startIndex; index < core.length; index++) {
@@ -1960,12 +1976,12 @@ public final class VF2 {
 
 
 	private boolean assertValidState() {
-		assert coreNodesCount == corePlacesCount + coreTransitionsCount;
+		assert coreMatchedNodesCount == coreMatchedPlacesCount + coreMatchedTransitionsCount;
 
-		assert getUnequalCount(coreSourcePlaces, CORE_NULL_NODE)      == corePlacesCount;
-		assert getUnequalCount(coreSourceTransitions, CORE_NULL_NODE) == coreTransitionsCount;
-		assert getUnequalCount(coreTargetPlaces, CORE_NULL_NODE)      == corePlacesCount;
-		assert getUnequalCount(coreTargetTransitions, CORE_NULL_NODE) == coreTransitionsCount;
+		assert getUnequalCount(coreSourcePlaces, CORE_NULL_NODE)      == coreMatchedPlacesCount;
+		assert getUnequalCount(coreSourceTransitions, CORE_NULL_NODE) == coreMatchedTransitionsCount;
+		assert getUnequalCount(coreTargetPlaces, CORE_NULL_NODE)      == coreMatchedPlacesCount;
+		assert getUnequalCount(coreTargetTransitions, CORE_NULL_NODE) == coreMatchedTransitionsCount;
 
 		assert getUnequalCount(inSourcePlaces, SET_NULL_VALUE)        == inSourcePlacesCount;
 		assert getUnequalCount(inSourceTransitions, SET_NULL_VALUE)   == inSourceTransitionsCount;
@@ -1977,22 +1993,25 @@ public final class VF2 {
 		assert getUnequalCount(outTargetPlaces, SET_NULL_VALUE)       == outTargetPlacesCount;
 		assert getUnequalCount(outTargetTransitions, SET_NULL_VALUE)  == outTargetTransitionsCount;
 
-		assert inSourcePlacesCount       >= corePlacesCount;
-		assert inSourceTransitionsCount  >= coreTransitionsCount;
-		assert outSourcePlacesCount      >= corePlacesCount;
-		assert outSourceTransitionsCount >= coreTransitionsCount;
+		assert inSourcePlacesCount       >= coreMatchedPlacesCount;
+		assert inSourceTransitionsCount  >= coreMatchedTransitionsCount;
+		assert outSourcePlacesCount      >= coreMatchedPlacesCount;
+		assert outSourceTransitionsCount >= coreMatchedTransitionsCount;
 
-		assert inTargetPlacesCount 		 >= corePlacesCount;
-		assert inTargetTransitionsCount  >= coreTransitionsCount;
-		assert outTargetPlacesCount 	 >= corePlacesCount;
-		assert outTargetTransitionsCount >= coreTransitionsCount;
+		assert inTargetPlacesCount 		 >= coreMatchedPlacesCount;
+		assert inTargetTransitionsCount  >= coreMatchedTransitionsCount;
+		assert outTargetPlacesCount 	 >= coreMatchedPlacesCount;
+		assert outTargetTransitionsCount >= coreMatchedTransitionsCount;
 
 		assert sourcePlacesIndexes.size() 	   == sourcePlaces.length;
 		assert sourceTransitionsIndexes.size() == sourceTransitions.length;
 		assert targetPlacesIndexes.size() 	   == targetPlaces.length;
 		assert targetTransitionsIndexes.size() == targetTransitions.length;
 
+		assert arcRestrictedSourcePlaces.length == sourcePlaces.length;
+
 		assert matchVisitor instanceof MatchVisitor;
+		assert isMatching == true;
 
 		for (Place place : sourcePlacesIndexes.keySet()) {
 			assert sourcePlaces[sourcePlacesIndexes.get(place)].equals(place);
@@ -2110,7 +2129,7 @@ public final class VF2 {
 		
 		RandomGenerator defaultRandom = new Well44497b(seed);
 		
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < 2000; i++) {
 			defaultRandom.nextInt();
 		}
 		
@@ -2127,17 +2146,17 @@ public final class VF2 {
 		builder.append(Arrays.toString(targetPlaces) + "\n");
 		builder.append(Arrays.toString(targetTransitions) + "\n");
 
-		if (semanticMatrixPlace != null) {
+		if (semanticMatrixPlaces != null) {
 			builder.append("Semantic Places\n");
-			for (int index = 0; index < semanticMatrixPlace.length; index++) {
-				builder.append(Arrays.toString(semanticMatrixPlace[index]) + "\n");
+			for (int index = 0; index < semanticMatrixPlaces.length; index++) {
+				builder.append(Arrays.toString(semanticMatrixPlaces[index]) + "\n");
 			}
 		}
 
-		if (semanticMatrixTransition != null) {
+		if (semanticMatrixTransitions != null) {
 			builder.append("Semantic Transitions\n");
-			for (int index = 0; index < semanticMatrixTransition.length; index++) {
-				builder.append(Arrays.toString(semanticMatrixTransition[index]) + "\n");
+			for (int index = 0; index < semanticMatrixTransitions.length; index++) {
+				builder.append(Arrays.toString(semanticMatrixTransitions[index]) + "\n");
 			}
 		}
 
@@ -2157,13 +2176,13 @@ public final class VF2 {
 		}
 	}
 
-	private final class AcceptFirstMatchVisitor implements MatchVisitor {
+	private final class AcceptFirst implements MatchVisitor {
 		public boolean visit(Match match) {
 			return true;
 		}
 	}
 	
-	private enum NEXT_CANDIDATE_SET {
+	private enum CandidateSet {
 		TERMINAL_OUT, TERMINAL_IN, NEW;
 	}
 }

@@ -16,7 +16,7 @@ import petrinet.model.Petrinet;
 import petrinet.model.Place;
 import petrinet.model.PreArc;
 import transformation.matcher.*;
-import transformation.matcher.VF2.MatchException;
+import transformation.matcher.PNVF2.MatchException;
 import data.MorphismData;
 
 /**
@@ -46,7 +46,7 @@ public class MorphismPlacesTest {
 		Place targetPlace;
 		// try 100 morphism and count them
 		for (int i = 0; i < morphismCount; i++) {
-			Match match = VF2.getInstance(placesFromNet, placesToNet).getMatch(false); 
+			Match match = PNVF2.getInstance(placesFromNet, placesToNet).getMatch(false); 
 					//Ullmann.createMatch(placesFromNet, placesToNet);
 			targetPlace = match.getPlace(fromPlace);
 
@@ -107,7 +107,7 @@ public class MorphismPlacesTest {
 		//Match  match  = Ullmann.createMatch(placesFromNet, placesToNet);
 		Match match;
 		try {
-			match = VF2.getInstance(placesFromNet, placesToNet).getMatch(false);
+			match = PNVF2.getInstance(placesFromNet, placesToNet).getMatch(false);
 			match.getPreArc(placesFromNet.getPreArcs().iterator().next());
 			match.getPreArcs();
 			match.getPostArc(placesFromNet.getPostArcs().iterator().next());

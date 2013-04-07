@@ -44,7 +44,7 @@ public class MorphismTransitionsTest {
 		// try 100 morphism and count them
 		for (int i = 0; i < 20; i++) {
 			//Match match = Ullmann.createMatch(transitionFromNet, transitionToNet);
-			Match match = VF2.getInstance(transitionFromNet, transitionToNet).getMatch(false);
+			Match match = PNVF2.getInstance(transitionFromNet, transitionToNet).getMatch(false);
 			
 			targetTransition = match.getTransition(fromTransition);
 

@@ -10,7 +10,7 @@ import petrinet.model.PostArc;
 import petrinet.model.PreArc;
 import petrinet.model.Transition;
 import transformation.matcher.*;
-import transformation.matcher.VF2.MatchException;
+import transformation.matcher.PNVF2.MatchException;
 import exceptions.EngineException;
 
 /**
@@ -18,7 +18,7 @@ import exceptions.EngineException;
  * The Transformation applies a rule on an petrinet under a certain match
  */
 public class Transformation {
-	protected final static class CheckContactConditionFulfilledMatchVisitor implements VF2.MatchVisitor {		
+	protected final static class CheckContactConditionFulfilledMatchVisitor implements PNVF2.MatchVisitor {		
 		private Petrinet petrinet;
 		private Rule     rule;
 				
@@ -96,7 +96,7 @@ public class Transformation {
 		//Match match = Ullmann.createMatch(rule.getL(), petrinet);
 		
 		try {
-			Match match = VF2.getInstance(rule.getL(), petrinet).getMatch(false, rule.getPlacesToDelete());
+			Match match = PNVF2.getInstance(rule.getL(), petrinet).getMatch(false, rule.getPlacesToDelete());
 			return new Transformation(petrinet, match, rule);			
 		} catch (MatchException e) {
 			return null;

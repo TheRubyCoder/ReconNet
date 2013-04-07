@@ -17,8 +17,8 @@
  * It is used in the {@link transformation.Transformation Transformation} to
  * actually apply a rule to a petrinet. The modified Ullmann algorithm is 
  * extracted into the utility class
- * {@link transformation.matcher.Ullmann ullmann} and the modified VF2 into
- * {@link transformation.matcher.VF2 vf2} 
+ * {@link transformation.matcher.Ullmann ullmann} and the PNVF2 into
+ * {@link transformation.matcher.PNVF2 pnvf2} 
  * </p>
  */
 package transformation;

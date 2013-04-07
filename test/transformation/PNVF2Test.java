@@ -32,15 +32,16 @@ import petrinet.model.PostArc;
 import petrinet.model.PreArc;
 import petrinet.model.Renews;
 import petrinet.model.Transition;
-import transformation.matcher.VF2;
-import transformation.matcher.VF2.*;
+import transformation.matcher.PNVF2;
+import transformation.matcher.PNVF2.MatchException;
+import transformation.matcher.PNVF2.*;
 
 /**
  * Testing the morphism of places like specified in
  * "../additional/images/Isomorphism_transitions.png"
  */
 
-public class VF2Test {
+public class PNVF2Test {
 	class NoTwiceMatchesMatchVisitor implements MatchVisitor {
 		private Set<Match> matches = new HashSet<Match>();
 		private int matchesCount = 0;
@@ -63,7 +64,7 @@ public class VF2Test {
 			return matches;
 		}
 	}
-	
+
 	class MatchesCountsMatchVisitor implements MatchVisitor {
 		private Map<Match, Integer> matchesCounts = new HashMap<Match, Integer>();
 		
@@ -82,6 +83,27 @@ public class VF2Test {
 		public Map<Match, Integer> getMatchesCounts() {
 			return matchesCounts;
 		}
+	}
+
+	class CheckParallelCallExceptionMatchVisitor implements MatchVisitor {
+		private PNVF2 pnvf2;
+		
+		public CheckParallelCallExceptionMatchVisitor(PNVF2 pnvf2) {
+			this.pnvf2 = pnvf2;
+		}
+		
+		public boolean visit(Match match) {
+			try {
+				pnvf2.getMatch(false);
+				fail();
+			} catch (IllegalArgumentException e) {
+				// expected
+			} catch (MatchException e) {
+				fail();
+			}
+			
+			return true;
+		}	
 	}
 	
 	Petrinet source;
@@ -476,7 +498,7 @@ public class VF2Test {
 		}
 
 		for (int i = 0; i < rounds; i++) {	
-			VF2 matcher = VF2.getInstance(source, target, random);	
+			PNVF2 matcher = PNVF2.getInstance(source, target, random);	
 			
 			try {
 				assertNotNull(matcher.getMatch(false, visitor));
@@ -930,6 +952,33 @@ public class VF2Test {
 		testMatch(true);
 	}
 	
+	@Test
+	public void testParallelCall() {		
+		source.addPlace("");
+		target.addPlace("");
+		target.addPlace("");
+		testMatch(false);
+		testMatch(true);
+		
+		PNVF2 pnvf2 = PNVF2.getInstance(source, target);
+		Match match = null;
+		
+		try {
+			match = pnvf2.getMatch(false, new CheckParallelCallExceptionMatchVisitor(pnvf2));
+			pnvf2.getMatch(true, new CheckParallelCallExceptionMatchVisitor(pnvf2));
+		} catch (MatchException e) {
+			fail();
+		}
+
+		try {
+			pnvf2.getMatch(false, match, new CheckParallelCallExceptionMatchVisitor(pnvf2));
+			pnvf2.getMatch(true, match, new CheckParallelCallExceptionMatchVisitor(pnvf2));
+		} catch (MatchException e) {
+			fail();
+		}
+	}
+	
+	
 
 
 	@Test
@@ -1099,34 +1148,34 @@ public class VF2Test {
 	@Test 
 	public void testGetInstanceException() {
 		try {
-			VF2.getInstance(null, target);
+			PNVF2.getInstance(null, target);
 			fail();
 		} catch (IllegalArgumentException e) {}
 
 		try {
-			VF2.getInstance(source, null);
+			PNVF2.getInstance(source, null);
 			fail();
 		} catch (IllegalArgumentException e) {}
 
 		try {
-			VF2.getInstance(null, target, new JDKRandomGenerator());
+			PNVF2.getInstance(null, target, new JDKRandomGenerator());
 			fail();
 		} catch (IllegalArgumentException e) {}
 
 		try {
-			VF2.getInstance(source, null, new JDKRandomGenerator());
+			PNVF2.getInstance(source, null, new JDKRandomGenerator());
 			fail();
 		} catch (IllegalArgumentException e) {}
 
 		try {
-			VF2.getInstance(source, target, null);
+			PNVF2.getInstance(source, target, null);
 			fail();
 		} catch (IllegalArgumentException e) {}
 	}
 	
 	@Test
 	public void testGetMatchExceptions() {
-		VF2 matcher = VF2.getInstance(source, target);	
+		PNVF2 matcher = PNVF2.getInstance(source, target);	
 		Match match = new Match(source, target, new HashMap<Place, Place>(),
 				new HashMap<Transition, Transition>(),
 				new HashMap<PreArc, PreArc>(), new HashMap<PostArc, PostArc>());
@@ -1249,7 +1298,7 @@ public class VF2Test {
 
 	private Match testMatch(Petrinet source, Petrinet target, boolean isStrictMatch, Set<Place> arcRestrictedPlaces) {	
 		try {
-			Match match = VF2.getInstance(source, target).getMatch(isStrictMatch, arcRestrictedPlaces);
+			Match match = PNVF2.getInstance(source, target).getMatch(isStrictMatch, arcRestrictedPlaces);
 			
 			assertNotNull(match);
 			
@@ -1261,7 +1310,7 @@ public class VF2Test {
 				source.getPostArcs().size()
 			);
 
-			assertEquals(match, VF2.getInstance(source, target).getMatch(isStrictMatch, match, arcRestrictedPlaces));
+			assertEquals(match, PNVF2.getInstance(source, target).getMatch(isStrictMatch, match, arcRestrictedPlaces));
 			
 			
 			return match;
@@ -1273,7 +1322,7 @@ public class VF2Test {
 
 	private Match testMatch(Petrinet source, Petrinet target, boolean isStrictMatch) {
 		try {
-			Match match = VF2.getInstance(source, target).getMatch(isStrictMatch);
+			Match match = PNVF2.getInstance(source, target).getMatch(isStrictMatch);
 			
 			assertNotNull(match);
 			
@@ -1285,7 +1334,7 @@ public class VF2Test {
 				source.getPostArcs().size()
 			);
 
-			assertEquals(match, VF2.getInstance(source, target).getMatch(isStrictMatch, match));
+			assertEquals(match, PNVF2.getInstance(source, target).getMatch(isStrictMatch, match));
 			
 			
 			return match;
@@ -1301,14 +1350,14 @@ public class VF2Test {
 
 	private void testNoMatch(Petrinet source, Petrinet target, boolean isStrictMatch, Set<Place> arcRestrictedPlaces) {
 		try {
-			VF2.getInstance(source, target).getMatch(isStrictMatch, arcRestrictedPlaces);			
+			PNVF2.getInstance(source, target).getMatch(isStrictMatch, arcRestrictedPlaces);			
 			fail();
 		} catch (MatchException e) {}			
 	}
 
 	private void testNoMatch(Petrinet source, Petrinet target, boolean isStrictMatch) {
 		try {
-			VF2.getInstance(source, target).getMatch(isStrictMatch);			
+			PNVF2.getInstance(source, target).getMatch(isStrictMatch);			
 			fail();
 		} catch (MatchException e) {}			
 	}
@@ -1386,7 +1435,7 @@ public class VF2Test {
 	}
 
 	private Set<Match> testUniqueMatchCount(Petrinet source, Petrinet target, boolean isStrictMatch, Set<Place> arcRestrictedPlaces, int count) {
-		VF2 vf2 = VF2.getInstance(source, target);
+		PNVF2 vf2 = PNVF2.getInstance(source, target);
 
 		NoTwiceMatchesMatchVisitor visitor = new NoTwiceMatchesMatchVisitor();		
 		
@@ -1402,7 +1451,7 @@ public class VF2Test {
 	}
 
 	private Set<Match>  testUniqueMatchCount(Petrinet source, Petrinet target, boolean isStrictMatch, int count) {
-		VF2 vf2 = VF2.getInstance(source, target);
+		PNVF2 vf2 = PNVF2.getInstance(source, target);
 
 		NoTwiceMatchesMatchVisitor visitor = new NoTwiceMatchesMatchVisitor();		
 		
@@ -1418,7 +1467,7 @@ public class VF2Test {
 	}
 
 	private Set<Match>  testUniqueMatch(Petrinet source, Petrinet target, boolean isStrictMatch) {
-		VF2 vf2 = VF2.getInstance(source, target);
+		PNVF2 vf2 = PNVF2.getInstance(source, target);
 
 		NoTwiceMatchesMatchVisitor visitor = new NoTwiceMatchesMatchVisitor();		
 		
