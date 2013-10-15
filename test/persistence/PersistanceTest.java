@@ -29,12 +29,14 @@ import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import petrinet.model.IArc;
 import petrinet.model.INode;
 import petrinet.model.Petrinet;
+import util.StringUtilities;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.EngineMockupForPersistence;
 import engine.handler.RuleNet;
@@ -45,6 +47,16 @@ import exceptions.EngineException;
 import gui.Style;
 
 public class PersistanceTest {
+	
+	private String pathString;
+	
+    @Before
+
+    public void setup(){
+
+    File directory = new File (".");
+    pathString = StringUtilities.substringBeforeLast(directory.getAbsolutePath(), ".");
+    }
 
 	@Test
 	public void testExamplePNMLParsing() {
@@ -62,7 +74,7 @@ public class PersistanceTest {
 			m.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
 
 			pnml = (Pnml) m
-					.unmarshal(new File("test/persistence/example.pnml"));
+					.unmarshal(new File(pathString + "test/persistence/example.pnml"));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -115,7 +127,7 @@ public class PersistanceTest {
 	public void testLoadRule() {
 		IRulePersistence rulePersistence = RulePersistence.getInstance();
 
-		int id = Persistence.loadRule("test/persistence/testRule.PNML",
+		int id = Persistence.loadRule(pathString + "test/persistence/testRule.PNML",
 				rulePersistence);
 
 		assert (id > -1);
@@ -151,13 +163,13 @@ public class PersistanceTest {
 		handler.createPreArc(id, RuleNet.R, place1, trans2);
 		handler.createPostArc(id, RuleNet.R, trans2, place3);
 
-		handlerSave.save(id, "test", "rule_save_test", "pnml");
+		handlerSave.save(id,pathString +  "test", "rule_save_test", "pnml");
 
 		/*
 		 * } catch (EngineException e) { e.printStackTrace(); }
 		 */
 
-		assertTrue(new File("test/rule_save_test.pnml").exists());
+		assertTrue(new File(pathString + "test/rule_save_test.pnml").exists());
 	}
 
 	@Ignore

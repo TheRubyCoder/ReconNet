@@ -144,7 +144,7 @@
          ================================= -->
     <target name="junit-test" depends="instrument-java" description="run junit test">
     	<echo message="performing junit-tests"/>
-    	<junit fork="yes">
+    	<junit fork="yes" haltonerror="yes" haltonfailure="yes">
     		
     		<classpath> 
     			<path refid="wppetrinetze.classpath"/>
