@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<pnml nodeSize="50.0" type="rule" xmlns="http://www.pnml.org/version-2009/grammar/pnml">
+    <net id="202" nettype="L">
+        <page>
+            <place id="204">
+                <graphics>
+                    <color b="0" g="0" r="255"/>
+                    <position x="58.0" y="26.0"/>
+                </graphics>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <placeName>
+                    <text>undefined</text>
+                </placeName>
+            </place>
+        </page>
+    </net>
+    <net id="201" nettype="K">
+        <page>
+            <arc id="210" source="204" target="208">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>2</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <place id="204">
+                <graphics>
+                    <color b="0" g="0" r="255"/>
+                    <position x="58.0" y="26.0"/>
+                </graphics>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <placeName>
+                    <text>undefined</text>
+                </placeName>
+            </place>
+            <transition id="208">
+                <graphics>
+                    <position x="75.0" y="144.0"/>
+                </graphics>
+                <transitionLabel>
+                    <text></text>
+                </transitionLabel>
+                <transitionName>
+                    <text>undefined</text>
+                </transitionName>
+                <transitionRenew>
+                    <text>id</text>
+                </transitionRenew>
+            </transition>
+        </page>
+    </net>
+    <net id="203" nettype="R">
+        <page>
+            <arc id="210" source="204" target="208">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>2</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <place id="204">
+                <graphics>
+                    <color b="0" g="0" r="255"/>
+                    <position x="58.0" y="26.0"/>
+                </graphics>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <placeName>
+                    <text>undefined</text>
+                </placeName>
+            </place>
+            <transition id="208">
+                <graphics>
+                    <position x="75.0" y="144.0"/>
+                </graphics>
+                <transitionLabel>
+                    <text></text>
+                </transitionLabel>
+                <transitionName>
+                    <text>undefined</text>
+                </transitionName>
+                <transitionRenew>
+                    <text>id</text>
+                </transitionRenew>
+            </transition>
+        </page>
+    </net>
+</pnml>

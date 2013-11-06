@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<pnml nodeSize="50.0" type="rule" xmlns="http://www.pnml.org/version-2009/grammar/pnml">
+    <net id="145" nettype="L">
+        <page>
+            <place id="147">
+                <graphics>
+                    <color b="0" g="0" r="255"/>
+                    <position x="61.0" y="25.0"/>
+                </graphics>
+                <initialMarking>
+                    <text>1</text>
+                </initialMarking>
+                <placeName>
+                    <text>defined</text>
+                </placeName>
+            </place>
+        </page>
+    </net>
+    <net id="144" nettype="K">
+        <page>
+            <arc id="156" source="147" target="154">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>1</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="240" source="154" target="147">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>1</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <place id="147">
+                <graphics>
+                    <color b="0" g="0" r="255"/>
+                    <position x="61.0" y="25.0"/>
+                </graphics>
+                <initialMarking>
+                    <text>1</text>
+                </initialMarking>
+                <placeName>
+                    <text>defined</text>
+                </placeName>
+            </place>
+            <transition id="154">
+                <graphics>
+                    <position x="123.0" y="83.0"/>
+                </graphics>
+                <transitionLabel>
+                    <text></text>
+                </transitionLabel>
+                <transitionName>
+                    <text>undefined</text>
+                </transitionName>
+                <transitionRenew>
+                    <text>id</text>
+                </transitionRenew>
+            </transition>
+        </page>
+    </net>
+    <net id="146" nettype="R">
+        <page>
+            <arc id="156" source="147" target="154">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>1</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="240" source="154" target="147">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>1</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <place id="147">
+                <graphics>
+                    <color b="0" g="0" r="255"/>
+                    <position x="61.0" y="25.0"/>
+                </graphics>
+                <initialMarking>
+                    <text>1</text>
+                </initialMarking>
+                <placeName>
+                    <text>defined</text>
+                </placeName>
+            </place>
+            <transition id="154">
+                <graphics>
+                    <position x="123.0" y="83.0"/>
+                </graphics>
+                <transitionLabel>
+                    <text></text>
+                </transitionLabel>
+                <transitionName>
+                    <text>undefined</text>
+                </transitionName>
+                <transitionRenew>
+                    <text>id</text>
+                </transitionRenew>
+            </transition>
+        </page>
+    </net>
+</pnml>

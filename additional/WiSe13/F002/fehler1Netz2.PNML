@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<pnml nodeSize="50.0" type="petrinet" xmlns="http://www.pnml.org/version-2009/grammar/pnml">
+    <net id="127">
+        <page>
+            <arc id="140" source="133" target="131">
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>1</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="139" source="134" target="133">
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>1</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="138" source="129" target="134">
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>1</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="137" source="130" target="129">
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>1</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="143" source="135" target="128">
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>1</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="142" source="132" target="135">
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>1</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="141" source="131" target="132">
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>1</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="136" source="128" target="130">
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>1</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <place id="128">
+                <graphics>
+                    <color b="128" g="128" r="128"/>
+                    <position x="83.0" y="29.0"/>
+                </graphics>
+                <initialMarking>
+                    <text>1</text>
+                </initialMarking>
+                <placeName>
+                    <text>undefined</text>
+                </placeName>
+            </place>
+            <place id="132">
+                <graphics>
+                    <color b="128" g="128" r="128"/>
+                    <position x="87.0" y="174.0"/>
+                </graphics>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <placeName>
+                    <text>undefined</text>
+                </placeName>
+            </place>
+            <place id="129">
+                <graphics>
+                    <color b="128" g="128" r="128"/>
+                    <position x="389.0" y="37.0"/>
+                </graphics>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <placeName>
+                    <text>undefined</text>
+                </placeName>
+            </place>
+            <place id="133">
+                <graphics>
+                    <color b="128" g="128" r="128"/>
+                    <position x="393.0" y="187.0"/>
+                </graphics>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <placeName>
+                    <text>defined</text>
+                </placeName>
+            </place>
+            <transition id="131">
+                <graphics>
+                    <position x="217.0" y="177.0"/>
+                </graphics>
+                <transitionLabel>
+                    <text></text>
+                </transitionLabel>
+                <transitionName>
+                    <text>undefined</text>
+                </transitionName>
+                <transitionRenew>
+                    <text>id</text>
+                </transitionRenew>
+            </transition>
+            <transition id="130">
+                <graphics>
+                    <position x="229.0" y="23.0"/>
+                </graphics>
+                <transitionLabel>
+                    <text></text>
+                </transitionLabel>
+                <transitionName>
+                    <text>undefined</text>
+                </transitionName>
+                <transitionRenew>
+                    <text>id</text>
+                </transitionRenew>
+            </transition>
+            <transition id="135">
+                <graphics>
+                    <position x="76.0" y="81.0"/>
+                </graphics>
+                <transitionLabel>
+                    <text></text>
+                </transitionLabel>
+                <transitionName>
+                    <text>undefined</text>
+                </transitionName>
+                <transitionRenew>
+                    <text>id</text>
+                </transitionRenew>
+            </transition>
+            <transition id="134">
+                <graphics>
+                    <position x="388.0" y="105.0"/>
+                </graphics>
+                <transitionLabel>
+                    <text></text>
+                </transitionLabel>
+                <transitionName>
+                    <text>undefined</text>
+                </transitionName>
+                <transitionRenew>
+                    <text>id</text>
+                </transitionRenew>
+            </transition>
+        </page>
+    </net>
+</pnml>
