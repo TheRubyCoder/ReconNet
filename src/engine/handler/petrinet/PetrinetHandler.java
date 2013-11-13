@@ -407,6 +407,19 @@ final public class PetrinetHandler {
 		// set new marking
 		place.setMark(marking);
 	}
+	
+	/**
+	 * {@link IPetrinetManipulation#setCapacity(int, INode, int)}
+	 */
+	public void setCapacity(@NotNull int id, @NotNull Place place,
+			@NotNull int capacity) throws EngineException {
+		
+		checkIsPlace(place);
+		getPetrinetData(id);
+
+		// set new capacity
+		place.setCapacity(capacity);
+	}
 
 	/**
 	 * {@link IPetrinetManipulation#setPname(int, INode, String)}

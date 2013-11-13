@@ -24,6 +24,8 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sun.istack.NotNull;
+
 import petrinet.model.IArc;
 import petrinet.model.INode;
 import petrinet.model.IRenew;
@@ -296,6 +298,13 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 	@Override
 	public double getNodeSize(int id) throws NullPointerException {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setCapacity(@NotNull int id, @NotNull INode place,
+			@NotNull int capacity) throws EngineException {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

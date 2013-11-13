@@ -290,6 +290,58 @@ public class Rule {
 		}
 	}
 	
+	/**
+	 * Sets the capacity for the place and its mappings, that is only in L and K
+	 * 
+	 * @param place
+	 * @param capacity
+	 */
+	public void setCapacityInL(Place place, int capacity) {
+		place.setCapacity(capacity);
+		fromLtoK(place).setCapacity(capacity);
+
+		Place rightPlace = fromLtoR(place);
+		
+		if (rightPlace != null) {
+			rightPlace.setCapacity(capacity);
+		}
+	}
+
+	/**
+	 * Sets the capacity for the place and its mappings, thats only in K and R
+	 * 
+	 * @param place
+	 * @param capacity
+	 */
+	public void setCapacityInK(Place place, int capacity) {
+		if (fromKtoL(place) != null) {
+			fromKtoL(place).setCapacity(capacity);
+		}
+		
+		place.setCapacity(capacity);		
+		
+		if (fromKtoR(place) != null) {
+			fromKtoR(place).setCapacity(capacity);
+		}
+	}
+
+	/**
+	 * Sets the capacity for the place and its mappings, thats in L, K and R
+	 * 
+	 * @param place
+	 * @param capacity
+	 */
+	public void setCapacityInR(Place place, int capacity) {
+		fromRtoK(place).setCapacity(capacity);
+		place.setCapacity(capacity);
+
+		Place leftPlace = fromRtoL(place);
+		
+		if (leftPlace != null) {
+			leftPlace.setCapacity(capacity);
+		}
+	}
+	
 
 	/**
 	 * Sets the name of a place in a rule and modifies other parts of the rule accordingly
