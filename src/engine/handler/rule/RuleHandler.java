@@ -597,7 +597,7 @@ final public class RuleHandler {
 		return new PlaceAttribute(
 			place.getMark(), 
 			place.getName(),
-			color
+			color, place.getCapacity()
 		);
 	}
 

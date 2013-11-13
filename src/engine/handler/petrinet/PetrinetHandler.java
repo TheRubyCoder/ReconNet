@@ -309,7 +309,8 @@ final public class PetrinetHandler {
 		return new PlaceAttribute(
 			place.getMark(), 
 			place.getName(), 
-			jungData.getPlaceColor(place)
+			jungData.getPlaceColor(place),
+			place.getCapacity()
 		);
 	}
 

@@ -119,8 +119,9 @@ public class AttributePane {
 						.getPlaceAttribute((Place) node);
 				String name = placeAttribute.getPname();
 				String mark = String.valueOf(placeAttribute.getMarking());
+				String capacity = String.valueOf(placeAttribute.getCapacity());
 
-				tableModel = new PlaceTableModel(id, name, mark);
+				tableModel = new PlaceTableModel(id, name, mark, capacity);
 			} else {
 				// display edge
 				TransitionAttribute transitionAttribute = petrinetViewer
@@ -262,13 +263,14 @@ public class AttributePane {
 		 * The General Data for the Placetable
 		 */
 		private String[][] data = { { "Id", "" }, { "Name", "" },
-				{ "Markierung", "" } };
+				{ "Markierung", "" }, { "Kapazität", "" } };
 
 		/** Initiates the table with actual data for id, name, and mark */
-		public PlaceTableModel(String id, String name, String mark) {
+		public PlaceTableModel(String id, String name, String mark, String capacity) {
 			data[0][1] = id;
 			data[1][1] = name;
 			data[2][1] = mark;
+			data[3][1] = capacity;
 		}
 
 		/** Returns all data (whole table except the head) */
