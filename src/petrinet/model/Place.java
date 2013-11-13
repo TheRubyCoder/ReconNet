@@ -225,7 +225,7 @@ public class Place implements INode {
 	 */
 	@Override
 	public String toString() {
-		return "Place [name=" + name + ", mark=" + mark + ", id=" + id + "]";
+		return "Place [name=" + name + ", capacity=" + capacity + ", mark=" + mark + ", id=" + id + "]";
 	}
 
 	/*
