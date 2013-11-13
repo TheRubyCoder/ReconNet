@@ -1369,7 +1369,13 @@ public class PetrinetViewer extends VisualizationViewer<INode, IArc> {
 				decorator.setPaint(FONT_COLOR_DARK);
 				decorator.drawString(placeAttribute.getPname(),
 						(int) (x + width), (int) (y + height));
-
+				
+				// write capacity
+				if(placeAttribute.getCapacity() < Integer.MAX_VALUE){
+					decorator.drawString("K=" + String.valueOf(placeAttribute.getCapacity()),
+							(int) (x + decorator.getFont().getSize() ) , (int) (y + height + decorator.getFont().getSize()));
+				}
+				
 				// display marking
 				int marking = placeAttribute.getMarking();
 				if (marking == 0) {

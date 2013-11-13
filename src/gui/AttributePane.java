@@ -495,8 +495,10 @@ public class AttributePane {
 						}
 					} else if (attribute.equals("Kapazität")) {
 						try {
-							if(data.length()==0){
+							if(data.length()==0){ //wenn Eingabefeld leer
+								//Kapazität auf Max Value setzen
 								petrinetViewer.setCapacity(place, Integer.MAX_VALUE);
+								//Anzeige sofort aktualisieren, damit "unbegrenzt" reingeschrieben wird
 								AttributePane.getInstance().displayNode(place, petrinetViewer);
 							}else{
 								int capacity = Integer.parseInt(data);
