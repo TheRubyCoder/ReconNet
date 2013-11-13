@@ -718,6 +718,30 @@ public class PetrinetViewer extends VisualizationViewer<INode, IArc> {
 		}
 
 	}
+	
+	/**
+	 * Sets the <code>capacity</code>of a <code>place</code> no matter if its
+	 * part a rule or a regular petrinet
+	 * 
+	 * @param place
+	 * @param capacity
+	 */
+	public void setCapacity(Place place, int capacity) {
+		try {
+			if (isN()) {
+				EngineAdapter.getPetrinetManipulation().setCapacity(
+						getCurrentId(), place, capacity);
+			} else {
+				EngineAdapter.getRuleManipulation().setCapacity(getCurrentId(),
+						place, capacity);
+			}
+			smartRepaint();
+		} catch (EngineException e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
+
+	}
 
 	/**
 	 * Sets the <code>name</code> of a <code>transition</code> no matter if its

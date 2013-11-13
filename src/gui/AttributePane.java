@@ -119,7 +119,9 @@ public class AttributePane {
 						.getPlaceAttribute((Place) node);
 				String name = placeAttribute.getPname();
 				String mark = String.valueOf(placeAttribute.getMarking());
-				String capacity = String.valueOf(placeAttribute.getCapacity());
+				String capacity = placeAttribute.getCapacity() == 
+						Integer.MAX_VALUE?"unbegrenzt"
+						:String.valueOf(placeAttribute.getCapacity());
 
 				tableModel = new PlaceTableModel(id, name, mark, capacity);
 			} else {
@@ -490,6 +492,19 @@ public class AttributePane {
 							petrinetViewer.setMarking(place, marking);
 						} catch (NumberFormatException nfe) {
 							PopUp.popError("Die Markierung muss eine natürliche Zahl sein.");
+						}
+					} else if (attribute.equals("Kapazität")) {
+						try {
+							if(data.length()==0){
+								petrinetViewer.setCapacity(place, Integer.MAX_VALUE);
+								AttributePane.getInstance().displayNode(place, petrinetViewer);
+							}else{
+								int capacity = Integer.parseInt(data);
+								petrinetViewer.setCapacity(place, capacity);
+							}
+							
+						} catch (NumberFormatException nfe) {
+							PopUp.popError("Die Kapazität muss eine natürliche Zahl sein.");
 						}
 					}
 
