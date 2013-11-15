@@ -265,6 +265,11 @@ public class Converter {
 		InitialMarking initm = new InitialMarking();
 		initm.setText(String.valueOf(place.getMark()));
 		newPlace.setInitialMarking(initm);
+		
+		// Capacity
+		InitialCapacity initc = new InitialCapacity();
+		initc.setText(String.valueOf(place.getCapacity()));
+		newPlace.setInitialCapacity(initc);
 
 		// Graphics
 		Graphics graphics = new Graphics();
@@ -351,6 +356,9 @@ public class Converter {
 				
 				handler.setMarking(petrinetID, realPlace,
 						Integer.parseInt(place.getInitialMarking().getText()));
+				
+				handler.setCapacity(petrinetID, realPlace,
+						Integer.parseInt(place.getInitialCapacity().getText()));
 
 				placesAndTransis.put(place.getId(), realPlace);
 			}
@@ -644,6 +652,8 @@ public class Converter {
 			handler.setPname(id, createdPlace, place.getPlaceName().getText());
 			handler.setMarking(id, createdPlace,
 					Integer.valueOf(place.getInitialMarking().getText()));
+			handler.setCapacity(id, createdPlace,
+					Integer.valueOf(place.getInitialCapacity().getText()));
 			if (toAddto == RuleNet.L) {
 				idToINodeInL.put(place.id, createdPlace);
 			} else if (toAddto == RuleNet.K) {
@@ -872,6 +882,12 @@ public class Converter {
 				initM.setText(String.valueOf(place.getMark()));
 
 				newPlace.setInitialMarking(initM);
+				
+				// Capacity
+				InitialCapacity initC = new InitialCapacity();
+				initC.setText(String.valueOf(place.getCapacity()));
+
+				newPlace.setInitialCapacity(initC);
 
 				// Add to List
 				listPlace.add(newPlace);

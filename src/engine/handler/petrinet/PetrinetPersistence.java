@@ -105,6 +105,13 @@ public class PetrinetPersistence implements IPetrinetPersistence {
 
 		petrinetManipulationBackend.setMarking(id, place, marking);
 	}
+	
+	@Override
+	public void setCapacity(int id, Place place, int capacity)
+			throws EngineException {
+
+		petrinetManipulationBackend.setCapacity(id, place, capacity);
+	}
 
 	@Override
 	public void setPname(int id, Place place, String pname)

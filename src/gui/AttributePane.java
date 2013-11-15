@@ -506,6 +506,8 @@ public class AttributePane {
 							}
 							
 						} catch (NumberFormatException nfe) {
+							//Anzeige sofort aktualisieren, falls ungültiges reingeschrieben wurde
+							AttributePane.getInstance().displayNode(place, petrinetViewer);
 							PopUp.popError("Die Kapazität muss eine natürliche Zahl sein.");
 						}
 					}
