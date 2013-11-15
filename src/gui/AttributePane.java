@@ -489,8 +489,14 @@ public class AttributePane {
 					} else if (attribute.equals("Markierung")) {
 						try {
 							int marking = Integer.parseInt(data);
-							petrinetViewer.setMarking(place, marking);
+							if(marking > place.getCapacity()){
+								AttributePane.getInstance().displayNode(place, petrinetViewer);
+								PopUp.popError("Die Markierung darf die Kapazität nicht übersteigen.");
+							} else{
+								petrinetViewer.setMarking(place, marking);
+							}
 						} catch (NumberFormatException nfe) {
+							AttributePane.getInstance().displayNode(place, petrinetViewer);
 							PopUp.popError("Die Markierung muss eine natürliche Zahl sein.");
 						}
 					} else if (attribute.equals("Kapazität")) {

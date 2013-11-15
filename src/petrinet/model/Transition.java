@@ -275,14 +275,20 @@ public class Transition implements INode {
 	}
 
 	/**
-	 * Checks whether this {@link Transition} is active. Only incoming arcs are
-	 * checked
+	 * Checks whether this {@link Transition} is active.
+	 * Incoming arcs must have places with enough marks to pay.
+	 * Outgoing arcs must have places with a capacity thats big enough.
 	 * 
 	 * @return
 	 */
 	public boolean isActivated() {
 		for (PreArc arc : incomingArcs.values()) {
 			if (arc.getPlace().getMark() < arc.getWeight()) {
+				return false;
+			}
+		}
+		for (PostArc arc : outgoingArcs.values()) {
+			if (arc.getPlace().getCapacity() < (arc.getWeight() + arc.getPlace().getMark())) {
 				return false;
 			}
 		}
