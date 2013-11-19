@@ -508,7 +508,12 @@ public class AttributePane {
 								AttributePane.getInstance().displayNode(place, petrinetViewer);
 							}else{
 								int capacity = Integer.parseInt(data);
-								petrinetViewer.setCapacity(place, capacity);
+								if(capacity < place.getMark()){
+									AttributePane.getInstance().displayNode(place, petrinetViewer);
+									PopUp.popError("Die Kapazität darf die Markierung nicht unterschreiten.");
+								} else{
+									petrinetViewer.setCapacity(place, capacity);
+								}
 							}
 							
 						} catch (NumberFormatException nfe) {

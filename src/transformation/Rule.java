@@ -552,13 +552,6 @@ public class Rule {
 		}
 	}
 	
-	
-	
-	
-
-	
-
-
 	/**
 	 * Sets the weight of a preArc in a rule and modifies other parts of the rule accordingly
 	 * 
@@ -666,26 +659,7 @@ public class Rule {
 			leftPostArc.setWeight(weight);
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+		
 	public Place addPlaceToL(String name) {
 		Place leftPlace = getL().addPlace(name);
 		
@@ -710,8 +684,6 @@ public class Rule {
 		
 		return rightPlace;
 	}
-	
-
 	
 	public Transition addTransitionToL(String name) {
 		Transition leftTransition = getL().addTransition(name);
@@ -796,7 +768,6 @@ public class Rule {
 		return rightPreArc;
 	}
 	
-
 	public PostArc addPostArcToL(String name, Transition transition, Place place) {
 		PostArc leftPostArc = getL().addPostArc(name, transition, place);
 		
@@ -832,9 +803,7 @@ public class Rule {
 		
 		return rightPostArc;
 	}
-	
-	
-	
+		
 	public void removePlaceFromL(Place place) {		
 		removePlaceFromK(fromLtoK(place));	
 	}
@@ -881,7 +850,6 @@ public class Rule {
 		removeTransitionFromK(fromRtoK(transition));
 	}
 	
-
 	public void removePreArcFromL(PreArc preArc) {
 		removePreArcFromK(fromLtoK(preArc));
 	}
@@ -969,8 +937,6 @@ public class Rule {
 		return transitionMappingKToL.get(transition);
 	}
 	
-
-
 	/**
 	 * Returns the corresponding place in R.
 	 * 
@@ -1011,8 +977,6 @@ public class Rule {
 		return transitionMappingKToR.get(transition);
 	}
 
-
-
 	/**
 	 * Returns the corresponding place in K.
 	 * 
@@ -1052,8 +1016,6 @@ public class Rule {
 	public Transition fromLtoK(Transition transition) {
 		return transitionMappingKToL.getKey(transition);
 	}
-
-
 
 	/**
 	 * Returns the corresponding place in R.
