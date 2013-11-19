@@ -19,7 +19,9 @@ import engine.session.SessionManager;
 import exceptions.EngineException;
 
 public class SimulationHandlerTest {
-
+/**
+ * Fehler:Simulation bricht ab, wenn keine Regel anwendbar ist, obwohl mindestens eine Transition aktiviert ist
+ */
 	@Test
 	public void fireOrTransformTest() {
 		try {
