@@ -40,6 +40,7 @@ import edu.uci.ics.jung.graph.DirectedGraph;
 import engine.Positioning;
 import engine.attribute.NodeLayoutAttribute;
 import engine.ihandler.IPetrinetManipulation;
+import exceptions.Exceptions;
 import gui.Style;
 
 /**
@@ -454,9 +455,8 @@ final public class JungData {
 		checkINodeInvariant(node);
 		if (checkForCollisions) {
 			checkPoint2DInvariant(coordinate);
-		} else {
-			// nothing
 		}
+		
 		check(graph.containsVertex(node), "unknown node");
 
 		Set<INode> excludes = new HashSet<INode>();
@@ -464,8 +464,6 @@ final public class JungData {
 
 		if (checkForCollisions) {
 			checkPoint2DLocation(coordinate, excludes);
-		} else {
-			// nothing
 		}
 
 		layout.setLocation(node, coordinate);
@@ -690,16 +688,15 @@ final public class JungData {
 	 */
 	private void checkPoint2DLocation(Point2D point, Collection<INode> excludes) {		
 		for (INode node : graph.getVertices()) {
-			if (excludes.contains(node)) {
-				continue;
+			if (!excludes.contains(node)) {
+				double xDistance = Math.abs(layout.getX(node) - point.getX());
+				double yDistance = Math.abs(layout.getY(node) - point.getY());
+	
+				if(!(Double.compare(xDistance, getMinDinstance()) >= 0
+						|| Double.compare(yDistance, getMinDinstance()) >= 0)) {
+					Exceptions.warning("An dieser Stelle befindet sich bereits ein Knoten!");
+				}
 			}
-
-			double xDistance = Math.abs(layout.getX(node) - point.getX());
-			double yDistance = Math.abs(layout.getY(node) - point.getY());
-
-			check(Double.compare(xDistance, getMinDinstance()) >= 0
-					|| Double.compare(yDistance, getMinDinstance()) >= 0,
-					"point is too close to a node");
 		}
 	}
 
