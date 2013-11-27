@@ -20,6 +20,7 @@ package transformation;
 
 import static transformation.dependency.PetrinetAdapter.createPetrinet;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -53,6 +54,9 @@ public class Rule {
 	private final Petrinet l;
 	/** R part of the rule */
 	private final Petrinet r;
+	
+	/** NACs that belong to the rule */
+	private Set<NAC> nacs;
 
 	private final BidiMap<Place, Place> 		  placeMappingKToL;
 	private final BidiMap<PostArc, PostArc> 	  postArcMappingKToL;
@@ -110,6 +114,16 @@ public class Rule {
 		return r;
 	}
 
+    /**
+     * Returns an unmodifiable set of NACs.<p>
+     * Only for reading purposes. NAC manipulation is available via the according Rule.
+     *
+     * @return Set of this rule's NACs.
+     */
+    public Set<NAC> getNACs() {
+            //TODO make final??
+            return Collections.unmodifiableSet(nacs);
+    }
 
 
 	/**
@@ -236,7 +250,7 @@ public class Rule {
 		return transtions;
 	}
 	
-
+	//TODO NAC setters
 
 	/**
 	 * Sets the mark for the place and its mappings, that is only in L and K
