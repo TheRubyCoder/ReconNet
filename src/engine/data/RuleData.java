@@ -146,7 +146,7 @@ final public class RuleData extends SessionDataAbstract {
 	}
 
 	/**
-	 * Moves the <tt>node</tt> to the <tt>coordinate</tt> relative to its current
+	 * Moves the <tt>node</tt> to the <tt>coordinate</tt> relativ to its current
 	 * position. Also moves all mappings in L,K,R
 	 * 
 	 * @param node
@@ -156,9 +156,9 @@ final public class RuleData extends SessionDataAbstract {
 	 */
 	public void moveNodeRelative(INode node, Point2D coordinate) {
 		
-//		if (!getKJungData().isCreatePossibleAt(coordinate)) {
-//			throw new ShowAsInfoException("Ein Knoten ist im Weg");
-//		}
+		if (!getKJungData().isCreatePossibleAt(coordinate)) {
+			throw new ShowAsInfoException("Ein Knoten ist im Weg");
+		}
 		
 		List<INode> nodeMappings = TransformationComponent.getTransformation()
 				.getMappings(getRule(), node);
@@ -168,21 +168,21 @@ final public class RuleData extends SessionDataAbstract {
 		INode nodeInR = nodeMappings.get(2);
 		
 		if (nodeInL != null) {
-			getLJungData().moveNodeWithPositionCheck(
+			getLJungData().moveNodeWithoutPositionCheck(
 					nodeInL,
 					Positioning.addPoints(getLJungData()
 							.getNodeLayoutAttributes().get(nodeInL)
 							.getCoordinate(), coordinate));
 		}
 		if (nodeInK != null) {
-			getKJungData().moveNodeWithPositionCheck(
+			getKJungData().moveNodeWithoutPositionCheck(
 					nodeInK,
 					Positioning.addPoints(getKJungData()
 							.getNodeLayoutAttributes().get(nodeInK)
 							.getCoordinate(), coordinate));
 		}
 		if (nodeInR != null) {
-			getRJungData().moveNodeWithPositionCheck(
+			getRJungData().moveNodeWithoutPositionCheck(
 					nodeInR,
 					Positioning.addPoints(getRJungData()
 							.getNodeLayoutAttributes().get(nodeInR)

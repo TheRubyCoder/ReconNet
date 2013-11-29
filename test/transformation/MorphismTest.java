@@ -192,18 +192,12 @@ public class MorphismTest {
     	from_post_a = new PostArc[2];
 
     	from_p[0] = fromPn.addPlace("Wecker Ein");
-    	from_p[0].setCapacity(5);
     	from_p[1] = fromPn.addPlace("");
-    	from_p[1].setCapacity(6);
     	from_p[2] = fromPn.addPlace("Wecker Ein");
-    	from_p[2].setCapacity(7);
     	from_p[2].setMark(1);
     	from_p[3] = fromPn.addPlace("Wecker Aus");
-    	from_p[3].setCapacity(8);
     	from_p[4] = fromPn.addPlace("");
-    	from_p[4].setCapacity(9);
     	from_p[5] = fromPn.addPlace("Wecker Aus");
-    	from_p[5].setCapacity(10);
     	
     	from_t[0] = fromPn.addTransition("");
     	from_t[1] = fromPn.addTransition("");
@@ -225,20 +219,14 @@ public class MorphismTest {
     	to_post_a = new PostArc[9];
     	
     	to_p[0] = toPn.addPlace("Wecker Ein");
-    	to_p[0].setCapacity(5);
     	to_p[1] = toPn.addPlace("Aufstehen");
     	to_p[1].setMark(1);
     	to_p[2] = toPn.addPlace("");
-    	to_p[2].setCapacity(6);
     	to_p[3] = toPn.addPlace("Wecker Ein");
-    	to_p[3].setCapacity(7);
     	to_p[3].setMark(1);
     	to_p[4] = toPn.addPlace("Wecker Aus");
-    	to_p[4].setCapacity(8);
     	to_p[5] = toPn.addPlace("");
-    	to_p[5].setCapacity(9);
     	to_p[6] = toPn.addPlace("Wecker Aus");
-    	to_p[6].setCapacity(10);
     	to_p[7] = toPn.addPlace("Badezimmer");
     	to_p[8] = toPn.addPlace("Küche");
     	to_p[9] = toPn.addPlace("");
@@ -296,40 +284,6 @@ public class MorphismTest {
     	
     	expectedPostArcMap.put(from_post_a[0], to_post_a[0]);
     	expectedPostArcMap.put(from_post_a[1], to_post_a[3]);
-    }
-    
-    /**
-     * Test of Capacity use in Morphism
-     */
-    @Test
-    public void testCapacity() {
-    	boolean exceptionThrown = false;
-    	Match matchA;
-    	Petrinet from = PetrinetComponent.getPetrinet().createPetrinet();
-    	Place p1 = from.addPlace("Place");
-    	
-    	Petrinet to = PetrinetComponent.getPetrinet().createPetrinet();
-    	Place p2 = to.addPlace("Place");
-    	
-		try {
-			matchA = PNVF2.getInstance(from, to).getMatch(false);
-	    	Match matchB = Ullmann.createMatch(from, to);
-	    	
-	    	assertEquals(matchA.getPlace(p1), p2);
-	        assertEquals(matchA, matchB);
-	        
-	        p1.setCapacity(2);
-	        try{
-	        	matchA = PNVF2.getInstance(from, to).getMatch(false);
-	        } catch (MatchException e) {
-				exceptionThrown=true;
-			}   
-	        
-	        assertTrue(exceptionThrown);    
-	        
-		} catch (MatchException e) {
-			fail();
-		}    	       
     }
     
 }
