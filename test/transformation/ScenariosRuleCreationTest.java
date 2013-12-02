@@ -359,4 +359,82 @@ public class ScenariosRuleCreationTest {
 		assertEquals(3,firstInR.getMark());
 		assertEquals(3,firstInL.getMark());
 	}
+	
+	/** changing capacity in k */
+	@Test
+	public void scenario16() {
+		Petrinet k = getRuleScenario16().getK();
+		Petrinet l = getRuleScenario16().getL();
+		Petrinet r = getRuleScenario16().getR();
+		Place place =  k.getPlaces().iterator().next();
+
+		// user action
+		getRuleScenario16().setCapacityInK(place, 3);
+		
+		Place firstInK = k.getPlaces().iterator().next();
+		Place firstInL = l.getPlaces().iterator().next();
+		Place firstInR = r.getPlaces().iterator().next();
+
+		// all have "P1" ?
+		assertEquals("P1", firstInK.getName());
+		assertEquals("P1", firstInL.getName());
+		assertEquals("P1", firstInR.getName());
+		
+		// all have mark 3?
+		assertEquals(3,firstInK.getCapacity());
+		assertEquals(3,firstInL.getCapacity());
+		assertEquals(3,firstInR.getCapacity());
+	}
+	
+	/** changing capacity in l */
+	@Test
+	public void scenario17() {
+		Petrinet k = getRuleScenario17().getK();
+		Petrinet l = getRuleScenario17().getL();
+		Petrinet r = getRuleScenario17().getR();
+		Place place =  l.getPlaces().iterator().next();
+
+		// user action
+		getRuleScenario17().setCapacityInL(place, 3);
+
+		Place firstInK = k.getPlaces().iterator().next();
+		Place firstInL = l.getPlaces().iterator().next();
+		Place firstInR = r.getPlaces().iterator().next();
+
+		// all have "P1" ?
+		assertEquals("P1", firstInK.getName());
+		assertEquals("P1", firstInL.getName());
+		assertEquals("P1", firstInR.getName());
+
+		// R, L and K have mark 3?
+		assertEquals(3,firstInK.getCapacity());
+		assertEquals(3,firstInL.getCapacity());
+		assertEquals(3,firstInR.getCapacity());
+	}
+
+	/** changing capacity in r */
+	@Test
+	public void scenario18() {
+		Petrinet k = getRuleScenario18().getK();
+		Petrinet l = getRuleScenario18().getL();
+		Petrinet r = getRuleScenario18().getR();
+		Place place =  r.getPlaces().iterator().next();
+
+		// user action
+		getRuleScenario18().setCapacityInR(place, 3);
+
+		Place firstInK = k.getPlaces().iterator().next();
+		Place firstInL = l.getPlaces().iterator().next();
+		Place firstInR = r.getPlaces().iterator().next();
+
+		// all have "P1" ?
+		assertEquals("P1", firstInK.getName());
+		assertEquals("P1", firstInL.getName());
+		assertEquals("P1", firstInR.getName());
+
+		// R and K have mark 3?
+		assertEquals(3,firstInK.getCapacity());
+		assertEquals(3,firstInR.getCapacity());
+		assertEquals(3,firstInL.getCapacity());
+	}
 }
