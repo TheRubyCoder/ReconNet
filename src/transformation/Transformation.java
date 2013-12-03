@@ -217,8 +217,7 @@ public class Transformation {
 			PreArc newPreArc = petrinet.addPreArc(
 				preArcToAdd.getName(),
 				match.getPlace(rule.fromRtoK(preArcToAdd.getPlace())),
-				match.getTransition(rule.fromRtoK(preArcToAdd.getTransition())),
-				preArcToAdd.getWeight()
+				match.getTransition(rule.fromRtoK(preArcToAdd.getTransition()))
 			);
 			addedPreArcs.add(newPreArc);
 			match.getPreArcs().put(preArcToAdd, newPreArc);
@@ -229,8 +228,7 @@ public class Transformation {
 			PostArc newPostArc = petrinet.addPostArc(
 				postArcToAdd.getName(),
 				match.getTransition(rule.fromRtoK(postArcToAdd.getTransition())),
-				match.getPlace(rule.fromRtoK(postArcToAdd.getPlace())),
-				postArcToAdd.getWeight()
+				match.getPlace(rule.fromRtoK(postArcToAdd.getPlace()))
 			);
 			addedPostArcs.add(newPostArc);
 			match.getPostArcs().put(postArcToAdd, newPostArc);

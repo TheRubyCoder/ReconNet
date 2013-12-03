@@ -652,8 +652,12 @@ public class Converter {
 			handler.setPname(id, createdPlace, place.getPlaceName().getText());
 			handler.setMarking(id, createdPlace,
 					Integer.valueOf(place.getInitialMarking().getText()));
-			handler.setCapacity(id, createdPlace,
+			if(place.getInitialCapacity() != null){
+				handler.setCapacity(id, createdPlace,
 					Integer.valueOf(place.getInitialCapacity().getText()));
+			} else {
+				handler.setCapacity(id, createdPlace, Integer.MAX_VALUE);
+			}
 			if (toAddto == RuleNet.L) {
 				idToINodeInL.put(place.id, createdPlace);
 			} else if (toAddto == RuleNet.K) {

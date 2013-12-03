@@ -72,6 +72,18 @@ public class ScenarioRuleChangingData {
 	public static Rule getRuleScenario15() {
 		return ruleWithOnePlaceInLKR;
 	}
+	
+	public static Rule getRuleScenario16() {
+		return ruleWithOnePlaceInLKR;
+	}
+	
+	public static Rule getRuleScenario17() {
+		return ruleWithOnePlaceInLKR;
+	}
+	
+	public static Rule getRuleScenario18() {
+		return ruleWithOnePlaceInLKR;
+	}
 
 	private static Rule emptyRule;
 

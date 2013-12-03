@@ -154,7 +154,10 @@ public class PersistanceTest {
 
 		handler.setPlaceColor(id, place1, new java.awt.Color(255, 0, 0));
 		handler.setPlaceColor(id, place3, new java.awt.Color(0, 255, 0));
-
+		
+		handler.setCapacity(id, place1, 5);
+		handler.setCapacity(id, place3, 6);
+		
 		petrinet.model.Transition trans2 = handler.createTransition(id, RuleNet.R,
 				new Point2D.Double(10, 500));
 
@@ -223,6 +226,8 @@ public class PersistanceTest {
 				petrinet.model.Place net2Place = pos2place.get(pos);
 
 				if (!net2Place.getName().equals(p.getName()))
+					return false;
+				if (net2Place.getCapacity() != p.getCapacity())
 					return false;
 				if (net2Place.getMark() != p.getMark())
 					return false;

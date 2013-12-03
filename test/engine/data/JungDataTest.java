@@ -865,8 +865,8 @@ public class JungDataTest {
 	/**
 	 * Place schon im Graphen enthalten
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_createPlace_containsPlace() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_createPlace_containsPlace() {
 		emptyJung.createPlace(place1, pointPositive1);
 		emptyJung.createPlace(place1, pointPositive1);
 	}
@@ -874,8 +874,8 @@ public class JungDataTest {
 	/**
 	 * Place ist zu nah an einem anderen Place (Überlagerung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_createPlace_toClose_OverlayPlace() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_createPlace_toClose_OverlayPlace() {
 		emptyJung.createPlace(place1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive1);
 	}
@@ -883,8 +883,8 @@ public class JungDataTest {
 	/**
 	 * Place ist zu nah an einem anderen Place (Innerhalb der Mindestentfernung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_createPlace_toClose_TooCloseLeftPlace() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_createPlace_toClose_TooCloseLeftPlace() {
 		emptyJung.createPlace(place1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive1TooCloseLeft);
 	}
@@ -892,8 +892,8 @@ public class JungDataTest {
 	/**
 	 * Place ist zu nah an einem anderen Place (Innerhalb der Mindestentfernung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_createPlace_toClose_TooCloseRightPlace() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_createPlace_toClose_TooCloseRightPlace() {
 		emptyJung.createPlace(place1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive1TooCloseRight);
 	}
@@ -901,7 +901,7 @@ public class JungDataTest {
 	/**
 	 * Place ist zu nah an einem anderen Place (Innerhalb der Mindestentfernung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testInvalidArguments_createPlace_toClose_TooCloseTopPlace() {
 		emptyJung.createPlace(place1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive1TooCloseTop);
@@ -910,8 +910,8 @@ public class JungDataTest {
 	/**
 	 * Place ist zu nah an einem anderen Place (Innerhalb der Mindestentfernung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_createPlace_toClose_TooCloseBottomPlace() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_createPlace_toClose_TooCloseBottomPlace() {
 		emptyJung.createPlace(place1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive1TooCloseBottom);
 	}
@@ -919,8 +919,8 @@ public class JungDataTest {
 	/**
 	 * Place ist zu nah an einem anderen Transition (Überlagerung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_createPlace_toClose_OverlayTransition() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_createPlace_toClose_OverlayTransition() {
 		emptyJung.createTransition(transition1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive1);
 	}
@@ -929,8 +929,8 @@ public class JungDataTest {
 	 * Place ist zu nah an einem anderen Transition (Innerhalb der
 	 * Mindestentfernung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_createPlace_toClose_TooCloseLeftTransition() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_createPlace_toClose_TooCloseLeftTransition() {
 		emptyJung.createTransition(transition1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive1TooCloseLeft);
 	}
@@ -939,8 +939,8 @@ public class JungDataTest {
 	 * Place ist zu nah an einem anderen Transition (Innerhalb der
 	 * Mindestentfernung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_createPlace_toClose_TooCloseRightTransition() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_createPlace_toClose_TooCloseRightTransition() {
 		emptyJung.createTransition(transition1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive1TooCloseRight);
 	}
@@ -949,8 +949,8 @@ public class JungDataTest {
 	 * Place ist zu nah an einem anderen Transition (Innerhalb der
 	 * Mindestentfernung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_createPlace_toClose_TooCloseTopTransition() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_createPlace_toClose_TooCloseTopTransition() {
 		emptyJung.createTransition(transition1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive1TooCloseTop);
 	}
@@ -959,8 +959,8 @@ public class JungDataTest {
 	 * Place ist zu nah an einem anderen Transition (Innerhalb der
 	 * Mindestentfernung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_createPlace_toClose_TooCloseBottomTransition() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_createPlace_toClose_TooCloseBottomTransition() {
 		emptyJung.createTransition(transition1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive1TooCloseBottom);
 	}
@@ -968,8 +968,8 @@ public class JungDataTest {
 	/**
 	 * Transition schon im Graphen enthalten
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_createTransition_containsTransition() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_createTransition_containsTransition() {
 		emptyJung.createTransition(transition1, pointPositive1);
 		emptyJung.createTransition(transition1, pointPositive1);
 	}
@@ -977,8 +977,8 @@ public class JungDataTest {
 	/**
 	 * Transition ist zu nah an einer anderen Transition (Überlagerung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_createTransition_toClose_OverlayTransition() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_createTransition_toClose_OverlayTransition() {
 		emptyJung.createTransition(transition1, pointPositive1);
 		emptyJung.createTransition(transition2, pointPositive1);
 	}
@@ -987,8 +987,8 @@ public class JungDataTest {
 	 * Transition ist zu nah an einer anderen Transition (Innerhalb der
 	 * Mindestentfernung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_createTransition_toClose_TooCloseLeftTransition() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_createTransition_toClose_TooCloseLeftTransition() {
 		emptyJung.createTransition(transition1, pointPositive1);
 		emptyJung.createTransition(transition2, pointPositive1TooCloseLeft);
 	}
@@ -997,8 +997,8 @@ public class JungDataTest {
 	 * Transition ist zu nah an einer anderen Transition (Innerhalb der
 	 * Mindestentfernung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_createTransition_toClose_TooCloseRightTransition() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_createTransition_toClose_TooCloseRightTransition() {
 		emptyJung.createTransition(transition1, pointPositive1);
 		emptyJung.createTransition(transition2, pointPositive1TooCloseRight);
 	}
@@ -1007,8 +1007,8 @@ public class JungDataTest {
 	 * Transition ist zu nah an einer anderen Transition (Innerhalb der
 	 * Mindestentfernung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_createTransition_toClose_TooCloseTopTransition() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_createTransition_toClose_TooCloseTopTransition() {
 		emptyJung.createTransition(transition1, pointPositive1);
 		emptyJung.createTransition(transition2, pointPositive1TooCloseTop);
 	}
@@ -1017,8 +1017,8 @@ public class JungDataTest {
 	 * Transition ist zu nah an einer anderen Transition (Innerhalb der
 	 * Mindestentfernung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_createTransition_toClose_TooCloseBottomTransition() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_createTransition_toClose_TooCloseBottomTransition() {
 		emptyJung.createTransition(transition1, pointPositive1);
 		emptyJung.createTransition(transition2, pointPositive1TooCloseBottom);
 	}
@@ -1026,8 +1026,8 @@ public class JungDataTest {
 	/**
 	 * Transition ist zu nah an einem Place (Überlagerung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_createTransition_toClose_OverlayPlace() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_createTransition_toClose_OverlayPlace() {
 		emptyJung.createPlace(place2, pointPositive1);
 		emptyJung.createTransition(transition1, pointPositive1);
 	}
@@ -1035,8 +1035,8 @@ public class JungDataTest {
 	/**
 	 * Transition ist zu nah an einem Place (Innerhalb der Mindestentfernung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_createTransition_toClose_TooCloseLeftPlace() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_createTransition_toClose_TooCloseLeftPlace() {
 		emptyJung.createPlace(place2, pointPositive1);
 		emptyJung.createTransition(transition1, pointPositive1TooCloseLeft);
 	}
@@ -1044,8 +1044,8 @@ public class JungDataTest {
 	/**
 	 * Transition ist zu nah an einem Place (Innerhalb der Mindestentfernung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_createTransition_toClose_TooCloseRightPlace() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_createTransition_toClose_TooCloseRightPlace() {
 		emptyJung.createPlace(place2, pointPositive1);
 		emptyJung.createTransition(transition1, pointPositive1TooCloseRight);
 	}
@@ -1053,8 +1053,8 @@ public class JungDataTest {
 	/**
 	 * Transition ist zu nah an einem Place (Innerhalb der Mindestentfernung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_createTransition_toClose_TooCloseTopPlace() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_createTransition_toClose_TooCloseTopPlace() {
 		emptyJung.createPlace(place2, pointPositive1);
 		emptyJung.createTransition(transition1, pointPositive1TooCloseTop);
 	}
@@ -1062,8 +1062,8 @@ public class JungDataTest {
 	/**
 	 * Transition ist zu nah an einem Place (Innerhalb der Mindestentfernung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_createTransition_toClose_TooCloseBottomPlace() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_createTransition_toClose_TooCloseBottomPlace() {
 		emptyJung.createPlace(place2, pointPositive1);
 		emptyJung.createTransition(transition1, pointPositive1TooCloseBottom);
 	}
@@ -1171,8 +1171,8 @@ public class JungDataTest {
 	/**
 	 * Node kommt zu nah an einen anderen Node (Überlagerung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_moveNode_Overlay() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_moveNode_Overlay() {
 		emptyJung.createPlace(place1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive2);
 		emptyJung.moveNodeWithPositionCheck(place2, pointPositive1);
@@ -1181,8 +1181,8 @@ public class JungDataTest {
 	/**
 	 * Node kommt zu nah an einen anderen Node (Innerhalb der Mindestentfernung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_moveNode_TooCloseLeft() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_moveNode_TooCloseLeft() {
 		emptyJung.createPlace(place1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive2);
 		emptyJung.moveNodeWithPositionCheck(place2, pointPositive1TooCloseLeft);
@@ -1191,8 +1191,8 @@ public class JungDataTest {
 	/**
 	 * Node kommt zu nah an einen anderen Node (Innerhalb der Mindestentfernung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_moveNode_TooCloseRight() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_moveNode_TooCloseRight() {
 		emptyJung.createPlace(place1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive2);
 		emptyJung
@@ -1202,8 +1202,8 @@ public class JungDataTest {
 	/**
 	 * Node kommt zu nah an einen anderen Node (Innerhalb der Mindestentfernung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_moveNode_TooCloseTop() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_moveNode_TooCloseTop() {
 		emptyJung.createPlace(place1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive2);
 		emptyJung.moveNodeWithPositionCheck(place2, pointPositive1TooCloseTop);
@@ -1212,8 +1212,8 @@ public class JungDataTest {
 	/**
 	 * Node kommt zu nah an einen anderen Node (Innerhalb der Mindestentfernung)
 	 */
-	@Test(expected = exceptions.ShowAsWarningException.class)
-	public void testShowAsWarning_moveNode_TooCloseBottom() {
+	@Test(expected = IllegalArgumentException.class)
+	public void testInvalidArguments_moveNode_TooCloseBottom() {
 		emptyJung.createPlace(place1, pointPositive1);
 		emptyJung.createPlace(place2, pointPositive2);
 		emptyJung.moveNodeWithPositionCheck(place2,

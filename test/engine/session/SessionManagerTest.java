@@ -95,6 +95,8 @@ public class SessionManagerTest {
         arc22 = p.addPostArc("x2", transition2, place2);
         
         place1.setMark(1);
+        
+        place1.setCapacity(5);
 
         graph    = new DirectedSparseGraph<INode, IArc>();
         layout   = new StaticLayout<INode, IArc>(graph);
