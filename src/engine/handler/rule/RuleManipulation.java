@@ -24,6 +24,8 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
+import com.sun.istack.NotNull;
+
 import petrinet.model.IArc;
 import petrinet.model.INode;
 import petrinet.model.IRenew;
@@ -205,6 +207,19 @@ public class RuleManipulation implements IRuleManipulation {
 		ruleManipulationBackend.setMarking(id, (Place) place, marking);
 
 	}
+	
+	@Override
+	public void setCapacity(@NotNull int id, @NotNull INode place,
+			@NotNull int capacity) throws EngineException {
+				
+			if (!(place instanceof Place)) {
+				warning("place isn't a Place");
+				return;
+			} 
+
+			ruleManipulationBackend.setCapacity(id, (Place) place, capacity);
+
+	}
 
 	@Override
 	public void setPname(int id, INode place, String pname)
@@ -332,4 +347,5 @@ public class RuleManipulation implements IRuleManipulation {
 	public double getNodeSize(int id) throws EngineException {
 		return ruleManipulationBackend.getNodeSize(id);
 	}
+
 }

@@ -269,6 +269,20 @@ public interface IPetrinetManipulation {
 	 */
 	public void setMarking(@NotNull int id, @NotNull INode place,
 			@NotNull int marking) throws EngineException;
+	
+	/**
+	 * Sets the Capacity of a Place.
+	 * 
+	 * @param id
+	 *            ID of the Petrinet
+	 * @param place
+	 *            where to set the Capacity
+	 * @param marking
+	 *            amount of marCapacityk
+	 * @throws EngineException
+	 */
+	public void setCapacity(@NotNull int id, @NotNull INode place,
+			@NotNull int capacity) throws EngineException;
 
 	/**
 	 * Sets the PName of a Place.

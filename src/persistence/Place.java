@@ -43,6 +43,11 @@ public class Place {
 	InitialMarking initialMarking;
 	
 	/**
+	 * Capacity of the place
+	 */
+	InitialCapacity initialCapacity;
+	
+	/**
 	 * Graphical information about the node
 	 */
 	Graphics graphics;
@@ -71,6 +76,15 @@ public class Place {
 
 	public void setInitialMarking(InitialMarking initialMarking) {
 		this.initialMarking = initialMarking;
+	}
+	
+	@XmlElement
+	public InitialCapacity getInitialCapacity() {
+		return initialCapacity;
+	}
+	
+	public void setInitialCapacity(InitialCapacity initialCapacity) {
+		this.initialCapacity = initialCapacity;
 	}
 
 	@XmlElement

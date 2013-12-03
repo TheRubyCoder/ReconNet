@@ -290,6 +290,58 @@ public class Rule {
 		}
 	}
 	
+	/**
+	 * Sets the capacity for the place and its mappings, that is only in L and K
+	 * 
+	 * @param place
+	 * @param capacity
+	 */
+	public void setCapacityInL(Place place, int capacity) {
+		place.setCapacity(capacity);
+		fromLtoK(place).setCapacity(capacity);
+
+		Place rightPlace = fromLtoR(place);
+		
+		if (rightPlace != null) {
+			rightPlace.setCapacity(capacity);
+		}
+	}
+
+	/**
+	 * Sets the capacity for the place and its mappings, thats only in K and R
+	 * 
+	 * @param place
+	 * @param capacity
+	 */
+	public void setCapacityInK(Place place, int capacity) {
+		if (fromKtoL(place) != null) {
+			fromKtoL(place).setCapacity(capacity);
+		}
+		
+		place.setCapacity(capacity);		
+		
+		if (fromKtoR(place) != null) {
+			fromKtoR(place).setCapacity(capacity);
+		}
+	}
+
+	/**
+	 * Sets the capacity for the place and its mappings, thats in L, K and R
+	 * 
+	 * @param place
+	 * @param capacity
+	 */
+	public void setCapacityInR(Place place, int capacity) {
+		fromRtoK(place).setCapacity(capacity);
+		place.setCapacity(capacity);
+
+		Place leftPlace = fromRtoL(place);
+		
+		if (leftPlace != null) {
+			leftPlace.setCapacity(capacity);
+		}
+	}
+	
 
 	/**
 	 * Sets the name of a place in a rule and modifies other parts of the rule accordingly
@@ -500,13 +552,6 @@ public class Rule {
 		}
 	}
 	
-	
-	
-	
-
-	
-
-
 	/**
 	 * Sets the weight of a preArc in a rule and modifies other parts of the rule accordingly
 	 * 
@@ -614,26 +659,7 @@ public class Rule {
 			leftPostArc.setWeight(weight);
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+		
 	public Place addPlaceToL(String name) {
 		Place leftPlace = getL().addPlace(name);
 		
@@ -658,8 +684,6 @@ public class Rule {
 		
 		return rightPlace;
 	}
-	
-
 	
 	public Transition addTransitionToL(String name) {
 		Transition leftTransition = getL().addTransition(name);
@@ -744,7 +768,6 @@ public class Rule {
 		return rightPreArc;
 	}
 	
-
 	public PostArc addPostArcToL(String name, Transition transition, Place place) {
 		PostArc leftPostArc = getL().addPostArc(name, transition, place);
 		
@@ -780,9 +803,7 @@ public class Rule {
 		
 		return rightPostArc;
 	}
-	
-	
-	
+		
 	public void removePlaceFromL(Place place) {		
 		removePlaceFromK(fromLtoK(place));	
 	}
@@ -829,7 +850,6 @@ public class Rule {
 		removeTransitionFromK(fromRtoK(transition));
 	}
 	
-
 	public void removePreArcFromL(PreArc preArc) {
 		removePreArcFromK(fromLtoK(preArc));
 	}
@@ -917,8 +937,6 @@ public class Rule {
 		return transitionMappingKToL.get(transition);
 	}
 	
-
-
 	/**
 	 * Returns the corresponding place in R.
 	 * 
@@ -959,8 +977,6 @@ public class Rule {
 		return transitionMappingKToR.get(transition);
 	}
 
-
-
 	/**
 	 * Returns the corresponding place in K.
 	 * 
@@ -1000,8 +1016,6 @@ public class Rule {
 	public Transition fromLtoK(Transition transition) {
 		return transitionMappingKToL.getKey(transition);
 	}
-
-
 
 	/**
 	 * Returns the corresponding place in R.

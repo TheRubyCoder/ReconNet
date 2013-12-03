@@ -119,8 +119,11 @@ public class AttributePane {
 						.getPlaceAttribute((Place) node);
 				String name = placeAttribute.getPname();
 				String mark = String.valueOf(placeAttribute.getMarking());
+				String capacity = placeAttribute.getCapacity() == 
+						Integer.MAX_VALUE?"unbegrenzt"
+						:String.valueOf(placeAttribute.getCapacity());
 
-				tableModel = new PlaceTableModel(id, name, mark);
+				tableModel = new PlaceTableModel(id, name, mark, capacity);
 			} else {
 				// display edge
 				TransitionAttribute transitionAttribute = petrinetViewer
@@ -262,13 +265,14 @@ public class AttributePane {
 		 * The General Data for the Placetable
 		 */
 		private String[][] data = { { "Id", "" }, { "Name", "" },
-				{ "Markierung", "" } };
+				{ "Markierung", "" }, { "Kapazität", "" } };
 
 		/** Initiates the table with actual data for id, name, and mark */
-		public PlaceTableModel(String id, String name, String mark) {
+		public PlaceTableModel(String id, String name, String mark, String capacity) {
 			data[0][1] = id;
 			data[1][1] = name;
 			data[2][1] = mark;
+			data[3][1] = capacity;
 		}
 
 		/** Returns all data (whole table except the head) */
@@ -485,9 +489,37 @@ public class AttributePane {
 					} else if (attribute.equals("Markierung")) {
 						try {
 							int marking = Integer.parseInt(data);
-							petrinetViewer.setMarking(place, marking);
+							if(marking > place.getCapacity()){
+								AttributePane.getInstance().displayNode(place, petrinetViewer);
+								PopUp.popError("Die Markierung darf die Kapazität nicht übersteigen.");
+							} else{
+								petrinetViewer.setMarking(place, marking);
+							}
 						} catch (NumberFormatException nfe) {
+							AttributePane.getInstance().displayNode(place, petrinetViewer);
 							PopUp.popError("Die Markierung muss eine natürliche Zahl sein.");
+						}
+					} else if (attribute.equals("Kapazität")) {
+						try {
+							if(data.length()==0){ //wenn Eingabefeld leer
+								//Kapazität auf Max Value setzen
+								petrinetViewer.setCapacity(place, Integer.MAX_VALUE);
+								//Anzeige sofort aktualisieren, damit "unbegrenzt" reingeschrieben wird
+								AttributePane.getInstance().displayNode(place, petrinetViewer);
+							}else{
+								int capacity = Integer.parseInt(data);
+								if(capacity < place.getMark()){
+									AttributePane.getInstance().displayNode(place, petrinetViewer);
+									PopUp.popError("Die Kapazität darf die Markierung nicht unterschreiten.");
+								} else{
+									petrinetViewer.setCapacity(place, capacity);
+								}
+							}
+							
+						} catch (NumberFormatException nfe) {
+							//Anzeige sofort aktualisieren, falls ungültiges reingeschrieben wurde
+							AttributePane.getInstance().displayNode(place, petrinetViewer);
+							PopUp.popError("Die Kapazität muss eine natürliche Zahl sein.");
 						}
 					}
 

@@ -257,6 +257,21 @@ public interface IRuleManipulation {
 	 */
 	public void setMarking(@NotNull int id, @NotNull INode place,
 			@NotNull int marking) throws EngineException;
+	
+	/**
+	 * Sets the Capacity of a Place  and its corresponding nodes in the other parts
+	 * of the rule
+	 * 
+	 * @param id
+	 *            ID of the Rule
+	 * @param place
+	 *            where to set the Capacity
+	 * @param marking
+	 *            amount of capacity
+	 * @throws EngineException
+	 */
+	public void setCapacity(@NotNull int id, @NotNull INode place,
+			@NotNull int capacity) throws EngineException;
 
 	/**
 	 * Sets the PName of a Place and its corresponding nodes in the other parts

@@ -24,6 +24,8 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
+import com.sun.istack.NotNull;
+
 import petrinet.model.IArc;
 import petrinet.model.INode;
 import petrinet.model.IRenew;
@@ -231,6 +233,13 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 		} 
 		
 		petrinetManipulationBackend.setMarking(id, (Place) place, marking);
+	}
+	
+	@Override
+	public void setCapacity(@NotNull int id, @NotNull INode place,
+			@NotNull int capacity) throws EngineException {
+		petrinetManipulationBackend.setCapacity(id, (Place) place, capacity);
+		
 	}
 
 	@Override

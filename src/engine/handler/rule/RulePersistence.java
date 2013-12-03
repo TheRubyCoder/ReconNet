@@ -99,6 +99,13 @@ public class RulePersistence implements IRulePersistence {
 
 		ruleManipulationBackend.setMarking(id, place, marking);
 	}
+	
+	@Override
+	public void setCapacity(int id, Place place, int capacity)
+			throws EngineException {
+
+		ruleManipulationBackend.setCapacity(id, place, capacity);
+	}
 
 	@Override
 	public void setPname(int id, Place place, String pname)

@@ -37,6 +37,10 @@ public class Place implements INode {
 	/**
 	 * Capacity of the node
 	 */
+	private int capacity;
+	/**
+	 * Marking of the node
+	 */
 	private int mark;
 	/**
 	 * Unique id
@@ -199,6 +203,28 @@ public class Place implements INode {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see haw.wp.rcpn.Place#getCapacity()
+	 */
+	public int getCapacity() {
+		return capacity;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see haw.wp.rcpn.Place#setCapacity(int)
+	 */
+	public void setCapacity(int capacity) {
+		if (capacity < 0) {
+			throw new IllegalArgumentException("Capacity is negative");
+		}
+		
+		this.capacity = capacity;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see haw.wp.rcpn.Place#getMark()
 	 */
 	public int getMark() {
@@ -225,7 +251,7 @@ public class Place implements INode {
 	 */
 	@Override
 	public String toString() {
-		return "Place [name=" + name + ", mark=" + mark + ", id=" + id + "]";
+		return "Place [name=" + name + ", capacity=" + capacity + ", mark=" + mark + ", id=" + id + "]";
 	}
 
 	/*

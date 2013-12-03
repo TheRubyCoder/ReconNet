@@ -117,8 +117,46 @@ public class SimulationHandler implements ISimulation {
     @Override
     public void transform(int id, Collection<Integer> ruleIDs, int n) throws EngineException {
 
+
 	if (ruleIDs.isEmpty()) {
 	    info("Es sind keine Regeln ausgewählt");
+		PetrinetData petrinetData = sessionManager.getPetrinetData(id);
+
+		// Test: is id valid
+		if (petrinetData == null) {
+			exception("SimulationHandler - id of the Petrinet is wrong");
+			return;
+		} 
+	
+		Petrinet petrinet = petrinetData.getPetrinet();
+		JungData jungData = petrinetData.getJungData();
+		List<Rule> sortedRules = new ArrayList<Rule>();
+		for (Integer ruleId : ruleIDs) {
+			sortedRules.add(sessionManager.getRuleData(ruleId).getRule());
+		}
+		sortedRules = Collections.unmodifiableList(sortedRules);
+
+		for (int i = 0; i < n; i++) {
+			// Make sure a random rule is selected each time
+			List<Rule> shuffledRules = new ArrayList<Rule>(sortedRules);
+			Collections.shuffle(shuffledRules);
+			// Find matching rule and apply it
+			System.out.println("matchingrule start");
+			Transformation transformation = findMatchingRule(shuffledRules,
+					petrinet);
+			System.out.println("matchingrule end");
+			// Remove deleted elements from display
+			jungData.deleteDataOfMissingElements(petrinet);
+			// Add new elements to display
+			fillJungDataWithNewElements(
+				jungData,
+				transformation.getAddedPlaces(),
+				transformation.getAddedTransitions(),
+				transformation.getAddedPreArcs(),
+				transformation.getAddedPostArcs()
+			);
+		}
+
 	}
 
 	PetrinetData petrinetData = sessionManager.getPetrinetData(id);
@@ -173,6 +211,7 @@ public class SimulationHandler implements ISimulation {
 	for (Transition transition : addedTransitions) {
 	    jungData.createTransition(transition);
 	}
+
 
 	// Add arcs
 	for (PreArc arc : addedPreArcs) {
@@ -235,6 +274,7 @@ public class SimulationHandler implements ISimulation {
 		catch(ShowAsInfoException ex){
 		 // transform failed? OK, try fire
 		    fire(id, 1);
+
 		}
 	    }
 	}

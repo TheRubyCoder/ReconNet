@@ -1712,7 +1712,8 @@ public final class PNVF2 {
 			  || (!isArcRestricted && source.getIncomingArcs().size() <= target.getIncomingArcs().size()
 	   	    		&& source.getOutgoingArcs().size() <= target.getOutgoingArcs().size())
 	   	       )
-	   		&& source.getName().equals(target.getName());
+	   		&& source.getName().equals(target.getName())
+	   		&& source.getCapacity() == target.getCapacity();
 	}
 
 	/**

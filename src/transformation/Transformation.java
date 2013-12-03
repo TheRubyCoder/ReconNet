@@ -179,6 +179,8 @@ public class Transformation {
 		// Add new places, map k to these new Places
 		for (Place placeToAdd : rule.getPlacesToAdd()) {			
 			Place newPlace = petrinet.addPlace(placeToAdd.getName());
+			newPlace.setMark(placeToAdd.getMark());
+			newPlace.setCapacity(placeToAdd.getCapacity());
 			addedPlaces.add(newPlace);
 			match.getPlaces().put(rule.fromRtoK(placeToAdd), newPlace);
 		}

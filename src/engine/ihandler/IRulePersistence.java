@@ -110,6 +110,16 @@ public interface IRulePersistence {
 	public void setMarking(@NotNull int id, @NotNull Place place, @NotNull int marking) throws EngineException;
 	
 	/**
+	 * Sets the Capacity of a Place
+	 * 
+	 * @param id ID of the Rule
+	 * @param place where to set the Capacity
+	 * @param capacity amount of capacity 
+	 * @throws EngineException 
+	 */
+	public void setCapacity(@NotNull int id, @NotNull Place place, @NotNull int capacity) throws EngineException;
+	
+	/**
 	 * Sets the PName of a Place.
 	 * 
 	 * @param id ID of the Rule

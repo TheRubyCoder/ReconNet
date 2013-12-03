@@ -101,6 +101,16 @@ public interface IPetrinetPersistence {
 	public void setMarking(int id, Place place, int marking) throws EngineException;
 	
 	/**
+	 * Sets the Capacity of a Place.
+	 * 
+	 * @param id ID of the Petrinet
+	 * @param place where to set the Mark
+	 * @param capacity amount of capacity 
+	 * @throws EngineException 
+	 */
+	public void setCapacity(int id, Place place, int capacity) throws EngineException;
+	
+	/**
 	 * Sets the PName of a Place.
 	 * 
 	 * @param id ID of the Petrinet

@@ -597,7 +597,7 @@ final public class RuleHandler {
 		return new PlaceAttribute(
 			place.getMark(), 
 			place.getName(),
-			color
+			color, place.getCapacity()
 		);
 	}
 
@@ -710,6 +710,29 @@ final public class RuleHandler {
 			
 		} else if (net == Net.R) {
 			rule.setMarkInR(place, marking); 
+		} 
+	}
+	
+	/**
+	 * @see IRuleManipulation#setMarking(int, INode, int)
+	 */
+	public void setCapacity(int id, Place place, int capacity)
+			throws EngineException {
+		
+		checkIsPlace(place);
+
+		RuleData ruleData = getRuleData(id);	
+		Rule     rule     = ruleData.getRule();
+		Net      net      = TransformationComponent.getTransformation().getNet(rule, place);
+		
+		if (net == Net.L) {
+			rule.setCapacityInL(place, capacity);
+			
+		} else if (net == Net.K) {
+			rule.setCapacityInK(place, capacity);
+			
+		} else if (net == Net.R) {
+			rule.setCapacityInR(place, capacity); 
 		} 
 	}
 

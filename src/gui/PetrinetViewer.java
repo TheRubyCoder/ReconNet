@@ -718,6 +718,30 @@ public class PetrinetViewer extends VisualizationViewer<INode, IArc> {
 		}
 
 	}
+	
+	/**
+	 * Sets the <code>capacity</code>of a <code>place</code> no matter if its
+	 * part a rule or a regular petrinet
+	 * 
+	 * @param place
+	 * @param capacity
+	 */
+	public void setCapacity(Place place, int capacity) {
+		try {
+			if (isN()) {
+				EngineAdapter.getPetrinetManipulation().setCapacity(
+						getCurrentId(), place, capacity);
+			} else {
+				EngineAdapter.getRuleManipulation().setCapacity(getCurrentId(),
+						place, capacity);
+			}
+			smartRepaint();
+		} catch (EngineException e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
+
+	}
 
 	/**
 	 * Sets the <code>name</code> of a <code>transition</code> no matter if its
@@ -1345,7 +1369,13 @@ public class PetrinetViewer extends VisualizationViewer<INode, IArc> {
 				decorator.setPaint(FONT_COLOR_DARK);
 				decorator.drawString(placeAttribute.getPname(),
 						(int) (x + width), (int) (y + height));
-
+				
+				// write capacity
+				if(placeAttribute.getCapacity() < Integer.MAX_VALUE){
+					decorator.drawString("K=" + String.valueOf(placeAttribute.getCapacity()),
+							(int) (x + decorator.getFont().getSize() ) , (int) (y + height + decorator.getFont().getSize()));
+				}
+				
 				// display marking
 				int marking = placeAttribute.getMarking();
 				if (marking == 0) {

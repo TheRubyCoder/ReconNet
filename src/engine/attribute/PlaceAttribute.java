@@ -32,15 +32,21 @@ public class PlaceAttribute {
 	private int marking;
 	private String pname;
 	private Color color;
+	private int capacity;
 
-	public PlaceAttribute(int marking, String pname, Color color) {
+	public PlaceAttribute(int marking, String pname, Color color, int capacity) {
 		this.marking = marking;
 		this.pname = pname;
 		this.color = color;
+		this.capacity = capacity;
 	}
 
 	public int getMarking() {
 		return marking;
+	}
+	
+	public int getCapacity() {
+		return capacity;
 	}
 
 	public String getPname() {
