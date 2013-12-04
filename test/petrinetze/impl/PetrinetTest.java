@@ -108,6 +108,25 @@ public class PetrinetTest {
         p1.setCapacity(1);
           
         assertFalse(t2.isActivated());
+        
+        p1.setMark(2);
+        p2.setMark(0);
+        t1p2.setWeight(2);
+        p2.setCapacity(2);
+        assertTrue(t1.isActivated());
+        
+        p.fire(t1.getId());
+        
+        assertEquals(1, p1.getMark());
+        assertEquals(2, p2.getMark());
+        
+        assertFalse(t1.isActivated());
+        assertTrue(t2.isActivated());
+        
+        p1.setCapacity(1);
+        
+        assertFalse(t2.isActivated());
+        
 
         p.removePlace(p2.getId());
         assertFalse(p.getPlaces().contains(p2));
