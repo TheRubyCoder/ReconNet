@@ -41,6 +41,7 @@ import transformation.matcher.PNVF2.MatchException;
 import data.MorphismData;
 
 public class CapacityTest {
+<<<<<<< Upstream, based on origin/master
 
 	private static Petrinet fromNet;
 	private static Petrinet toNet;
@@ -105,6 +106,44 @@ public class CapacityTest {
 
 		Match match = PNVF2.getInstance(fromNet, toNet).getMatch(false);
 
+=======
+	
+	private static Petrinet fromNet;
+	private static Petrinet toNet;
+	
+	@BeforeClass
+	public static void setUpOnce() throws Exception {
+		
+		fromNet = PetrinetComponent.getPetrinet().createPetrinet();
+		
+		Place p1 = fromNet.addPlace("P1");
+		
+		Transition t1 = fromNet.addTransition("A", new Identity());
+		Transition t2 = fromNet.addTransition("A", new Identity());
+		Transition t3 = fromNet.addTransition("A", new Identity());
+	
+		fromNet.addPostArc("", t1, p1);
+		fromNet.addPostArc("", t2, p1);
+
+		fromNet.addPreArc("", p1, t3);
+				
+		p1.setMark(2);
+		
+		p1.setCapacity(5);
+		
+		
+		toNet = PetrinetComponent.getPetrinet().createPetrinet();
+		
+		Place p2 = fromNet.addPlace("P1");
+		
+		Transition t11 = fromNet.addTransition("A", new Identity());
+		Transition t12 = fromNet.addTransition("A", new Identity());
+		Transition t13 = fromNet.addTransition("A", new Identity());
+		
+		p2.setMark(2);
+		
+		
+>>>>>>> e7ce3b2 start CapacityTest.java
 	}
 
 }
