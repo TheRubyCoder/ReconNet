@@ -108,12 +108,16 @@ public class RuleTest {
         System.out.println("fromLtoK");
         Rule instance = new Rule();
         Place place = instance.addPlaceToL("a");
+        instance.setCapacityInL(place, 5);
 
     	assertEquals(place.getName(), instance.fromLtoK(place).getName());
 		assertEquals(place.getName(), instance.fromKtoL(instance.fromLtoK(place)).getName());
 		
     	assertEquals(place.getMark(), instance.fromLtoK(place).getMark());
 		assertEquals(place.getMark(), instance.fromKtoL(instance.fromLtoK(place)).getMark());
+		
+		assertEquals(place.getCapacity(), instance.fromLtoK(place).getCapacity());
+		assertEquals(place.getCapacity(), instance.fromKtoL(instance.fromLtoK(place)).getCapacity());
 		
 		assertNull(instance.fromKtoR(instance.fromLtoK(place)));
 		assertNull(instance.fromLtoR(place));
@@ -149,6 +153,7 @@ public class RuleTest {
         System.out.println("fromRtoK");
         Rule instance = new Rule();
         Place place = instance.addPlaceToR("a");
+        instance.setCapacityInR(place, 5);
         
         assertEquals(place.getName(), instance.fromRtoK(place).getName());
     	assertEquals(place.getName(), instance.fromKtoR(instance.fromRtoK(place)).getName());
@@ -156,6 +161,8 @@ public class RuleTest {
     	assertEquals(place.getMark(), instance.fromKtoR(instance.fromRtoK(place)).getMark());
     	assertEquals(place.getMark(), instance.fromKtoR(instance.fromRtoK(place)).getMark());
     	
+    	assertEquals(place.getCapacity(), instance.fromKtoR(instance.fromRtoK(place)).getCapacity());
+    	assertEquals(place.getCapacity(), instance.fromKtoR(instance.fromRtoK(place)).getCapacity());    	
     	
 		assertNull(instance.fromKtoL(instance.fromLtoK(place)));
 		assertNull(instance.fromRtoL(place));
@@ -1011,6 +1018,17 @@ public class RuleTest {
         assertEquals("b", transition.getTlb());
     }
 
+	@Test
+	 public void testCapacityFromKtoLandR() {
+	        Rule  rule       = new Rule();
+	        Place place      = rule.addPlaceToK("K");
+	    
+	    rule.setCapacityInK(place, 5);
+	
+	    assertEquals(5, place.getCapacity());
+	    assertEquals(5, rule.fromKtoL(place).getCapacity());
+	    assertEquals(5, rule.fromKtoR(place).getCapacity());
+	}
 
     @Test
     public void testSetMarkingPlace_1() {

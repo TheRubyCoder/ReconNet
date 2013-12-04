@@ -63,6 +63,7 @@ public class Place implements INode {
 		this.id           = id;
 		this.incomingArcs = new DualHashBidiMap<Integer, PostArc>();
 		this.outgoingArcs = new DualHashBidiMap<Integer, PreArc>();
+		this.capacity = Integer.MAX_VALUE;
 	}
 
 	public void addIncomingArc(PostArc arc) {

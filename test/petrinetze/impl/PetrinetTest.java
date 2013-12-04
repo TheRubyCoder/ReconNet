@@ -47,6 +47,7 @@ public class PetrinetTest {
         final Place p1 = p.addPlace("p1");
         final Place p2 = p.addPlace("p2");
 
+
         final Transition t1 = p.addTransition("t1");
         final Transition t2 = p.addTransition("t2");
 
@@ -93,6 +94,20 @@ public class PetrinetTest {
         assertEquals(0, p1.getMark());
         assertEquals(1, p2.getMark());
         assertTrue(t2.isActivated());
+        
+        p1.setMark(2);
+        p2.setMark(0);
+        t1p2.setWeight(2);
+        p2.setCapacity(2);
+        assertTrue(t1.isActivated());
+        p.fire(t1.getId());
+        assertEquals(1, p1.getMark());
+        assertEquals(2, p2.getMark());
+        assertFalse(t1.isActivated());
+        assertTrue(t2.isActivated());
+        p1.setCapacity(1);
+          
+        assertFalse(t2.isActivated());
 
         p.removePlace(p2.getId());
         assertFalse(p.getPlaces().contains(p2));
@@ -109,6 +124,7 @@ public class PetrinetTest {
 
         final Place p1 = net.addPlace("p1");
         final Place p2 = net.addPlace("p2");
+        final Place p3 = net.addPlace("p3");
 
         final Transition t1 = net.addTransition("t1");
 
@@ -119,20 +135,20 @@ public class PetrinetTest {
 
         final IArc a = net.addPreArc("a", p1, t1);
         assertFalse(
-            "A transition with an empty place in pre and an edge-weight of 1 must be activated",
+        	"A transition with an empty place in pre and an edge-weight of 1 must not be activated",
             t1.isActivated()
         );
 
         final IArc b = net.addPreArc("b", p2, t1);
         assertFalse(
-            "A transition with two empty places in pre and an edge-weight of 1 must be activated",
+        	"A transition with two empty places in pre and an edge-weight of 1 must not be activated",
             t1.isActivated()
         );
 
         p1.setMark(1);
         assertFalse(
             "A transition with one empty place and one containing one token in pre and an edge-weight of 1 " +
-            "must be activated",
+            "must not be activated",
             t1.isActivated()
         );
 
@@ -156,6 +172,19 @@ public class PetrinetTest {
         assertFalse(t1.isActivated());
 
         p2.setMark(2);
+        assertTrue(t1.isActivated());
+        final IArc c = net.addPostArc("c", t1, p3);
+        a.setWeight(1);
+        b.setWeight(1);
+        c.setWeight(1);
+        p1.setMark(1);
+        p2.setMark(1);
+        assertTrue(t1.isActivated());
+        p3.setCapacity(1);
+        p3.setMark(1);
+        assertFalse(t1.isActivated());
+        p3.setCapacity(2);
+        
         assertTrue(t1.isActivated());
     }
 }

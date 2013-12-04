@@ -20,6 +20,7 @@ package engine.data;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.util.Arrays;
 
 import org.junit.*;
 
@@ -29,6 +30,7 @@ import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.graph.DirectedGraph;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import engine.data.JungData;
+import exceptions.ShowAsWarningException;
 import petrinet.model.IArc;
 import petrinet.model.INode;
 import petrinet.model.Petrinet;
@@ -231,5 +233,45 @@ public class RuleDataTest {
 	@Test(expected=IllegalArgumentException.class) 
 	public void testIllegalArgument_constructor_jungData_3() { 
 		new RuleData(1,  rule, jungl, jungk, emptyJungl); 
+	}
+		
+		
+		/**
+		 * Ueberlagerung zweier Nodes nicht moeglich 
+		 */
+		@Test(expected=ShowAsWarningException.class) 
+		public void testIllegalArgument_moveNodeRelative() { 
+			
+	        Rule rule1 = TransformationComponent.getTransformation().createRule();
+	        
+	        DirectedGraph<INode, IArc> graph = new DirectedSparseGraph<INode, IArc>();
+	        JungData jungk1 = new JungData(graph, new StaticLayout<INode, IArc>(graph));
+	        
+	        graph = new DirectedSparseGraph<INode, IArc>();
+	        JungData jungl1 = new JungData(graph, new StaticLayout<INode, IArc>(graph));
+	        
+	        graph = new DirectedSparseGraph<INode, IArc>();
+	        JungData jungr1 = new JungData(graph, new StaticLayout<INode, IArc>(graph));
+	
+	        Place place1 = rule1.addPlaceToL("test1");
+	        Place placeNew = rule1.addPlaceToL("test2");
+	
+	        buildJung(rule1.getL(), jungl1);
+	        buildJung(rule1.getK(), jungk1);
+	        buildJung(rule1.getR(), jungr1);
+					
+			double xCoordinate1 = jungl1.getJungLayout().getX(place1);
+			double yCoordinate1 = jungl1.getJungLayout().getY(place1);
+			
+			double xCoordinateNew = jungl1.getJungLayout().getX(placeNew);
+			double yCoordinateNew = jungl1.getJungLayout().getY(placeNew);
+			
+			Double xToMove = xCoordinate1 - xCoordinateNew;
+			Double yToMove = yCoordinate1 - yCoordinateNew;
+					
+			Point2D movePlaceNewToCoordinate = new Point(xToMove.intValue(), yToMove.intValue());
+			
+			RuleData newRuleData = buildAndTest(3, rule1, jungl1, jungk1, jungr1);
+			newRuleData.moveNodeRelative(placeNew, movePlaceNewToCoordinate);
 	}
 }

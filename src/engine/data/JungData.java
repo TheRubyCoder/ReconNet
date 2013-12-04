@@ -40,6 +40,7 @@ import edu.uci.ics.jung.graph.DirectedGraph;
 import engine.Positioning;
 import engine.attribute.NodeLayoutAttribute;
 import engine.ihandler.IPetrinetManipulation;
+import exceptions.Exceptions;
 import gui.Style;
 
 /**
@@ -454,8 +455,6 @@ final public class JungData {
 		checkINodeInvariant(node);
 		if (checkForCollisions) {
 			checkPoint2DInvariant(coordinate);
-		} else {
-			// nothing
 		}
 		check(graph.containsVertex(node), "unknown node");
 
@@ -464,8 +463,6 @@ final public class JungData {
 
 		if (checkForCollisions) {
 			checkPoint2DLocation(coordinate, excludes);
-		} else {
-			// nothing
 		}
 
 		layout.setLocation(node, coordinate);
@@ -479,31 +476,32 @@ final public class JungData {
 	 */
 	public void deleteDataOfMissingElements(Petrinet petrinet) {
 		List<INode> missingNodes = new LinkedList<INode>();
-		List<IArc>  missingEdges = new LinkedList<IArc>();
+		List<IArc> missingEdges = new LinkedList<IArc>();
 
-		Set<Place>      places      = petrinet.getPlaces();
-		Set<Transition> transitions = petrinet.getTransitions();		
-		Set<IArc> 	    arcs        = petrinet.getArcs();
-		
+		Set<Place> places = petrinet.getPlaces();
+		Set<Transition> transitions = petrinet.getTransitions();
+		Set<IArc> arcs = petrinet.getArcs();
+
 		for (INode node : graph.getVertices()) {
 			if (node instanceof Place && !places.contains((Place) node)) {
 				missingNodes.add(node);
-				
-			} else if (node instanceof Transition && !transitions.contains((Transition) node)) {
+
+			} else if (node instanceof Transition
+					&& !transitions.contains((Transition) node)) {
 				missingNodes.add(node);
 			}
 		}
-		
+
 		for (IArc arc : graph.getEdges()) {
 			if (!arcs.contains(arc)) {
 				missingEdges.add(arc);
 			}
 		}
-		
+
 		for (INode missingNode : missingNodes) {
 			graph.removeVertex(missingNode);
 		}
-		
+
 		for (IArc arc : missingEdges) {
 			graph.removeEdge(arc);
 		}
@@ -688,18 +686,19 @@ final public class JungData {
 	 * @param excludes
 	 *            dont't check to these nodes
 	 */
-	private void checkPoint2DLocation(Point2D point, Collection<INode> excludes) {		
+	private void checkPoint2DLocation(Point2D point, Collection<INode> excludes) {
 		for (INode node : graph.getVertices()) {
-			if (excludes.contains(node)) {
-				continue;
+			if (!excludes.contains(node)) {
+				double xDistance = Math.abs(layout.getX(node) - point.getX());
+				double yDistance = Math.abs(layout.getY(node) - point.getY());
+
+				if (!(Double.compare(xDistance, getMinDinstance()) >= 0 || Double
+						.compare(yDistance, getMinDinstance()) >= 0)) {
+					Exceptions
+							.warning("An dieser Stelle befindet sich bereits ein Knoten!");
+				}
 			}
 
-			double xDistance = Math.abs(layout.getX(node) - point.getX());
-			double yDistance = Math.abs(layout.getY(node) - point.getY());
-
-			check(Double.compare(xDistance, getMinDinstance()) >= 0
-					|| Double.compare(yDistance, getMinDinstance()) >= 0,
-					"point is too close to a node");
 		}
 	}
 
