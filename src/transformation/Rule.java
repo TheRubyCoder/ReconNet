@@ -20,6 +20,7 @@ package transformation;
 
 import static transformation.dependency.PetrinetAdapter.createPetrinet;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -33,6 +34,7 @@ import petrinet.model.Place;
 import petrinet.model.PostArc;
 import petrinet.model.PreArc;
 import petrinet.model.Transition;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 
 /**
@@ -43,6 +45,20 @@ import petrinet.model.Transition;
  */
 
 public class Rule {
+	
+	/**
+	 * Indicates that a passed NAC isn't part of the rule that it was passed to
+	 * @author abj415
+	 *
+	 */
+	public class NACnotContainedException extends Exception {
+		//TODO
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -1697213998453938281L;
+	}
+
 	public enum Net {
 		L, K, R
 	}
@@ -53,6 +69,9 @@ public class Rule {
 	private final Petrinet l;
 	/** R part of the rule */
 	private final Petrinet r;
+	
+	/** NACs that belong to the rule */
+	private Set<NAC> nacs;
 
 	private final BidiMap<Place, Place> 		  placeMappingKToL;
 	private final BidiMap<PostArc, PostArc> 	  postArcMappingKToL;
@@ -110,7 +129,16 @@ public class Rule {
 		return r;
 	}
 
-
+    /**
+     * Returns an unmodifiable set of NACs.<p>
+     * Only for reading purposes. NAC manipulation is available via the according Rule.
+     *
+     * @return Set of this rule's NACs.
+     */
+    public Set<NAC> getNACs() {
+            //TODO make final??
+            return Collections.unmodifiableSet(nacs);
+    }
 
 	/**
 	 * Returns the postArcs (in R) that will be added on applying the rule.
@@ -236,8 +264,6 @@ public class Rule {
 		return transtions;
 	}
 	
-
-
 	/**
 	 * Sets the mark for the place and its mappings, that is only in L and K
 	 * 
@@ -289,7 +315,6 @@ public class Rule {
 			leftPlace.setMark(mark);
 		}
 	}
-	
 	/**
 	 * Sets the capacity for the place and its mappings, that is only in L and K
 	 * 
@@ -343,6 +368,11 @@ public class Rule {
 	}
 	
 
+	public void setMarkInNac(Place place, int mark, NAC nac) throws NACnotContainedException {
+		checkIfcontained(nac);
+		//TODO
+		throw new NotImplementedException();	}
+
 	/**
 	 * Sets the name of a place in a rule and modifies other parts of the rule accordingly
 	 * 
@@ -395,6 +425,11 @@ public class Rule {
 		}
 	}
 
+	public void setNameInNac(Place place, String name, NAC nac) throws NACnotContainedException {
+		checkIfcontained(nac);
+		//TODO
+		throw new NotImplementedException();	}
+	
 	/**
 	 * Sets the name of a transition in a rule and modifies other parts of the rule accordingly
 	 * 
@@ -446,6 +481,11 @@ public class Rule {
 			leftTransition.setName(name);
 		}
 	}
+	
+	public void setNameInNac(Transition transition, String name, NAC nac) throws NACnotContainedException {
+		checkIfcontained(nac);
+		//TODO
+		throw new NotImplementedException();	}
 
 	/**
 	 * Sets the tlb of a transition in a rule and modifies other parts of the rule accordingly
@@ -499,6 +539,10 @@ public class Rule {
 		}
 	}
 
+	public void setTlbInNac(Transition transition, String tlb, NAC nac) throws NACnotContainedException {
+		checkIfcontained(nac);
+		//TODO
+		throw new NotImplementedException();	}
 
 	/**
 	 * Sets the rnw of a transition in a rule and modifies other parts of the rule accordingly
@@ -552,6 +596,12 @@ public class Rule {
 		}
 	}
 	
+	public void setRnwInNac(Transition transition, IRenew rnw, NAC nac) throws NACnotContainedException {
+		checkIfcontained(nac);
+		//TODO
+		throw new NotImplementedException();	}
+
+	
 	/**
 	 * Sets the weight of a preArc in a rule and modifies other parts of the rule accordingly
 	 * 
@@ -604,10 +654,12 @@ public class Rule {
 		}
 	}
 
+	public void setWeightInNac(PreArc preArc, int weight, NAC nac) throws NACnotContainedException {
+		checkIfcontained(nac);
+		//TODO
+		throw new NotImplementedException();
+	}
 	
-
-
-
 	/**
 	 * Sets the weight of a postArc in a rule and modifies other parts of the rule accordingly
 	 * 
@@ -660,6 +712,12 @@ public class Rule {
 		}
 	}
 		
+	public void setWeightInNac(PostArc postArc, int weight, NAC nac) throws NACnotContainedException {
+		checkIfcontained(nac);
+		//TODO
+		throw new NotImplementedException();
+	}
+	
 	public Place addPlaceToL(String name) {
 		Place leftPlace = getL().addPlace(name);
 		
@@ -683,6 +741,13 @@ public class Rule {
 		placeMappingKToR.put(getK().addPlace(name), rightPlace);
 		
 		return rightPlace;
+	}
+	
+
+	public Place addPlaceToNac(String name, NAC nac) throws NACnotContainedException {
+		checkIfcontained(nac);
+		//TODO
+		throw new NotImplementedException();
 	}
 	
 	public Transition addTransitionToL(String name) {
@@ -730,7 +795,18 @@ public class Rule {
 		
 		return transition;
 	}
+
+	public Transition addTransitionToNac(String name, NAC nac) throws NACnotContainedException {
+		checkIfcontained(nac);
+		//TODO
+		throw new NotImplementedException();
+	}
 	
+	public Transition addTransitionToNac(String name, IRenew rnw, NAC nac) throws NACnotContainedException {
+		checkIfcontained(nac);
+		//TODO
+		throw new NotImplementedException();
+	}
 
 	public PreArc addPreArcToL(String name, Place place, Transition transition) {
 		PreArc leftPreArc = getL().addPreArc(name, place, transition);
@@ -768,6 +844,11 @@ public class Rule {
 		return rightPreArc;
 	}
 	
+	public PreArc addPreArcToNac(String name, Place place, Transition transition, NAC nac) throws NACnotContainedException {
+		checkIfcontained(nac);
+		//TODO
+		throw new NotImplementedException();
+	}
 	public PostArc addPostArcToL(String name, Transition transition, Place place) {
 		PostArc leftPostArc = getL().addPostArc(name, transition, place);
 		
@@ -804,6 +885,12 @@ public class Rule {
 		return rightPostArc;
 	}
 		
+	public PostArc addPostArcToNac(String name, Transition transition, Place place, NAC nac) throws NACnotContainedException {
+		checkIfcontained(nac);
+		//TODO
+		throw new NotImplementedException();
+	}
+	
 	public void removePlaceFromL(Place place) {		
 		removePlaceFromK(fromLtoK(place));	
 	}
@@ -824,6 +911,10 @@ public class Rule {
 	}
 	
 	public void removePlaceFromR(Place place) {
+		removePlaceFromK(fromRtoK(place));
+	}
+	
+	public void removePlaceFromNac(Place place, NAC nac) {
 		removePlaceFromK(fromRtoK(place));
 	}
 		
@@ -850,6 +941,11 @@ public class Rule {
 		removeTransitionFromK(fromRtoK(transition));
 	}
 	
+	public void removeTransitionFromNac(Transition transition, NAC nac) throws NACnotContainedException {
+		checkIfcontained(nac);
+		//TODO
+		throw new NotImplementedException();
+	}
 	public void removePreArcFromL(PreArc preArc) {
 		removePreArcFromK(fromLtoK(preArc));
 	}
@@ -871,6 +967,12 @@ public class Rule {
 	
 	public void removePreArcFromR(PreArc preArc) {
 		removePreArcFromK(fromRtoK(preArc));
+	}
+	
+	public void removePreArcFromNac(PreArc preArc, NAC nac) throws NACnotContainedException {
+		checkIfcontained(nac);
+		//TODO
+		throw new NotImplementedException();
 	}
 	
 	public void removePostArcFromL(PostArc postArc) {
@@ -896,6 +998,11 @@ public class Rule {
 		removePostArcFromK(fromRtoK(postArc));
 	}
 	
+	public void removePostArcFromNac(PostArc postArc, NAC nac) throws NACnotContainedException {
+		checkIfcontained(nac);
+		//TODO
+		throw new NotImplementedException();
+	}
 
 	/**
 	 * Returns the corresponding place in L.
@@ -1136,5 +1243,15 @@ public class Rule {
 	 */
 	public Transition fromRtoL(Transition transition) {
 		return fromKtoL(fromRtoK(transition));
+	}
+	
+	/**
+	 * Checks if the passed NAC is part of this rules NAC set
+	 * @param nac	The NAC that is supposed to be contained
+	 * @throws NACnotContainedException If it isn't
+	 */
+	private void checkIfcontained(NAC nac) throws NACnotContainedException {
+		//TODO
+		throw new NACnotContainedException();
 	}
 }
