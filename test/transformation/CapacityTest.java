@@ -41,73 +41,70 @@ import transformation.matcher.PNVF2.MatchException;
 import data.MorphismData;
 
 public class CapacityTest {
-	
+
 	private static Petrinet fromNet;
 	private static Petrinet toNet;
 	private static Place fromPlace;
 	private static Place toPlace;
-	
+
 	@BeforeClass
 	public static void setUpOnce() throws Exception {
-		
+
 		fromNet = PetrinetComponent.getPetrinet().createPetrinet();
-		
+
 		fromPlace = fromNet.addPlace("P1");
-		
+
 		Transition t1 = fromNet.addTransition("A", new Identity());
 		Transition t2 = fromNet.addTransition("A", new Identity());
 		Transition t3 = fromNet.addTransition("A", new Identity());
-	
+
 		fromNet.addPostArc("", t1, fromPlace);
 		fromNet.addPostArc("", t2, fromPlace);
 
 		fromNet.addPreArc("", fromPlace, t3);
-				
+
 		fromPlace.setMark(2);
-		
-		
-		
+
 		toNet = PetrinetComponent.getPetrinet().createPetrinet();
-		
+
 		toPlace = toNet.addPlace("P1");
-		
+
 		Transition t11 = toNet.addTransition("A", new Identity());
 		Transition t12 = toNet.addTransition("A", new Identity());
 		Transition t13 = toNet.addTransition("A", new Identity());
-		
+
 		toNet.addPostArc("", t11, toPlace);
 		toNet.addPostArc("", t12, toPlace);
 
 		toNet.addPreArc("", toPlace, t13);
-		
+
 		toPlace.setMark(2);
 	}
 
-	
 	@Test
 	public void testMatchPlacesWithSameCapacity() throws MatchException {
 
-//			Place fromPlace = fromNet.getPlaces().iterator().next();
-		
-			fromPlace.setCapacity(5);
-			toPlace.setCapacity(5);
-			
-			Match match = PNVF2.getInstance(fromNet, toNet).getMatch(false);
-			
-			Place tmpToPlace = match.getPlace(fromPlace);
-			
-			assertEquals(tmpToPlace, toPlace);
+		// Place fromPlace = fromNet.getPlaces().iterator().next();
+
+		fromPlace.setCapacity(5);
+		toPlace.setCapacity(5);
+
+		Match match = PNVF2.getInstance(fromNet, toNet).getMatch(false);
+
+		Place tmpToPlace = match.getPlace(fromPlace);
+
+		assertEquals(tmpToPlace, toPlace);
 	}
-	
-	@Test(expected=MatchException.class) 
-	public void testNoMatchOfPlacesWithDifferentSameCapacity() throws MatchException {
-		
+
+	@Test(expected = MatchException.class)
+	public void testNoMatchOfPlacesWithDifferentSameCapacity()
+			throws MatchException {
+
 		fromPlace.setCapacity(5);
 		toPlace.setCapacity(6);
-		
+
 		Match match = PNVF2.getInstance(fromNet, toNet).getMatch(false);
-		
+
 	}
-	
-	
+
 }

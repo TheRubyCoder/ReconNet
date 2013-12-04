@@ -39,7 +39,8 @@ import transformation.rules.*;
 	Rule1Test.class,
 	ScenariosRuleCreationTest.class ,
 	PNVF2Test.class,
-	WeightTest.class
+	WeightTest.class,
+	CapacityTest.class
 	}
 )
 
