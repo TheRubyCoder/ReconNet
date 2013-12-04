@@ -339,34 +339,34 @@ public class MorphismData {
 		//mark
 		p7.setMark(2);
 		
-//		
-//		// The matching subnet capacity is to high
-//		Place p8 = result.addPlace("P1");
-//		idsMatchedPlaces.add(p8.getId());
-//
-//								
-//		Transition t81 = result.addTransition("A", renewId);
-//		Transition t82 = result.addTransition("A", renewId);
-//		Transition t83 = result.addTransition("A", renewId);
-//		Transition t84 = result.addTransition("A", renewId);
-//		Transition t85 = result.addTransition("A", renewId);
-//		Transition t86 = result.addTransition("A", renewId);
-//								
-//		// pre
-//		result.addPostArc("", t81, p8);
-//		result.addPostArc("", t82, p8);
-//		result.addPostArc("", t83, p8);
-//								
-//		//post
-//		result.addPreArc("", p8, t84);
-//		result.addPreArc("", p8, t85);
-//		result.addPreArc("", p8, t86);
-//		
-//		//capacity
-//		p8.setCapacity(4);
-//								
-//		//mark
-//		p8.setMark(4);
+		
+		/*// The matching subnet capacity is to high
+		Place p8 = result.addPlace("P1");
+		idsMatchedPlaces.add(p8.getId());
+
+								
+		Transition t81 = result.addTransition("A", renewId);
+		Transition t82 = result.addTransition("A", renewId);
+		Transition t83 = result.addTransition("A", renewId);
+		Transition t84 = result.addTransition("A", renewId);
+		Transition t85 = result.addTransition("A", renewId);
+		Transition t86 = result.addTransition("A", renewId);
+								
+		// pre
+		result.addPostArc("", t81, p8);
+		result.addPostArc("", t82, p8);
+		result.addPostArc("", t83, p8);
+								
+		//post
+		result.addPreArc("", p8, t84);
+		result.addPreArc("", p8, t85);
+		result.addPreArc("", p8, t86);
+		
+		//capacity
+		p8.setCapacity(4);
+								
+		//mark
+		p8.setMark(4);*/
 
 		
 		return result;
