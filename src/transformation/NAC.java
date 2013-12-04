@@ -20,7 +20,7 @@ import petrinet.model.Transition;
  */
 public class NAC {
 
-        // N part of the NAC
+        // Nac part of the NAC
         private Petrinet nac;
 
         // Mapping part of the NAC
@@ -38,9 +38,6 @@ public class NAC {
                 preArcMappingLToNac     = new DualHashBidiMap<PreArc, PreArc>();
                 transitionMappingLToNac = new DualHashBidiMap<Transition, Transition>();
         }
-
-
-        // TODO setters
 
         public Petrinet getNac() {
                 return nac;
@@ -85,4 +82,6 @@ public class NAC {
         public Transition fromLtoNac(Transition t){
                 return transitionMappingLToNac.get(t);
         }
+        
+        //TODO Protected setters
 }
