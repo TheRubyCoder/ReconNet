@@ -86,10 +86,15 @@ final public class Petrinet {
 	 * @param  name    	   Name of the {@link PostArc}
 	 * @param  transition  start  {@link Transition transition}  of the arc
 	 * @param  place       target {@link Place place} of the arc
+	 * @param weight       weight of the arc
 	 * @return The new {@link PostArc}
 	 * @throws IllegalArgumentException
 	 */
 	public PostArc addPostArc(String name, Transition transition, Place place) {
+		        return addPostArc(name, transition, place, 1); 
+	}
+	
+	public PostArc addPostArc(String name, Transition transition, Place place, int weight) {
 		if (name == null || place == null || transition == null
 		|| !place.equals(places.get(place.getId()))
 		|| !transition.equals(transitions.get(transition.getId()))) {
@@ -102,7 +107,7 @@ final public class Petrinet {
 		}
 
 		int           id  = UUID.getaID();		
-		final PostArc arc = new PostArc(id, transition, place, name, 1);
+		final PostArc arc = new PostArc(id, transition, place, name, weight);
 
 		transition.addOutgoingArc(arc);
 		place.addIncomingArc(arc);
@@ -122,27 +127,61 @@ final public class Petrinet {
 	 * @throws IllegalArgumentException
 	 */
 	public PreArc addPreArc(String name, Place place, Transition transition) {
-		if (name == null || place == null || transition == null
-		|| !place.equals(places.get(place.getId()))
-		|| !transition.equals(transitions.get(transition.getId()))) {
-			throw new IllegalArgumentException();
-		}
-		
-		if (transition.getIncomingPlaces().contains(place)
-		 || place.getOutgoingTransitions().contains(transition)) {
-			throw new IllegalArgumentException("arc already exists");			
-		}
-
-		int          id  = UUID.getaID();		
-		final PreArc arc = new PreArc(id, place, transition, name, 1);
-
-		place.addOutgoingArc(arc);
-		transition.addIncomingArc(arc);
-
-		preArcs.put(id, arc);
-
-		return arc;
+		return addPreArc(name, place, transition, 1);
+//		if (name == null || place == null || transition == null
+//		|| !place.equals(places.get(place.getId()))
+//		|| !transition.equals(transitions.get(transition.getId()))) {
+//			throw new IllegalArgumentException();
+//		}
+//		
+//		if (transition.getIncomingPlaces().contains(place)
+//		 || place.getOutgoingTransitions().contains(transition)) {
+//			throw new IllegalArgumentException("arc already exists");			
+//		}
+//
+//		int          id  = UUID.getaID();		
+//		final PreArc arc = new PreArc(id, place, transition, name, 1);
+//
+//		place.addOutgoingArc(arc);
+//		transition.addIncomingArc(arc);
+//
+//		preArcs.put(id, arc);
+//
+//		return arc;
 	}
+	
+	/**
+	     * Adds a new {@link PreArc} to the petrinet
+	     * 
+	     * @param  name        Name of the {@link PreArc}
+	     * @param  place       start {@link Place place}  of the arc
+	     * @param  transition  target {@link Transition transition} of the arc
+	     * @param  weight      weight of the arc
+	     * @return The new {@link PreArc}
+	     * @throws IllegalArgumentException
+	     */
+	    public PreArc addPreArc(String name, Place place, Transition transition, int weight) {
+	        if (name == null || place == null || transition == null
+	        || !place.equals(places.get(place.getId()))
+	        || !transition.equals(transitions.get(transition.getId()))) {
+	            throw new IllegalArgumentException();
+	        }
+	        
+	        if (transition.getIncomingPlaces().contains(place)
+	         || place.getOutgoingTransitions().contains(transition)) {
+	            throw new IllegalArgumentException("arc already exists");           
+	        }
+	
+	        int          id  = UUID.getaID();       
+	        final PreArc arc = new PreArc(id, place, transition, name, weight);
+	
+	        place.addOutgoingArc(arc);
+	        transition.addIncomingArc(arc);
+	
+	        preArcs.put(id, arc);
+	
+	        return arc;
+	    }
 	
 	public boolean containsArc(int id) {
 		return containsPreArc(id) || containsPostArc(id);
