@@ -66,6 +66,7 @@ public class CapacityTest {
 		p1.setCapacity(5);
 		
 		
+		
 		toNet = PetrinetComponent.getPetrinet().createPetrinet();
 		
 		Place p2 = fromNet.addPlace("P1");
@@ -74,9 +75,28 @@ public class CapacityTest {
 		Transition t12 = fromNet.addTransition("A", new Identity());
 		Transition t13 = fromNet.addTransition("A", new Identity());
 		
+		fromNet.addPostArc("", t11, p2);
+		fromNet.addPostArc("", t12, p2);
+
+		fromNet.addPreArc("", p2, t13);
+		
 		p2.setMark(2);
 		
 		
 	}
 
+	
+	@Test
+	public void testPlacesTest() {
+//		try {
+//			Match match = PNVF2.getInstance(fromNet, toNet).getMatch(false);
+//			assertEquals(match.getPlace(place))
+//		} catch (MatchException e) {
+//			
+//			e.printStackTrace();
+//		} 
+		
+	}
+	
+	
 }
