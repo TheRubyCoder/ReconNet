@@ -51,8 +51,12 @@ public class NAC {
 	private final BidiMap<PreArc, PreArc> preArcMappingLToNac;
 	private final BidiMap<Transition, Transition> transitionMappingLToNac;
 	
+<<<<<<< Upstream, based on origin/master
 	// internal UUID to avoid collisions during modifications
 	private final UUID id;
+=======
+	//TODO add a UUID to avoid collisions during NAC modifications?
+>>>>>>> d2de2a2 Minimal NAC construction added.
 
 	/**
 	 * Constructs a new NAC from a given L-part of a rule.
@@ -62,8 +66,11 @@ public class NAC {
 	 */
 	protected NAC(Petrinet l) {
 		nac = createPetrinet();
+<<<<<<< Upstream, based on origin/master
 		
 		id = UUID.randomUUID();
+=======
+>>>>>>> d2de2a2 Minimal NAC construction added.
 
 		placeMappingLToNac = new DualHashBidiMap<Place, Place>();
 		postArcMappingLToNac = new DualHashBidiMap<PostArc, PostArc>();
@@ -148,6 +155,7 @@ public class NAC {
 	// TODO Protected adders
 
 	// TODO Protected removers
+<<<<<<< Upstream, based on origin/master
 	
 	@Override
 	public int hashCode() {
@@ -173,4 +181,6 @@ public class NAC {
 			return false;
 		return true;
 	}
+=======
+>>>>>>> d2de2a2 Minimal NAC construction added.
 }
