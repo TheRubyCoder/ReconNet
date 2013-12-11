@@ -20,6 +20,8 @@ package transformation;
 
 import static transformation.dependency.PetrinetAdapter.createPetrinet;
 
+import java.util.UUID;
+
 import org.apache.commons.collections15.BidiMap;
 import org.apache.commons.collections15.bidimap.DualHashBidiMap;
 
@@ -49,7 +51,8 @@ public class NAC {
 	private final BidiMap<PreArc, PreArc> preArcMappingLToNac;
 	private final BidiMap<Transition, Transition> transitionMappingLToNac;
 	
-	//TODO add a UUID to avoid collisions during NAC modifications?
+	// internal UUID to avoid collisions during modifications
+	private final UUID id;
 
 	/**
 	 * Constructs a new NAC from a given L-part of a rule.
@@ -59,6 +62,8 @@ public class NAC {
 	 */
 	protected NAC(Petrinet l) {
 		nac = createPetrinet();
+		
+		id = UUID.randomUUID();
 
 		placeMappingLToNac = new DualHashBidiMap<Place, Place>();
 		postArcMappingLToNac = new DualHashBidiMap<PostArc, PostArc>();
@@ -143,4 +148,29 @@ public class NAC {
 	// TODO Protected adders
 
 	// TODO Protected removers
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof NAC))
+			return false;
+		NAC other = (NAC) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
 }
