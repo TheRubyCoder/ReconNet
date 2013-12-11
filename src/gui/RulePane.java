@@ -18,196 +18,232 @@
 
 package gui;
 
-import static gui.Style.RULE_PANEL_LAYOUT;
 import static gui.Style.RULE_PANE_BORDER_K;
 import static gui.Style.RULE_PANE_BORDER_L;
+import static gui.Style.RULE_PANE_BORDER_NAC;
 import static gui.Style.RULE_PANE_BORDER_R;
+import static gui.Style.TOTAL_WIDTH;
 
 import java.awt.GridLayout;
 import java.util.List;
 
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 
 import petrinet.model.IArc;
 import petrinet.model.INode;
+import transformation.ITransformation;
 import transformation.TransformationComponent;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import engine.handler.RuleNet;
 import exceptions.EngineException;
 
 /** Pane for displaying rules */
-class RulePane {
+public class RulePane {
 
-	/** Internal JPanel for gui-layouting the petrinet */
-	private JPanel rulePanel;
+    /** Internal JPanel for gui-layouting the petrinet */
+    private JSplitPane rulePanel;
 
-	private JPanel lBorderPanel;
+    private JPanel lPanel;
 
-	private JPanel kBorderPanel;
+    private JPanel kPanel;
 
-	private JPanel rBorderPanel;
+    private JPanel rPanel;
 
-	private PetrinetViewer lViewer;
+    private JPanel nacPanel;
 
-	private PetrinetViewer kViewer;
+    private PetrinetViewer lViewer;
 
-	private PetrinetViewer rViewer;
+    private PetrinetViewer kViewer;
 
-	private int currentId;
+    private PetrinetViewer rViewer;
 
-	/** Singleton */
-	private RulePane() {
-		rulePanel = new JPanel();
-		rulePanel.setLayout(RULE_PANEL_LAYOUT);
+    private PetrinetViewer nacViewer;
 
-		lBorderPanel = new JPanel();
-		kBorderPanel = new JPanel();
-		rBorderPanel = new JPanel();
+    private int currentId;
 
-		rulePanel.add(lBorderPanel);
-		rulePanel.add(kBorderPanel);
-		rulePanel.add(rBorderPanel);
+    private JSplitPane leftRulePanel;
 
-		lBorderPanel.setBorder(RULE_PANE_BORDER_L);
-		lBorderPanel.setLayout(new GridLayout(1, 1));
+    private JSplitPane rightRulePanel;
 
-		kBorderPanel.setBorder(RULE_PANE_BORDER_K);
-		kBorderPanel.setLayout(new GridLayout(1, 1));
+    /** Singleton */
+    private RulePane() {
+        this.initializeLeftRulePanel();
+        this.initializeRightRulePanel();
 
-		rBorderPanel.setBorder(RULE_PANE_BORDER_R);
-		rBorderPanel.setLayout(new GridLayout(1, 1));
+        this.rulePanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.leftRulePanel, this.rightRulePanel);
+        this.rulePanel.setOneTouchExpandable(true);
+        this.rulePanel.setResizeWeight(.5);
 
-	}
+        this.setDividerLocations();
+    }
 
-	private static RulePane instance;
+    private static RulePane instance;
 
-	static {
-		instance = new RulePane();
-	}
+    static {
+        instance = new RulePane();
+    }
 
-	static RulePane getInstance() {
-		return instance;
-	}
+    public static RulePane getInstance() {
+        return instance;
+    }
 
-	/** Adds the rule pane to the given JPanel (frame) */
-	void addTo(JPanel frame) {
-		frame.add(rulePanel);
-	}
+    private void initializeLeftRulePanel() {
+        this.nacPanel = new JPanel(new GridLayout(1, 1));
+        this.lPanel = new JPanel(new GridLayout(1, 1));
 
-	void repaint() {
-		lViewer.repaint();
-		kViewer.repaint();
-		rViewer.repaint();
-	}
+        this.nacPanel.setBorder(RULE_PANE_BORDER_NAC);
+        this.lPanel.setBorder(RULE_PANE_BORDER_L);
 
-	/**
-	 * Replaces the current PetrinetViewers so the new rule is displayed.
-	 */
-	public void displayRule(int ruleId) {
-		currentId = ruleId;
-		try {
-			Layout<INode, IArc> lLayout = EngineAdapter.getRuleManipulation()
-					.getJungLayout(ruleId, RuleNet.L);
-			Layout<INode, IArc> kLayout = EngineAdapter.getRuleManipulation()
-					.getJungLayout(ruleId, RuleNet.K);
-			Layout<INode, IArc> rLayout = EngineAdapter.getRuleManipulation()
-					.getJungLayout(ruleId, RuleNet.R);
-			if (lViewer != null) {
-				lViewer.removeFrom(lBorderPanel);
-				kViewer.removeFrom(kBorderPanel);
-				rViewer.removeFrom(rBorderPanel);
-			}
-			lViewer = new PetrinetViewer(lLayout, ruleId, RuleNet.L);
-			kViewer = new PetrinetViewer(kLayout, ruleId, RuleNet.K);
-			rViewer = new PetrinetViewer(rLayout, ruleId, RuleNet.R);
+        this.leftRulePanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.nacPanel, this.lPanel);
+        this.leftRulePanel.setOneTouchExpandable(true);
+        this.leftRulePanel.setResizeWeight(.5);
+    }
 
-			double nodeSize = EngineAdapter.getRuleManipulation().getNodeSize(
-					ruleId);
-			
-			lViewer.setNodeSize(nodeSize);
-			kViewer.setNodeSize(nodeSize);
-			rViewer.setNodeSize(nodeSize);
+    private void initializeRightRulePanel() {
+        this.kPanel = new JPanel(new GridLayout(1, 1));
+        this.rPanel = new JPanel(new GridLayout(1, 1));
 
-			lViewer.addTo(lBorderPanel);
-			kViewer.addTo(kBorderPanel);
-			rViewer.addTo(rBorderPanel);
+        this.kPanel.setBorder(RULE_PANE_BORDER_K);
+        this.rPanel.setBorder(RULE_PANE_BORDER_R);
 
-			MainWindow.getInstance().repaint();
-		} catch (EngineException e) {
-			PopUp.popError(e);
-			e.printStackTrace();
-		}
-	}
+        this.rightRulePanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, this.kPanel, this.rPanel);
+        this.rightRulePanel.setOneTouchExpandable(true);
+        this.rightRulePanel.setResizeWeight(.5);
+    }
 
-	/**
-	 * Very similar to
-	 * {@link ITransformation#getMappings(transformation.Rule, INode)}. But it
-	 * returns the mappings for the one selected node of the user
-	 * 
-	 * @see {@link PetrinetViewer#currentSelectedNode}
-	 * @return <code>null</code> if selected node does not exists anymore
-	 */
-	public List<INode> getMappingsOfSelectedNode() {
-		return TransformationComponent.getTransformation().getMappings(
-				currentId, getCurrentSelectedNode());
-	}
+    /** Adds the rule pane to the given JPanel (frame) */
+    void addTo(JPanel frame) {
+        frame.add(rulePanel);
+    }
 
-	/**
-	 * Returns the currently selected node of the rule. <code>null</code> if no
-	 * node is selected
-	 * 
-	 * @return
-	 */
-	private INode getCurrentSelectedNode() {
-		if (lViewer.currentSelectedNode != null) {
-			return lViewer.currentSelectedNode;
-		} else if (kViewer.currentSelectedNode != null) {
-			return kViewer.currentSelectedNode;
-		} else {
-			return rViewer.currentSelectedNode;
-		}
-	}
+    void repaint() {
+        nacViewer.repaint();
+        lViewer.repaint();
+        kViewer.repaint();
+        rViewer.repaint();
+    }
 
-	/**
-	 * Makes the {@link RulePane} display empty space, in case no rule is selected
-	 */
-	public void displayEmpty() {
-		if (lViewer != null) {
-			lViewer.removeFrom(lBorderPanel);
-			kViewer.removeFrom(kBorderPanel);
-			rViewer.removeFrom(rBorderPanel);
-			MainWindow.getInstance().repaint();
-		}
-	}
+    /**
+     * Replaces the current PetrinetViewers so the new rule is displayed.
+     */
+    public void displayRule(int ruleId) {
+        currentId = ruleId;
+        try {
+            // TODO:
+            Layout<INode, IArc> nacLayout = EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.L);
+            Layout<INode, IArc> lLayout = EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.L);
+            Layout<INode, IArc> kLayout = EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.K);
+            Layout<INode, IArc> rLayout = EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.R);
+            if (lViewer != null) {
+                nacViewer.removeFrom(nacPanel);
+                lViewer.removeFrom(lPanel);
+                kViewer.removeFrom(kPanel);
+                rViewer.removeFrom(rPanel);
+            }
+            nacViewer = new PetrinetViewer(nacLayout, ruleId, RuleNet.L);
+            lViewer = new PetrinetViewer(lLayout, ruleId, RuleNet.L);
+            kViewer = new PetrinetViewer(kLayout, ruleId, RuleNet.K);
+            rViewer = new PetrinetViewer(rLayout, ruleId, RuleNet.R);
 
-	/**
-	 * Resets {@link PetrinetViewer#currentSelectedNode} for all viewers in the
-	 * rule but not for <code>petrinetViewer</code>
-	 * 
-	 * @param petrinetViewer
-	 */
-	public void deselectBut(PetrinetViewer petrinetViewer) {
-		if (lViewer != petrinetViewer) {
-			lViewer.currentSelectedNode = null;
-		}
-		if (kViewer != petrinetViewer) {
-			kViewer.currentSelectedNode = null;
-		}
-		if (rViewer != petrinetViewer) {
-			rViewer.currentSelectedNode = null;
-		}
-	}
+            double nodeSize = EngineAdapter.getRuleManipulation().getNodeSize(ruleId);
+            nacViewer.setNodeSize(nodeSize);
+            lViewer.setNodeSize(nodeSize);
+            kViewer.setNodeSize(nodeSize);
+            rViewer.setNodeSize(nodeSize);
 
-	/**
-	 * Resizes Nodes on all parts of the rule
-	 * 
-	 * @see {@link PetrinetViewer#resizeNodes(float)}
-	 * @param factor
-	 */
-	public void resizeNodes(float factor) {
-		lViewer.resizeNodesOnlyOnThisPartOfRule(factor);
-		kViewer.resizeNodesOnlyOnThisPartOfRule(factor);
-		rViewer.resizeNodesOnlyOnThisPartOfRule(factor);
-	}
+            nacViewer.addTo(nacPanel);
+            lViewer.addTo(lPanel);
+            kViewer.addTo(kPanel);
+            rViewer.addTo(rPanel);
+
+            MainWindow.getInstance().repaint();
+        } catch (EngineException e) {
+            PopUp.popError(e);
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Very similar to
+     * {@link ITransformation#getMappings(transformation.Rule, INode)}. But it
+     * returns the mappings for the one selected node of the user
+     * 
+     * @see {@link PetrinetViewer#currentSelectedNode}
+     * @return <code>null</code> if selected node does not exists anymore
+     */
+    public List<INode> getMappingsOfSelectedNode() {
+        return TransformationComponent.getTransformation().getMappings(currentId, getCurrentSelectedNode());
+    }
+
+    /**
+     * Returns the currently selected node of the rule. <code>null</code> if no
+     * node is selected
+     * 
+     * @return
+     */
+    private INode getCurrentSelectedNode() {
+        if (lViewer.currentSelectedNode != null) {
+            return lViewer.currentSelectedNode;
+        } else if (kViewer.currentSelectedNode != null) {
+            return kViewer.currentSelectedNode;
+        } else {
+            return rViewer.currentSelectedNode;
+        }
+    }
+
+    /**
+     * Makes the {@link RulePane} display empty space, in case no rule is
+     * selected
+     */
+    public void displayEmpty() {
+        if (lViewer != null) {
+            nacViewer.removeFrom(nacPanel);
+            lViewer.removeFrom(lPanel);
+            kViewer.removeFrom(kPanel);
+            rViewer.removeFrom(rPanel);
+            MainWindow.getInstance().repaint();
+        }
+    }
+
+    /**
+     * Resets {@link PetrinetViewer#currentSelectedNode} for all viewers in the
+     * rule but not for <code>petrinetViewer</code>
+     * 
+     * @param petrinetViewer
+     */
+    public void deselectBut(PetrinetViewer petrinetViewer) {
+        if (nacViewer != petrinetViewer) {
+            nacViewer.currentSelectedNode = null;
+        }
+        if (lViewer != petrinetViewer) {
+            lViewer.currentSelectedNode = null;
+        }
+        if (kViewer != petrinetViewer) {
+            kViewer.currentSelectedNode = null;
+        }
+        if (rViewer != petrinetViewer) {
+            rViewer.currentSelectedNode = null;
+        }
+    }
+
+    /**
+     * Resizes Nodes on all parts of the rule
+     * 
+     * @see {@link PetrinetViewer#resizeNodes(float)}
+     * @param factor
+     */
+    public void resizeNodes(float factor) {
+        nacViewer.resizeNodesOnlyOnThisPartOfRule(factor);
+        lViewer.resizeNodesOnlyOnThisPartOfRule(factor);
+        kViewer.resizeNodesOnlyOnThisPartOfRule(factor);
+        rViewer.resizeNodesOnlyOnThisPartOfRule(factor);
+    }
+
+    private void setDividerLocations() {
+        this.rulePanel.setDividerLocation(TOTAL_WIDTH / 2);
+        this.leftRulePanel.setDividerLocation(TOTAL_WIDTH / 4);
+        this.rightRulePanel.setDividerLocation(TOTAL_WIDTH / 4);
+    }
 
 }
