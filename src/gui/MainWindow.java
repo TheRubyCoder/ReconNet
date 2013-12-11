@@ -30,171 +30,157 @@ import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 
 import engine.handler.petrinet.PetrinetManipulation;
 import engine.ihandler.IPetrinetManipulation;
+import gui.fileTree.FileTreePane;
 
 /**
  * Main Window that contains all sub areas
  */
 class MainWindow {
 
-	/** The main frame of the gui */
-	JFrame mainFrame;
+    // -------------GUI Panels-------------------------
 
-	/** The Head Panel */
-	JPanel headPanel;
+    /**
+     * The main frame of the gui
+     */
+    JFrame mainFrame;
 
-	/** The Panel of the left side */
-	JPanel leftPanel;
+    /**
+     * The Head panel of the gui
+     */
+    JPanel headPanel;
 
-	/** The Panel of the center */
-	JPanel centerPanel;
+    /**
+     * The Body panel of the gui
+     */
+    JSplitPane bodyPanel;
 
-	/** PetrinetManipulation aspect of engine */
-	private static IPetrinetManipulation manipulation;
+    /**
+     * The UpperBody panel of the gui
+     */
+    JPanel upperBodyPanel;
+
+    // ------------END of GUI Panel--------------------
 
 
-	/** singleton instance */
-	private static MainWindow instance;
+    /** PetrinetManipulation aspect of engine */
+    private static IPetrinetManipulation manipulation;
 
-	// static constructor that initiates the singleton instance and constants
-	static {
-		instance = new MainWindow();
-	}
+    /** singleton instance */
+    private static MainWindow instance;
 
-	/** Returns the only instance of the main window */
-	public static MainWindow getInstance() {
-		return instance;
-	}
+    // static constructor that initiates the singleton instance and constants
+    static {
+        instance = new MainWindow();
+    }
 
-	/** Returns petrinet manipulation aspect of engine*/
-	public static IPetrinetManipulation getPetrinetManipulation() {
-		return manipulation;
-	}
+    /** Returns the only instance of the main window */
+    public static MainWindow getInstance() {
+        return instance;
+    }
 
-	/** Private Constructor that configures the main window */
-	private MainWindow() {
-		initiateDependencies();
-		initializeMainFrame();
-		addEditorPane();
-		addAttributePane();
-		addSimulationPane();
-		addPetrinetPane();
-		addRulePane();
-		addFilePanes();
-		show();
-	}
+    /** Returns petrinet manipulation aspect of engine */
+    public static IPetrinetManipulation getPetrinetManipulation() {
+        return manipulation;
+    }
 
-	/** Initiates references to engine */
-	private void initiateDependencies() {
-		manipulation = PetrinetManipulation.getInstance();
-	}
+    /** Private Constructor that configures the main window */
+    private MainWindow() {
+        initiateDependencies();
+        initializeMainFrame();
+        initializeGuiComponents();
+        addGuiComponents();
+        show();
+        this.setDividerLocations();
+    }
+    
 
-	/**
-	 * Initializes the main frame with defaults values for title, size and
-	 * position
-	 */
-	private void initializeMainFrame() {
-		mainFrame = new JFrame();
-		mainFrame.setTitle("ReconNet");
-		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage("src/gui/icons/ReconNetLogo.png"));
-		mainFrame.setSize(TOTAL_WIDTH, TOTAL_HEIGHT);
-		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainFrame.setLayout(new BorderLayout());
+    private void setDividerLocations() {
+        this.bodyPanel.setDividerLocation(this.bodyPanel.getHeight() / 2);
+    }
 
-		JPanel head = initializeHeadPanel();
-		mainFrame.getContentPane().add(head, BorderLayout.PAGE_START);
+    private void addGuiComponents() {
+        mainFrame.getContentPane().add(this.headPanel, BorderLayout.PAGE_START);
+        mainFrame.getContentPane().add(this.bodyPanel, BorderLayout.CENTER);
+    }
 
-		JPanel left = initializeLeftPanel();
-		mainFrame.getContentPane().add(left, BorderLayout.WEST);
 
-		JPanel center = initializeCenterPanel();
-		mainFrame.getContentPane().add(center, BorderLayout.CENTER);
-	}
+    /**
+     * Initializes the main frame with defaults values for title, size and
+     * position
+     */
+    private void initializeMainFrame() {
+        mainFrame = new JFrame();
+        mainFrame.setTitle("ReconNet");
+        mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage("src/gui/icons/ReconNetLogo.png"));
+        mainFrame.setSize(TOTAL_WIDTH, TOTAL_HEIGHT);
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainFrame.setLayout(new BorderLayout());
+    }
+    
 
-	/**
-	 * Initialize the Mainpanel in the Center with 2 Rows for the Petrinetpane
-	 * and Rulepane
-	 */
-	private JPanel initializeCenterPanel() {
-		GridLayout layout = new GridLayout(2, 1);
-		centerPanel = new JPanel(layout);
+    /**
+     * Adds GUI components to frame.
+     */
+    private void initializeGuiComponents() {
+        initializeHeadPanel();
+        initializeBodyPanel();
+    }
 
-		return centerPanel;
-	}
+    /**
+     * Adds the body panel (JSPlitPane) to frame.
+     */
+    private void initializeBodyPanel() {
+        initializeUpperBodyPanel();
+        JPanel p = new JPanel(new GridLayout(1, 1));
+        RulePane.getInstance().addTo(p);
+        this.bodyPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, this.upperBodyPanel, p);
+        this.bodyPanel.setOneTouchExpandable(true);
+        this.bodyPanel.setResizeWeight(.5);
+    }
 
-	/**
-	 * Initialize the Headpanel with Borderlayout and the Dimension for the
-	 * Panel
-	 */
-	private JPanel initializeHeadPanel() {
-		BorderLayout layout = new BorderLayout();
-		headPanel = new JPanel(layout);
-		headPanel.setPreferredSize(HEADER_DIMENSION);
-		headPanel.setMinimumSize(HEADER_DIMENSION);
+    private void initializeUpperBodyPanel() {
+        this.upperBodyPanel = new JPanel(new BorderLayout());
+        // FileTabPane.getInstance().addTo(this.upperBodyPanel);
+        FileTreePane.getInstance().addTo(this.upperBodyPanel);
+        PetrinetPane.getInstance().addTo(this.upperBodyPanel);
+    }
 
-		return headPanel;
-	}
+    /**
+     * Adds the head panel to frame.
+     */
+    private void initializeHeadPanel() {
+        headPanel = new JPanel(new BorderLayout());
+        headPanel.setPreferredSize(HEADER_DIMENSION);
+        headPanel.setMinimumSize(HEADER_DIMENSION);
 
-	/**
-	 * Initialize the Panel of the left side with 2 Rows for the
-	 * FilePanes(Petrinet an Rule) And set the Dimension of the Pane
-	 */
-	private JPanel initializeLeftPanel() {
-		GridLayout layout = new GridLayout(2, 1);
-		leftPanel = new JPanel(layout);
-		leftPanel.setPreferredSize(LEFT_PANEL_DIMENSION);
-		leftPanel.setMinimumSize(LEFT_PANEL_DIMENSION);
+        EditorPane.getInstance().addTo(headPanel);
+        AttributePane.getInstance().addTo(headPanel);
+        SimulationPane.getInstance().addTo(headPanel);
+    }
 
-		return leftPanel;
-	}
+    /**
+     * Initiates references to engine
+     */
+    private void initiateDependencies() {
+        manipulation = PetrinetManipulation.getInstance();
+    }
 
-	/** Add the Editorpane to the Headpane */
-	private void addEditorPane() {
-		EditorPane editorPane = EditorPane.getInstance();
-		editorPane.addTo(headPanel);
-	}
+    /** Set Size of Mainframe and make it visible */
+    private void show() {
+        mainFrame.pack();
+        mainFrame.setBounds(0, 0, TOTAL_WIDTH, TOTAL_HEIGHT);
+        mainFrame.setVisible(true);
+    }
 
-	/** Add the Simulationpane to the Headpane */
-	private void addSimulationPane() {
-		SimulationPane simulationPane = SimulationPane.getInstance();
-		simulationPane.addTo(headPanel);
-	}
-
-	/** Add the Petrinetpane to the Centerpane */
-	private void addPetrinetPane() {
-		PetrinetPane.getInstance().addTo(centerPanel);
-	}
-	
-	/** Adds the Rulepane to the center pane*/
-	private void addRulePane() {
-		RulePane.getInstance().addTo(centerPanel);
-	}
-
-	/** Add the Filepanes to the Leftpane */
-	private void addFilePanes() {
-		FilePane.getPetrinetFilePane().addTo(leftPanel);
-		FilePane.getRuleFilePane().addTo(leftPanel);
-	}
-
-	/** Add the Attributepane to the Headpane */
-	private void addAttributePane() {
-		AttributePane.getInstance().addTo(headPanel);
-	}
-
-	/** Set Size of Mainframe and make it visible */
-	private void show() {
-		mainFrame.pack();
-		mainFrame.setBounds(0, 0, TOTAL_WIDTH, TOTAL_HEIGHT);
-		mainFrame.setVisible(true);
-	}
-
-	/** Repaints whole gui */
-	public void repaint() {
-		Rectangle oldBounds = mainFrame.getBounds();
-		mainFrame.pack(); //resets bounds
-		mainFrame.setBounds(oldBounds);
-	}
+    /** Repaints whole gui */
+    public void repaint() {
+        Rectangle oldBounds = mainFrame.getBounds();
+        mainFrame.pack(); // resets bounds
+        mainFrame.setBounds(oldBounds);
+    }
 
 }
