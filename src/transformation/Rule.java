@@ -1267,6 +1267,6 @@ public class Rule {
 	 */
 	private void checkIfcontained(NAC nac) {
 		if (!nacs.contains(nac))
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("NAC not contained in this rule");
 	}
 }
