@@ -45,19 +45,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 
 public class Rule {
-	
-	/**
-	 * Indicates that a passed NAC isn't part of the rule that it was passed to
-	 * @author abj415
-	 *
-	 */
-	public class NACnotContainedException extends Exception {
-		//TODO
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -1697213998453938281L;
-	}
 
 	public enum Net {
 		L, K, R
@@ -100,6 +87,17 @@ public class Rule {
 		postArcMappingKToR    = new DualHashBidiMap<PostArc, PostArc>();
 		preArcMappingKToR     = new DualHashBidiMap<PreArc, PreArc>();
 		transitionMappingKToR = new DualHashBidiMap<Transition, Transition>();
+	}
+	
+	/**
+	 * Creates a new minimal NAC in the rule's set of NACs
+	 * 
+	 * @return The new NAC
+	 */
+	public NAC createNAC() {
+		NAC newNAC = new NAC(l);
+		nacs.add(newNAC);
+		return newNAC;
 	}
 
 	/**
@@ -271,6 +269,7 @@ public class Rule {
 	 * @param mark
 	 */
 	public void setMarkInL(Place place, int mark) {
+		//TODO consider NACs
 		place.setMark(mark);
 		fromLtoK(place).setMark(mark);
 
@@ -315,6 +314,19 @@ public class Rule {
 			leftPlace.setMark(mark);
 		}
 	}
+	
+	/**
+	 * 
+	 * @param place
+	 * @param mark
+	 * @param nac
+	 */
+	public void setMarkInNac(Place place, int mark, NAC nac) {
+		checkIfcontained(nac);
+		//TODO
+		throw new NotImplementedException();	
+	}
+
 	/**
 	 * Sets the capacity for the place and its mappings, that is only in L and K
 	 * 
@@ -322,6 +334,7 @@ public class Rule {
 	 * @param capacity
 	 */
 	public void setCapacityInL(Place place, int capacity) {
+		//TODO consider NACs
 		place.setCapacity(capacity);
 		fromLtoK(place).setCapacity(capacity);
 
@@ -366,12 +379,6 @@ public class Rule {
 			leftPlace.setCapacity(capacity);
 		}
 	}
-	
-
-	public void setMarkInNac(Place place, int mark, NAC nac) throws NACnotContainedException {
-		checkIfcontained(nac);
-		//TODO
-		throw new NotImplementedException();	}
 
 	/**
 	 * Sets the name of a place in a rule and modifies other parts of the rule accordingly
@@ -380,6 +387,7 @@ public class Rule {
 	 * @param name
 	 */
 	public void setNameInL(Place place, String name) {
+		//TODO consider NACs
 		place.setName(name);
 		fromLtoK(place).setName(name);
 
@@ -425,7 +433,7 @@ public class Rule {
 		}
 	}
 
-	public void setNameInNac(Place place, String name, NAC nac) throws NACnotContainedException {
+	public void setNameInNac(Place place, String name, NAC nac) {
 		checkIfcontained(nac);
 		//TODO
 		throw new NotImplementedException();	}
@@ -437,6 +445,7 @@ public class Rule {
 	 * @param name
 	 */
 	public void setNameInL(Transition transition, String name) {
+		//TODO consider NACs
 		transition.setName(name);
 		fromLtoK(transition).setName(name);
 
@@ -482,7 +491,7 @@ public class Rule {
 		}
 	}
 	
-	public void setNameInNac(Transition transition, String name, NAC nac) throws NACnotContainedException {
+	public void setNameInNac(Transition transition, String name, NAC nac) {
 		checkIfcontained(nac);
 		//TODO
 		throw new NotImplementedException();	}
@@ -494,6 +503,7 @@ public class Rule {
 	 * @param tlb
 	 */
 	public void setTlbInL(Transition transition, String tlb) {
+		//TODO consider NACs
 		transition.setTlb(tlb);
 		fromLtoK(transition).setTlb(tlb);
 
@@ -539,7 +549,7 @@ public class Rule {
 		}
 	}
 
-	public void setTlbInNac(Transition transition, String tlb, NAC nac) throws NACnotContainedException {
+	public void setTlbInNac(Transition transition, String tlb, NAC nac) {
 		checkIfcontained(nac);
 		//TODO
 		throw new NotImplementedException();	}
@@ -551,6 +561,7 @@ public class Rule {
 	 * @param rnw
 	 */
 	public void setRnwInL(Transition transition, IRenew rnw) {
+		//TODO consider NACs
 		transition.setRnw(rnw);
 		fromLtoK(transition).setRnw(rnw);
 
@@ -596,7 +607,7 @@ public class Rule {
 		}
 	}
 	
-	public void setRnwInNac(Transition transition, IRenew rnw, NAC nac) throws NACnotContainedException {
+	public void setRnwInNac(Transition transition, IRenew rnw, NAC nac) {
 		checkIfcontained(nac);
 		//TODO
 		throw new NotImplementedException();	}
@@ -609,6 +620,7 @@ public class Rule {
 	 * @param weight
 	 */
 	public void setWeightInL(PreArc preArc, int weight) {
+		//TODO consider NACs
 		preArc.setWeight(weight);
 		fromLtoK(preArc).setWeight(weight);
 
@@ -654,7 +666,7 @@ public class Rule {
 		}
 	}
 
-	public void setWeightInNac(PreArc preArc, int weight, NAC nac) throws NACnotContainedException {
+	public void setWeightInNac(PreArc preArc, int weight, NAC nac) {
 		checkIfcontained(nac);
 		//TODO
 		throw new NotImplementedException();
@@ -667,6 +679,7 @@ public class Rule {
 	 * @param weight
 	 */
 	public void setWeightInL(PostArc postArc, int weight) {
+		//TODO consider NACs
 		postArc.setWeight(weight);
 		fromLtoK(postArc).setWeight(weight);
 
@@ -712,7 +725,7 @@ public class Rule {
 		}
 	}
 		
-	public void setWeightInNac(PostArc postArc, int weight, NAC nac) throws NACnotContainedException {
+	public void setWeightInNac(PostArc postArc, int weight, NAC nac) {
 		checkIfcontained(nac);
 		//TODO
 		throw new NotImplementedException();
@@ -744,13 +757,14 @@ public class Rule {
 	}
 	
 
-	public Place addPlaceToNac(String name, NAC nac) throws NACnotContainedException {
+	public Place addPlaceToNac(String name, NAC nac) {
 		checkIfcontained(nac);
 		//TODO
 		throw new NotImplementedException();
 	}
 	
 	public Transition addTransitionToL(String name) {
+		//TODO consider NACs
 		Transition leftTransition = getL().addTransition(name);
 		
 		transitionMappingKToL.put(getK().addTransition(name), leftTransition);
@@ -796,13 +810,13 @@ public class Rule {
 		return transition;
 	}
 
-	public Transition addTransitionToNac(String name, NAC nac) throws NACnotContainedException {
+	public Transition addTransitionToNac(String name, NAC nac) {
 		checkIfcontained(nac);
 		//TODO
 		throw new NotImplementedException();
 	}
 	
-	public Transition addTransitionToNac(String name, IRenew rnw, NAC nac) throws NACnotContainedException {
+	public Transition addTransitionToNac(String name, IRenew rnw, NAC nac) {
 		checkIfcontained(nac);
 		//TODO
 		throw new NotImplementedException();
@@ -844,7 +858,7 @@ public class Rule {
 		return rightPreArc;
 	}
 	
-	public PreArc addPreArcToNac(String name, Place place, Transition transition, NAC nac) throws NACnotContainedException {
+	public PreArc addPreArcToNac(String name, Place place, Transition transition, NAC nac) {
 		checkIfcontained(nac);
 		//TODO
 		throw new NotImplementedException();
@@ -885,7 +899,7 @@ public class Rule {
 		return rightPostArc;
 	}
 		
-	public PostArc addPostArcToNac(String name, Transition transition, Place place, NAC nac) throws NACnotContainedException {
+	public PostArc addPostArcToNac(String name, Transition transition, Place place, NAC nac) {
 		checkIfcontained(nac);
 		//TODO
 		throw new NotImplementedException();
@@ -941,11 +955,12 @@ public class Rule {
 		removeTransitionFromK(fromRtoK(transition));
 	}
 	
-	public void removeTransitionFromNac(Transition transition, NAC nac) throws NACnotContainedException {
+	public void removeTransitionFromNac(Transition transition, NAC nac) {
 		checkIfcontained(nac);
 		//TODO
 		throw new NotImplementedException();
 	}
+	
 	public void removePreArcFromL(PreArc preArc) {
 		removePreArcFromK(fromLtoK(preArc));
 	}
@@ -969,7 +984,7 @@ public class Rule {
 		removePreArcFromK(fromRtoK(preArc));
 	}
 	
-	public void removePreArcFromNac(PreArc preArc, NAC nac) throws NACnotContainedException {
+	public void removePreArcFromNac(PreArc preArc, NAC nac) {
 		checkIfcontained(nac);
 		//TODO
 		throw new NotImplementedException();
@@ -998,9 +1013,9 @@ public class Rule {
 		removePostArcFromK(fromRtoK(postArc));
 	}
 	
-	public void removePostArcFromNac(PostArc postArc, NAC nac) throws NACnotContainedException {
+	public void removePostArcFromNac(PostArc postArc, NAC nac) {
 		checkIfcontained(nac);
-		//TODO
+		//TODO consider NACs
 		throw new NotImplementedException();
 	}
 
@@ -1250,8 +1265,8 @@ public class Rule {
 	 * @param nac	The NAC that is supposed to be contained
 	 * @throws NACnotContainedException If it isn't
 	 */
-	private void checkIfcontained(NAC nac) throws NACnotContainedException {
-		//TODO
-		throw new NACnotContainedException();
+	private void checkIfcontained(NAC nac) {
+		if (!nacs.contains(nac))
+			throw new IllegalArgumentException("NAC not contained in this rule");
 	}
 }
