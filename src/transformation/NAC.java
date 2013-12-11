@@ -142,8 +142,53 @@ public class NAC {
 	public Transition fromLtoNac(Transition t) {
 		return transitionMappingLToNac.get(t);
 	}
+	
+	/**
+	 * Returns the corresponding Place in Nac
+	 * 
+	 * @param p
+	 *            Place in L
+	 * @return Place in N
+	 */
+	public Place fromNacToL(Place p) {
+		return placeMappingLToNac.getKey(p);
+	}
+
+	/**
+	 * Returns the corresponding PreArc in Nac
+	 * 
+	 * @param pre
+	 *            PreArc in L
+	 * @return PreArc in N
+	 */
+	public PreArc fromNacToL(PreArc pre) {
+		return preArcMappingLToNac.getKey((PreArc) pre);
+	}
+
+	/**
+	 * Returns the corresponding PostArc in Nac
+	 * 
+	 * @param post
+	 *            PostArc in L
+	 * @return PostArc in N
+	 */
+	public PostArc fromNacToL(PostArc post) {
+		return postArcMappingLToNac.getKey((PostArc) post);
+	}
+
+	/**
+	 * Returns the corresponding Transition in Nac
+	 * 
+	 * @param t
+	 *            Transition in L
+	 * @return Transition in N
+	 */
+	public Transition fromNacToL(Transition t) {
+		return transitionMappingLToNac.getKey((Transition) t);
+	}
 
 	// TODO Protected setters
+
 
 	// TODO Protected adders
 
@@ -173,4 +218,5 @@ public class NAC {
 			return false;
 		return true;
 	}
+
 }
