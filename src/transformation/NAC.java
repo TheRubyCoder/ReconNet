@@ -52,11 +52,16 @@ public class NAC {
 	private final BidiMap<Transition, Transition> transitionMappingLToNac;
 	
 <<<<<<< Upstream, based on origin/master
+<<<<<<< Upstream, based on origin/master
 	// internal UUID to avoid collisions during modifications
 	private final UUID id;
 =======
 	//TODO add a UUID to avoid collisions during NAC modifications?
 >>>>>>> d2de2a2 Minimal NAC construction added.
+=======
+	// internal UUID to avoid collisions during modifications
+	private final UUID id;
+>>>>>>> 8755749 added internal UUID to NAC
 
 	/**
 	 * Constructs a new NAC from a given L-part of a rule.
@@ -67,10 +72,15 @@ public class NAC {
 	protected NAC(Petrinet l) {
 		nac = createPetrinet();
 <<<<<<< Upstream, based on origin/master
+<<<<<<< Upstream, based on origin/master
 		
 		id = UUID.randomUUID();
 =======
 >>>>>>> d2de2a2 Minimal NAC construction added.
+=======
+		
+		id = UUID.randomUUID();
+>>>>>>> 8755749 added internal UUID to NAC
 
 		placeMappingLToNac = new DualHashBidiMap<Place, Place>();
 		postArcMappingLToNac = new DualHashBidiMap<PostArc, PostArc>();
@@ -156,6 +166,7 @@ public class NAC {
 
 	// TODO Protected removers
 <<<<<<< Upstream, based on origin/master
+<<<<<<< Upstream, based on origin/master
 	
 	@Override
 	public int hashCode() {
@@ -184,3 +195,31 @@ public class NAC {
 =======
 >>>>>>> d2de2a2 Minimal NAC construction added.
 }
+=======
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof NAC))
+			return false;
+		NAC other = (NAC) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+}
+>>>>>>> 8755749 added internal UUID to NAC
