@@ -50,8 +50,8 @@ public class NAC {
 	private final BidiMap<PostArc, PostArc> postArcMappingLToNac;
 	private final BidiMap<PreArc, PreArc> preArcMappingLToNac;
 	private final BidiMap<Transition, Transition> transitionMappingLToNac;
-	
-	// internal UUID to avoid collisions during modifications
+
+	// internal UID to avoid collisions during modifications
 	private final UUID id;
 
 	/**
@@ -62,7 +62,7 @@ public class NAC {
 	 */
 	protected NAC(Petrinet l) {
 		nac = createPetrinet();
-		
+
 		id = UUID.randomUUID();
 
 		placeMappingLToNac = new DualHashBidiMap<Place, Place>();
@@ -75,7 +75,7 @@ public class NAC {
 			placeMappingLToNac.put(p, nacPlace);
 		}
 
-		//TODO brauchen wir noch eine Variante mit Renews?
+		// TODO Variante mit Renews
 		for (Transition t : l.getTransitions()) {
 			Transition nacTrans = nac.addTransition(t.getName());
 			transitionMappingLToNac.put(t, nacTrans);
@@ -142,7 +142,7 @@ public class NAC {
 	public Transition fromLtoNac(Transition t) {
 		return transitionMappingLToNac.get(t);
 	}
-	
+
 	/**
 	 * Returns the corresponding Place in Nac
 	 * 
@@ -187,13 +187,34 @@ public class NAC {
 		return transitionMappingLToNac.getKey((Transition) t);
 	}
 
-	// TODO Protected setters
+	/**
+	 * @return the placeMappingLToNac
+	 */
+	protected BidiMap<Place, Place> getPlaceMappingLToNac() {
+		return placeMappingLToNac;
+	}
 
+	/**
+	 * @return the postArcMappingLToNac
+	 */
+	protected BidiMap<PostArc, PostArc> getPostArcMappingLToNac() {
+		return postArcMappingLToNac;
+	}
 
-	// TODO Protected adders
+	/**
+	 * @return the preArcMappingLToNac
+	 */
+	protected BidiMap<PreArc, PreArc> getPreArcMappingLToNac() {
+		return preArcMappingLToNac;
+	}
 
-	// TODO Protected removers
-	
+	/**
+	 * @return the transitionMappingLToNac
+	 */
+	protected BidiMap<Transition, Transition> getTransitionMappingLToNac() {
+		return transitionMappingLToNac;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

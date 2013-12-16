@@ -841,7 +841,6 @@ public class Rule {
 	 * @param weight
 	 */
 	public void setWeightInR(PostArc postArc, int weight) {
-		//TODO consider NACs
 		fromRtoK(postArc).setWeight(weight);
 		postArc.setWeight(weight);
 
@@ -849,13 +848,22 @@ public class Rule {
 		
 		if (leftPostArc != null) {
 			leftPostArc.setWeight(weight);
+			for (NAC nac : nacs) {
+				nac.fromLtoNac(leftPostArc).setWeight(weight);
+			}
 		}
 	}
 		
 	public void setWeightInNac(PostArc postArc, int weight, NAC nac) {
 		checkIfcontained(nac);
-		//TODO
-		throw new NotImplementedException();
+
+		if (nac.fromNacToL(postArc) != null) {
+			throw new ShowAsWarningException(
+					new AccessForbiddenException(
+							"This operation is not allowed for Elements that have a representation in L"));
+		} else {
+			postArc.setWeight(weight);
+		}
 	}
 	
 	public Place addPlaceToL(String name) {
@@ -863,14 +871,24 @@ public class Rule {
 		
 		placeMappingKToL.put(getK().addPlace(name), leftPlace);
 		
+		for (NAC nac : nacs) {
+			nac.getPlaceMappingLToNac().put(leftPlace, nac.getNac().addPlace(name));
+		}
+		
 		return leftPlace;
 	}
 	
 	public Place addPlaceToK(String name) {
 		Place place = getK().addPlace(name);
 
-		placeMappingKToL.put(place, getL().addPlace(name));
+		Place leftPlace = getL().addPlace(name);
+		
+		placeMappingKToL.put(place, leftPlace);
 		placeMappingKToR.put(place, getR().addPlace(name));
+		
+		for (NAC nac : nacs) {
+			nac.getPlaceMappingLToNac().put(leftPlace, nac.getNac().addPlace(name));
+		}	
 		
 		return place;
 	}
@@ -886,15 +904,18 @@ public class Rule {
 
 	public Place addPlaceToNac(String name, NAC nac) {
 		checkIfcontained(nac);
-		//TODO
-		throw new NotImplementedException();
+		
+		return nac.getNac().addPlace(name);
 	}
 	
 	public Transition addTransitionToL(String name) {
-		//TODO consider NACs
 		Transition leftTransition = getL().addTransition(name);
 		
 		transitionMappingKToL.put(getK().addTransition(name), leftTransition);
+		
+		for (NAC nac : nacs) {
+			nac.getTransitionMappingLToNac().put(leftTransition, nac.getNac().addTransition(name));
+		}
 		
 		return leftTransition;
 	}
@@ -902,17 +923,22 @@ public class Rule {
 	public Transition addTransitionToL(String name, IRenew rnw) {
 		//TODO consider NACs
 		Transition transition = addTransitionToL(name);		
-		setRnwInL(transition, rnw);		
+		setRnwInL(transition, rnw);
 		
 		return transition;
 	}
 	
 	public Transition addTransitionToK(String name) {
-		//TODO consider NACs
 		Transition transition = getK().addTransition(name);
 
-		transitionMappingKToL.put(transition, getL().addTransition(name));
+		Transition leftTransition = getL().addTransition(name);
+		
+		transitionMappingKToL.put(transition, leftTransition);
 		transitionMappingKToR.put(transition, getR().addTransition(name));
+		
+		for (NAC nac : nacs) {
+			nac.getTransitionMappingLToNac().put(leftTransition, nac.getNac().addTransition(name));
+		}
 		
 		return transition;
 	}
@@ -942,8 +968,8 @@ public class Rule {
 
 	public Transition addTransitionToNac(String name, NAC nac) {
 		checkIfcontained(nac);
-		//TODO
-		throw new NotImplementedException();
+		
+		return nac.getNac().addTransition(name);
 	}
 	
 	public Transition addTransitionToNac(String name, IRenew rnw, NAC nac) {
@@ -953,13 +979,19 @@ public class Rule {
 	}
 
 	public PreArc addPreArcToL(String name, Place place, Transition transition) {
-		//TODO consider NACs
 		PreArc leftPreArc = getL().addPreArc(name, place, transition);
 		
 		Place 	   kPlace      = fromLtoK(place);
-		Transition kTransition = fromLtoK(transition);		
+		Transition kTransition = fromLtoK(transition);
 		
 		preArcMappingKToL.put(getK().addPreArc(name, kPlace, kTransition), leftPreArc);
+		
+		for (NAC nac : nacs) {
+			PreArc newPreArc = nac.getNac().addPreArc(leftPreArc.getName(), 
+					nac.fromLtoNac(leftPreArc.getPlace()), 
+					nac.fromLtoNac(leftPreArc.getTransition()));
+			nac.getPreArcMappingLToNac().put(leftPreArc, newPreArc);
+		}
 		
 		return leftPreArc;
 	}
@@ -1414,12 +1446,12 @@ public class Rule {
 			throw new IllegalArgumentException("NAC not contained in this rule");
 	}
 	
-	private void setMarkInNACs(Place p) {}
-	private void setCapacityInNACs(Place place, int capacity) {}
-	private void setNameInNACs(Place p, String name) {}
-	private void setNameInNACs(Place p, String name, IRenew renew) {}
-	private void setTlbInNACs(Transition t, String tlb) {}
-	private void setRnwInNACs(Transition t, IRenew renew) {}
+	private void setMarkFromLToNacs(Place p) {}
+	private void setCapacityInNACsAccordingWith(Place place, int capacity) {}
+	private void setNameInNACsAccordingWith(Place p, String name) {}
+	private void setNameInNACsAccordingWith(Place p, String name, IRenew renew) {}
+	private void setTlbInNACsAccordingWith(Transition t, String tlb) {}
+	private void setRnwInNACsAccordingWith(Transition t, IRenew renew) {}
 	private void setWeightInNACs(PreArc pre, int weight) {}
 	private void setWeightInNACs(PostArc post, int weight) {}
 }
