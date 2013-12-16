@@ -63,9 +63,6 @@ public class NACVisitor_draft implements MatchVisitor {
 
 
         /**
-         * @brief Checks if the negative application conditions (NACs) are fulfilled
-         * If the given rule doesn't contain NACs, this acts like a trivial "accept first" visitor
-         *
          * @param nac                   NAC to be checked for
          * @return partialMatch Mapping from Nac to the target net, following the given Match
          */
