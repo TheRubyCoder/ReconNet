@@ -1,5 +1,6 @@
 package gui.fileTree;
 
+import static gui.Style.*;
 import exceptions.EngineException;
 import exceptions.ShowAsInfoException;
 import exceptions.ShowAsWarningException;
@@ -78,23 +79,43 @@ public class PopupMenuListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         // set up action for file choose dialog.
-        if (e.getActionCommand().equalsIgnoreCase("Add Net")) {
+        if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_ADD_NET)) {
             this.addToTree(SELECTED_TYPE_IS_NET);
-        } else if (e.getActionCommand().equalsIgnoreCase("Add Rule")) {
+        } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_ADD_RULE)) {
             this.addToTree(SELECTED_TYPE_IS_RULE);
-        } else if (e.getActionCommand().equalsIgnoreCase("Load Net")) {
+        } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_LOAD_NET)) {
             this.loadNed();
-        } else if (e.getActionCommand().equalsIgnoreCase("Load Rule")) {
+        } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_LOAD_RULE)) {
             this.loadRule();
-        } else if (e.getActionCommand().equalsIgnoreCase("Save")) {
+        } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_SAVE)) {
             this.save();
-        } else if (e.getActionCommand().equalsIgnoreCase("Save All")) {
+        } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_SAVE_ALL)) {
             this.saveAll();
-        } else if (e.getActionCommand().equalsIgnoreCase("Reload")) {
+        } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_RELOAD_NET)) {
             this.reload();
-        } else if (e.getActionCommand().equalsIgnoreCase("Remove")) {
+        } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_REMOVE_NET)) {
             this.remove();
+        } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_CHECK_RULE)) {
+            this.checkNode();
+        } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_UNCHECK_RULE)) {
+            this.uncheckNode();
         }
+    }
+
+    private void uncheckNode() {
+        PetriTreeNode node = (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
+        node.setChecked(false);
+        FileTreePane.getInstance().getTree().invalidate();
+        FileTreePane.getInstance().getTree().validate();
+        FileTreePane.getInstance().getTree().repaint();
+    }
+
+    private void checkNode() {
+        PetriTreeNode node = (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
+        node.setChecked(true);
+        FileTreePane.getInstance().getTree().invalidate();
+        FileTreePane.getInstance().getTree().validate();
+        FileTreePane.getInstance().getTree().repaint();
     }
 
     private void remove() {
@@ -112,14 +133,14 @@ public class PopupMenuListener implements ActionListener {
         nameToFilepath.remove(name);
         nameToPId.remove(name);
 
-        if (node.isNetNode()) {
+        if (node.isNodeType(NodeType.NET)) {
             PetrinetPane.getInstance().displayEmpty();
-            parentNode =  (PetriTreeNode) FileTreePane.getInstance().getNetNode();
-        } else if (node.isRuleNode()) {
+            parentNode = (PetriTreeNode) FileTreePane.getInstance().getNetNode();
+        } else if (node.isNodeType(NodeType.RULE)) {
             RulePane.getInstance().displayEmpty();
-            parentNode =  (PetriTreeNode) FileTreePane.getInstance().getRuleNode();
+            parentNode = (PetriTreeNode) FileTreePane.getInstance().getRuleNode();
         }
-        
+
         FileTreePane.getInstance().getTreeModel().removeNodeFromParent(node);
         FileTreePane.getInstance().getTree().scrollPathToVisible(new TreePath(parentNode.getPath()));
         FileTreePane.getInstance().getTree().setSelectionPath(new TreePath(FileTreePane.getInstance().getTreeModel().getPathToRoot(parentNode)));
@@ -129,9 +150,9 @@ public class PopupMenuListener implements ActionListener {
         PetriTreeNode node = (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
         File file = this.nameToFilepath.get(node.toString());
         int netType = -1;
-        if (node.isNetNode()) {
+        if (node.isNodeType(NodeType.NET)) {
             netType = PopupMenuListener.SELECTED_TYPE_IS_NET;
-        } else if (node.isRuleNode()) {
+        } else if (node.isNodeType(NodeType.RULE)) {
             netType = PopupMenuListener.SELECTED_TYPE_IS_RULE;
         }
         this.loadFromFile(file, netType);
@@ -201,10 +222,10 @@ public class PopupMenuListener implements ActionListener {
 
             if (netType == SELECTED_TYPE_IS_NET) {
                 parentNode = FileTreePane.getInstance().getNetNode();
-                n = new PetriTreeNode(PetriTreeNode.NET_NODE, name);
+                n = new PetriTreeNode(NodeType.NET, name);
             } else if (netType == SELECTED_TYPE_IS_RULE) {
                 parentNode = FileTreePane.getInstance().getRuleNode();
-                n = new PetriTreeNode(PetriTreeNode.RULE_NODE, name);
+                n = new PetriTreeNode(NodeType.RULE, name);
             } else {
                 // TODO: hier nac mit if else
             }
@@ -242,10 +263,10 @@ public class PopupMenuListener implements ActionListener {
         int id = nameToPId.get(name);
         File file = nameToFilepath.get(name);
         try {
-            if (((PetriTreeNode) node).isNetNode()) {
+            if (((PetriTreeNode) node).isNodeType(NodeType.NET)) {
                 EngineAdapter.getPetrinetManipulation().save(id, file.getParent(), name, FILE_EXTENSION_WITHOUT_DOT,
                         PetrinetPane.getInstance().getCurrentNodeSize());
-            } else if (((PetriTreeNode) node).isRuleNode()) {
+            } else if (((PetriTreeNode) node).isNodeType(NodeType.RULE)) {
                 EngineAdapter.getRuleManipulation().save(id, file.getParent(), name, FILE_EXTENSION_WITHOUT_DOT);
             }
         } catch (EngineException e) {
@@ -324,10 +345,10 @@ public class PopupMenuListener implements ActionListener {
 
             if (netType == SELECTED_TYPE_IS_NET) {
                 parentNode = FileTreePane.getInstance().getNetNode();
-                n = new PetriTreeNode(PetriTreeNode.NET_NODE, name);
+                n = new PetriTreeNode(NodeType.NET, name);
             } else if (netType == SELECTED_TYPE_IS_RULE) {
                 parentNode = FileTreePane.getInstance().getRuleNode();
-                n = new PetriTreeNode(PetriTreeNode.RULE_NODE, name);
+                n = new PetriTreeNode(NodeType.RULE, name);
             } else {
                 // TODO: hier nac mit if else
             }
@@ -401,9 +422,7 @@ public class PopupMenuListener implements ActionListener {
 
     }
 
-	public Integer getSelectedRules() {
-		PetriTreeNode node = (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
-        String name = node.toString();
-		return nameToPId.get(name);
-	}
+    public Integer getIdForNode(PetriTreeNode n) {
+        return nameToPId.get(n.toString());
+    }
 }

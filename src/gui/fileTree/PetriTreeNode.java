@@ -1,59 +1,68 @@
 package gui.fileTree;
 
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
 
 public class PetriTreeNode extends DefaultMutableTreeNode {
 
-    public static final int ROOT_NODE = -1;
-    public static final int RULE_ROOT_NODE = 0;
-    public static final int RULE_NODE = 1;
-    public static final int NET_ROOT_NODE = 2;
-    public static final int NET_NODE = 3;
-
-    /**
-     * generated UID
-     */
-    private static final long serialVersionUID = -5162180130369164448L;
-
-    private int noteType;
-
-    public PetriTreeNode(int noteType) {
-        super();
-        this.noteType = noteType;
-    }
     
 
-    public PetriTreeNode(int noteType, Object userObject) {
+    private NodeType nodeType;
+
+    private boolean hasCheckBox;
+
+    private boolean checked;
+
+    private boolean selected;
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 602894489830122046L;
+
+    PetriTreeNode(NodeType nodeType, Object userObject) {
         super(userObject);
-        this.noteType = noteType;
+        init(nodeType);
     }
 
-    public PetriTreeNode(int noteType, Object userObject, boolean allowsChildren) {
-        super(userObject, allowsChildren);
-        this.noteType = noteType;
+    private void init(NodeType nodeType) {
+        this.checked = false;
+        this.nodeType = nodeType;
+        if (this.nodeType.equals(NodeType.RULE)) {
+            this.setHasCheckBox(true);
+        }
     }
 
-    public boolean isRuleRootNode() {
-        return this.noteType == RULE_ROOT_NODE;
+    public String toString() {
+        return super.toString();
     }
 
-    public boolean isRuleNode() {
-        return this.noteType == RULE_NODE;
+    public boolean isNodeType(NodeType nodeType) {
+        return this.nodeType.equals(nodeType);
     }
 
-    public boolean isNetRootNode() {
-        return this.noteType == NET_ROOT_NODE;
+    public boolean isHasCheckBox() {
+        return hasCheckBox;
     }
 
-    public boolean isNetNode() {
-        return this.noteType == NET_NODE;
+    public void setHasCheckBox(boolean hasCheckBox) {
+        this.hasCheckBox = hasCheckBox;
     }
 
+    public boolean isChecked() {
+        return checked;
+    }
 
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
 
-    @Override
-    public void add(MutableTreeNode newChild) {
-        super.add(newChild);
+    public boolean isSelected() {
+
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+        System.out.println(super.toString() + " selcted: " + selected);
     }
 }

@@ -232,9 +232,11 @@ public class Style {
     public static final String TREE_MENU_RELOAD_NET = "Reload";
 
     // rule entry
-    public static final String TREE_MENU_REMOVE_RULE = "Remove";
-    public static final String TREE_MENU_RELOAD_RULE = "Reload";
+    public static final String TREE_MENU_REMOVE_RULE = TREE_MENU_REMOVE_NET;
+    public static final String TREE_MENU_RELOAD_RULE = TREE_MENU_RELOAD_NET;
     public static final String TREE_MENU_ADD_NAC = "Add NAC";
+    public static final String TREE_MENU_CHECK_RULE = "Activate Rule";
+    public static final String TREE_MENU_UNCHECK_RULE = "Deactivate Rule";
 
     // all tree entries
     public static final String TREE_MENU_SAVE_ALL = "Save All";
