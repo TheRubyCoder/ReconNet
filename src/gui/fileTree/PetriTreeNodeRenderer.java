@@ -12,15 +12,28 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 public class PetriTreeNodeRenderer extends DefaultTreeCellRenderer {
 
     /**
-     * 
+     * serialVersionUID
      */
     private static final long serialVersionUID = -5797712768845785147L;
 
+    /**
+     * Background color for selected tree items.
+     */
     private Color selectedBkgrnd;
+
+    /**
+     * Background Color for items not selected.
+     */
     private Color nonSelectedBkgrnd;
+
+    /**
+     * Font for checkbox to be simmilar to label.
+     */
     private Font fontValue;
-    
-    
+
+    /**
+     * Constructor.
+     */
     public PetriTreeNodeRenderer() {
         super();
         DefaultTreeCellRenderer r = new DefaultTreeCellRenderer();
@@ -32,31 +45,29 @@ public class PetriTreeNodeRenderer extends DefaultTreeCellRenderer {
     @Override
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
         Component renderer;
-        
-        
-        
-        if(value instanceof PetriTreeNode) {
+
+        if (value instanceof PetriTreeNode) {
             PetriTreeNode node = (PetriTreeNode) value;
-            if(node.isNodeType(NodeType.RULE)) {
+            if (node.isNodeType(NodeType.RULE)) {
                 JCheckBox box = new JCheckBox(node.toString());
                 box.setSelected(node.isChecked());
-                
+
                 if (fontValue != null) {
-                  box.setFont(fontValue);
+                    box.setFont(fontValue);
                 }
-                if(node.isSelected()) {
+                if (node.isSelected()) {
                     box.setBackground(selectedBkgrnd);
                 } else {
                     box.setBackground(nonSelectedBkgrnd);
                 }
                 renderer = box;
-            }else {
+            } else {
                 renderer = (new DefaultTreeCellRenderer().getTreeCellRendererComponent(tree, value, node.isSelected(), expanded, leaf, row, hasFocus));
             }
-        }else {
+        } else {
             renderer = (new DefaultTreeCellRenderer().getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus));
         }
-        
+
         return renderer;
     }
 

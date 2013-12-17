@@ -26,29 +26,47 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
+/**
+ * custom mouse listener for use in petrinet tree extending {@link MouseListener}.
+ */
 public class TreeMouseListener implements MouseListener {
 
+    /**
+     * reference to the {@link JTree} object.
+     */
     private JTree tree;
 
+    /**
+     * reference to the {@link PopupMenuListener}.
+     */
     private ActionListener menuListener;
 
+    /**
+     * Constructor
+     * @param tree reference to the {@link JTree} object.
+     */
     public TreeMouseListener(JTree tree) {
         super();
         this.tree = tree;
         this.menuListener = PopupMenuListener.getInstance();
     }
 
-    private void showPopupMenu(MouseEvent e, Object o) {
-        PetriTreeNode selectedNode = (PetriTreeNode) o;
+    /**
+     * dispatches the node type to show different popup menus.
+     * @param event the mouse event triggered action.
+     * @param node the node clicked.
+     */
+    private void showPopupMenu(MouseEvent event, Object node) {
+        PetriTreeNode selectedNode = (PetriTreeNode) node;
 
         if (selectedNode.isNodeType(NodeType.NET_ROOT)) {
-            this.showNetRootMenu(e, selectedNode);
+            this.showNetRootMenu(event, selectedNode);
         } else if (selectedNode.isNodeType(NodeType.RULE_ROOT)) {
-            this.showRuleRootMenu(e, selectedNode);
+            this.showRuleRootMenu(event, selectedNode);
         } else if (selectedNode.isNodeType(NodeType.NET)) {
-            this.showNetMenu(e, selectedNode);
+            this.showNetMenu(event, selectedNode);
         } else if (selectedNode.isNodeType(NodeType.RULE)) {
-            this.showRuleMenu(e, selectedNode);
+            this.showRuleMenu(event, selectedNode);
         } else {
             // TODO: throw exception here
             System.out.println("unknown node type");
@@ -56,7 +74,12 @@ public class TreeMouseListener implements MouseListener {
 
     }
 
-    private void showRuleMenu(MouseEvent e, PetriTreeNode selectedNode) {
+    /**
+     * displays the popup menu for rules.
+     * @param event the mouse event triggered action.
+     * @param selectedNode the node clicked.
+     */
+    private void showRuleMenu(MouseEvent event, PetriTreeNode selectedNode) {
         JPopupMenu popup = new JPopupMenu();
         JMenuItem i;
 
@@ -90,9 +113,14 @@ public class TreeMouseListener implements MouseListener {
         popup.add(i);
         i.addActionListener(this.menuListener);
 
-        popup.show(tree, e.getX(), e.getY());
+        popup.show(tree, event.getX(), event.getY());
     }
 
+    /**
+     * displays the popup menu for nets.
+     * @param event the mouse event triggered action.
+     * @param selectedNode the node clicked.
+     */
     private void showNetMenu(MouseEvent e, DefaultMutableTreeNode selectedNode) {
         JPopupMenu popup = new JPopupMenu();
         JMenuItem i;
@@ -118,6 +146,11 @@ public class TreeMouseListener implements MouseListener {
         popup.show(tree, e.getX(), e.getY());
     }
 
+    /**
+     * displays the popup menu for rule root.
+     * @param event the mouse event triggered action.
+     * @param selectedNode the node clicked.
+     */
     private void showRuleRootMenu(MouseEvent e, DefaultMutableTreeNode selectedNode) {
         JPopupMenu popup = new JPopupMenu();
         JMenuItem i;
@@ -139,6 +172,11 @@ public class TreeMouseListener implements MouseListener {
         popup.show(tree, e.getX(), e.getY());
     }
 
+    /**
+     * displays the popup menu for net root.
+     * @param event the mouse event triggered action.
+     * @param selectedNode the node clicked.
+     */
     private void showNetRootMenu(MouseEvent e, DefaultMutableTreeNode selectedNode) {
 
         JPopupMenu popup = new JPopupMenu();
@@ -203,26 +241,22 @@ public class TreeMouseListener implements MouseListener {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        // TODO Auto-generated method stub
-
+        // not used
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        // TODO Auto-generated method stub
-
+        // not used
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // TODO Auto-generated method stub
-
+        // not used
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        // TODO Auto-generated method stub
-
+        // not used
     }
 
 }
