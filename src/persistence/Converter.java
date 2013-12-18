@@ -356,8 +356,13 @@ public class Converter {
 				handler.setMarking(petrinetID, realPlace,
 						Integer.parseInt(place.getInitialMarking().getText()));
 				
-				handler.setCapacity(petrinetID, realPlace,
-						Integer.parseInt(place.getInitialCapacity().getText()));
+				if(place.getInitialCapacity() != null){
+					handler.setCapacity(petrinetID, realPlace,
+							Integer.parseInt(place.getInitialCapacity().getText()));
+				} else {
+					handler.setCapacity(petrinetID, realPlace, Integer.MAX_VALUE);
+				}
+				
 
 				placesAndTransis.put(place.getId(), realPlace);
 			}
