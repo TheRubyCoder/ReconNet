@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import petrinet.model.IArc;
+import petrinet.model.INode;
 import petrinet.model.Petrinet;
 import petrinet.model.Place;
 import petrinet.model.PostArc;
@@ -38,6 +40,7 @@ import transformation.ITransformation;
 import transformation.Rule;
 import transformation.Transformation;
 import transformation.TransformationComponent;
+import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import engine.data.JungData;
 import engine.data.PetrinetData;
 import engine.ihandler.ISimulation;
@@ -185,6 +188,15 @@ public class SimulationHandler implements ISimulation {
                 info("Keine der Regeln passt auf das Petrinetz");// p2 nach
                                                                  // präsentation
             }// p2 nach präsentation
+        }
+        
+        // Restart the layouting process
+        // this gets done here because we know no better place to do it in
+        
+        FRLayout<INode, IArc> frLayout = (FRLayout<INode, IArc>) jungData.getJungLayout();
+        frLayout.initialize();
+        for(int i = 0; i < 700; i++){
+        	frLayout.step();
         }
     }
 

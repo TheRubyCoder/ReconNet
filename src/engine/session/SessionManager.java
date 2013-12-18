@@ -27,6 +27,7 @@ import petrinet.model.IArc;
 import petrinet.model.INode;
 import petrinet.model.Petrinet;
 import transformation.Rule;
+import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import engine.data.JungData;
@@ -114,7 +115,7 @@ final public class SessionManager {
 		checkEmptyPetrinet(petrinet);
 
 		PetrinetData data = new PetrinetData(getNextSessionDataId(), petrinet,
-				getNewJungData());
+				getNewFRLayoutJungData());
 
 		petrinetData.put(data.getId(), data);
 
@@ -137,7 +138,7 @@ final public class SessionManager {
 		checkEmptyRule(rule);
 
 		RuleData data = new RuleData(getNextSessionDataId(), rule,
-				getNewJungData(), getNewJungData(), getNewJungData());
+				getNewStaticLayoutJungData(), getNewStaticLayoutJungData(), getNewStaticLayoutJungData());
 
 		ruleData.put(data.getId(), data);
 
@@ -155,11 +156,28 @@ final public class SessionManager {
 	public boolean closeSessionData(int id) {
 		return sessionData.remove(id) != null;
 	}
-
-	private JungData getNewJungData() {
+	
+	/**
+	 * @return an empty graph with a Static-Layout 
+	 * */
+	private JungData getNewStaticLayoutJungData() {
 		DirectedSparseGraph<INode, IArc> graph = new DirectedSparseGraph<INode, IArc>();
 
 		return new JungData(graph, new StaticLayout<INode, IArc>(graph));
+	}
+	
+	/**
+	 * @return an empty graph with a FR-Layout 
+	 * */
+	private JungData getNewFRLayoutJungData() {
+		DirectedSparseGraph<INode, IArc> graph = new DirectedSparseGraph<INode, IArc>();
+
+		FRLayout<INode, IArc> frLayout =  new FRLayout<INode, IArc>(graph);
+		
+		frLayout.setAttractionMultiplier(0.9);
+		frLayout.setRepulsionMultiplier(0.1);
+		
+		return new JungData(graph, frLayout);
 	}
 
 	private int getNextSessionDataId() {
