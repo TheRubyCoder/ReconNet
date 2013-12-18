@@ -117,6 +117,5 @@ public class PetriTreeNode extends DefaultMutableTreeNode {
      */
     public void setSelected(boolean selected) {
         this.selected = selected;
-        System.out.println(super.toString() + " selcted: " + selected);
     }
 }
