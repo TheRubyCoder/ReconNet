@@ -71,6 +71,7 @@ public class TransformationComponent implements ITransformation {
 		mappings.add(null);
 		mappings.add(null);
 		mappings.add(null);
+		mappings.add(null);
 		
 		
 		if (node instanceof Place) {
@@ -129,6 +130,7 @@ public class TransformationComponent implements ITransformation {
 		mappings.add(null);
 		mappings.add(null);
 		mappings.add(null);
+		mappings.add(null);
 		
 		
 		if (arc instanceof PreArc) {
@@ -173,7 +175,7 @@ public class TransformationComponent implements ITransformation {
 				mappings.set(0, rule.fromRtoL((PostArc) arc));
 				mappings.set(1, rule.fromRtoK((PostArc) arc));
 				mappings.set(2, (PostArc) arc);
-				break;					
+				break;
 			}
 		}
 		
@@ -215,6 +217,7 @@ public class TransformationComponent implements ITransformation {
 		rules.put(id, rule);
 	}
 	
+	//TODO warum nicht private??
 	public Net getNet(Rule rule, Place place) {
 		if (rule.getL().containsPlace(place)) {
 			return Net.L;
