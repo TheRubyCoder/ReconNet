@@ -28,6 +28,9 @@ import java.util.Set;
 import org.apache.commons.collections15.BidiMap;
 import org.apache.commons.collections15.bidimap.DualHashBidiMap;
 
+import exceptions.AccessForbiddenException;
+import exceptions.ShowAsWarningException;
+
 import petrinet.model.IRenew;
 import petrinet.model.Petrinet;
 import petrinet.model.Place;
@@ -77,6 +80,8 @@ public class Rule {
 		k = createPetrinet();
 		l = createPetrinet();
 		r = createPetrinet();
+		
+		nacs = new HashSet<NAC>();
 
 		placeMappingKToL      = new DualHashBidiMap<Place, Place>();
 		postArcMappingKToL    = new DualHashBidiMap<PostArc, PostArc>();
@@ -263,13 +268,12 @@ public class Rule {
 	}
 	
 	/**
-	 * Sets the mark for the place and its mappings, that is only in L and K
+	 * Sets the mark for the place and its mappings, that is only in L, K and NACs if given
 	 * 
 	 * @param place
 	 * @param mark
 	 */
 	public void setMarkInL(Place place, int mark) {
-		//TODO consider NACs
 		place.setMark(mark);
 		fromLtoK(place).setMark(mark);
 
@@ -278,17 +282,26 @@ public class Rule {
 		if (rightPlace != null) {
 			rightPlace.setMark(mark);
 		}
+		
+		for (NAC nac : nacs) {
+			nac.fromLtoNac(place).setMark(mark);
+		}
 	}
 
 	/**
-	 * Sets the mark for the place and its mappings, thats only in K and R
+	 * Sets the mark for the place and its mappings, thats only in K and R and NACs if given
 	 * 
 	 * @param place
 	 * @param mark
 	 */
 	public void setMarkInK(Place place, int mark) {
-		if (fromKtoL(place) != null) {
-			fromKtoL(place).setMark(mark);
+		Place leftPlace = fromKtoL(place);
+		
+		if (leftPlace != null) {
+			leftPlace.setMark(mark);
+			for (NAC nac : nacs) {
+				nac.fromLtoNac(leftPlace).setMark(mark);
+			}
 		}
 		
 		place.setMark(mark);		
@@ -312,6 +325,9 @@ public class Rule {
 		
 		if (leftPlace != null) {
 			leftPlace.setMark(mark);
+			for (NAC nac : nacs) {
+				nac.fromLtoNac(leftPlace).setMark(mark);
+			}
 		}
 	}
 	
@@ -323,8 +339,14 @@ public class Rule {
 	 */
 	public void setMarkInNac(Place place, int mark, NAC nac) {
 		checkIfcontained(nac);
-		//TODO
-		throw new NotImplementedException();	
+
+		if (nac.fromNacToL(place) != null) {
+			throw new ShowAsWarningException(
+					new AccessForbiddenException(
+							"This operation is not allowed for Elements that have a representation in L"));
+		} else {
+			place.setMark(mark);
+		}
 	}
 
 	/**
@@ -334,7 +356,6 @@ public class Rule {
 	 * @param capacity
 	 */
 	public void setCapacityInL(Place place, int capacity) {
-		//TODO consider NACs
 		place.setCapacity(capacity);
 		fromLtoK(place).setCapacity(capacity);
 
@@ -342,6 +363,10 @@ public class Rule {
 		
 		if (rightPlace != null) {
 			rightPlace.setCapacity(capacity);
+		}
+		
+		for (NAC nac : nacs) {
+			nac.fromLtoNac(place).setCapacity(capacity);
 		}
 	}
 
@@ -352,11 +377,16 @@ public class Rule {
 	 * @param capacity
 	 */
 	public void setCapacityInK(Place place, int capacity) {
-		if (fromKtoL(place) != null) {
+		Place leftPlace = fromKtoL(place);
+		
+		if (leftPlace != null) {
 			fromKtoL(place).setCapacity(capacity);
+			for (NAC nac : nacs) {
+				nac.fromLtoNac(leftPlace).setCapacity(capacity);
+			}
 		}
 		
-		place.setCapacity(capacity);		
+		place.setCapacity(capacity);	
 		
 		if (fromKtoR(place) != null) {
 			fromKtoR(place).setCapacity(capacity);
@@ -377,6 +407,9 @@ public class Rule {
 		
 		if (leftPlace != null) {
 			leftPlace.setCapacity(capacity);
+			for (NAC nac : nacs) {
+				nac.fromLtoNac(leftPlace).setCapacity(capacity);
+			}
 		}
 	}
 
@@ -387,7 +420,6 @@ public class Rule {
 	 * @param name
 	 */
 	public void setNameInL(Place place, String name) {
-		//TODO consider NACs
 		place.setName(name);
 		fromLtoK(place).setName(name);
 
@@ -395,6 +427,10 @@ public class Rule {
 		
 		if (rightPlace != null) {
 			rightPlace.setName(name);
+		}
+		
+		for (NAC nac : nacs) {
+			nac.fromLtoNac(place).setName(name);
 		}
 	}
 
@@ -405,8 +441,12 @@ public class Rule {
 	 * @param name
 	 */
 	public void setNameInK(Place place, String name) {
-		if (fromKtoL(place) != null) {
+		Place leftPlace = fromKtoL(place);
+		if (leftPlace != null) {
 			fromKtoL(place).setName(name);
+			for (NAC nac : nacs) {
+				nac.fromLtoNac(leftPlace).setName(name);
+			}
 		}
 		
 		place.setName(name);
@@ -430,14 +470,24 @@ public class Rule {
 		
 		if (leftPlace != null) {
 			leftPlace.setName(name);
+			for (NAC nac : nacs) {
+				nac.fromLtoNac(leftPlace).setName(name);
+			}
 		}
 	}
 
 	public void setNameInNac(Place place, String name, NAC nac) {
 		checkIfcontained(nac);
-		//TODO
-		throw new NotImplementedException();	}
-	
+
+		if (nac.fromNacToL(place) != null) {
+			throw new ShowAsWarningException(
+					new AccessForbiddenException(
+							"This operation is not allowed for Elements that have a representation in L"));
+		} else {
+			place.setName(name);
+		}
+	}
+
 	/**
 	 * Sets the name of a transition in a rule and modifies other parts of the rule accordingly
 	 * 
@@ -445,7 +495,6 @@ public class Rule {
 	 * @param name
 	 */
 	public void setNameInL(Transition transition, String name) {
-		//TODO consider NACs
 		transition.setName(name);
 		fromLtoK(transition).setName(name);
 
@@ -453,6 +502,10 @@ public class Rule {
 		
 		if (rightTransition != null) {
 			rightTransition.setName(name);
+		}
+		
+		for (NAC nac : nacs) {
+			nac.fromLtoNac(transition).setName(name);
 		}
 	}
 
@@ -463,8 +516,13 @@ public class Rule {
 	 * @param name
 	 */
 	public void setNameInK(Transition transition, String name) {
-		if (fromKtoL(transition) != null) {
+		Transition leftTrans = fromKtoL(transition);
+		
+		if (leftTrans != null) {
 			fromKtoL(transition).setName(name);
+			for (NAC nac : nacs) {
+				nac.fromLtoNac(leftTrans).setName(name);
+			}
 		}
 		
 		transition.setName(name);
@@ -488,13 +546,23 @@ public class Rule {
 		
 		if (leftTransition != null) {
 			leftTransition.setName(name);
+			for (NAC nac : nacs) {
+				nac.fromLtoNac(leftTransition).setName(name);
+			}
 		}
 	}
 	
 	public void setNameInNac(Transition transition, String name, NAC nac) {
 		checkIfcontained(nac);
-		//TODO
-		throw new NotImplementedException();	}
+
+		if (nac.fromNacToL(transition) != null) {
+			throw new ShowAsWarningException(
+					new AccessForbiddenException(
+							"This operation is not allowed for Elements that have a representation in L"));
+		} else {
+			transition.setName(name);
+		}
+	}
 
 	/**
 	 * Sets the tlb of a transition in a rule and modifies other parts of the rule accordingly
@@ -503,7 +571,6 @@ public class Rule {
 	 * @param tlb
 	 */
 	public void setTlbInL(Transition transition, String tlb) {
-		//TODO consider NACs
 		transition.setTlb(tlb);
 		fromLtoK(transition).setTlb(tlb);
 
@@ -511,6 +578,10 @@ public class Rule {
 		
 		if (rightTransition != null) {
 			rightTransition.setTlb(tlb);
+		}
+		
+		for (NAC nac : nacs) {
+			nac.fromLtoNac(transition).setTlb(tlb);
 		}
 	}
 
@@ -521,8 +592,12 @@ public class Rule {
 	 * @param name
 	 */
 	public void setTlbInK(Transition transition, String tlb) {
-		if (fromKtoL(transition) != null) {
+		Transition leftTransition = fromKtoL(transition); 
+		if (leftTransition != null) {
 			fromKtoL(transition).setTlb(tlb);
+			for (NAC nac : nacs) {
+				nac.fromLtoNac(leftTransition).setTlb(tlb);
+			}
 		}
 		
 		transition.setTlb(tlb);
@@ -546,13 +621,23 @@ public class Rule {
 		
 		if (leftTransition != null) {
 			leftTransition.setTlb(tlb);
+			for (NAC nac : nacs) {
+				nac.fromLtoNac(leftTransition).setTlb(tlb);
+			}
 		}
 	}
 
 	public void setTlbInNac(Transition transition, String tlb, NAC nac) {
 		checkIfcontained(nac);
-		//TODO
-		throw new NotImplementedException();	}
+
+		if (nac.fromNacToL(transition) != null) {
+			throw new ShowAsWarningException(
+					new AccessForbiddenException(
+							"This operation is not allowed for Elements that have a representation in L"));
+		} else {
+			transition.setTlb(tlb);
+		}
+	}
 
 	/**
 	 * Sets the rnw of a transition in a rule and modifies other parts of the rule accordingly
@@ -561,7 +646,6 @@ public class Rule {
 	 * @param rnw
 	 */
 	public void setRnwInL(Transition transition, IRenew rnw) {
-		//TODO consider NACs
 		transition.setRnw(rnw);
 		fromLtoK(transition).setRnw(rnw);
 
@@ -569,6 +653,10 @@ public class Rule {
 		
 		if (rightTransition != null) {
 			rightTransition.setRnw(rnw);
+		}
+		
+		for (NAC nac : nacs) {
+			nac.fromLtoNac(transition).setRnw(rnw);
 		}
 	}
 
@@ -579,8 +667,13 @@ public class Rule {
 	 * @param rnw
 	 */
 	public void setRnwInK(Transition transition, IRenew rnw) {
-		if (fromKtoL(transition) != null) {
-			fromKtoL(transition).setRnw(rnw);
+		Transition leftTransition = fromKtoL(transition); 
+		
+		if (leftTransition != null) {
+			leftTransition.setRnw(rnw);
+			for (NAC nac : nacs) {
+				nac.fromLtoNac(leftTransition).setRnw(rnw);
+			}
 		}
 		
 		transition.setRnw(rnw);
@@ -604,13 +697,23 @@ public class Rule {
 		
 		if (leftTransition != null) {
 			leftTransition.setRnw(rnw);
+			for (NAC nac : nacs) {
+				nac.fromLtoNac(leftTransition).setRnw(rnw);
+			}
 		}
 	}
 	
 	public void setRnwInNac(Transition transition, IRenew rnw, NAC nac) {
 		checkIfcontained(nac);
-		//TODO
-		throw new NotImplementedException();	}
+
+		if (nac.fromNacToL(transition) != null) {
+			throw new ShowAsWarningException(
+					new AccessForbiddenException(
+							"This operation is not allowed for Elements that have a representation in L"));
+		} else {
+			transition.setRnw(rnw);
+		}
+	}
 
 	
 	/**
@@ -620,7 +723,6 @@ public class Rule {
 	 * @param weight
 	 */
 	public void setWeightInL(PreArc preArc, int weight) {
-		//TODO consider NACs
 		preArc.setWeight(weight);
 		fromLtoK(preArc).setWeight(weight);
 
@@ -628,6 +730,10 @@ public class Rule {
 		
 		if (rightPreArc != null) {
 			rightPreArc.setWeight(weight);
+		}
+		
+		for (NAC nac : nacs) {
+			nac.fromLtoNac(preArc).setWeight(weight);
 		}
 	}
 
@@ -638,8 +744,12 @@ public class Rule {
 	 * @param weight
 	 */
 	public void setWeightInK(PreArc preArc, int weight) {
-		if (fromKtoL(preArc) != null) {
-			fromKtoL(preArc).setWeight(weight);
+		PreArc leftPreArc = fromKtoL(preArc); 
+		if (leftPreArc != null) {
+			leftPreArc.setWeight(weight);
+			for (NAC nac : nacs) {
+				nac.fromLtoNac(leftPreArc).setWeight(weight);
+			}
 		}
 		
 		preArc.setWeight(weight);
@@ -663,13 +773,22 @@ public class Rule {
 		
 		if (leftPreArc != null) {
 			leftPreArc.setWeight(weight);
+			for (NAC nac : nacs) {
+				nac.fromLtoNac(leftPreArc).setWeight(weight);
+			}
 		}
 	}
 
 	public void setWeightInNac(PreArc preArc, int weight, NAC nac) {
 		checkIfcontained(nac);
-		//TODO
-		throw new NotImplementedException();
+
+		if (nac.fromNacToL(preArc) != null) {
+			throw new ShowAsWarningException(
+					new AccessForbiddenException(
+							"This operation is not allowed for Elements that have a representation in L"));
+		} else {
+			preArc.setWeight(weight);
+		}
 	}
 	
 	/**
@@ -679,7 +798,6 @@ public class Rule {
 	 * @param weight
 	 */
 	public void setWeightInL(PostArc postArc, int weight) {
-		//TODO consider NACs
 		postArc.setWeight(weight);
 		fromLtoK(postArc).setWeight(weight);
 
@@ -687,6 +805,10 @@ public class Rule {
 		
 		if (rightPostArc != null) {
 			rightPostArc.setWeight(weight);
+		}
+		
+		for (NAC nac : nacs) {
+			nac.fromLtoNac(postArc).setWeight(weight);
 		}
 	}
 
@@ -697,10 +819,14 @@ public class Rule {
 	 * @param weight
 	 */
 	public void setWeightInK(PostArc postArc, int weight) {
-		if (fromKtoL(postArc) != null) {
-			fromKtoL(postArc).setWeight(weight);
+		PostArc leftPostArc = fromKtoL(postArc);
+		if (leftPostArc != null) {
+			leftPostArc.setWeight(weight);
+			for (NAC nac : nacs) {
+				nac.fromLtoNac(leftPostArc).setWeight(weight);
+			}
 		}
-		
+
 		postArc.setWeight(weight);
 		
 		if (fromKtoR(postArc) != null) {
@@ -722,13 +848,22 @@ public class Rule {
 		
 		if (leftPostArc != null) {
 			leftPostArc.setWeight(weight);
+			for (NAC nac : nacs) {
+				nac.fromLtoNac(leftPostArc).setWeight(weight);
+			}
 		}
 	}
 		
 	public void setWeightInNac(PostArc postArc, int weight, NAC nac) {
 		checkIfcontained(nac);
-		//TODO
-		throw new NotImplementedException();
+
+		if (nac.fromNacToL(postArc) != null) {
+			throw new ShowAsWarningException(
+					new AccessForbiddenException(
+							"This operation is not allowed for Elements that have a representation in L"));
+		} else {
+			postArc.setWeight(weight);
+		}
 	}
 	
 	public Place addPlaceToL(String name) {
@@ -736,14 +871,24 @@ public class Rule {
 		
 		placeMappingKToL.put(getK().addPlace(name), leftPlace);
 		
+		for (NAC nac : nacs) {
+			nac.getPlaceMappingLToNac().put(leftPlace, nac.getNac().addPlace(name));
+		}
+		
 		return leftPlace;
 	}
 	
 	public Place addPlaceToK(String name) {
 		Place place = getK().addPlace(name);
 
-		placeMappingKToL.put(place, getL().addPlace(name));
+		Place leftPlace = getL().addPlace(name);
+		
+		placeMappingKToL.put(place, leftPlace);
 		placeMappingKToR.put(place, getR().addPlace(name));
+		
+		for (NAC nac : nacs) {
+			nac.getPlaceMappingLToNac().put(leftPlace, nac.getNac().addPlace(name));
+		}	
 		
 		return place;
 	}
@@ -759,22 +904,25 @@ public class Rule {
 
 	public Place addPlaceToNac(String name, NAC nac) {
 		checkIfcontained(nac);
-		//TODO
-		throw new NotImplementedException();
+		
+		return nac.getNac().addPlace(name);
 	}
 	
 	public Transition addTransitionToL(String name) {
-		//TODO consider NACs
 		Transition leftTransition = getL().addTransition(name);
 		
 		transitionMappingKToL.put(getK().addTransition(name), leftTransition);
+		
+		for (NAC nac : nacs) {
+			nac.getTransitionMappingLToNac().put(leftTransition, nac.getNac().addTransition(name));
+		}
 		
 		return leftTransition;
 	}
 	
 	public Transition addTransitionToL(String name, IRenew rnw) {
 		Transition transition = addTransitionToL(name);		
-		setRnwInL(transition, rnw);		
+		setRnwInL(transition, rnw);
 		
 		return transition;
 	}
@@ -782,8 +930,14 @@ public class Rule {
 	public Transition addTransitionToK(String name) {
 		Transition transition = getK().addTransition(name);
 
-		transitionMappingKToL.put(transition, getL().addTransition(name));
+		Transition leftTransition = getL().addTransition(name);
+		
+		transitionMappingKToL.put(transition, leftTransition);
 		transitionMappingKToR.put(transition, getR().addTransition(name));
+		
+		for (NAC nac : nacs) {
+			nac.getTransitionMappingLToNac().put(leftTransition, nac.getNac().addTransition(name));
+		}
 		
 		return transition;
 	}
@@ -805,30 +959,39 @@ public class Rule {
 	
 	public Transition addTransitionToR(String name, IRenew rnw) {
 		Transition transition = addTransitionToR(name);		
-		setRnwInR(transition, rnw);		
+		setRnwInR(transition, rnw);
 		
 		return transition;
 	}
 
 	public Transition addTransitionToNac(String name, NAC nac) {
 		checkIfcontained(nac);
-		//TODO
-		throw new NotImplementedException();
+		
+		return nac.getNac().addTransition(name);
 	}
 	
 	public Transition addTransitionToNac(String name, IRenew rnw, NAC nac) {
 		checkIfcontained(nac);
-		//TODO
-		throw new NotImplementedException();
+		Transition newTransition = addTransitionToNac(name, nac);
+		setRnwInNac(newTransition, rnw, nac);
+		
+		return newTransition;
 	}
 
 	public PreArc addPreArcToL(String name, Place place, Transition transition) {
 		PreArc leftPreArc = getL().addPreArc(name, place, transition);
 		
 		Place 	   kPlace      = fromLtoK(place);
-		Transition kTransition = fromLtoK(transition);		
+		Transition kTransition = fromLtoK(transition);
 		
 		preArcMappingKToL.put(getK().addPreArc(name, kPlace, kTransition), leftPreArc);
+		
+		for (NAC nac : nacs) {
+			PreArc newPreArc = nac.getNac().addPreArc(leftPreArc.getName(), 
+					nac.fromLtoNac(leftPreArc.getPlace()), 
+					nac.fromLtoNac(leftPreArc.getTransition()));
+			nac.getPreArcMappingLToNac().put(leftPreArc, newPreArc);
+		}
 		
 		return leftPreArc;
 	}
@@ -841,9 +1004,18 @@ public class Rule {
 		Place 	   rightPlace      = fromKtoR(place);
 		Transition rightTransition = fromKtoR(transition);	
 
-		preArcMappingKToL.put(preArc, getL().addPreArc(name, leftPlace,  leftTransition));
-		preArcMappingKToR.put(preArc, getR().addPreArc(name, rightPlace, rightTransition));
+		PreArc leftPreArc = getL().addPreArc(name, leftPlace,  leftTransition);
 		
+		preArcMappingKToL.put(preArc, leftPreArc);
+		preArcMappingKToR.put(preArc, getR().addPreArc(name, rightPlace, rightTransition));
+
+		for (NAC nac : nacs) {
+			Place 		nacPlace 		= nac.fromLtoNac(leftPlace);
+			Transition 	nacTransition 	= nac.fromLtoNac(leftTransition);
+			nac.getPreArcMappingLToNac().put(leftPreArc,
+					nac.getNac().addPreArc(name, nacPlace, nacTransition));
+		}
+
 		return preArc;
 	}
 	
@@ -860,9 +1032,11 @@ public class Rule {
 	
 	public PreArc addPreArcToNac(String name, Place place, Transition transition, NAC nac) {
 		checkIfcontained(nac);
-		//TODO
-		throw new NotImplementedException();
+		
+		// TODO wird hier alles beruecksichtigt? bin mir unsicher...
+		return nac.getNac().addPreArc(name, place, transition);
 	}
+	
 	public PostArc addPostArcToL(String name, Transition transition, Place place) {
 		PostArc leftPostArc = getL().addPostArc(name, transition, place);
 		
@@ -870,6 +1044,13 @@ public class Rule {
 		Transition kTransition = fromLtoK(transition);		
 		
 		postArcMappingKToL.put(getK().addPostArc(name, kTransition, kPlace), leftPostArc);
+		
+		for (NAC nac : nacs) {
+			Place		nacPlace		= nac.fromLtoNac(place);
+			Transition	nacTransition	= nac.fromLtoNac(transition);
+			PostArc nacPostArc	= nac.getNac().addPostArc(name, nacTransition, nacPlace);
+			nac.getPostArcMappingLToNac().put(leftPostArc, nacPostArc);
+		}
 		
 		return leftPostArc;
 	}
@@ -882,8 +1063,17 @@ public class Rule {
 		Place 	   rightPlace      = fromKtoR(place);
 		Transition rightTransition = fromKtoR(transition);	
 
-		postArcMappingKToL.put(postArc, getL().addPostArc(name, leftTransition,  leftPlace));
+		PostArc leftPostArc	= getL().addPostArc(name, leftTransition,  leftPlace);
+		
+		postArcMappingKToL.put(postArc, leftPostArc);
 		postArcMappingKToR.put(postArc, getR().addPostArc(name, rightTransition, rightPlace));
+
+		for (NAC nac : nacs) {
+			Place		nacPlace		= nac.fromLtoNac(leftPlace);
+			Transition	nacTransition	= nac.fromLtoNac(leftTransition);
+			PostArc nacPostArc	= nac.getNac().addPostArc(name, nacTransition, nacPlace);
+			nac.getPostArcMappingLToNac().put(leftPostArc, nacPostArc);
+		}
 		
 		return postArc;
 	}
@@ -901,17 +1091,25 @@ public class Rule {
 		
 	public PostArc addPostArcToNac(String name, Transition transition, Place place, NAC nac) {
 		checkIfcontained(nac);
-		//TODO
-		throw new NotImplementedException();
+		
+		// TODO wird hier alles beruecksichtigt? bin mir unsicher...
+		return nac.getNac().addPostArc(name, transition, place);
 	}
 	
-	public void removePlaceFromL(Place place) {		
-		removePlaceFromK(fromLtoK(place));	
+	// TODO die Remover laufen alle ueber K, d.h. ein entferntes Element wird
+	// immer aus allen Teilen der Regel entfernt. das ist unintuitiv und doof
+	
+	public void removePlaceFromL(Place place) {
+		removePlaceFromK(fromLtoK(place));
 	}
 	
 	public void removePlaceFromK(Place place) {
-		if (fromKtoL(place) != null) {
-			getL().removePlace(fromKtoL(place));
+		Place leftPlace = fromKtoL(place);
+		if (leftPlace != null) {
+			getL().removePlace(leftPlace);
+			for (NAC nac : nacs) {
+				removePlaceFromNac(nac.fromLtoNac(leftPlace), nac);
+			}
 		}
 		
 		getK().removePlace(place);
@@ -929,7 +1127,8 @@ public class Rule {
 	}
 	
 	public void removePlaceFromNac(Place place, NAC nac) {
-		removePlaceFromK(fromRtoK(place));
+		nac.getNac().removePlace(place);
+		nac.getPlaceMappingLToNac().remove(nac.fromNacToL(place));
 	}
 		
 	public void removeTransitionFromL(Transition transition) {
@@ -937,8 +1136,12 @@ public class Rule {
 	}
 	
 	public void removeTransitionFromK(Transition transition) {
-		if (fromKtoL(transition) != null) {
-			getL().removeTransition(fromKtoL(transition));
+		Transition leftTransition = fromKtoL(transition);
+		if (leftTransition != null) {
+			getL().removeTransition(leftTransition);
+			for (NAC nac : nacs) {
+				removeTransitionFromNac(nac.fromLtoNac(leftTransition), nac);
+			}
 		}
 		
 		getK().removeTransition(transition);
@@ -957,8 +1160,8 @@ public class Rule {
 	
 	public void removeTransitionFromNac(Transition transition, NAC nac) {
 		checkIfcontained(nac);
-		//TODO
-		throw new NotImplementedException();
+		nac.getNac().removeTransition(transition);
+		nac.getTransitionMappingLToNac().remove(nac.fromNacToL(transition));
 	}
 	
 	public void removePreArcFromL(PreArc preArc) {
@@ -966,8 +1169,12 @@ public class Rule {
 	}
 	
 	public void removePreArcFromK(PreArc preArc) {
-		if (fromKtoL(preArc) != null) {
-			getL().removeArc(fromKtoL(preArc));
+		PreArc leftPreArc = fromKtoL(preArc);
+		if (leftPreArc != null) {
+			getL().removeArc(leftPreArc);
+			for (NAC nac : nacs) {
+				removePreArcFromNac(nac.fromLtoNac(leftPreArc), nac);
+			}
 		}
 		
 		getK().removeArc(preArc);
@@ -986,8 +1193,8 @@ public class Rule {
 	
 	public void removePreArcFromNac(PreArc preArc, NAC nac) {
 		checkIfcontained(nac);
-		//TODO
-		throw new NotImplementedException();
+		nac.getNac().removeArc(preArc);
+		nac.getPreArcMappingLToNac().remove(nac.fromNacToL(preArc));
 	}
 	
 	public void removePostArcFromL(PostArc postArc) {
@@ -995,8 +1202,12 @@ public class Rule {
 	}
 	
 	public void removePostArcFromK(PostArc postArc) {
-		if (fromKtoL(postArc) != null) {
-			getL().removeArc(fromKtoL(postArc));
+		PostArc leftPostArc = fromKtoL(postArc);
+		if (leftPostArc != null) {
+			getL().removeArc(leftPostArc);
+			for (NAC nac : nacs) {
+				removePostArcFromNac(nac.fromLtoNac(leftPostArc), nac);
+			}
 		}
 		
 		getK().removeArc(postArc);
@@ -1015,8 +1226,8 @@ public class Rule {
 	
 	public void removePostArcFromNac(PostArc postArc, NAC nac) {
 		checkIfcontained(nac);
-		//TODO consider NACs
-		throw new NotImplementedException();
+		nac.getNac().removeArc(postArc);
+		nac.getPostArcMappingLToNac().remove(nac.fromNacToL(postArc));
 	}
 
 	/**
@@ -1258,7 +1469,7 @@ public class Rule {
 	 */
 	public Transition fromRtoL(Transition transition) {
 		return fromKtoL(fromRtoK(transition));
-	}
+	} 
 	
 	/**
 	 * Checks if the passed NAC is part of this rules NAC set
@@ -1269,4 +1480,5 @@ public class Rule {
 		if (!nacs.contains(nac))
 			throw new IllegalArgumentException("NAC not contained in this rule");
 	}
+
 }

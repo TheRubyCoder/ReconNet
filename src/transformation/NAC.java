@@ -51,9 +51,8 @@ public class NAC {
 	private final BidiMap<PreArc, PreArc> preArcMappingLToNac;
 	private final BidiMap<Transition, Transition> transitionMappingLToNac;
 	
-	// internal UUID to avoid collisions during modifications
+	// internal UID to avoid collisions during modifications
 	private final UUID id;
-
 
 	/**
 	 * Constructs a new NAC from a given L-part of a rule.
@@ -76,7 +75,7 @@ public class NAC {
 			placeMappingLToNac.put(p, nacPlace);
 		}
 
-		//TODO brauchen wir noch eine Variante mit Renews?
+		// TODO Variante mit Renews
 		for (Transition t : l.getTransitions()) {
 			Transition nacTrans = nac.addTransition(t.getName());
 			transitionMappingLToNac.put(t, nacTrans);
@@ -144,11 +143,77 @@ public class NAC {
 		return transitionMappingLToNac.get(t);
 	}
 
-	// TODO Protected setters
+	/**
+	 * Returns the corresponding Place in Nac
+	 * 
+	 * @param p
+	 *            Place in L
+	 * @return Place in N
+	 */
+	public Place fromNacToL(Place p) {
+		return placeMappingLToNac.getKey(p);
+	}
 
-	// TODO Protected adders
+	/**
+	 * Returns the corresponding PreArc in Nac
+	 * 
+	 * @param pre
+	 *            PreArc in L
+	 * @return PreArc in N
+	 */
+	public PreArc fromNacToL(PreArc pre) {
+		return preArcMappingLToNac.getKey((PreArc) pre);
+	}
 
-	// TODO Protected removers
+	/**
+	 * Returns the corresponding PostArc in Nac
+	 * 
+	 * @param post
+	 *            PostArc in L
+	 * @return PostArc in N
+	 */
+	public PostArc fromNacToL(PostArc post) {
+		return postArcMappingLToNac.getKey((PostArc) post);
+	}
+
+	/**
+	 * Returns the corresponding Transition in Nac
+	 * 
+	 * @param t
+	 *            Transition in L
+	 * @return Transition in N
+	 */
+	public Transition fromNacToL(Transition t) {
+		return transitionMappingLToNac.getKey((Transition) t);
+	}
+
+	/**
+	 * @return the placeMappingLToNac
+	 */
+	protected BidiMap<Place, Place> getPlaceMappingLToNac() {
+		return placeMappingLToNac;
+	}
+
+	/**
+	 * @return the postArcMappingLToNac
+	 */
+	protected BidiMap<PostArc, PostArc> getPostArcMappingLToNac() {
+		return postArcMappingLToNac;
+	}
+
+	/**
+	 * @return the preArcMappingLToNac
+	 */
+	protected BidiMap<PreArc, PreArc> getPreArcMappingLToNac() {
+		return preArcMappingLToNac;
+	}
+
+	/**
+	 * @return the transitionMappingLToNac
+	 */
+	protected BidiMap<Transition, Transition> getTransitionMappingLToNac() {
+		return transitionMappingLToNac;
+	}
 
 	@Override
 	public int hashCode() {
