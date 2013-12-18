@@ -39,6 +39,7 @@ import petrinet.model.PreArc;
 import petrinet.model.Transition;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
+//TODO In den Javadoc Kommentaren der Methoden die NACs beruecksichtigen. 
 
 /**
  * An Interface for Rules<br\>
@@ -139,7 +140,6 @@ public class Rule {
      * @return Set of this rule's NACs.
      */
     public Set<NAC> getNACs() {
-            //TODO make final??
             return Collections.unmodifiableSet(nacs);
     }
 
@@ -411,6 +411,17 @@ public class Rule {
 				nac.fromLtoNac(leftPlace).setCapacity(capacity);
 			}
 		}
+	}
+	
+	/**
+	 * Sets the capacity for the place and its mappings, that is only in L and K, Nac
+	 * 
+	 * @param place
+	 * @param capacity
+	 */
+	public void setCapacityInNac(Place place, int capacity) {
+		//TODO
+		throw new NotImplementedException();
 	}
 
 	/**
@@ -1033,7 +1044,6 @@ public class Rule {
 	public PreArc addPreArcToNac(String name, Place place, Transition transition, NAC nac) {
 		checkIfcontained(nac);
 		
-		// TODO wird hier alles beruecksichtigt? bin mir unsicher...
 		return nac.getNac().addPreArc(name, place, transition);
 	}
 	
@@ -1091,8 +1101,6 @@ public class Rule {
 		
 	public PostArc addPostArcToNac(String name, Transition transition, Place place, NAC nac) {
 		checkIfcontained(nac);
-		
-		// TODO wird hier alles beruecksichtigt? bin mir unsicher...
 		return nac.getNac().addPostArc(name, transition, place);
 	}
 	
