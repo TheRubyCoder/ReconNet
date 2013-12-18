@@ -17,123 +17,225 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
+/**
+ * A panel to display the file tree. Extends {@link JPanel}
+ */
 public class FileTreePane extends JPanel {
 
-	DefaultMutableTreeNode rootNode;
-	DefaultMutableTreeNode netNode;
-	DefaultMutableTreeNode ruleNode;
+    /**
+     * Root node (not visible).
+     */
+    private DefaultMutableTreeNode rootNode;
 
-	private JTree tree;
+    /**
+     * Net root node. Root of all nets.
+     */
+    private DefaultMutableTreeNode netNode;
 
-	public JTree getTree() {
-		return tree;
-	}
+    /**
+     * Rule root node. Root of all rules.
+     */
+    private DefaultMutableTreeNode ruleNode;
 
-	private DefaultTreeModel treeModel;
+    /**
+     * Reference to the tree object.
+     */
+    private JTree tree;
 
-	private JScrollPane treeView;
+    /**
+     * Reference to tree model instance
+     */
+    private DefaultTreeModel treeModel;
 
-	private static FileTreePane instance;
+    /**
+     * Scroll pane holding JTree.
+     */
+    private JScrollPane treeView;
 
-	/**
-	 * generated ID
-	 */
-	private static final long serialVersionUID = -2388963754966220772L;
+    /**
+     * Singleton: Instance of this {@link FileTreePane}.
+     */
+    private static FileTreePane instance;
 
-	static {
-		instance = new FileTreePane();
-	}
+    /**
+     * generated ID
+     */
+    private static final long serialVersionUID = -2388963754966220772L;
 
-	public static FileTreePane getInstance() {
-		return instance;
-	}
+    /**
+     * Singleton: Create Instance.
+     */
+    static {
+        instance = new FileTreePane();
+    }
 
-	private FileTreePane() {
-		this.initializeFileTreePane();
-	}
+    /**
+     * Singleton. Returns the Instance.
+     * 
+     * @return the Instance {@link FileTreePane}
+     */
+    public static FileTreePane getInstance() {
+        return instance;
+    }
 
-	private void initializeFileTreePane() {
-		this.initializeTreeView();
-		this.setLayout(new GridLayout(1, 1));
-		this.add(this.treeView);
-	}
+    /**
+     * Constructor
+     */
+    private FileTreePane() {
+        this.initializeFileTreePane();
+    }
 
-	private void initializeTreeView() {
-		this.initializeTree();
-		this.treeView = new JScrollPane(this.tree);
-	}
+    /**
+     * Initialization of this {@link FileTreePane}.
+     */
+    private void initializeFileTreePane() {
+        this.initializeTreeView();
+        this.setLayout(new GridLayout(1, 1));
+        this.add(this.treeView);
+    }
 
-	private void initializeTree() {
-		this.createRoot();
-		this.createTreeModel();
-		this.tree = new JTree(this.treeModel);
-		this.tree.setRootVisible(false);
-		this.tree.setPreferredSize(FILE_TREE_PANE_PREFERRED_SIZE);
-		this.tree.addMouseListener(new TreeMouseListener(this.tree));
-	}
+    /**
+     * Initialization of the {@link JScrollPane} and call initialization of
+     * {@link JTree}.
+     */
+    private void initializeTreeView() {
+        this.initializeTree();
+        this.treeView = new JScrollPane(this.tree);
+    }
 
-	private void createTreeModel() {
-		this.treeModel = new DefaultTreeModel((DefaultMutableTreeNode) rootNode);
-		// TODO: modellistener???
-	}
+    /**
+     * Initialization of the {@link JTree}.
+     */
+    private void initializeTree() {
+        this.createRoot();
+        this.createTreeModel();
+        this.tree = new JTree(this.treeModel);
+        this.tree.setRootVisible(false);
+        this.tree.setPreferredSize(FILE_TREE_PANE_PREFERRED_SIZE);
+        this.tree.addMouseListener(new TreeMouseListener(this.tree));
+        this.tree.setCellRenderer(new PetriTreeNodeRenderer());
+    }
 
-	private DefaultMutableTreeNode createRoot() {
-		this.rootNode = new PetriTreeNode(PetriTreeNode.ROOT_NODE,
-				TREE_STRING_ROOT);
-		netNode = new PetriTreeNode(PetriTreeNode.NET_ROOT_NODE,
-				TREE_STRING_NET);
-		ruleNode = new PetriTreeNode(PetriTreeNode.RULE_ROOT_NODE,
-				TREE_STRING_RULE);
-		this.rootNode.add(netNode);
-		this.rootNode.add(ruleNode);
-		return this.rootNode;
-	}
+    /**
+     * Creates the TreeModel.
+     */
+    private void createTreeModel() {
+        this.treeModel = new DefaultTreeModel((DefaultMutableTreeNode) rootNode);
+    }
 
-	public void addTo(JPanel p) {
-		p.add(this, BorderLayout.LINE_START);
-	}
+    /**
+     * Creates the root node and adds the netRootNode and the ruleRootNode.
+     * 
+     * @return Configured root node {@link DefaultMutableTreeNode}.
+     */
+    private DefaultMutableTreeNode createRoot() {
+        this.rootNode = new PetriTreeNode(NodeType.ROOT, TREE_STRING_ROOT);
+        netNode = new PetriTreeNode(NodeType.NET_ROOT, TREE_STRING_NET);
+        ruleNode = new PetriTreeNode(NodeType.RULE_ROOT, TREE_STRING_RULE);
+        this.rootNode.add(netNode);
+        this.rootNode.add(ruleNode);
+        return this.rootNode;
+    }
 
-	public DefaultMutableTreeNode getNetNode() {
-		return netNode;
-	}
+    /**
+     * Adds this Pane to given {@link JPanel}.
+     * 
+     * @param panel
+     *            {@link JPanel} to add this {@link FileTreePane} to.
+     */
+    public void addTo(JPanel panel) {
+        panel.add(this, BorderLayout.LINE_START);
+    }
 
-	public DefaultMutableTreeNode getRuleNode() {
-		return ruleNode;
-	}
+    /**
+     * Retruns the net root node.
+     * @return The net root node {@link DefaultMutableTreeNode}.
+     */
+    public DefaultMutableTreeNode getNetNode() {
+        return netNode;
+    }
 
-	public void addNode(int action, DefaultMutableTreeNode nodeToAdd) {
-		DefaultMutableTreeNode n = null;
-		if (action == PopupMenuListener.SELECTED_TYPE_IS_NET) {
-			n = netNode;
-		} else if (action == PopupMenuListener.SELECTED_TYPE_IS_NET) {
-			n = ruleNode;
-		}
-		n.add(nodeToAdd);
-		this.tree.expandRow(0);
-	}
+    /**
+     * Retruns the rule root node.
+     * @return The rule root node {@link DefaultMutableTreeNode}.
+     */
+    public DefaultMutableTreeNode getRuleNode() {
+        return ruleNode;
+    }
 
-	public DefaultMutableTreeNode getSelectedNode() {
-		return (DefaultMutableTreeNode) tree.getSelectionPath()
-				.getLastPathComponent();
-	}
+    /**
+     * Adds the given node to the tree. Action describes which kind of node is about to be added.
+     * @param action Kind of node to be added <tt>PopupMenuListener.SELECTED_TYPE_IS_NET</tt> or <tt>PopupMenuListener.SELECTED_TYPE_IS_NET</tt>).
+     * @param nodeToAdd
+     *//*
+    public void addNode(int action, DefaultMutableTreeNode nodeToAdd) {
+        DefaultMutableTreeNode n = null;
+        if (action == PopupMenuListener.SELECTED_TYPE_IS_NET) {
+            n = netNode;
+        } else if (action == PopupMenuListener.SELECTED_TYPE_IS_NET) {
+            n = ruleNode;
+        }
+        n.add(nodeToAdd);
+        this.tree.expandRow(0);
+    }*/
 
-	public DefaultTreeModel getTreeModel() {
-		return treeModel;
-	}
+    /**
+     * Returns the selected node.
+     * @return Selected {@link DefaultMutableTreeNode}.
+     */
+    public DefaultMutableTreeNode getSelectedNode() {
+        return (DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent();
+    }
 
-	public DefaultMutableTreeNode getRootNode() {
-		return rootNode;
-	}
+    /**
+     * Returns the tree model.
+     * @return {@link DefaultTreeModel}
+     */
+    public DefaultTreeModel getTreeModel() {
+        return treeModel;
+    }
 
-	public void setRuleNode(DefaultMutableTreeNode ruleNode) {
-		this.ruleNode = ruleNode;
-	}
+    /**
+     * Returns the root node.
+     * @return root node {@link DefaultMutableTreeNode}
+     */
+    public DefaultMutableTreeNode getRootNode() {
+        return rootNode;
+    }
 
-	public Collection<Integer> getSelectedIds() {
-		List<Integer> l = new ArrayList<Integer>();
-		// TODO: mehrere selektierte ds holen
-		l.add(PopupMenuListener.getInstance().getSelectedRules());
-		return l;
-	}
+    /**
+     * Sets the rule node.
+     * @param {@link DefaultMutableTreeNode} ruleNode
+     */
+    public void setRuleNode(DefaultMutableTreeNode ruleNode) {
+        this.ruleNode = ruleNode;
+    }
+
+    /**
+     * Returns the IDs of the selected rules.
+     * @return IDs {@link Collection}
+     */
+    public Collection<Integer> getSelectedRuleIds() {
+        List<Integer> l = new ArrayList<Integer>();
+        PetriTreeNode parent = (PetriTreeNode) this.ruleNode;
+        PetriTreeNode child;
+        int numberOfChilds = parent.getChildCount();
+        for (int i = 0; i < numberOfChilds; i++) {
+            child = (PetriTreeNode) parent.getChildAt(i);
+            if (child.isChecked()) {
+                l.add(PopupMenuListener.getInstance().getIdForNode(child));
+            }
+        }
+        return l;
+    }
+
+    /**
+     * Getter for the tree object.
+     * 
+     * @return instance of the {@link JTree} object.
+     */
+    public JTree getTree() {
+        return tree;
+    }
 
 }

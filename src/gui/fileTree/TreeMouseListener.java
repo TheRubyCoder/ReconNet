@@ -3,14 +3,16 @@ package gui.fileTree;
 import static gui.Style.TREE_MENU_ADD_NAC;
 import static gui.Style.TREE_MENU_ADD_NET;
 import static gui.Style.TREE_MENU_ADD_RULE;
+import static gui.Style.TREE_MENU_CHECK_RULE;
 import static gui.Style.TREE_MENU_LOAD_NET;
 import static gui.Style.TREE_MENU_LOAD_RULE;
-import static gui.Style.TREE_MENU_REMOVE_NET;
-import static gui.Style.TREE_MENU_REMOVE_RULE;
 import static gui.Style.TREE_MENU_RELOAD_NET;
 import static gui.Style.TREE_MENU_RELOAD_RULE;
+import static gui.Style.TREE_MENU_REMOVE_NET;
+import static gui.Style.TREE_MENU_REMOVE_RULE;
 import static gui.Style.TREE_MENU_SAVE;
 import static gui.Style.TREE_MENU_SAVE_ALL;
+import static gui.Style.TREE_MENU_UNCHECK_RULE;
 import gui.PetrinetPane;
 import gui.RulePane;
 
@@ -24,29 +26,47 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
+/**
+ * custom mouse listener for use in petrinet tree extending {@link MouseListener}.
+ */
 public class TreeMouseListener implements MouseListener {
 
+    /**
+     * reference to the {@link JTree} object.
+     */
     private JTree tree;
 
+    /**
+     * reference to the {@link PopupMenuListener}.
+     */
     private ActionListener menuListener;
 
+    /**
+     * Constructor
+     * @param tree reference to the {@link JTree} object.
+     */
     public TreeMouseListener(JTree tree) {
         super();
         this.tree = tree;
         this.menuListener = PopupMenuListener.getInstance();
     }
 
-    private void showPopupMenu(MouseEvent e, Object o) {
-        PetriTreeNode selectedNode = (PetriTreeNode) o;
+    /**
+     * dispatches the node type to show different popup menus.
+     * @param event the mouse event triggered action.
+     * @param node the node clicked.
+     */
+    private void showPopupMenu(MouseEvent event, Object node) {
+        PetriTreeNode selectedNode = (PetriTreeNode) node;
 
-        if (selectedNode.isNetRootNode()) {
-            this.showNetRootMenu(e, selectedNode);
-        } else if (selectedNode.isRuleRootNode()) {
-            this.showRuleRootMenu(e, selectedNode);
-        } else if (selectedNode.isNetNode()) {
-            this.showNetMenu(e, selectedNode);
-        } else if (selectedNode.isRuleNode()) {
-            this.showRuleMenu(e, selectedNode);
+        if (selectedNode.isNodeType(NodeType.NET_ROOT)) {
+            this.showNetRootMenu(event, selectedNode);
+        } else if (selectedNode.isNodeType(NodeType.RULE_ROOT)) {
+            this.showRuleRootMenu(event, selectedNode);
+        } else if (selectedNode.isNodeType(NodeType.NET)) {
+            this.showNetMenu(event, selectedNode);
+        } else if (selectedNode.isNodeType(NodeType.RULE)) {
+            this.showRuleMenu(event, selectedNode);
         } else {
             // TODO: throw exception here
             System.out.println("unknown node type");
@@ -54,20 +74,33 @@ public class TreeMouseListener implements MouseListener {
 
     }
 
-    private void showRuleMenu(MouseEvent e, DefaultMutableTreeNode selectedNode) {
+    /**
+     * displays the popup menu for rules.
+     * @param event the mouse event triggered action.
+     * @param selectedNode the node clicked.
+     */
+    private void showRuleMenu(MouseEvent event, PetriTreeNode selectedNode) {
         JPopupMenu popup = new JPopupMenu();
         JMenuItem i;
 
         i = new JMenuItem(TREE_MENU_SAVE_ALL);
         popup.add(i);
         i.addActionListener(this.menuListener);
-        
+
         popup.addSeparator();
+
+        if (selectedNode.isChecked()) {
+            i = new JMenuItem(TREE_MENU_UNCHECK_RULE);
+        } else {
+            i = new JMenuItem(TREE_MENU_CHECK_RULE);
+        }
+        popup.add(i);
+        i.addActionListener(this.menuListener);
 
         i = new JMenuItem(TREE_MENU_SAVE);
         popup.add(i);
         i.addActionListener(this.menuListener);
-        
+
         i = new JMenuItem(TREE_MENU_ADD_NAC);
         popup.add(i);
         i.addActionListener(this.menuListener);
@@ -75,14 +108,19 @@ public class TreeMouseListener implements MouseListener {
         i = new JMenuItem(TREE_MENU_REMOVE_RULE);
         popup.add(i);
         i.addActionListener(this.menuListener);
-        
+
         i = new JMenuItem(TREE_MENU_RELOAD_RULE);
         popup.add(i);
         i.addActionListener(this.menuListener);
 
-        popup.show(tree, e.getX(), e.getY());
+        popup.show(tree, event.getX(), event.getY());
     }
 
+    /**
+     * displays the popup menu for nets.
+     * @param event the mouse event triggered action.
+     * @param selectedNode the node clicked.
+     */
     private void showNetMenu(MouseEvent e, DefaultMutableTreeNode selectedNode) {
         JPopupMenu popup = new JPopupMenu();
         JMenuItem i;
@@ -90,7 +128,7 @@ public class TreeMouseListener implements MouseListener {
         i = new JMenuItem(TREE_MENU_SAVE_ALL);
         popup.add(i);
         i.addActionListener(this.menuListener);
-        
+
         popup.addSeparator();
 
         i = new JMenuItem(TREE_MENU_SAVE);
@@ -108,6 +146,11 @@ public class TreeMouseListener implements MouseListener {
         popup.show(tree, e.getX(), e.getY());
     }
 
+    /**
+     * displays the popup menu for rule root.
+     * @param event the mouse event triggered action.
+     * @param selectedNode the node clicked.
+     */
     private void showRuleRootMenu(MouseEvent e, DefaultMutableTreeNode selectedNode) {
         JPopupMenu popup = new JPopupMenu();
         JMenuItem i;
@@ -129,8 +172,13 @@ public class TreeMouseListener implements MouseListener {
         popup.show(tree, e.getX(), e.getY());
     }
 
+    /**
+     * displays the popup menu for net root.
+     * @param event the mouse event triggered action.
+     * @param selectedNode the node clicked.
+     */
     private void showNetRootMenu(MouseEvent e, DefaultMutableTreeNode selectedNode) {
-        
+
         JPopupMenu popup = new JPopupMenu();
         JMenuItem i;
 
@@ -162,10 +210,26 @@ public class TreeMouseListener implements MouseListener {
             String name = node.toString();
             Integer id = PopupMenuListener.getInstance().getPidOf(name);
 
-            if (node.isNetNode()) {
+            if (node.isNodeType(NodeType.NET)) {
                 PetrinetPane.getInstance().displayPetrinet(id, name);
-            } else if (node.isRuleNode()) {
+                PetriTreeNode netRoot = (PetriTreeNode) node.getParent();
+                PetriTreeNode child;
+                int numberOfChilcds = netRoot.getChildCount();
+                for (int i = 0; i < numberOfChilcds; i++) {
+                    child = (PetriTreeNode) netRoot.getChildAt(i);
+                    child.setSelected(false);
+                }
+                node.setSelected(true);
+            } else if (node.isNodeType(NodeType.RULE)) {
                 RulePane.getInstance().displayRule(id);
+                PetriTreeNode ruleRoot = (PetriTreeNode) node.getParent();
+                PetriTreeNode child;
+                int numberOfChilcds = ruleRoot.getChildCount();
+                for (int i = 0; i < numberOfChilcds; i++) {
+                    child = (PetriTreeNode) ruleRoot.getChildAt(i);
+                    child.setSelected(false);
+                }
+                node.setSelected(true);
             }
 
             if (e.getButton() == MouseEvent.BUTTON3) {
@@ -177,26 +241,22 @@ public class TreeMouseListener implements MouseListener {
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        // TODO Auto-generated method stub
-
+        // not used
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        // TODO Auto-generated method stub
-
+        // not used
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        // TODO Auto-generated method stub
-
+        // not used
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        // TODO Auto-generated method stub
-
+        // not used
     }
 
 }

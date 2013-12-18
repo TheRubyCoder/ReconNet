@@ -19,7 +19,6 @@
 package gui;
 
 import static gui.Style.HEADER_DIMENSION;
-import static gui.Style.LEFT_PANEL_DIMENSION;
 import static gui.Style.TOTAL_HEIGHT;
 import static gui.Style.TOTAL_WIDTH;
 
@@ -65,7 +64,6 @@ class MainWindow {
 
     // ------------END of GUI Panel--------------------
 
-
     /** PetrinetManipulation aspect of engine */
     private static IPetrinetManipulation manipulation;
 
@@ -96,17 +94,22 @@ class MainWindow {
         show();
         this.setDividerLocations();
     }
-    
 
+    /**
+     * sets the location of the divider from {@link JSplitPane} to the half of
+     * the parent panel.
+     */
     private void setDividerLocations() {
         this.bodyPanel.setDividerLocation(this.bodyPanel.getHeight() / 2);
     }
 
+    /**
+     * adds gui components to the main window.
+     */
     private void addGuiComponents() {
         mainFrame.getContentPane().add(this.headPanel, BorderLayout.PAGE_START);
         mainFrame.getContentPane().add(this.bodyPanel, BorderLayout.CENTER);
     }
-
 
     /**
      * Initializes the main frame with defaults values for title, size and
@@ -120,7 +123,6 @@ class MainWindow {
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setLayout(new BorderLayout());
     }
-    
 
     /**
      * Adds GUI components to frame.
@@ -142,9 +144,11 @@ class MainWindow {
         this.bodyPanel.setResizeWeight(.5);
     }
 
+    /**
+     * initializes the upper body panel holding the net and file tree.
+     */
     private void initializeUpperBodyPanel() {
         this.upperBodyPanel = new JPanel(new BorderLayout());
-        // FileTabPane.getInstance().addTo(this.upperBodyPanel);
         FileTreePane.getInstance().addTo(this.upperBodyPanel);
         PetrinetPane.getInstance().addTo(this.upperBodyPanel);
     }
@@ -169,14 +173,18 @@ class MainWindow {
         manipulation = PetrinetManipulation.getInstance();
     }
 
-    /** Set Size of Mainframe and make it visible */
+    /**
+     * Set Size of Mainframe and make it visible
+     */
     private void show() {
         mainFrame.pack();
         mainFrame.setBounds(0, 0, TOTAL_WIDTH, TOTAL_HEIGHT);
         mainFrame.setVisible(true);
     }
 
-    /** Repaints whole gui */
+    /**
+     * Repaints whole gui
+     */
     public void repaint() {
         Rectangle oldBounds = mainFrame.getBounds();
         mainFrame.pack(); // resets bounds

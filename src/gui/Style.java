@@ -216,29 +216,31 @@ public class Style {
      */
     public static final Dimension FILE_TREE_PANE_PREFERRED_SIZE = new Dimension(200, 200);
     public static final String TREE_STRING_ROOT = "root";
-    public static final String TREE_STRING_NET = "Nets";
-    public static final String TREE_STRING_RULE = "Rules";
+    public static final String TREE_STRING_NET = "Netze";
+    public static final String TREE_STRING_RULE = "Regeln";
 
     // net root entry
-    public static final String TREE_MENU_ADD_NET = "Add Net";
-    public static final String TREE_MENU_LOAD_NET = "Load Net";
+    public static final String TREE_MENU_ADD_NET = "Neues Netz";
+    public static final String TREE_MENU_LOAD_NET = "Netz laden";
 
     // rule root entry
-    public static final String TREE_MENU_ADD_RULE = "Add Rule";
-    public static final String TREE_MENU_LOAD_RULE = "Load Rule";
+    public static final String TREE_MENU_ADD_RULE = "Neue Regel";
+    public static final String TREE_MENU_LOAD_RULE = "Regel laden";
 
     // net entry
-    public static final String TREE_MENU_REMOVE_NET = "Remove";
-    public static final String TREE_MENU_RELOAD_NET = "Reload";
+    public static final String TREE_MENU_REMOVE_NET = "Entfernen";
+    public static final String TREE_MENU_RELOAD_NET = "Erneut laden";
 
     // rule entry
-    public static final String TREE_MENU_REMOVE_RULE = "Remove";
-    public static final String TREE_MENU_RELOAD_RULE = "Reload";
-    public static final String TREE_MENU_ADD_NAC = "Add NAC";
+    public static final String TREE_MENU_REMOVE_RULE = TREE_MENU_REMOVE_NET;
+    public static final String TREE_MENU_RELOAD_RULE = TREE_MENU_RELOAD_NET;
+    public static final String TREE_MENU_ADD_NAC = "NAC hinzufügen";
+    public static final String TREE_MENU_CHECK_RULE = "Aktivieren";
+    public static final String TREE_MENU_UNCHECK_RULE = "Deaktivieren";
 
     // all tree entries
-    public static final String TREE_MENU_SAVE_ALL = "Save All";
-    public static final String TREE_MENU_SAVE = "Save";
+    public static final String TREE_MENU_SAVE_ALL = "Alle speichern";
+    public static final String TREE_MENU_SAVE = "Speichern";
 
     /* *************************************
      * rule pane ************************************

@@ -1,5 +1,15 @@
 package gui.fileTree;
 
+import static gui.Style.TREE_MENU_ADD_NET;
+import static gui.Style.TREE_MENU_ADD_RULE;
+import static gui.Style.TREE_MENU_CHECK_RULE;
+import static gui.Style.TREE_MENU_LOAD_NET;
+import static gui.Style.TREE_MENU_LOAD_RULE;
+import static gui.Style.TREE_MENU_RELOAD_NET;
+import static gui.Style.TREE_MENU_REMOVE_NET;
+import static gui.Style.TREE_MENU_SAVE;
+import static gui.Style.TREE_MENU_SAVE_ALL;
+import static gui.Style.TREE_MENU_UNCHECK_RULE;
 import exceptions.EngineException;
 import exceptions.ShowAsInfoException;
 import exceptions.ShowAsWarningException;
@@ -22,50 +32,101 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
+/**
+ * Custom popup menu listener extending {@link ActionListener}.
+ */
 public class PopupMenuListener implements ActionListener {
 
+    /**
+     * singleton: the instance
+     */
     private static PopupMenuListener instance;
 
+    /**
+     * singleton: creates the instance.
+     */
     static {
         instance = new PopupMenuListener();
     }
 
+    /**
+     * singleton: returns the instance.
+     * 
+     * @return the instance of {@link PopupMenuListener}
+     */
     public static PopupMenuListener getInstance() {
         return instance;
     }
 
+    /**
+     * constant to determine operating with nets.
+     */
     public static final int SELECTED_TYPE_IS_NET = 0;
 
+    /**
+     * constant to determine operating with rules.
+     */
     public static final int SELECTED_TYPE_IS_RULE = 1;
 
+    /**
+     * constant to determine creating nets.
+     */
     public static final int DIALOG_CREATE_NET = SELECTED_TYPE_IS_NET;
+
+    /**
+     * constant to determine creating rules.
+     */
     public static final int DIALOG_CREATE_RULE = SELECTED_TYPE_IS_RULE;
+
+    /**
+     * constant to determine loading nets.
+     */
     public static final int DIALOG_LOAD_NET = 2;
+
+    /**
+     * constant to determine loading rules.
+     */
     public static final int DIALOG_LOAD_RULE = 3;
 
-    /** The extension a file needs to have with the dot: ".PNML" */
+    /**
+     * The extension a file needs to have with the dot: ".PNML"
+     */
     private static final String FILE_EXTENSION = ".PNML";
 
-    /** The extension a file needs to have without the dot: "PNML" */
+    /**
+     * The extension a file needs to have without the dot: "PNML"
+     */
     private static final String FILE_EXTENSION_WITHOUT_DOT = "PNML";
 
-    /** The extension a file needs to have with the dot: ".pnml" */
+    /**
+     * The extension a file needs to have with the dot: ".pnml"
+     */
     private static final String FILE_EXTENSION_LOWER_CASE = ".pnml";
 
     private JFileChooser fileChooser;
 
-    /** To remember what list entry refers to wich petrinet */
+    /**
+     * To remember what list entry refers to wich petrinet
+     */
     private Map<String, Integer> nameToPId;
 
-    /** To remember what list entry refers to which filepath */
+    /**
+     * To remember what list entry refers to which filepath
+     */
     private Map<String, File> nameToFilepath;
 
+    /**
+     * Constructor.
+     */
     private PopupMenuListener() {
         nameToPId = new HashMap<String, Integer>();
         nameToFilepath = new HashMap<String, File>();
         this.initializeFileChooser();
     }
 
+    /**
+     * initializes the file choosing dialog.
+     */
     private void initializeFileChooser() {
         FileFilter filter = new FileNameExtensionFilter("PetriNetModellingLanguage (*.PNML)", "PNML");
         this.fileChooser = new JFileChooser();
@@ -78,25 +139,54 @@ public class PopupMenuListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         // set up action for file choose dialog.
-        if (e.getActionCommand().equalsIgnoreCase("Add Net")) {
+        if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_ADD_NET)) {
             this.addToTree(SELECTED_TYPE_IS_NET);
-        } else if (e.getActionCommand().equalsIgnoreCase("Add Rule")) {
+        } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_ADD_RULE)) {
             this.addToTree(SELECTED_TYPE_IS_RULE);
-        } else if (e.getActionCommand().equalsIgnoreCase("Load Net")) {
+        } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_LOAD_NET)) {
             this.loadNed();
-        } else if (e.getActionCommand().equalsIgnoreCase("Load Rule")) {
+        } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_LOAD_RULE)) {
             this.loadRule();
-        } else if (e.getActionCommand().equalsIgnoreCase("Save")) {
+        } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_SAVE)) {
             this.save();
-        } else if (e.getActionCommand().equalsIgnoreCase("Save All")) {
+        } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_SAVE_ALL)) {
             this.saveAll();
-        } else if (e.getActionCommand().equalsIgnoreCase("Reload")) {
+        } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_RELOAD_NET)) {
             this.reload();
-        } else if (e.getActionCommand().equalsIgnoreCase("Remove")) {
+        } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_REMOVE_NET)) {
             this.remove();
+        } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_CHECK_RULE)) {
+            this.checkNode();
+        } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_UNCHECK_RULE)) {
+            this.uncheckNode();
         }
     }
 
+    /**
+     * unchecks the checkbox of the selected node.
+     */
+    private void uncheckNode() {
+        PetriTreeNode node = (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
+        node.setChecked(false);
+        FileTreePane.getInstance().getTree().invalidate();
+        FileTreePane.getInstance().getTree().validate();
+        FileTreePane.getInstance().getTree().repaint();
+    }
+
+    /**
+     * unchecks the checkbox of the selected node.
+     */
+    private void checkNode() {
+        PetriTreeNode node = (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
+        node.setChecked(true);
+        FileTreePane.getInstance().getTree().invalidate();
+        FileTreePane.getInstance().getTree().validate();
+        FileTreePane.getInstance().getTree().repaint();
+    }
+
+    /**
+     * removes the selected node from tree.
+     */
     private void remove() {
         boolean delete = JOptionPane.showOptionDialog(null, "Sollen die Dateien vom Dateisystem gelöscht werden?", "Löschen", 0, JOptionPane.QUESTION_MESSAGE,
                 null, new String[] { "Dateien löschen", "Nur aus Übersicht löschen" }, "Nur aus Übersicht löschen") == 0 ? true : false;
@@ -112,32 +202,38 @@ public class PopupMenuListener implements ActionListener {
         nameToFilepath.remove(name);
         nameToPId.remove(name);
 
-        if (node.isNetNode()) {
+        if (node.isNodeType(NodeType.NET)) {
             PetrinetPane.getInstance().displayEmpty();
-            parentNode =  (PetriTreeNode) FileTreePane.getInstance().getNetNode();
-        } else if (node.isRuleNode()) {
+            parentNode = (PetriTreeNode) FileTreePane.getInstance().getNetNode();
+        } else if (node.isNodeType(NodeType.RULE)) {
             RulePane.getInstance().displayEmpty();
-            parentNode =  (PetriTreeNode) FileTreePane.getInstance().getRuleNode();
+            parentNode = (PetriTreeNode) FileTreePane.getInstance().getRuleNode();
         }
-        
+
         FileTreePane.getInstance().getTreeModel().removeNodeFromParent(node);
         FileTreePane.getInstance().getTree().scrollPathToVisible(new TreePath(parentNode.getPath()));
         FileTreePane.getInstance().getTree().setSelectionPath(new TreePath(FileTreePane.getInstance().getTreeModel().getPathToRoot(parentNode)));
     }
 
+    /**
+     * reloads the file contents from disk to reset changes done to the net or rule.
+     */
     private void reload() {
         PetriTreeNode node = (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
         File file = this.nameToFilepath.get(node.toString());
         int netType = -1;
-        if (node.isNetNode()) {
+        if (node.isNodeType(NodeType.NET)) {
             netType = PopupMenuListener.SELECTED_TYPE_IS_NET;
-        } else if (node.isRuleNode()) {
+        } else if (node.isNodeType(NodeType.RULE)) {
             netType = PopupMenuListener.SELECTED_TYPE_IS_RULE;
         }
         this.loadFromFile(file, netType);
 
     }
 
+    /**
+     * shows file dialog and loads chosen net file.
+     */
     private void loadNed() {
         File file = null;
         int status = this.showDialog(PopupMenuListener.DIALOG_LOAD_NET);
@@ -158,7 +254,9 @@ public class PopupMenuListener implements ActionListener {
         }
 
     }
-
+    /**
+     * shows file dialog and loads chosen rule file.
+     */
     private void loadRule() {
         File file = null;
         int status = this.showDialog(PopupMenuListener.DIALOG_LOAD_RULE);
@@ -180,7 +278,11 @@ public class PopupMenuListener implements ActionListener {
 
     }
 
-    /** Loads a petrinet or file from a given file */
+    /** 
+     * Loads a petrinet or file from a given file
+     * @param file the file containing the net or rule
+     * @param netType type of file (rule or net)
+     */
     private void loadFromFile(File file, int netType) {
         int id;
         String name = this.getFilenameWithoutExtension(file);
@@ -201,10 +303,10 @@ public class PopupMenuListener implements ActionListener {
 
             if (netType == SELECTED_TYPE_IS_NET) {
                 parentNode = FileTreePane.getInstance().getNetNode();
-                n = new PetriTreeNode(PetriTreeNode.NET_NODE, name);
+                n = new PetriTreeNode(NodeType.NET, name);
             } else if (netType == SELECTED_TYPE_IS_RULE) {
                 parentNode = FileTreePane.getInstance().getRuleNode();
-                n = new PetriTreeNode(PetriTreeNode.RULE_NODE, name);
+                n = new PetriTreeNode(NodeType.RULE, name);
             } else {
                 // TODO: hier nac mit if else
             }
@@ -219,10 +321,16 @@ public class PopupMenuListener implements ActionListener {
         nameToFilepath.put(name, file);
     }
 
+    /**
+     * saves selected file.
+     */
     private void save() {
         saveNode(FileTreePane.getInstance().getSelectedNode());
     }
 
+    /**
+     * saves all files.
+     */
     private void saveAll() {
         int childCount = FileTreePane.getInstance().getNetNode().getChildCount();
 
@@ -237,15 +345,19 @@ public class PopupMenuListener implements ActionListener {
         }
     }
 
+    /**
+     * saves the file via engine.
+     * @param node node to save.
+     */
     private void saveNode(DefaultMutableTreeNode node) {
         String name = node.getUserObject().toString();
         int id = nameToPId.get(name);
         File file = nameToFilepath.get(name);
         try {
-            if (((PetriTreeNode) node).isNetNode()) {
+            if (((PetriTreeNode) node).isNodeType(NodeType.NET)) {
                 EngineAdapter.getPetrinetManipulation().save(id, file.getParent(), name, FILE_EXTENSION_WITHOUT_DOT,
                         PetrinetPane.getInstance().getCurrentNodeSize());
-            } else if (((PetriTreeNode) node).isRuleNode()) {
+            } else if (((PetriTreeNode) node).isNodeType(NodeType.RULE)) {
                 EngineAdapter.getRuleManipulation().save(id, file.getParent(), name, FILE_EXTENSION_WITHOUT_DOT);
             }
         } catch (EngineException e) {
@@ -254,6 +366,10 @@ public class PopupMenuListener implements ActionListener {
         }
     }
 
+    /**
+     * shows file chooser dialog, creates a new file via engine and adds it to tree.
+     * @param netType the type of net which should be created.
+     */
     private void addToTree(int netType) {
         File file = null;
         int status = JFileChooser.ERROR_OPTION;
@@ -324,10 +440,10 @@ public class PopupMenuListener implements ActionListener {
 
             if (netType == SELECTED_TYPE_IS_NET) {
                 parentNode = FileTreePane.getInstance().getNetNode();
-                n = new PetriTreeNode(PetriTreeNode.NET_NODE, name);
+                n = new PetriTreeNode(NodeType.NET, name);
             } else if (netType == SELECTED_TYPE_IS_RULE) {
                 parentNode = FileTreePane.getInstance().getRuleNode();
-                n = new PetriTreeNode(PetriTreeNode.RULE_NODE, name);
+                n = new PetriTreeNode(NodeType.RULE, name);
             } else {
                 // TODO: hier nac mit if else
             }
@@ -342,8 +458,13 @@ public class PopupMenuListener implements ActionListener {
         }
     }
 
-    private int showDialog(int createRule) {
-        switch (createRule) {
+    /**
+     * shows the file choosing dialog.
+     * @param intend the intend what the dialog is shown for.
+     * @return result of JFileChooser .showDialog() call.
+     */
+    private int showDialog(int intend) {
+        switch (intend) {
         case PopupMenuListener.DIALOG_CREATE_NET:
             this.fileChooser.setDialogTitle("Create Petrinet File as..");
             return fileChooser.showDialog(null, "Create Net");
@@ -391,19 +512,32 @@ public class PopupMenuListener implements ActionListener {
         }
     }
 
+    /**
+     * returns the filename without extension (.pnml).
+     * @param f file object to get name from.
+     * @return the name of the file.
+     */
     private String getFilenameWithoutExtension(File f) {
         // Assuming file is a .PNML file cut last 5 characters off.
         return f.getName().substring(0, f.getName().length() - 5);
     }
 
+    /**
+     * returns the PID for the given name.
+     * @param name name to get ID for
+     * @return the PID
+     */
     public Integer getPidOf(String name) {
         return this.nameToPId.get(name);
 
     }
 
-	public Integer getSelectedRules() {
-		PetriTreeNode node = (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
-        String name = node.toString();
-		return nameToPId.get(name);
-	}
+    /**
+     * returns the PID for the given tree node.
+     * @param n node to get ID for
+     * @return the PID
+     */
+    public Integer getIdForNode(PetriTreeNode n) {
+        return nameToPId.get(n.toString());
+    }
 }

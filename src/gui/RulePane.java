@@ -41,32 +41,69 @@ import exceptions.EngineException;
 /** Pane for displaying rules */
 public class RulePane {
 
-    /** Internal JPanel for gui-layouting the petrinet */
+    /**
+     * main split for the rule panel
+     */
     private JSplitPane rulePanel;
 
-    private JPanel lPanel;
-
-    private JPanel kPanel;
-
-    private JPanel rPanel;
-
-    private JPanel nacPanel;
-
-    private PetrinetViewer lViewer;
-
-    private PetrinetViewer kViewer;
-
-    private PetrinetViewer rViewer;
-
-    private PetrinetViewer nacViewer;
-
-    private int currentId;
-
+    /**
+     * left sub split
+     */
     private JSplitPane leftRulePanel;
 
+    /**
+     * right sub split
+     */
     private JSplitPane rightRulePanel;
 
-    /** Singleton */
+    /**
+     * panel holding viewer for L
+     */
+    private JPanel lPanel;
+
+    /**
+     * panel holding viewer for K
+     */
+    private JPanel kPanel;
+
+    /**
+     * panel holding viewer for R
+     */
+    private JPanel rPanel;
+
+    /**
+     * panel holding viewer for NAC
+     */
+    private JPanel nacPanel;
+
+    /**
+     * viewer for L
+     */
+    private PetrinetViewer lViewer;
+
+    /**
+     * viewer for K
+     */
+    private PetrinetViewer kViewer;
+
+    /**
+     * viewer for R
+     */
+    private PetrinetViewer rViewer;
+
+    /**
+     * viewer for NAC
+     */
+    private PetrinetViewer nacViewer;
+
+    /**
+     * the PID of the currently displayed rule.
+     */
+    private int currentId;
+
+    /**
+     *  Singleton
+      */
     private RulePane() {
         this.initializeLeftRulePanel();
         this.initializeRightRulePanel();
@@ -78,16 +115,29 @@ public class RulePane {
         this.setDividerLocations();
     }
 
+    /**
+     * singleton: the instance.
+     */
     private static RulePane instance;
 
+    /**
+     * singleton: chreates the instance.
+     */
     static {
         instance = new RulePane();
     }
 
+    /**
+     * singleton: returns the instance
+     * @return the instance
+     */
     public static RulePane getInstance() {
         return instance;
     }
 
+    /**
+     * initializes the left sub split pane
+     */
     private void initializeLeftRulePanel() {
         this.nacPanel = new JPanel(new GridLayout(1, 1));
         this.lPanel = new JPanel(new GridLayout(1, 1));
@@ -100,6 +150,9 @@ public class RulePane {
         this.leftRulePanel.setResizeWeight(.5);
     }
 
+    /**
+     * initializes the right sub split pane
+     */
     private void initializeRightRulePanel() {
         this.kPanel = new JPanel(new GridLayout(1, 1));
         this.rPanel = new JPanel(new GridLayout(1, 1));
@@ -112,11 +165,16 @@ public class RulePane {
         this.rightRulePanel.setResizeWeight(.5);
     }
 
-    /** Adds the rule pane to the given JPanel (frame) */
+    /** 
+     * Adds the rule pane to the given JPanel (frame).
+      */
     void addTo(JPanel frame) {
         frame.add(rulePanel);
     }
 
+    /**
+     * invokes repainting the viewers.
+     */
     void repaint() {
         nacViewer.repaint();
         lViewer.repaint();
@@ -240,6 +298,9 @@ public class RulePane {
         rViewer.resizeNodesOnlyOnThisPartOfRule(factor);
     }
 
+    /**
+     * sets the initial locations for the dividers of the {@link JSplitPane}s.
+     */
     private void setDividerLocations() {
         this.rulePanel.setDividerLocation(TOTAL_WIDTH / 2);
         this.leftRulePanel.setDividerLocation(TOTAL_WIDTH / 4);

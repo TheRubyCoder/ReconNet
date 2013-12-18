@@ -1,59 +1,121 @@
 package gui.fileTree;
 
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
 
+/**
+ * A special type of {@link DefaultMutableTreeNode} holding some additional information for ReconNet.
+ */
 public class PetriTreeNode extends DefaultMutableTreeNode {
 
-    public static final int ROOT_NODE = -1;
-    public static final int RULE_ROOT_NODE = 0;
-    public static final int RULE_NODE = 1;
-    public static final int NET_ROOT_NODE = 2;
-    public static final int NET_NODE = 3;
+    /**
+     * The {@link NodeType} of this {@link PetriTreeNode}.
+     */
+    private NodeType nodeType;
 
     /**
-     * generated UID
+     * This node is displayed with a checkbox (rule node).
      */
-    private static final long serialVersionUID = -5162180130369164448L;
+    private boolean hasCheckBox;
 
-    private int noteType;
+    /**
+     * State of checkbox.
+     */
+    private boolean checked;
 
-    public PetriTreeNode(int noteType) {
-        super();
-        this.noteType = noteType;
-    }
-    
+    /**
+     * This node is selected and highlighted in tree.
+     */
+    private boolean selected;
 
-    public PetriTreeNode(int noteType, Object userObject) {
+    /**
+     * serialVersionUID
+     */
+    private static final long serialVersionUID = 602894489830122046L;
+
+    /**
+     * Constructor.
+     * @param nodeType Type of this node.
+     * @param userObject user object.
+     */
+    PetriTreeNode(NodeType nodeType, Object userObject) {
         super(userObject);
-        this.noteType = noteType;
+        init(nodeType);
     }
 
-    public PetriTreeNode(int noteType, Object userObject, boolean allowsChildren) {
-        super(userObject, allowsChildren);
-        this.noteType = noteType;
+    /**
+     * Initializes this node.
+     * @param nodeType Type of this node.
+     */
+    private void init(NodeType nodeType) {
+        this.checked = false;
+        this.nodeType = nodeType;
+        if (this.nodeType.equals(NodeType.RULE)) {
+            this.setHasCheckBox(true);
+        }
     }
 
-    public boolean isRuleRootNode() {
-        return this.noteType == RULE_ROOT_NODE;
+    /**
+     * Calls super.toString().
+     */
+    public String toString() {
+        return super.toString();
     }
 
-    public boolean isRuleNode() {
-        return this.noteType == RULE_NODE;
+    /**
+     * Compares type of this node with given node type.
+     * @param nodeType {@link NodeType} to compare this node with.
+     * @return Returns whether this node is of type of given type.
+     */
+    public boolean isNodeType(NodeType nodeType) {
+        return this.nodeType.equals(nodeType);
     }
 
-    public boolean isNetRootNode() {
-        return this.noteType == NET_ROOT_NODE;
+    /**
+     * Returns true if this node should be displayed with checkbox (rule node).
+     * @return true if this node should be displayed with checkbox (rule node).
+     */
+    public boolean isHasCheckBox() {
+        return hasCheckBox;
     }
 
-    public boolean isNetNode() {
-        return this.noteType == NET_NODE;
+    /**
+     * Sets this node to be displayed with checkbox or not.
+     * @param hasCheckBox True = display with checkbox, false = display without checkbox.
+     */
+    public void setHasCheckBox(boolean hasCheckBox) {
+        this.hasCheckBox = hasCheckBox;
     }
 
+    /**
+     * Returns checked state of checkbox.
+     * @return checked state of checkbox.
+     */
+    public boolean isChecked() {
+        return checked;
+    }
 
+    /**
+     * Changes the checked state of checkbox.
+     * @param checked new checked state.
+     */
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
 
-    @Override
-    public void add(MutableTreeNode newChild) {
-        super.add(newChild);
+    /**
+     * returns selected state of this node (marked to be selected in tree).
+     * @return selected state.
+     */
+    public boolean isSelected() {
+
+        return selected;
+    }
+
+    /**
+     * sets whether this node should be displayed selected or not.
+     * @param selected new seleted state.
+     */
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }
