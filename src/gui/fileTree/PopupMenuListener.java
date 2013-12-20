@@ -299,7 +299,7 @@ public class PopupMenuListener implements ActionListener {
         if (!nameToPId.containsKey(name)) {
 
             DefaultMutableTreeNode parentNode = null;
-            DefaultMutableTreeNode n = null;
+            PetriTreeNode n = null;
 
             if (netType == SELECTED_TYPE_IS_NET) {
                 parentNode = FileTreePane.getInstance().getNetNode();
@@ -307,6 +307,7 @@ public class PopupMenuListener implements ActionListener {
             } else if (netType == SELECTED_TYPE_IS_RULE) {
                 parentNode = FileTreePane.getInstance().getRuleNode();
                 n = new PetriTreeNode(NodeType.RULE, name);
+                n.setChecked(true);
             } else {
                 // TODO: hier nac mit if else
             }
@@ -436,7 +437,7 @@ public class PopupMenuListener implements ActionListener {
             }
 
             DefaultMutableTreeNode parentNode = null;
-            DefaultMutableTreeNode n = null;
+            PetriTreeNode n = null;
 
             if (netType == SELECTED_TYPE_IS_NET) {
                 parentNode = FileTreePane.getInstance().getNetNode();
@@ -444,6 +445,7 @@ public class PopupMenuListener implements ActionListener {
             } else if (netType == SELECTED_TYPE_IS_RULE) {
                 parentNode = FileTreePane.getInstance().getRuleNode();
                 n = new PetriTreeNode(NodeType.RULE, name);
+                n.setChecked(true);
             } else {
                 // TODO: hier nac mit if else
             }
