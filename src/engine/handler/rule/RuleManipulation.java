@@ -348,4 +348,15 @@ public class RuleManipulation implements IRuleManipulation {
 		return ruleManipulationBackend.getNodeSize(id);
 	}
 
+    @Override
+    public void addNac(int nacId, int ruleId) {
+        // TODO: NAC hier erweitern
+        
+    }
+
+    @Override
+    public void removeNac(int nacId, int ruleId) {
+        // TODO: NAC hier erweitern
+    }
+
 }

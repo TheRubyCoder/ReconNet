@@ -204,8 +204,22 @@ public class PetrinetViewer extends VisualizationViewer<INode, IArc> {
 	 * @see PetrinetViewer#isN()
 	 */
 	boolean isIdRuleId() {
-		return !isIdPetrinetId();
+		//return !isIdPetrinetId();
+	    return isL() || isR() || isK();
 	}
+	
+	/**
+     * Returns <tt>true</tt> if the current Id is the id of a petrinet within a
+     * NAC (L, K or R -Petrinet)
+     * 
+     * @see PetrinetViewer#isL()
+     * @see PetrinetViewer#isK()
+     * @see PetrinetViewer#isR()
+     * @see PetrinetViewer#isN()
+     */
+    boolean isIdNacId() {
+        return isNAC();
+    }
 
 	/**
 	 * Is the currently displayed petrinet the R-part of a rule?
@@ -255,6 +269,19 @@ public class PetrinetViewer extends VisualizationViewer<INode, IArc> {
 		return ruleNet == null;
 	}
 
+	/**
+     * Is the currently displayed petrinet the NAC-part of a rule?
+     * 
+     * @see PetrinetViewer#isL()
+     * @see PetrinetViewer#isK()
+     * @see PetrinetViewer#isR()
+     * @see PetrinetViewer#isN()
+     * @see PetrinetViewer#isNAC()
+     */
+    boolean isNAC() {
+        return ruleNet == RuleNet.NAC;
+    }
+	
 	/**
 	 * Returns the {@link RuleNet} of the {@link PetrinetViewer}.
 	 * <code>null</code> if the displayed petrinet is not part of a rule

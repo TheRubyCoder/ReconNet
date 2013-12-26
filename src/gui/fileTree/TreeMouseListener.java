@@ -1,18 +1,6 @@
 package gui.fileTree;
 
-import static gui.Style.TREE_MENU_ADD_NAC;
-import static gui.Style.TREE_MENU_ADD_NET;
-import static gui.Style.TREE_MENU_ADD_RULE;
-import static gui.Style.TREE_MENU_CHECK_RULE;
-import static gui.Style.TREE_MENU_LOAD_NET;
-import static gui.Style.TREE_MENU_LOAD_RULE;
-import static gui.Style.TREE_MENU_RELOAD_NET;
-import static gui.Style.TREE_MENU_RELOAD_RULE;
-import static gui.Style.TREE_MENU_REMOVE_NET;
-import static gui.Style.TREE_MENU_REMOVE_RULE;
-import static gui.Style.TREE_MENU_SAVE;
-import static gui.Style.TREE_MENU_SAVE_ALL;
-import static gui.Style.TREE_MENU_UNCHECK_RULE;
+import static gui.Style.*;
 import gui.PetrinetPane;
 import gui.RulePane;
 
@@ -67,6 +55,8 @@ public class TreeMouseListener implements MouseListener {
             this.showNetMenu(event, selectedNode);
         } else if (selectedNode.isNodeType(NodeType.RULE)) {
             this.showRuleMenu(event, selectedNode);
+        }else if (selectedNode.isNodeType(NodeType.NAC)) {
+            this.showNacMenu(event, selectedNode);
         } else {
             // TODO: throw exception here
             System.out.println("unknown node type");
@@ -110,6 +100,28 @@ public class TreeMouseListener implements MouseListener {
         i.addActionListener(this.menuListener);
 
         i = new JMenuItem(TREE_MENU_RELOAD_RULE);
+        popup.add(i);
+        i.addActionListener(this.menuListener);
+
+        popup.show(tree, event.getX(), event.getY());
+    }
+    
+    /**
+     * displays the popup menu for nacs.
+     * @param event the mouse event triggered action.
+     * @param selectedNode the node clicked.
+     */
+    private void showNacMenu(MouseEvent event, PetriTreeNode selectedNode) {
+        JPopupMenu popup = new JPopupMenu();
+        JMenuItem i;
+
+        i = new JMenuItem(TREE_MENU_SAVE_ALL);
+        popup.add(i);
+        i.addActionListener(this.menuListener);
+
+        popup.addSeparator();
+
+        i = new JMenuItem(TREE_MENU_REMOVE_NAC);
         popup.add(i);
         i.addActionListener(this.menuListener);
 

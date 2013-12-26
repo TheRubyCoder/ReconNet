@@ -1,11 +1,13 @@
 package gui.fileTree;
 
+import static gui.Style.TREE_MENU_ADD_NAC;
 import static gui.Style.TREE_MENU_ADD_NET;
 import static gui.Style.TREE_MENU_ADD_RULE;
 import static gui.Style.TREE_MENU_CHECK_RULE;
 import static gui.Style.TREE_MENU_LOAD_NET;
 import static gui.Style.TREE_MENU_LOAD_RULE;
 import static gui.Style.TREE_MENU_RELOAD_NET;
+import static gui.Style.TREE_MENU_REMOVE_NAC;
 import static gui.Style.TREE_MENU_REMOVE_NET;
 import static gui.Style.TREE_MENU_SAVE;
 import static gui.Style.TREE_MENU_SAVE_ALL;
@@ -23,7 +25,9 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -111,6 +115,11 @@ public class PopupMenuListener implements ActionListener {
     private Map<String, Integer> nameToPId;
 
     /**
+     * To remember what list entry refers to wich petrinet
+     */
+    private Map<Integer, Set<Integer>> ruleToNacs;
+
+    /**
      * To remember what list entry refers to which filepath
      */
     private Map<String, File> nameToFilepath;
@@ -121,6 +130,7 @@ public class PopupMenuListener implements ActionListener {
     private PopupMenuListener() {
         nameToPId = new HashMap<String, Integer>();
         nameToFilepath = new HashMap<String, File>();
+        ruleToNacs = new HashMap<Integer, Set<Integer>>();
         this.initializeFileChooser();
     }
 
@@ -143,6 +153,8 @@ public class PopupMenuListener implements ActionListener {
             this.addToTree(SELECTED_TYPE_IS_NET);
         } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_ADD_RULE)) {
             this.addToTree(SELECTED_TYPE_IS_RULE);
+        } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_ADD_NAC)) {
+            this.addNacToTree();
         } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_LOAD_NET)) {
             this.loadNed();
         } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_LOAD_RULE)) {
@@ -159,7 +171,39 @@ public class PopupMenuListener implements ActionListener {
             this.checkNode();
         } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_UNCHECK_RULE)) {
             this.uncheckNode();
+        } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_REMOVE_NAC)) {
+            this.removeNac();
         }
+    }
+
+    /**
+     * removes nac from tree and tells engine to remove it
+     */
+    private void removeNac() {
+        PetriTreeNode nacNode = (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
+        PetriTreeNode ruleNode = (PetriTreeNode) nacNode.getParent();
+        // TODO: multiple NACs hier um Namensgebung kümmern
+        String nacName = "NAC";
+        String ruleName = ruleNode.getUserObject().toString();
+        int ruleId = nameToPId.get(ruleName);
+        int nacId = nameToPId.get(nacName);
+
+        nameToPId.remove(nacName);
+        Set<Integer> nacs = ruleToNacs.get(ruleId);
+        if (nacs != null) {
+            for (Integer i : nacs) {
+                if (i.equals(nacId)) {
+                    nacs.remove(i);
+                }
+            }
+        }
+
+        EngineAdapter.getRuleManipulation().removeNac(nacId, ruleId);
+        RulePane.getInstance().displayRule(ruleId);
+
+        FileTreePane.getInstance().getTreeModel().removeNodeFromParent(nacNode);
+        FileTreePane.getInstance().getTree().scrollPathToVisible(new TreePath(ruleNode.getPath()));
+        FileTreePane.getInstance().getTree().setSelectionPath(new TreePath(FileTreePane.getInstance().getTreeModel().getPathToRoot(ruleNode)));
     }
 
     /**
@@ -216,7 +260,8 @@ public class PopupMenuListener implements ActionListener {
     }
 
     /**
-     * reloads the file contents from disk to reset changes done to the net or rule.
+     * reloads the file contents from disk to reset changes done to the net or
+     * rule.
      */
     private void reload() {
         PetriTreeNode node = (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
@@ -254,6 +299,7 @@ public class PopupMenuListener implements ActionListener {
         }
 
     }
+
     /**
      * shows file dialog and loads chosen rule file.
      */
@@ -278,10 +324,13 @@ public class PopupMenuListener implements ActionListener {
 
     }
 
-    /** 
+    /**
      * Loads a petrinet or file from a given file
-     * @param file the file containing the net or rule
-     * @param netType type of file (rule or net)
+     * 
+     * @param file
+     *            the file containing the net or rule
+     * @param netType
+     *            type of file (rule or net)
      */
     private void loadFromFile(File file, int netType) {
         int id;
@@ -348,7 +397,9 @@ public class PopupMenuListener implements ActionListener {
 
     /**
      * saves the file via engine.
-     * @param node node to save.
+     * 
+     * @param node
+     *            node to save.
      */
     private void saveNode(DefaultMutableTreeNode node) {
         String name = node.getUserObject().toString();
@@ -368,8 +419,11 @@ public class PopupMenuListener implements ActionListener {
     }
 
     /**
-     * shows file chooser dialog, creates a new file via engine and adds it to tree.
-     * @param netType the type of net which should be created.
+     * shows file chooser dialog, creates a new file via engine and adds it to
+     * tree.
+     * 
+     * @param netType
+     *            the type of net which should be created.
      */
     private void addToTree(int netType) {
         File file = null;
@@ -461,8 +515,47 @@ public class PopupMenuListener implements ActionListener {
     }
 
     /**
+     * shows file chooser dialog, creates a new file via engine and adds it to
+     * tree.
+     * 
+     * @param netType
+     *            the type of net which should be created.
+     */
+    private void addNacToTree() {
+        // TODO: multiple NACs hier um Namensgebung kümmern
+        String nacName = "NAC";
+
+        if (!nameToPId.containsKey(nacName)) {
+            PetriTreeNode ruleNode = (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
+            String ruleName = ruleNode.getUserObject().toString();
+            int ruleId = nameToPId.get(ruleName);
+            int nacId = EngineAdapter.getPetrinetManipulation().createNac();
+
+            nameToPId.put(nacName, nacId);
+
+            Set<Integer> nacs = ruleToNacs.get(ruleId);
+            if (nacs == null) {
+                nacs = new HashSet<Integer>();
+                ruleToNacs.put(ruleId, nacs);
+            }
+            nacs.add(nacId);
+
+            RulePane.getInstance().displayRule(ruleId);
+            EngineAdapter.getRuleManipulation().addNac(nacId, ruleId);
+
+            PetriTreeNode n = new PetriTreeNode(NodeType.NAC, nacName);
+
+            FileTreePane.getInstance().getTreeModel().insertNodeInto(n, ruleNode, ruleNode.getChildCount());
+            FileTreePane.getInstance().getTree().scrollPathToVisible(new TreePath(n.getPath()));
+            FileTreePane.getInstance().getTree().setSelectionPath(new TreePath(FileTreePane.getInstance().getTreeModel().getPathToRoot(n)));
+        }
+    }
+
+    /**
      * shows the file choosing dialog.
-     * @param intend the intend what the dialog is shown for.
+     * 
+     * @param intend
+     *            the intend what the dialog is shown for.
      * @return result of JFileChooser .showDialog() call.
      */
     private int showDialog(int intend) {
@@ -516,7 +609,9 @@ public class PopupMenuListener implements ActionListener {
 
     /**
      * returns the filename without extension (.pnml).
-     * @param f file object to get name from.
+     * 
+     * @param f
+     *            file object to get name from.
      * @return the name of the file.
      */
     private String getFilenameWithoutExtension(File f) {
@@ -526,7 +621,9 @@ public class PopupMenuListener implements ActionListener {
 
     /**
      * returns the PID for the given name.
-     * @param name name to get ID for
+     * 
+     * @param name
+     *            name to get ID for
      * @return the PID
      */
     public Integer getPidOf(String name) {
@@ -536,10 +633,20 @@ public class PopupMenuListener implements ActionListener {
 
     /**
      * returns the PID for the given tree node.
-     * @param n node to get ID for
+     * 
+     * @param n
+     *            node to get ID for
      * @return the PID
      */
     public Integer getIdForNode(PetriTreeNode n) {
         return nameToPId.get(n.toString());
+    }
+
+    public boolean ruleHasNacs(int ruleId) {
+        Set<Integer> nacs = ruleToNacs.get(ruleId);
+        if (nacs != null) {
+            return (nacs.size() > 0);
+        }
+        return false;
     }
 }

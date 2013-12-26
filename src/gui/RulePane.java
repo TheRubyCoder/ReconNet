@@ -37,6 +37,7 @@ import transformation.TransformationComponent;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import engine.handler.RuleNet;
 import exceptions.EngineException;
+import gui.fileTree.PopupMenuListener;
 
 /** Pane for displaying rules */
 public class RulePane {
@@ -102,8 +103,8 @@ public class RulePane {
     private int currentId;
 
     /**
-     *  Singleton
-      */
+     * Singleton
+     */
     private RulePane() {
         this.initializeLeftRulePanel();
         this.initializeRightRulePanel();
@@ -129,6 +130,7 @@ public class RulePane {
 
     /**
      * singleton: returns the instance
+     * 
      * @return the instance
      */
     public static RulePane getInstance() {
@@ -165,9 +167,9 @@ public class RulePane {
         this.rightRulePanel.setResizeWeight(.5);
     }
 
-    /** 
+    /**
      * Adds the rule pane to the given JPanel (frame).
-      */
+     */
     void addTo(JPanel frame) {
         frame.add(rulePanel);
     }
@@ -188,8 +190,7 @@ public class RulePane {
     public void displayRule(int ruleId) {
         currentId = ruleId;
         try {
-            // TODO:
-            Layout<INode, IArc> nacLayout = EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.L);
+            Layout<INode, IArc> nacLayout = EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.NAC);
             Layout<INode, IArc> lLayout = EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.L);
             Layout<INode, IArc> kLayout = EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.K);
             Layout<INode, IArc> rLayout = EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.R);
@@ -199,7 +200,7 @@ public class RulePane {
                 kViewer.removeFrom(kPanel);
                 rViewer.removeFrom(rPanel);
             }
-            nacViewer = new PetrinetViewer(nacLayout, ruleId, RuleNet.L);
+            nacViewer = new PetrinetViewer(nacLayout, ruleId, RuleNet.NAC);
             lViewer = new PetrinetViewer(lLayout, ruleId, RuleNet.L);
             kViewer = new PetrinetViewer(kLayout, ruleId, RuleNet.K);
             rViewer = new PetrinetViewer(rLayout, ruleId, RuleNet.R);
@@ -209,8 +210,11 @@ public class RulePane {
             lViewer.setNodeSize(nodeSize);
             kViewer.setNodeSize(nodeSize);
             rViewer.setNodeSize(nodeSize);
-
-            nacViewer.addTo(nacPanel);
+            if (PopupMenuListener.getInstance().ruleHasNacs(ruleId)) {
+                nacViewer.addTo(nacPanel);
+            } else {
+                nacPanel.removeAll();
+            }
             lViewer.addTo(lPanel);
             kViewer.addTo(kPanel);
             rViewer.addTo(rPanel);
@@ -245,8 +249,12 @@ public class RulePane {
             return lViewer.currentSelectedNode;
         } else if (kViewer.currentSelectedNode != null) {
             return kViewer.currentSelectedNode;
-        } else {
+        } else if (rViewer.currentSelectedNode != null) {
             return rViewer.currentSelectedNode;
+        } else if (rViewer.currentSelectedNode != null) {
+            return nacViewer.currentSelectedNode;
+        } else {
+            return null;
         }
     }
 
@@ -282,6 +290,9 @@ public class RulePane {
         }
         if (rViewer != petrinetViewer) {
             rViewer.currentSelectedNode = null;
+        }
+        if (nacViewer != petrinetViewer) {
+            nacViewer.currentSelectedNode = null;
         }
     }
 

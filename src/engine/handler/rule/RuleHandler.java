@@ -556,9 +556,13 @@ final public class RuleHandler {
 			// Manipulation in R
 			// Get JungData
 			return ruleData.getRJungData().getJungLayout();
-		} 
+		} else if (net.equals(RuleNet.NAC)) {
+            // Manipulation in NAC
+            // Get JungData
+            return ruleData.getNacJungData().getJungLayout();
+        } 
 		
-		exception("getJungLayout - Not given if Manipulation is in L,K or R");		
+		exception("getJungLayout - Not given if Manipulation is in L,K, R or NAC");		
 		return null;
 	}
 

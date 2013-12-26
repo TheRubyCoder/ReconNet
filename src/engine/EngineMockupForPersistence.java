@@ -340,4 +340,10 @@ public class EngineMockupForPersistence implements IPetrinetManipulation {
 		
 	}
 
+    @Override
+    public int createNac() {
+        // TODO: NAC hier erweitern
+        return 0;
+    }
+
 }

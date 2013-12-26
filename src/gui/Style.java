@@ -241,6 +241,10 @@ public class Style {
     // all tree entries
     public static final String TREE_MENU_SAVE_ALL = "Alle speichern";
     public static final String TREE_MENU_SAVE = "Speichern";
+    
+    // nac entry
+    public static final String TREE_MENU_REMOVE_NAC = "NAC entfernen";
+    
 
     /* *************************************
      * rule pane ************************************

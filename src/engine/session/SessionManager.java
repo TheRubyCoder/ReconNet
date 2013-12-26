@@ -138,7 +138,7 @@ final public class SessionManager {
 		checkEmptyRule(rule);
 
 		RuleData data = new RuleData(getNextSessionDataId(), rule,
-				getNewStaticLayoutJungData(), getNewStaticLayoutJungData(), getNewStaticLayoutJungData());
+				getNewStaticLayoutJungData(), getNewStaticLayoutJungData(), getNewStaticLayoutJungData(), getNewStaticLayoutJungData());
 
 		ruleData.put(data.getId(), data);
 

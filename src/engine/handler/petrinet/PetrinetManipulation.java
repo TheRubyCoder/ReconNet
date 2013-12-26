@@ -355,4 +355,10 @@ public class PetrinetManipulation implements IPetrinetManipulation {
 		return petrinetManipulationBackend.getNodeSize(id);
 	}
 
+    @Override
+    public int createNac() {
+        // TODO: NAC hier erweitern
+        return 0;
+    }
+
 }

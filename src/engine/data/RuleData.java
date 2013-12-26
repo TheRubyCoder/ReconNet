@@ -39,6 +39,7 @@ final public class RuleData extends SessionDataAbstract {
 	private JungData jungDataL;
 	private JungData jungDataK;
 	private JungData jungDataR;
+	private JungData jungDataNac;
 	/** Used for adding places so all places in the rule have the same color */
 	private ColorGenerator colorGenerator;
 
@@ -48,17 +49,21 @@ final public class RuleData extends SessionDataAbstract {
 	}
 
 	public RuleData(int id, Rule rule, JungData lJungData, JungData kJungData,
-			JungData rJungData) {
+			JungData rJungData, JungData nacJungData) {
 		check(id > 0, "id have to be greater than 0");
 		check(rule instanceof Rule, "petrinet not of type Petrinet");
 		check(lJungData instanceof JungData, "lJungData not of type JungData");
 		check(kJungData instanceof JungData, "kJungData not of type JungData");
 		check(rJungData instanceof JungData, "rJungData not of type JungData");
+		check(nacJungData instanceof JungData, "nacJungData not of type JungData");
 
 		checkContaining(rule.getK(), kJungData);
 		checkContaining(rule.getL(), lJungData);
 		checkContaining(rule.getR(), rJungData);
+		// TODO: hier für NACs
+		//checkContaining(rule.getNACs()., nacJungData);
 
+		// TODO: NAC
 		check(!(kJungData == lJungData || lJungData == rJungData || kJungData == rJungData),
 				"jungData same instance");
 
@@ -67,6 +72,7 @@ final public class RuleData extends SessionDataAbstract {
 		this.jungDataL = lJungData;
 		this.jungDataK = kJungData;
 		this.jungDataR = rJungData;
+		this.jungDataNac = nacJungData;
 		this.colorGenerator = new ColorGenerator();
 	}
 
@@ -96,6 +102,16 @@ final public class RuleData extends SessionDataAbstract {
 	public JungData getRJungData() {
 		return jungDataR;
 	}
+	
+
+    /**
+     * Gets the JungData of NAC from a Rule
+     * 
+     * @return JungData
+     */
+    public JungData getNacJungData() {
+        return jungDataNac;
+    }
 
 	/**
 	 * Gets a Rule.

@@ -306,6 +306,12 @@ public class EngineMockupWithEngine implements IPetrinetManipulation  {
 		// TODO Auto-generated method stub
 		
 	}
+
+    @Override
+    public int createNac() {
+        // TODO: NAC hier erweitern
+        return 0;
+    }
 	
 }
 

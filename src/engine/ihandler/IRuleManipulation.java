@@ -434,4 +434,18 @@ public interface IRuleManipulation {
 	 * @return
 	 */
 	public double getNodeSize(int id) throws EngineException;
+
+	/**
+	 * Adds a NAC to specified rule.
+	 * @param id
+	 * @param ruleId
+	 */
+    public void addNac(int nacId, int ruleId);
+
+    /**
+     * removes a nac from its rule
+     * @param nacId
+     * @param ruleId
+     */
+    public void removeNac(int nacId, int ruleId);
 }

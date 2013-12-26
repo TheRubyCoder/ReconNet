@@ -424,4 +424,13 @@ public interface IPetrinetManipulation {
 	 */
 	public double getNodeSize(int id) throws NullPointerException;
 
+	/**
+     * 
+     * Creates a NAC
+     * 
+     * @return ID of the created NAC
+     * 
+     */
+    public int createNac();
+
 }
