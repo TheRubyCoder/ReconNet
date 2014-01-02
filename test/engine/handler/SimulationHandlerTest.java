@@ -4,16 +4,26 @@ package engine.handler;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
+import org.apache.commons.math3.util.IterationManager;
 import org.junit.Test;
+
+import petrinet.model.INode;
+import petrinet.model.Petrinet;
 import petrinet.model.Place;
 import petrinet.model.Transition;
 import transformation.ITransformation;
 import transformation.Rule;
 import transformation.TransformationComponent;
 import engine.data.RuleData;
+import engine.handler.petrinet.PetrinetManipulation;
 import engine.handler.petrinet.PetrinetPersistence;
+import engine.handler.rule.RuleManipulation;
 import engine.handler.simulation.SimulationHandler;
+import engine.ihandler.IPetrinetManipulation;
 import engine.ihandler.IPetrinetPersistence;
+import engine.ihandler.IRuleManipulation;
 import engine.ihandler.ISimulation;
 import engine.session.SessionManager;
 import exceptions.EngineException;
@@ -35,6 +45,7 @@ public class SimulationHandlerTest {
 			Point2D place2Point = new Point2D.Double(400., 50.);
 			Point2D place4Point = new Point2D.Double(50., 200.);
 			Point2D place3Point = new Point2D.Double(400., 200.);
+
 			// Stellen erstellen und in Petrinet einfügen
 			Place place1 = iPetrinetPersistence.createPlace(petrinetID,
 					place1Point);
@@ -77,6 +88,7 @@ public class SimulationHandlerTest {
 			iPetrinetPersistence.createPostArc(petrinetID, trans2, place3);
 			iPetrinetPersistence.createPostArc(petrinetID, trans1, place2);
 
+			//Erstelle Regel
 			ITransformation iTransformation = TransformationComponent.getTransformation();
 			Rule rule = iTransformation.createRule();
 			RuleData ruleData = SessionManager.getInstance().createRuleData(rule);
@@ -90,11 +102,17 @@ public class SimulationHandlerTest {
 			rule.addPostArcToR("", transRule, placeR);
 			rule.addPreArcToR("", placeR, transRule);
 			
+			
+			
+			
+			
+			
 			// Simulation
 			ISimulation iSimulation = SimulationHandler.getInstance();
 			Collection<Integer> ruleIDs = new ArrayList<Integer>();
 			ruleIDs.add(ruleId);
-
+			
+			
 			iSimulation.fireOrTransform(petrinetID, ruleIDs, 2000);
 
 		} catch (EngineException e) {
