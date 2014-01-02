@@ -29,6 +29,7 @@ import petrinet.model.PreArc;
 import petrinet.model.Transition;
 import transformation.matcher.*;
 import transformation.matcher.PNVF2.MatchException;
+import transformation.matcher.PNVF2.MatchVisitor;
 import exceptions.EngineException;
 
 /**
@@ -121,6 +122,19 @@ public class Transformation {
 		}		
 	}
 
+	
+	//WLAD Aenderung 2 match mit nac methode
+	public static Transformation createTransformationWithNAC(Petrinet petrinet,
+			Rule rule) {
+		try {
+			MatchVisitor nacVisitor = new NacVisitor(rule);
+			Match match = PNVF2.getInstance(rule.getL(), petrinet).getMatch(false, rule.getPlacesToDelete(), nacVisitor);
+			return new Transformation(petrinet, match, rule);			
+		} catch (MatchException e) {
+			return null;
+		}
+	}
+	
 	/**
 	 * Returns the Petrinet of this transformation. This net will be changed
 	 * when transform() is called.

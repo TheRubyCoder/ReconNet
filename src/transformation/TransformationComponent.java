@@ -195,8 +195,13 @@ public class TransformationComponent implements ITransformation {
 	 */
 	@Override
 	public Transformation transform(Petrinet net, Rule rule) 	{
-		Transformation transformation = Transformation.createTransformationWithAnyMatch(net, rule);
-		
+		Transformation transformation ;
+		//WLAD Aenderung 1, match mit oder ohne nac
+		if (rule.getNACs().isEmpty()){
+			transformation = Transformation.createTransformationWithAnyMatch(net, rule);
+		}else{
+			transformation = Transformation.createTransformationWithNAC(net, rule);
+		}
 		if(transformation == null) {
 			return null;
 		}
