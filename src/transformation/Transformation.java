@@ -20,7 +20,6 @@ package transformation;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import petrinet.model.INode;
 import petrinet.model.Petrinet;
 import petrinet.model.Place;
