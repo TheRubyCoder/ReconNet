@@ -199,8 +199,10 @@ public class Transformation {
 		}
 
 		// Add new transitions, map k to these new Places
-		for (Transition transitionToAdd : rule.getTransitionsToAdd()) {			
-			Transition newTransition = petrinet.addTransition(transitionToAdd.getName(), transitionToAdd.getRnw());			
+		for (Transition transitionToAdd : rule.getTransitionsToAdd()) {	
+			Transition newTransition = petrinet.addTransition(transitionToAdd.getName(), transitionToAdd.getRnw());
+			if (transitionToAdd.getTlb() != null)
+				newTransition.setTlb(transitionToAdd.getTlb());
 			addedTransitions.add(newTransition);
 			match.getTransitions().put(rule.fromRtoK(transitionToAdd), newTransition);
 		}

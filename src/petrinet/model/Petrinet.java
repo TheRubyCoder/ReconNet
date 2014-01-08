@@ -369,8 +369,31 @@ final public class Petrinet {
 	}
 	
 	
-	
-	
+	/**
+	 * Adds a new {@link Transition} to this petrinet
+	 * 
+	 * @param name
+	 *            Name of the {@link Transition}
+	 * @param rnw
+	 *            {@link IRenew Renew} of the {@link Transition}
+	 * @param tlb
+	 * 			  {@link String tlb} of the {@link Transition}
+	 * @return The new {@link Transition}
+	 */
+	public Transition addTransition(String name, IRenew rnw, String tlb) {
+		if (name == null || rnw == null || tlb == null) {
+			throw new IllegalArgumentException();
+		}		
+		
+		int        id         = UUID.gettID();
+		Transition transition = new Transition(id, rnw);
+		
+		transition.setName(name);
+		transition.setTlb(tlb);
+		transitions.put(id, transition);
+		
+		return transition;
+	}
 	
 	
 	/**
