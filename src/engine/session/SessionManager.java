@@ -174,8 +174,9 @@ final public class SessionManager {
 
 		FRLayout<INode, IArc> frLayout =  new FRLayout<INode, IArc>(graph);
 		
-		frLayout.setAttractionMultiplier(0.9);
-		frLayout.setRepulsionMultiplier(0.1);
+		// Staerke der Federn: Abstossung und Anziehung ueber diese Werte beeinflussbar
+		frLayout.setAttractionMultiplier(0.5);
+		frLayout.setRepulsionMultiplier(0.9);
 		
 		return new JungData(graph, frLayout);
 	}
