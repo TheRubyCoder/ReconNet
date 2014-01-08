@@ -21,6 +21,7 @@ package engine.handler.simulation;
 import static exceptions.Exceptions.exception;
 import static exceptions.Exceptions.info;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -190,12 +191,24 @@ public class SimulationHandler implements ISimulation {
             }// p2 nach präsentation
         }
         
+        //Work-Around: Wenn das Startnetz aus nur einem Knoten besteht, werden nach einer Transformation 
+        //die neuen Knoten rechts eingefügt und nicht das FR-Layout angewendet.
+        //Um das FR-Layout anzuzeigen, wird "manuell" ein Knoten verschoben. Dann geht's...
+        Collection<INode> vertices = jungData.getJungGraph().getVertices();
+        int j = 0;
+        for(INode node : vertices){
+        	if(j == 0){
+        		j++;
+        		jungData.moveNodeWithoutPositionCheck(node, new Point(2, 2));
+        	}
+        }
+        
         // Restart the layouting process
         // this gets done here because we know no better place to do it in
-        
         FRLayout<INode, IArc> frLayout = (FRLayout<INode, IArc>) jungData.getJungLayout();
+        int iFrIterations = 10; 
         frLayout.initialize();
-        for(int i = 0; i < 700; i++){
+        for(int i = 0; i < iFrIterations; i++){
         	frLayout.step();
         }
     }
