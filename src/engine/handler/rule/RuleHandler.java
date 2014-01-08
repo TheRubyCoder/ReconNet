@@ -213,6 +213,7 @@ final public class RuleHandler {
 		JungData lJungData = ruleData.getLJungData();
 		JungData kJungData = ruleData.getKJungData();
 		JungData rJungData = ruleData.getRJungData();
+		JungData nacJungData = ruleData.getNacJungData();
 		
 		if (!lJungData.isCreatePossibleAt(coordinate)) {
 			exception("Place too close to Node in L");
@@ -226,6 +227,11 @@ final public class RuleHandler {
 		
 		if (!rJungData.isCreatePossibleAt(coordinate)) {
 			exception("Place too close to Node in R");
+			return null;
+		}
+		
+		if (!nacJungData.isCreatePossibleAt(coordinate)) {
+			exception("Place too close to Node in NAC");
 			return null;
 		}
 		
@@ -307,7 +313,35 @@ final public class RuleHandler {
 
 			return newPlace;
 
-		} else {
+		} 
+		
+		//TODO: Create Place für Stelle in NAC erweitern.
+		/*else if (net.equals(RuleNet.NAC)) {
+			// create a new Place
+			Place newPlace = rule.addPlaceToNac("undefined", nac);
+
+			// call JungModificator
+			try {
+				nacJungData.createPlace(newPlace, coordinate);
+			} catch (IllegalArgumentException e) {
+				exception("createPlace - can not create Place in NAC");
+			}
+
+			// get automatically added Corresponding Place in K
+			Place newPlaceInK = rule.fromRtoK(newPlace);
+			
+			if (newPlaceInK != null) {
+				try {
+					kJungData.createPlace(newPlaceInK, coordinate);
+				} catch (IllegalArgumentException e) {
+					exception("createPlace - can not create Place in K");
+				}
+			}
+			setPlaceColor(id, newPlace, ruleData.getColorGenerator().next());
+
+			return newPlace;
+
+		}*/ else {
 			exception("createPlace - Not given if Manipulation is in L,K or R");
 			return null;
 		}

@@ -644,6 +644,8 @@ public class Converter {
 						idToINodeInK.put(xmlId, respectiveNode);
 					} else if (i == 2) {
 						idToINodeInR.put(xmlId, respectiveNode);
+					} else if (i == 3) {
+						idToINodeInNAC.put(xmlId, respectiveNode);
 					}
 				}
 			}
@@ -661,6 +663,8 @@ public class Converter {
 						idToINodeInK.put(xmlId, respectiveNode);
 					} else if (i == 2) {
 						idToINodeInR.put(xmlId, respectiveNode);
+					} else if (i == 3) {
+						idToINodeInNAC.put(xmlId, respectiveNode);
 					}
 				}
 			}
@@ -678,6 +682,8 @@ public class Converter {
 						idToINodeInK.put(xmlId, respectiveNode);
 					} else if (i == 2) {
 						idToINodeInR.put(xmlId, respectiveNode);
+					} else if (i == 3) {
+						idToINodeInNAC.put(xmlId, respectiveNode);
 					}
 				}
 			}
@@ -778,10 +784,14 @@ public class Converter {
 					source = idToINodeInL.get(arc.getSource());
 					target = idToINodeInL.get(arc.getTarget());
 				}
-			} else {
+			} else if (getIdsOfArcsList(rArcs).contains(arc.getId())) {
 				toAddto = RuleNet.R;
 				source = idToINodeInR.get(arc.getSource());
 				target = idToINodeInR.get(arc.getTarget());
+			} else {
+				toAddto = RuleNet.NAC;
+				source = idToINodeInNAC.get(arc.getSource());
+				target = idToINodeInNAC.get(arc.getTarget());
 			}
 
 			int weight = 1;
@@ -810,39 +820,6 @@ public class Converter {
 			}
 		}
 		
-		/*
-		 * 
-		 * Nac Arcs are independent of L, K and R
-		 */
-		for (Arc arc : nacArcs) {
-			INode source = idToINodeInNAC.get(arc.getSource());
-			INode target = idToINodeInNAC.get(arc.getTarget());
-			int weight = 1;
-			
-			if (arc.getToolspecific() != null) {
-				weight = Integer.valueOf(arc.getToolspecific().getWeight().getText());
-			} 
-
-			if (source instanceof petrinet.model.Place
-			 && target instanceof petrinet.model.Transition) {
-				petrinet.model.PreArc preArc = handler.createPreArc(
-					id, 
-					RuleNet.NAC, 
-					(petrinet.model.Place) 	    source,
-					(petrinet.model.Transition) target
-				);
-				handler.setWeight(id, preArc, weight);				
-			} else {
-				petrinet.model.PostArc postArc = handler.createPostArc(
-					id, 
-					RuleNet.NAC, 
-					(petrinet.model.Transition) source,
-					(petrinet.model.Place) 	    target
-				);		
-				handler.setWeight(id, postArc, weight);				
-			}
-		}
-
 	}
 
 	/**
@@ -942,9 +919,12 @@ public class Converter {
 				} else {
 					toAddto = RuleNet.L;
 				}
-			} else {
+			} else if (getIdsOfPlaceList(rPlaces).contains(place.getId())) {
 				toAddto = RuleNet.R;
+			} else {
+				toAddto = RuleNet.NAC;				
 			}
+			
 			petrinet.model.Place createdPlace = handler.createPlace(id, toAddto,
 					positionToPoint2D(place.getGraphics().getPosition()));
 			handler.setPlaceColor(id, createdPlace, place.getGraphics()
@@ -962,34 +942,13 @@ public class Converter {
 				idToINodeInL.put(place.id, createdPlace);
 			} else if (toAddto == RuleNet.K) {
 				idToINodeInK.put(place.id, createdPlace);
-			} else {
+			} else if (toAddto == RuleNet.R) {
 				idToINodeInR.put(place.id, createdPlace);
+			} else if (toAddto == RuleNet.NAC) {
+				idToINodeInNAC.put(place.id, createdPlace);
 			}
 		}
 		
-		/*
-		 * 
-		 * Nac Places are indepentend of L, K and R
-		 */
-		for (Place place : nacPlaces) {
-			
-			petrinet.model.Place createdPlace = handler.createPlace(id, RuleNet.NAC,
-					positionToPoint2D(place.getGraphics().getPosition()));
-			handler.setPlaceColor(id, createdPlace, place.getGraphics()
-					.getColor().toAWTColor());
-			handler.setPname(id, createdPlace, place.getPlaceName().getText());
-			handler.setMarking(id, createdPlace,
-					Integer.valueOf(place.getInitialMarking().getText()));
-			if(place.getInitialCapacity() != null){
-				handler.setCapacity(id, createdPlace,
-					Integer.valueOf(place.getInitialCapacity().getText()));
-			} else {
-				handler.setCapacity(id, createdPlace, Integer.MAX_VALUE);
-			}
-			
-			idToINodeInNAC.put(place.id, createdPlace);
-			
-		}
 		return result;
 	}
 
@@ -1089,8 +1048,10 @@ public class Converter {
 				} else {
 					toAddto = RuleNet.L;
 				}
-			} else {
+			} else if (getIdsOfTransitionList(rTransition).contains(transition.getId())){
 				toAddto = RuleNet.R;
+			} else {
+				toAddto = RuleNet.NAC;
 			}
 			petrinet.model.Transition createdTransition = handler.createTransition(id, toAddto,
 					positionToPoint2D(transition.getGraphics().getPosition()));
@@ -1104,29 +1065,12 @@ public class Converter {
 				idToINodeInL.put(transition.id, createdTransition);
 			} else if (toAddto == RuleNet.K) {
 				idToINodeInK.put(transition.id, createdTransition);
-			} else {
+			} else if (toAddto == RuleNet.R) {
 				idToINodeInR.put(transition.id, createdTransition);
+			} else if (toAddto == RuleNet.NAC) {
+				idToINodeInNAC.put(transition.id, createdTransition);
 			}
-		}
-		
-		/*
-		 * 
-		 * NAC Transisions are independent of L, K and R
-		 */
-		for (Transition transition : nacTransition) {
-			
-			petrinet.model.Transition createdTransition = handler.createTransition(id, RuleNet.NAC,
-					positionToPoint2D(transition.getGraphics().getPosition()));
-			handler.setTlb(id, createdTransition, transition
-					.getTransitionLabel().getText());
-			handler.setTname(id, createdTransition, transition
-					.getTransitionName().getText());
-			handler.setRnw(id, createdTransition, Renews.fromString(transition
-					.getTransitionRenew().getText()));
-			idToINodeInNAC.put(transition.id, createdTransition);
-			
-		}
-		
+		}		
 		return result;
 	}
 
