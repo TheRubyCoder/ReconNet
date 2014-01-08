@@ -195,6 +195,63 @@ public class Persistence {
 
 		return success;
 	}
+	
+	/**
+	 * Saves a {@link Rule rule} into a file
+	 * 
+	 * @param pathAndFilename
+	 *            String that identifies the file
+	 * @param rule
+	 *            the logical rule to be saved
+	 * @param nodeMapL
+	 *            layout information for nodes in L
+	 * @param nodeMapK
+	 *            layout information for nodes in K
+	 * @param nodeMapR
+	 *            layout information for nodes in R
+	 * @param nodeMapNAC
+	 *            layout information for nodes in NAC
+	 * @param nodeSize
+	 *            Size of nodes. This is depending on "zoom" and is important
+	 *            when loading the file
+	 * @return <code>true</code> when successful, <code>false</code> when any
+	 *         exception was thrown
+	 */				//Überladen für Speicherung eines Nac
+	public static boolean saveRule(String pathAndFilename, Rule rule,
+			Map<INode, NodeLayoutAttribute> nodeMapL,
+			Map<INode, NodeLayoutAttribute> nodeMapK,
+			Map<INode, NodeLayoutAttribute> nodeMapR,
+			Map<INode, NodeLayoutAttribute> nodeMapNAC, double nodeSize) {
+		boolean success = false;
+
+		try {
+
+			Map<INode, NodeLayoutAttribute> nodeMapMerged = new HashMap<INode, NodeLayoutAttribute>();
+			nodeMapMerged.putAll(nodeMapL);
+			nodeMapMerged.putAll(nodeMapK);
+			nodeMapMerged.putAll(nodeMapR);
+			nodeMapMerged.putAll(nodeMapNAC);
+
+			Marshaller m = context.createMarshaller();
+			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			Pnml pnml = Converter.convertRuleWithNacToPnml(rule, nodeMapMerged,
+					nodeSize);
+
+			m.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
+
+			FileWriter fw = new FileWriter(pathAndFilename);
+			m.marshal(pnml, fw);
+			fw.flush();
+			fw.close();
+			success = true;
+		} catch (IOException e) {
+			PopUp.popError(e);
+		} catch (JAXBException e) {
+			PopUp.popError(e);
+		}
+
+		return success;
+	}
 
 	/**
 	 * Loads a {@linkplain Rule} from a file
@@ -216,6 +273,34 @@ public class Persistence {
 			pnml = (Pnml) m.unmarshal(new File(pathAndFilename));
 
 			return Converter.convertPnmlToRule(pnml, handler);
+		} catch (JAXBException e) {
+			e.printStackTrace();
+			PopUp.popError(e);
+		}
+
+		return 0;
+	}
+	
+	/**
+	 * Loads a {@linkplain Rule} from a file
+	 * 
+	 * @param pathAndFilename
+	 *            String that identifies the file
+	 * @param handler
+	 *            The engine handler to create and modify the rule
+	 * @return the id of the created rule. <code>-1</code> if any exception was
+	 *         thrown
+	 */
+	public static int loadRuleWithNac(String pathAndFilename, IRulePersistence handler) {
+		Pnml pnml;
+		try {
+			Unmarshaller m = context.createUnmarshaller();
+
+			m.setEventHandler(new javax.xml.bind.helpers.DefaultValidationEventHandler());
+
+			pnml = (Pnml) m.unmarshal(new File(pathAndFilename));
+
+			return Converter.convertPnmlToRuleWithNac(pnml, handler);
 		} catch (JAXBException e) {
 			e.printStackTrace();
 			PopUp.popError(e);

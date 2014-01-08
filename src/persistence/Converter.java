@@ -483,6 +483,78 @@ public class Converter {
 		
 		return id;
 	}
+	
+	/**
+	 * Converts a {@link Pnml} object that was unmarshalled from an XMLFile into
+	 * a {@link Rule}
+	 * 
+	 * @param pnml
+	 *            The object tree, representing the XML file
+	 * @param handler
+	 *            The engine handler to create and modify the rule.
+	 * @return id of petrinet Id of the created petrinet
+	 */
+	public static int convertPnmlToRuleWithNac(Pnml pnml, IRulePersistence handler) {
+		// In each XML file there is the type attribute for the pnml node to
+		// quick-check if its a rule or a petrinet
+		if (!pnml.getType().equals(RULE_IDENT)) {
+			throw new ShowAsWarningException(
+					"Die ausgewählte Datei enthält ein Petrinetz, keine Regel");
+		}
+		int id = handler.createRule();
+
+		try {
+			handler.setNodeSize(id, pnml.getNodeSize());
+	
+			Net lNet = pnml.getNet().get(0);
+			Net kNet = pnml.getNet().get(1);
+			Net rNet = pnml.getNet().get(2);
+			Net nacNet = pnml.getNet().get(3);
+	
+			// Elements of L
+			List<Place> lPlaces = lNet.getPage().getPlace();
+			List<Transition> lTransis = lNet.getPage().getTransition();
+			List<Arc> lArcs = lNet.getPage().getArc();
+	
+			// Elements of K
+			List<Place> kPlaces = kNet.getPage().getPlace();
+			List<Transition> kTransis = kNet.getPage().getTransition();
+			List<Arc> kArcs = kNet.getPage().getArc();
+	
+			// Elements of R
+			List<Place> rPlaces = rNet.getPage().getPlace();
+			List<Transition> rTransis = rNet.getPage().getTransition();
+			List<Arc> rArcs = rNet.getPage().getArc();
+			
+			// Elements of NAC
+			List<Place> nacPlaces = nacNet.getPage().getPlace();
+			List<Transition> nacTransis = nacNet.getPage().getTransition();
+			List<Arc> nacArcs = nacNet.getPage().getArc();
+	
+			/** Contains the created INode object for each XML-id */
+			Map<String, INode> idToINodeInL = new HashMap<String, INode>();
+			/** Contains the created INode object for each XML-id */
+			Map<String, INode> idToINodeInK = new HashMap<String, INode>();
+			/** Contains the created INode object for each XML-id */
+			Map<String, INode> idToINodeInR = new HashMap<String, INode>();
+			/** Contains the created INode object for each XML-id */
+			Map<String, INode> idToINodeInNAC = new HashMap<String, INode>();
+		
+			addPlacesToRule(id, lPlaces, kPlaces, rPlaces, nacPlaces, handler,
+					idToINodeInL, idToINodeInK, idToINodeInR, idToINodeInNAC);
+			addTransitionsToRule(id, lTransis, kTransis, rTransis, nacTransis, handler,
+					idToINodeInL, idToINodeInK, idToINodeInR, idToINodeInNAC);
+			fillMapsWithMissingMappings(id, idToINodeInL, idToINodeInK,
+					idToINodeInR, idToINodeInNAC);
+			addArcsToTule(id, lArcs, kArcs, rArcs, nacArcs, handler, idToINodeInL,
+					idToINodeInK, idToINodeInR, idToINodeInNAC);
+		} catch (EngineException e) {
+			PopUp.popError(e);
+			e.printStackTrace();
+		}
+		
+		return id;
+	}
 
 	/**
 	 * After Places and Rules have been added, there are only
@@ -542,6 +614,76 @@ public class Converter {
 						idToINodeInK.put(xmlId, respectiveNode);
 					} else if (i == 2) {
 						idToINodeInR.put(xmlId, respectiveNode);
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * After Places and Rules have been added, there are only
+	 * String-id-to-INode-mappings for the original inserted nodes, but not for
+	 * the ones that were inserted automatically For beeing able to properly add
+	 * arcs to the rule, we need those mappings
+	 */
+	private static void fillMapsWithMissingMappings(int ruleId,
+			Map<String, INode> idToINodeInL, Map<String, INode> idToINodeInK,
+			Map<String, INode> idToINodeInR, Map<String, INode> idToINodeInNAC) {
+		ITransformation transformation = TransformationComponent
+				.getTransformation();
+		// fill with mappings of Ls nodes
+		for (String xmlId : idToINodeInL.keySet()) {
+			INode node = idToINodeInL.get(xmlId);
+			List<INode> mappings = transformation.getMappings(ruleId, node);
+			for (int i = 0; i < mappings.size(); i++) {
+				INode respectiveNode = mappings.get(i);
+				if (respectiveNode != null) {
+					if (i == 0) {
+						idToINodeInL.put(xmlId, respectiveNode);
+					} else if (i == 1) {
+						idToINodeInK.put(xmlId, respectiveNode);
+					} else if (i == 2) {
+						idToINodeInR.put(xmlId, respectiveNode);
+					} else if (i == 3) {
+						idToINodeInNAC.put(xmlId, respectiveNode);
+					}
+				}
+			}
+		}
+		// fill with mappings of Ks nodes
+		for (String xmlId : idToINodeInK.keySet()) {
+			INode node = idToINodeInK.get(xmlId);
+			List<INode> mappings = transformation.getMappings(ruleId, node);
+			for (int i = 0; i < mappings.size(); i++) {
+				INode respectiveNode = mappings.get(i);
+				if (respectiveNode != null) {
+					if (i == 0) {
+						idToINodeInL.put(xmlId, respectiveNode);
+					} else if (i == 1) {
+						idToINodeInK.put(xmlId, respectiveNode);
+					} else if (i == 2) {
+						idToINodeInR.put(xmlId, respectiveNode);
+					} else if (i == 3) {
+						idToINodeInNAC.put(xmlId, respectiveNode);
+					}
+				}
+			}
+		}
+		// fill with mappings of Rs nodes
+		for (String xmlId : idToINodeInR.keySet()) {
+			INode node = idToINodeInR.get(xmlId);
+			List<INode> mappings = transformation.getMappings(ruleId, node);
+			for (int i = 0; i < mappings.size(); i++) {
+				INode respectiveNode = mappings.get(i);
+				if (respectiveNode != null) {
+					if (i == 0) {
+						idToINodeInL.put(xmlId, respectiveNode);
+					} else if (i == 1) {
+						idToINodeInK.put(xmlId, respectiveNode);
+					} else if (i == 2) {
+						idToINodeInR.put(xmlId, respectiveNode);
+					} else if (i == 3) {
+						idToINodeInNAC.put(xmlId, respectiveNode);
 					}
 				}
 			}
@@ -610,6 +752,75 @@ public class Converter {
 		}
 
 	}
+	
+	/**
+	 * Adds all arcs from the XML to the rule object, using the engine handler
+	 * 
+	 * @param idToINodeInR
+	 * @param idToINodeInR
+	 * @param idToINodeInK
+	 * @param idToINodeInNAC
+	 */
+	private static void addArcsToTule(int id, List<Arc> lArcs, List<Arc> kArcs,
+			List<Arc> rArcs, List<Arc> nacArcs, IRulePersistence handler,
+			Map<String, INode> idToINodeInL, Map<String, INode> idToINodeInK,
+			Map<String, INode> idToINodeInR, Map<String, INode> idToINodeInNAC) throws EngineException {
+		/*
+		 * All arcs must be in K. To determine where the arcs must be added, we
+		 * have to find out: Are they also in L AND in K or just in one of them?
+		 * And if they are only in one of them - in which?
+		 */
+		for (Arc arc : kArcs) {
+			RuleNet toAddto;
+			INode source;
+			INode target;
+			if (getIdsOfArcsList(lArcs).contains(arc.getId())) {
+				if (getIdsOfArcsList(rArcs).contains(arc.getId())) {
+					toAddto = RuleNet.K;
+					source = idToINodeInK.get(arc.getSource());
+					target = idToINodeInK.get(arc.getTarget());
+				} else {
+					toAddto = RuleNet.L;
+					source = idToINodeInL.get(arc.getSource());
+					target = idToINodeInL.get(arc.getTarget());
+				}
+			} else if (getIdsOfArcsList(rArcs).contains(arc.getId())) {
+				toAddto = RuleNet.R;
+				source = idToINodeInR.get(arc.getSource());
+				target = idToINodeInR.get(arc.getTarget());
+			} else {
+				toAddto = RuleNet.NAC;
+				source = idToINodeInNAC.get(arc.getSource());
+				target = idToINodeInNAC.get(arc.getTarget());
+			}
+
+			int weight = 1;
+			
+			if (arc.getToolspecific() != null) {
+				weight = Integer.valueOf(arc.getToolspecific().getWeight().getText());
+			} 
+
+			if (source instanceof petrinet.model.Place
+			 && target instanceof petrinet.model.Transition) {
+				petrinet.model.PreArc preArc = handler.createPreArc(
+					id, 
+					toAddto, 
+					(petrinet.model.Place) 	    source,
+					(petrinet.model.Transition) target
+				);
+				handler.setWeight(id, preArc, weight);				
+			} else {
+				petrinet.model.PostArc postArc = handler.createPostArc(
+					id, 
+					toAddto, 
+					(petrinet.model.Transition) source,
+					(petrinet.model.Place) 	    target
+				);		
+				handler.setWeight(id, postArc, weight);				
+			}
+		}
+		
+	}
 
 	/**
 	 * Adds places to the rule, writing the mappings of created places into the
@@ -671,6 +882,75 @@ public class Converter {
 		}
 		return result;
 	}
+	
+	/**
+	 * Adds places to the rule, writing the mappings of created places into the
+	 * resprective maps (last 3 parameters)
+	 * 
+	 * @param id
+	 * @param lPlaces
+	 * @param kPlaces
+	 * @param rPlaces
+	 * @param nacPlaces
+	 * @param handler
+	 * @param idToINodeInL
+	 * @param idToINodeInK
+	 * @param idToINodeInR
+	 * @param idToINodeInNac
+	 * @return
+	 * @throws EngineException
+	 */
+	private static Map<String, INode> addPlacesToRule(int id,
+			List<Place> lPlaces, List<Place> kPlaces, List<Place> rPlaces,
+			List<Place> nacPlaces, IRulePersistence handler, Map<String, INode> idToINodeInL,
+			Map<String, INode> idToINodeInK, Map<String, INode> idToINodeInR, Map<String, INode> idToINodeInNAC)
+			throws EngineException {
+		Map<String, INode> result = new HashMap<String, INode>();
+		/*
+		 * All places must be in K. To determine where the places must be added,
+		 * we have to find out: Are they also in L AND in K or just in one of
+		 * them? And if they are only in one of them - in which?
+		 */
+		for (Place place : kPlaces) {
+			RuleNet toAddto;
+			if (getIdsOfPlaceList(lPlaces).contains(place.getId())) {
+				if (getIdsOfPlaceList(rPlaces).contains(place.getId())) {
+					toAddto = RuleNet.K;
+				} else {
+					toAddto = RuleNet.L;
+				}
+			} else if (getIdsOfPlaceList(rPlaces).contains(place.getId())) {
+				toAddto = RuleNet.R;
+			} else {
+				toAddto = RuleNet.NAC;				
+			}
+			
+			petrinet.model.Place createdPlace = handler.createPlace(id, toAddto,
+					positionToPoint2D(place.getGraphics().getPosition()));
+			handler.setPlaceColor(id, createdPlace, place.getGraphics()
+					.getColor().toAWTColor());
+			handler.setPname(id, createdPlace, place.getPlaceName().getText());
+			handler.setMarking(id, createdPlace,
+					Integer.valueOf(place.getInitialMarking().getText()));
+			if(place.getInitialCapacity() != null){
+				handler.setCapacity(id, createdPlace,
+					Integer.valueOf(place.getInitialCapacity().getText()));
+			} else {
+				handler.setCapacity(id, createdPlace, Integer.MAX_VALUE);
+			}
+			if (toAddto == RuleNet.L) {
+				idToINodeInL.put(place.id, createdPlace);
+			} else if (toAddto == RuleNet.K) {
+				idToINodeInK.put(place.id, createdPlace);
+			} else if (toAddto == RuleNet.R) {
+				idToINodeInR.put(place.id, createdPlace);
+			} else if (toAddto == RuleNet.NAC) {
+				idToINodeInNAC.put(place.id, createdPlace);
+			}
+		}
+		
+		return result;
+	}
 
 	/**
 	 * Adds transitions to the rule, writing the mappings of created places into
@@ -727,6 +1007,70 @@ public class Converter {
 				idToINodeInR.put(transition.id, createdTransition);
 			}
 		}
+		return result;
+	}
+	
+	/**
+	 * Adds transitions to the rule, writing the mappings of created places into
+	 * the resprective maps (last 3 parameters)
+	 * 
+	 * @param id
+	 * @param lPlaces
+	 * @param kPlaces
+	 * @param rPlaces
+	 * @param nacPlaces
+	 * @param handler
+	 * @param idToINodeInL
+	 * @param idToINodeInK
+	 * @param idToINodeInR
+	 * @param idToINodeInNAC
+	 * @return
+	 * @throws EngineException
+	 */
+	private static Map<String, INode> addTransitionsToRule(int id,
+			List<Transition> lTransitions, List<Transition> kTransition,
+			List<Transition> rTransition, List<Transition> nacTransition, IRulePersistence handler,
+			Map<String, INode> idToINodeInL, Map<String, INode> idToINodeInK,
+			Map<String, INode> idToINodeInR, Map<String, INode> idToINodeInNAC) throws EngineException {
+		Map<String, INode> result = new HashMap<String, INode>();
+		/*
+		 * All Transitions must be in K. To determine where the transitions must
+		 * be added, we have to find out: Are they also in L AND in K or just in
+		 * one of them? And if they are only in one of them - in which?
+		 */
+		for (Transition transition : kTransition) {
+			RuleNet toAddto;
+			if (getIdsOfTransitionList(lTransitions).contains(
+					transition.getId())) {
+				if (getIdsOfTransitionList(rTransition).contains(
+						transition.getId())) {
+					toAddto = RuleNet.K;
+				} else {
+					toAddto = RuleNet.L;
+				}
+			} else if (getIdsOfTransitionList(rTransition).contains(transition.getId())){
+				toAddto = RuleNet.R;
+			} else {
+				toAddto = RuleNet.NAC;
+			}
+			petrinet.model.Transition createdTransition = handler.createTransition(id, toAddto,
+					positionToPoint2D(transition.getGraphics().getPosition()));
+			handler.setTlb(id, createdTransition, transition
+					.getTransitionLabel().getText());
+			handler.setTname(id, createdTransition, transition
+					.getTransitionName().getText());
+			handler.setRnw(id, createdTransition, Renews.fromString(transition
+					.getTransitionRenew().getText()));
+			if (toAddto == RuleNet.L) {
+				idToINodeInL.put(transition.id, createdTransition);
+			} else if (toAddto == RuleNet.K) {
+				idToINodeInK.put(transition.id, createdTransition);
+			} else if (toAddto == RuleNet.R) {
+				idToINodeInR.put(transition.id, createdTransition);
+			} else if (toAddto == RuleNet.NAC) {
+				idToINodeInNAC.put(transition.id, createdTransition);
+			}
+		}		
 		return result;
 	}
 
@@ -810,6 +1154,50 @@ public class Converter {
 				add(lNet);
 				add(kNet);
 				add(rNet);
+			}
+		});
+
+		return pnml;
+	}
+	
+	/**
+	 * Converts a logical {@link Rule rule} object into the equivalent Pnml
+	 * object tree, which can the be marshalled into a file.
+	 * 
+	 * @param rule
+	 *            logical rule
+	 * @param layout
+	 *            layout information in the following format:
+	 *            <ul>
+	 *            <li>key: id of node as String</li>
+	 *            <li>value: {@link NodeLayoutAttribute layout}
+	 *            </ul>
+	 * @param nodeSize
+	 *            the size of the nodes in pixels. This is important due to
+	 *            collision detection when loading the petrinet.
+	 * @return
+	 */
+	public static Pnml convertRuleWithNacToPnml(Rule rule,
+			Map<INode, NodeLayoutAttribute> map, double nodeSize) {
+		Pnml pnml = new Pnml();
+
+		pnml.setType(RULE_IDENT);
+		pnml.setNodeSize(nodeSize);
+
+		pnml.net = new ArrayList<Net>();
+		final Net lNet = createNet(rule.getL(), map, RuleNet.L, rule);
+		final Net kNet = createNet(rule.getK(), map, RuleNet.K, rule);
+		final Net rNet = createNet(rule.getR(), map, RuleNet.R, rule);
+		final Net nacNet = createNet(rule.getNACs().iterator().next().getNac(), map, RuleNet.NAC, rule);
+		
+		pnml.setNet(new ArrayList<Net>() {
+			private static final long serialVersionUID = 8434245017694015611L;
+
+			{
+				add(lNet);
+				add(kNet);
+				add(rNet);
+				add(nacNet);
 			}
 		});
 
