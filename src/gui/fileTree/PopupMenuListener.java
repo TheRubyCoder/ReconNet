@@ -118,6 +118,11 @@ public class PopupMenuListener implements ActionListener {
      * To remember what list entry refers to wich petrinet
      */
     private Map<Integer, Set<Integer>> ruleToNacs;
+    
+    /**
+     * Link nac name to display name
+     */
+    private Map<String, String> nacNameToDisplayName;
 
     /**
      * To remember what list entry refers to which filepath
@@ -131,6 +136,7 @@ public class PopupMenuListener implements ActionListener {
         nameToPId = new HashMap<String, Integer>();
         nameToFilepath = new HashMap<String, File>();
         ruleToNacs = new HashMap<Integer, Set<Integer>>();
+        nacNameToDisplayName = new HashMap<String, String>();
         this.initializeFileChooser();
     }
 
@@ -522,16 +528,21 @@ public class PopupMenuListener implements ActionListener {
      *            the type of net which should be created.
      */
     private void addNacToTree() {
+    	
+    	PetriTreeNode ruleNode = (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
+        String ruleName = ruleNode.getUserObject().toString();
+        int ruleId = nameToPId.get(ruleName);
+        
         // TODO: multiple NACs hier um Namensgebung kümmern
-        String nacName = "NAC";
+        String nacDisplayName = "NAC";
+        String nacName = ruleName + "." + nacDisplayName;
 
         if (!nameToPId.containsKey(nacName)) {
-            PetriTreeNode ruleNode = (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
-            String ruleName = ruleNode.getUserObject().toString();
-            int ruleId = nameToPId.get(ruleName);
+            
             int nacId = EngineAdapter.getPetrinetManipulation().createNac();
-
             nameToPId.put(nacName, nacId);
+            
+            this.nacNameToDisplayName.put(nacName, nacDisplayName);
 
             Set<Integer> nacs = ruleToNacs.get(ruleId);
             if (nacs == null) {
@@ -543,7 +554,7 @@ public class PopupMenuListener implements ActionListener {
             RulePane.getInstance().displayRule(ruleId);
             EngineAdapter.getRuleManipulation().addNac(nacId, ruleId);
 
-            PetriTreeNode n = new PetriTreeNode(NodeType.NAC, nacName);
+            PetriTreeNode n = new PetriTreeNode(NodeType.NAC, nacDisplayName);
 
             FileTreePane.getInstance().getTreeModel().insertNodeInto(n, ruleNode, ruleNode.getChildCount());
             FileTreePane.getInstance().getTree().scrollPathToVisible(new TreePath(n.getPath()));
