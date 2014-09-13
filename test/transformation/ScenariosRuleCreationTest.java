@@ -1,22 +1,59 @@
 /*
- * BSD-Lizenz
- * Copyright © Teams of 'WPP Petrinetze' of HAW Hamburg 2010 - 2013; various authors of Bachelor and/or Masterthesises --> see file 'authors' for detailed information
- *
- * Weiterverbreitung und Verwendung in nichtkompilierter oder kompilierter Form, mit oder ohne Veränderung, sind unter den folgenden Bedingungen zulässig:
- * 1.	Weiterverbreitete nichtkompilierte Exemplare müssen das obige Copyright, diese Liste der Bedingungen und den folgenden Haftungsausschluss im Quelltext enthalten.
- * 2.	Weiterverbreitete kompilierte Exemplare müssen das obige Copyright, diese Liste der Bedingungen und den folgenden Haftungsausschluss in der Dokumentation und/oder anderen Materialien, die mit dem Exemplar verbreitet werden, enthalten.
- * 3.	Weder der Name der Hochschule noch die Namen der Beitragsleistenden dürfen zum Kennzeichnen oder Bewerben von Produkten, die von dieser Software abgeleitet wurden, ohne spezielle vorherige schriftliche Genehmigung verwendet werden.
- * DIESE SOFTWARE WIRD VON DER HOCHSCHULE* UND DEN BEITRAGSLEISTENDEN OHNE JEGLICHE SPEZIELLE ODER IMPLIZIERTE GARANTIEN ZUR VERFÜGUNG GESTELLT, DIE UNTER ANDEREM EINSCHLIESSEN: DIE IMPLIZIERTE GARANTIE DER VERWENDBARKEIT DER SOFTWARE FÜR EINEN BESTIMMTEN ZWECK. AUF KEINEN FALL SIND DIE HOCHSCHULE* ODER DIE BEITRAGSLEISTENDEN FÜR IRGENDWELCHE DIREKTEN, INDIREKTEN, ZUFÄLLIGEN, SPEZIELLEN, BEISPIELHAFTEN ODER FOLGESCHÄDEN (UNTER ANDEREM VERSCHAFFEN VON ERSATZGÜTERN ODER -DIENSTLEISTUNGEN; EINSCHRÄNKUNG DER NUTZUNGSFÄHIGKEIT; VERLUST VON NUTZUNGSFÄHIGKEIT; DATEN; PROFIT ODER GESCHÄFTSUNTERBRECHUNG), WIE AUCH IMMER VERURSACHT UND UNTER WELCHER VERPFLICHTUNG AUCH IMMER, OB IN VERTRAG, STRIKTER VERPFLICHTUNG ODER UNERLAUBTER HANDLUNG (INKLUSIVE FAHRLÄSSIGKEIT) VERANTWORTLICH, AUF WELCHEM WEG SIE AUCH IMMER DURCH DIE BENUTZUNG DIESER SOFTWARE ENTSTANDEN SIND, SOGAR, WENN SIE AUF DIE MÖGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WORDEN SIND.
- *
- * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
- * 1.	Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
- * 2.	Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
- * 3.	Neither the name of the University nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
- * THIS SOFTWARE IS PROVIDED BY THE UNIVERSITY* AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE UNIVERSITY* OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *  *   bedeutet / means: HOCHSCHULE FÜR ANGEWANDTE WISSENSCHAFTEN HAMBURG / HAMBURG UNIVERSITY OF APPLIED SCIENCES
+ * BSD-Lizenz Copyright © Teams of 'WPP Petrinetze' of HAW Hamburg 2010 -
+ * 2013; various authors of Bachelor and/or Masterthesises --> see file
+ * 'authors' for detailed information Weiterverbreitung und Verwendung in
+ * nichtkompilierter oder kompilierter Form, mit oder ohne Veränderung, sind
+ * unter den folgenden Bedingungen zulässig: 1. Weiterverbreitete
+ * nichtkompilierte Exemplare müssen das obige Copyright, diese Liste der
+ * Bedingungen und den folgenden Haftungsausschluss im Quelltext enthalten. 2.
+ * Weiterverbreitete kompilierte Exemplare müssen das obige Copyright, diese
+ * Liste der Bedingungen und den folgenden Haftungsausschluss in der
+ * Dokumentation und/oder anderen Materialien, die mit dem Exemplar verbreitet
+ * werden, enthalten. 3. Weder der Name der Hochschule noch die Namen der
+ * Beitragsleistenden dürfen zum Kennzeichnen oder Bewerben von Produkten, die
+ * von dieser Software abgeleitet wurden, ohne spezielle vorherige
+ * schriftliche Genehmigung verwendet werden. DIESE SOFTWARE WIRD VON DER
+ * HOCHSCHULE* UND DEN BEITRAGSLEISTENDEN OHNE JEGLICHE SPEZIELLE ODER
+ * IMPLIZIERTE GARANTIEN ZUR VERFÜGUNG GESTELLT, DIE UNTER ANDEREM
+ * EINSCHLIESSEN: DIE IMPLIZIERTE GARANTIE DER VERWENDBARKEIT DER SOFTWARE FÜR
+ * EINEN BESTIMMTEN ZWECK. AUF KEINEN FALL SIND DIE HOCHSCHULE* ODER DIE
+ * BEITRAGSLEISTENDEN FÜR IRGENDWELCHE DIREKTEN, INDIREKTEN, ZUFÄLLIGEN,
+ * SPEZIELLEN, BEISPIELHAFTEN ODER FOLGESCHÄDEN (UNTER ANDEREM VERSCHAFFEN VON
+ * ERSATZGÜTERN ODER -DIENSTLEISTUNGEN; EINSCHRÄNKUNG DER NUTZUNGSFÄHIGKEIT;
+ * VERLUST VON NUTZUNGSFÄHIGKEIT; DATEN; PROFIT ODER GESCHÄFTSUNTERBRECHUNG),
+ * WIE AUCH IMMER VERURSACHT UND UNTER WELCHER VERPFLICHTUNG AUCH IMMER, OB IN
+ * VERTRAG, STRIKTER VERPFLICHTUNG ODER UNERLAUBTER HANDLUNG (INKLUSIVE
+ * FAHRLÄSSIGKEIT) VERANTWORTLICH, AUF WELCHEM WEG SIE AUCH IMMER DURCH DIE
+ * BENUTZUNG DIESER SOFTWARE ENTSTANDEN SIND, SOGAR, WENN SIE AUF DIE
+ * MÖGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WORDEN SIND. Redistribution
+ * and use in source and binary forms, with or without modification, are
+ * permitted provided that the following conditions are met: 1.
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer. 2. Redistributions in
+ * binary form must reproduce the above copyright notice, this list of
+ * conditions and the following disclaimer in the documentation and/or other
+ * materials provided with the distribution. 3. Neither the name of the
+ * University nor the names of its contributors may be used to endorse or
+ * promote products derived from this software without specific prior written
+ * permission. THIS SOFTWARE IS PROVIDED BY THE UNIVERSITY* AND CONTRIBUTORS
+ * “AS IS” AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE UNIVERSITY* OR CONTRIBUTORS
+ * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE. * bedeutet / means: HOCHSCHULE FÜR ANGEWANDTE
+ * WISSENSCHAFTEN HAMBURG / HAMBURG UNIVERSITY OF APPLIED SCIENCES
  */
 
 package transformation;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,417 +61,448 @@ import org.junit.Test;
 import petrinet.model.Petrinet;
 import petrinet.model.Place;
 
-import static data.ScenarioRuleChangingData.*;
-import static org.junit.Assert.*;
+import static data.ScenarioRuleChangingData.clearAllRuleChanges;
+import static data.ScenarioRuleChangingData.getRuleScenario1;
+import static data.ScenarioRuleChangingData.getRuleScenario2;
+import static data.ScenarioRuleChangingData.getRuleScenario3;
+import static data.ScenarioRuleChangingData.getRuleScenario4;
+import static data.ScenarioRuleChangingData.getRuleScenario5;
+import static data.ScenarioRuleChangingData.getRuleScenario6;
+import static data.ScenarioRuleChangingData.getRuleScenario7;
+import static data.ScenarioRuleChangingData.getRuleScenario8;
+import static data.ScenarioRuleChangingData.getRuleScenario9;
+import static data.ScenarioRuleChangingData.getRuleScenario13;
+import static data.ScenarioRuleChangingData.getRuleScenario14;
+import static data.ScenarioRuleChangingData.getRuleScenario15;
+import static data.ScenarioRuleChangingData.getRuleScenario16;
+import static data.ScenarioRuleChangingData.getRuleScenario17;
+import static data.ScenarioRuleChangingData.getRuleScenario18;
 
 public class ScenariosRuleCreationTest {
 
-	@Before
-	public void resetChanges() {
-		clearAllRuleChanges();
-	}
+  static final int MARKS = 3;
 
-	/** creating in k */
-	@Test
-	public void scenario1() {
-		Petrinet k = getRuleScenario1().getK();
-		Petrinet l = getRuleScenario1().getL();
-		Petrinet r = getRuleScenario1().getR();
+  @Before
+  public void resetChanges() {
 
-		// user action
-		getRuleScenario1().addPlaceToK("P1");
-		
-		Place firstInK = k.getPlaces().iterator().next();
-		Place firstInL = l.getPlaces().iterator().next();
-		Place firstInR = r.getPlaces().iterator().next();
+    clearAllRuleChanges();
+  }
 
-		// all have "P1" ?
-		assertEquals("P1", firstInK.getName());
-		assertEquals("P1", firstInL.getName());
-		assertEquals("P1", firstInR.getName());
+  /** creating in k */
+  @Test
+  public void scenario1() {
 
-		// all equal?
-		assertTrue(k.equalsPetrinet(l));
-		assertTrue(k.equalsPetrinet(r));
-	}
+    Petrinet k = getRuleScenario1().getK();
+    Petrinet l = getRuleScenario1().getL();
+    Petrinet r = getRuleScenario1().getR();
 
-	/** creating in l */
-	@Test
-	public void scenario2() {
-		Petrinet k = getRuleScenario2().getK();
-		Petrinet l = getRuleScenario2().getL();
-		Petrinet r = getRuleScenario2().getR();
+    // user action
+    getRuleScenario1().addPlaceToK("P1");
 
-		// user action
-		getRuleScenario2().addPlaceToL("P1");
+    Place firstInK = k.getPlaces().iterator().next();
+    Place firstInL = l.getPlaces().iterator().next();
+    Place firstInR = r.getPlaces().iterator().next();
 
-		Place firstInK = k.getPlaces().iterator().next();
-		Place firstInL = l.getPlaces().iterator().next();
+    // all have "P1" ?
+    assertEquals("P1", firstInK.getName());
+    assertEquals("P1", firstInL.getName());
+    assertEquals("P1", firstInR.getName());
 
-		// L and K have "P1"?
-		assertEquals("P1", firstInK.getName());
-		assertEquals("P1", firstInL.getName());
-		// L and K equal?
-		assertTrue(k.equalsPetrinet(l));
-		// R not equal?
-		assertFalse("R should not equal K or L", k.equalsPetrinet(r));
-		// R empty?
-		assertTrue("R should be empty", r.getPlaces().isEmpty());
-		assertTrue("R should be empty", r.getTransitions().isEmpty());
-	}
+    // all equal?
+    assertTrue(k.equalsPetrinet(l));
+    assertTrue(k.equalsPetrinet(r));
+  }
 
-	/** creating in r */
-	@Test
-	public void scenario3() {
-		Petrinet k = getRuleScenario3().getK();
-		Petrinet l = getRuleScenario3().getL();
-		Petrinet r = getRuleScenario3().getR();
+  /** creating in l */
+  @Test
+  public void scenario2() {
 
-		// user action
-		getRuleScenario3().addPlaceToR("P1");
+    Petrinet k = getRuleScenario2().getK();
+    Petrinet l = getRuleScenario2().getL();
+    Petrinet r = getRuleScenario2().getR();
 
-		Place firstInK = k.getPlaces().iterator().next();
-		Place firstInR = r.getPlaces().iterator().next();
+    // user action
+    getRuleScenario2().addPlaceToL("P1");
 
-		// R and K have "P1"?
-		assertEquals("P1", firstInK.getName());
-		assertEquals("P1", firstInR.getName());
-		// R and K equal?
-		assertTrue(k.equalsPetrinet(r));
-		// L not equal?
-		assertFalse("L should not equal K or R", k.equalsPetrinet(l));
-		// L empty?
-		assertTrue("L should be empty", l.getPlaces().isEmpty());
-		assertTrue("L should be empty", l.getTransitions().isEmpty());
-	}
+    Place firstInK = k.getPlaces().iterator().next();
+    Place firstInL = l.getPlaces().iterator().next();
 
-	/** deleting in k */
-	@Test
-	public void scenario4() {
-		Petrinet k = getRuleScenario4().getK();
-		Petrinet l = getRuleScenario4().getL();
-		Petrinet r = getRuleScenario4().getR();
-		Place place = k.getPlaces().iterator().next();
+    // L and K have "P1"?
+    assertEquals("P1", firstInK.getName());
+    assertEquals("P1", firstInL.getName());
+    // L and K equal?
+    assertTrue(k.equalsPetrinet(l));
+    // R not equal?
+    assertFalse("R should not equal K or L", k.equalsPetrinet(r));
+    // R empty?
+    assertTrue("R should be empty", r.getPlaces().isEmpty());
+    assertTrue("R should be empty", r.getTransitions().isEmpty());
+  }
 
-		// user action
-		getRuleScenario4().removePlaceFromK(place);
+  /** creating in r */
+  @Test
+  public void scenario3() {
 
-		// L, K and R are equal?
-		assertTrue(l.equalsPetrinet(k));
-		assertTrue(r.equalsPetrinet(k));
+    Petrinet k = getRuleScenario3().getK();
+    Petrinet l = getRuleScenario3().getL();
+    Petrinet r = getRuleScenario3().getR();
 
-		// L, K and R are empty?
-		assertTrue(l.getPlaces().isEmpty());
-		assertTrue(k.getPlaces().isEmpty());
-		assertTrue(r.getPlaces().isEmpty());
+    // user action
+    getRuleScenario3().addPlaceToR("P1");
 
-		assertTrue(l.getTransitions().isEmpty());
-		assertTrue(k.getTransitions().isEmpty());
-		assertTrue(r.getTransitions().isEmpty());
-	}
+    Place firstInK = k.getPlaces().iterator().next();
+    Place firstInR = r.getPlaces().iterator().next();
 
-	/** deleting in l */
-	@Test
-	public void scenario5() {
-		Petrinet k = getRuleScenario5().getK();
-		Petrinet l = getRuleScenario5().getL();
-		Petrinet r = getRuleScenario5().getR();
-		Place place = l.getPlaces().iterator().next();
+    // R and K have "P1"?
+    assertEquals("P1", firstInK.getName());
+    assertEquals("P1", firstInR.getName());
+    // R and K equal?
+    assertTrue(k.equalsPetrinet(r));
+    // L not equal?
+    assertFalse("L should not equal K or R", k.equalsPetrinet(l));
+    // L empty?
+    assertTrue("L should be empty", l.getPlaces().isEmpty());
+    assertTrue("L should be empty", l.getTransitions().isEmpty());
+  }
 
-		// user action
-		getRuleScenario5().removePlaceFromL(place);
+  /** deleting in k */
+  @Test
+  public void scenario4() {
 
-		// L and K are equal?
-		assertTrue(l.equalsPetrinet(k));		
-		assertTrue(r.equalsPetrinet(k));
-		assertTrue(r.equalsPetrinet(l));
+    Petrinet k = getRuleScenario4().getK();
+    Petrinet l = getRuleScenario4().getL();
+    Petrinet r = getRuleScenario4().getR();
+    Place place = k.getPlaces().iterator().next();
 
-		// L and K are empty?
-		assertTrue(l.getPlaces().isEmpty());
-		assertTrue(k.getPlaces().isEmpty());
-		assertTrue(r.getPlaces().isEmpty());
-		assertTrue(l.getTransitions().isEmpty());
-		assertTrue(k.getTransitions().isEmpty());
-		assertTrue(r.getTransitions().isEmpty());
-	}
+    // user action
+    getRuleScenario4().removePlaceFromK(place);
 
-	/** deleting in r */
-	@Test
-	public void scenario6() {
-		Petrinet k = getRuleScenario6().getK();
-		Petrinet l = getRuleScenario6().getL();
-		Petrinet r = getRuleScenario6().getR();
-		Place place = r.getPlaces().iterator().next();
+    // L, K and R are equal?
+    assertTrue(l.equalsPetrinet(k));
+    assertTrue(r.equalsPetrinet(k));
 
-		// user action
-		getRuleScenario6().removePlaceFromR(place);
-		
+    // L, K and R are empty?
+    assertTrue(l.getPlaces().isEmpty());
+    assertTrue(k.getPlaces().isEmpty());
+    assertTrue(r.getPlaces().isEmpty());
 
-		// R and K are equal?
-		assertTrue(r.equalsPetrinet(k));
-		assertTrue(l.equalsPetrinet(k));
-		assertTrue(l.equalsPetrinet(r));
+    assertTrue(l.getTransitions().isEmpty());
+    assertTrue(k.getTransitions().isEmpty());
+    assertTrue(r.getTransitions().isEmpty());
+  }
 
-		// R and K are empty?
-		assertTrue(r.getPlaces().isEmpty());
-		assertTrue(k.getPlaces().isEmpty());
-		assertTrue(r.getPlaces().isEmpty());
-		assertTrue(r.getTransitions().isEmpty());
-		assertTrue(k.getTransitions().isEmpty());
-		assertTrue(r.getTransitions().isEmpty());
-	}
+  /** deleting in l */
+  @Test
+  public void scenario5() {
 
-	/** deleting transition in "complex" k */
-	@Test
-	public void scenario7() {
-		Petrinet k = getRuleScenario7().getK();
-		Petrinet l = getRuleScenario7().getL();
-		Petrinet r = getRuleScenario7().getR();
-		Place place = k.getPlaces().iterator().next();
+    Petrinet k = getRuleScenario5().getK();
+    Petrinet l = getRuleScenario5().getL();
+    Petrinet r = getRuleScenario5().getR();
+    Place place = l.getPlaces().iterator().next();
 
-		// user action
-		getRuleScenario7().removePlaceFromK(place);
+    // user action
+    getRuleScenario5().removePlaceFromL(place);
 
-		// L, K and R are equal?
-		assertTrue(l.equalsPetrinet(k));
-		assertTrue(r.equalsPetrinet(k));
+    // L and K are equal?
+    assertTrue(l.equalsPetrinet(k));
+    assertTrue(r.equalsPetrinet(k));
+    assertTrue(r.equalsPetrinet(l));
 
-		// L, K and R have no places?
-		assertTrue(l.getPlaces().isEmpty());
-		assertTrue(k.getPlaces().isEmpty());
-		assertTrue(r.getPlaces().isEmpty());
+    // L and K are empty?
+    assertTrue(l.getPlaces().isEmpty());
+    assertTrue(k.getPlaces().isEmpty());
+    assertTrue(r.getPlaces().isEmpty());
+    assertTrue(l.getTransitions().isEmpty());
+    assertTrue(k.getTransitions().isEmpty());
+    assertTrue(r.getTransitions().isEmpty());
+  }
 
-		// L, K and R have one transition?
-		assertEquals(1, l.getTransitions().size());
-		assertEquals(1, k.getTransitions().size());
-		assertEquals(1, r.getTransitions().size());
+  /** deleting in r */
+  @Test
+  public void scenario6() {
 
-		// L, K and R have no arcs?
-		assertTrue(l.getArcs().isEmpty());
-		assertTrue(k.getArcs().isEmpty());
-		assertTrue(r.getArcs().isEmpty());
-	}
+    Petrinet k = getRuleScenario6().getK();
+    Petrinet l = getRuleScenario6().getL();
+    Petrinet r = getRuleScenario6().getR();
+    Place place = r.getPlaces().iterator().next();
 
-	/** deleting transition in "complex" l */
-	@Test
-	public void scenario8() {
-		Petrinet k = getRuleScenario8().getK();
-		Petrinet l = getRuleScenario8().getL();
-		Petrinet r = getRuleScenario8().getR();
-		Place place = l.getPlaces().iterator().next();
+    // user action
+    getRuleScenario6().removePlaceFromR(place);
 
-		// user action
-		getRuleScenario8().removePlaceFromL(place);
-		// L and K are equal?
-		assertTrue(l.equalsPetrinet(k));
-		assertTrue(r.equalsPetrinet(k));
-		assertTrue(r.equalsPetrinet(l));
+    // R and K are equal?
+    assertTrue(r.equalsPetrinet(k));
+    assertTrue(l.equalsPetrinet(k));
+    assertTrue(l.equalsPetrinet(r));
 
-		// L, K and R have no places?
-		assertTrue(l.getPlaces().isEmpty());
-		assertTrue(k.getPlaces().isEmpty());
-		assertTrue(r.getPlaces().isEmpty());
+    // R and K are empty?
+    assertTrue(r.getPlaces().isEmpty());
+    assertTrue(k.getPlaces().isEmpty());
+    assertTrue(r.getPlaces().isEmpty());
+    assertTrue(r.getTransitions().isEmpty());
+    assertTrue(k.getTransitions().isEmpty());
+    assertTrue(r.getTransitions().isEmpty());
+  }
 
-		// L, K and R have one transition?
-		assertEquals(1, l.getTransitions().size());
-		assertEquals(1, k.getTransitions().size());
-		assertEquals(1, r.getTransitions().size());
+  /** deleting transition in "complex" k */
+  @Test
+  public void scenario7() {
 
-		// L,K and R have no arcs?
-		assertTrue(l.getArcs().isEmpty());
-		assertTrue(k.getArcs().isEmpty());
-		assertTrue(r.getArcs().isEmpty());
-	}
-	
-	/** deleting transition in "complex" r */
-	@Test
-	public void scenario9() {
-		Petrinet k = getRuleScenario9().getK();
-		Petrinet l = getRuleScenario9().getL();
-		Petrinet r = getRuleScenario9().getR();
-		Place place = r.getPlaces().iterator().next();
+    Petrinet k = getRuleScenario7().getK();
+    Petrinet l = getRuleScenario7().getL();
+    Petrinet r = getRuleScenario7().getR();
+    Place place = k.getPlaces().iterator().next();
 
-		// user action
-		getRuleScenario9().removePlaceFromR(place);
-		
-		// R and K are equal?
-		assertTrue(r.equalsPetrinet(k));
-		assertTrue(l.equalsPetrinet(k));
-		assertTrue(l.equalsPetrinet(r));
+    // user action
+    getRuleScenario7().removePlaceFromK(place);
 
-		// L, R and K have no places?
-		assertTrue(l.getPlaces().isEmpty());
-		assertTrue(r.getPlaces().isEmpty());
-		assertTrue(k.getPlaces().isEmpty());
+    // L, K and R are equal?
+    assertTrue(l.equalsPetrinet(k));
+    assertTrue(r.equalsPetrinet(k));
 
-		// L, K and R have one transition?
-		assertEquals(1, l.getTransitions().size());
-		assertEquals(1, k.getTransitions().size());
-		assertEquals(1, r.getTransitions().size());
+    // L, K and R have no places?
+    assertTrue(l.getPlaces().isEmpty());
+    assertTrue(k.getPlaces().isEmpty());
+    assertTrue(r.getPlaces().isEmpty());
 
-		// L, R and K have no arcs?
-		assertTrue(l.getArcs().isEmpty());
-		assertTrue(r.getArcs().isEmpty());
-		assertTrue(k.getArcs().isEmpty());
-	}
-	
-	/** changing mark in k */
-	@Test
-	public void scenario13() {
-		Petrinet k = getRuleScenario13().getK();
-		Petrinet l = getRuleScenario13().getL();
-		Petrinet r = getRuleScenario13().getR();
-		Place place =  k.getPlaces().iterator().next();
+    // L, K and R have one transition?
+    assertEquals(1, l.getTransitions().size());
+    assertEquals(1, k.getTransitions().size());
+    assertEquals(1, r.getTransitions().size());
 
-		// user action
-		getRuleScenario13().setMarkInK(place, 3);
-		
-		Place firstInK = k.getPlaces().iterator().next();
-		Place firstInL = l.getPlaces().iterator().next();
-		Place firstInR = r.getPlaces().iterator().next();
+    // L, K and R have no arcs?
+    assertTrue(l.getArcs().isEmpty());
+    assertTrue(k.getArcs().isEmpty());
+    assertTrue(r.getArcs().isEmpty());
+  }
 
-		// all have "P1" ?
-		assertEquals("P1", firstInK.getName());
-		assertEquals("P1", firstInL.getName());
-		assertEquals("P1", firstInR.getName());
+  /** deleting transition in "complex" l */
+  @Test
+  public void scenario8() {
 
-		// all equal?
-		assertTrue(k.equalsPetrinet(l));
-		assertTrue(k.equalsPetrinet(r));
-		
-		// all have mark 3?
-		assertEquals(3,firstInK.getMark());
-		assertEquals(3,firstInL.getMark());
-		assertEquals(3,firstInR.getMark());
-	}
-	
-	/** changing mark in l */
-	@Test
-	public void scenario14() {
-		Petrinet k = getRuleScenario14().getK();
-		Petrinet l = getRuleScenario14().getL();
-		Petrinet r = getRuleScenario14().getR();
-		Place place =  l.getPlaces().iterator().next();
+    Petrinet k = getRuleScenario8().getK();
+    Petrinet l = getRuleScenario8().getL();
+    Petrinet r = getRuleScenario8().getR();
+    Place place = l.getPlaces().iterator().next();
 
-		// user action
-		getRuleScenario14().setMarkInL(place, 3);
+    // user action
+    getRuleScenario8().removePlaceFromL(place);
+    // L and K are equal?
+    assertTrue(l.equalsPetrinet(k));
+    assertTrue(r.equalsPetrinet(k));
+    assertTrue(r.equalsPetrinet(l));
 
-		Place firstInK = k.getPlaces().iterator().next();
-		Place firstInL = l.getPlaces().iterator().next();
-		Place firstInR = r.getPlaces().iterator().next();
+    // L, K and R have no places?
+    assertTrue(l.getPlaces().isEmpty());
+    assertTrue(k.getPlaces().isEmpty());
+    assertTrue(r.getPlaces().isEmpty());
 
-		// all have "P1" ?
-		assertEquals("P1", firstInK.getName());
-		assertEquals("P1", firstInL.getName());
-		assertEquals("P1", firstInR.getName());
+    // L, K and R have one transition?
+    assertEquals(1, l.getTransitions().size());
+    assertEquals(1, k.getTransitions().size());
+    assertEquals(1, r.getTransitions().size());
 
-		// R, L and K have mark 3?
-		assertEquals(3,firstInK.getMark());
-		assertEquals(3,firstInL.getMark());
-		assertEquals(3,firstInR.getMark());
-	}
+    // L,K and R have no arcs?
+    assertTrue(l.getArcs().isEmpty());
+    assertTrue(k.getArcs().isEmpty());
+    assertTrue(r.getArcs().isEmpty());
+  }
 
-	/** changing mark in r */
-	@Test
-	public void scenario15() {
-		Petrinet k = getRuleScenario15().getK();
-		Petrinet l = getRuleScenario15().getL();
-		Petrinet r = getRuleScenario15().getR();
-		Place place =  r.getPlaces().iterator().next();
+  /** deleting transition in "complex" r */
+  @Test
+  public void scenario9() {
 
-		// user action
-		getRuleScenario15().setMarkInR(place, 3);
+    Petrinet k = getRuleScenario9().getK();
+    Petrinet l = getRuleScenario9().getL();
+    Petrinet r = getRuleScenario9().getR();
+    Place place = r.getPlaces().iterator().next();
 
-		Place firstInK = k.getPlaces().iterator().next();
-		Place firstInL = l.getPlaces().iterator().next();
-		Place firstInR = r.getPlaces().iterator().next();
+    // user action
+    getRuleScenario9().removePlaceFromR(place);
 
-		// all have "P1" ?
-		assertEquals("P1", firstInK.getName());
-		assertEquals("P1", firstInL.getName());
-		assertEquals("P1", firstInR.getName());
+    // R and K are equal?
+    assertTrue(r.equalsPetrinet(k));
+    assertTrue(l.equalsPetrinet(k));
+    assertTrue(l.equalsPetrinet(r));
 
-		// R and K have mark 3?
-		assertEquals(3,firstInK.getMark());
-		assertEquals(3,firstInR.getMark());
-		assertEquals(3,firstInL.getMark());
-	}
-	
-	/** changing capacity in k */
-	@Test
-	public void scenario16() {
-		Petrinet k = getRuleScenario16().getK();
-		Petrinet l = getRuleScenario16().getL();
-		Petrinet r = getRuleScenario16().getR();
-		Place place =  k.getPlaces().iterator().next();
+    // L, R and K have no places?
+    assertTrue(l.getPlaces().isEmpty());
+    assertTrue(r.getPlaces().isEmpty());
+    assertTrue(k.getPlaces().isEmpty());
 
-		// user action
-		getRuleScenario16().setCapacityInK(place, 3);
-		
-		Place firstInK = k.getPlaces().iterator().next();
-		Place firstInL = l.getPlaces().iterator().next();
-		Place firstInR = r.getPlaces().iterator().next();
+    // L, K and R have one transition?
+    assertEquals(1, l.getTransitions().size());
+    assertEquals(1, k.getTransitions().size());
+    assertEquals(1, r.getTransitions().size());
 
-		// all have "P1" ?
-		assertEquals("P1", firstInK.getName());
-		assertEquals("P1", firstInL.getName());
-		assertEquals("P1", firstInR.getName());
-		
-		// all have mark 3?
-		assertEquals(3,firstInK.getCapacity());
-		assertEquals(3,firstInL.getCapacity());
-		assertEquals(3,firstInR.getCapacity());
-	}
-	
-	/** changing capacity in l */
-	@Test
-	public void scenario17() {
-		Petrinet k = getRuleScenario17().getK();
-		Petrinet l = getRuleScenario17().getL();
-		Petrinet r = getRuleScenario17().getR();
-		Place place =  l.getPlaces().iterator().next();
+    // L, R and K have no arcs?
+    assertTrue(l.getArcs().isEmpty());
+    assertTrue(r.getArcs().isEmpty());
+    assertTrue(k.getArcs().isEmpty());
+  }
 
-		// user action
-		getRuleScenario17().setCapacityInL(place, 3);
+  /** changing mark in k */
+  @Test
+  public void scenario13() {
 
-		Place firstInK = k.getPlaces().iterator().next();
-		Place firstInL = l.getPlaces().iterator().next();
-		Place firstInR = r.getPlaces().iterator().next();
+    Petrinet k = getRuleScenario13().getK();
+    Petrinet l = getRuleScenario13().getL();
+    Petrinet r = getRuleScenario13().getR();
+    Place place = k.getPlaces().iterator().next();
 
-		// all have "P1" ?
-		assertEquals("P1", firstInK.getName());
-		assertEquals("P1", firstInL.getName());
-		assertEquals("P1", firstInR.getName());
+    // user action
+    getRuleScenario13().setMarkInK(place, MARKS);
 
-		// R, L and K have mark 3?
-		assertEquals(3,firstInK.getCapacity());
-		assertEquals(3,firstInL.getCapacity());
-		assertEquals(3,firstInR.getCapacity());
-	}
+    Place firstInK = k.getPlaces().iterator().next();
+    Place firstInL = l.getPlaces().iterator().next();
+    Place firstInR = r.getPlaces().iterator().next();
 
-	/** changing capacity in r */
-	@Test
-	public void scenario18() {
-		Petrinet k = getRuleScenario18().getK();
-		Petrinet l = getRuleScenario18().getL();
-		Petrinet r = getRuleScenario18().getR();
-		Place place =  r.getPlaces().iterator().next();
+    // all have "P1" ?
+    assertEquals("P1", firstInK.getName());
+    assertEquals("P1", firstInL.getName());
+    assertEquals("P1", firstInR.getName());
 
-		// user action
-		getRuleScenario18().setCapacityInR(place, 3);
+    // all equal?
+    assertTrue(k.equalsPetrinet(l));
+    assertTrue(k.equalsPetrinet(r));
 
-		Place firstInK = k.getPlaces().iterator().next();
-		Place firstInL = l.getPlaces().iterator().next();
-		Place firstInR = r.getPlaces().iterator().next();
+    // all have mark 3?
+    assertEquals(MARKS, firstInK.getMark());
+    assertEquals(MARKS, firstInL.getMark());
+    assertEquals(MARKS, firstInR.getMark());
+  }
 
-		// all have "P1" ?
-		assertEquals("P1", firstInK.getName());
-		assertEquals("P1", firstInL.getName());
-		assertEquals("P1", firstInR.getName());
+  /** changing mark in l */
+  @Test
+  public void scenario14() {
 
-		// R and K have mark 3?
-		assertEquals(3,firstInK.getCapacity());
-		assertEquals(3,firstInR.getCapacity());
-		assertEquals(3,firstInL.getCapacity());
-	}
+    Petrinet k = getRuleScenario14().getK();
+    Petrinet l = getRuleScenario14().getL();
+    Petrinet r = getRuleScenario14().getR();
+    Place place = l.getPlaces().iterator().next();
+
+    // user action
+    getRuleScenario14().setMarkInL(place, MARKS);
+
+    Place firstInK = k.getPlaces().iterator().next();
+    Place firstInL = l.getPlaces().iterator().next();
+    Place firstInR = r.getPlaces().iterator().next();
+
+    // all have "P1" ?
+    assertEquals("P1", firstInK.getName());
+    assertEquals("P1", firstInL.getName());
+    assertEquals("P1", firstInR.getName());
+
+    // R, L and K have mark 3?
+    assertEquals(MARKS, firstInK.getMark());
+    assertEquals(MARKS, firstInL.getMark());
+    assertEquals(MARKS, firstInR.getMark());
+  }
+
+  /** changing mark in r */
+  @Test
+  public void scenario15() {
+
+    Petrinet k = getRuleScenario15().getK();
+    Petrinet l = getRuleScenario15().getL();
+    Petrinet r = getRuleScenario15().getR();
+    Place place = r.getPlaces().iterator().next();
+
+    // user action
+    getRuleScenario15().setMarkInR(place, MARKS);
+
+    Place firstInK = k.getPlaces().iterator().next();
+    Place firstInL = l.getPlaces().iterator().next();
+    Place firstInR = r.getPlaces().iterator().next();
+
+    // all have "P1" ?
+    assertEquals("P1", firstInK.getName());
+    assertEquals("P1", firstInL.getName());
+    assertEquals("P1", firstInR.getName());
+
+    // R and K have mark 3?
+    assertEquals(MARKS, firstInK.getMark());
+    assertEquals(MARKS, firstInR.getMark());
+    assertEquals(MARKS, firstInL.getMark());
+  }
+
+  /** changing capacity in k */
+  @Test
+  public void scenario16() {
+
+    Petrinet k = getRuleScenario16().getK();
+    Petrinet l = getRuleScenario16().getL();
+    Petrinet r = getRuleScenario16().getR();
+    Place place = k.getPlaces().iterator().next();
+
+    // user action
+    getRuleScenario16().setCapacityInK(place, MARKS);
+
+    Place firstInK = k.getPlaces().iterator().next();
+    Place firstInL = l.getPlaces().iterator().next();
+    Place firstInR = r.getPlaces().iterator().next();
+
+    // all have "P1" ?
+    assertEquals("P1", firstInK.getName());
+    assertEquals("P1", firstInL.getName());
+    assertEquals("P1", firstInR.getName());
+
+    // all have mark 3?
+    assertEquals(MARKS, firstInK.getCapacity());
+    assertEquals(MARKS, firstInL.getCapacity());
+    assertEquals(MARKS, firstInR.getCapacity());
+  }
+
+  /** changing capacity in l */
+  @Test
+  public void scenario17() {
+
+    Petrinet k = getRuleScenario17().getK();
+    Petrinet l = getRuleScenario17().getL();
+    Petrinet r = getRuleScenario17().getR();
+    Place place = l.getPlaces().iterator().next();
+
+    // user action
+    getRuleScenario17().setCapacityInL(place, MARKS);
+
+    Place firstInK = k.getPlaces().iterator().next();
+    Place firstInL = l.getPlaces().iterator().next();
+    Place firstInR = r.getPlaces().iterator().next();
+
+    // all have "P1" ?
+    assertEquals("P1", firstInK.getName());
+    assertEquals("P1", firstInL.getName());
+    assertEquals("P1", firstInR.getName());
+
+    // R, L and K have mark 3?
+    assertEquals(MARKS, firstInK.getCapacity());
+    assertEquals(MARKS, firstInL.getCapacity());
+    assertEquals(MARKS, firstInR.getCapacity());
+  }
+
+  /** changing capacity in r */
+  @Test
+  public void scenario18() {
+
+    Petrinet k = getRuleScenario18().getK();
+    Petrinet l = getRuleScenario18().getL();
+    Petrinet r = getRuleScenario18().getR();
+    Place place = r.getPlaces().iterator().next();
+
+    // user action
+    getRuleScenario18().setCapacityInR(place, MARKS);
+
+    Place firstInK = k.getPlaces().iterator().next();
+    Place firstInL = l.getPlaces().iterator().next();
+    Place firstInR = r.getPlaces().iterator().next();
+
+    // all have "P1" ?
+    assertEquals("P1", firstInK.getName());
+    assertEquals("P1", firstInL.getName());
+    assertEquals("P1", firstInR.getName());
+
+    // R and K have mark 3?
+    assertEquals(MARKS, firstInK.getCapacity());
+    assertEquals(MARKS, firstInR.getCapacity());
+    assertEquals(MARKS, firstInL.getCapacity());
+  }
 }

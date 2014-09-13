@@ -1,6 +1,70 @@
+/*
+ * BSD-Lizenz Copyright © Teams of 'WPP Petrinetze' of HAW Hamburg 2010 -
+ * 2013; various authors of Bachelor and/or Masterthesises --> see file
+ * 'authors' for detailed information Weiterverbreitung und Verwendung in
+ * nichtkompilierter oder kompilierter Form, mit oder ohne Veränderung, sind
+ * unter den folgenden Bedingungen zulässig: 1. Weiterverbreitete
+ * nichtkompilierte Exemplare müssen das obige Copyright, diese Liste der
+ * Bedingungen und den folgenden Haftungsausschluss im Quelltext enthalten. 2.
+ * Weiterverbreitete kompilierte Exemplare müssen das obige Copyright, diese
+ * Liste der Bedingungen und den folgenden Haftungsausschluss in der
+ * Dokumentation und/oder anderen Materialien, die mit dem Exemplar verbreitet
+ * werden, enthalten. 3. Weder der Name der Hochschule noch die Namen der
+ * Beitragsleistenden dürfen zum Kennzeichnen oder Bewerben von Produkten, die
+ * von dieser Software abgeleitet wurden, ohne spezielle vorherige
+ * schriftliche Genehmigung verwendet werden. DIESE SOFTWARE WIRD VON DER
+ * HOCHSCHULE* UND DEN BEITRAGSLEISTENDEN OHNE JEGLICHE SPEZIELLE ODER
+ * IMPLIZIERTE GARANTIEN ZUR VERFÜGUNG GESTELLT, DIE UNTER ANDEREM
+ * EINSCHLIESSEN: DIE IMPLIZIERTE GARANTIE DER VERWENDBARKEIT DER SOFTWARE FÜR
+ * EINEN BESTIMMTEN ZWECK. AUF KEINEN FALL SIND DIE HOCHSCHULE* ODER DIE
+ * BEITRAGSLEISTENDEN FÜR IRGENDWELCHE DIREKTEN, INDIREKTEN, ZUFÄLLIGEN,
+ * SPEZIELLEN, BEISPIELHAFTEN ODER FOLGESCHÄDEN (UNTER ANDEREM VERSCHAFFEN VON
+ * ERSATZGÜTERN ODER -DIENSTLEISTUNGEN; EINSCHRÄNKUNG DER NUTZUNGSFÄHIGKEIT;
+ * VERLUST VON NUTZUNGSFÄHIGKEIT; DATEN; PROFIT ODER GESCHÄFTSUNTERBRECHUNG),
+ * WIE AUCH IMMER VERURSACHT UND UNTER WELCHER VERPFLICHTUNG AUCH IMMER, OB IN
+ * VERTRAG, STRIKTER VERPFLICHTUNG ODER UNERLAUBTER HANDLUNG (INKLUSIVE
+ * FAHRLÄSSIGKEIT) VERANTWORTLICH, AUF WELCHEM WEG SIE AUCH IMMER DURCH DIE
+ * BENUTZUNG DIESER SOFTWARE ENTSTANDEN SIND, SOGAR, WENN SIE AUF DIE
+ * MÖGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WORDEN SIND. Redistribution
+ * and use in source and binary forms, with or without modification, are
+ * permitted provided that the following conditions are met: 1.
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer. 2. Redistributions in
+ * binary form must reproduce the above copyright notice, this list of
+ * conditions and the following disclaimer in the documentation and/or other
+ * materials provided with the distribution. 3. Neither the name of the
+ * University nor the names of its contributors may be used to endorse or
+ * promote products derived from this software without specific prior written
+ * permission. THIS SOFTWARE IS PROVIDED BY THE UNIVERSITY* AND CONTRIBUTORS
+ * “AS IS” AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE UNIVERSITY* OR CONTRIBUTORS
+ * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE. * bedeutet / means: HOCHSCHULE FÜR ANGEWANDTE
+ * WISSENSCHAFTEN HAMBURG / HAMBURG UNIVERSITY OF APPLIED SCIENCES
+ */
+
 package gui.fileTree;
 
-import static gui.Style.*;
+import static gui.Style.TREE_MENU_LOAD_NET;
+import static gui.Style.TREE_MENU_LOAD_RULE;
+import static gui.Style.TREE_MENU_ADD_NAC;
+import static gui.Style.TREE_MENU_ADD_NET;
+import static gui.Style.TREE_MENU_ADD_RULE;
+import static gui.Style.TREE_MENU_CHECK_RULE;
+import static gui.Style.TREE_MENU_RELOAD_NET;
+import static gui.Style.TREE_MENU_RELOAD_RULE;
+import static gui.Style.TREE_MENU_REMOVE_NAC;
+import static gui.Style.TREE_MENU_REMOVE_NET;
+import static gui.Style.TREE_MENU_REMOVE_RULE;
+import static gui.Style.TREE_MENU_SAVE;
+import static gui.Style.TREE_MENU_SAVE_ALL;
+import static gui.Style.TREE_MENU_UNCHECK_RULE;
 import gui.PetrinetPane;
 import gui.RulePane;
 
@@ -15,260 +79,295 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 /**
- * custom mouse listener for use in petrinet tree extending {@link MouseListener}.
+ * custom mouse listener for use in petrinet tree extending
+ * {@link MouseListener}.
  */
-public class TreeMouseListener implements MouseListener {
+public class TreeMouseListener
+  implements MouseListener {
 
-    /**
-     * reference to the {@link JTree} object.
-     */
-    private JTree tree;
+  /**
+   * reference to the {@link JTree} object.
+   */
+  private JTree tree;
 
-    /**
-     * reference to the {@link PopupMenuListener}.
-     */
-    private ActionListener menuListener;
+  /**
+   * reference to the {@link PopupMenuListener}.
+   */
+  private ActionListener menuListener;
 
-    /**
-     * Constructor
-     * @param tree reference to the {@link JTree} object.
-     */
-    public TreeMouseListener(JTree tree) {
-        super();
-        this.tree = tree;
-        this.menuListener = PopupMenuListener.getInstance();
+  /**
+   * Constructor
+   * 
+   * @param tree
+   *        reference to the {@link JTree} object.
+   */
+  public TreeMouseListener(JTree tree) {
+
+    super();
+    this.tree = tree;
+    this.menuListener = PopupMenuListener.getInstance();
+  }
+
+  /**
+   * dispatches the node type to show different popup menus.
+   * 
+   * @param event
+   *        the mouse event triggered action.
+   * @param node
+   *        the node clicked.
+   */
+  private void showPopupMenu(MouseEvent event, Object node) {
+
+    PetriTreeNode selectedNode = (PetriTreeNode) node;
+
+    if (selectedNode.isNodeType(NodeType.NET_ROOT)) {
+      this.showNetRootMenu(event, selectedNode);
+    } else if (selectedNode.isNodeType(NodeType.RULE_ROOT)) {
+      this.showRuleRootMenu(event, selectedNode);
+    } else if (selectedNode.isNodeType(NodeType.NET)) {
+      this.showNetMenu(event, selectedNode);
+    } else if (selectedNode.isNodeType(NodeType.RULE)) {
+      this.showRuleMenu(event, selectedNode);
+    } else if (selectedNode.isNodeType(NodeType.NAC)) {
+      this.showNacMenu(event, selectedNode);
+    } else {
+      // TODO: throw exception here
+      System.out.println("unknown node type");
     }
 
-    /**
-     * dispatches the node type to show different popup menus.
-     * @param event the mouse event triggered action.
-     * @param node the node clicked.
-     */
-    private void showPopupMenu(MouseEvent event, Object node) {
-        PetriTreeNode selectedNode = (PetriTreeNode) node;
+  }
 
-        if (selectedNode.isNodeType(NodeType.NET_ROOT)) {
-            this.showNetRootMenu(event, selectedNode);
-        } else if (selectedNode.isNodeType(NodeType.RULE_ROOT)) {
-            this.showRuleRootMenu(event, selectedNode);
-        } else if (selectedNode.isNodeType(NodeType.NET)) {
-            this.showNetMenu(event, selectedNode);
-        } else if (selectedNode.isNodeType(NodeType.RULE)) {
-            this.showRuleMenu(event, selectedNode);
-        }else if (selectedNode.isNodeType(NodeType.NAC)) {
-            this.showNacMenu(event, selectedNode);
-        } else {
-            // TODO: throw exception here
-            System.out.println("unknown node type");
+  /**
+   * displays the popup menu for rules.
+   * 
+   * @param event
+   *        the mouse event triggered action.
+   * @param selectedNode
+   *        the node clicked.
+   */
+  private void showRuleMenu(MouseEvent event, PetriTreeNode selectedNode) {
+
+    JPopupMenu popup = new JPopupMenu();
+    JMenuItem i;
+
+    i = new JMenuItem(TREE_MENU_SAVE_ALL);
+    popup.add(i);
+    i.addActionListener(this.menuListener);
+
+    popup.addSeparator();
+
+    if (selectedNode.isChecked()) {
+      i = new JMenuItem(TREE_MENU_UNCHECK_RULE);
+    } else {
+      i = new JMenuItem(TREE_MENU_CHECK_RULE);
+    }
+    popup.add(i);
+    i.addActionListener(this.menuListener);
+
+    i = new JMenuItem(TREE_MENU_SAVE);
+    popup.add(i);
+    i.addActionListener(this.menuListener);
+
+    i = new JMenuItem(TREE_MENU_ADD_NAC);
+    popup.add(i);
+    i.addActionListener(this.menuListener);
+
+    i = new JMenuItem(TREE_MENU_REMOVE_RULE);
+    popup.add(i);
+    i.addActionListener(this.menuListener);
+
+    i = new JMenuItem(TREE_MENU_RELOAD_RULE);
+    popup.add(i);
+    i.addActionListener(this.menuListener);
+
+    popup.show(tree, event.getX(), event.getY());
+  }
+
+  /**
+   * displays the popup menu for nacs.
+   * 
+   * @param event
+   *        the mouse event triggered action.
+   * @param selectedNode
+   *        the node clicked.
+   */
+  private void showNacMenu(MouseEvent event, PetriTreeNode selectedNode) {
+
+    JPopupMenu popup = new JPopupMenu();
+    JMenuItem i;
+
+    i = new JMenuItem(TREE_MENU_SAVE_ALL);
+    popup.add(i);
+    i.addActionListener(this.menuListener);
+
+    popup.addSeparator();
+
+    i = new JMenuItem(TREE_MENU_REMOVE_NAC);
+    popup.add(i);
+    i.addActionListener(this.menuListener);
+
+    popup.show(tree, event.getX(), event.getY());
+  }
+
+  /**
+   * displays the popup menu for nets.
+   * 
+   * @param event
+   *        the mouse event triggered action.
+   * @param selectedNode
+   *        the node clicked.
+   */
+  private void showNetMenu(MouseEvent e, DefaultMutableTreeNode selectedNode) {
+
+    JPopupMenu popup = new JPopupMenu();
+    JMenuItem i;
+
+    i = new JMenuItem(TREE_MENU_SAVE_ALL);
+    popup.add(i);
+    i.addActionListener(this.menuListener);
+
+    popup.addSeparator();
+
+    i = new JMenuItem(TREE_MENU_SAVE);
+    popup.add(i);
+    i.addActionListener(this.menuListener);
+
+    i = new JMenuItem(TREE_MENU_REMOVE_NET);
+    popup.add(i);
+    i.addActionListener(this.menuListener);
+
+    i = new JMenuItem(TREE_MENU_RELOAD_NET);
+    popup.add(i);
+    i.addActionListener(this.menuListener);
+
+    popup.show(tree, e.getX(), e.getY());
+  }
+
+  /**
+   * displays the popup menu for rule root.
+   * 
+   * @param event
+   *        the mouse event triggered action.
+   * @param selectedNode
+   *        the node clicked.
+   */
+  private void showRuleRootMenu(MouseEvent e,
+    DefaultMutableTreeNode selectedNode) {
+
+    JPopupMenu popup = new JPopupMenu();
+    JMenuItem i;
+
+    i = new JMenuItem(TREE_MENU_SAVE_ALL);
+    popup.add(i);
+    i.addActionListener(this.menuListener);
+
+    popup.addSeparator();
+
+    i = new JMenuItem(TREE_MENU_ADD_RULE);
+    popup.add(i);
+    i.addActionListener(this.menuListener);
+
+    i = new JMenuItem(TREE_MENU_LOAD_RULE);
+    popup.add(i);
+    i.addActionListener(this.menuListener);
+
+    popup.show(tree, e.getX(), e.getY());
+  }
+
+  /**
+   * displays the popup menu for net root.
+   * 
+   * @param event
+   *        the mouse event triggered action.
+   * @param selectedNode
+   *        the node clicked.
+   */
+  private void showNetRootMenu(MouseEvent e,
+    DefaultMutableTreeNode selectedNode) {
+
+    JPopupMenu popup = new JPopupMenu();
+    JMenuItem i;
+
+    i = new JMenuItem(TREE_MENU_SAVE_ALL);
+    popup.add(i);
+    i.addActionListener(this.menuListener);
+
+    popup.addSeparator();
+
+    i = new JMenuItem(TREE_MENU_ADD_NET);
+    popup.add(i);
+    i.addActionListener(this.menuListener);
+
+    i = new JMenuItem(TREE_MENU_LOAD_NET);
+    popup.add(i);
+    i.addActionListener(this.menuListener);
+
+    popup.show(tree, e.getX(), e.getY());
+  }
+
+  @Override
+  public void mouseClicked(MouseEvent e) {
+
+    TreePath path = this.tree.getPathForLocation(e.getX(), e.getY());
+
+    if (path != null) {
+      this.tree.setSelectionPath(path);
+      PetriTreeNode node = (PetriTreeNode) path.getLastPathComponent();
+
+      String name = node.toString();
+      Integer id = PopupMenuListener.getInstance().getPidOf(name);
+
+      if (node.isNodeType(NodeType.NET)) {
+        PetrinetPane.getInstance().displayPetrinet(id, name);
+        PetriTreeNode netRoot = (PetriTreeNode) node.getParent();
+        PetriTreeNode child;
+        int numberOfChilcds = netRoot.getChildCount();
+        for (int i = 0; i < numberOfChilcds; i++) {
+          child = (PetriTreeNode) netRoot.getChildAt(i);
+          child.setSelected(false);
         }
-
-    }
-
-    /**
-     * displays the popup menu for rules.
-     * @param event the mouse event triggered action.
-     * @param selectedNode the node clicked.
-     */
-    private void showRuleMenu(MouseEvent event, PetriTreeNode selectedNode) {
-        JPopupMenu popup = new JPopupMenu();
-        JMenuItem i;
-
-        i = new JMenuItem(TREE_MENU_SAVE_ALL);
-        popup.add(i);
-        i.addActionListener(this.menuListener);
-
-        popup.addSeparator();
-
-        if (selectedNode.isChecked()) {
-            i = new JMenuItem(TREE_MENU_UNCHECK_RULE);
-        } else {
-            i = new JMenuItem(TREE_MENU_CHECK_RULE);
+        node.setSelected(true);
+      } else if (node.isNodeType(NodeType.RULE)) {
+        RulePane.getInstance().displayRule(id);
+        PetriTreeNode ruleRoot = (PetriTreeNode) node.getParent();
+        PetriTreeNode child;
+        int numberOfChilcds = ruleRoot.getChildCount();
+        for (int i = 0; i < numberOfChilcds; i++) {
+          child = (PetriTreeNode) ruleRoot.getChildAt(i);
+          child.setSelected(false);
         }
-        popup.add(i);
-        i.addActionListener(this.menuListener);
+        node.setSelected(true);
+      }
 
-        i = new JMenuItem(TREE_MENU_SAVE);
-        popup.add(i);
-        i.addActionListener(this.menuListener);
-
-        i = new JMenuItem(TREE_MENU_ADD_NAC);
-        popup.add(i);
-        i.addActionListener(this.menuListener);
-
-        i = new JMenuItem(TREE_MENU_REMOVE_RULE);
-        popup.add(i);
-        i.addActionListener(this.menuListener);
-
-        i = new JMenuItem(TREE_MENU_RELOAD_RULE);
-        popup.add(i);
-        i.addActionListener(this.menuListener);
-
-        popup.show(tree, event.getX(), event.getY());
-    }
-    
-    /**
-     * displays the popup menu for nacs.
-     * @param event the mouse event triggered action.
-     * @param selectedNode the node clicked.
-     */
-    private void showNacMenu(MouseEvent event, PetriTreeNode selectedNode) {
-        JPopupMenu popup = new JPopupMenu();
-        JMenuItem i;
-
-        i = new JMenuItem(TREE_MENU_SAVE_ALL);
-        popup.add(i);
-        i.addActionListener(this.menuListener);
-
-        popup.addSeparator();
-
-        i = new JMenuItem(TREE_MENU_REMOVE_NAC);
-        popup.add(i);
-        i.addActionListener(this.menuListener);
-
-        popup.show(tree, event.getX(), event.getY());
+      if (e.getButton() == MouseEvent.BUTTON3) {
+        showPopupMenu(e, path.getLastPathComponent());
+      }
     }
 
-    /**
-     * displays the popup menu for nets.
-     * @param event the mouse event triggered action.
-     * @param selectedNode the node clicked.
-     */
-    private void showNetMenu(MouseEvent e, DefaultMutableTreeNode selectedNode) {
-        JPopupMenu popup = new JPopupMenu();
-        JMenuItem i;
+  }
 
-        i = new JMenuItem(TREE_MENU_SAVE_ALL);
-        popup.add(i);
-        i.addActionListener(this.menuListener);
+  @Override
+  public void mouseEntered(MouseEvent e) {
 
-        popup.addSeparator();
+    // not used
+  }
 
-        i = new JMenuItem(TREE_MENU_SAVE);
-        popup.add(i);
-        i.addActionListener(this.menuListener);
+  @Override
+  public void mouseExited(MouseEvent e) {
 
-        i = new JMenuItem(TREE_MENU_REMOVE_NET);
-        popup.add(i);
-        i.addActionListener(this.menuListener);
+    // not used
+  }
 
-        i = new JMenuItem(TREE_MENU_RELOAD_NET);
-        popup.add(i);
-        i.addActionListener(this.menuListener);
+  @Override
+  public void mousePressed(MouseEvent e) {
 
-        popup.show(tree, e.getX(), e.getY());
-    }
+    // not used
+  }
 
-    /**
-     * displays the popup menu for rule root.
-     * @param event the mouse event triggered action.
-     * @param selectedNode the node clicked.
-     */
-    private void showRuleRootMenu(MouseEvent e, DefaultMutableTreeNode selectedNode) {
-        JPopupMenu popup = new JPopupMenu();
-        JMenuItem i;
+  @Override
+  public void mouseReleased(MouseEvent e) {
 
-        i = new JMenuItem(TREE_MENU_SAVE_ALL);
-        popup.add(i);
-        i.addActionListener(this.menuListener);
-
-        popup.addSeparator();
-
-        i = new JMenuItem(TREE_MENU_ADD_RULE);
-        popup.add(i);
-        i.addActionListener(this.menuListener);
-
-        i = new JMenuItem(TREE_MENU_LOAD_RULE);
-        popup.add(i);
-        i.addActionListener(this.menuListener);
-
-        popup.show(tree, e.getX(), e.getY());
-    }
-
-    /**
-     * displays the popup menu for net root.
-     * @param event the mouse event triggered action.
-     * @param selectedNode the node clicked.
-     */
-    private void showNetRootMenu(MouseEvent e, DefaultMutableTreeNode selectedNode) {
-
-        JPopupMenu popup = new JPopupMenu();
-        JMenuItem i;
-
-        i = new JMenuItem(TREE_MENU_SAVE_ALL);
-        popup.add(i);
-        i.addActionListener(this.menuListener);
-
-        popup.addSeparator();
-
-        i = new JMenuItem(TREE_MENU_ADD_NET);
-        popup.add(i);
-        i.addActionListener(this.menuListener);
-
-        i = new JMenuItem(TREE_MENU_LOAD_NET);
-        popup.add(i);
-        i.addActionListener(this.menuListener);
-
-        popup.show(tree, e.getX(), e.getY());
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        TreePath path = this.tree.getPathForLocation(e.getX(), e.getY());
-
-        if (path != null) {
-            this.tree.setSelectionPath(path);
-            PetriTreeNode node = (PetriTreeNode) path.getLastPathComponent();
-
-            String name = node.toString();
-            Integer id = PopupMenuListener.getInstance().getPidOf(name);
-
-            if (node.isNodeType(NodeType.NET)) {
-                PetrinetPane.getInstance().displayPetrinet(id, name);
-                PetriTreeNode netRoot = (PetriTreeNode) node.getParent();
-                PetriTreeNode child;
-                int numberOfChilcds = netRoot.getChildCount();
-                for (int i = 0; i < numberOfChilcds; i++) {
-                    child = (PetriTreeNode) netRoot.getChildAt(i);
-                    child.setSelected(false);
-                }
-                node.setSelected(true);
-            } else if (node.isNodeType(NodeType.RULE)) {
-                RulePane.getInstance().displayRule(id);
-                PetriTreeNode ruleRoot = (PetriTreeNode) node.getParent();
-                PetriTreeNode child;
-                int numberOfChilcds = ruleRoot.getChildCount();
-                for (int i = 0; i < numberOfChilcds; i++) {
-                    child = (PetriTreeNode) ruleRoot.getChildAt(i);
-                    child.setSelected(false);
-                }
-                node.setSelected(true);
-            }
-
-            if (e.getButton() == MouseEvent.BUTTON3) {
-                showPopupMenu(e, path.getLastPathComponent());
-            }
-        }
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        // not used
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        // not used
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-        // not used
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        // not used
-    }
+    // not used
+  }
 
 }
