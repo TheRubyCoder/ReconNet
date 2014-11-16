@@ -69,6 +69,7 @@ import petrinet.model.PostArc;
 import petrinet.model.PreArc;
 import petrinet.model.Transition;
 import transformation.ITransformation;
+import transformation.NAC;
 import transformation.Rule;
 import transformation.Rule.Net;
 import transformation.TransformationComponent;
@@ -87,7 +88,7 @@ import exceptions.EngineException;
 
 /**
  * This is the implementation of all methods regarding rules by engine.
- * 
+ *
  * @see IRuleManipulation
  * @see IRulePersistence
  */
@@ -113,7 +114,7 @@ public final class RuleHandler {
 
   /**
    * Creates an PreArc in the rule referenced by <code>id</code>
-   * 
+   *
    * @param id
    *        Id of the rule
    * @param net
@@ -175,7 +176,7 @@ public final class RuleHandler {
 
   /**
    * Creates an PostArc in the rule referenced by <code>id</code>
-   * 
+   *
    * @param id
    *        Id of the rule
    * @param net
@@ -249,24 +250,32 @@ public final class RuleHandler {
     JungData rJungData = ruleData.getRJungData();
     JungData nacJungData = ruleData.getNacJungData();
 
-    if (!lJungData.isCreatePossibleAt(coordinate)) {
-      exception("Place too close to Node in L");
-      return null;
-    }
+    //
+    // Überdeckung nur in L, K und R prüfen
+    // bei NACs keine Prüfung
+    //
+    if (!net.equals(RuleNet.NAC)) {
 
-    if (!kJungData.isCreatePossibleAt(coordinate)) {
-      exception("Place too close to Node in K");
-      return null;
-    }
+      if (!lJungData.isCreatePossibleAt(coordinate)) {
+        exception("Place too close to Node in L");
+        return null;
+      }
 
-    if (!rJungData.isCreatePossibleAt(coordinate)) {
-      exception("Place too close to Node in R");
-      return null;
-    }
+      if (!kJungData.isCreatePossibleAt(coordinate)) {
+        exception("Place too close to Node in K");
+        return null;
+      }
 
-    if (!nacJungData.isCreatePossibleAt(coordinate)) {
-      exception("Place too close to Node in NAC");
-      return null;
+      if (!rJungData.isCreatePossibleAt(coordinate)) {
+        exception("Place too close to Node in R");
+        return null;
+      }
+
+      if (!nacJungData.isCreatePossibleAt(coordinate)) {
+        exception("Place too close to Node in NAC");
+        return null;
+      }
+
     }
 
     if (net.equals(RuleNet.L)) {
@@ -361,6 +370,18 @@ public final class RuleHandler {
        * setPlaceColor(id, newPlace, ruleData.getColorGenerator().next());
        * return newPlace; }
        */
+    } else if (net.equals(RuleNet.NAC)) {
+
+      NAC[] nacs = rule.getNACs().toArray(new NAC[0]);
+
+      // Testweise immer zum ersten NAC hinzufügen
+      NAC nac = nacs[0];
+
+      Place newPlace = rule.addPlaceToNac("undefined", nac);
+      nacJungData.createPlace(newPlace, coordinate);
+
+      return newPlace;
+
     } else {
       exception("createPlace - Not given if Manipulation is in L,K or R");
       return null;
@@ -649,6 +670,9 @@ public final class RuleHandler {
     case R:
       petrinetData = ruleData.getRJungData();
       break;
+    case NAC:
+      petrinetData = ruleData.getNacJungData();
+      break;
     default:
       break;
     }
@@ -820,7 +844,13 @@ public final class RuleHandler {
 
     } else if (net == Net.R) {
       ruleData.getRule().setNameInR(place, pname);
+
+    } else if (net == Net.NAC) {
+      // TODO: support multiple nacs
+      NAC[] nacs = ruleData.getRule().getNACs().toArray(new NAC[0]);
+      ruleData.getRule().setNameInNac(place, pname, nacs[0]);
     }
+
   }
 
   /**
@@ -1051,6 +1081,13 @@ public final class RuleHandler {
       return RuleNet.R;
     }
 
+    for (NAC nac : rule.getNACs()) {
+      if (nac.getNac().getPlaces().contains(node)
+        || nac.getNac().getTransitions().contains(node)) {
+        return RuleNet.NAC;
+      }
+    }
+
     return null;
   }
 
@@ -1173,7 +1210,7 @@ public final class RuleHandler {
   /**
    * Checks whether a combination of start and taget nodes is valid for
    * creating an arc in the rule
-   * 
+   *
    * @param net
    * @param from
    * @param to
@@ -1205,7 +1242,7 @@ public final class RuleHandler {
   /**
    * Checks whether a combination of start and taget nodes is valid for
    * creating an arc in the rule
-   * 
+   *
    * @param net
    * @param from
    * @param to
@@ -1263,5 +1300,21 @@ public final class RuleHandler {
     throws EngineException {
 
     exceptionIf(!(arc instanceof IArc), "this isn't an arc");
+  }
+
+  public int createNac(int ruleId)
+    throws EngineException {
+
+    System.out.println(RuleHandler.class + " - createNac(ruleId:" + ruleId
+      + ")");
+
+    RuleData ruleData = getRuleData(ruleId);
+    Rule rule = ruleData.getRule();
+
+    NAC nac = rule.createNAC();
+
+    int newNacId = rule.getNACs().size();
+
+    return newNacId;
   }
 }

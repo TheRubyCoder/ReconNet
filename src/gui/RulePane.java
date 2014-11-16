@@ -69,7 +69,6 @@ import transformation.TransformationComponent;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import engine.handler.RuleNet;
 import exceptions.EngineException;
-import gui.fileTree.PopupMenuListener;
 
 /** Pane for displaying rules */
 public final class RulePane {
@@ -169,7 +168,7 @@ public final class RulePane {
 
   /**
    * singleton: returns the instance
-   * 
+   *
    * @return the instance
    */
   public static RulePane getInstance() {
@@ -183,9 +182,9 @@ public final class RulePane {
   private void initializeLeftRulePanel() {
 
     this.nacPanel = new JPanel(new GridLayout(1, 1));
-    this.lPanel = new JPanel(new GridLayout(1, 1));
-
     this.nacPanel.setBorder(RULE_PANE_BORDER_NAC);
+
+    this.lPanel = new JPanel(new GridLayout(1, 1));
     this.lPanel.setBorder(RULE_PANE_BORDER_L);
 
     this.leftRulePanel =
@@ -236,37 +235,33 @@ public final class RulePane {
   public void displayRule(int ruleId) {
 
     currentId = ruleId;
+
     try {
-      Layout<INode, IArc> nacLayout =
-        EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.NAC);
+
       Layout<INode, IArc> lLayout =
         EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.L);
       Layout<INode, IArc> kLayout =
         EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.K);
       Layout<INode, IArc> rLayout =
         EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.R);
+
       if (lViewer != null) {
-        nacViewer.removeFrom(nacPanel);
         lViewer.removeFrom(lPanel);
         kViewer.removeFrom(kPanel);
         rViewer.removeFrom(rPanel);
       }
-      nacViewer = new PetrinetViewer(nacLayout, ruleId, RuleNet.NAC);
+
       lViewer = new PetrinetViewer(lLayout, ruleId, RuleNet.L);
       kViewer = new PetrinetViewer(kLayout, ruleId, RuleNet.K);
       rViewer = new PetrinetViewer(rLayout, ruleId, RuleNet.R);
 
       double nodeSize =
         EngineAdapter.getRuleManipulation().getNodeSize(ruleId);
-      nacViewer.setNodeSize(nodeSize);
+
       lViewer.setNodeSize(nodeSize);
       kViewer.setNodeSize(nodeSize);
       rViewer.setNodeSize(nodeSize);
-      if (PopupMenuListener.getInstance().ruleHasNacs(ruleId)) {
-        nacViewer.addTo(nacPanel);
-      } else {
-        nacPanel.removeAll();
-      }
+
       lViewer.addTo(lPanel);
       kViewer.addTo(kPanel);
       rViewer.addTo(rPanel);
@@ -278,11 +273,41 @@ public final class RulePane {
     }
   }
 
+  public void displayNAC(int ruleId, int nacId) {
+
+    System.out.println(RulePane.class + " - displayNAC(ruleId:" + ruleId
+      + ", nacId:" + nacId + ")");
+
+    // preventive remove old NAC viewer before displaying the new
+    if (nacViewer != null) {
+      nacPanel.remove(nacViewer);
+    }
+
+    try {
+
+      Layout<INode, IArc> nacLayout =
+        EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.NAC);
+
+      nacViewer = new PetrinetViewer(nacLayout, ruleId, RuleNet.NAC);
+      nacViewer.addTo(nacPanel);
+
+      double nodeSize =
+        EngineAdapter.getRuleManipulation().getNodeSize(ruleId);
+      nacViewer.setNodeSize(nodeSize);
+
+      MainWindow.getInstance().repaint();
+
+    } catch (Exception e) {
+
+    }
+
+  }
+
   /**
    * Very similar to
    * {@link ITransformation#getMappings(transformation.Rule, INode)}. But it
    * returns the mappings for the one selected node of the user
-   * 
+   *
    * @see {@link PetrinetViewer#currentSelectedNode}
    * @return <code>null</code> if selected node does not exists anymore
    */
@@ -295,7 +320,7 @@ public final class RulePane {
   /**
    * Returns the currently selected node of the rule. <code>null</code> if no
    * node is selected
-   * 
+   *
    * @return
    */
   private INode getCurrentSelectedNode() {
@@ -331,7 +356,7 @@ public final class RulePane {
   /**
    * Resets {@link PetrinetViewer#currentSelectedNode} for all viewers in the
    * rule but not for <code>petrinetViewer</code>
-   * 
+   *
    * @param petrinetViewer
    */
   public void deselectBut(PetrinetViewer petrinetViewer) {
@@ -355,7 +380,7 @@ public final class RulePane {
 
   /**
    * Resizes Nodes on all parts of the rule
-   * 
+   *
    * @see {@link PetrinetViewer#resizeNodes(float)}
    * @param factor
    */

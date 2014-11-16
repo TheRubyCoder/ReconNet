@@ -75,7 +75,7 @@ import exceptions.EngineException;
  * delete[Arc|Place|Transition](..) - get[Arc|Place|Transition]Attribute(..) -
  * getJungLayout(..) - move[Graph|Node](..) - save(..) -
  * set[Marking|Pname|Tlb|Tname|Weight|NodeType](..)
- * 
+ *
  * @author alex (aas772)
  */
 
@@ -83,7 +83,7 @@ public interface IPetrinetManipulation {
 
   /**
    * Creates an Arc
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @param from
@@ -97,7 +97,7 @@ public interface IPetrinetManipulation {
 
   /**
    * Creates a Place
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @param coordinate
@@ -110,14 +110,14 @@ public interface IPetrinetManipulation {
 
   /**
    * Creates a Petrinet
-   * 
+   *
    * @return ID of the created Petrinet
    */
   int createPetrinet();
 
   /**
    * Creates a Transition
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @param coordinate
@@ -130,7 +130,7 @@ public interface IPetrinetManipulation {
 
   /**
    * Deletes an Arc
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @param arc
@@ -142,7 +142,7 @@ public interface IPetrinetManipulation {
 
   /**
    * Deletes a Place
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @param place
@@ -153,7 +153,7 @@ public interface IPetrinetManipulation {
 
   /**
    * Deletes a Transition
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @param transition
@@ -164,7 +164,7 @@ public interface IPetrinetManipulation {
 
   /**
    * Gets the Attributes from an Arc
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @param arc
@@ -176,7 +176,7 @@ public interface IPetrinetManipulation {
 
   /**
    * Gets the JungLayout from the Petrinet
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @return AbstractLayout
@@ -188,7 +188,7 @@ public interface IPetrinetManipulation {
 
   /**
    * Gets the Attributes from a Place
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @param place
@@ -201,7 +201,7 @@ public interface IPetrinetManipulation {
 
   /**
    * Gets the Attributes from a Transition
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @param transition
@@ -211,11 +211,11 @@ public interface IPetrinetManipulation {
    */
   TransitionAttribute getTransitionAttribute(@NotNull int id,
     @NotNull INode transition)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Moves a Graph.
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @param relativePosition
@@ -229,7 +229,7 @@ public interface IPetrinetManipulation {
    * Move a graph into the vision of the GUI. (Top left node will be at [0,0]
    * position). This may be useful if the user moved the graph outside the
    * window and can't find it
-   * 
+   *
    * @param id
    *        id of the graph
    * @throws EngineException
@@ -239,7 +239,7 @@ public interface IPetrinetManipulation {
 
   /**
    * Moves a node.
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @param node
@@ -250,11 +250,11 @@ public interface IPetrinetManipulation {
    */
   void moveNode(@NotNull int id, @NotNull INode node,
     @NotNull Point2D relativePosition)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Saves a Petrinet.
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @param path
@@ -267,11 +267,11 @@ public interface IPetrinetManipulation {
    */
   void save(@NotNull int id, @NotNull String path, @NotNull String filename,
     @NotNull String format, double nodeSize)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Load a Petrinet.
-   * 
+   *
    * @param path
    *        where is this Petrinet
    * @param filename
@@ -282,7 +282,7 @@ public interface IPetrinetManipulation {
 
   /**
    * Sets the Marking of a Place.
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @param place
@@ -292,12 +292,12 @@ public interface IPetrinetManipulation {
    * @throws EngineException
    */
   void
-    setMarking(@NotNull int id, @NotNull INode place, @NotNull int marking)
-      throws EngineException;
+  setMarking(@NotNull int id, @NotNull INode place, @NotNull int marking)
+    throws EngineException;
 
   /**
    * Sets the Capacity of a Place.
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @param place
@@ -308,11 +308,11 @@ public interface IPetrinetManipulation {
    */
   void setCapacity(@NotNull int id, @NotNull INode place,
     @NotNull int capacity)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Sets the PName of a Place.
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @param place
@@ -326,7 +326,7 @@ public interface IPetrinetManipulation {
 
   /**
    * Sets the Tlb of a Transition.
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @param transition
@@ -336,12 +336,12 @@ public interface IPetrinetManipulation {
    * @throws EngineException
    */
   void
-    setTlb(@NotNull int id, @NotNull INode transition, @NotNull String tlb)
-      throws EngineException;
+  setTlb(@NotNull int id, @NotNull INode transition, @NotNull String tlb)
+    throws EngineException;
 
   /**
    * Sets the TName of a Transition.
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @param transition
@@ -352,11 +352,11 @@ public interface IPetrinetManipulation {
    */
   void setTname(@NotNull int id, @NotNull INode transition,
     @NotNull String tname)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Sets the Weight of an Arc.
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @param arc
@@ -370,7 +370,7 @@ public interface IPetrinetManipulation {
 
   /**
    * Sets a Strings as RNW.
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @param rnw
@@ -379,11 +379,11 @@ public interface IPetrinetManipulation {
    */
   void setRnw(@NotNull int id, @NotNull INode transition,
     @NotNull IRenew renews)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Set Color of a Place.
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @param place
@@ -394,11 +394,11 @@ public interface IPetrinetManipulation {
    */
   void setPlaceColor(@NotNull int id, @NotNull INode place,
     @NotNull Color color)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * This methods clean the Tool from this Petrinet.
-   * 
+   *
    * @param id
    *        ID of the Petrinet
    * @throws EngineException
@@ -408,7 +408,7 @@ public interface IPetrinetManipulation {
 
   /**
    * Returns the type of the Object.
-   * 
+   *
    * @param node
    *        to check
    * @return Enum composed of Place, Transition
@@ -425,7 +425,7 @@ public interface IPetrinetManipulation {
   /**
    * Similar to {@link PetrinetViewer#moveAllNodesTo(float, Point)} but looks
    * up petrinet with <code>id</code> first
-   * 
+   *
    * @param id
    * @param factor
    * @param point
@@ -434,7 +434,7 @@ public interface IPetrinetManipulation {
 
   /**
    * Sets the nodeSize for the JungData of petrinet with <code>id</code>
-   * 
+   *
    * @see {@link JungData#setNodeSize(double)}
    * @param id
    * @param nodeSize
@@ -443,19 +443,12 @@ public interface IPetrinetManipulation {
 
   /**
    * Returns the nodeSize of Petrinet with <code>id</code>
-   * 
+   *
    * @param id
    * @throws if
    *         id is wrong
    * @return
    */
   double getNodeSize(int id);
-
-  /**
-   * Creates a NAC
-   * 
-   * @return ID of the created NAC
-   */
-  int createNac();
 
 }

@@ -105,6 +105,7 @@ public class PetriTreeNodeRenderer
     if (value instanceof PetriTreeNode) {
       PetriTreeNode node = (PetriTreeNode) value;
       if (node.isNodeType(NodeType.RULE)) {
+
         JCheckBox box = new JCheckBox(node.toString());
         box.setSelected(node.isChecked());
 
@@ -117,6 +118,7 @@ public class PetriTreeNodeRenderer
           box.setBackground(nonSelectedBkgrnd);
         }
         renderer = box;
+
       } else {
         renderer =
           (new DefaultTreeCellRenderer().getTreeCellRendererComponent(tree,

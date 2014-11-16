@@ -97,7 +97,7 @@ public class TreeMouseListener
 
   /**
    * Constructor
-   * 
+   *
    * @param tree
    *        reference to the {@link JTree} object.
    */
@@ -110,7 +110,7 @@ public class TreeMouseListener
 
   /**
    * dispatches the node type to show different popup menus.
-   * 
+   *
    * @param event
    *        the mouse event triggered action.
    * @param node
@@ -139,7 +139,7 @@ public class TreeMouseListener
 
   /**
    * displays the popup menu for rules.
-   * 
+   *
    * @param event
    *        the mouse event triggered action.
    * @param selectedNode
@@ -185,7 +185,7 @@ public class TreeMouseListener
 
   /**
    * displays the popup menu for nacs.
-   * 
+   *
    * @param event
    *        the mouse event triggered action.
    * @param selectedNode
@@ -211,7 +211,7 @@ public class TreeMouseListener
 
   /**
    * displays the popup menu for nets.
-   * 
+   *
    * @param event
    *        the mouse event triggered action.
    * @param selectedNode
@@ -245,7 +245,7 @@ public class TreeMouseListener
 
   /**
    * displays the popup menu for rule root.
-   * 
+   *
    * @param event
    *        the mouse event triggered action.
    * @param selectedNode
@@ -276,7 +276,7 @@ public class TreeMouseListener
 
   /**
    * displays the popup menu for net root.
-   * 
+   *
    * @param event
    *        the mouse event triggered action.
    * @param selectedNode
@@ -337,6 +337,13 @@ public class TreeMouseListener
           child.setSelected(false);
         }
         node.setSelected(true);
+      } else if (node.isNodeType(NodeType.NAC)) {
+
+        String ruleName = node.getParent().toString();
+        int ruleId = PopupMenuListener.getInstance().getPidOf(ruleName);
+
+        RulePane.getInstance().displayNAC(ruleId, 0);
+
       }
 
       if (e.getButton() == MouseEvent.BUTTON3) {

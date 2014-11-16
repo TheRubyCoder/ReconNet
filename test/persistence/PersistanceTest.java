@@ -241,7 +241,10 @@ public class PersistanceTest {
     // try {
     // CHECKSTYLE:OFF - No need to check for magic numbers
     int id = handler.createRule();
-    handlerSave.addNac(0, id);
+
+    // CHOFF - auskommentiert weil umstrukturiert
+    // handlerSave.addNac(0, id);
+
     petrinet.model.Place place1 =
       handler.createPlace(id, RuleNet.K, new Point2D.Double(10, 10));
     petrinet.model.Place place2 =
@@ -349,7 +352,7 @@ public class PersistanceTest {
     EngineMockupForPersistence mockup, petrinet.model.Petrinet net1,
     int net1_pid, AbstractLayout layout1, petrinet.model.Petrinet net2,
     int net2_pid, AbstractLayout layout2)
-    throws EngineException {
+      throws EngineException {
 
     Map<Point2D, petrinet.model.Place> pos2place =
       new HashMap<Point2D, petrinet.model.Place>();

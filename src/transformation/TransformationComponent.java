@@ -238,7 +238,7 @@ public final class TransformationComponent
 
   /**
    * Transformations the petrinet like defined in rule with random match
-   * 
+   *
    * @param petrinet
    *        Petrinet to transform
    * @param rule
@@ -286,6 +286,12 @@ public final class TransformationComponent
 
     } else if (rule.getR().containsPlace(place)) {
       return Net.R;
+    }
+
+    for (NAC nac : rule.getNACs()) {
+      if (nac.getNac().containsPlace(place)) {
+        return Net.NAC;
+      }
     }
 
     System.out.println("unknown place");

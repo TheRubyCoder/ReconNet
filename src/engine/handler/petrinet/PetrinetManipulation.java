@@ -98,12 +98,12 @@ import exceptions.EngineException;
  * <li>set[Marking|Pname|Tlb|Tname|Weight|NodeType](..)</li>
  * </ul>
  * </p>
- * 
+ *
  * @author alex (aas772)
  */
 
 public final class PetrinetManipulation
-  implements IPetrinetManipulation {
+implements IPetrinetManipulation {
 
   /** Singleton instance */
   private static PetrinetManipulation petrinetManipulation;
@@ -264,7 +264,7 @@ public final class PetrinetManipulation
   @Override
   public void save(int id, String path, String filename, String format,
     double nodeSize)
-    throws EngineException {
+      throws EngineException {
 
     petrinetManipulationBackend.save(id, path, filename, format, nodeSize);
   }
@@ -290,7 +290,7 @@ public final class PetrinetManipulation
   @Override
   public void setCapacity(@NotNull int id, @NotNull INode place,
     @NotNull int capacity)
-    throws EngineException {
+      throws EngineException {
 
     petrinetManipulationBackend.setCapacity(id, (Place) place, capacity);
 
@@ -417,13 +417,6 @@ public final class PetrinetManipulation
   public double getNodeSize(int id) {
 
     return petrinetManipulationBackend.getNodeSize(id);
-  }
-
-  @Override
-  public int createNac() {
-
-    // TODO: NAC hier erweitern
-    return 0;
   }
 
 }

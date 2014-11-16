@@ -95,11 +95,11 @@ import exceptions.EngineException;
  * <li>set[Marking|Pname|Tlb|Tname|Weight|NodeType](..)</li>
  * </ul>
  * </p>
- * 
+ *
  * @author alex (aas772)
  */
 public final class RuleManipulation
-  implements IRuleManipulation {
+implements IRuleManipulation {
 
   /** Singleton instance of this class */
   private static RuleManipulation ruleManipulation;
@@ -257,7 +257,7 @@ public final class RuleManipulation
   @Override
   public void setCapacity(@NotNull int id, @NotNull INode place,
     @NotNull int capacity)
-    throws EngineException {
+      throws EngineException {
 
     if (!(place instanceof Place)) {
       warning("place isn't a Place");
@@ -412,16 +412,10 @@ public final class RuleManipulation
   }
 
   @Override
-  public void addNac(int nacId, int ruleId) {
+  public int createNac(int ruleId)
+    throws EngineException {
 
-    // TODO: NAC hier erweitern
-
-  }
-
-  @Override
-  public void removeNac(int nacId, int ruleId) {
-
-    // TODO: NAC hier erweitern
+    return ruleManipulationBackend.createNac(ruleId);
   }
 
 }

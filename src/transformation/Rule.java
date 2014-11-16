@@ -84,7 +84,7 @@ import petrinet.model.Transition;
 public class Rule {
 
   public enum Net {
-    L, K, R
+    L, K, R, NAC
   }
 
   /** K part of the rule */
@@ -131,10 +131,12 @@ public class Rule {
 
   /**
    * Creates a new minimal NAC in the rule's set of NACs
-   * 
+   *
    * @return The new NAC
    */
   public NAC createNAC() {
+
+    System.out.println(Rule.class + " - createNAC");
 
     NAC newNAC = new NAC(l);
     nacs.add(newNAC);
@@ -143,7 +145,7 @@ public class Rule {
 
   /**
    * Returns the gluing Petrinet of this rule.
-   * 
+   *
    * @return the gluing Petrinet of this rule.
    */
   public Petrinet getK() {
@@ -153,7 +155,7 @@ public class Rule {
 
   /**
    * Returns the left Petrinet of this rule.
-   * 
+   *
    * @return the left Petrinet of this rule.
    */
   public Petrinet getL() {
@@ -163,7 +165,7 @@ public class Rule {
 
   /**
    * Returns the right Petrinet of this rule.
-   * 
+   *
    * @return the right Petrinet of this rule.
    */
   public Petrinet getR() {
@@ -176,7 +178,7 @@ public class Rule {
    * <p>
    * Only for reading purposes. NAC manipulation is available via the
    * according Rule.
-   * 
+   *
    * @return Set of this rule's NACs.
    */
   public Set<NAC> getNACs() {
@@ -319,7 +321,7 @@ public class Rule {
   /**
    * Sets the mark for the place and its mappings, that is only in L, K and
    * NACs if given
-   * 
+   *
    * @param place
    * @param mark
    */
@@ -342,7 +344,7 @@ public class Rule {
   /**
    * Sets the mark for the place and its mappings, thats only in K and R and
    * NACs if given
-   * 
+   *
    * @param place
    * @param mark
    */
@@ -366,7 +368,7 @@ public class Rule {
 
   /**
    * Sets the mark for the place and its mappings, thats in L, K and R
-   * 
+   *
    * @param place
    * @param mark
    */
@@ -405,7 +407,7 @@ public class Rule {
 
   /**
    * Sets the capacity for the place and its mappings, that is only in L and K
-   * 
+   *
    * @param place
    * @param capacity
    */
@@ -427,7 +429,7 @@ public class Rule {
 
   /**
    * Sets the capacity for the place and its mappings, thats only in K and R
-   * 
+   *
    * @param place
    * @param capacity
    */
@@ -451,7 +453,7 @@ public class Rule {
 
   /**
    * Sets the capacity for the place and its mappings, thats in L, K and R
-   * 
+   *
    * @param place
    * @param capacity
    */
@@ -473,7 +475,7 @@ public class Rule {
   /**
    * Sets the capacity for the place and its mappings, that is only in L and
    * K, Nac
-   * 
+   *
    * @param place
    * @param capacity
    */
@@ -486,7 +488,7 @@ public class Rule {
   /**
    * Sets the name of a place in a rule and modifies other parts of the rule
    * accordingly
-   * 
+   *
    * @param place
    * @param name
    */
@@ -509,7 +511,7 @@ public class Rule {
   /**
    * Sets the name of a place in a rule and modifies other parts of the rule
    * accordingly
-   * 
+   *
    * @param place
    * @param name
    */
@@ -533,7 +535,7 @@ public class Rule {
   /**
    * Sets the name of a place in a rule and modifies other parts of the rule
    * accordingly
-   * 
+   *
    * @param place
    * @param name
    */
@@ -568,7 +570,7 @@ public class Rule {
   /**
    * Sets the name of a transition in a rule and modifies other parts of the
    * rule accordingly
-   * 
+   *
    * @param transition
    * @param name
    */
@@ -591,7 +593,7 @@ public class Rule {
   /**
    * Sets the name of a transition in a rule and modifies other parts of the
    * rule accordingly
-   * 
+   *
    * @param transition
    * @param name
    */
@@ -616,7 +618,7 @@ public class Rule {
   /**
    * Sets the name of a transition in a rule and modifies other parts of the
    * rule accordingly
-   * 
+   *
    * @param transition
    * @param name
    */
@@ -651,7 +653,7 @@ public class Rule {
   /**
    * Sets the tlb of a transition in a rule and modifies other parts of the
    * rule accordingly
-   * 
+   *
    * @param transition
    * @param tlb
    */
@@ -674,7 +676,7 @@ public class Rule {
   /**
    * Sets the tlb of a transition in a rule and modifies other parts of the
    * rule accordingly
-   * 
+   *
    * @param transition
    * @param name
    */
@@ -698,7 +700,7 @@ public class Rule {
   /**
    * Sets the tlb of a transition in a rule and modifies other parts of the
    * rule accordingly
-   * 
+   *
    * @param transition
    * @param name
    */
@@ -733,7 +735,7 @@ public class Rule {
   /**
    * Sets the rnw of a transition in a rule and modifies other parts of the
    * rule accordingly
-   * 
+   *
    * @param transition
    * @param rnw
    */
@@ -756,7 +758,7 @@ public class Rule {
   /**
    * Sets the rnw of a transition in a rule and modifies other parts of the
    * rule accordingly
-   * 
+   *
    * @param transition
    * @param rnw
    */
@@ -781,7 +783,7 @@ public class Rule {
   /**
    * Sets the rnw of a transition in a rule and modifies other parts of the
    * rule accordingly
-   * 
+   *
    * @param transition
    * @param rnw
    */
@@ -816,7 +818,7 @@ public class Rule {
   /**
    * Sets the weight of a preArc in a rule and modifies other parts of the
    * rule accordingly
-   * 
+   *
    * @param preArc
    * @param weight
    */
@@ -839,7 +841,7 @@ public class Rule {
   /**
    * Sets the weight of a preArc in a rule and modifies other parts of the
    * rule accordingly
-   * 
+   *
    * @param preArc
    * @param weight
    */
@@ -863,7 +865,7 @@ public class Rule {
   /**
    * Sets the weight of a preArc in a rule and modifies other parts of the
    * rule accordingly
-   * 
+   *
    * @param preArc
    * @param weight
    */
@@ -898,7 +900,7 @@ public class Rule {
   /**
    * Sets the weight of a postArc in a rule and modifies other parts of the
    * rule accordingly
-   * 
+   *
    * @param postArc
    * @param weight
    */
@@ -921,7 +923,7 @@ public class Rule {
   /**
    * Sets the weight of a postArc in a rule and modifies other parts of the
    * rule accordingly
-   * 
+   *
    * @param postArc
    * @param weight
    */
@@ -945,7 +947,7 @@ public class Rule {
   /**
    * Sets the weight of a postArc in a rule and modifies other parts of the
    * rule accordingly
-   * 
+   *
    * @param postArc
    * @param weight
    */
@@ -1391,7 +1393,7 @@ public class Rule {
 
   /**
    * Returns the corresponding place in L.
-   * 
+   *
    * @param place
    *        a place in K.
    * @return the corresponding place in L.
@@ -1403,7 +1405,7 @@ public class Rule {
 
   /**
    * Returns the corresponding preArc in L.
-   * 
+   *
    * @param preArc
    *        a preArc in K.
    * @return the corresponding preArc in L.
@@ -1415,7 +1417,7 @@ public class Rule {
 
   /**
    * Returns the corresponding postArc in L.
-   * 
+   *
    * @param postArc
    *        a postArc in K.
    * @return the corresponding postArc in L.
@@ -1427,7 +1429,7 @@ public class Rule {
 
   /**
    * Returns the corresponding transition in L.
-   * 
+   *
    * @param transition
    *        a transition in K.
    * @return the corresponding transition in L.
@@ -1439,7 +1441,7 @@ public class Rule {
 
   /**
    * Returns the corresponding place in R.
-   * 
+   *
    * @param place
    *        a place in K.
    * @return the corresponding place in R.
@@ -1451,7 +1453,7 @@ public class Rule {
 
   /**
    * Returns the corresponding preArc in R.
-   * 
+   *
    * @param preArc
    *        a preArc in K.
    * @return the corresponding preArc in R.
@@ -1463,7 +1465,7 @@ public class Rule {
 
   /**
    * Returns the corresponding postArc in R.
-   * 
+   *
    * @param postArc
    *        a postArc in K.
    * @return the corresponding postArc in R.
@@ -1475,7 +1477,7 @@ public class Rule {
 
   /**
    * Returns the corresponding transition in R.
-   * 
+   *
    * @param transition
    *        a transition in K.
    * @return the corresponding transition in R.
@@ -1487,7 +1489,7 @@ public class Rule {
 
   /**
    * Returns the corresponding place in K.
-   * 
+   *
    * @param place
    *        a place in L.
    * @return the corresponding place in K.
@@ -1499,7 +1501,7 @@ public class Rule {
 
   /**
    * Returns the corresponding preArc in K.
-   * 
+   *
    * @param preArc
    *        a preArc in L.
    * @return the corresponding preArc in K.
@@ -1511,7 +1513,7 @@ public class Rule {
 
   /**
    * Returns the corresponding postArc in K.
-   * 
+   *
    * @param postArc
    *        a postArc in L.
    * @return the corresponding postArc in K.
@@ -1523,7 +1525,7 @@ public class Rule {
 
   /**
    * Returns the corresponding transition in K.
-   * 
+   *
    * @param transition
    *        a transition in L.
    * @return the corresponding transition in K.
@@ -1535,7 +1537,7 @@ public class Rule {
 
   /**
    * Returns the corresponding place in R.
-   * 
+   *
    * @param place
    *        a place in L.
    * @return the corresponding place in R.
@@ -1547,7 +1549,7 @@ public class Rule {
 
   /**
    * Returns the corresponding preArc in R.
-   * 
+   *
    * @param preArc
    *        a preArc in L.
    * @return the corresponding preArc in R.
@@ -1559,7 +1561,7 @@ public class Rule {
 
   /**
    * Returns the corresponding postArc in R.
-   * 
+   *
    * @param postArc
    *        a postArc in L.
    * @return the corresponding postArc in R.
@@ -1571,7 +1573,7 @@ public class Rule {
 
   /**
    * Returns the corresponding transition in R.
-   * 
+   *
    * @param transition
    *        a transition in L.
    * @return the corresponding transition in R.
@@ -1583,7 +1585,7 @@ public class Rule {
 
   /**
    * Returns the corresponding place in K.
-   * 
+   *
    * @param place
    *        a place in R.
    * @return the corresponding place in K.
@@ -1595,7 +1597,7 @@ public class Rule {
 
   /**
    * Returns the corresponding preArc in K.
-   * 
+   *
    * @param preArc
    *        a preArc in R.
    * @return the corresponding preArc in K.
@@ -1607,7 +1609,7 @@ public class Rule {
 
   /**
    * Returns the corresponding postArc in K.
-   * 
+   *
    * @param postArc
    *        a postArc in R.
    * @return the corresponding postArc in K.
@@ -1619,7 +1621,7 @@ public class Rule {
 
   /**
    * Returns the corresponding transition in K.
-   * 
+   *
    * @param transition
    *        a transition in R.
    * @return the corresponding transition in K.
@@ -1631,7 +1633,7 @@ public class Rule {
 
   /**
    * Returns the corresponding place in L.
-   * 
+   *
    * @param place
    *        a place in R.
    * @return the corresponding place in L.
@@ -1643,7 +1645,7 @@ public class Rule {
 
   /**
    * Returns the corresponding preArc in L.
-   * 
+   *
    * @param preArc
    *        a preArc in R.
    * @return the corresponding preArc in L.
@@ -1655,7 +1657,7 @@ public class Rule {
 
   /**
    * Returns the corresponding postArc in L.
-   * 
+   *
    * @param postArc
    *        a postArc in R.
    * @return the corresponding postArc in L.
@@ -1667,7 +1669,7 @@ public class Rule {
 
   /**
    * Returns the corresponding transition in L.
-   * 
+   *
    * @param transition
    *        a transition in R.
    * @return the corresponding transition in L.
@@ -1679,7 +1681,7 @@ public class Rule {
 
   /**
    * Checks if the passed NAC is part of this rules NAC set
-   * 
+   *
    * @param nac
    *        The NAC that is supposed to be contained
    * @throws NACnotContainedException

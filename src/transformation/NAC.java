@@ -88,7 +88,7 @@ public class NAC {
 
   /**
    * Constructs a new NAC from a given L-part of a rule.
-   * 
+   *
    * @param l
    *        The L-part of the rule the new NAC belongs to.
    */
@@ -97,6 +97,9 @@ public class NAC {
     nac = createPetrinet();
 
     id = UUID.randomUUID();
+
+    System.out.println(NAC.class + " - constructor: created NAC with UUID "
+      + id);
 
     placeMappingLToNac = new DualHashBidiMap<Place, Place>();
     postArcMappingLToNac = new DualHashBidiMap<PostArc, PostArc>();
@@ -135,7 +138,7 @@ public class NAC {
 
   /**
    * Returns the corresponding Place in Nac
-   * 
+   *
    * @param p
    *        Place in L
    * @return Place in N
@@ -147,7 +150,7 @@ public class NAC {
 
   /**
    * Returns the corresponding PreArc in Nac
-   * 
+   *
    * @param pre
    *        PreArc in L
    * @return PreArc in N
@@ -159,7 +162,7 @@ public class NAC {
 
   /**
    * Returns the corresponding PostArc in Nac
-   * 
+   *
    * @param post
    *        PostArc in L
    * @return PostArc in N
@@ -171,7 +174,7 @@ public class NAC {
 
   /**
    * Returns the corresponding Transition in Nac
-   * 
+   *
    * @param t
    *        Transition in L
    * @return Transition in N
@@ -183,7 +186,7 @@ public class NAC {
 
   /**
    * Returns the corresponding Place in Nac
-   * 
+   *
    * @param p
    *        Place in L
    * @return Place in N
@@ -195,7 +198,7 @@ public class NAC {
 
   /**
    * Returns the corresponding PreArc in Nac
-   * 
+   *
    * @param pre
    *        PreArc in L
    * @return PreArc in N
@@ -207,7 +210,7 @@ public class NAC {
 
   /**
    * Returns the corresponding PostArc in Nac
-   * 
+   *
    * @param post
    *        PostArc in L
    * @return PostArc in N
@@ -219,7 +222,7 @@ public class NAC {
 
   /**
    * Returns the corresponding Transition in Nac
-   * 
+   *
    * @param t
    *        Transition in L
    * @return Transition in N

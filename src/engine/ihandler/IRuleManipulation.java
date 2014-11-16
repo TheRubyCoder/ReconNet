@@ -73,7 +73,7 @@ import exceptions.EngineException;
 /**
  * This is a Interface for a RuleManipulation from the GUI-Component.
  * Implementation: engine.handler.rule.RuleManipulation
- * 
+ *
  * @author alex (aas772)
  */
 
@@ -81,7 +81,7 @@ public interface IRuleManipulation {
 
   /**
    * Creates an Arc
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param from
@@ -92,11 +92,11 @@ public interface IRuleManipulation {
    */
   void createArc(@NotNull int id, RuleNet net, @NotNull INode from,
     @NotNull INode to)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Creates a Place
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param coordinate
@@ -105,18 +105,18 @@ public interface IRuleManipulation {
    */
   void createPlace(@NotNull int id, @NotNull RuleNet net,
     @NotNull Point2D coordinate)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Creates a Rule
-   * 
+   *
    * @return ID of the created Rule
    */
   int createRule();
 
   /**
    * Creates a Transition
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param coordinate
@@ -126,11 +126,11 @@ public interface IRuleManipulation {
    */
   void createTransition(@NotNull int id, @NotNull RuleNet net,
     @NotNull Point2D coordinate)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Deletes an Arc
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param arc
@@ -141,19 +141,19 @@ public interface IRuleManipulation {
 
   /**
    * Deletes a Place
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param place
    *        which will be deleted
    */
   void
-    deletePlace(@NotNull int id, @NotNull RuleNet net, @NotNull INode place)
-      throws EngineException;
+  deletePlace(@NotNull int id, @NotNull RuleNet net, @NotNull INode place)
+    throws EngineException;
 
   /**
    * Deletes a Transition
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param transition
@@ -161,11 +161,11 @@ public interface IRuleManipulation {
    */
   void deleteTransition(@NotNull int id, @NotNull RuleNet net,
     @NotNull INode transition)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Gets the Attributes from an Arc
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param arc
@@ -177,18 +177,18 @@ public interface IRuleManipulation {
 
   /**
    * Gets the JungLayout from the Rule
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @return AbstractLayout
    */
   AbstractLayout<INode, IArc> getJungLayout(@NotNull int id,
     @NotNull RuleNet net)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Gets the Attributes from a Place
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param place
@@ -201,7 +201,7 @@ public interface IRuleManipulation {
 
   /**
    * Gets the Attributes from a Transition
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param transition
@@ -211,11 +211,11 @@ public interface IRuleManipulation {
    */
   TransitionAttribute getTransitionAttribute(@NotNull int id,
     @NotNull INode transition)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Gets the Attributes from a Rule
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @return RuleAttribute or it throws a EngineException
@@ -226,7 +226,7 @@ public interface IRuleManipulation {
 
   /**
    * Moves a node.
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param node
@@ -237,11 +237,11 @@ public interface IRuleManipulation {
    */
   void moveNode(@NotNull int id, @NotNull INode node,
     @NotNull Point2D relativePosition)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Saves a Rule.
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param path
@@ -253,11 +253,11 @@ public interface IRuleManipulation {
    */
   void save(@NotNull int id, @NotNull String path, @NotNull String filename,
     @NotNull String format)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Load a Rule.
-   * 
+   *
    * @param path
    *        where can we find the Rule
    * @param filename
@@ -269,7 +269,7 @@ public interface IRuleManipulation {
   /**
    * Sets the Marking of a Place and its corresponding nodes in the other
    * parts of the rule
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param place
@@ -279,13 +279,13 @@ public interface IRuleManipulation {
    * @throws EngineException
    */
   void
-    setMarking(@NotNull int id, @NotNull INode place, @NotNull int marking)
-      throws EngineException;
+  setMarking(@NotNull int id, @NotNull INode place, @NotNull int marking)
+    throws EngineException;
 
   /**
    * Sets the Capacity of a Place and its corresponding nodes in the other
    * parts of the rule
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param place
@@ -296,12 +296,12 @@ public interface IRuleManipulation {
    */
   void setCapacity(@NotNull int id, @NotNull INode place,
     @NotNull int capacity)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Sets the PName of a Place and its corresponding nodes in the other parts
    * of the rule
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param place
@@ -316,7 +316,7 @@ public interface IRuleManipulation {
   /**
    * Sets the Tlb of a Transition and its corresponding nodes in the other
    * parts of the rule
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param transition
@@ -326,13 +326,13 @@ public interface IRuleManipulation {
    * @throws EngineException
    */
   void
-    setTlb(@NotNull int id, @NotNull INode transition, @NotNull String tlb)
-      throws EngineException;
+  setTlb(@NotNull int id, @NotNull INode transition, @NotNull String tlb)
+    throws EngineException;
 
   /**
    * Sets the TName of a Transition and its corresponding nodes in the other
    * parts of the rule
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param transition
@@ -343,11 +343,11 @@ public interface IRuleManipulation {
    */
   void setTname(@NotNull int id, @NotNull INode transition,
     @NotNull String tname)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Sets the Weight of an Arc.
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param arc
@@ -362,7 +362,7 @@ public interface IRuleManipulation {
   /**
    * Sets a Strings as RNW and its corresponding nodes in the other parts of
    * the rule
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param rnw
@@ -374,7 +374,7 @@ public interface IRuleManipulation {
   /**
    * Set Color of a Place and its corresponding nodes in the other parts of
    * the rule
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param place
@@ -387,7 +387,7 @@ public interface IRuleManipulation {
 
   /**
    * This methods clean the Tool from this Rule.
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @throws EngineException
@@ -397,7 +397,7 @@ public interface IRuleManipulation {
 
   /**
    * Returns the type of the Object.
-   * 
+   *
    * @param node
    *        to check
    * @return Enum composed of Place, Transition
@@ -408,7 +408,7 @@ public interface IRuleManipulation {
 
   /**
    * Moves all petrinets of the rule.
-   * 
+   *
    * @param id
    *        ID of rule
    * @param relativePosition
@@ -419,7 +419,7 @@ public interface IRuleManipulation {
 
   /**
    * Moves all petrinets of the rule into vision.
-   * 
+   *
    * @see {@link IPetrinetManipulation#moveGraphIntoVision(int)}
    * @param currentId
    * @throws EngineException
@@ -430,7 +430,7 @@ public interface IRuleManipulation {
   /**
    * Similar to {@link PetrinetViewer#moveAllNodesTo(float, Point)} but looks
    * up rule with <code>id</code> first and applies it to all parts of rule
-   * 
+   *
    * @param currentId
    * @param factor
    * @param point
@@ -442,7 +442,7 @@ public interface IRuleManipulation {
   /**
    * Sets the nodeSize for the JungData of the petrinets of the rule with
    * <code>id</code>
-   * 
+   *
    * @see {@link JungData#setNodeSize(double)}
    * @param id
    * @param nodeSize
@@ -453,7 +453,7 @@ public interface IRuleManipulation {
 
   /**
    * Returns the nodeSize of Petrinet with <code>id</code>
-   * 
+   *
    * @param id
    * @throws NullPointerException
    *         if id is wrong
@@ -463,18 +463,12 @@ public interface IRuleManipulation {
     throws EngineException;
 
   /**
-   * Adds a NAC to specified rule.
-   * 
-   * @param id
+   * Creates a new NAC to a given Rule
+   *
    * @param ruleId
+   * @return ID of the created NAC
    */
-  void addNac(int nacId, int ruleId);
+  int createNac(int ruleId)
+    throws EngineException;
 
-  /**
-   * removes a nac from its rule
-   * 
-   * @param nacId
-   * @param ruleId
-   */
-  void removeNac(int nacId, int ruleId);
 }

@@ -80,7 +80,7 @@ import exceptions.EngineException;
  * in tests and should not be used any more
  */
 public class EngineMockupWithEngine
-  implements IPetrinetManipulation {
+implements IPetrinetManipulation {
 
   private IPetrinetManipulation iPetrinetManipulation;
   private int id;
@@ -243,7 +243,7 @@ public class EngineMockupWithEngine
   @Override
   public void save(int id, String path, String filename, String format,
     double nodeSize)
-    throws EngineException {
+      throws EngineException {
 
     iPetrinetManipulation.save(id, path, filename, format, nodeSize);
 
@@ -364,17 +364,10 @@ public class EngineMockupWithEngine
   @Override
   public void setCapacity(@NotNull int id, @NotNull INode place,
     @NotNull int capacity)
-    throws EngineException {
+      throws EngineException {
 
     // TODO Auto-generated method stub
 
-  }
-
-  @Override
-  public int createNac() {
-
-    // TODO: NAC hier erweitern
-    return 0;
   }
 
 }

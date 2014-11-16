@@ -72,7 +72,7 @@ import javax.swing.tree.DefaultTreeModel;
  * A panel to display the file tree. Extends {@link JPanel}
  */
 public final class FileTreePane
-  extends JPanel {
+extends JPanel {
 
   /**
    * Root node (not visible).
@@ -123,7 +123,7 @@ public final class FileTreePane
 
   /**
    * Singleton. Returns the Instance.
-   * 
+   *
    * @return the Instance {@link FileTreePane}
    */
   public static FileTreePane getInstance() {
@@ -183,7 +183,7 @@ public final class FileTreePane
 
   /**
    * Creates the root node and adds the netRootNode and the ruleRootNode.
-   * 
+   *
    * @return Configured root node {@link DefaultMutableTreeNode}.
    */
   private DefaultMutableTreeNode createRoot() {
@@ -198,7 +198,7 @@ public final class FileTreePane
 
   /**
    * Adds this Pane to given {@link JPanel}.
-   * 
+   *
    * @param panel
    *        {@link JPanel} to add this {@link FileTreePane} to.
    */
@@ -209,7 +209,7 @@ public final class FileTreePane
 
   /**
    * Retruns the net root node.
-   * 
+   *
    * @return The net root node {@link DefaultMutableTreeNode}.
    */
   public DefaultMutableTreeNode getNetNode() {
@@ -219,7 +219,7 @@ public final class FileTreePane
 
   /**
    * Retruns the rule root node.
-   * 
+   *
    * @return The rule root node {@link DefaultMutableTreeNode}.
    */
   public DefaultMutableTreeNode getRuleNode() {
@@ -230,7 +230,7 @@ public final class FileTreePane
   /**
    * Adds the given node to the tree. Action describes which kind of node is
    * about to be added.
-   * 
+   *
    * @param action
    *        Kind of node to be added
    *        <tt>PopupMenuListener.SELECTED_TYPE_IS_NET</tt> or
@@ -247,7 +247,7 @@ public final class FileTreePane
 
   /**
    * Returns the selected node.
-   * 
+   *
    * @return Selected {@link DefaultMutableTreeNode}.
    */
   public DefaultMutableTreeNode getSelectedNode() {
@@ -260,7 +260,7 @@ public final class FileTreePane
 
   /**
    * Returns the tree model.
-   * 
+   *
    * @return {@link DefaultTreeModel}
    */
   public DefaultTreeModel getTreeModel() {
@@ -270,7 +270,7 @@ public final class FileTreePane
 
   /**
    * Returns the root node.
-   * 
+   *
    * @return root node {@link DefaultMutableTreeNode}
    */
   public DefaultMutableTreeNode getRootNode() {
@@ -280,7 +280,7 @@ public final class FileTreePane
 
   /**
    * Sets the rule node.
-   * 
+   *
    * @param {@link DefaultMutableTreeNode} ruleNode
    */
   public void setRuleNode(DefaultMutableTreeNode ruleNode) {
@@ -290,7 +290,7 @@ public final class FileTreePane
 
   /**
    * Returns the IDs of the selected rules.
-   * 
+   *
    * @return IDs {@link Collection}
    */
   public Collection<Integer> getSelectedRuleIds() {
@@ -310,7 +310,7 @@ public final class FileTreePane
 
   /**
    * Getter for the tree object.
-   * 
+   *
    * @return instance of the {@link JTree} object.
    */
   public JTree getTree() {
