@@ -58,7 +58,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * information for ReconNet.
  */
 public class PetriTreeNode
-  extends DefaultMutableTreeNode {
+extends DefaultMutableTreeNode {
 
   /**
    * The {@link NodeType} of this {@link PetriTreeNode}.
@@ -86,8 +86,13 @@ public class PetriTreeNode
   private static final long serialVersionUID = 602894489830122046L;
 
   /**
+   * The text to display in the GUI
+   */
+  private String displayText;
+
+  /**
    * Constructor.
-   * 
+   *
    * @param nodeType
    *        Type of this node.
    * @param userObject
@@ -99,9 +104,16 @@ public class PetriTreeNode
     init(nodeType);
   }
 
+  public PetriTreeNode(NodeType nodeType, String displayText,
+    Object userObject) {
+
+    this(nodeType, userObject);
+    this.displayText = displayText;
+  }
+
   /**
    * Initializes this node.
-   * 
+   *
    * @param nodeType
    *        Type of this node.
    */
@@ -119,12 +131,16 @@ public class PetriTreeNode
    */
   public String toString() {
 
-    return super.toString();
+    if (this.displayText != null) {
+      return this.displayText;
+    } else {
+      return super.toString();
+    }
   }
 
   /**
    * Compares type of this node with given node type.
-   * 
+   *
    * @param nodeType
    *        {@link NodeType} to compare this node with.
    * @return Returns whether this node is of type of given type.
@@ -136,7 +152,7 @@ public class PetriTreeNode
 
   /**
    * Returns true if this node should be displayed with checkbox (rule node).
-   * 
+   *
    * @return true if this node should be displayed with checkbox (rule node).
    */
   public boolean isHasCheckBox() {
@@ -146,7 +162,7 @@ public class PetriTreeNode
 
   /**
    * Sets this node to be displayed with checkbox or not.
-   * 
+   *
    * @param hasCheckBox
    *        True = display with checkbox, false = display without checkbox.
    */
@@ -157,7 +173,7 @@ public class PetriTreeNode
 
   /**
    * Returns checked state of checkbox.
-   * 
+   *
    * @return checked state of checkbox.
    */
   public boolean isChecked() {
@@ -167,7 +183,7 @@ public class PetriTreeNode
 
   /**
    * Changes the checked state of checkbox.
-   * 
+   *
    * @param checked
    *        new checked state.
    */
@@ -178,7 +194,7 @@ public class PetriTreeNode
 
   /**
    * returns selected state of this node (marked to be selected in tree).
-   * 
+   *
    * @return selected state.
    */
   public boolean isSelected() {
@@ -188,7 +204,7 @@ public class PetriTreeNode
 
   /**
    * sets whether this node should be displayed selected or not.
-   * 
+   *
    * @param selected
    *        new seleted state.
    */

@@ -78,6 +78,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
+
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
@@ -89,7 +91,7 @@ import javax.swing.tree.TreePath;
  * Custom popup menu listener extending {@link ActionListener}.
  */
 public final class PopupMenuListener
-  implements ActionListener {
+implements ActionListener {
 
   /**
    * singleton: the instance
@@ -274,8 +276,8 @@ public final class PopupMenuListener
       JOptionPane.showOptionDialog(null,
         "Sollen die Dateien vom Dateisystem gelöscht werden?", "Löschen", 0,
         JOptionPane.QUESTION_MESSAGE, null, new String[]{"Dateien löschen",
-          "Nur aus Übersicht löschen"}, "Nur aus Übersicht löschen") == 0
-        ? true : false;
+      "Nur aus Übersicht löschen"}, "Nur aus Übersicht löschen") == 0
+      ? true : false;
     // CHECKSTYLE:ON
 
     PetriTreeNode node =
@@ -608,7 +610,7 @@ public final class PopupMenuListener
 
     try {
 
-      int nacId = this.createNacInBackend(ruleId);
+      UUID nacId = this.createNacInBackend(ruleId);
       this.createNacTreeItem(nacId);
 
       RulePane.getInstance().displayRule(ruleId);
@@ -620,22 +622,24 @@ public final class PopupMenuListener
 
   }
 
-  private int createNacInBackend(int ruleId)
+  private UUID createNacInBackend(int ruleId)
     throws EngineException {
 
-    int nacId = EngineAdapter.getRuleManipulation().createNac(ruleId);
+    UUID nacId = EngineAdapter.getRuleManipulation().createNac(ruleId);
+
+    System.out.println("createNacInBackend: " + nacId);
 
     return nacId;
   }
 
-  private void createNacTreeItem(int nacId) {
+  private void createNacTreeItem(UUID nacId) {
 
     PetriTreeNode ruleNode =
       (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
 
-    String nacDisplayName = "NAC " + nacId;
+    String displayText = "NAC " + nacId;
 
-    PetriTreeNode n = new PetriTreeNode(NodeType.NAC, nacDisplayName);
+    PetriTreeNode n = new PetriTreeNode(NodeType.NAC, displayText, nacId);
     FileTreePane flTrPn = FileTreePane.getInstance();
 
     flTrPn.getTreeModel().insertNodeInto(n, ruleNode,

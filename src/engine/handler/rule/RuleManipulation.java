@@ -56,6 +56,7 @@ import static exceptions.Exceptions.warning;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.util.UUID;
 
 import com.sun.istack.NotNull;
 
@@ -99,7 +100,7 @@ import exceptions.EngineException;
  * @author alex (aas772)
  */
 public final class RuleManipulation
-implements IRuleManipulation {
+  implements IRuleManipulation {
 
   /** Singleton instance of this class */
   private static RuleManipulation ruleManipulation;
@@ -257,7 +258,7 @@ implements IRuleManipulation {
   @Override
   public void setCapacity(@NotNull int id, @NotNull INode place,
     @NotNull int capacity)
-      throws EngineException {
+    throws EngineException {
 
     if (!(place instanceof Place)) {
       warning("place isn't a Place");
@@ -412,7 +413,15 @@ implements IRuleManipulation {
   }
 
   @Override
-  public int createNac(int ruleId)
+  public AbstractLayout<INode, IArc> getJungLayout(int ruleId, UUID nacId)
+    throws EngineException {
+
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public UUID createNac(int ruleId)
     throws EngineException {
 
     return ruleManipulationBackend.createNac(ruleId);

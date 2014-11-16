@@ -59,6 +59,7 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import persistence.Persistence;
 import petrinet.model.IArc;
@@ -128,7 +129,7 @@ public final class RuleHandler {
    */
   public PreArc createPreArc(int id, RuleNet net, Place place,
     Transition transition)
-    throws EngineException {
+      throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -190,7 +191,7 @@ public final class RuleHandler {
    */
   public PostArc createPostArc(int id, RuleNet net, Transition transition,
     Place place)
-    throws EngineException {
+      throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -694,7 +695,7 @@ public final class RuleHandler {
    */
   public TransitionAttribute getTransitionAttribute(int id,
     Transition transition)
-    throws EngineException {
+      throws EngineException {
 
     String tlb = transition.getTlb();
     String name = transition.getName();
@@ -1302,7 +1303,7 @@ public final class RuleHandler {
     exceptionIf(!(arc instanceof IArc), "this isn't an arc");
   }
 
-  public int createNac(int ruleId)
+  public UUID createNac(int ruleId)
     throws EngineException {
 
     System.out.println(RuleHandler.class + " - createNac(ruleId:" + ruleId
@@ -1313,8 +1314,6 @@ public final class RuleHandler {
 
     NAC nac = rule.createNAC();
 
-    int newNacId = rule.getNACs().size();
-
-    return newNacId;
+    return nac.getId();
   }
 }

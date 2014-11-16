@@ -59,6 +59,7 @@ import static gui.Style.TOTAL_WIDTH;
 
 import java.awt.GridLayout;
 import java.util.List;
+import java.util.UUID;
 
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -273,7 +274,7 @@ public final class RulePane {
     }
   }
 
-  public void displayNAC(int ruleId, int nacId) {
+  public void displayNAC(int ruleId, UUID nacId) {
 
     System.out.println(RulePane.class + " - displayNAC(ruleId:" + ruleId
       + ", nacId:" + nacId + ")");

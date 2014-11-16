@@ -264,6 +264,14 @@ public class NAC {
     return transitionMappingLToNac;
   }
 
+  /**
+   * @return The UUID, set at creation of the NAC
+   */
+  public UUID getId() {
+
+    return id;
+  }
+
   @Override
   public int hashCode() {
 

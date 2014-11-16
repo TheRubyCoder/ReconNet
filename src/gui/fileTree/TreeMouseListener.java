@@ -71,6 +71,7 @@ import gui.RulePane;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.UUID;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -342,7 +343,9 @@ public class TreeMouseListener
         String ruleName = node.getParent().toString();
         int ruleId = PopupMenuListener.getInstance().getPidOf(ruleName);
 
-        RulePane.getInstance().displayNAC(ruleId, 0);
+        UUID nacId = (UUID) node.getUserObject();
+
+        RulePane.getInstance().displayNAC(ruleId, nacId);
 
       }
 
