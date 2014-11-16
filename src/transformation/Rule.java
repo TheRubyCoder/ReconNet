@@ -140,6 +140,7 @@ public class Rule {
 
     NAC newNAC = new NAC(l);
     nacs.add(newNAC);
+
     return newNAC;
   }
 
@@ -1172,7 +1173,7 @@ public class Rule {
   }
 
   public PostArc
-  addPostArcToL(String name, Transition transition, Place place) {
+    addPostArcToL(String name, Transition transition, Place place) {
 
     PostArc leftPostArc = getL().addPostArc(name, transition, place);
 
@@ -1194,7 +1195,7 @@ public class Rule {
   }
 
   public PostArc
-  addPostArcToK(String name, Transition transition, Place place) {
+    addPostArcToK(String name, Transition transition, Place place) {
 
     PostArc postArc = getK().addPostArc(name, transition, place);
 
@@ -1221,7 +1222,7 @@ public class Rule {
   }
 
   public PostArc
-  addPostArcToR(String name, Transition transition, Place place) {
+    addPostArcToR(String name, Transition transition, Place place) {
 
     PostArc rightPostArc = getR().addPostArc(name, transition, place);
 

@@ -59,6 +59,7 @@ import com.sun.istack.NotNull;
 import petrinet.model.IArc;
 import petrinet.model.INode;
 import petrinet.model.Petrinet;
+import transformation.NAC;
 import transformation.Rule;
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
@@ -111,7 +112,7 @@ public final class SessionManager {
 
   /**
    * Gets PetrinetData with the ID.
-   * 
+   *
    * @param id
    *        from the PetrinetData
    * @return the PetrinetData with this id, null if the Id is not known
@@ -123,7 +124,7 @@ public final class SessionManager {
 
   /**
    * This method return the RuleData for the Id
-   * 
+   *
    * @param id
    *        from the RuleData
    * @return the RuleData or null if the Id is not valid
@@ -144,7 +145,7 @@ public final class SessionManager {
 
   /**
    * Create a new PetrinetData.
-   * 
+   *
    * @param empty
    *        petrinet for the PetrinetData
    * @return the new PetrinetData
@@ -164,7 +165,7 @@ public final class SessionManager {
 
   /**
    * Creates a new RuleData from all Petrinet (l, k, r).
-   * 
+   *
    * @param l
    *        id of left Petrinet
    * @param k
@@ -188,8 +189,20 @@ public final class SessionManager {
   }
 
   /**
+   * Creates an empty JungLayout for a new NAC in a rule
+   *
+   * @param ruleData
+   * @param nac
+   */
+  public void createJungLayoutForNac(@NotNull RuleData ruleData,
+    @NotNull NAC nac) {
+
+    ruleData.putJungDataForNac(nac.getId(), getNewStaticLayoutJungData());
+  }
+
+  /**
    * removes a Data from instance manager
-   * 
+   *
    * @param id
    *        of a SessionData
    * @return true if Data was successful closed, false if id was not found, or
@@ -238,7 +251,7 @@ public final class SessionManager {
 
   /**
    * throws an exception, if check result is negative.
-   * 
+   *
    * @param isValid
    *        if false, exception is thrown
    * @param message

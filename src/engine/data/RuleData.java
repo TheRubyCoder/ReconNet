@@ -52,7 +52,9 @@
 package engine.data;
 
 import java.awt.geom.Point2D;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import petrinet.model.INode;
 import transformation.Rule;
@@ -62,7 +64,7 @@ import engine.attribute.ColorGenerator;
 
 /**
  * This Class is a data container for a Rule and all Petrinet in this Rule.
- * 
+ *
  * @author alex (aas772)
  */
 
@@ -76,6 +78,8 @@ public final class RuleData
   private JungData jungDataNac;
   /** Used for adding places so all places in the rule have the same color. */
   private ColorGenerator colorGenerator;
+
+  private HashMap<UUID, JungData> jungDataNACs;
 
   @SuppressWarnings("unused")
   // no default constructor
@@ -111,12 +115,21 @@ public final class RuleData
     this.jungDataK = kJungData;
     this.jungDataR = rJungData;
     this.jungDataNac = nacJungData;
+
+    this.jungDataNACs = new HashMap<UUID, JungData>();
+    this.jungDataNACs.put(null, nacJungData);
+
     this.colorGenerator = new ColorGenerator();
+  }
+
+  public void putJungDataForNac(UUID nacId, JungData jungData) {
+
+    this.jungDataNACs.put(nacId, jungData);
   }
 
   /**
    * Gets the JungData of L from a Rule
-   * 
+   *
    * @return JungData
    */
   public JungData getLJungData() {
@@ -126,7 +139,7 @@ public final class RuleData
 
   /**
    * Gets the JungData of K from a Rule
-   * 
+   *
    * @return JungData
    */
   public JungData getKJungData() {
@@ -136,7 +149,7 @@ public final class RuleData
 
   /**
    * Gets the JungData of R from a Rule
-   * 
+   *
    * @return JungData
    */
   public JungData getRJungData() {
@@ -146,7 +159,7 @@ public final class RuleData
 
   /**
    * Gets the JungData of NAC from a Rule
-   * 
+   *
    * @return JungData
    */
   public JungData getNacJungData() {
@@ -154,9 +167,14 @@ public final class RuleData
     return jungDataNac;
   }
 
+  public JungData getNacJungData(UUID nacId) {
+
+    return jungDataNACs.get(nacId);
+  }
+
   /**
    * Gets a Rule.
-   * 
+   *
    * @return Rule
    */
   public Rule getRule() {
@@ -173,7 +191,7 @@ public final class RuleData
   /**
    * Removes data of elements that are no longer in the rule. This may be used
    * if the rule is altered from outside the engine.
-   * 
+   *
    * @param petrinet
    */
   public void deleteDataOfMissingElements(Rule rule) {
@@ -214,7 +232,7 @@ public final class RuleData
   /**
    * Moves the <tt>node</tt> to the <tt>coordinate</tt> relative to its
    * current position. Also moves all mappings in L,K,R
-   * 
+   *
    * @param node
    * @param coordinate
    * @throws ShowAsInfoException

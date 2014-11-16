@@ -73,6 +73,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
+import java.util.UUID;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
@@ -118,7 +119,7 @@ import gui.EditorPane.EditorMode;
  */
 @SuppressWarnings("serial")
 public class PetrinetViewer
-  extends VisualizationViewer<INode, IArc> {
+extends VisualizationViewer<INode, IArc> {
 
   /**
    * ID of currently displayed petrinet or rule. If RuleNet is set (L,K or R)
@@ -127,10 +128,14 @@ public class PetrinetViewer
    */
   private int currentId = -1;
 
+  // UUID of the NAC to be shown
+  //
+  private UUID nacId;
+
   /**
    * Returns the general node size. Do not use this for concrete nodes. Use
    * one of the following instead:
-   * 
+   *
    * @return
    */
   private double nodeSize = Style.NODE_SIZE_DEFAULT;
@@ -194,6 +199,14 @@ public class PetrinetViewer
       new PetrinetArcShapeTransformer());
   }
 
+  // Extended Constructor for NAC PetrinetViewer
+  PetrinetViewer(Layout<INode, IArc> layout, int petrinetOrRuleId,
+    UUID nacId, RuleNet ruleNet) {
+
+    this(layout, petrinetOrRuleId, ruleNet);
+    this.nacId = nacId;
+  }
+
   /**
    * @return the currentSelectedNode
    */
@@ -245,7 +258,7 @@ public class PetrinetViewer
   /**
    * Returns <tt>true</tt> if the current Id is the id of a petrinet
    * (N-Petrinet)
-   * 
+   *
    * @see PetrinetViewer#isL()
    * @see PetrinetViewer#isK()
    * @see PetrinetViewer#isR()
@@ -259,7 +272,7 @@ public class PetrinetViewer
   /**
    * Returns <tt>true</tt> if the current Id is the id of a petrinet within a
    * rule (L, K or R -Petrinet)
-   * 
+   *
    * @see PetrinetViewer#isL()
    * @see PetrinetViewer#isK()
    * @see PetrinetViewer#isR()
@@ -274,7 +287,7 @@ public class PetrinetViewer
   /**
    * Returns <tt>true</tt> if the current Id is the id of a petrinet within a
    * NAC (L, K or R -Petrinet)
-   * 
+   *
    * @see PetrinetViewer#isL()
    * @see PetrinetViewer#isK()
    * @see PetrinetViewer#isR()
@@ -287,7 +300,7 @@ public class PetrinetViewer
 
   /**
    * Is the currently displayed petrinet the R-part of a rule?
-   * 
+   *
    * @see PetrinetViewer#isL()
    * @see PetrinetViewer#isK()
    * @see PetrinetViewer#isR()
@@ -300,7 +313,7 @@ public class PetrinetViewer
 
   /**
    * Is the currently displayed petrinet the K-part of a rule?
-   * 
+   *
    * @see PetrinetViewer#isL()
    * @see PetrinetViewer#isK()
    * @see PetrinetViewer#isR()
@@ -313,7 +326,7 @@ public class PetrinetViewer
 
   /**
    * Is the currently displayed petrinet the L-part of a rule?
-   * 
+   *
    * @see PetrinetViewer#isL()
    * @see PetrinetViewer#isK()
    * @see PetrinetViewer#isR()
@@ -326,7 +339,7 @@ public class PetrinetViewer
 
   /**
    * Is the currently displayed petrinet the N-part of a rule?
-   * 
+   *
    * @see PetrinetViewer#isL()
    * @see PetrinetViewer#isK()
    * @see PetrinetViewer#isR()
@@ -339,7 +352,7 @@ public class PetrinetViewer
 
   /**
    * Is the currently displayed petrinet the NAC-part of a rule?
-   * 
+   *
    * @see PetrinetViewer#isL()
    * @see PetrinetViewer#isK()
    * @see PetrinetViewer#isR()
@@ -354,7 +367,7 @@ public class PetrinetViewer
   /**
    * Returns the {@link RuleNet} of the {@link PetrinetViewer}.
    * <code>null</code> if the displayed petrinet is not part of a rule
-   * 
+   *
    * @see PetrinetViewer#isL()
    * @see PetrinetViewer#isK()
    * @see PetrinetViewer#isR()
@@ -368,7 +381,7 @@ public class PetrinetViewer
   /**
    * Makes the view zoom in or out (depending of <code>factor</code>) from a
    * certain <code>point</code>
-   * 
+   *
    * @param factor
    * @param point
    */
@@ -387,7 +400,7 @@ public class PetrinetViewer
   /**
    * Sets the nodeSize in the {@link PetrinetData} within the engine to
    * <code>nodeSize</code>
-   * 
+   *
    * @see PetrinetViewer#resizeNodes(float)
    */
   private void changeNodeSizeInJungData(double nodeSize) {
@@ -410,7 +423,7 @@ public class PetrinetViewer
    * Changes the nodeSize in this {@link PetrinetViewer} by a certain
    * <code>factor</code>. If this {@link PetrinetViewer} is part of a rule,
    * the node size in the other parts of the rule will be also changed
-   * 
+   *
    * @see PetrinetViewer#changeNodeSizeInJungData(double)
    */
   private void resizeNodes(float factor) {
@@ -441,7 +454,7 @@ public class PetrinetViewer
    * away from <code>point</code>. <h4>example</h4> Position of (only) node is
    * [10,10], <code>point</code> is [0,5] and <code>factor</code> is 0,9.
    * Resulting position of node is [9,9,5]
-   * 
+   *
    * @param factor
    * @param point
    */
@@ -463,7 +476,7 @@ public class PetrinetViewer
 
   /**
    * Returns the size of nodes in pixels
-   * 
+   *
    * @return
    */
   public double getNodeSize() {
@@ -484,7 +497,7 @@ public class PetrinetViewer
 
   /**
    * Returns the width of a place in pixels
-   * 
+   *
    * @return
    */
   private double getPlaceWidth() {
@@ -494,7 +507,7 @@ public class PetrinetViewer
 
   /**
    * Returns the height of a place in pixels
-   * 
+   *
    * @return
    */
   private double getPlaceHeight() {
@@ -504,7 +517,7 @@ public class PetrinetViewer
 
   /**
    * Returns the size of a (quadratic) transition
-   * 
+   *
    * @return
    */
   private double getTransitionSize() {
@@ -514,7 +527,7 @@ public class PetrinetViewer
 
   /**
    * Returns the distance that must be among nodes
-   * 
+   *
    * @return
    */
   public double getNodeDistance() {
@@ -596,7 +609,7 @@ public class PetrinetViewer
 
   /**
    * Checks for the type of the <code>node</code>
-   * 
+   *
    * @param node
    * @return <code>true</code> if its a {@link Place}, <code>false</code> else
    */
@@ -619,7 +632,7 @@ public class PetrinetViewer
   /**
    * Moves a <code>node</code> by a vector called
    * <code>relativePosition</code>
-   * 
+   *
    * @param node
    * @param relativePosition
    */
@@ -642,7 +655,7 @@ public class PetrinetViewer
 
   /**
    * Deletes the currently selected node or arc
-   * 
+   *
    * @return <code>false</code> if nothing was selected
    */
   public boolean deleteSelected() {
@@ -714,6 +727,10 @@ public class PetrinetViewer
       if (isN()) {
         EngineAdapter.getPetrinetManipulation().createPlace(getCurrentId(),
           point);
+      } else if (isNAC()) {
+        System.out.println("PetrinetViewer.create Place");
+        EngineAdapter.getRuleManipulation().createPlace(getCurrentId(),
+          nacId, point);
       } else {
         EngineAdapter.getRuleManipulation().createPlace(getCurrentId(),
           getRuleNet(), point);
@@ -727,7 +744,7 @@ public class PetrinetViewer
   /**
    * Deletes the <code>place</code> from the currently displayed petrinet or
    * rule
-   * 
+   *
    * @param place
    */
   void deletePlace(Place place) {
@@ -750,7 +767,7 @@ public class PetrinetViewer
   /**
    * Deletes the <code>transition</code> from the currently displayed petrinet
    * or rule
-   * 
+   *
    * @param transition
    */
   void deleteTransition(Transition transition) {
@@ -773,7 +790,7 @@ public class PetrinetViewer
   /**
    * Deletes the <code>arc</code> from the currently displayed petrinet or
    * rule
-   * 
+   *
    * @param arc
    */
   void deleteArc(IArc arc) {
@@ -796,7 +813,7 @@ public class PetrinetViewer
   /**
    * Sets the name of a {@link Transition} no matter if its part a rule or a
    * regular petrinet
-   * 
+   *
    * @param place
    * @param pname
    */
@@ -821,7 +838,7 @@ public class PetrinetViewer
   /**
    * Sets the <code>marking</code>of a <code>place</code> no matter if its
    * part a rule or a regular petrinet
-   * 
+   *
    * @param place
    * @param marking
    */
@@ -846,7 +863,7 @@ public class PetrinetViewer
   /**
    * Sets the <code>capacity</code>of a <code>place</code> no matter if its
    * part a rule or a regular petrinet
-   * 
+   *
    * @param place
    * @param capacity
    */
@@ -871,7 +888,7 @@ public class PetrinetViewer
   /**
    * Sets the <code>name</code> of a <code>transition</code> no matter if its
    * part a rule or a regular petrinet
-   * 
+   *
    * @param transition
    * @param name
    */
@@ -895,7 +912,7 @@ public class PetrinetViewer
   /**
    * Sets the <code>label</code> of a <code>transition</code> no matter if its
    * part a rule or a regular petrinet
-   * 
+   *
    * @param transition
    * @param label
    */
@@ -919,7 +936,7 @@ public class PetrinetViewer
   /**
    * Sets the <code>renew</code> of a <code>transition</code> no matter if its
    * part a rule or a regular petrinet
-   * 
+   *
    * @param transition
    * @param renew
    */
@@ -943,7 +960,7 @@ public class PetrinetViewer
   /**
    * Sets the <code>weight</code> of an <code>arc</code> no matter if its part
    * a rule or a regular petrinet
-   * 
+   *
    * @param arc
    * @param weight
    */
@@ -967,7 +984,7 @@ public class PetrinetViewer
   /**
    * Sets the <code>color</code> of a <code>place</code> no matter if its part
    * a rule or a regular petrinet
-   * 
+   *
    * @param place
    * @param color
    */
@@ -991,7 +1008,7 @@ public class PetrinetViewer
   /**
    * Moves the whole graph of this {@link PetrinetViewer} by a vector called
    * <code>relativePosition</code>
-   * 
+   *
    * @param id
    * @param relativePosition
    */
@@ -1037,7 +1054,7 @@ public class PetrinetViewer
    * item: "Ins Sichtfeld verschieben"
    */
   private static class PetrinetGraphPopUpMenu
-    extends JPopupMenu {
+  extends JPopupMenu {
 
     public PetrinetGraphPopUpMenu(PetrinetViewer petrinetViewer) {
 
@@ -1048,7 +1065,7 @@ public class PetrinetViewer
 
     /** Listener that is invoced when the menu item is clicked */
     private static class MoveListener
-      implements ActionListener {
+    implements ActionListener {
 
       private PetrinetViewer petrinetViewer;
 
@@ -1072,7 +1089,7 @@ public class PetrinetViewer
    * for deleting and settings colors
    */
   private static final class PetrinetNodePopUpMenu
-    extends JPopupMenu {
+  extends JPopupMenu {
 
     /**
      * Listener for clicking on menu items<br>
@@ -1083,7 +1100,7 @@ public class PetrinetViewer
      * Node(Place/Transition) and Arc
      */
     private static final class DeleteListener
-      implements ActionListener {
+    implements ActionListener {
 
       private DeleteListener() {
 
@@ -1144,7 +1161,7 @@ public class PetrinetViewer
 
     /** Listener for clicks on color fields in context menus of places */
     private static final class ChangeColorListener
-      implements ActionListener {
+    implements ActionListener {
 
       private PetrinetViewer petrinetViewer;
 
@@ -1235,8 +1252,8 @@ public class PetrinetViewer
 
   /** mouse click listener for the drawing panel */
   private static class PetrinetMouseListener
-    extends PickingGraphMousePlugin<INode, IArc>
-    implements MouseWheelListener, MouseMotionListener {
+  extends PickingGraphMousePlugin<INode, IArc>
+  implements MouseWheelListener, MouseMotionListener {
 
     private static enum DragMode {
       SCROLL, MOVENODE, ARC, NONE
@@ -1280,7 +1297,7 @@ public class PetrinetViewer
     public void mouseClicked(MouseEvent e) {
 
       super.mousePressed(e); // mousePressedEvent in class
-                             // PickingGraphMousePlugin selects nodes
+      // PickingGraphMousePlugin selects nodes
       EditorMode mode = EditorPane.getInstance().getCurrentMode();
 
       // left-click PICK : display clicked node
@@ -1411,7 +1428,7 @@ public class PetrinetViewer
    * element
    */
   private static class PetrinetKeyboardListener
-    implements KeyListener {
+  implements KeyListener {
 
     private PetrinetViewer petrinetViewer;
 
@@ -1471,7 +1488,7 @@ public class PetrinetViewer
    * places circular
    */
   private static class PetrinetRenderer
-    implements Vertex<INode, IArc> {
+  implements Vertex<INode, IArc> {
 
     private PetrinetViewer petrinetViewer;
 
@@ -1620,7 +1637,7 @@ public class PetrinetViewer
     /**
      * Returns <code>true</code> if the color is bright enough so text that is
      * displayed upon it, must be drawn with {@link Style#FONT_COLOR_DARK}
-     * 
+     *
      * @see Style#FONT_COLOR_BRIGHT
      * @param color
      * @return
@@ -1635,7 +1652,7 @@ public class PetrinetViewer
    * Return <code>true</code> if the color is bright enough so text on it cant
    * be drawn with {@link Style#FONT_COLOR_DARK}. Else it should be drawn with
    * {@link Style#FONT_COLOR_DARK}
-   * 
+   *
    * @param color
    * @return
    */
@@ -1645,7 +1662,7 @@ public class PetrinetViewer
    * an Arc
    */
   private static class PetrinetArcLabelTransformer
-    implements Transformer<IArc, String> {
+  implements Transformer<IArc, String> {
 
     private PetrinetViewer petrinetViewer;
 
@@ -1673,7 +1690,7 @@ public class PetrinetViewer
    * lines
    */
   private static class PetrinetArcShapeTransformer
-    extends AbstractEdgeShapeTransformer<INode, IArc> {
+  extends AbstractEdgeShapeTransformer<INode, IArc> {
 
     private QuadCurve<INode, IArc> curve =
       new EdgeShape.QuadCurve<INode, IArc>();
@@ -1696,7 +1713,7 @@ public class PetrinetViewer
    * them
    */
   private static class PetrinetNodeShapeTransformer
-    implements Transformer<INode, Shape> {
+  implements Transformer<INode, Shape> {
 
     private PetrinetViewer petrinetViewer;
 

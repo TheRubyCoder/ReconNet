@@ -129,7 +129,7 @@ public final class RuleHandler {
    */
   public PreArc createPreArc(int id, RuleNet net, Place place,
     Transition transition)
-      throws EngineException {
+    throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -191,7 +191,7 @@ public final class RuleHandler {
    */
   public PostArc createPostArc(int id, RuleNet net, Transition transition,
     Place place)
-      throws EngineException {
+    throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -387,6 +387,32 @@ public final class RuleHandler {
       exception("createPlace - Not given if Manipulation is in L,K or R");
       return null;
     }
+  }
+
+  public Place createPlace(int id, UUID nacId, Point2D coordinate)
+    throws EngineException {
+
+    RuleData ruleData = getRuleData(id);
+    Rule rule = ruleData.getRule();
+
+    NAC nac = null;
+
+    // Search the NAC with the nacId in the Set of NACs
+    for (NAC n : rule.getNACs()) {
+
+      if (n.getId() == nacId) {
+        nac = n;
+      }
+
+    }
+
+    Place newPlace = rule.addPlaceToNac("undefined", nac);
+
+    // create the Place in the jungData
+    JungData nacJungData = ruleData.getNacJungData(nacId);
+    nacJungData.createPlace(newPlace, coordinate);
+
+    return newPlace;
   }
 
   /**
@@ -638,10 +664,6 @@ public final class RuleHandler {
       // Manipulation in R
       // Get JungData
       return ruleData.getRJungData().getJungLayout();
-    } else if (net.equals(RuleNet.NAC)) {
-      // Manipulation in NAC
-      // Get JungData
-      return ruleData.getNacJungData().getJungLayout();
     }
 
     exception("getJungLayout"
@@ -695,7 +717,7 @@ public final class RuleHandler {
    */
   public TransitionAttribute getTransitionAttribute(int id,
     Transition transition)
-      throws EngineException {
+    throws EngineException {
 
     String tlb = transition.getTlb();
     String name = transition.getName();
@@ -1314,6 +1336,17 @@ public final class RuleHandler {
 
     NAC nac = rule.createNAC();
 
+    sessionManager.createJungLayoutForNac(ruleData, nac);
+
     return nac.getId();
   }
+
+  public AbstractLayout<INode, IArc> getJungLayout(int ruleId, UUID nacId)
+    throws EngineException {
+
+    RuleData ruleData = getRuleData(ruleId);
+
+    return ruleData.getNacJungData(nacId).getJungLayout();
+  }
+
 }

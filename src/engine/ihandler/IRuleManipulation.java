@@ -109,6 +109,18 @@ public interface IRuleManipulation {
     throws EngineException;
 
   /**
+   * Creates a Place in a NAC of a rule
+   *
+   * @param id
+   *        ID of the Rule which contains the NAC
+   * @param nacId
+   *        ID of the NAC
+   */
+  void createPlace(@NotNull int id, @NotNull UUID nacId,
+    @NotNull Point2D coordinate)
+    throws EngineException;
+
+  /**
    * Creates a Rule
    *
    * @return ID of the created Rule
@@ -197,8 +209,9 @@ public interface IRuleManipulation {
    * @return AbstractLayout
    * @throws EngineException
    */
-  AbstractLayout<INode, IArc> getJungLayout(@NotNull int ruleId, UUID nacId)
-    throws EngineException;
+  AbstractLayout<INode, IArc> getJungLayout(@NotNull int ruleId,
+    @NotNull UUID nacId)
+      throws EngineException;
 
   /**
    * Gets the Attributes from a Place

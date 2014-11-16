@@ -286,10 +286,14 @@ public final class RulePane {
 
     try {
 
-      Layout<INode, IArc> nacLayout =
-        EngineAdapter.getRuleManipulation().getJungLayout(ruleId, RuleNet.NAC);
+      // Layout<INode, IArc> nacLayout =
+      // EngineAdapter.getRuleManipulation().getJungLayout(ruleId,
+      // RuleNet.NAC);
 
-      nacViewer = new PetrinetViewer(nacLayout, ruleId, RuleNet.NAC);
+      Layout<INode, IArc> nacLayout =
+        EngineAdapter.getRuleManipulation().getJungLayout(ruleId, nacId);
+
+      nacViewer = new PetrinetViewer(nacLayout, ruleId, nacId, RuleNet.NAC);
       nacViewer.addTo(nacPanel);
 
       double nodeSize =
