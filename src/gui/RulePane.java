@@ -286,10 +286,6 @@ public final class RulePane {
 
     try {
 
-      // Layout<INode, IArc> nacLayout =
-      // EngineAdapter.getRuleManipulation().getJungLayout(ruleId,
-      // RuleNet.NAC);
-
       Layout<INode, IArc> nacLayout =
         EngineAdapter.getRuleManipulation().getJungLayout(ruleId, nacId);
 
