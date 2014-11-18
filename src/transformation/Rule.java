@@ -557,6 +557,10 @@ public class Rule {
 
   public void setNameInNac(Place place, String name, NAC nac) {
 
+    System.out.println(Rule.class + ": setNameInNac " + nac);
+    System.out.println(Rule.class + ": setNameInNac - "
+      + "nac.fromNacToL(place)=" + nac.fromNacToL(place));
+
     checkIfcontained(nac);
 
     if (nac.fromNacToL(place) != null) {
@@ -1173,7 +1177,7 @@ public class Rule {
   }
 
   public PostArc
-    addPostArcToL(String name, Transition transition, Place place) {
+  addPostArcToL(String name, Transition transition, Place place) {
 
     PostArc leftPostArc = getL().addPostArc(name, transition, place);
 
@@ -1195,7 +1199,7 @@ public class Rule {
   }
 
   public PostArc
-    addPostArcToK(String name, Transition transition, Place place) {
+  addPostArcToK(String name, Transition transition, Place place) {
 
     PostArc postArc = getK().addPostArc(name, transition, place);
 
@@ -1222,7 +1226,7 @@ public class Rule {
   }
 
   public PostArc
-    addPostArcToR(String name, Transition transition, Place place) {
+  addPostArcToR(String name, Transition transition, Place place) {
 
     PostArc rightPostArc = getR().addPostArc(name, transition, place);
 

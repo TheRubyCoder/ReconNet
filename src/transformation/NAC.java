@@ -98,9 +98,6 @@ public class NAC {
 
     id = UUID.randomUUID();
 
-    System.out.println(NAC.class + " - constructor: created NAC with UUID "
-      + id);
-
     placeMappingLToNac = new DualHashBidiMap<Place, Place>();
     postArcMappingLToNac = new DualHashBidiMap<PostArc, PostArc>();
     preArcMappingLToNac = new DualHashBidiMap<PreArc, PreArc>();
@@ -128,6 +125,9 @@ public class NAC {
         nac.addPreArc(pre.getName(), pre.getPlace(), pre.getTransition());
       preArcMappingLToNac.put(pre, nacPre);
     }
+
+    System.out.println(NAC.class + " - constructor: created NAC with UUID "
+      + id + "; nac has " + nac.getPlaces().size() + " nodes");
   }
 
   // Getters

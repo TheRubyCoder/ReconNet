@@ -197,6 +197,11 @@ public final class SessionManager {
   public void createJungLayoutForNac(@NotNull RuleData ruleData,
     @NotNull NAC nac) {
 
+    /*
+     * TODO: if a nac is created, the places and transitions of L are added
+     * internally thus a NewStaticLayout won't represent the real state of the
+     * NAC
+     */
     ruleData.putJungDataForNac(nac.getId(), getNewStaticLayoutJungData());
   }
 

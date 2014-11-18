@@ -100,7 +100,7 @@ import exceptions.EngineException;
  * @author alex (aas772)
  */
 public final class RuleManipulation
-implements IRuleManipulation {
+  implements IRuleManipulation {
 
   /** Singleton instance of this class */
   private static RuleManipulation ruleManipulation;
@@ -143,13 +143,6 @@ implements IRuleManipulation {
     throws EngineException {
 
     ruleManipulationBackend.createPlace(id, net, coordinate);
-  }
-
-  @Override
-  public void createPlace(int id, UUID nacId, Point2D coordinate)
-    throws EngineException {
-
-    ruleManipulationBackend.createPlace(id, nacId, coordinate);
   }
 
   @Override
@@ -265,7 +258,7 @@ implements IRuleManipulation {
   @Override
   public void setCapacity(@NotNull int id, @NotNull INode place,
     @NotNull int capacity)
-      throws EngineException {
+    throws EngineException {
 
     if (!(place instanceof Place)) {
       warning("place isn't a Place");
@@ -424,6 +417,13 @@ implements IRuleManipulation {
     throws EngineException {
 
     return ruleManipulationBackend.createNac(ruleId);
+  }
+
+  @Override
+  public void createPlace(int id, UUID nacId, Point2D coordinate)
+    throws EngineException {
+
+    ruleManipulationBackend.createPlace(id, nacId, coordinate);
   }
 
   @Override

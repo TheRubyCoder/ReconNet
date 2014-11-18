@@ -84,7 +84,7 @@ import javax.swing.tree.TreePath;
  * {@link MouseListener}.
  */
 public class TreeMouseListener
-  implements MouseListener {
+implements MouseListener {
 
   /**
    * reference to the {@link JTree} object.

@@ -129,7 +129,7 @@ public final class RuleHandler {
    */
   public PreArc createPreArc(int id, RuleNet net, Place place,
     Transition transition)
-    throws EngineException {
+      throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -191,7 +191,7 @@ public final class RuleHandler {
    */
   public PostArc createPostArc(int id, RuleNet net, Transition transition,
     Place place)
-    throws EngineException {
+      throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -251,32 +251,24 @@ public final class RuleHandler {
     JungData rJungData = ruleData.getRJungData();
     JungData nacJungData = ruleData.getNacJungData();
 
-    //
-    // Überdeckung nur in L, K und R prüfen
-    // bei NACs keine Prüfung
-    //
-    if (!net.equals(RuleNet.NAC)) {
+    if (!lJungData.isCreatePossibleAt(coordinate)) {
+      exception("Place too close to Node in L");
+      return null;
+    }
 
-      if (!lJungData.isCreatePossibleAt(coordinate)) {
-        exception("Place too close to Node in L");
-        return null;
-      }
+    if (!kJungData.isCreatePossibleAt(coordinate)) {
+      exception("Place too close to Node in K");
+      return null;
+    }
 
-      if (!kJungData.isCreatePossibleAt(coordinate)) {
-        exception("Place too close to Node in K");
-        return null;
-      }
+    if (!rJungData.isCreatePossibleAt(coordinate)) {
+      exception("Place too close to Node in R");
+      return null;
+    }
 
-      if (!rJungData.isCreatePossibleAt(coordinate)) {
-        exception("Place too close to Node in R");
-        return null;
-      }
-
-      if (!nacJungData.isCreatePossibleAt(coordinate)) {
-        exception("Place too close to Node in NAC");
-        return null;
-      }
-
+    if (!nacJungData.isCreatePossibleAt(coordinate)) {
+      exception("Place too close to Node in NAC");
+      return null;
     }
 
     if (net.equals(RuleNet.L)) {
@@ -371,18 +363,6 @@ public final class RuleHandler {
        * setPlaceColor(id, newPlace, ruleData.getColorGenerator().next());
        * return newPlace; }
        */
-    } else if (net.equals(RuleNet.NAC)) {
-
-      NAC[] nacs = rule.getNACs().toArray(new NAC[0]);
-
-      // Testweise immer zum ersten NAC hinzufügen
-      NAC nac = nacs[0];
-
-      Place newPlace = rule.addPlaceToNac("undefined", nac);
-      nacJungData.createPlace(newPlace, coordinate);
-
-      return newPlace;
-
     } else {
       exception("createPlace - Not given if Manipulation is in L,K or R");
       return null;
@@ -405,6 +385,8 @@ public final class RuleHandler {
       }
 
     }
+
+    System.out.println(".. createPlace in NAC " + nac);
 
     Place newPlace = rule.addPlaceToNac("undefined", nac);
 
@@ -717,7 +699,7 @@ public final class RuleHandler {
    */
   public TransitionAttribute getTransitionAttribute(int id,
     Transition transition)
-    throws EngineException {
+      throws EngineException {
 
     String tlb = transition.getTlb();
     String name = transition.getName();
@@ -1345,6 +1327,14 @@ public final class RuleHandler {
     throws EngineException {
 
     RuleData ruleData = getRuleData(ruleId);
+
+    // Rule rule = ruleData.getRule();
+
+    // for (NAC n : rule.getNACs()) {
+    // if (n.getId() == nacId) {
+
+    // }
+    // }
 
     return ruleData.getNacJungData(nacId).getJungLayout();
   }

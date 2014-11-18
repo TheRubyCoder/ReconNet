@@ -276,7 +276,7 @@ public final class RulePane {
 
   public void displayNAC(int ruleId, UUID nacId) {
 
-    System.out.println(RulePane.class + " - displayNAC(ruleId:" + ruleId
+    System.out.println(RulePane.class + ": displayNAC(ruleId:" + ruleId
       + ", nacId:" + nacId + ")");
 
     // preventive remove old NAC viewer before displaying the new
@@ -288,6 +288,9 @@ public final class RulePane {
 
       Layout<INode, IArc> nacLayout =
         EngineAdapter.getRuleManipulation().getJungLayout(ruleId, nacId);
+
+      System.out.println(RulePane.class + ": nacLayout has "
+        + nacLayout.getGraph().getVertexCount() + " nodes");
 
       nacViewer = new PetrinetViewer(nacLayout, ruleId, nacId, RuleNet.NAC);
       nacViewer.addTo(nacPanel);
