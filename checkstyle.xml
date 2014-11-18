@@ -5,7 +5,7 @@
     This configuration file was written by the eclipse-cs plugin configuration editor
 -->
 <!--
-    Checkstyle-Configuration: ReConNet
+    Checkstyle-Configuration: ReConNetCheckstyle
     Description: none
 -->
 <module name="Checker">
@@ -180,7 +180,7 @@
   </module>
   <module name="Header">
     <property name="severity" value="error"/>
-    <property name="headerFile" value="C:\Users\Fabian\Studium\2013WS\RKPN\git\rkpn\BSD_Header"/>
+    <property name="headerFile" value="C:\Users\locke.d\git\wppetrinetze\BSD_Header"/>
     <property name="ignoreLines" value="2, 3"/>
     <property name="fileExtensions" value=".java"/>
   </module>
