@@ -71,7 +71,7 @@ import exceptions.EngineException;
 public final class Transformation {
 
   protected static final class CheckContactConditionFulfilledMatchVisitor
-    implements PNVF2.MatchVisitor {
+  implements PNVF2.MatchVisitor {
 
     @SuppressWarnings("unused")
     private Petrinet petrinet;
@@ -113,7 +113,7 @@ public final class Transformation {
 
   /**
    * Constructor for the class Transformation
-   * 
+   *
    * @param net
    *        the petrinet to transform
    * @param morph
@@ -130,7 +130,7 @@ public final class Transformation {
 
   /**
    * Creates a new Transformation with given parameters
-   * 
+   *
    * @param petrinet
    *        Petrinet to transform
    * @param match
@@ -147,7 +147,7 @@ public final class Transformation {
 
   /**
    * Creates a new Transformation with given parameters
-   * 
+   *
    * @param petrinet
    *        Petrinet to transform
    * @param match
@@ -179,6 +179,8 @@ public final class Transformation {
   public static Transformation createTransformationWithNAC(Petrinet petrinet,
     Rule rule) {
 
+    System.out.println(Transformation.class + ": createTransformationWithNAC");
+
     try {
       MatchVisitor nacVisitor = new NacVisitor(rule);
       Match match =
@@ -193,7 +195,7 @@ public final class Transformation {
   /**
    * Returns the Petrinet of this transformation. This net will be changed
    * when transform() is called.
-   * 
+   *
    * @return the Rule of this transformation.
    */
   public Petrinet getPetrinet() {
@@ -203,7 +205,7 @@ public final class Transformation {
 
   /**
    * Returns the Match of this transformation.
-   * 
+   *
    * @return the Match of this transformation.
    */
   public Match getMatch() {
@@ -213,7 +215,7 @@ public final class Transformation {
 
   /**
    * Returns the Rule of this transformation.
-   * 
+   *
    * @return the Rule of this transformation.
    */
   public Rule getRule() {
@@ -224,7 +226,7 @@ public final class Transformation {
   /**
    * This will transform the petrinet using the Rule returned by getRule() and
    * the Match returned by getMatch().
-   * 
+   *
    * @return the Transformation that was used (<tt>this</tt>)
    * @throws EngineException
    *         When contact condition is not fulfilled
@@ -417,7 +419,7 @@ public final class Transformation {
   /**
    * Returns <tt>true</tt> if the contact condition for all Nodes in K-R is
    * fulfilled.
-   * 
+   *
    * @param petrinet
    * @param rule
    * @param match
