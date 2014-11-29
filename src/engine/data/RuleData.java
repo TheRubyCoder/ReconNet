@@ -53,7 +53,9 @@ package engine.data;
 
 import java.awt.geom.Point2D;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import petrinet.model.INode;
@@ -88,14 +90,13 @@ public final class RuleData
   }
 
   public RuleData(int id, Rule rule, JungData lJungData, JungData kJungData,
-    JungData rJungData, JungData nacJungData) {
+    JungData rJungData) {
 
     check(id > 0, "id have to be greater than 0");
     check(rule instanceof Rule, "petrinet not of type Petrinet");
     check(lJungData instanceof JungData, "lJungData not of type JungData");
     check(kJungData instanceof JungData, "kJungData not of type JungData");
     check(rJungData instanceof JungData, "rJungData not of type JungData");
-    check(nacJungData instanceof JungData, "nacJungData not of type JungData");
 
     checkContaining(rule.getK(), kJungData);
     checkContaining(rule.getL(), lJungData);
@@ -114,17 +115,9 @@ public final class RuleData
     this.jungDataL = lJungData;
     this.jungDataK = kJungData;
     this.jungDataR = rJungData;
-    this.jungDataNac = nacJungData;
-
     this.jungDataNACs = new HashMap<UUID, JungData>();
-    this.jungDataNACs.put(null, nacJungData);
 
     this.colorGenerator = new ColorGenerator();
-  }
-
-  public void putJungDataForNac(UUID nacId, JungData jungData) {
-
-    this.jungDataNACs.put(nacId, jungData);
   }
 
   /**
@@ -162,14 +155,37 @@ public final class RuleData
    *
    * @return JungData
    */
+  @Deprecated
   public JungData getNacJungData() {
 
     return jungDataNac;
   }
 
+  /**
+   * Gets the JungData HashMap Value for a given nacId
+   *
+   * @param nacId
+   * @return JungData
+   */
   public JungData getNacJungData(UUID nacId) {
 
     return jungDataNACs.get(nacId);
+  }
+
+  /**
+   * Sets the JungData HashMap Value for a given nacId
+   *
+   * @param nacId
+   * @param jungData
+   */
+  public void putNacJungData(UUID nacId, JungData jungData) {
+
+    this.jungDataNACs.put(nacId, jungData);
+  }
+
+  public Set<JungData> getNacJungDataSet() {
+
+    return new HashSet<JungData>(jungDataNACs.values());
   }
 
   /**

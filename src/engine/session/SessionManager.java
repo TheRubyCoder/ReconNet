@@ -53,13 +53,13 @@ package engine.session;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import com.sun.istack.NotNull;
 
 import petrinet.model.IArc;
 import petrinet.model.INode;
 import petrinet.model.Petrinet;
-import transformation.NAC;
 import transformation.Rule;
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
@@ -181,7 +181,7 @@ public final class SessionManager {
     RuleData data =
       new RuleData(getNextSessionDataId(), rule,
         getNewStaticLayoutJungData(), getNewStaticLayoutJungData(),
-        getNewStaticLayoutJungData(), getNewStaticLayoutJungData());
+        getNewStaticLayoutJungData());
 
     ruleData.put(data.getId(), data);
 
@@ -195,14 +195,9 @@ public final class SessionManager {
    * @param nac
    */
   public void createJungLayoutForNac(@NotNull RuleData ruleData,
-    @NotNull NAC nac) {
+    @NotNull UUID nacId) {
 
-    /*
-     * TODO: if a nac is created, the places and transitions of L are added
-     * internally thus a NewStaticLayout won't represent the real state of the
-     * NAC
-     */
-    ruleData.putJungDataForNac(nac.getId(), getNewStaticLayoutJungData());
+    ruleData.putNacJungData(nacId, getNewStaticLayoutJungData());
   }
 
   /**

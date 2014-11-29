@@ -249,7 +249,6 @@ public final class RuleHandler {
     JungData lJungData = ruleData.getLJungData();
     JungData kJungData = ruleData.getKJungData();
     JungData rJungData = ruleData.getRJungData();
-    JungData nacJungData = ruleData.getNacJungData();
 
     if (!lJungData.isCreatePossibleAt(coordinate)) {
       exception("Place too close to Node in L");
@@ -266,11 +265,6 @@ public final class RuleHandler {
       return null;
     }
 
-    if (!nacJungData.isCreatePossibleAt(coordinate)) {
-      exception("Place too close to Node in NAC");
-      return null;
-    }
-
     if (net.equals(RuleNet.L)) {
       // create a new Place
       Place newPlace = rule.addPlaceToL("undefined");
@@ -280,6 +274,14 @@ public final class RuleHandler {
         lJungData.createPlace(newPlace, coordinate);
       } catch (IllegalArgumentException e) {
         exception("createPlace - can not create Place in L");
+      }
+
+      // create analog Place in all NACs
+      for (NAC nac : rule.getNACs()) {
+
+        JungData nacJungData = ruleData.getNacJungData(nac.getId());
+        Place nacPlace = nac.fromLtoNac(newPlace);
+        nacJungData.createPlace(nacPlace, coordinate);
       }
 
       // get automatically added Corresponding Place in K
@@ -375,16 +377,7 @@ public final class RuleHandler {
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();
 
-    NAC nac = null;
-
-    // Search the NAC with the nacId in the Set of NACs
-    for (NAC n : rule.getNACs()) {
-
-      if (n.getId() == nacId) {
-        nac = n;
-      }
-
-    }
+    NAC nac = rule.getNAC(nacId);
 
     System.out.println(".. createPlace in NAC " + nac);
 
@@ -676,8 +669,10 @@ public final class RuleHandler {
       petrinetData = ruleData.getRJungData();
       break;
     case NAC:
-      petrinetData = ruleData.getNacJungData();
-      break;
+      // TODO: anpassen für multi-nac
+      // im Zweifel einfach grau
+      return new PlaceAttribute(place.getMark(), place.getName(), Color.gray,
+        place.getCapacity());
     default:
       break;
     }
@@ -1132,6 +1127,10 @@ public final class RuleHandler {
     ruleData.getLJungData().moveGraph(relativePosition);
     ruleData.getKJungData().moveGraph(relativePosition);
     ruleData.getRJungData().moveGraph(relativePosition);
+
+    for (JungData nacJungData : ruleData.getNacJungDataSet()) {
+      nacJungData.moveGraph(relativePosition);
+    }
   }
 
   /**
@@ -1150,6 +1149,10 @@ public final class RuleHandler {
     ruleData.getLJungData().moveGraph(vectorToMoveIntoVision);
     ruleData.getKJungData().moveGraph(vectorToMoveIntoVision);
     ruleData.getRJungData().moveGraph(vectorToMoveIntoVision);
+
+    for (JungData nacJungData : ruleData.getNacJungDataSet()) {
+      nacJungData.moveGraph(vectorToMoveIntoVision);
+    }
   }
 
   /**
@@ -1166,6 +1169,10 @@ public final class RuleHandler {
     ruleData.getLJungData().moveAllNodesTo(factor, point);
     ruleData.getKJungData().moveAllNodesTo(factor, point);
     ruleData.getRJungData().moveAllNodesTo(factor, point);
+
+    for (JungData nacJungData : ruleData.getNacJungDataSet()) {
+      nacJungData.moveAllNodesTo(factor, point);
+    }
   }
 
   /**
@@ -1181,6 +1188,10 @@ public final class RuleHandler {
     ruleData.getLJungData().setNodeSize(nodeSize);
     ruleData.getKJungData().setNodeSize(nodeSize);
     ruleData.getRJungData().setNodeSize(nodeSize);
+
+    for (JungData nacJungData : ruleData.getNacJungDataSet()) {
+      nacJungData.setNodeSize(nodeSize);
+    }
   }
 
   /**
@@ -1316,9 +1327,61 @@ public final class RuleHandler {
     RuleData ruleData = getRuleData(ruleId);
     Rule rule = ruleData.getRule();
 
-    NAC nac = rule.createNAC();
+    // Add places/transitions/arcs of L to NAC
+    // TODO: arcs
 
-    sessionManager.createJungLayoutForNac(ruleData, nac);
+    NAC nac = rule.createPlainNAC();
+    sessionManager.createJungLayoutForNac(ruleData, nac.getId());
+
+    JungData nacJungData = ruleData.getNacJungData(nac.getId());
+
+    /* Add Places from L to new NAC */
+    for (Place lPlace : rule.getL().getPlaces()) {
+
+      double x_coord = ruleData.getLJungData().getJungLayout().getX(lPlace);
+      double y_coord = ruleData.getLJungData().getJungLayout().getY(lPlace);
+      Point2D coordinate = new Point2D.Double(x_coord, y_coord);
+
+      Place nacPlace =
+        rule.addPlaceToNacWithMappingToPlaceInL(lPlace, nac.getId());
+      nacJungData.createPlace(nacPlace, coordinate);
+    }
+
+    /* Add Transitions from L to new NAC */
+    for (Transition lTransition : rule.getL().getTransitions()) {
+
+      double x_coord =
+        ruleData.getLJungData().getJungLayout().getX(lTransition);
+      double y_coord =
+        ruleData.getLJungData().getJungLayout().getY(lTransition);
+      Point2D coordinate = new Point2D.Double(x_coord, y_coord);
+
+      Transition nacTransition =
+        rule.addTransitionToNacWithMappingToTransitionInL(lTransition,
+          nac.getId());
+      nacJungData.createTransition(nacTransition, coordinate);
+    }
+
+    /* Add PostArcs from L to new NAC */
+    for (PostArc lPostArc : rule.getL().getPostArcs()) {
+
+      PostArc nacPostArc =
+        rule.addPostArcToNacWithMappingToPostArcInL(lPostArc, nac.getId());
+
+      nacJungData.createArc(nacPostArc, nacPostArc.getSource(),
+        nacPostArc.getTarget());
+    }
+
+    /* Add PreArcs from L to new NAC */
+    for (PreArc lPreArc : rule.getL().getPreArcs()) {
+
+      PreArc nacPreArc =
+        rule.addPreArcToNacWithMappingToPreArcInL(lPreArc, nac.getId());
+
+      nacJungData.createArc(nacPreArc, nacPreArc.getSource(),
+        nacPreArc.getTarget());
+
+    }
 
     return nac.getId();
   }
@@ -1327,14 +1390,6 @@ public final class RuleHandler {
     throws EngineException {
 
     RuleData ruleData = getRuleData(ruleId);
-
-    // Rule rule = ruleData.getRule();
-
-    // for (NAC n : rule.getNACs()) {
-    // if (n.getId() == nacId) {
-
-    // }
-    // }
 
     return ruleData.getNacJungData(nacId).getJungLayout();
   }

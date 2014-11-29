@@ -74,6 +74,9 @@ import petrinet.model.Transition;
  */
 public class NAC {
 
+  // internal UID to avoid collisions during modifications
+  private final UUID id;
+
   // Nac part of the NAC
   private Petrinet nac;
 
@@ -82,9 +85,6 @@ public class NAC {
   private final BidiMap<PostArc, PostArc> postArcMappingLToNac;
   private final BidiMap<PreArc, PreArc> preArcMappingLToNac;
   private final BidiMap<Transition, Transition> transitionMappingLToNac;
-
-  // internal UID to avoid collisions during modifications
-  private final UUID id;
 
   /**
    * Constructs a new NAC from a given L-part of a rule.
@@ -128,6 +128,21 @@ public class NAC {
 
     System.out.println(NAC.class + " - constructor: created NAC with UUID "
       + id + "; nac has " + nac.getPlaces().size() + " nodes");
+  }
+
+  /**
+   * Constructs a plain NAC without any further logic.
+   */
+  protected NAC() {
+
+    nac = createPetrinet();
+
+    id = UUID.randomUUID();
+
+    placeMappingLToNac = new DualHashBidiMap<Place, Place>();
+    postArcMappingLToNac = new DualHashBidiMap<PostArc, PostArc>();
+    preArcMappingLToNac = new DualHashBidiMap<PreArc, PreArc>();
+    transitionMappingLToNac = new DualHashBidiMap<Transition, Transition>();
   }
 
   // Getters

@@ -54,16 +54,17 @@ package transformation;
 import static transformation.dependency.PetrinetAdapter.createPetrinet;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import org.apache.commons.collections15.BidiMap;
 import org.apache.commons.collections15.bidimap.DualHashBidiMap;
 
 import exceptions.AccessForbiddenException;
 import exceptions.ShowAsWarningException;
-
 import petrinet.model.IRenew;
 import petrinet.model.Petrinet;
 import petrinet.model.Place;
@@ -95,7 +96,7 @@ public class Rule {
   private final Petrinet r;
 
   /** NACs that belong to the rule */
-  private Set<NAC> nacs;
+  private HashMap<UUID, NAC> nacs;
 
   private final BidiMap<Place, Place> placeMappingKToL;
   private final BidiMap<PostArc, PostArc> postArcMappingKToL;
@@ -116,7 +117,7 @@ public class Rule {
     l = createPetrinet();
     r = createPetrinet();
 
-    nacs = new HashSet<NAC>();
+    nacs = new HashMap<UUID, NAC>();
 
     placeMappingKToL = new DualHashBidiMap<Place, Place>();
     postArcMappingKToL = new DualHashBidiMap<PostArc, PostArc>();
@@ -139,9 +140,18 @@ public class Rule {
     System.out.println(Rule.class + " - createNAC");
 
     NAC newNAC = new NAC(l);
-    nacs.add(newNAC);
+    nacs.put(newNAC.getId(), newNAC);
 
     return newNAC;
+  }
+
+  public NAC createPlainNAC() {
+
+    NAC nac = new NAC();
+
+    nacs.put(nac.getId(), nac);
+
+    return nac;
   }
 
   /**
@@ -184,7 +194,8 @@ public class Rule {
    */
   public Set<NAC> getNACs() {
 
-    return Collections.unmodifiableSet(nacs);
+    HashSet<NAC> nacSet = new HashSet<NAC>(nacs.values());
+    return Collections.unmodifiableSet(nacSet);
   }
 
   /**
@@ -337,7 +348,7 @@ public class Rule {
       rightPlace.setMark(mark);
     }
 
-    for (NAC nac : nacs) {
+    for (NAC nac : nacs.values()) {
       nac.fromLtoNac(place).setMark(mark);
     }
   }
@@ -355,7 +366,7 @@ public class Rule {
 
     if (leftPlace != null) {
       leftPlace.setMark(mark);
-      for (NAC nac : nacs) {
+      for (NAC nac : nacs.values()) {
         nac.fromLtoNac(leftPlace).setMark(mark);
       }
     }
@@ -382,7 +393,7 @@ public class Rule {
 
     if (leftPlace != null) {
       leftPlace.setMark(mark);
-      for (NAC nac : nacs) {
+      for (NAC nac : nacs.values()) {
         nac.fromLtoNac(leftPlace).setMark(mark);
       }
     }
@@ -423,7 +434,7 @@ public class Rule {
       rightPlace.setCapacity(capacity);
     }
 
-    for (NAC nac : nacs) {
+    for (NAC nac : nacs.values()) {
       nac.fromLtoNac(place).setCapacity(capacity);
     }
   }
@@ -440,7 +451,7 @@ public class Rule {
 
     if (leftPlace != null) {
       fromKtoL(place).setCapacity(capacity);
-      for (NAC nac : nacs) {
+      for (NAC nac : nacs.values()) {
         nac.fromLtoNac(leftPlace).setCapacity(capacity);
       }
     }
@@ -467,7 +478,7 @@ public class Rule {
 
     if (leftPlace != null) {
       leftPlace.setCapacity(capacity);
-      for (NAC nac : nacs) {
+      for (NAC nac : nacs.values()) {
         nac.fromLtoNac(leftPlace).setCapacity(capacity);
       }
     }
@@ -504,7 +515,7 @@ public class Rule {
       rightPlace.setName(name);
     }
 
-    for (NAC nac : nacs) {
+    for (NAC nac : nacs.values()) {
       nac.fromLtoNac(place).setName(name);
     }
   }
@@ -521,7 +532,7 @@ public class Rule {
     Place leftPlace = fromKtoL(place);
     if (leftPlace != null) {
       fromKtoL(place).setName(name);
-      for (NAC nac : nacs) {
+      for (NAC nac : nacs.values()) {
         nac.fromLtoNac(leftPlace).setName(name);
       }
     }
@@ -549,7 +560,7 @@ public class Rule {
 
     if (leftPlace != null) {
       leftPlace.setName(name);
-      for (NAC nac : nacs) {
+      for (NAC nac : nacs.values()) {
         nac.fromLtoNac(leftPlace).setName(name);
       }
     }
@@ -590,7 +601,7 @@ public class Rule {
       rightTransition.setName(name);
     }
 
-    for (NAC nac : nacs) {
+    for (NAC nac : nacs.values()) {
       nac.fromLtoNac(transition).setName(name);
     }
   }
@@ -608,7 +619,7 @@ public class Rule {
 
     if (leftTrans != null) {
       fromKtoL(transition).setName(name);
-      for (NAC nac : nacs) {
+      for (NAC nac : nacs.values()) {
         nac.fromLtoNac(leftTrans).setName(name);
       }
     }
@@ -636,7 +647,7 @@ public class Rule {
 
     if (leftTransition != null) {
       leftTransition.setName(name);
-      for (NAC nac : nacs) {
+      for (NAC nac : nacs.values()) {
         nac.fromLtoNac(leftTransition).setName(name);
       }
     }
@@ -673,7 +684,7 @@ public class Rule {
       rightTransition.setTlb(tlb);
     }
 
-    for (NAC nac : nacs) {
+    for (NAC nac : nacs.values()) {
       nac.fromLtoNac(transition).setTlb(tlb);
     }
   }
@@ -690,7 +701,7 @@ public class Rule {
     Transition leftTransition = fromKtoL(transition);
     if (leftTransition != null) {
       fromKtoL(transition).setTlb(tlb);
-      for (NAC nac : nacs) {
+      for (NAC nac : nacs.values()) {
         nac.fromLtoNac(leftTransition).setTlb(tlb);
       }
     }
@@ -718,7 +729,7 @@ public class Rule {
 
     if (leftTransition != null) {
       leftTransition.setTlb(tlb);
-      for (NAC nac : nacs) {
+      for (NAC nac : nacs.values()) {
         nac.fromLtoNac(leftTransition).setTlb(tlb);
       }
     }
@@ -755,7 +766,7 @@ public class Rule {
       rightTransition.setRnw(rnw);
     }
 
-    for (NAC nac : nacs) {
+    for (NAC nac : nacs.values()) {
       nac.fromLtoNac(transition).setRnw(rnw);
     }
   }
@@ -773,7 +784,7 @@ public class Rule {
 
     if (leftTransition != null) {
       leftTransition.setRnw(rnw);
-      for (NAC nac : nacs) {
+      for (NAC nac : nacs.values()) {
         nac.fromLtoNac(leftTransition).setRnw(rnw);
       }
     }
@@ -801,7 +812,7 @@ public class Rule {
 
     if (leftTransition != null) {
       leftTransition.setRnw(rnw);
-      for (NAC nac : nacs) {
+      for (NAC nac : nacs.values()) {
         nac.fromLtoNac(leftTransition).setRnw(rnw);
       }
     }
@@ -838,7 +849,7 @@ public class Rule {
       rightPreArc.setWeight(weight);
     }
 
-    for (NAC nac : nacs) {
+    for (NAC nac : nacs.values()) {
       nac.fromLtoNac(preArc).setWeight(weight);
     }
   }
@@ -855,7 +866,7 @@ public class Rule {
     PreArc leftPreArc = fromKtoL(preArc);
     if (leftPreArc != null) {
       leftPreArc.setWeight(weight);
-      for (NAC nac : nacs) {
+      for (NAC nac : nacs.values()) {
         nac.fromLtoNac(leftPreArc).setWeight(weight);
       }
     }
@@ -883,7 +894,7 @@ public class Rule {
 
     if (leftPreArc != null) {
       leftPreArc.setWeight(weight);
-      for (NAC nac : nacs) {
+      for (NAC nac : nacs.values()) {
         nac.fromLtoNac(leftPreArc).setWeight(weight);
       }
     }
@@ -920,7 +931,7 @@ public class Rule {
       rightPostArc.setWeight(weight);
     }
 
-    for (NAC nac : nacs) {
+    for (NAC nac : nacs.values()) {
       nac.fromLtoNac(postArc).setWeight(weight);
     }
   }
@@ -937,7 +948,7 @@ public class Rule {
     PostArc leftPostArc = fromKtoL(postArc);
     if (leftPostArc != null) {
       leftPostArc.setWeight(weight);
-      for (NAC nac : nacs) {
+      for (NAC nac : nacs.values()) {
         nac.fromLtoNac(leftPostArc).setWeight(weight);
       }
     }
@@ -965,7 +976,7 @@ public class Rule {
 
     if (leftPostArc != null) {
       leftPostArc.setWeight(weight);
-      for (NAC nac : nacs) {
+      for (NAC nac : nacs.values()) {
         nac.fromLtoNac(leftPostArc).setWeight(weight);
       }
     }
@@ -990,7 +1001,7 @@ public class Rule {
 
     placeMappingKToL.put(getK().addPlace(name), leftPlace);
 
-    for (NAC nac : nacs) {
+    for (NAC nac : nacs.values()) {
       nac.getPlaceMappingLToNac().put(leftPlace, nac.getNac().addPlace(name));
     }
 
@@ -1006,7 +1017,7 @@ public class Rule {
     placeMappingKToL.put(place, leftPlace);
     placeMappingKToR.put(place, getR().addPlace(name));
 
-    for (NAC nac : nacs) {
+    for (NAC nac : nacs.values()) {
       nac.getPlaceMappingLToNac().put(leftPlace, nac.getNac().addPlace(name));
     }
 
@@ -1029,13 +1040,23 @@ public class Rule {
     return nac.getNac().addPlace(name);
   }
 
+  public Place addPlaceToNacWithMappingToPlaceInL(Place lPlace, UUID nacId) {
+
+    NAC nac = nacs.get(nacId);
+
+    Place nacPlace = nac.getNac().addPlace(lPlace.getName());
+    nac.getPlaceMappingLToNac().put(lPlace, nacPlace);
+
+    return nacPlace;
+  }
+
   public Transition addTransitionToL(String name) {
 
     Transition leftTransition = getL().addTransition(name);
 
     transitionMappingKToL.put(getK().addTransition(name), leftTransition);
 
-    for (NAC nac : nacs) {
+    for (NAC nac : nacs.values()) {
       nac.getTransitionMappingLToNac().put(leftTransition,
         nac.getNac().addTransition(name));
     }
@@ -1060,7 +1081,7 @@ public class Rule {
     transitionMappingKToL.put(transition, leftTransition);
     transitionMappingKToR.put(transition, getR().addTransition(name));
 
-    for (NAC nac : nacs) {
+    for (NAC nac : nacs.values()) {
       nac.getTransitionMappingLToNac().put(leftTransition,
         nac.getNac().addTransition(name));
     }
@@ -1100,6 +1121,18 @@ public class Rule {
     return nac.getNac().addTransition(name);
   }
 
+  public Transition addTransitionToNacWithMappingToTransitionInL(
+    Transition lTransition, UUID nacId) {
+
+    NAC nac = nacs.get(nacId);
+
+    Transition nacTransition =
+      nac.getNac().addTransition(lTransition.getName());
+    nac.getTransitionMappingLToNac().put(lTransition, nacTransition);
+
+    return nacTransition;
+  }
+
   public Transition addTransitionToNac(String name, IRenew rnw, NAC nac) {
 
     checkIfcontained(nac);
@@ -1119,7 +1152,7 @@ public class Rule {
     preArcMappingKToL.put(getK().addPreArc(name, kPlace, kTransition),
       leftPreArc);
 
-    for (NAC nac : nacs) {
+    for (NAC nac : nacs.values()) {
       PreArc newPreArc =
         nac.getNac().addPreArc(leftPreArc.getName(),
           nac.fromLtoNac(leftPreArc.getPlace()),
@@ -1145,7 +1178,7 @@ public class Rule {
     preArcMappingKToR.put(preArc, getR().addPreArc(name, rightPlace,
       rightTransition));
 
-    for (NAC nac : nacs) {
+    for (NAC nac : nacs.values()) {
       Place nacPlace = nac.fromLtoNac(leftPlace);
       Transition nacTransition = nac.fromLtoNac(leftTransition);
       nac.getPreArcMappingLToNac().put(leftPreArc,
@@ -1187,7 +1220,7 @@ public class Rule {
     postArcMappingKToL.put(getK().addPostArc(name, kTransition, kPlace),
       leftPostArc);
 
-    for (NAC nac : nacs) {
+    for (NAC nac : nacs.values()) {
       Place nacPlace = nac.fromLtoNac(place);
       Transition nacTransition = nac.fromLtoNac(transition);
       PostArc nacPostArc =
@@ -1214,7 +1247,7 @@ public class Rule {
     postArcMappingKToR.put(postArc, getR().addPostArc(name, rightTransition,
       rightPlace));
 
-    for (NAC nac : nacs) {
+    for (NAC nac : nacs.values()) {
       Place nacPlace = nac.fromLtoNac(leftPlace);
       Transition nacTransition = nac.fromLtoNac(leftTransition);
       PostArc nacPostArc =
@@ -1246,6 +1279,35 @@ public class Rule {
     return nac.getNac().addPostArc(name, transition, place);
   }
 
+  public PostArc addPostArcToNacWithMappingToPostArcInL(PostArc lPostArc,
+    UUID nacId) {
+
+    NAC nac = nacs.get(nacId);
+
+    PostArc nacPostArc =
+      nac.getNac().addPostArc(lPostArc.getName(),
+        nac.fromLtoNac(lPostArc.getTransition()),
+        nac.fromLtoNac(lPostArc.getPlace()));
+    nac.getPostArcMappingLToNac().put(lPostArc, nacPostArc);
+
+    return nacPostArc;
+  }
+
+  public PreArc addPreArcToNacWithMappingToPreArcInL(PreArc lPreArc,
+    UUID nacId) {
+
+    NAC nac = nacs.get(nacId);
+
+    PreArc nacPreArc =
+      nac.getNac().addPreArc(lPreArc.getName(),
+        nac.fromLtoNac(lPreArc.getPlace()),
+        nac.fromLtoNac(lPreArc.getTransition()));
+
+    nac.getPreArcMappingLToNac().put(lPreArc, nacPreArc);
+
+    return nacPreArc;
+  }
+
   // TODO die Remover laufen alle ueber K, d.h. ein entferntes Element wird
   // immer aus allen Teilen der Regel entfernt. das ist unintuitiv und doof
 
@@ -1259,7 +1321,7 @@ public class Rule {
     Place leftPlace = fromKtoL(place);
     if (leftPlace != null) {
       getL().removePlace(leftPlace);
-      for (NAC nac : nacs) {
+      for (NAC nac : nacs.values()) {
         removePlaceFromNac(nac.fromLtoNac(leftPlace), nac);
       }
     }
@@ -1295,7 +1357,7 @@ public class Rule {
     Transition leftTransition = fromKtoL(transition);
     if (leftTransition != null) {
       getL().removeTransition(leftTransition);
-      for (NAC nac : nacs) {
+      for (NAC nac : nacs.values()) {
         removeTransitionFromNac(nac.fromLtoNac(leftTransition), nac);
       }
     }
@@ -1332,7 +1394,7 @@ public class Rule {
     PreArc leftPreArc = fromKtoL(preArc);
     if (leftPreArc != null) {
       getL().removeArc(leftPreArc);
-      for (NAC nac : nacs) {
+      for (NAC nac : nacs.values()) {
         removePreArcFromNac(nac.fromLtoNac(leftPreArc), nac);
       }
     }
@@ -1369,7 +1431,7 @@ public class Rule {
     PostArc leftPostArc = fromKtoL(postArc);
     if (leftPostArc != null) {
       getL().removeArc(leftPostArc);
-      for (NAC nac : nacs) {
+      for (NAC nac : nacs.values()) {
         removePostArcFromNac(nac.fromLtoNac(leftPostArc), nac);
       }
     }
@@ -1694,9 +1756,20 @@ public class Rule {
    */
   private void checkIfcontained(NAC nac) {
 
-    if (!nacs.contains(nac)) {
+    if (!nacs.values().contains(nac)) {
       throw new IllegalArgumentException("NAC not contained in this rule");
     }
+  }
+
+  /**
+   * Returns the NAC with the specified nacID.
+   *
+   * @param nacId
+   * @return The NAC
+   */
+  public NAC getNAC(UUID nacId) {
+
+    return nacs.get(nacId);
   }
 
 }

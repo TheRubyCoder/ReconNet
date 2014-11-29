@@ -149,7 +149,7 @@ public final class JungData {
 
   /**
    * Gets the JungGraph representation.
-   * 
+   *
    * @return DirectedGraph<INode, IArc>
    */
   public DirectedGraph<INode, IArc> getJungGraph() {
@@ -159,7 +159,7 @@ public final class JungData {
 
   /**
    * Gets the JungLayout information
-   * 
+   *
    * @return AbstractLayout<INode, IArc>
    */
   public AbstractLayout<INode, IArc> getJungLayout() {
@@ -169,7 +169,7 @@ public final class JungData {
 
   /**
    * Gets the LayoutAttributes of all Nodes.
-   * 
+   *
    * @return Map<INode, NodeLayoutAttribute> map with INode as Key and his
    *         LayoutAttribute as Value
    */
@@ -200,7 +200,7 @@ public final class JungData {
   /**
    * Creates an Arc in the JungRepresentation of the petrinet from a Place to
    * a Transition.
-   * 
+   *
    * @param arc
    *        arc to add
    * @param fromPlace
@@ -224,7 +224,7 @@ public final class JungData {
   /**
    * Creates an Arc in the JungRepresentation of the petrinet from a
    * Transition to a Place.
-   * 
+   *
    * @param arc
    *        arc to add
    * @param fromTransition
@@ -247,7 +247,7 @@ public final class JungData {
 
   /**
    * Creates a Place in the JungRepresentation of the petrinet.
-   * 
+   *
    * @param place
    *        Place to create
    * @param coordinate
@@ -266,7 +266,7 @@ public final class JungData {
 
   /**
    * Creates a place at a position that is chosen automatically
-   * 
+   *
    * @param place
    */
   public void createPlace(Place place) {
@@ -276,7 +276,7 @@ public final class JungData {
 
   /**
    * Creates a transition at a position that is chosen automatically
-   * 
+   *
    * @param place
    */
   public void createTransition(Transition transition) {
@@ -286,7 +286,7 @@ public final class JungData {
 
   /**
    * Returns a position where a place or transition can be added
-   * 
+   *
    * @return
    */
   private Point2D findPositionForNewNode() {
@@ -298,7 +298,7 @@ public final class JungData {
 
   /**
    * Finds the {@link INode} that is the farest to the right
-   * 
+   *
    * @return
    */
   private INode findNodeWithBiggestX() {
@@ -322,7 +322,7 @@ public final class JungData {
 
   /**
    * Creates a Transition in the JungRepresentation of the petrinet.
-   * 
+   *
    * @param transition
    *        Transition to create
    * @param coordinate
@@ -342,7 +342,7 @@ public final class JungData {
 
   /**
    * Deletes Arcs and INodes from the JungRepresentation.
-   * 
+   *
    * @param arcs
    *        Collection of Arcs to be deleted
    * @param nodes
@@ -435,7 +435,7 @@ public final class JungData {
 
   /**
    * Moves the graph.
-   * 
+   *
    * @see {@link IPetrinetManipulation#moveGraph(int, Point2D)}
    * @param relativPosition
    */
@@ -461,7 +461,7 @@ public final class JungData {
 
   /**
    * Finds the vector for that graph to move it into vision
-   * 
+   *
    * @return
    */
   public Point2D.Double getVectorToMoveIntoVision() {
@@ -493,7 +493,7 @@ public final class JungData {
 
   /**
    * Moves a INode to position while checking for collisions
-   * 
+   *
    * @param node
    *        Node to move
    * @param coordinate
@@ -506,7 +506,7 @@ public final class JungData {
 
   /**
    * Moves a INode to position without checking for collisions
-   * 
+   *
    * @param node
    *        Node to move
    * @param coordinate
@@ -519,7 +519,7 @@ public final class JungData {
 
   /**
    * Moves a INode to position. Can check for collisions
-   * 
+   *
    * @param node
    *        Node to move
    * @param coordinate
@@ -547,7 +547,7 @@ public final class JungData {
   /**
    * Removes data of elements that are no longer in the petrinet. This may be
    * used if the petrinet is altered from outside the engine.
-   * 
+   *
    * @param petrinet
    */
   public void deleteDataOfMissingElements(Petrinet petrinet) {
@@ -589,7 +589,7 @@ public final class JungData {
 
   /**
    * throws an exception, if check result is negative.
-   * 
+   *
    * @param isValid
    *        if false, exception is thrown
    * @param message
@@ -604,7 +604,7 @@ public final class JungData {
 
   /**
    * checks if an arc is valid
-   * 
+   *
    * @param arc
    *        arc to check
    */
@@ -615,7 +615,7 @@ public final class JungData {
 
   /**
    * checks if an arc is valid and if it connects "from" an "to"
-   * 
+   *
    * @param arc
    *        arc to check
    * @param from
@@ -632,7 +632,7 @@ public final class JungData {
 
   /**
    * checks if a node is valid
-   * 
+   *
    * @param node
    *        node to check
    */
@@ -643,7 +643,7 @@ public final class JungData {
 
   /**
    * checks if place is valid
-   * 
+   *
    * @param place
    *        place to check
    */
@@ -654,7 +654,7 @@ public final class JungData {
 
   /**
    * checks if point is valid (not negative)
-   * 
+   *
    * @param point
    *        point to check
    */
@@ -667,7 +667,7 @@ public final class JungData {
 
   /**
    * checks if transition is valid
-   * 
+   *
    * @param transition
    *        transition to check
    */
@@ -678,7 +678,7 @@ public final class JungData {
 
   /**
    * checks a collection of arcs
-   * 
+   *
    * @param arcs
    *        collection to check
    */
@@ -693,7 +693,7 @@ public final class JungData {
 
   /**
    * checks a collection of nodes
-   * 
+   *
    * @param nodes
    *        collection to check
    */
@@ -708,7 +708,7 @@ public final class JungData {
 
   /**
    * checks if jung graph contains arc
-   * 
+   *
    * @param arc
    *        arc to check
    * @throws NullPointerException
@@ -721,7 +721,7 @@ public final class JungData {
 
   /**
    * checks if jung graph contains all arcs
-   * 
+   *
    * @param arcs
    *        collection of arc to check
    * @throws NullPointerException
@@ -736,7 +736,7 @@ public final class JungData {
 
   /**
    * checks if jung graph contains node
-   * 
+   *
    * @param node
    *        node to check
    * @throws NullPointerException
@@ -749,7 +749,7 @@ public final class JungData {
 
   /**
    * checks if jung graph contains all nodes
-   * 
+   *
    * @param nodes
    *        collection of nodes to check
    * @throws NullPointerException
@@ -765,14 +765,14 @@ public final class JungData {
   /**
    * checks if a new node were too close to an other node. Checking by
    * calculating the boundig box of an node.
-   * 
+   *
    * @param point
    *        point to check
    * @param excludes
    *        dont't check to these nodes
    */
   private void
-    checkPoint2DLocation(Point2D point, Collection<INode> excludes) {
+  checkPoint2DLocation(Point2D point, Collection<INode> excludes) {
 
     for (INode node : graph.getVertices()) {
       if (!excludes.contains(node)) {

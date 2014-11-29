@@ -224,7 +224,10 @@ public final class RulePane {
    */
   void repaint() {
 
-    nacViewer.repaint();
+    if (nacViewer != null) {
+      nacViewer.repaint();
+    }
+
     lViewer.repaint();
     kViewer.repaint();
     rViewer.repaint();
@@ -348,13 +351,23 @@ public final class RulePane {
    */
   public void displayEmpty() {
 
-    if (lViewer != null) {
+    if (nacViewer != null) {
       nacViewer.removeFrom(nacPanel);
-      lViewer.removeFrom(lPanel);
-      kViewer.removeFrom(kPanel);
-      rViewer.removeFrom(rPanel);
-      MainWindow.getInstance().repaint();
     }
+
+    if (lViewer != null) {
+      lViewer.removeFrom(lPanel);
+    }
+
+    if (kViewer != null) {
+      kViewer.removeFrom(kPanel);
+    }
+
+    if (rViewer != null) {
+      rViewer.removeFrom(rPanel);
+    }
+
+    MainWindow.getInstance().repaint();
   }
 
   /**
@@ -366,7 +379,10 @@ public final class RulePane {
   public void deselectBut(PetrinetViewer petrinetViewer) {
 
     if (nacViewer != petrinetViewer) {
-      nacViewer.setCurrentSelectedNode(null);
+      // if no NAC is present, nacViewer is null
+      if (nacViewer != null) {
+        nacViewer.setCurrentSelectedNode(null);
+      }
     }
     if (lViewer != petrinetViewer) {
       lViewer.setCurrentSelectedNode(null);
@@ -376,9 +392,6 @@ public final class RulePane {
     }
     if (rViewer != petrinetViewer) {
       rViewer.setCurrentSelectedNode(null);
-    }
-    if (nacViewer != petrinetViewer) {
-      nacViewer.setCurrentSelectedNode(null);
     }
   }
 

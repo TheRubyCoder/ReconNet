@@ -143,15 +143,13 @@ public class RuleDataTest {
 
     assertFalse(rule.getK().getPlaces().isEmpty());
 
-    RuleData data1 = buildAndTest(1, rule, jungl, jungk, jungr, jungNac);
+    RuleData data1 = buildAndTest(1, rule, jungl, jungk, jungr);
     RuleData data2 =
-      buildAndTest(1, emptyRule, emptyJungl, emptyJungk, emptyJungr,
-        emptyJungNac);
+      buildAndTest(1, emptyRule, emptyJungl, emptyJungk, emptyJungr);
 
-    RuleData data3 = buildAndTest(2, rule, jungl, jungk, jungr, jungNac);
+    RuleData data3 = buildAndTest(2, rule, jungl, jungk, jungr);
     RuleData data4 =
-      buildAndTest(2, emptyRule, emptyJungl, emptyJungk, emptyJungr,
-        emptyJungNac);
+      buildAndTest(2, emptyRule, emptyJungl, emptyJungk, emptyJungr);
 
     assertEquals(data1, data2);
     assertEquals(data3, data4);
@@ -161,10 +159,9 @@ public class RuleDataTest {
   }
 
   private RuleData buildAndTest(int id, Rule rule, JungData lJungData,
-    JungData kJungData, JungData rJungData, JungData nacJungData) {
+    JungData kJungData, JungData rJungData) {
 
-    RuleData data =
-      new RuleData(id, rule, lJungData, kJungData, rJungData, nacJungData);
+    RuleData data = new RuleData(id, rule, lJungData, kJungData, rJungData);
 
     assertEquals(id, data.getId());
     assertEquals(lJungData, data.getLJungData());
@@ -209,31 +206,25 @@ public class RuleDataTest {
   @Test(expected = IllegalArgumentException.class)
   public void testNull_constructor_1() {
 
-    new RuleData(1, null, emptyJungk, emptyJungl, emptyJungr, emptyJungNac);
+    new RuleData(1, null, emptyJungk, emptyJungl, emptyJungr);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testNull_constructor_2() {
 
-    new RuleData(1, emptyRule, null, emptyJungl, emptyJungr, emptyJungNac);
+    new RuleData(1, emptyRule, null, emptyJungl, emptyJungr);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testNull_constructor_3() {
 
-    new RuleData(1, emptyRule, emptyJungk, null, emptyJungr, emptyJungNac);
+    new RuleData(1, emptyRule, emptyJungk, null, emptyJungr);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testNull_constructor_4() {
 
-    new RuleData(1, emptyRule, emptyJungk, emptyJungl, null, emptyJungNac);
-  }
-
-  @Test(expected = IllegalArgumentException.class)
-  public void testNull_constructor_5() {
-
-    new RuleData(1, emptyRule, emptyJungk, emptyJungl, emptyJungr, null);
+    new RuleData(1, emptyRule, emptyJungk, emptyJungl, null);
   }
 
   /**
@@ -246,15 +237,13 @@ public class RuleDataTest {
   @Test(expected = IllegalArgumentException.class)
   public void testIllegalArgument_constructor_id_1() {
 
-    new RuleData(0, emptyRule, emptyJungk, emptyJungl, emptyJungr,
-      emptyJungNac);
+    new RuleData(0, emptyRule, emptyJungk, emptyJungl, emptyJungr);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testIllegalArgument_constructor_id_2() {
 
-    new RuleData(-1, emptyRule, emptyJungk, emptyJungl, emptyJungr,
-      emptyJungNac);
+    new RuleData(-1, emptyRule, emptyJungk, emptyJungl, emptyJungr);
   }
 
   /**
@@ -263,29 +252,25 @@ public class RuleDataTest {
   @Test(expected = IllegalArgumentException.class)
   public void testIllegalArgument_constructor_jungDataSame_1() {
 
-    new RuleData(1, emptyRule, emptyJungk, emptyJungk, emptyJungr,
-      emptyJungNac);
+    new RuleData(1, emptyRule, emptyJungk, emptyJungk, emptyJungr);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testIllegalArgument_constructor_jungDataSame_2() {
 
-    new RuleData(1, emptyRule, emptyJungk, emptyJungl, emptyJungk,
-      emptyJungNac);
+    new RuleData(1, emptyRule, emptyJungk, emptyJungl, emptyJungk);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testIllegalArgument_constructor_jungDataSame_3() {
 
-    new RuleData(1, emptyRule, emptyJungk, emptyJungl, emptyJungl,
-      emptyJungNac);
+    new RuleData(1, emptyRule, emptyJungk, emptyJungl, emptyJungl);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testIllegalArgument_constructor_jungDataSame_4() {
 
-    new RuleData(1, emptyRule, emptyJungk, emptyJungk, emptyJungk,
-      emptyJungNac);
+    new RuleData(1, emptyRule, emptyJungk, emptyJungk, emptyJungk);
   }
 
   /**
@@ -294,19 +279,19 @@ public class RuleDataTest {
   @Test(expected = IllegalArgumentException.class)
   public void testIllegalArgument_constructor_jungData_1() {
 
-    new RuleData(1, rule, emptyJungk, jungk, jungr, jungNac);
+    new RuleData(1, rule, emptyJungk, jungk, jungr);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testIllegalArgument_constructor_jungData_2() {
 
-    new RuleData(1, rule, jungl, emptyJungl, jungr, jungNac);
+    new RuleData(1, rule, jungl, emptyJungl, jungr);
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testIllegalArgument_constructor_jungData_3() {
 
-    new RuleData(1, rule, jungl, jungk, emptyJungl, jungNac);
+    new RuleData(1, rule, jungl, jungk, emptyJungl);
   }
 
   // TODO: hier für NAC testen
@@ -337,8 +322,6 @@ public class RuleDataTest {
       new JungData(graph, new StaticLayout<INode, IArc>(graph));
 
     graph = new DirectedSparseGraph<INode, IArc>();
-    JungData jungNac1 =
-      new JungData(graph, new StaticLayout<INode, IArc>(graph));
 
     Place place1 = rule1.addPlaceToL("test1");
     Place placeNew = rule1.addPlaceToL("test2");
@@ -346,7 +329,6 @@ public class RuleDataTest {
     buildJung(rule1.getL(), jungl1);
     buildJung(rule1.getK(), jungk1);
     buildJung(rule1.getR(), jungr1);
-    buildJung(rule1.getR(), jungNac1);
 
     double xCoordinate1 = jungl1.getJungLayout().getX(place1);
     double yCoordinate1 = jungl1.getJungLayout().getY(place1);
@@ -360,8 +342,7 @@ public class RuleDataTest {
     Point2D movePlaceNewToCoordinate =
       new Point(xToMove.intValue(), yToMove.intValue());
     // CHECKSTYLE:OFF - No need to ceck for magic numbers
-    RuleData newRuleData =
-      buildAndTest(3, rule1, jungl1, jungk1, jungr1, jungNac1);
+    RuleData newRuleData = buildAndTest(3, rule1, jungl1, jungk1, jungr1);
     // CHECKSTYLE:ON
     newRuleData.moveNodeRelative(placeNew, movePlaceNewToCoordinate);
   }
