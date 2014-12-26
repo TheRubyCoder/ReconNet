@@ -57,6 +57,7 @@ import static exceptions.Exceptions.warning;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -129,7 +130,7 @@ public final class RuleHandler {
    */
   public PreArc createPreArc(int id, RuleNet net, Place place,
     Transition transition)
-      throws EngineException {
+    throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -148,8 +149,18 @@ public final class RuleHandler {
     PreArc kArc = null;
 
     if (net.equals(RuleNet.L)) {
+
       createdArc = rule.addPreArcToL("undefined", place, transition);
       kArc = rule.fromLtoK(createdArc);
+
+      for (NAC nac : rule.getNACs()) {
+
+        JungData nacJungData = ruleData.getNacJungData(nac.getId());
+        PreArc nacPreArc = nac.fromLtoNac(createdArc);
+        nacJungData.createArc(nacPreArc, nacPreArc.getSource(),
+          nacPreArc.getTransition());
+      }
+
     } else if (net.equals(RuleNet.K)) {
       createdArc = rule.addPreArcToK("undefined", place, transition);
       kArc = createdArc;
@@ -191,7 +202,7 @@ public final class RuleHandler {
    */
   public PostArc createPostArc(int id, RuleNet net, Transition transition,
     Place place)
-      throws EngineException {
+    throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -210,8 +221,18 @@ public final class RuleHandler {
     PostArc kArc = null;
 
     if (net.equals(RuleNet.L)) {
+
       createdArc = rule.addPostArcToL("undefined", transition, place);
       kArc = rule.fromLtoK(createdArc);
+
+      for (NAC nac : rule.getNACs()) {
+
+        JungData nacJungData = ruleData.getNacJungData(nac.getId());
+        PostArc nacPostArc = nac.fromLtoNac(createdArc);
+        nacJungData.createArc(nacPostArc, nacPostArc.getSource(),
+          nacPostArc.getTarget());
+      }
+
     } else if (net.equals(RuleNet.K)) {
       createdArc = rule.addPostArcToK("undefined", transition, place);
       kArc = createdArc;
@@ -371,25 +392,6 @@ public final class RuleHandler {
     }
   }
 
-  public Place createPlace(int id, UUID nacId, Point2D coordinate)
-    throws EngineException {
-
-    RuleData ruleData = getRuleData(id);
-    Rule rule = ruleData.getRule();
-
-    NAC nac = rule.getNAC(nacId);
-
-    System.out.println(".. createPlace in NAC " + nac);
-
-    Place newPlace = rule.addPlaceToNac("undefined", nac);
-
-    // create the Place in the jungData
-    JungData nacJungData = ruleData.getNacJungData(nacId);
-    nacJungData.createPlace(newPlace, coordinate);
-
-    return newPlace;
-  }
-
   /**
    * @see IRuleManipulation#createRule()
    */
@@ -438,6 +440,14 @@ public final class RuleHandler {
         lJungData.createTransition(newTransition, coordinate);
       } catch (IllegalArgumentException e) {
         exception("createTransition - can not create Transition in L");
+      }
+
+      // create analog Place in all NACs
+      for (NAC nac : rule.getNACs()) {
+
+        JungData nacJungData = ruleData.getNacJungData(nac.getId());
+        Transition nacTransition = nac.fromLtoNac(newTransition);
+        nacJungData.createTransition(nacTransition, coordinate);
       }
 
       // get automatically added Corresponding Place in K
@@ -694,7 +704,7 @@ public final class RuleHandler {
    */
   public TransitionAttribute getTransitionAttribute(int id,
     Transition transition)
-      throws EngineException {
+    throws EngineException {
 
     String tlb = transition.getTlb();
     String name = transition.getName();
@@ -1384,6 +1394,147 @@ public final class RuleHandler {
     }
 
     return nac.getId();
+  }
+
+  public Place createPlace(int id, UUID nacId, Point2D coordinate)
+    throws EngineException {
+
+    RuleData ruleData = getRuleData(id);
+    Rule rule = ruleData.getRule();
+
+    NAC nac = rule.getNAC(nacId);
+
+    System.out.println(".. createPlace in NAC " + nac);
+
+    Place newPlace = rule.addPlaceToNac("undefined", nac);
+
+    // create the Place in the jungData
+    JungData nacJungData = ruleData.getNacJungData(nacId);
+    nacJungData.createPlace(newPlace, coordinate);
+
+    return newPlace;
+  }
+
+  public void deletePlace(int id, UUID nacId, Place place)
+    throws EngineException {
+
+    /*
+     * TODO: check if this place is free to delete. If place is in L, deleting
+     * is not allowed
+     */
+
+    checkIsPlace(place);
+
+    RuleData ruleData = getRuleData(id);
+    Rule rule = ruleData.getRule();
+
+    NAC nac = rule.getNAC(nacId);
+
+    System.out.println(".. deletePlace from NAC " + nac);
+
+    JungData nacJungData = ruleData.getNacJungData(nacId);
+
+    // delete-collections must be build before deleting
+    ArrayList<IArc> arcsToDelete = new ArrayList<IArc>();
+    ArrayList<INode> nodesToDelete = new ArrayList<INode>();
+
+    nodesToDelete.add(place);
+    arcsToDelete.addAll(place.getIncomingArcs());
+    arcsToDelete.addAll(place.getOutgoingArcs());
+
+    // TODO check function of removeTransitionFromNac - method modifies L->NAC
+    // mapping which is not intended here. Nodes coming from L should only be
+    // deleted in L
+    rule.removePlaceFromNac(place, nac);
+    nacJungData.delete(arcsToDelete, nodesToDelete);
+  }
+
+  public void createTransition(int id, UUID nacId, Point2D coordinate)
+    throws EngineException {
+
+    RuleData ruleData = getRuleData(id);
+    Rule rule = ruleData.getRule();
+
+    NAC nac = rule.getNAC(nacId);
+
+    System.out.println(".. createTransition in NAC " + nac);
+
+    Transition newTransition = rule.addTransitionToNac("undefined", nac);
+
+    JungData nacJungData = ruleData.getNacJungData(nacId);
+    nacJungData.createTransition(newTransition, coordinate);
+  }
+
+  public void deleteTransition(int id, UUID nacId, Transition transition)
+    throws EngineException {
+
+    /*
+     * TODO: check if this transition is free to delete. If transition is in
+     * L, deleting is not allowed
+     */
+
+    checkIsTransition(transition);
+
+    RuleData ruleData = getRuleData(id);
+    Rule rule = ruleData.getRule();
+
+    NAC nac = rule.getNAC(nacId);
+
+    System.out.println(".. deleteTransition from NAC " + nac);
+
+    JungData nacJungData = ruleData.getNacJungData(nacId);
+
+    // delete-collections must be build before deleting
+    ArrayList<IArc> arcsToDelete = new ArrayList<IArc>();
+    ArrayList<INode> nodesToDelete = new ArrayList<INode>();
+
+    nodesToDelete.add(transition);
+    arcsToDelete.addAll(transition.getIncomingArcs());
+    arcsToDelete.addAll(transition.getOutgoingArcs());
+
+    // TODO check function of removeTransitionFromNac - method modifies L->NAC
+    // mapping which is not intended here. Nodes coming from L should only be
+    // deleted in L
+    rule.removeTransitionFromNac(transition, nac);
+    nacJungData.delete(arcsToDelete, nodesToDelete);
+  }
+
+  public void createPreArc(int id, UUID nacId, Place from, Transition to)
+    throws EngineException {
+
+    checkIsPlace(from);
+    checkIsTransition(to);
+
+    RuleData ruleData = getRuleData(id);
+    Rule rule = ruleData.getRule();
+
+    NAC nac = rule.getNAC(nacId);
+
+    System.out.println(".. createPreArc in NAC " + nac);
+
+    PreArc newPreArc = rule.addPreArcToNac("undefined", from, to, nac);
+
+    JungData nacJungData = ruleData.getNacJungData(nacId);
+    nacJungData.createArc(newPreArc, from, to);
+  }
+
+  public void createPostArc(int id, UUID nacId, Transition from, Place to)
+    throws EngineException {
+
+    checkIsTransition(from);
+    checkIsPlace(to);
+
+    RuleData ruleData = getRuleData(id);
+    Rule rule = ruleData.getRule();
+
+    NAC nac = rule.getNAC(nacId);
+
+    System.out.println(".. createPostArc in NAC " + nac);
+
+    PostArc newPostArc = rule.addPostArcToNac("undefined", from, to, nac);
+
+    JungData nacJungData = ruleData.getNacJungData(nacId);
+    nacJungData.createArc(newPostArc, from, to);
   }
 
   public AbstractLayout<INode, IArc> getJungLayout(int ruleId, UUID nacId)

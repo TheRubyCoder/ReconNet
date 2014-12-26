@@ -684,6 +684,9 @@ extends VisualizationViewer<INode, IArc> {
       if (isN()) {
         EngineAdapter.getPetrinetManipulation().createArc(getCurrentId(),
           start, end);
+      } else if (isNAC()) {
+        EngineAdapter.getRuleManipulation().createArc(getCurrentId(), nacId,
+          start, end);
       } else {
         EngineAdapter.getRuleManipulation().createArc(getCurrentId(),
           getRuleNet(), start, end);
@@ -706,6 +709,11 @@ extends VisualizationViewer<INode, IArc> {
       if (isN()) {
         EngineAdapter.getPetrinetManipulation().createTransition(
           getCurrentId(), position);
+      } else if (isNAC()) {
+        System.out.println("PetrinetViewer.createTransition");
+        EngineAdapter.getRuleManipulation().createTransition(getCurrentId(),
+          nacId, position);
+
       } else {
         EngineAdapter.getRuleManipulation().createTransition(getCurrentId(),
           getRuleNet(), position);
@@ -728,7 +736,7 @@ extends VisualizationViewer<INode, IArc> {
         EngineAdapter.getPetrinetManipulation().createPlace(getCurrentId(),
           point);
       } else if (isNAC()) {
-        System.out.println("PetrinetViewer.create Place");
+        System.out.println("PetrinetViewer.createPlace");
         EngineAdapter.getRuleManipulation().createPlace(getCurrentId(),
           nacId, point);
       } else {
@@ -753,6 +761,10 @@ extends VisualizationViewer<INode, IArc> {
       if (isN()) {
         EngineAdapter.getPetrinetManipulation().deletePlace(getCurrentId(),
           place);
+      } else if (isNAC()) {
+        System.out.println("PetrinetViewer.deletePlace");
+        EngineAdapter.getRuleManipulation().deletePlace(getCurrentId(),
+          nacId, place);
       } else {
         EngineAdapter.getRuleManipulation().deletePlace(getCurrentId(),
           getRuleNet(), place);
@@ -776,6 +788,10 @@ extends VisualizationViewer<INode, IArc> {
       if (isN()) {
         EngineAdapter.getPetrinetManipulation().deleteTransition(
           getCurrentId(), transition);
+      } else if (isNAC()) {
+        System.out.println("PetrinetViewer.deleteTransition");
+        EngineAdapter.getRuleManipulation().deleteTransition(getCurrentId(),
+          nacId, transition);
       } else {
         EngineAdapter.getRuleManipulation().deleteTransition(getCurrentId(),
           getRuleNet(), transition);

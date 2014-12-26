@@ -427,6 +427,45 @@ public final class RuleManipulation
   }
 
   @Override
+  public void deletePlace(int id, UUID nacId, INode place)
+    throws EngineException {
+
+    ruleManipulationBackend.deletePlace(id, nacId, (Place) place);
+  }
+
+  @Override
+  public void createTransition(int id, UUID nacId, Point2D coordinate)
+    throws EngineException {
+
+    ruleManipulationBackend.createTransition(id, nacId, coordinate);
+  }
+
+  @Override
+  public void deleteTransition(int id, UUID nacId, INode transition)
+    throws EngineException {
+
+    ruleManipulationBackend.deleteTransition(id, nacId,
+      (Transition) transition);
+  }
+
+  @Override
+  public void createArc(int id, UUID nacId, INode from, INode to)
+    throws EngineException {
+
+    if (from instanceof Place && to instanceof Transition) {
+      ruleManipulationBackend.createPreArc(id, nacId, (Place) from,
+        (Transition) to);
+    } else if (from instanceof Transition && to instanceof Place) {
+      ruleManipulationBackend.createPostArc(id, nacId, (Transition) from,
+        (Place) to);
+    } else {
+      warning("Pfeile dürfen nicht zwischen Stelle und Stelle bzw. "
+        + "zwischen Transition und Transition bestehen.");
+    }
+
+  }
+
+  @Override
   public AbstractLayout<INode, IArc> getJungLayout(int ruleId, UUID nacId)
     throws EngineException {
 
