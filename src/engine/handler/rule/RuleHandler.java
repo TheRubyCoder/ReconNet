@@ -1337,9 +1337,6 @@ public final class RuleHandler {
     RuleData ruleData = getRuleData(ruleId);
     Rule rule = ruleData.getRule();
 
-    // Add places/transitions/arcs of L to NAC
-    // TODO: arcs
-
     NAC nac = rule.createPlainNAC();
     sessionManager.createJungLayoutForNac(ruleData, nac.getId());
 
@@ -1418,17 +1415,17 @@ public final class RuleHandler {
   public void deletePlace(int id, UUID nacId, Place place)
     throws EngineException {
 
-    /*
-     * TODO: check if this place is free to delete. If place is in L, deleting
-     * is not allowed
-     */
-
     checkIsPlace(place);
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();
 
     NAC nac = rule.getNAC(nacId);
+
+    if (!nac.isPlaceSafeToDelete(place)) {
+      throw new EngineException(
+        "Stelle kann nicht gelöscht werden, weil diese in L vorhanden ist. Zum Löschen gewünschte Stelle in L löschen.");
+    }
 
     System.out.println(".. deletePlace from NAC " + nac);
 
@@ -1479,6 +1476,11 @@ public final class RuleHandler {
     Rule rule = ruleData.getRule();
 
     NAC nac = rule.getNAC(nacId);
+
+    if (!nac.isTransitionSafeToDelete(transition)) {
+      throw new EngineException(
+        "Transition kann nicht gelöscht werden, weil diese in L vorhanden ist. Zum Löschen gewünschte Transition in L löschen.");
+    }
 
     System.out.println(".. deleteTransition from NAC " + nac);
 

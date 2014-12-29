@@ -321,4 +321,14 @@ public class NAC {
     }
     return true;
   }
+
+  public boolean isPlaceSafeToDelete(Place place) {
+
+    return !this.placeMappingLToNac.containsValue(place);
+  }
+
+  public boolean isTransitionSafeToDelete(Transition transition) {
+
+    return !this.transitionMappingLToNac.containsValue(transition);
+  }
 }
