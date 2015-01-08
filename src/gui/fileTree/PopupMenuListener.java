@@ -91,7 +91,7 @@ import javax.swing.tree.TreePath;
  * Custom popup menu listener extending {@link ActionListener}.
  */
 public final class PopupMenuListener
-implements ActionListener {
+  implements ActionListener {
 
   /**
    * singleton: the instance
@@ -276,8 +276,8 @@ implements ActionListener {
       JOptionPane.showOptionDialog(null,
         "Sollen die Dateien vom Dateisystem gelöscht werden?", "Löschen", 0,
         JOptionPane.QUESTION_MESSAGE, null, new String[]{"Dateien löschen",
-      "Nur aus Übersicht löschen"}, "Nur aus Übersicht löschen") == 0
-      ? true : false;
+          "Nur aus Übersicht löschen"}, "Nur aus Übersicht löschen") == 0
+        ? true : false;
     // CHECKSTYLE:ON
 
     PetriTreeNode node =
@@ -651,8 +651,32 @@ implements ActionListener {
 
   private void removeNac() {
 
-    // Knoten aus Tree löschen
-    // NAC aus Backend löschen
+    PetriTreeNode nacNode =
+      (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
+
+    PetriTreeNode ruleNode = (PetriTreeNode) nacNode.getParent();
+    int ruleId =
+      PopupMenuListener.getInstance().getPidOf(ruleNode.toString());
+
+    UUID nacId = (UUID) nacNode.getUserObject();
+
+    System.out.println("removeNac:" + nacId + " ruleId: " + ruleId);
+
+    try {
+
+      EngineAdapter.getRuleManipulation().deleteNac(ruleId, nacId);
+
+    } catch (Exception e) {
+
+      PopUp.popError(e);
+
+    }
+
+    // remove node from filetree
+    FileTreePane.getInstance().getTreeModel().removeNodeFromParent(nacNode);
+
+    // clear the nac panel
+    RulePane.getInstance().displayEmptyNAC();
   }
 
   /*

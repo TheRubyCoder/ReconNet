@@ -272,6 +272,23 @@ public final class RuleData
         nodeInL,
         Positioning.addPoints(getLJungData().getNodeLayoutAttributes().get(
           nodeInL).getCoordinate(), coordinate));
+
+      // assumption: if node is in L, than it's also in all NACs
+      // TODO has to be optimized. ugly code
+      // this class was implemented by the devil
+      /*
+       * for (NAC nac : getRule().getNACs()) { if (node instanceof Place) {
+       * Place nacPlace = nac.fromLtoNac((Place) node);
+       * getNacJungData(nac.getId()).moveNodeWithoutPositionCheck( nacPlace,
+       * Positioning.addPoints(
+       * getNacJungData(nac.getId()).getNodeLayoutAttributes().get(
+       * nacPlace).getCoordinate(), coordinate)); } if (node instanceof
+       * Transition) { Transition nacTransition = nac.fromLtoNac((Transition)
+       * node); getNacJungData(nac.getId()).moveNodeWithoutPositionCheck(
+       * nacTransition, Positioning.addPoints(
+       * getNacJungData(nac.getId()).getNodeLayoutAttributes().get(
+       * nacTransition).getCoordinate(), coordinate)); } }
+       */
     }
     if (nodeInK != null) {
       getKJungData().moveNodeWithPositionCheck(
@@ -285,5 +302,11 @@ public final class RuleData
         Positioning.addPoints(getRJungData().getNodeLayoutAttributes().get(
           nodeInR).getCoordinate(), coordinate));
     }
+
+  }
+
+  public void deleteNacJungData(UUID nacId) {
+
+    this.jungDataNACs.remove(nacId);
   }
 }

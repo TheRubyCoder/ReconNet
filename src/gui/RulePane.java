@@ -371,6 +371,18 @@ public final class RulePane {
   }
 
   /**
+   * Clears the NAC display.
+   */
+  public void displayEmptyNAC() {
+
+    if (nacViewer != null) {
+      nacViewer.removeFrom(nacPanel);
+    }
+
+    MainWindow.getInstance().repaint();
+  }
+
+  /**
    * Resets {@link PetrinetViewer#currentSelectedNode} for all viewers in the
    * rule but not for <code>petrinetViewer</code>
    *

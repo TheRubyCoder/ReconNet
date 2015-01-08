@@ -149,9 +149,14 @@ public class Rule {
 
     NAC nac = new NAC();
 
-    nacs.put(nac.getId(), nac);
+    this.nacs.put(nac.getId(), nac);
 
     return nac;
+  }
+
+  public void deleteNac(UUID nacId) {
+
+    this.nacs.remove(nacId);
   }
 
   /**
@@ -563,23 +568,6 @@ public class Rule {
       for (NAC nac : nacs.values()) {
         nac.fromLtoNac(leftPlace).setName(name);
       }
-    }
-  }
-
-  public void setNameInNac(Place place, String name, NAC nac) {
-
-    System.out.println(Rule.class + ": setNameInNac " + nac);
-    System.out.println(Rule.class + ": setNameInNac - "
-      + "nac.fromNacToL(place)=" + nac.fromNacToL(place));
-
-    checkIfcontained(nac);
-
-    if (nac.fromNacToL(place) != null) {
-      throw new ShowAsWarningException(new AccessForbiddenException(
-        "This operation is not allowed "
-          + "for Elements that have a representation in L"));
-    } else {
-      place.setName(name);
     }
   }
 

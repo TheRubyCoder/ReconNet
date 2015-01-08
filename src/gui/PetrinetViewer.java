@@ -547,6 +547,10 @@ extends VisualizationViewer<INode, IArc> {
         placeAttribute =
           EngineAdapter.getPetrinetManipulation().getPlaceAttribute(
             getCurrentId(), place);
+      } else if (isNAC()) {
+        placeAttribute =
+          EngineAdapter.getRuleManipulation().getPlaceAttribute(
+            getCurrentId(), nacId, place);
       } else {
         placeAttribute =
           EngineAdapter.getRuleManipulation().getPlaceAttribute(
@@ -839,6 +843,9 @@ extends VisualizationViewer<INode, IArc> {
       if (isN()) {
         EngineAdapter.getPetrinetManipulation().setPname(getCurrentId(),
           place, pname);
+      } else if (isNAC()) {
+        EngineAdapter.getRuleManipulation().setPname(getCurrentId(), nacId,
+          place, pname);
       } else {
         EngineAdapter.getRuleManipulation().setPname(getCurrentId(), place,
           pname);
@@ -913,6 +920,9 @@ extends VisualizationViewer<INode, IArc> {
     try {
       if (isN()) {
         EngineAdapter.getPetrinetManipulation().setTname(getCurrentId(),
+          transition, name);
+      } else if (isNAC()) {
+        EngineAdapter.getRuleManipulation().setTname(getCurrentId(), nacId,
           transition, name);
       } else {
         EngineAdapter.getRuleManipulation().setTname(getCurrentId(),

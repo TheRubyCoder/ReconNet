@@ -322,12 +322,12 @@ public class NAC {
     return true;
   }
 
-  public boolean isPlaceSafeToDelete(Place place) {
+  public boolean isPlaceSafeToChange(Place place) {
 
     return !this.placeMappingLToNac.containsValue(place);
   }
 
-  public boolean isTransitionSafeToDelete(Transition transition) {
+  public boolean isTransitionSafeToChange(Transition transition) {
 
     return !this.transitionMappingLToNac.containsValue(transition);
   }

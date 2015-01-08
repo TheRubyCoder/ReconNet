@@ -162,6 +162,7 @@ public final class RuleHandler {
       }
 
     } else if (net.equals(RuleNet.K)) {
+      // TODO add arc to NAC if added in K
       createdArc = rule.addPreArcToK("undefined", place, transition);
       kArc = createdArc;
     } else if (net.equals(RuleNet.R)) {
@@ -286,7 +287,10 @@ public final class RuleHandler {
       return null;
     }
 
+    Color newPlaceColor = ruleData.getColorGenerator().next();
+
     if (net.equals(RuleNet.L)) {
+
       // create a new Place
       Place newPlace = rule.addPlaceToL("undefined");
 
@@ -303,6 +307,7 @@ public final class RuleHandler {
         JungData nacJungData = ruleData.getNacJungData(nac.getId());
         Place nacPlace = nac.fromLtoNac(newPlace);
         nacJungData.createPlace(nacPlace, coordinate);
+        nacJungData.setPlaceColor(nacPlace, newPlaceColor);
       }
 
       // get automatically added Corresponding Place in K
@@ -316,7 +321,7 @@ public final class RuleHandler {
         }
       }
 
-      setPlaceColor(id, newPlace, ruleData.getColorGenerator().next());
+      setPlaceColor(id, newPlace, newPlaceColor);
 
       return newPlace;
 
@@ -327,6 +332,7 @@ public final class RuleHandler {
       // call JungModificator
       try {
         kJungData.createPlace(newPlace, coordinate);
+        kJungData.setPlaceColor(newPlace, newPlaceColor);
       } catch (IllegalArgumentException e) {
         exception("createPlace - can not create Place in K");
       }
@@ -338,13 +344,25 @@ public final class RuleHandler {
       if (newPlaceInL != null && newPlaceInR != null) {
         try {
           lJungData.createPlace(newPlaceInL, coordinate);
+          lJungData.setPlaceColor(newPlaceInL, newPlaceColor);
+
           rJungData.createPlace(newPlaceInR, coordinate);
+          rJungData.setPlaceColor(newPlaceInR, newPlaceColor);
+
+          // create analog Place in all NACs
+          for (NAC nac : rule.getNACs()) {
+
+            JungData nacJungData = ruleData.getNacJungData(nac.getId());
+            Place nacPlace = nac.fromLtoNac(newPlaceInL);
+            nacJungData.createPlace(nacPlace, coordinate);
+            nacJungData.setPlaceColor(nacPlace, newPlaceColor);
+          }
+
         } catch (IllegalArgumentException e) {
           exception("createPlace - can not create Place in K");
         }
       }
 
-      setPlaceColor(id, newPlace, ruleData.getColorGenerator().next());
       return newPlace;
 
     } else if (net.equals(RuleNet.R)) {
@@ -368,24 +386,10 @@ public final class RuleHandler {
           exception("createPlace - can not create Place in K");
         }
       }
-      setPlaceColor(id, newPlace, ruleData.getColorGenerator().next());
+      setPlaceColor(id, newPlace, newPlaceColor);
 
       return newPlace;
-      // TODO: Create Place für Stelle in NAC erweitern.
-      /*
-       * } else if (net.equals(RuleNet.NAC)) { // create a new Place Place
-       * newPlace = rule.addPlaceToNac("undefined", nac); // call
-       * JungModificator try { nacJungData.createPlace(newPlace, coordinate);
-       * } catch (IllegalArgumentException e) {
-       * exception("createPlace - can not create Place in NAC"); } // get
-       * automatically added Corresponding Place in K Place newPlaceInK =
-       * rule.fromRtoK(newPlace); if (newPlaceInK != null) { try {
-       * kJungData.createPlace(newPlaceInK, coordinate); } catch
-       * (IllegalArgumentException e) {
-       * exception("createPlace - can not create Place in K"); } }
-       * setPlaceColor(id, newPlace, ruleData.getColorGenerator().next());
-       * return newPlace; }
-       */
+
     } else {
       exception("createPlace - Not given if Manipulation is in L,K or R");
       return null;
@@ -482,6 +486,15 @@ public final class RuleHandler {
         try {
           lJungData.createTransition(newTransitionInL, coordinate);
           rJungData.createTransition(newTransitionInR, coordinate);
+
+          // create analog Place in all NACs
+          for (NAC nac : rule.getNACs()) {
+
+            JungData nacJungData = ruleData.getNacJungData(nac.getId());
+            Transition nacTransition = nac.fromLtoNac(newTransitionInL);
+            nacJungData.createTransition(nacTransition, coordinate);
+          }
+
         } catch (IllegalArgumentException e) {
           exception("createTransition"
             + " - can not create Transition in L or R");
@@ -576,6 +589,17 @@ public final class RuleHandler {
     }
 
     if (net == RuleNet.L) {
+
+      // Stelle x löschen ausgehend von L
+      // * Stelle x in R, K und allen NACs identifizieren (falls vorhanden)
+      // * Mappings löschen
+
+      System.out.println("RuleHandler::deletePlace");
+
+      System.out.println("place in L: " + place);
+      System.out.println("place in K: " + rule.fromLtoK(place));
+      System.out.println("place in R: " + rule.fromLtoR(place));
+
       rule.removePlaceFromL(place);
 
     } else if (net == RuleNet.K) {
@@ -678,11 +702,6 @@ public final class RuleHandler {
     case R:
       petrinetData = ruleData.getRJungData();
       break;
-    case NAC:
-      // TODO: anpassen für multi-nac
-      // im Zweifel einfach grau
-      return new PlaceAttribute(place.getMark(), place.getName(), Color.gray,
-        place.getCapacity());
     default:
       break;
     }
@@ -854,11 +873,6 @@ public final class RuleHandler {
 
     } else if (net == Net.R) {
       ruleData.getRule().setNameInR(place, pname);
-
-    } else if (net == Net.NAC) {
-      // TODO: support multiple nacs
-      NAC[] nacs = ruleData.getRule().getNACs().toArray(new NAC[0]);
-      ruleData.getRule().setNameInNac(place, pname, nacs[0]);
     }
 
   }
@@ -1345,22 +1359,25 @@ public final class RuleHandler {
     /* Add Places from L to new NAC */
     for (Place lPlace : rule.getL().getPlaces()) {
 
-      double x_coord = ruleData.getLJungData().getJungLayout().getX(lPlace);
-      double y_coord = ruleData.getLJungData().getJungLayout().getY(lPlace);
+      JungData lJungData = ruleData.getLJungData();
+
+      double x_coord = lJungData.getJungLayout().getX(lPlace);
+      double y_coord = lJungData.getJungLayout().getY(lPlace);
       Point2D coordinate = new Point2D.Double(x_coord, y_coord);
 
       Place nacPlace =
         rule.addPlaceToNacWithMappingToPlaceInL(lPlace, nac.getId());
       nacJungData.createPlace(nacPlace, coordinate);
+      nacJungData.setPlaceColor(nacPlace, lJungData.getPlaceColor(lPlace));
     }
 
     /* Add Transitions from L to new NAC */
     for (Transition lTransition : rule.getL().getTransitions()) {
 
-      double x_coord =
-        ruleData.getLJungData().getJungLayout().getX(lTransition);
-      double y_coord =
-        ruleData.getLJungData().getJungLayout().getY(lTransition);
+      JungData lJungData = ruleData.getLJungData();
+
+      double x_coord = lJungData.getJungLayout().getX(lTransition);
+      double y_coord = lJungData.getJungLayout().getY(lTransition);
       Point2D coordinate = new Point2D.Double(x_coord, y_coord);
 
       Transition nacTransition =
@@ -1393,6 +1410,16 @@ public final class RuleHandler {
     return nac.getId();
   }
 
+  public void deleteNac(int ruleId, UUID nacId)
+    throws EngineException {
+
+    RuleData ruleData = getRuleData(ruleId);
+    Rule rule = ruleData.getRule();
+
+    rule.deleteNac(nacId);
+    ruleData.deleteNacJungData(nacId);
+  }
+
   public Place createPlace(int id, UUID nacId, Point2D coordinate)
     throws EngineException {
 
@@ -1422,7 +1449,7 @@ public final class RuleHandler {
 
     NAC nac = rule.getNAC(nacId);
 
-    if (!nac.isPlaceSafeToDelete(place)) {
+    if (!nac.isPlaceSafeToChange(place)) {
       throw new EngineException(
         "Stelle kann nicht gelöscht werden, weil diese in L vorhanden ist. Zum Löschen gewünschte Stelle in L löschen.");
     }
@@ -1465,11 +1492,6 @@ public final class RuleHandler {
   public void deleteTransition(int id, UUID nacId, Transition transition)
     throws EngineException {
 
-    /*
-     * TODO: check if this transition is free to delete. If transition is in
-     * L, deleting is not allowed
-     */
-
     checkIsTransition(transition);
 
     RuleData ruleData = getRuleData(id);
@@ -1477,7 +1499,7 @@ public final class RuleHandler {
 
     NAC nac = rule.getNAC(nacId);
 
-    if (!nac.isTransitionSafeToDelete(transition)) {
+    if (!nac.isTransitionSafeToChange(transition)) {
       throw new EngineException(
         "Transition kann nicht gelöscht werden, weil diese in L vorhanden ist. Zum Löschen gewünschte Transition in L löschen.");
     }
@@ -1545,6 +1567,49 @@ public final class RuleHandler {
     RuleData ruleData = getRuleData(ruleId);
 
     return ruleData.getNacJungData(nacId).getJungLayout();
+  }
+
+  public PlaceAttribute getPlaceAttribute(int id, UUID nacId, Place place)
+    throws EngineException {
+
+    RuleData ruleData = getRuleData(id);
+    JungData nacJungData = ruleData.getNacJungData(nacId);
+
+    return new PlaceAttribute(place.getMark(), place.getName(),
+      nacJungData.getPlaceColor(place), place.getCapacity());
+  }
+
+  public void setPname(int id, UUID nacId, Place place, String pname)
+    throws EngineException {
+
+    RuleData ruleData = getRuleData(id);
+    Rule rule = ruleData.getRule();
+
+    NAC nac = rule.getNAC(nacId);
+
+    if (!nac.isPlaceSafeToChange(place)) {
+      throw new EngineException(
+        "Stelle kann nicht umbenannt werden, weil diese in L vorhanden ist. Zum Umbenennen gewünschte Stelle in L umnennen.");
+    }
+
+    place.setName(pname);
+  }
+
+  public void
+    setTname(int id, UUID nacId, Transition transition, String tname)
+    throws EngineException {
+
+    RuleData ruleData = getRuleData(id);
+    Rule rule = ruleData.getRule();
+
+    NAC nac = rule.getNAC(nacId);
+
+    if (!nac.isTransitionSafeToChange(transition)) {
+      throw new EngineException(
+        "Transition kann nicht umbenannt werden, weil diese in L vorhanden ist. Zum Umbenennen gewünschte Transition in L umnennen.");
+    }
+
+    transition.setName(tname);
   }
 
 }

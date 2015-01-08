@@ -420,6 +420,13 @@ public final class RuleManipulation
   }
 
   @Override
+  public void deleteNac(int ruleId, UUID nacId)
+    throws EngineException {
+
+    ruleManipulationBackend.deleteNac(ruleId, nacId);
+  }
+
+  @Override
   public void createPlace(int id, UUID nacId, Point2D coordinate)
     throws EngineException {
 
@@ -466,10 +473,47 @@ public final class RuleManipulation
   }
 
   @Override
+  public PlaceAttribute getPlaceAttribute(int id, UUID nacId, INode place)
+    throws EngineException {
+
+    if (!(place instanceof Place)) {
+      warning("node isn't a place");
+      return null;
+    }
+
+    return ruleManipulationBackend.getPlaceAttribute(id, nacId, (Place) place);
+  }
+
+  @Override
   public AbstractLayout<INode, IArc> getJungLayout(int ruleId, UUID nacId)
     throws EngineException {
 
     return ruleManipulationBackend.getJungLayout(ruleId, nacId);
+  }
+
+  @Override
+  public void setPname(int id, UUID nacId, INode place, String pname)
+    throws EngineException {
+
+    if (!(place instanceof Place)) {
+      warning("place isn't a Place");
+      return;
+    }
+
+    ruleManipulationBackend.setPname(id, nacId, (Place) place, pname);
+  }
+
+  @Override
+  public void setTname(int id, UUID nacId, INode transition, String tname)
+    throws EngineException {
+
+    if (!(transition instanceof Transition)) {
+      warning("transition isn't a Transition");
+      return;
+    }
+
+    ruleManipulationBackend.setTname(id, nacId, (Transition) transition,
+      tname);
   }
 
 }

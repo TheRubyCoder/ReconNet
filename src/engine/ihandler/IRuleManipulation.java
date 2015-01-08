@@ -223,7 +223,7 @@ public interface IRuleManipulation {
 
   /**
    * Deletes a Transition from a NAC
-   * 
+   *
    * @param id
    *        ID of the rule
    * @param nacId
@@ -285,6 +285,22 @@ public interface IRuleManipulation {
    */
   PlaceAttribute getPlaceAttribute(@NotNull int id, @NotNull INode place)
     throws EngineException;
+
+  /**
+   * Gets the Attribute from a Place of a NAC
+   *
+   * @param id
+   *        ID of the rule
+   * @param nacId
+   *        ID of the nac
+   * @param place
+   *        which attributes are wanted
+   * @return
+   * @throws EngineException
+   */
+  PlaceAttribute getPlaceAttribute(@NotNull int id, @NotNull UUID nacId,
+    @NotNull INode place)
+      throws EngineException;
 
   /**
    * Gets the Attributes from a Transition
@@ -401,6 +417,23 @@ public interface IRuleManipulation {
     throws EngineException;
 
   /**
+   * Sets the Name of a NAC-explicit Place
+   *
+   * @param id
+   *        ID of the rule
+   * @param nacId
+   *        ID of the nac
+   * @param place
+   *        place to be named
+   * @param pname
+   *        name
+   * @throws EngineException
+   */
+  void setPname(@NotNull int id, @NotNull UUID nacId, @NotNull INode place,
+    @NotNull String pname)
+    throws EngineException;
+
+  /**
    * Sets the Tlb of a Transition and its corresponding nodes in the other
    * parts of the rule
    *
@@ -430,6 +463,23 @@ public interface IRuleManipulation {
    */
   void setTname(@NotNull int id, @NotNull INode transition,
     @NotNull String tname)
+      throws EngineException;
+
+  /**
+   * Sets the Name of a NAC-explicit transition
+   *
+   * @param id
+   *        ID of the rule
+   * @param nacId
+   *        ID of the NAC
+   * @param transition
+   *        transition to be named
+   * @param tname
+   *        name
+   * @throws EngineException
+   */
+  void setTname(@NotNull int id, @NotNull UUID nacId,
+    @NotNull INode transition, @NotNull String tname)
       throws EngineException;
 
   /**
@@ -556,6 +606,18 @@ public interface IRuleManipulation {
    * @return ID of the created NAC
    */
   UUID createNac(int ruleId)
+    throws EngineException;
+
+  /**
+   * Deletes a NAC from a rule
+   *
+   * @param ruleId
+   *        The rule containing the NAC
+   * @param nacId
+   *        ID of the NAC
+   * @throws EngineException
+   */
+  void deleteNac(int ruleId, UUID nacId)
     throws EngineException;
 
 }
