@@ -58,6 +58,7 @@ import java.util.UUID;
 import org.apache.commons.collections15.BidiMap;
 import org.apache.commons.collections15.bidimap.DualHashBidiMap;
 
+import petrinet.model.IArc;
 import petrinet.model.Petrinet;
 import petrinet.model.Place;
 import petrinet.model.PostArc;
@@ -330,5 +331,18 @@ public class NAC {
   public boolean isTransitionSafeToChange(Transition transition) {
 
     return !this.transitionMappingLToNac.containsValue(transition);
+  }
+
+  public boolean isArcSafeToChange(IArc arc) {
+
+    if (this.preArcMappingLToNac.containsValue(arc)) {
+      return false;
+    }
+
+    if (this.postArcMappingLToNac.containsValue(arc)) {
+      return false;
+    }
+
+    return true;
   }
 }

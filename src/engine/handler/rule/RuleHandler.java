@@ -130,7 +130,7 @@ public final class RuleHandler {
    */
   public PreArc createPreArc(int id, RuleNet net, Place place,
     Transition transition)
-    throws EngineException {
+      throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -162,9 +162,19 @@ public final class RuleHandler {
       }
 
     } else if (net.equals(RuleNet.K)) {
-      // TODO add arc to NAC if added in K
+
       createdArc = rule.addPreArcToK("undefined", place, transition);
       kArc = createdArc;
+
+      for (NAC nac : rule.getNACs()) {
+
+        JungData nacJungData = ruleData.getNacJungData(nac.getId());
+        PreArc lPreArc = rule.fromKtoL(createdArc);
+        PreArc nacPreArc = nac.fromLtoNac(lPreArc);
+        nacJungData.createArc(nacPreArc, nacPreArc.getSource(),
+          nacPreArc.getTarget());
+      }
+
     } else if (net.equals(RuleNet.R)) {
       createdArc = rule.addPreArcToR("undefined", place, transition);
       kArc = rule.fromRtoK(createdArc);
@@ -203,7 +213,7 @@ public final class RuleHandler {
    */
   public PostArc createPostArc(int id, RuleNet net, Transition transition,
     Place place)
-    throws EngineException {
+      throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -235,8 +245,19 @@ public final class RuleHandler {
       }
 
     } else if (net.equals(RuleNet.K)) {
+
       createdArc = rule.addPostArcToK("undefined", transition, place);
       kArc = createdArc;
+
+      for (NAC nac : rule.getNACs()) {
+
+        JungData nacJungData = ruleData.getNacJungData(nac.getId());
+        PostArc lPostArc = rule.fromKtoL(createdArc);
+        PostArc nacPostArc = nac.fromLtoNac(lPostArc);
+        nacJungData.createArc(nacPostArc, nacPostArc.getSource(),
+          nacPostArc.getTarget());
+      }
+
     } else if (net.equals(RuleNet.R)) {
       createdArc = rule.addPostArcToR("undefined", transition, place);
       kArc = rule.fromRtoK(createdArc);
@@ -723,7 +744,7 @@ public final class RuleHandler {
    */
   public TransitionAttribute getTransitionAttribute(int id,
     Transition transition)
-    throws EngineException {
+      throws EngineException {
 
     String tlb = transition.getTlb();
     String name = transition.getName();
@@ -1342,6 +1363,20 @@ public final class RuleHandler {
     exceptionIf(!(arc instanceof IArc), "this isn't an arc");
   }
 
+  /*
+   * Checks if the given transition is present in L If so, adding pre or post
+   * arc in the NAC is not allowed
+   */
+  private void checkIfNewArcInNacIsAllowed(NAC nac, Transition transition)
+    throws EngineException {
+
+    Transition transitionInL = nac.fromNacToL(transition);
+
+    exceptionIf(
+      (transitionInL != null),
+      "The transition effected by this new arc is contained in L. Therefore creating this new arc is not allowed.");
+  }
+
   public UUID createNac(int ruleId)
     throws EngineException {
 
@@ -1526,6 +1561,9 @@ public final class RuleHandler {
   public void createPreArc(int id, UUID nacId, Place from, Transition to)
     throws EngineException {
 
+    // check if target transition is in L
+    // if in L, creating an arc to the transition is not allowed
+
     checkIsPlace(from);
     checkIsTransition(to);
 
@@ -1533,6 +1571,8 @@ public final class RuleHandler {
     Rule rule = ruleData.getRule();
 
     NAC nac = rule.getNAC(nacId);
+
+    checkIfNewArcInNacIsAllowed(nac, to);
 
     System.out.println(".. createPreArc in NAC " + nac);
 
@@ -1553,12 +1593,42 @@ public final class RuleHandler {
 
     NAC nac = rule.getNAC(nacId);
 
+    checkIfNewArcInNacIsAllowed(nac, from);
+
     System.out.println(".. createPostArc in NAC " + nac);
 
     PostArc newPostArc = rule.addPostArcToNac("undefined", from, to, nac);
 
     JungData nacJungData = ruleData.getNacJungData(nacId);
     nacJungData.createArc(newPostArc, from, to);
+  }
+
+  public void deleteArc(int id, UUID nacId, IArc arc)
+    throws EngineException {
+
+    RuleData ruleData = getRuleData(id);
+    Rule rule = ruleData.getRule();
+
+    NAC nac = rule.getNAC(nacId);
+
+    exceptionIf((!nac.isArcSafeToChange(arc)),
+      "Arc cannot be deleted because it exists in L.");
+
+    if (arc instanceof PreArc) {
+      rule.removePreArcFromNac((PreArc) arc, nac);
+    }
+
+    if (arc instanceof PostArc) {
+      rule.removePostArcFromNac((PostArc) arc, nac);
+    }
+
+    ArrayList<IArc> arcsToDelete = new ArrayList<IArc>();
+    ArrayList<INode> nodesToDelete = new ArrayList<INode>();
+
+    arcsToDelete.add(arc);
+
+    JungData nacJungData = ruleData.getNacJungData(nacId);
+    nacJungData.delete(arcsToDelete, nodesToDelete);
   }
 
   public AbstractLayout<INode, IArc> getJungLayout(int ruleId, UUID nacId)
@@ -1596,8 +1666,8 @@ public final class RuleHandler {
   }
 
   public void
-    setTname(int id, UUID nacId, Transition transition, String tname)
-    throws EngineException {
+  setTname(int id, UUID nacId, Transition transition, String tname)
+      throws EngineException {
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();

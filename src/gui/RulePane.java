@@ -292,9 +292,6 @@ public final class RulePane {
       Layout<INode, IArc> nacLayout =
         EngineAdapter.getRuleManipulation().getJungLayout(ruleId, nacId);
 
-      System.out.println(RulePane.class + ": nacLayout has "
-        + nacLayout.getGraph().getVertexCount() + " nodes");
-
       nacViewer = new PetrinetViewer(nacLayout, ruleId, nacId, RuleNet.NAC);
       nacViewer.addTo(nacPanel);
 

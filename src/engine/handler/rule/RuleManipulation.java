@@ -100,7 +100,7 @@ import exceptions.EngineException;
  * @author alex (aas772)
  */
 public final class RuleManipulation
-  implements IRuleManipulation {
+implements IRuleManipulation {
 
   /** Singleton instance of this class */
   private static RuleManipulation ruleManipulation;
@@ -258,7 +258,7 @@ public final class RuleManipulation
   @Override
   public void setCapacity(@NotNull int id, @NotNull INode place,
     @NotNull int capacity)
-    throws EngineException {
+      throws EngineException {
 
     if (!(place instanceof Place)) {
       warning("place isn't a Place");
@@ -514,6 +514,18 @@ public final class RuleManipulation
 
     ruleManipulationBackend.setTname(id, nacId, (Transition) transition,
       tname);
+  }
+
+  @Override
+  public void deleteArc(int id, UUID nacId, IArc arc)
+    throws EngineException {
+
+    if (!(arc instanceof IArc)) {
+      warning("this isn't an arc");
+      return;
+    }
+
+    ruleManipulationBackend.deleteArc(id, nacId, arc);
   }
 
 }

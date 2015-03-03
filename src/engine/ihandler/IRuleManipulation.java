@@ -183,6 +183,20 @@ public interface IRuleManipulation {
     throws EngineException;
 
   /**
+   * Deletes an Arc in a given NAC
+   *
+   * @param id
+   *        ID of the rule
+   * @param nacId
+   *        ID of the NAC
+   * @param arc
+   *        The arc to delete
+   * @throws EngineException
+   */
+  void deleteArc(@NotNull int id, @NotNull UUID nacId, @NotNull IArc arc)
+    throws EngineException;
+
+  /**
    * Deletes a Place
    *
    * @param id
