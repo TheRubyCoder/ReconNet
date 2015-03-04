@@ -574,79 +574,17 @@ public final class RuleHandler {
     if (net == RuleNet.L) {
 
       if (arc instanceof PreArc) {
-
-        for (NAC nac : rule.getNACs()) {
-
-          PreArc nacPreArc = nac.fromLtoNac((PreArc) arc);
-
-          ArrayList<IArc> arcsToDelete = new ArrayList<IArc>();
-          ArrayList<INode> nodesToDelete = new ArrayList<INode>();
-
-          arcsToDelete.add(nacPreArc);
-
-          JungData nacJungData = ruleData.getNacJungData(nac.getId());
-          nacJungData.delete(arcsToDelete, nodesToDelete);
-        }
-
         rule.removePreArcFromL((PreArc) arc);
-
       } else if (arc instanceof PostArc) {
-
-        for (NAC nac : rule.getNACs()) {
-
-          PostArc nacPostArc = nac.fromLtoNac((PostArc) arc);
-
-          ArrayList<IArc> arcsToDelete = new ArrayList<IArc>();
-          ArrayList<INode> nodesToDelete = new ArrayList<INode>();
-
-          arcsToDelete.add(nacPostArc);
-
-          JungData nacJungData = ruleData.getNacJungData(nac.getId());
-          nacJungData.delete(arcsToDelete, nodesToDelete);
-        }
-
         rule.removePostArcFromL((PostArc) arc);
-
       }
 
     } else if (net == RuleNet.K) {
 
       if (arc instanceof PreArc) {
-
-        for (NAC nac : rule.getNACs()) {
-
-          PreArc lPreArc = rule.fromKtoL((PreArc) arc);
-          PreArc nacPreArc = nac.fromLtoNac(lPreArc);
-
-          ArrayList<IArc> arcsToDelete = new ArrayList<IArc>();
-          ArrayList<INode> nodesToDelete = new ArrayList<INode>();
-
-          arcsToDelete.add(nacPreArc);
-
-          JungData nacJungData = ruleData.getNacJungData(nac.getId());
-          nacJungData.delete(arcsToDelete, nodesToDelete);
-        }
-
         rule.removePreArcFromK((PreArc) arc);
-
       } else if (arc instanceof PostArc) {
-
-        for (NAC nac : rule.getNACs()) {
-
-          PostArc lPostArc = rule.fromKtoL((PostArc) arc);
-          PostArc nacPostArc = nac.fromLtoNac(lPostArc);
-
-          ArrayList<IArc> arcsToDelete = new ArrayList<IArc>();
-          ArrayList<INode> nodesToDelete = new ArrayList<INode>();
-
-          arcsToDelete.add(nacPostArc);
-
-          JungData nacJungData = ruleData.getNacJungData(nac.getId());
-          nacJungData.delete(arcsToDelete, nodesToDelete);
-        }
-
         rule.removePostArcFromK((PostArc) arc);
-
       }
 
     } else if (net == RuleNet.R) {
@@ -658,19 +596,6 @@ public final class RuleHandler {
       }
 
     }
-
-    /*
-     * if (arc instanceof PreArc && net == RuleNet.L) {
-     * rule.removePreArcFromL((PreArc) arc); } else if (arc instanceof PreArc
-     * && net == RuleNet.K) { rule.removePreArcFromK((PreArc) arc); } else if
-     * (arc instanceof PreArc && net == RuleNet.R) {
-     * rule.removePreArcFromR((PreArc) arc); } else if (arc instanceof PostArc
-     * && net == RuleNet.L) { rule.removePostArcFromL((PostArc) arc); } else
-     * if (arc instanceof PostArc && net == RuleNet.K) {
-     * rule.removePostArcFromK((PostArc) arc); } else if (arc instanceof
-     * PostArc && net == RuleNet.R) { rule.removePostArcFromR((PostArc) arc);
-     * }
-     */
 
     ruleData.deleteDataOfMissingElements(rule);
   }
@@ -692,31 +617,9 @@ public final class RuleHandler {
     }
 
     if (net == RuleNet.L) {
-
-      for (NAC nac : rule.getNACs()) {
-
-        Place nacPlace = nac.fromLtoNac(place);
-
-        // delete-collections must be build before deleting
-        ArrayList<IArc> arcsToDelete = new ArrayList<IArc>();
-        ArrayList<INode> nodesToDelete = new ArrayList<INode>();
-
-        nodesToDelete.add(nacPlace);
-        arcsToDelete.addAll(nacPlace.getIncomingArcs());
-        arcsToDelete.addAll(nacPlace.getOutgoingArcs());
-
-        // only JungData has to be removed because logic data will be
-        // removed via rule.removePlaceFromL(place)
-
-        JungData nacJungData = ruleData.getNacJungData(nac.getId());
-        nacJungData.delete(arcsToDelete, nodesToDelete);
-      }
-
       rule.removePlaceFromL(place);
-
     } else if (net == RuleNet.K) {
       rule.removePlaceFromK(place);
-
     } else if (net == RuleNet.R) {
       rule.removePlaceFromR(place);
     }
@@ -741,31 +644,9 @@ public final class RuleHandler {
     }
 
     if (net == RuleNet.L) {
-
-      for (NAC nac : rule.getNACs()) {
-
-        Transition nacTransition = nac.fromLtoNac(transition);
-
-        // delete-collections must be build before deleting
-        ArrayList<IArc> arcsToDelete = new ArrayList<IArc>();
-        ArrayList<INode> nodesToDelete = new ArrayList<INode>();
-
-        nodesToDelete.add(nacTransition);
-        arcsToDelete.addAll(nacTransition.getIncomingArcs());
-        arcsToDelete.addAll(nacTransition.getOutgoingArcs());
-
-        // only JungData has to be removed because logic data will be
-        // removed via rule.removeTransitionFromL(transition)
-
-        JungData nacJungData = ruleData.getNacJungData(nac.getId());
-        nacJungData.delete(arcsToDelete, nodesToDelete);
-      }
-
       rule.removeTransitionFromL(transition);
-
     } else if (net == RuleNet.K) {
       rule.removeTransitionFromK(transition);
-
     } else if (net == RuleNet.R) {
       rule.removeTransitionFromR(transition);
     }
@@ -1733,13 +1614,7 @@ public final class RuleHandler {
       rule.removePostArcFromNac((PostArc) arc, nac);
     }
 
-    ArrayList<IArc> arcsToDelete = new ArrayList<IArc>();
-    ArrayList<INode> nodesToDelete = new ArrayList<INode>();
-
-    arcsToDelete.add(arc);
-
-    JungData nacJungData = ruleData.getNacJungData(nacId);
-    nacJungData.delete(arcsToDelete, nodesToDelete);
+    ruleData.deleteDataOfMissingElements(rule);
   }
 
   public AbstractLayout<INode, IArc> getJungLayout(int ruleId, UUID nacId)

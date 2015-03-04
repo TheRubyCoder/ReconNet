@@ -55,6 +55,7 @@ import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
@@ -63,6 +64,7 @@ import transformation.Rule;
 import transformation.TransformationComponent;
 import engine.Positioning;
 import engine.attribute.ColorGenerator;
+import exceptions.ShowAsInfoException;
 
 /**
  * This Class is a data container for a Rule and all Petrinet in this Rule.
@@ -71,7 +73,7 @@ import engine.attribute.ColorGenerator;
  */
 
 public final class RuleData
-  extends SessionDataAbstract {
+extends SessionDataAbstract {
 
   private Rule rule;
   private JungData jungDataL;
@@ -215,6 +217,12 @@ public final class RuleData
     getLJungData().deleteDataOfMissingElements(rule.getL());
     getKJungData().deleteDataOfMissingElements(rule.getK());
     getRJungData().deleteDataOfMissingElements(rule.getR());
+
+    for (Entry<UUID, JungData> entry : jungDataNACs.entrySet()) {
+
+      entry.getValue().deleteDataOfMissingElements(
+        rule.getNAC(entry.getKey()).getNac());
+    }
   }
 
   @Override
