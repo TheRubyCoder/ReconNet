@@ -54,6 +54,7 @@ package persistence;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -101,7 +102,7 @@ public final class Persistence {
 
   /**
    * Saves a petrinet into a file
-   * 
+   *
    * @param pathAndFilename
    *        String that identifies the file
    * @param petrinet
@@ -122,11 +123,11 @@ public final class Persistence {
 
     for (Entry<INode, NodeLayoutAttribute> e : nodeMap.entrySet()) {
       String[] coords =
-        {String.valueOf(e.getValue().getCoordinate().getX()),
-          String.valueOf(e.getValue().getCoordinate().getY()),
-          String.valueOf(e.getValue().getColor().getRed()),
-          String.valueOf(e.getValue().getColor().getGreen()),
-          String.valueOf(e.getValue().getColor().getBlue())};
+      {String.valueOf(e.getValue().getCoordinate().getX()),
+        String.valueOf(e.getValue().getCoordinate().getY()),
+        String.valueOf(e.getValue().getColor().getRed()),
+        String.valueOf(e.getValue().getColor().getGreen()),
+        String.valueOf(e.getValue().getColor().getBlue())};
       coordinates.put(String.valueOf(e.getKey().getId()), coords);
     }
 
@@ -157,7 +158,7 @@ public final class Persistence {
 
   /**
    * Loads a petrinet from a file
-   * 
+   *
    * @param pathAndFilename
    *        String that identifies the file
    * @param handler
@@ -189,7 +190,7 @@ public final class Persistence {
 
   /**
    * Saves a {@link Rule rule} into a file
-   * 
+   *
    * @param pathAndFilename
    *        String that identifies the file
    * @param rule
@@ -243,33 +244,11 @@ public final class Persistence {
     return success;
   }
 
-  /**
-   * Saves a {@link Rule rule} into a file
-   * 
-   * @param pathAndFilename
-   *        String that identifies the file
-   * @param rule
-   *        the logical rule to be saved
-   * @param nodeMapL
-   *        layout information for nodes in L
-   * @param nodeMapK
-   *        layout information for nodes in K
-   * @param nodeMapR
-   *        layout information for nodes in R
-   * @param nodeMapNAC
-   *        layout information for nodes in NAC
-   * @param nodeSize
-   *        Size of nodes. This is depending on "zoom" and is important when
-   *        loading the file
-   * @return <code>true</code> when successful, <code>false</code> when any
-   *         exception was thrown
-   */
-  // Überladen für Speicherung eines Nac
-  public static boolean saveRule(String pathAndFilename, Rule rule,
+  public static boolean saveRuleWithNacs(String pathAndFilename, Rule rule,
     Map<INode, NodeLayoutAttribute> nodeMapL,
     Map<INode, NodeLayoutAttribute> nodeMapK,
     Map<INode, NodeLayoutAttribute> nodeMapR,
-    Map<INode, NodeLayoutAttribute> nodeMapNAC, double nodeSize) {
+    ArrayList<Map<INode, NodeLayoutAttribute>> nodeMapNacs, double kNodeSize) {
 
     boolean success = false;
 
@@ -280,12 +259,16 @@ public final class Persistence {
       nodeMapMerged.putAll(nodeMapL);
       nodeMapMerged.putAll(nodeMapK);
       nodeMapMerged.putAll(nodeMapR);
-      nodeMapMerged.putAll(nodeMapNAC);
+
+      for (Map<INode, NodeLayoutAttribute> nodeMapNac : nodeMapNacs) {
+
+        nodeMapMerged.putAll(nodeMapNac);
+      }
 
       Marshaller m = context.createMarshaller();
       m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
       Pnml pnml =
-        Converter.convertRuleWithNacToPnml(rule, nodeMapMerged, nodeSize);
+        Converter.convertRuleWithNacsToPnml(rule, nodeMapMerged, kNodeSize);
 
       DefaultValidationEventHandler eventHandler =
         new javax.xml.bind.helpers.DefaultValidationEventHandler();
@@ -307,7 +290,7 @@ public final class Persistence {
 
   /**
    * Loads a {@linkplain Rule} from a file
-   * 
+   *
    * @param pathAndFilename
    *        String that identifies the file
    * @param handler
@@ -316,7 +299,7 @@ public final class Persistence {
    *         thrown
    */
   public static int
-    loadRule(String pathAndFilename, IRulePersistence handler) {
+  loadRule(String pathAndFilename, IRulePersistence handler) {
 
     Pnml pnml;
     try {
@@ -328,7 +311,8 @@ public final class Persistence {
 
       pnml = (Pnml) m.unmarshal(new File(pathAndFilename));
 
-      return Converter.convertPnmlToRule(pnml, handler);
+      return Converter.convertPnmlToRuleWithNacs(pnml, handler);
+      // return Converter.convertPnmlToRule(pnml, handler);
     } catch (JAXBException e) {
       e.printStackTrace();
       PopUp.popError(e);
@@ -339,7 +323,7 @@ public final class Persistence {
 
   /**
    * Loads a {@linkplain Rule} from a file
-   * 
+   *
    * @param pathAndFilename
    *        String that identifies the file
    * @param handler
@@ -347,7 +331,7 @@ public final class Persistence {
    * @return the id of the created rule. <code>-1</code> if any exception was
    *         thrown
    */
-  public static int loadRuleWithNac(String pathAndFilename,
+  public static int loadRuleWithNacs(String pathAndFilename,
     IRulePersistence handler) {
 
     Pnml pnml;
@@ -360,7 +344,7 @@ public final class Persistence {
 
       pnml = (Pnml) m.unmarshal(new File(pathAndFilename));
 
-      return Converter.convertPnmlToRuleWithNac(pnml, handler);
+      return Converter.convertPnmlToRuleWithNacs(pnml, handler);
     } catch (JAXBException e) {
       e.printStackTrace();
       PopUp.popError(e);

@@ -130,7 +130,7 @@ public final class RuleHandler {
    */
   public PreArc createPreArc(int id, RuleNet net, Place place,
     Transition transition)
-      throws EngineException {
+    throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -213,7 +213,7 @@ public final class RuleHandler {
    */
   public PostArc createPostArc(int id, RuleNet net, Transition transition,
     Place place)
-      throws EngineException {
+    throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -736,7 +736,7 @@ public final class RuleHandler {
    */
   public TransitionAttribute getTransitionAttribute(int id,
     Transition transition)
-      throws EngineException {
+    throws EngineException {
 
     String tlb = transition.getTlb();
     String name = transition.getName();
@@ -807,6 +807,47 @@ public final class RuleHandler {
 
     Persistence.saveRule(path + "/" + filename + "." + format, rule,
       nodeMapL, nodeMapK, nodeMapR, kNodeSize);
+  }
+
+  public void saveRuleWithNacs(int id, String path, String filename,
+    String format)
+    throws EngineException {
+
+    RuleData ruleData = getRuleData(id);
+    Rule rule = ruleData.getRule();
+
+    JungData jungDataL = ruleData.getLJungData();
+    JungData jungDataK = ruleData.getKJungData();
+    JungData jungDataR = ruleData.getRJungData();
+
+    Map<INode, NodeLayoutAttribute> nodeMapL =
+      jungDataL.getNodeLayoutAttributes();
+    Map<INode, NodeLayoutAttribute> nodeMapK =
+      jungDataK.getNodeLayoutAttributes();
+    Map<INode, NodeLayoutAttribute> nodeMapR =
+      jungDataR.getNodeLayoutAttributes();
+
+    ArrayList<Map<INode, NodeLayoutAttribute>> nodeMapNacs =
+      new ArrayList<Map<INode, NodeLayoutAttribute>>();
+
+    for (JungData jungDataNac : ruleData.getNacJungDataSet()) {
+      nodeMapNacs.add(jungDataNac.getNodeLayoutAttributes());
+    }
+
+    checkNodeLayoutAttribute(nodeMapL == null, "save - nodeMapL == null");
+    checkNodeLayoutAttribute(nodeMapK == null, "save - nodeMapK == null");
+    checkNodeLayoutAttribute(nodeMapR == null, "save - nodeMapR == null");
+
+    for (int i = 0; i < nodeMapNacs.size(); i++) {
+
+      checkNodeLayoutAttribute(nodeMapNacs.get(i) == null,
+        "save - nodeMapNac[" + i + "] == null");
+    }
+
+    double kNodeSize = ruleData.getKJungData().getNodeSize();
+
+    Persistence.saveRuleWithNacs(path + "/" + filename + "." + format, rule,
+      nodeMapL, nodeMapK, nodeMapR, nodeMapNacs, kNodeSize);
   }
 
   /**
@@ -1652,8 +1693,8 @@ public final class RuleHandler {
   }
 
   public void
-  setTname(int id, UUID nacId, Transition transition, String tname)
-      throws EngineException {
+    setTname(int id, UUID nacId, Transition transition, String tname)
+    throws EngineException {
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();

@@ -68,20 +68,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import petrinet.model.IArc;
-import petrinet.model.INode;
 import petrinet.model.Petrinet;
-import transformation.Rule;
 import util.StringUtilities;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import engine.EngineMockupForPersistence;
-import engine.attribute.NodeLayoutAttribute;
-import engine.data.JungData;
-import engine.data.RuleData;
 import engine.handler.RuleNet;
 import engine.handler.rule.RuleManipulation;
 import engine.handler.rule.RulePersistence;
 import engine.ihandler.IRulePersistence;
-import engine.session.SessionManager;
 import exceptions.EngineException;
 import gui.Style;
 
@@ -225,97 +219,6 @@ public class PersistanceTest {
     assertTrue(new File(pathString + "test/rule_save_test.pnml").exists());
   }
 
-  /*
-   * TODO: Test ausführen, sobald RuleHandler erweitert wurde. Noch nicht
-   * lauffähig. Sollte funktionieren, sobald ie Methode createPlace im
-   * RuleHandler erweitert wurde um Stellen im NAC-Netz zu speichern
-   */
-  @Ignore
-  @Test
-  public void testSaveRuleWithNac()
-    throws EngineException {
-
-    RulePersistence handler = RulePersistence.getInstance();
-    RuleManipulation handlerSave = RuleManipulation.getInstance();
-
-    // try {
-    // CHECKSTYLE:OFF - No need to check for magic numbers
-    int id = handler.createRule();
-
-    // CHOFF - auskommentiert weil umstrukturiert
-    // handlerSave.addNac(0, id);
-
-    petrinet.model.Place place1 =
-      handler.createPlace(id, RuleNet.K, new Point2D.Double(10, 10));
-    petrinet.model.Place place2 =
-      handler.createPlace(id, RuleNet.NAC, new Point2D.Double(10, 100));
-    petrinet.model.Place place3 =
-      handler.createPlace(id, RuleNet.R, new Point2D.Double(10, 1000));
-    /*
-     * System.out.println("size:" + handler.getJungLayout(id,
-     * RuleNet.K).getGraph().getVertices() .size());
-     */
-
-    handler.setPlaceColor(id, place1, new java.awt.Color(255, 0, 0));
-    handler.setPlaceColor(id, place2, new java.awt.Color(0, 255, 0));
-    handler.setPlaceColor(id, place3, new java.awt.Color(0, 0, 255));
-
-    handler.setCapacity(id, place1, 4);
-    handler.setCapacity(id, place2, 5);
-    handler.setCapacity(id, place3, 6);
-
-    petrinet.model.Transition trans2 =
-      handler.createTransition(id, RuleNet.R, new Point2D.Double(10, 500));
-    // CHECKSTYLE:ON
-
-    /** TODO: map place 1 to INode in R */
-
-    handler.createPreArc(id, RuleNet.R, place1, trans2);
-    handler.createPostArc(id, RuleNet.R, trans2, place3);
-
-    // Handler.Save()-Part
-    SessionManager sessionManager = SessionManager.getInstance();
-
-    RuleData ruleData = sessionManager.getRuleData(id);
-    Rule rule = ruleData.getRule();
-
-    JungData jungDataL = ruleData.getLJungData();
-    JungData jungDataK = ruleData.getKJungData();
-    JungData jungDataR = ruleData.getRJungData();
-    JungData jungDataNAC = ruleData.getNacJungData();
-
-    Map<INode, NodeLayoutAttribute> nodeMapL =
-      jungDataL.getNodeLayoutAttributes();
-    Map<INode, NodeLayoutAttribute> nodeMapK =
-      jungDataK.getNodeLayoutAttributes();
-    Map<INode, NodeLayoutAttribute> nodeMapR =
-      jungDataR.getNodeLayoutAttributes();
-    Map<INode, NodeLayoutAttribute> nodeMapNAC =
-      jungDataNAC.getNodeLayoutAttributes();
-
-    if (nodeMapL == null) {
-      System.out.println("save - nodeMapL == null");
-    }
-    if (nodeMapK == null) {
-      System.out.println("save - nodeMapK == null");
-    }
-    if (nodeMapR == null) {
-      System.out.println("save - nodeMapR == null");
-    }
-    if (nodeMapNAC == null) {
-      System.out.println("save - nodeMapNAC == null");
-    }
-
-    Persistence.saveRule("rule_with_NAC_save_test.pnml", rule, nodeMapL,
-      nodeMapK, nodeMapR, nodeMapNAC, ruleData.getKJungData().getNodeSize());
-
-    /*
-     * } catch (EngineException e) { e.printStackTrace(); }
-     */
-
-    assertTrue(new File(pathString + "rule_with_NAC_save_test.pnml").exists());
-  }
-
   @Ignore
   @Test
   public void testPetrinetSaveLoadEquality()
@@ -352,7 +255,7 @@ public class PersistanceTest {
     EngineMockupForPersistence mockup, petrinet.model.Petrinet net1,
     int net1_pid, AbstractLayout layout1, petrinet.model.Petrinet net2,
     int net2_pid, AbstractLayout layout2)
-      throws EngineException {
+    throws EngineException {
 
     Map<Point2D, petrinet.model.Place> pos2place =
       new HashMap<Point2D, petrinet.model.Place>();

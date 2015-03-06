@@ -138,4 +138,18 @@ public class Place {
 
     this.graphics = graphics;
   }
+
+  @Override
+  public int hashCode() {
+
+    return this.getId().hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+
+    return (obj instanceof Place)
+      && (((Place) obj).getId().equals(this.getId()));
+  }
+
 }

@@ -58,7 +58,7 @@ import javax.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType(XmlAccessType.PROPERTY)
 /**
- * Class that represents the arc xml node 
+ * Class that represents the arc xml node
  */
 public class Arc {
 
@@ -156,6 +156,18 @@ public class Arc {
   public void setGraphics(Graphics graphics) {
 
     this.graphics = graphics;
+  }
+
+  @Override
+  public int hashCode() {
+
+    return this.getId().hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+
+    return (obj instanceof Arc) && (((Arc) obj).getId().equals(this.getId()));
   }
 
 }

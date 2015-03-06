@@ -58,7 +58,7 @@ import javax.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType(XmlAccessType.PROPERTY)
 /**
- * This class represents the information about a transition (xml node) 
+ * This class represents the information about a transition (xml node)
  */
 public class Transition {
 
@@ -140,6 +140,19 @@ public class Transition {
   public void setTransitionRenew(TransitionRenew transitionRenew) {
 
     this.transitionRenew = transitionRenew;
+  }
+
+  @Override
+  public int hashCode() {
+
+    return this.getId().hashCode();
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+
+    return (obj instanceof Transition)
+      && (((Transition) obj).getId().equals(this.getId()));
   }
 
 }

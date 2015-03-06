@@ -123,7 +123,7 @@ final class FilePane {
 
   /** Listener for button new petri net */
   private static class NewPetrinetListener
-    implements ActionListener {
+  implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -138,7 +138,7 @@ final class FilePane {
    * petrinet
    */
   private static class PetrinetListSelectionListener
-    implements ListSelectionListener {
+  implements ListSelectionListener {
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
@@ -149,7 +149,7 @@ final class FilePane {
         // compile these with
         // parameters
         String selectedValue =
-          (String) ((JList) e.getSource()).getSelectedValue();
+        (String) ((JList) e.getSource()).getSelectedValue();
         if (selectedValue != null) {
           int pId = FilePane.getPetrinetFilePane().getIdFromSelectedItem();
           PetrinetPane.getInstance().displayPetrinet(pId,
@@ -166,7 +166,7 @@ final class FilePane {
    * Selecting an item in the list will display its respective rule
    */
   private static class RuleListSelectionListener
-    implements ListSelectionListener {
+  implements ListSelectionListener {
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
@@ -189,7 +189,7 @@ final class FilePane {
 
   /** Listener for button load petri net */
   private static class LoadPetrinetListener
-    implements ActionListener {
+  implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -200,7 +200,7 @@ final class FilePane {
 
   /** Listener for button save petri net */
   private static class SavePetrinetListener
-    implements ActionListener {
+  implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -211,7 +211,7 @@ final class FilePane {
 
   /** Listener for button save as petri net */
   private static class SaveAsPetrinetListener
-    implements ActionListener {
+  implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -222,7 +222,7 @@ final class FilePane {
 
   /** Listener for button new rule */
   private static class NewRuleListener
-    implements ActionListener {
+  implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -233,7 +233,7 @@ final class FilePane {
 
   /** Listener for button load rule */
   private static class LoadRuleListener
-    implements ActionListener {
+  implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -244,7 +244,7 @@ final class FilePane {
 
   /** Listener for button save rule */
   private static class SaveRuleListener
-    implements ActionListener {
+  implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -255,7 +255,7 @@ final class FilePane {
 
   /** Listener for button save rule as */
   private static class SaveAsRuleListener
-    implements ActionListener {
+  implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -266,7 +266,7 @@ final class FilePane {
 
   /** Listener for button delete rule */
   private static class DeleteRuleListener
-    implements ActionListener {
+  implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -277,7 +277,7 @@ final class FilePane {
 
   /** Listener for button delete petrinet */
   private static class DeletePetrinetListener
-    implements ActionListener {
+  implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -376,7 +376,7 @@ final class FilePane {
 
   /**
    * Constructor that sets all the instance variables
-   * 
+   *
    * @param type
    *        "Petrinetz" / "Regel"
    * @param typePlural
@@ -437,7 +437,7 @@ final class FilePane {
   // with
   // parameters
   private JList
-    initiateList(ListSelectionListener listener) {
+  initiateList(ListSelectionListener listener) {
 
     listModel = new DefaultListModel();
     JList listRtrn = new JList(listModel);
@@ -447,7 +447,7 @@ final class FilePane {
 
   /**
    * Initiates the top level JPanel for layouting
-   * 
+   *
    * @param tree
    * @param buttonContainer
    * @param typePlural
@@ -472,7 +472,7 @@ final class FilePane {
   /**
    * Initiates an internal JPanel thats used for layouting the buttons. Also
    * adds the buttons to the JPanel
-   * 
+   *
    * @param newButton
    * @param saveButton
    * @param loadButton
@@ -498,7 +498,7 @@ final class FilePane {
 
   /**
    * Initiates the save as button with size, icon, tooltip etc
-   * 
+   *
    * @param type
    *        Descriptor: "Petrinetz" / "Regel"
    * @param saveAsListener
@@ -524,7 +524,7 @@ final class FilePane {
 
   /**
    * Initiates the delete button with size, icon, tooltip etc
-   * 
+   *
    * @param type
    *        Descriptor: "Petrinetz" / "Regel"
    * @param deleteListener
@@ -551,7 +551,7 @@ final class FilePane {
 
   /**
    * Initiates the load button with size, icon, tooltip etc
-   * 
+   *
    * @param type
    *        Descriptor: "Petrinetz" / "Regel"
    * @param loadListener
@@ -559,7 +559,7 @@ final class FilePane {
    * @return
    */
   private JButton
-    initiateLoadButton(String type, ActionListener loadListener) {
+  initiateLoadButton(String type, ActionListener loadListener) {
 
     JButton button = new JButton(LOAD_PETRINET_ICON);
     button.setBounds(LOAD_BUTTON_X, LOAD_BUTTON_Y,
@@ -577,7 +577,7 @@ final class FilePane {
 
   /**
    * Initiates the save button with size, icon, tooltip etc
-   * 
+   *
    * @param type
    *        Descriptor: "Petrinetz" / "Regel"
    * @param saveListener
@@ -585,7 +585,7 @@ final class FilePane {
    * @return
    */
   private JButton
-    initiateSaveButton(String type, ActionListener saveListener) {
+  initiateSaveButton(String type, ActionListener saveListener) {
 
     JButton button = new JButton(SAVE_PETRINET_ICON);
     button.setBounds(SAVE_BUTTON_X, SAVE_BUTTON_Y,
@@ -607,7 +607,7 @@ final class FilePane {
 
   /**
    * Initiates the new button with size, icon, tooltip etc
-   * 
+   *
    * @param type
    *        Descriptor: "Petrinetz" / "Regel"
    * @param newListener
@@ -639,7 +639,7 @@ final class FilePane {
   /**
    * Return the logical id of the pertrinet/rule behind the
    * <code>listItem</code>.
-   * 
+   *
    * @return <code>-1</code> when <code>listItem</code> is not in the list
    */
   int getIdFrom(String listItem) {
@@ -676,7 +676,7 @@ final class FilePane {
 
   /**
    * Makes sure the <tt>file</tt> ends with ".PNML"
-   * 
+   *
    * @return <tt>file</tt> if it already ends with ".PNML" <br>
    *         else a new file with that ending
    */
@@ -705,7 +705,7 @@ final class FilePane {
 
   /**
    * Makes sure the user wants to overwrite a file
-   * 
+   *
    * @return <code>true</code> if he wants to overwrite, <code>false</code> if
    *         not
    */
@@ -723,7 +723,7 @@ final class FilePane {
 
   /**
    * Creates a new petrinet or rule in a certain file defined by the user
-   * 
+   *
    * @param type
    *        of panel
    * @return name of the petrinet, if no data entered return <tt>null</tt>
@@ -733,7 +733,7 @@ final class FilePane {
   // with
   // parameters
   String
-    create(String type) {
+  create(String type) {
 
     JFileChooser fileChooser = new JFileChooser();
     fileChooser.setDialogTitle("Bitte Speicherort für neue(s) " + type
@@ -793,8 +793,10 @@ final class FilePane {
           fileToListEntry(file), FILE_EXTENSION_WITHOUT_DOT,
           PetrinetPane.getInstance().getCurrentNodeSize());
       } else {
-        EngineAdapter.getRuleManipulation().save(id, file.getParent(),
-          fileToListEntry(file), FILE_EXTENSION_WITHOUT_DOT);
+        // EngineAdapter.getRuleManipulation().save(id, file.getParent(),
+        // fileToListEntry(file), FILE_EXTENSION_WITHOUT_DOT);
+        EngineAdapter.getRuleManipulation().saveRuleWithNacs(id,
+          file.getParent(), fileToListEntry(file), FILE_EXTENSION_WITHOUT_DOT);
       }
     } catch (EngineException e) {
       PopUp.popError(e);
@@ -828,8 +830,11 @@ final class FilePane {
               FILE_EXTENSION_WITHOUT_DOT,
               PetrinetPane.getInstance().getCurrentNodeSize());
           } else {
-            EngineAdapter.getRuleManipulation().save(id, file.getParent(),
-              fileToListEntry(file), FILE_EXTENSION_WITHOUT_DOT);
+            // EngineAdapter.getRuleManipulation().save(id, file.getParent(),
+            // fileToListEntry(file), FILE_EXTENSION_WITHOUT_DOT);
+            EngineAdapter.getRuleManipulation().saveRuleWithNacs(id,
+              file.getParent(), fileToListEntry(file),
+              FILE_EXTENSION_WITHOUT_DOT);
           }
           String name = fileToListEntry(file);
           // If it is already loaded, remove it. As it will be loaded
@@ -851,7 +856,7 @@ final class FilePane {
   // with
   // parameters
   private void
-    loadFromFile(File file) {
+  loadFromFile(File file) {
 
     int id;
     String name = fileToListEntry(file);
@@ -921,7 +926,7 @@ final class FilePane {
         JOptionPane.showOptionDialog(treeAndButtonContainerWithBorder,
           "Sollen die Dateien vom Dateisystem gelöscht werden?", "Löschen",
           0, JOptionPane.QUESTION_MESSAGE, null, new String[]{
-            "Dateien löschen", "Nur aus Übersicht löschen"},
+          "Dateien löschen", "Nur aus Übersicht löschen"},
           "Nur aus Übersicht löschen");
 
       // When manipulating the list, the listener must be removed as
@@ -968,7 +973,7 @@ final class FilePane {
   @SuppressWarnings("deprecation")
   // deprecated in 1.7 but recon is developet on 1.6
   public Collection<Integer>
-    getIdsFromSelectedListItems() {
+  getIdsFromSelectedListItems() {
 
     Collection<Integer> result = new HashSet<Integer>();
     for (Object value : list.getSelectedValues()) {

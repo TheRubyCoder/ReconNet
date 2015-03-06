@@ -54,6 +54,7 @@ package persistence;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +64,7 @@ import petrinet.model.INode;
 import petrinet.model.Petrinet;
 import petrinet.model.Renews;
 import transformation.ITransformation;
+import transformation.NAC;
 import transformation.Rule;
 import transformation.TransformationComponent;
 import engine.attribute.NodeLayoutAttribute;
@@ -101,7 +103,7 @@ public final class Converter {
   /**
    * Converts a logical {@link Petrinet petrinet} object into the equivalent
    * Pnml object tree, which can the be marshalled into a file.
-   * 
+   *
    * @param petrinet
    *        logical petrinet
    * @param layout
@@ -164,7 +166,7 @@ public final class Converter {
   /**
    * Similar to
    * {@link Converter#addPlaceToPnml(Map, List, petrinet.model.Place)}
-   * 
+   *
    * @param places
    * @param transitions
    * @param pnmlArcs
@@ -240,7 +242,7 @@ public final class Converter {
 
   /**
    * Similar to Converter#addPlaceToPnml(Map, List, petrinet.Place)
-   * 
+   *
    * @param layout
    * @param transitionsList
    * @param logicalTransition
@@ -286,7 +288,7 @@ public final class Converter {
   /**
    * Adds a {@link petrinet.model.Place} into the <code>places</code> List
    * using the given <code>layout</code>
-   * 
+   *
    * @param layout
    * @param places
    * @param place
@@ -343,7 +345,7 @@ public final class Converter {
    * Converts the position as a List of Strings into a {@link Point2D.Double}
    * object like specified in
    * {@link Converter#convertPetrinetToPnml(Petrinet, Map, double)}
-   * 
+   *
    * @param pos
    * @throws NullPointerException
    *         if the any string is null
@@ -360,7 +362,7 @@ public final class Converter {
   /**
    * Converts a {@link Pnml} object that was unmarshalled from an XMLFile into
    * a {@link Petrinet}
-   * 
+   *
    * @param pnml
    *        The object tree, representing the XML file
    * @param handler
@@ -476,7 +478,7 @@ public final class Converter {
   /**
    * Converts a {@link Pnml} object that was unmarshalled from an XMLFile into
    * a {@link Rule}
-   * 
+   *
    * @param pnml
    *        The object tree, representing the XML file
    * @param handler
@@ -541,13 +543,14 @@ public final class Converter {
   /**
    * Converts a {@link Pnml} object that was unmarshalled from an XMLFile into
    * a {@link Rule}
-   * 
+   *
    * @param pnml
    *        The object tree, representing the XML file
    * @param handler
    *        The engine handler to create and modify the rule.
    * @return id of petrinet Id of the created petrinet
    */
+  @Deprecated
   public static int convertPnmlToRuleWithNac(Pnml pnml,
     IRulePersistence handler) {
 
@@ -610,6 +613,219 @@ public final class Converter {
     }
 
     return id;
+  }
+
+  /**
+   * Converts a {@link Pnml} object that was unmarshalled from an XMLFile into
+   * a {@link Rule}
+   *
+   * @param pnml
+   *        The object tree, representing the XML file
+   * @param handler
+   *        The engine handler to create and modify the rule.
+   * @return id of petrinet Id of the created petrinet
+   */
+  public static int convertPnmlToRuleWithNacs(Pnml pnml,
+    IRulePersistence handler) {
+
+    // In each XML file there is the type attribute for the pnml node to
+    // quick-check if its a rule or a petrinet
+    if (!pnml.getType().equals(RULE_IDENT)) {
+      throw new ShowAsWarningException(
+        "Die ausgewählte Datei enthält ein Petrinetz, keine Regel");
+    }
+    int ruleId = handler.createRule();
+
+    try {
+      handler.setNodeSize(ruleId, pnml.getNodeSize());
+
+      Net lNet = null;
+      Net kNet = null;
+      Net rNet = null;
+      ArrayList<Net> nacNetList = new ArrayList<Net>();
+
+      for (Net net : pnml.getNet()) {
+
+        if (net.getNettype().equals(RuleNet.L.name())) {
+          lNet = net;
+        }
+
+        if (net.getNettype().equals(RuleNet.K.name())) {
+          kNet = net;
+        }
+
+        if (net.getNettype().equals(RuleNet.R.name())) {
+          rNet = net;
+        }
+
+        if (net.getNettype().equals(RuleNet.NAC.name())) {
+          nacNetList.add(net);
+        }
+      }
+
+      if (lNet == null || kNet == null || rNet == null) {
+        throw new ShowAsWarningException(
+          "Cannot load rule. PNML data is corrupt.");
+      }
+
+      // Elements of L
+      List<Place> lPlaces = lNet.getPage().getPlace();
+      List<Transition> lTransis = lNet.getPage().getTransition();
+      List<Arc> lArcs = lNet.getPage().getArc();
+
+      // Elements of K
+      List<Place> kPlaces = kNet.getPage().getPlace();
+      List<Transition> kTransis = kNet.getPage().getTransition();
+      List<Arc> kArcs = kNet.getPage().getArc();
+
+      // Elements of R
+      List<Place> rPlaces = rNet.getPage().getPlace();
+      List<Transition> rTransis = rNet.getPage().getTransition();
+      List<Arc> rArcs = rNet.getPage().getArc();
+
+      // transform lists into sets for mathematical operations
+
+      Set<Place> lPlaceSet = new HashSet<Place>(lPlaces);
+      Set<Transition> lTransitionSet = new HashSet<Transition>(lTransis);
+      Set<Arc> lArcSet = new HashSet<Arc>(lArcs);
+      System.out.println("lPlaceSet:" + lPlaceSet.size());
+
+      Set<Place> kPlaceSet = new HashSet<Place>(kPlaces);
+      Set<Transition> kTransitionSet = new HashSet<Transition>(kTransis);
+      Set<Arc> kArcSet = new HashSet<Arc>(kArcs);
+      System.out.println("kPlaceSet:" + kPlaceSet.size());
+
+      Set<Place> rPlaceSet = new HashSet<Place>(rPlaces);
+      Set<Transition> rTransitionSet = new HashSet<Transition>(rTransis);
+      Set<Arc> rArcSet = new HashSet<Arc>(rArcs);
+      System.out.println("rPlaceSet:" + rPlaceSet.size());
+
+      // Skizze
+      // leere Nacs hinzufügen (Anzahl anhand PNML)
+      // Regel aufbauen -> baut auch Teile von NACs auf
+      // restlichen Elemente zu NACs hinzufügen
+
+      // maps used to create arcs between nodes by their id
+      HashMap<String, INode> addedNodesInL = new HashMap<String, INode>();
+      HashMap<String, INode> addedNodesInK = new HashMap<String, INode>();
+      HashMap<String, INode> addedNodesInR = new HashMap<String, INode>();
+
+      // ################
+      // add places
+      // >
+
+      // places to add in L
+      Set<Place> kOr_Places = new HashSet<Place>(kPlaceSet);
+      kOr_Places.removeAll(rPlaceSet);
+      for (Place place : kOr_Places) {
+        petrinet.model.Place lPlace =
+          handler.createPlace(ruleId, RuleNet.L,
+            positionToPoint2D(place.getGraphics().getPosition()));
+        addedNodesInL.put(place.getId(), lPlace);
+      }
+      // places to add in L
+
+      // places to add in K
+      Set<Place> lSr_Places = new HashSet<Place>(lPlaceSet);
+      lSr_Places.retainAll(rPlaces);
+
+      for (Place place : lSr_Places) {
+        petrinet.model.Place kPlace =
+          handler.createPlace(ruleId, RuleNet.K,
+            positionToPoint2D(place.getGraphics().getPosition()));
+        addedNodesInK.put(place.getId(), kPlace);
+      }
+      // places to add in K
+
+      // places to add in R
+      Set<Place> kOl_Places = new HashSet<Place>(kPlaceSet);
+      kOl_Places.removeAll(lPlaceSet);
+      for (Place place : kOl_Places) {
+        petrinet.model.Place rPlace =
+          handler.createPlace(ruleId, RuleNet.R,
+            positionToPoint2D(place.getGraphics().getPosition()));
+        addedNodesInR.put(place.getId(), rPlace);
+      }
+      // places to add in R
+
+      // >
+      // add places
+      // ################
+
+      // ################
+      // add transitions
+      // >
+
+      // transitions to add in L
+      Set<Transition> kOr_Transitions =
+        new HashSet<Transition>(kTransitionSet);
+      kOr_Transitions.removeAll(rTransitionSet);
+      for (Transition transition : kOr_Transitions) {
+        petrinet.model.Transition lTransition =
+          handler.createTransition(ruleId, RuleNet.L,
+            positionToPoint2D(transition.getGraphics().getPosition()));
+        addedNodesInL.put(transition.getId(), lTransition);
+      }
+      // transitions to add in L
+
+      // transitions to add in K
+      Set<Transition> lSr_Transitions =
+        new HashSet<Transition>(lTransitionSet);
+      lSr_Transitions.retainAll(rTransitionSet);
+
+      for (Transition transition : lSr_Transitions) {
+        petrinet.model.Transition kTransition =
+          handler.createTransition(ruleId, RuleNet.K,
+            positionToPoint2D(transition.getGraphics().getPosition()));
+        addedNodesInK.put(transition.getId(), kTransition);
+      }
+      // transitions to add in K
+
+      // transitions to add in R
+      Set<Transition> kOl_Transitions =
+        new HashSet<Transition>(kTransitionSet);
+      kOl_Transitions.removeAll(lTransitionSet);
+      for (Transition transition : kOl_Transitions) {
+        petrinet.model.Transition rTransition =
+          handler.createTransition(ruleId, RuleNet.R,
+            positionToPoint2D(transition.getGraphics().getPosition()));
+        addedNodesInR.put(transition.getId(), rTransition);
+      }
+      // transitions to add in R
+
+      // >
+      // add transitions
+      // ################
+
+      System.out.println("addedNodesInL " + addedNodesInL.size());
+      System.out.println("addedNodesInK " + addedNodesInK.size());
+      System.out.println("addedNodesInR " + addedNodesInR.size());
+
+      // ################
+      // add arcs
+      // >
+
+      // transitions to add in K
+      Set<Arc> lSr_Arcs = new HashSet<Arc>(lArcSet);
+      lSr_Arcs.retainAll(rArcSet);
+
+      for (Arc arc : lSr_Arcs) {
+        // handler.createPostArc(ruleId, RuleNet.K, transition, place);
+        // PreArc
+        // PostArc
+      }
+      // transitions to add in K
+
+      // >
+      // add arcs
+      // ################
+
+    } catch (EngineException e) {
+      PopUp.popError(e);
+      e.printStackTrace();
+    }
+
+    return ruleId;
   }
 
   /**
@@ -750,7 +966,7 @@ public final class Converter {
 
   /**
    * Adds all arcs from the XML to the rule object, using the engine handler
-   * 
+   *
    * @param idToINodeInR
    * @param idToINodeInK
    */
@@ -809,7 +1025,7 @@ public final class Converter {
 
   /**
    * Adds all arcs from the XML to the rule object, using the engine handler
-   * 
+   *
    * @param idToINodeInR
    * @param idToINodeInR
    * @param idToINodeInK
@@ -875,7 +1091,7 @@ public final class Converter {
   /**
    * Adds places to the rule, writing the mappings of created places into the
    * resprective maps (last 3 parameters)
-   * 
+   *
    * @param id
    * @param lPlaces
    * @param kPlaces
@@ -938,7 +1154,7 @@ public final class Converter {
   /**
    * Adds places to the rule, writing the mappings of created places into the
    * resprective maps (last 3 parameters)
-   * 
+   *
    * @param id
    * @param lPlaces
    * @param kPlaces
@@ -1010,7 +1226,7 @@ public final class Converter {
   /**
    * Adds transitions to the rule, writing the mappings of created places into
    * the resprective maps (last 3 parameters)
-   * 
+   *
    * @param id
    * @param lPlaces
    * @param kPlaces
@@ -1069,7 +1285,7 @@ public final class Converter {
   /**
    * Adds transitions to the rule, writing the mappings of created places into
    * the resprective maps (last 3 parameters)
-   * 
+   *
    * @param id
    * @param lPlaces
    * @param kPlaces
@@ -1135,7 +1351,7 @@ public final class Converter {
 
   /**
    * Extracts the XML ids of {@link Place places} into a List of ids as String
-   * 
+   *
    * @param placeList
    * @return
    */
@@ -1151,7 +1367,7 @@ public final class Converter {
   /**
    * Extracts the XML ids of {@link Transition transitions} into a List of ids
    * as String
-   * 
+   *
    * @param placeList
    * @return
    */
@@ -1167,7 +1383,7 @@ public final class Converter {
 
   /**
    * Extracts the XML ids of {@link Arc arc} into a List of ids as String
-   * 
+   *
    * @param placeList
    * @return
    */
@@ -1183,7 +1399,7 @@ public final class Converter {
   /**
    * Converts a logical {@link Rule rule} object into the equivalent Pnml
    * object tree, which can the be marshalled into a file.
-   * 
+   *
    * @param rule
    *        logical rule
    * @param layout
@@ -1227,7 +1443,7 @@ public final class Converter {
   /**
    * Converts a logical {@link Rule rule} object into the equivalent Pnml
    * object tree, which can the be marshalled into a file.
-   * 
+   *
    * @param rule
    *        logical rule
    * @param layout
@@ -1241,8 +1457,10 @@ public final class Converter {
    *        collision detection when loading the petrinet.
    * @return
    */
-  public static Pnml convertRuleWithNacToPnml(Rule rule,
+  public static Pnml convertRuleWithNacsToPnml(Rule rule,
     Map<INode, NodeLayoutAttribute> map, double nodeSize) {
+
+    System.out.println("convertRuleWithNacToPnml");
 
     Pnml pnml = new Pnml();
 
@@ -1253,9 +1471,12 @@ public final class Converter {
     final Net lNet = createNet(rule.getL(), map, RuleNet.L, rule);
     final Net kNet = createNet(rule.getK(), map, RuleNet.K, rule);
     final Net rNet = createNet(rule.getR(), map, RuleNet.R, rule);
-    final Net nacNet =
-      createNet(rule.getNACs().iterator().next().getNac(), map, RuleNet.NAC,
-        rule);
+
+    final ArrayList<Net> nacNetList = new ArrayList<Net>();
+
+    for (NAC nac : rule.getNACs()) {
+      nacNetList.add(createNetFromNac(nac, map, RuleNet.NAC, rule));
+    }
 
     pnml.setNet(new ArrayList<Net>() {
 
@@ -1265,7 +1486,7 @@ public final class Converter {
         add(lNet);
         add(kNet);
         add(rNet);
-        add(nacNet);
+        addAll(nacNetList);
       }
     });
 
@@ -1275,7 +1496,7 @@ public final class Converter {
   /**
    * Creates an {@link Net xml petrinet} as part of a rule. You can view this
    * as generating a sub tree
-   * 
+   *
    * @param petrinet
    * @param map
    * @param type
@@ -1487,6 +1708,210 @@ public final class Converter {
 
         // Add to List
         listArcs.add(arc);
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    page.setArc(listArcs);
+    page.setPlace(listPlace);
+    page.setTransition(listTrans);
+
+    return net;
+  }
+
+  /**
+   * Creates an {@link Net xml petrinet} as part of a rule. You can view this
+   * as generating a sub tree
+   *
+   * @param petrinet
+   * @param map
+   * @param type
+   * @param rule
+   * @return
+   */
+  // CHECKSTYLE:OFF - Method lenght is greater then 150 lines
+  private static Net createNetFromNac(NAC nac,
+    Map<INode, NodeLayoutAttribute> map, RuleNet type, Rule rule) {
+
+    // CHECKSTYLE:ON
+
+    Petrinet petrinet = nac.getNac();
+
+    // Net, Page, ID and Type
+    Net net = new Net();
+    Page page = new Page();
+    net.setId(String.valueOf(petrinet.getId()));
+    net.setNettype(type.name());
+    net.setPage(page);
+
+    Set<petrinet.model.IArc> arcs = petrinet.getArcs();
+    Set<petrinet.model.Place> places = petrinet.getPlaces();
+    Set<petrinet.model.Transition> transitions = petrinet.getTransitions();
+
+    List<Arc> listArcs = new ArrayList<Arc>();
+    List<Place> listPlace = new ArrayList<Place>();
+    List<Transition> listTrans = new ArrayList<Transition>();
+
+    try {
+      // inserting places
+      for (petrinet.model.Place place : places) {
+        Place newPlace = new Place();
+
+        // This "redirects" the variable place to the node in K
+        petrinet.model.Place nodeInL = nac.fromNacToL(place);
+        INode correspondingNode = rule.fromLtoK(nodeInL);
+
+        if (correspondingNode != null) {
+          place = (petrinet.model.Place) correspondingNode;
+        }
+
+        // id
+        newPlace.setId(String.valueOf(place.getId()));
+
+        // Name
+        PlaceName name = new PlaceName();
+        name.setText(place.getName());
+        newPlace.setPlaceName(name);
+
+        // Graphics -- Color
+        Graphics graphics = new Graphics();
+        Color color = new Color();
+        color.setR(String.valueOf(map.get(place).getColor().getRed()));
+        color.setG(String.valueOf(map.get(place).getColor().getGreen()));
+        color.setB(String.valueOf(map.get(place).getColor().getBlue()));
+        graphics.setColor(color);
+
+        // Graphics -- Position
+        Position position = new Position();
+        position.setX(String.valueOf(map.get(place).getCoordinate().getX()));
+        position.setY(String.valueOf(map.get(place).getCoordinate().getY()));
+        List<Position> positions = new ArrayList<Position>();
+        positions.add(position);
+        graphics.setPosition(positions);
+
+        newPlace.setGraphics(graphics);
+
+        // Marking
+        InitialMarking initM = new InitialMarking();
+        initM.setText(String.valueOf(place.getMark()));
+
+        newPlace.setInitialMarking(initM);
+
+        // Capacity
+        InitialCapacity initC = new InitialCapacity();
+        initC.setText(String.valueOf(place.getCapacity()));
+
+        newPlace.setInitialCapacity(initC);
+
+        // Add to List
+        listPlace.add(newPlace);
+      }
+
+      // inserting Transitions
+      for (petrinet.model.Transition transition : transitions) {
+        Transition xmlTransition = new Transition();
+
+        // This "redirects" the variable transition to the node in K
+        petrinet.model.Transition nodeInL = nac.fromNacToL(transition);
+        INode correspondingNode = rule.fromLtoK(nodeInL);
+
+        if (correspondingNode != null) {
+          transition = (petrinet.model.Transition) correspondingNode;
+        }
+
+        // ID
+        xmlTransition.setId(String.valueOf(transition.getId()));
+
+        // Name
+        TransitionName name = new TransitionName();
+        name.setText(transition.getName());
+        xmlTransition.setTransitionName(name);
+
+        // Graphics -- Position
+        Graphics graphics = new Graphics();
+        List<Position> positions = new ArrayList<Position>();
+        Position position = new Position();
+        double x = map.get(transition).getCoordinate().getX();
+        double y = map.get(transition).getCoordinate().getY();
+        position.setX(String.valueOf(x));
+        position.setY(String.valueOf(y));
+        positions.add(position);
+        graphics.setPosition(positions);
+        xmlTransition.setGraphics(graphics);
+
+        // Label
+        TransitionLabel label = new TransitionLabel();
+        label.setText(transition.getTlb());
+        xmlTransition.setTransitionLabel(label);
+
+        // Renew
+        TransitionRenew rnw = new TransitionRenew();
+        rnw.setText(transition.getRnw().toGUIString());
+        xmlTransition.setTransitionRenew(rnw);
+
+        // Add to List
+        listTrans.add(xmlTransition);
+      }
+
+      // inserting arcs
+      for (petrinet.model.IArc arc : arcs) {
+
+        Arc xmlArc = new Arc();
+
+        // This "redirects" the variable transition to the node in K
+        petrinet.model.IArc correspondingArc = null;
+
+        if (arc instanceof petrinet.model.PreArc) {
+
+          petrinet.model.PreArc arcInL =
+            nac.fromNacToL((petrinet.model.PreArc) arc);
+          correspondingArc = rule.fromLtoK(arcInL);
+
+        } else {
+
+          petrinet.model.PostArc arcInL =
+            nac.fromNacToL((petrinet.model.PostArc) arc);
+          correspondingArc = rule.fromLtoK(arcInL);
+        }
+
+        if (correspondingArc != null) {
+          arc = correspondingArc;
+        }
+
+        // ID
+        xmlArc.setId(String.valueOf(arc.getId()));
+
+        // Graphics -- Position
+        Graphics graphics = new Graphics();
+        Position position = new Position();
+
+        List<Position> positions = new ArrayList<Position>();
+        positions.add(position);
+        graphics.setPosition(positions);
+
+        xmlArc.setGraphics(graphics);
+
+        // Text
+        Inscription inscription = new Inscription();
+        inscription.setText(arc.getName());
+        xmlArc.setInscription(inscription);
+
+        Weight weight = new Weight();
+        weight.setText(String.valueOf(arc.getWeight()));
+
+        Toolspecific toolspecific = new Toolspecific();
+        toolspecific.setTool("ReConNet");
+        toolspecific.setVersion("1.0");
+        toolspecific.setWeight(weight);
+        xmlArc.setToolspecific(toolspecific);
+
+        // Source and Target
+        xmlArc.setSource(String.valueOf(arc.getSource().getId()));
+        xmlArc.setTarget(String.valueOf(arc.getTarget().getId()));
+
+        // Add to List
+        listArcs.add(xmlArc);
       }
 
     } catch (Exception e) {

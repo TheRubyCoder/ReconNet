@@ -340,6 +340,15 @@ implements IRuleManipulation {
   }
 
   @Override
+  public void saveRuleWithNacs(int id, String path, String filename,
+    String format)
+    throws EngineException {
+
+    ruleManipulationBackend.saveRuleWithNacs(id, path, filename, format);
+
+  }
+
+  @Override
   public void setRnw(int id, INode transition, IRenew renews)
     throws EngineException {
 

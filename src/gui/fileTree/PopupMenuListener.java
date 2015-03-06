@@ -91,7 +91,7 @@ import javax.swing.tree.TreePath;
  * Custom popup menu listener extending {@link ActionListener}.
  */
 public final class PopupMenuListener
-  implements ActionListener {
+implements ActionListener {
 
   /**
    * singleton: the instance
@@ -173,11 +173,6 @@ public final class PopupMenuListener
   private Map<Integer, Set<Integer>> ruleToNacs;
 
   /**
-   * Link nac name to display name
-   */
-  private Map<String, String> nacNameToDisplayName;
-
-  /**
    * To remember what list entry refers to which filepath
    */
   private Map<String, File> nameToFilepath;
@@ -190,7 +185,6 @@ public final class PopupMenuListener
     nameToPId = new HashMap<String, Integer>();
     nameToFilepath = new HashMap<String, File>();
     ruleToNacs = new HashMap<Integer, Set<Integer>>();
-    nacNameToDisplayName = new HashMap<String, String>();
     this.initializeFileChooser();
   }
 
@@ -276,8 +270,8 @@ public final class PopupMenuListener
       JOptionPane.showOptionDialog(null,
         "Sollen die Dateien vom Dateisystem gelöscht werden?", "Löschen", 0,
         JOptionPane.QUESTION_MESSAGE, null, new String[]{"Dateien löschen",
-          "Nur aus Übersicht löschen"}, "Nur aus Übersicht löschen") == 0
-        ? true : false;
+      "Nur aus Übersicht löschen"}, "Nur aus Übersicht löschen") == 0
+      ? true : false;
     // CHECKSTYLE:ON
 
     PetriTreeNode node =
@@ -483,8 +477,10 @@ public final class PopupMenuListener
           name, FILE_EXTENSION_WITHOUT_DOT,
           PetrinetPane.getInstance().getCurrentNodeSize());
       } else if (((PetriTreeNode) node).isNodeType(NodeType.RULE)) {
-        EngineAdapter.getRuleManipulation().save(id, file.getParent(), name,
-          FILE_EXTENSION_WITHOUT_DOT);
+        // EngineAdapter.getRuleManipulation().save(id, file.getParent(),
+        // name, FILE_EXTENSION_WITHOUT_DOT);
+        EngineAdapter.getRuleManipulation().saveRuleWithNacs(id,
+          file.getParent(), name, FILE_EXTENSION_WITHOUT_DOT);
       }
     } catch (EngineException e) {
       PopUp.popError(e);
@@ -563,8 +559,10 @@ public final class PopupMenuListener
             PetrinetPane.getInstance().getCurrentNodeSize());
         } else if (netType == SELECTED_TYPE_IS_RULE) {
           RulePane.getInstance().displayRule(id);
-          EngineAdapter.getRuleManipulation().save(id, file.getParent(),
-            name, FILE_EXTENSION_WITHOUT_DOT);
+          // EngineAdapter.getRuleManipulation().save(id, file.getParent(),
+          // name, FILE_EXTENSION_WITHOUT_DOT);
+          EngineAdapter.getRuleManipulation().saveRuleWithNacs(id,
+            file.getParent(), name, FILE_EXTENSION_WITHOUT_DOT);
         }
       } catch (EngineException ex) {
         PopUp.popError(ex);
