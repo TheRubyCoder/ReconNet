@@ -628,12 +628,11 @@ public final class Converter {
   public static int convertPnmlToRuleWithNacs(Pnml pnml,
     IRulePersistence handler) {
 
-    // In each XML file there is the type attribute for the pnml node to
-    // quick-check if its a rule or a petrinet
     if (!pnml.getType().equals(RULE_IDENT)) {
       throw new ShowAsWarningException(
-        "Die ausgewählte Datei enthält ein Petrinetz, keine Regel");
+        "The selected file doesn't have a rule.");
     }
+
     int ruleId = handler.createRule();
 
     try {
@@ -650,15 +649,15 @@ public final class Converter {
           lNet = net;
         }
 
-        if (net.getNettype().equals(RuleNet.K.name())) {
+        else if (net.getNettype().equals(RuleNet.K.name())) {
           kNet = net;
         }
 
-        if (net.getNettype().equals(RuleNet.R.name())) {
+        else if (net.getNettype().equals(RuleNet.R.name())) {
           rNet = net;
         }
 
-        if (net.getNettype().equals(RuleNet.NAC.name())) {
+        else if (net.getNettype().equals(RuleNet.NAC.name())) {
           nacNetList.add(net);
         }
       }
@@ -705,10 +704,18 @@ public final class Converter {
       // Regel aufbauen -> baut auch Teile von NACs auf
       // restlichen Elemente zu NACs hinzufügen
 
+      // initialize NACs
+      for (int i = 0; i < nacNetList.size(); i++) {
+        handler.createNac(ruleId);
+      }
+
       // maps used to create arcs between nodes by their id
       HashMap<String, INode> addedNodesInL = new HashMap<String, INode>();
       HashMap<String, INode> addedNodesInK = new HashMap<String, INode>();
       HashMap<String, INode> addedNodesInR = new HashMap<String, INode>();
+
+      ITransformation iTransformation =
+        TransformationComponent.getTransformation();
 
       // ################
       // add places
@@ -721,7 +728,10 @@ public final class Converter {
         petrinet.model.Place lPlace =
           handler.createPlace(ruleId, RuleNet.L,
             positionToPoint2D(place.getGraphics().getPosition()));
+
+        List<INode> mappings = iTransformation.getMappings(ruleId, lPlace);
         addedNodesInL.put(place.getId(), lPlace);
+        addedNodesInK.put(place.getId(), mappings.get(0));
       }
       // places to add in L
 
@@ -733,7 +743,11 @@ public final class Converter {
         petrinet.model.Place kPlace =
           handler.createPlace(ruleId, RuleNet.K,
             positionToPoint2D(place.getGraphics().getPosition()));
+
+        List<INode> mappings = iTransformation.getMappings(ruleId, kPlace);
         addedNodesInK.put(place.getId(), kPlace);
+        addedNodesInL.put(place.getId(), mappings.get(0));
+        addedNodesInR.put(place.getId(), mappings.get(2));
       }
       // places to add in K
 
@@ -744,7 +758,10 @@ public final class Converter {
         petrinet.model.Place rPlace =
           handler.createPlace(ruleId, RuleNet.R,
             positionToPoint2D(place.getGraphics().getPosition()));
+
+        List<INode> mappings = iTransformation.getMappings(ruleId, rPlace);
         addedNodesInR.put(place.getId(), rPlace);
+        addedNodesInK.put(place.getId(), mappings.get(1));
       }
       // places to add in R
 
@@ -764,7 +781,11 @@ public final class Converter {
         petrinet.model.Transition lTransition =
           handler.createTransition(ruleId, RuleNet.L,
             positionToPoint2D(transition.getGraphics().getPosition()));
+
+        List<INode> mappings =
+          iTransformation.getMappings(ruleId, lTransition);
         addedNodesInL.put(transition.getId(), lTransition);
+        addedNodesInK.put(transition.getId(), mappings.get(1));
       }
       // transitions to add in L
 
@@ -777,7 +798,12 @@ public final class Converter {
         petrinet.model.Transition kTransition =
           handler.createTransition(ruleId, RuleNet.K,
             positionToPoint2D(transition.getGraphics().getPosition()));
+
+        List<INode> mappings =
+          iTransformation.getMappings(ruleId, kTransition);
         addedNodesInK.put(transition.getId(), kTransition);
+        addedNodesInL.put(transition.getId(), mappings.get(0));
+        addedNodesInR.put(transition.getId(), mappings.get(2));
       }
       // transitions to add in K
 
@@ -789,7 +815,11 @@ public final class Converter {
         petrinet.model.Transition rTransition =
           handler.createTransition(ruleId, RuleNet.R,
             positionToPoint2D(transition.getGraphics().getPosition()));
+
+        List<INode> mappings =
+          iTransformation.getMappings(ruleId, rTransition);
         addedNodesInR.put(transition.getId(), rTransition);
+        addedNodesInK.put(transition.getId(), mappings.get(1));
       }
       // transitions to add in R
 
@@ -805,16 +835,27 @@ public final class Converter {
       // add arcs
       // >
 
-      // transitions to add in K
+      // arcs to add in K
       Set<Arc> lSr_Arcs = new HashSet<Arc>(lArcSet);
       lSr_Arcs.retainAll(rArcSet);
 
       for (Arc arc : lSr_Arcs) {
-        // handler.createPostArc(ruleId, RuleNet.K, transition, place);
-        // PreArc
-        // PostArc
+
+        INode source = addedNodesInK.get(arc.getSource());
+        INode target = addedNodesInK.get(arc.getTarget());
+
+        if (source instanceof petrinet.model.Place) {
+          // if source is a place -> PreArc
+          handler.createPreArc(ruleId, RuleNet.K,
+            (petrinet.model.Place) source, (petrinet.model.Transition) target);
+
+        } else {
+          // if source is a transition -> PostArc
+          handler.createPostArc(ruleId, RuleNet.K,
+            (petrinet.model.Transition) source, (petrinet.model.Place) target);
+        }
       }
-      // transitions to add in K
+      // arcs to add in K
 
       // >
       // add arcs
@@ -974,7 +1015,7 @@ public final class Converter {
     List<Arc> rArcs, IRulePersistence handler,
     Map<String, INode> idToINodeInL, Map<String, INode> idToINodeInK,
     Map<String, INode> idToINodeInR)
-    throws EngineException {
+      throws EngineException {
 
     /*
      * All arcs must be in K. To determine where the arcs must be added, we
@@ -1035,7 +1076,7 @@ public final class Converter {
     List<Arc> rArcs, List<Arc> nacArcs, IRulePersistence handler,
     Map<String, INode> idToINodeInL, Map<String, INode> idToINodeInK,
     Map<String, INode> idToINodeInR, Map<String, INode> idToINodeInNAC)
-    throws EngineException {
+      throws EngineException {
 
     /*
      * All arcs must be in K. To determine where the arcs must be added, we
@@ -1107,7 +1148,7 @@ public final class Converter {
     List<Place> lPlaces, List<Place> kPlaces, List<Place> rPlaces,
     IRulePersistence handler, Map<String, INode> idToINodeInL,
     Map<String, INode> idToINodeInK, Map<String, INode> idToINodeInR)
-    throws EngineException {
+      throws EngineException {
 
     Map<String, INode> result = new HashMap<String, INode>();
     /*
@@ -1173,7 +1214,7 @@ public final class Converter {
     List<Place> nacPlaces, IRulePersistence handler,
     Map<String, INode> idToINodeInL, Map<String, INode> idToINodeInK,
     Map<String, INode> idToINodeInR, Map<String, INode> idToINodeInNAC)
-    throws EngineException {
+      throws EngineException {
 
     Map<String, INode> result = new HashMap<String, INode>();
     /*
@@ -1243,7 +1284,7 @@ public final class Converter {
     List<Transition> rTransition, IRulePersistence handler,
     Map<String, INode> idToINodeInL, Map<String, INode> idToINodeInK,
     Map<String, INode> idToINodeInR)
-    throws EngineException {
+      throws EngineException {
 
     Map<String, INode> result = new HashMap<String, INode>();
     /*
@@ -1305,7 +1346,7 @@ public final class Converter {
     IRulePersistence handler, Map<String, INode> idToINodeInL,
     Map<String, INode> idToINodeInK, Map<String, INode> idToINodeInR,
     Map<String, INode> idToINodeInNAC)
-    throws EngineException {
+      throws EngineException {
 
     Map<String, INode> result = new HashMap<String, INode>();
     /*

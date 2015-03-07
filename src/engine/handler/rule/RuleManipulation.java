@@ -56,6 +56,7 @@ import static exceptions.Exceptions.warning;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.util.List;
 import java.util.UUID;
 
 import com.sun.istack.NotNull;
@@ -535,6 +536,13 @@ implements IRuleManipulation {
     }
 
     ruleManipulationBackend.deleteArc(id, nacId, arc);
+  }
+
+  @Override
+  public List<UUID> getNacIds(int ruleId)
+    throws EngineException {
+
+    return ruleManipulationBackend.getNacIds(ruleId);
   }
 
 }

@@ -53,6 +53,7 @@ package engine.ihandler;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.util.UUID;
 
 import petrinet.model.IRenew;
 import petrinet.model.Place;
@@ -68,7 +69,7 @@ import exceptions.EngineException;
 /**
  * This is a Interface for the Persistence-Component. Implementation:
  * engine.handler.rule.RulePersistence
- * 
+ *
  * @author alex (aas772)
  */
 
@@ -76,7 +77,7 @@ public interface IRulePersistence {
 
   /**
    * Creates an PreArc
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param place
@@ -87,11 +88,11 @@ public interface IRulePersistence {
    */
   PreArc createPreArc(@NotNull int id, RuleNet net, @NotNull Place place,
     @NotNull Transition transition)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Creates an PostArc
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param transition
@@ -102,11 +103,11 @@ public interface IRulePersistence {
    */
   PostArc createPostArc(@NotNull int id, RuleNet net,
     @NotNull Transition transition, @NotNull Place place)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Creates a Place
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param coordinate
@@ -115,18 +116,18 @@ public interface IRulePersistence {
    */
   Place createPlace(@NotNull int id, @NotNull RuleNet net,
     @NotNull Point2D coordinate)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Creates a Rule
-   * 
+   *
    * @return ID of the created Rule
    */
   int createRule();
 
   /**
    * Creates a Transition
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param coordinate
@@ -136,11 +137,11 @@ public interface IRulePersistence {
    */
   Transition createTransition(@NotNull int id, @NotNull RuleNet net,
     @NotNull Point2D coordinate)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Sets the Marking of a Place.
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param place
@@ -150,12 +151,12 @@ public interface IRulePersistence {
    * @throws EngineException
    */
   void
-    setMarking(@NotNull int id, @NotNull Place place, @NotNull int marking)
-      throws EngineException;
+  setMarking(@NotNull int id, @NotNull Place place, @NotNull int marking)
+    throws EngineException;
 
   /**
    * Sets the Capacity of a Place
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param place
@@ -166,11 +167,11 @@ public interface IRulePersistence {
    */
   void setCapacity(@NotNull int id, @NotNull Place place,
     @NotNull int capacity)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Sets the PName of a Place.
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param place
@@ -184,7 +185,7 @@ public interface IRulePersistence {
 
   /**
    * Sets the Tlb of a Transition.
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param transition
@@ -195,11 +196,11 @@ public interface IRulePersistence {
    */
   void setTlb(@NotNull int id, @NotNull Transition transition,
     @NotNull String tlb)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Sets the TName of a Transition.
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param transition
@@ -210,11 +211,11 @@ public interface IRulePersistence {
    */
   void setTname(@NotNull int id, @NotNull Transition transition,
     @NotNull String tname)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Sets the Weight of a PreArc.
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param preArc
@@ -224,12 +225,12 @@ public interface IRulePersistence {
    * @throws EngineException
    */
   void
-    setWeight(@NotNull int id, @NotNull PreArc preArc, @NotNull int weight)
-      throws EngineException;
+  setWeight(@NotNull int id, @NotNull PreArc preArc, @NotNull int weight)
+    throws EngineException;
 
   /**
    * Sets the Weight of a PostArc.
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param postArc
@@ -240,11 +241,11 @@ public interface IRulePersistence {
    */
   void setWeight(@NotNull int id, @NotNull PostArc postArc,
     @NotNull int weight)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Sets a Strings as RNW.
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param transition
@@ -256,7 +257,7 @@ public interface IRulePersistence {
 
   /**
    * Set Color of a Place.
-   * 
+   *
    * @param id
    *        ID of the Rule
    * @param place
@@ -270,12 +271,21 @@ public interface IRulePersistence {
   /**
    * Sets the nodeSize for the JungData of the petrinets of the rule with
    * <code>id</code>
-   * 
+   *
    * @see {@link JungData#setNodeSize(double)}
    * @param id
    * @param nodeSize
    * @throws EngineException
    */
   void setNodeSize(int id, double nodeSize)
+    throws EngineException;
+
+  /**
+   * Creates a new NAC to a given Rule
+   *
+   * @param ruleId
+   * @return ID of the created NAC
+   */
+  UUID createNac(int ruleId)
     throws EngineException;
 }

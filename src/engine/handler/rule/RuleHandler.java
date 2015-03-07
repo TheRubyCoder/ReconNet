@@ -1709,4 +1709,19 @@ public final class RuleHandler {
     transition.setName(tname);
   }
 
+  public List<UUID> getNacIds(int ruleId)
+    throws EngineException {
+
+    RuleData ruleData = getRuleData(ruleId);
+    Rule rule = ruleData.getRule();
+
+    ArrayList<UUID> nacIds = new ArrayList<UUID>();
+
+    for (NAC nac : rule.getNACs()) {
+      nacIds.add(nac.getId());
+    }
+
+    return nacIds;
+  }
+
 }

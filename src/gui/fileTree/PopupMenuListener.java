@@ -76,8 +76,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 import javax.swing.JFileChooser;
@@ -168,11 +168,6 @@ implements ActionListener {
   private Map<String, Integer> nameToPId;
 
   /**
-   * To remember what list entry refers to wich petrinet
-   */
-  private Map<Integer, Set<Integer>> ruleToNacs;
-
-  /**
    * To remember what list entry refers to which filepath
    */
   private Map<String, File> nameToFilepath;
@@ -184,7 +179,6 @@ implements ActionListener {
 
     nameToPId = new HashMap<String, Integer>();
     nameToFilepath = new HashMap<String, File>();
-    ruleToNacs = new HashMap<Integer, Set<Integer>>();
     this.initializeFileChooser();
   }
 
@@ -415,18 +409,35 @@ implements ActionListener {
         parentNode = FileTreePane.getInstance().getRuleNode();
         n = new PetriTreeNode(NodeType.RULE, name);
         n.setChecked(true);
-      } else {
-        // TODO: hier nac mit if else
+
+        // initialize sub nodes of nacs
+        try {
+          List<UUID> nacIds =
+            EngineAdapter.getRuleManipulation().getNacIds(id);
+
+          for (UUID nacId : nacIds) {
+
+            String displayText = "NAC " + nacId;
+            PetriTreeNode nacNode =
+              new PetriTreeNode(NodeType.NAC, displayText, nacId);
+            n.add(nacNode);
+          }
+
+        } catch (Exception e) {
+          PopUp.popError(e);
+          e.printStackTrace();
+        }
+
       }
 
-      // FileTreePane.getInstance().getTreeModel()
-      // .reload(FileTreePane.getInstance().getRootNode());
       FileTreePane flTrPn = FileTreePane.getInstance();
       flTrPn.getTreeModel().insertNodeInto(n, parentNode,
         parentNode.getChildCount());
-      flTrPn.getTree().scrollPathToVisible(new TreePath(n.getPath()));
-      flTrPn.getTree().setSelectionPath(
-        new TreePath(flTrPn.getTreeModel().getPathToRoot(n)));
+
+      TreePath pathToRuleNode = new TreePath(n.getPath());
+
+      flTrPn.getTree().scrollPathToVisible(pathToRuleNode);
+      flTrPn.getTree().expandPath(pathToRuleNode);
     }
 
     nameToPId.put(name, id);
@@ -813,13 +824,4 @@ implements ActionListener {
     return nameToPId.get(n.toString());
   }
 
-  // TODO: jetzt obsolet - nac panel wird immer angezeigt
-  public boolean ruleHasNacs(int ruleId) {
-
-    Set<Integer> nacs = ruleToNacs.get(ruleId);
-    if (nacs != null) {
-      return (nacs.size() > 0);
-    }
-    return false;
-  }
 }

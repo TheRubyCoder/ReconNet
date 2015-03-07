@@ -53,6 +53,7 @@ package engine.handler.rule;
 
 import java.awt.Color;
 import java.awt.geom.Point2D;
+import java.util.UUID;
 
 import petrinet.model.IRenew;
 import petrinet.model.Place;
@@ -69,7 +70,7 @@ import exceptions.EngineException;
  * functionalities are delegated to ruleManipulationBackend
  */
 public final class RulePersistence
-  implements IRulePersistence {
+implements IRulePersistence {
 
   /** Singleton instance */
   private static RulePersistence rulePersistence;
@@ -95,7 +96,7 @@ public final class RulePersistence
   @Override
   public PreArc createPreArc(int id, RuleNet net, Place place,
     Transition transition)
-    throws EngineException {
+      throws EngineException {
 
     return ruleManipulationBackend.createPreArc(id, net, place, transition);
   }
@@ -103,7 +104,7 @@ public final class RulePersistence
   @Override
   public PostArc createPostArc(int id, RuleNet net, Transition transition,
     Place place)
-    throws EngineException {
+      throws EngineException {
 
     PostArc arc =
       ruleManipulationBackend.createPostArc(id, net, transition, place);
@@ -199,5 +200,12 @@ public final class RulePersistence
     throws EngineException {
 
     ruleManipulationBackend.setNodeSize(id, nodeSize);
+  }
+
+  @Override
+  public UUID createNac(int ruleId)
+    throws EngineException {
+
+    return ruleManipulationBackend.createNac(ruleId);
   }
 }

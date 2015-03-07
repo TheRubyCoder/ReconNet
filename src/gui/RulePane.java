@@ -412,6 +412,7 @@ public final class RulePane {
    */
   public void resizeNodes(float factor) {
 
+    // if no NAC is present, nacViewer is null
     if (nacViewer != null) {
       nacViewer.resizeNodesOnlyOnThisPartOfRule(factor);
     }
