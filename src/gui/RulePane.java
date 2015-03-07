@@ -412,7 +412,10 @@ public final class RulePane {
    */
   public void resizeNodes(float factor) {
 
-    nacViewer.resizeNodesOnlyOnThisPartOfRule(factor);
+    if (nacViewer != null) {
+      nacViewer.resizeNodesOnlyOnThisPartOfRule(factor);
+    }
+
     lViewer.resizeNodesOnlyOnThisPartOfRule(factor);
     kViewer.resizeNodesOnlyOnThisPartOfRule(factor);
     rViewer.resizeNodesOnlyOnThisPartOfRule(factor);
