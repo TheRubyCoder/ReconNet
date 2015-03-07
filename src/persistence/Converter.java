@@ -647,17 +647,11 @@ public final class Converter {
 
         if (net.getNettype().equals(RuleNet.L.name())) {
           lNet = net;
-        }
-
-        else if (net.getNettype().equals(RuleNet.K.name())) {
+        } else if (net.getNettype().equals(RuleNet.K.name())) {
           kNet = net;
-        }
-
-        else if (net.getNettype().equals(RuleNet.R.name())) {
+        } else if (net.getNettype().equals(RuleNet.R.name())) {
           rNet = net;
-        }
-
-        else if (net.getNettype().equals(RuleNet.NAC.name())) {
+        } else if (net.getNettype().equals(RuleNet.NAC.name())) {
           nacNetList.add(net);
         }
       }
@@ -687,17 +681,14 @@ public final class Converter {
       Set<Place> lPlaceSet = new HashSet<Place>(lPlaces);
       Set<Transition> lTransitionSet = new HashSet<Transition>(lTransis);
       Set<Arc> lArcSet = new HashSet<Arc>(lArcs);
-      System.out.println("lPlaceSet:" + lPlaceSet.size());
 
       Set<Place> kPlaceSet = new HashSet<Place>(kPlaces);
       Set<Transition> kTransitionSet = new HashSet<Transition>(kTransis);
       Set<Arc> kArcSet = new HashSet<Arc>(kArcs);
-      System.out.println("kPlaceSet:" + kPlaceSet.size());
 
       Set<Place> rPlaceSet = new HashSet<Place>(rPlaces);
       Set<Transition> rTransitionSet = new HashSet<Transition>(rTransis);
       Set<Arc> rArcSet = new HashSet<Arc>(rArcs);
-      System.out.println("rPlaceSet:" + rPlaceSet.size());
 
       // Skizze
       // leere Nacs hinzufügen (Anzahl anhand PNML)
@@ -835,6 +826,28 @@ public final class Converter {
       // add arcs
       // >
 
+      // arcs to add in L
+      Set<Arc> kOr_Arcs = new HashSet<Arc>(kArcSet);
+      kOr_Arcs.removeAll(rArcSet);
+
+      for (Arc arc : kOr_Arcs) {
+
+        INode source = addedNodesInL.get(arc.getSource());
+        INode target = addedNodesInL.get(arc.getTarget());
+
+        if (source instanceof petrinet.model.Place) {
+          // if source is a place -> PreArc
+          handler.createPreArc(ruleId, RuleNet.L,
+            (petrinet.model.Place) source, (petrinet.model.Transition) target);
+        } else {
+          // if source is a place -> PreArc
+
+          handler.createPostArc(ruleId, RuleNet.L,
+            (petrinet.model.Transition) source, (petrinet.model.Place) target);
+        }
+      }
+      // arcs to add in L
+
       // arcs to add in K
       Set<Arc> lSr_Arcs = new HashSet<Arc>(lArcSet);
       lSr_Arcs.retainAll(rArcSet);
@@ -856,6 +869,28 @@ public final class Converter {
         }
       }
       // arcs to add in K
+
+      // arcs to add in R
+      Set<Arc> kOl_Arcs = new HashSet<Arc>(kArcSet);
+      kOl_Arcs.removeAll(lArcSet);
+
+      for (Arc arc : kOl_Arcs) {
+
+        INode source = addedNodesInR.get(arc.getSource());
+        INode target = addedNodesInR.get(arc.getTarget());
+
+        if (source instanceof petrinet.model.Place) {
+          // if source is a place -> PreArc
+          handler.createPreArc(ruleId, RuleNet.R,
+            (petrinet.model.Place) source, (petrinet.model.Transition) target);
+        } else {
+          // if source is a place -> PreArc
+
+          handler.createPostArc(ruleId, RuleNet.R,
+            (petrinet.model.Transition) source, (petrinet.model.Place) target);
+        }
+      }
+      // arcs to add in R
 
       // >
       // add arcs
