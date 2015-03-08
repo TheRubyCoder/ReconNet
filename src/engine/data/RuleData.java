@@ -55,6 +55,7 @@ import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
@@ -73,7 +74,7 @@ import exceptions.ShowAsInfoException;
  */
 
 public final class RuleData
-extends SessionDataAbstract {
+  extends SessionDataAbstract {
 
   private Rule rule;
   private JungData jungDataL;
@@ -275,40 +276,37 @@ extends SessionDataAbstract {
     INode nodeInK = nodeMappings.get(1);
     INode nodeInR = nodeMappings.get(2);
 
+    Map<UUID, INode> nodesInNacs =
+      TransformationComponent.getTransformation().getCorrespondingNodesOfAllNacs(
+        getRule(), node);
+
     if (nodeInL != null) {
       getLJungData().moveNodeWithPositionCheck(
         nodeInL,
         Positioning.addPoints(getLJungData().getNodeLayoutAttributes().get(
           nodeInL).getCoordinate(), coordinate));
-
-      // assumption: if node is in L, than it's also in all NACs
-      // TODO has to be optimized. ugly code
-      // this class was implemented by the devil
-      /*
-       * for (NAC nac : getRule().getNACs()) { if (node instanceof Place) {
-       * Place nacPlace = nac.fromLtoNac((Place) node);
-       * getNacJungData(nac.getId()).moveNodeWithoutPositionCheck( nacPlace,
-       * Positioning.addPoints(
-       * getNacJungData(nac.getId()).getNodeLayoutAttributes().get(
-       * nacPlace).getCoordinate(), coordinate)); } if (node instanceof
-       * Transition) { Transition nacTransition = nac.fromLtoNac((Transition)
-       * node); getNacJungData(nac.getId()).moveNodeWithoutPositionCheck(
-       * nacTransition, Positioning.addPoints(
-       * getNacJungData(nac.getId()).getNodeLayoutAttributes().get(
-       * nacTransition).getCoordinate(), coordinate)); } }
-       */
     }
+
     if (nodeInK != null) {
       getKJungData().moveNodeWithPositionCheck(
         nodeInK,
         Positioning.addPoints(getKJungData().getNodeLayoutAttributes().get(
           nodeInK).getCoordinate(), coordinate));
     }
+
     if (nodeInR != null) {
       getRJungData().moveNodeWithPositionCheck(
         nodeInR,
         Positioning.addPoints(getRJungData().getNodeLayoutAttributes().get(
           nodeInR).getCoordinate(), coordinate));
+    }
+
+    for (Entry<UUID, INode> nodeInNac : nodesInNacs.entrySet()) {
+      getNacJungData(nodeInNac.getKey()).moveNodeWithPositionCheck(
+        nodeInNac.getValue(),
+        Positioning.addPoints(
+          getNacJungData(nodeInNac.getKey()).getNodeLayoutAttributes().get(
+            nodeInNac.getValue()).getCoordinate(), coordinate));
     }
 
   }

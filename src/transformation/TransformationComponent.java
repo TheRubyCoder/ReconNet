@@ -55,6 +55,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import petrinet.model.IArc;
 import petrinet.model.INode;
@@ -236,6 +237,79 @@ public final class TransformationComponent
     return getMappings(rules.get(ruleId), node);
   }
 
+  @Override
+  public Map<UUID, INode>
+    getCorrespondingNodesOfAllNacs(Rule rule, INode node) {
+
+    Map<UUID, INode> nodes = new HashMap<UUID, INode>();
+
+    if (node instanceof Place) {
+      Net net = getNet(rule, (Place) node);
+
+      INode lNode = null;
+
+      switch (net) {
+      case L:
+        lNode = node;
+        break;
+
+      case K:
+        lNode = rule.fromKtoL((Place) node);
+        break;
+
+      case R:
+        lNode = rule.fromRtoL((Place) node);
+        break;
+
+      default:
+        break;
+      }
+
+      for (NAC nac : rule.getNACs()) {
+
+        INode nacNode = nac.fromLtoNac((Place) lNode);
+
+        if (nacNode != null) {
+          nodes.put(nac.getId(), nacNode);
+        }
+      }
+    }
+
+    if (node instanceof Transition) {
+      Net net = getNet(rule, (Transition) node);
+
+      INode lNode = null;
+
+      switch (net) {
+      case L:
+        lNode = node;
+        break;
+
+      case K:
+        lNode = rule.fromKtoL((Transition) node);
+        break;
+
+      case R:
+        lNode = rule.fromRtoL((Transition) node);
+        break;
+
+      default:
+        break;
+      }
+
+      for (NAC nac : rule.getNACs()) {
+
+        INode nacNode = nac.fromLtoNac((Transition) lNode);
+
+        if (nacNode != null) {
+          nodes.put(nac.getId(), nacNode);
+        }
+      }
+    }
+
+    return nodes;
+  }
+
   /**
    * Transformations the petrinet like defined in rule with random match
    *
@@ -345,4 +419,5 @@ public final class TransformationComponent
     System.out.println("unknown place");
     return null;
   }
+
 }

@@ -65,6 +65,7 @@ import static gui.Style.TREE_MENU_REMOVE_RULE;
 import static gui.Style.TREE_MENU_SAVE;
 import static gui.Style.TREE_MENU_SAVE_ALL;
 import static gui.Style.TREE_MENU_UNCHECK_RULE;
+import gui.PetrinetPane;
 import gui.RulePane;
 
 import java.awt.event.ActionListener;
@@ -83,7 +84,7 @@ import javax.swing.tree.TreePath;
  * {@link MouseListener}.
  */
 public class TreeMouseListener
-implements MouseListener {
+  implements MouseListener {
 
   /**
    * reference to the {@link JTree} object.
@@ -334,6 +335,10 @@ implements MouseListener {
 
   private void handleNetSelection(PetriTreeNode netNode) {
 
+    int netId = netNode.getNetId();
+    String netName = netNode.toString();
+
+    PetrinetPane.getInstance().displayPetrinet(netId, netName);
   }
 
   private void handleRuleSelection(RuleTreeNode ruleNode) {

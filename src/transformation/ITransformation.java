@@ -52,6 +52,8 @@
 package transformation;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import petrinet.model.IArc;
 import petrinet.model.INode;
@@ -70,14 +72,14 @@ public interface ITransformation {
 
   /**
    * Creates a new empty rule
-   * 
+   *
    * @return
    */
   Rule createRule();
 
   /**
    * Returns the respective representations of a node
-   * 
+   *
    * @param rule
    *        The rule in which the node lies
    * @param node
@@ -104,7 +106,7 @@ public interface ITransformation {
   /**
    * Very similar to {@link ITransformation#getMappings(Rule, INode)} but with
    * the <code>ruleId</code> instead of <tt>rule</tt>.
-   * 
+   *
    * @see ITransformation#storeSessionId(int, Rule)
    * @param ruleId
    * @param node
@@ -119,8 +121,20 @@ public interface ITransformation {
   List<IArc> getMappings(Rule rule, IArc arc);
 
   /**
+   * For a given node, this method returns all corresponding nodes of all nacs
+   * of the rule
+   *
+   * @param rule
+   *        The rule
+   * @param node
+   *        The origin node
+   * @return
+   */
+  Map<UUID, INode> getCorrespondingNodesOfAllNacs(Rule rule, INode node);
+
+  /**
    * Transformations the petrinet like defined in rule with random match
-   * 
+   *
    * @param petrinet
    *        Petrinet to transform
    * @param rule
@@ -133,7 +147,7 @@ public interface ITransformation {
   /**
    * Stores the session id of a rule so it can be used in
    * {@link ITransformation#getMappings(int, INode)}
-   * 
+   *
    * @param id
    * @param rule
    */
