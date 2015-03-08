@@ -123,7 +123,7 @@ final class FilePane {
 
   /** Listener for button new petri net */
   private static class NewPetrinetListener
-  implements ActionListener {
+    implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -138,7 +138,7 @@ final class FilePane {
    * petrinet
    */
   private static class PetrinetListSelectionListener
-  implements ListSelectionListener {
+    implements ListSelectionListener {
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
@@ -149,7 +149,7 @@ final class FilePane {
         // compile these with
         // parameters
         String selectedValue =
-        (String) ((JList) e.getSource()).getSelectedValue();
+          (String) ((JList) e.getSource()).getSelectedValue();
         if (selectedValue != null) {
           int pId = FilePane.getPetrinetFilePane().getIdFromSelectedItem();
           PetrinetPane.getInstance().displayPetrinet(pId,
@@ -166,7 +166,7 @@ final class FilePane {
    * Selecting an item in the list will display its respective rule
    */
   private static class RuleListSelectionListener
-  implements ListSelectionListener {
+    implements ListSelectionListener {
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
@@ -189,7 +189,7 @@ final class FilePane {
 
   /** Listener for button load petri net */
   private static class LoadPetrinetListener
-  implements ActionListener {
+    implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -200,7 +200,7 @@ final class FilePane {
 
   /** Listener for button save petri net */
   private static class SavePetrinetListener
-  implements ActionListener {
+    implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -211,7 +211,7 @@ final class FilePane {
 
   /** Listener for button save as petri net */
   private static class SaveAsPetrinetListener
-  implements ActionListener {
+    implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -222,7 +222,7 @@ final class FilePane {
 
   /** Listener for button new rule */
   private static class NewRuleListener
-  implements ActionListener {
+    implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -233,7 +233,7 @@ final class FilePane {
 
   /** Listener for button load rule */
   private static class LoadRuleListener
-  implements ActionListener {
+    implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -244,7 +244,7 @@ final class FilePane {
 
   /** Listener for button save rule */
   private static class SaveRuleListener
-  implements ActionListener {
+    implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -255,7 +255,7 @@ final class FilePane {
 
   /** Listener for button save rule as */
   private static class SaveAsRuleListener
-  implements ActionListener {
+    implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -266,7 +266,7 @@ final class FilePane {
 
   /** Listener for button delete rule */
   private static class DeleteRuleListener
-  implements ActionListener {
+    implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -277,7 +277,7 @@ final class FilePane {
 
   /** Listener for button delete petrinet */
   private static class DeletePetrinetListener
-  implements ActionListener {
+    implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -437,7 +437,7 @@ final class FilePane {
   // with
   // parameters
   private JList
-  initiateList(ListSelectionListener listener) {
+    initiateList(ListSelectionListener listener) {
 
     listModel = new DefaultListModel();
     JList listRtrn = new JList(listModel);
@@ -559,7 +559,7 @@ final class FilePane {
    * @return
    */
   private JButton
-  initiateLoadButton(String type, ActionListener loadListener) {
+    initiateLoadButton(String type, ActionListener loadListener) {
 
     JButton button = new JButton(LOAD_PETRINET_ICON);
     button.setBounds(LOAD_BUTTON_X, LOAD_BUTTON_Y,
@@ -585,7 +585,7 @@ final class FilePane {
    * @return
    */
   private JButton
-  initiateSaveButton(String type, ActionListener saveListener) {
+    initiateSaveButton(String type, ActionListener saveListener) {
 
     JButton button = new JButton(SAVE_PETRINET_ICON);
     button.setBounds(SAVE_BUTTON_X, SAVE_BUTTON_Y,
@@ -733,7 +733,7 @@ final class FilePane {
   // with
   // parameters
   String
-  create(String type) {
+    create(String type) {
 
     JFileChooser fileChooser = new JFileChooser();
     fileChooser.setDialogTitle("Bitte Speicherort für neue(s) " + type
@@ -856,7 +856,7 @@ final class FilePane {
   // with
   // parameters
   private void
-  loadFromFile(File file) {
+    loadFromFile(File file) {
 
     int id;
     String name = fileToListEntry(file);
@@ -866,8 +866,8 @@ final class FilePane {
           file.getName());
     } else {
       id =
-        EngineAdapter.getRuleManipulation().load(file.getParent(),
-          file.getName());
+        EngineAdapter.getRuleManipulation().loadRuleWithNacs(
+          file.getParent(), file.getName());
     }
     nameToPId.put(name, id);
     nameToFilepath.put(name, file);
@@ -926,7 +926,7 @@ final class FilePane {
         JOptionPane.showOptionDialog(treeAndButtonContainerWithBorder,
           "Sollen die Dateien vom Dateisystem gelöscht werden?", "Löschen",
           0, JOptionPane.QUESTION_MESSAGE, null, new String[]{
-          "Dateien löschen", "Nur aus Übersicht löschen"},
+            "Dateien löschen", "Nur aus Übersicht löschen"},
           "Nur aus Übersicht löschen");
 
       // When manipulating the list, the listener must be removed as
@@ -973,7 +973,7 @@ final class FilePane {
   @SuppressWarnings("deprecation")
   // deprecated in 1.7 but recon is developet on 1.6
   public Collection<Integer>
-  getIdsFromSelectedListItems() {
+    getIdsFromSelectedListItems() {
 
     Collection<Integer> result = new HashSet<Integer>();
     for (Object value : list.getSelectedValues()) {

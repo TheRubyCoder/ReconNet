@@ -65,7 +65,6 @@ import static gui.Style.TREE_MENU_REMOVE_RULE;
 import static gui.Style.TREE_MENU_SAVE;
 import static gui.Style.TREE_MENU_SAVE_ALL;
 import static gui.Style.TREE_MENU_UNCHECK_RULE;
-import gui.PetrinetPane;
 import gui.RulePane;
 
 import java.awt.event.ActionListener;
@@ -117,23 +116,19 @@ implements MouseListener {
    * @param node
    *        the node clicked.
    */
-  private void showPopupMenu(MouseEvent event, Object node) {
+  private void showPopupMenu(MouseEvent event,
+    DefaultMutableTreeNode selectedNode) {
 
-    PetriTreeNode selectedNode = (PetriTreeNode) node;
-
-    if (selectedNode.isNodeType(NodeType.NET_ROOT)) {
-      this.showNetRootMenu(event, selectedNode);
-    } else if (selectedNode.isNodeType(NodeType.RULE_ROOT)) {
-      this.showRuleRootMenu(event, selectedNode);
-    } else if (selectedNode.isNodeType(NodeType.NET)) {
-      this.showNetMenu(event, selectedNode);
-    } else if (selectedNode.isNodeType(NodeType.RULE)) {
-      this.showRuleMenu(event, selectedNode);
-    } else if (selectedNode.isNodeType(NodeType.NAC)) {
-      this.showNacMenu(event, selectedNode);
-    } else {
-      // TODO: throw exception here
-      System.out.println("unknown node type");
+    if (selectedNode instanceof NetRootTreeNode) {
+      this.showNetRootMenu(event, (NetRootTreeNode) selectedNode);
+    } else if (selectedNode instanceof RuleRootTreeNode) {
+      this.showRuleRootMenu(event, (RuleRootTreeNode) selectedNode);
+    } else if (selectedNode instanceof PetriTreeNode) {
+      this.showNetMenu(event, (PetriTreeNode) selectedNode);
+    } else if (selectedNode instanceof RuleTreeNode) {
+      this.showRuleMenu(event, (RuleTreeNode) selectedNode);
+    } else if (selectedNode instanceof NacTreeNode) {
+      this.showNacMenu(event, (NacTreeNode) selectedNode);
     }
 
   }
@@ -146,7 +141,7 @@ implements MouseListener {
    * @param selectedNode
    *        the node clicked.
    */
-  private void showRuleMenu(MouseEvent event, PetriTreeNode selectedNode) {
+  private void showRuleMenu(MouseEvent event, RuleTreeNode selectedNode) {
 
     JPopupMenu popup = new JPopupMenu();
     JMenuItem i;
@@ -192,7 +187,7 @@ implements MouseListener {
    * @param selectedNode
    *        the node clicked.
    */
-  private void showNacMenu(MouseEvent event, PetriTreeNode selectedNode) {
+  private void showNacMenu(MouseEvent event, NacTreeNode selectedNode) {
 
     JPopupMenu popup = new JPopupMenu();
     JMenuItem i;
@@ -311,49 +306,58 @@ implements MouseListener {
 
     TreePath path = this.tree.getPathForLocation(e.getX(), e.getY());
 
+    // select corresponding node (important for rightclick)
+    this.tree.setSelectionPath(path);
+
     if (path != null) {
-      this.tree.setSelectionPath(path);
-      PetriTreeNode node = (PetriTreeNode) path.getLastPathComponent();
 
-      String name = node.toString();
-      Integer id = PopupMenuListener.getInstance().getPidOf(name);
+      DefaultMutableTreeNode selectedNode =
+        (DefaultMutableTreeNode) path.getLastPathComponent();
 
-      if (node.isNodeType(NodeType.NET)) {
-        PetrinetPane.getInstance().displayPetrinet(id, name);
-        PetriTreeNode netRoot = (PetriTreeNode) node.getParent();
-        PetriTreeNode child;
-        int numberOfChilcds = netRoot.getChildCount();
-        for (int i = 0; i < numberOfChilcds; i++) {
-          child = (PetriTreeNode) netRoot.getChildAt(i);
-          child.setSelected(false);
+      if (e.getButton() == MouseEvent.BUTTON1) {
+
+        if (selectedNode instanceof PetriTreeNode) {
+          this.handleNetSelection((PetriTreeNode) selectedNode);
+        } else if (selectedNode instanceof RuleTreeNode) {
+          this.handleRuleSelection((RuleTreeNode) selectedNode);
+        } else if (selectedNode instanceof NacTreeNode) {
+          this.handleNacSelection((NacTreeNode) selectedNode);
         }
-        node.setSelected(true);
-      } else if (node.isNodeType(NodeType.RULE)) {
-        RulePane.getInstance().displayRule(id);
-        PetriTreeNode ruleRoot = (PetriTreeNode) node.getParent();
-        PetriTreeNode child;
-        int numberOfChilcds = ruleRoot.getChildCount();
-        for (int i = 0; i < numberOfChilcds; i++) {
-          child = (PetriTreeNode) ruleRoot.getChildAt(i);
-          child.setSelected(false);
-        }
-        node.setSelected(true);
-      } else if (node.isNodeType(NodeType.NAC)) {
 
-        String ruleName = node.getParent().toString();
-        int ruleId = PopupMenuListener.getInstance().getPidOf(ruleName);
+      } else if (e.getButton() == MouseEvent.BUTTON3) {
 
-        UUID nacId = (UUID) node.getUserObject();
-
-        RulePane.getInstance().displayNAC(ruleId, nacId);
-
-      }
-
-      if (e.getButton() == MouseEvent.BUTTON3) {
-        showPopupMenu(e, path.getLastPathComponent());
+        this.showPopupMenu(e, selectedNode);
       }
     }
 
+  }
+
+  private void handleNetSelection(PetriTreeNode netNode) {
+
+  }
+
+  private void handleRuleSelection(RuleTreeNode ruleNode) {
+
+    int ruleId = ruleNode.getRuleId();
+    RulePane.getInstance().displayRule(ruleId);
+
+    // if rule has nacs, display the first
+    if (ruleNode.getChildCount() > 0) {
+      NacTreeNode nacNode = (NacTreeNode) ruleNode.getChildAt(0);
+      UUID nacId = nacNode.getNacId();
+      RulePane.getInstance().displayNAC(ruleId, nacId);
+    } else {
+      RulePane.getInstance().displayEmptyNAC();
+    }
+  }
+
+  private void handleNacSelection(NacTreeNode nacNode) {
+
+    int ruleId = ((RuleTreeNode) nacNode.getParent()).getRuleId();
+    UUID nacId = nacNode.getNacId();
+
+    RulePane.getInstance().displayRule(ruleId);
+    RulePane.getInstance().displayNAC(ruleId, nacId);
   }
 
   @Override

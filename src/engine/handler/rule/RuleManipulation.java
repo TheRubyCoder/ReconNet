@@ -101,7 +101,7 @@ import exceptions.EngineException;
  * @author alex (aas772)
  */
 public final class RuleManipulation
-implements IRuleManipulation {
+  implements IRuleManipulation {
 
   /** Singleton instance of this class */
   private static RuleManipulation ruleManipulation;
@@ -259,7 +259,7 @@ implements IRuleManipulation {
   @Override
   public void setCapacity(@NotNull int id, @NotNull INode place,
     @NotNull int capacity)
-      throws EngineException {
+    throws EngineException {
 
     if (!(place instanceof Place)) {
       warning("place isn't a Place");
@@ -343,7 +343,7 @@ implements IRuleManipulation {
   @Override
   public void saveRuleWithNacs(int id, String path, String filename,
     String format)
-    throws EngineException {
+      throws EngineException {
 
     ruleManipulationBackend.saveRuleWithNacs(id, path, filename, format);
 
@@ -365,6 +365,12 @@ implements IRuleManipulation {
   public int load(String path, String filename) {
 
     return ruleManipulationBackend.load(path, filename);
+  }
+
+  @Override
+  public int loadRuleWithNacs(String path, String filename) {
+
+    return ruleManipulationBackend.loadRuleWithNacs(path, filename);
   }
 
   @Override

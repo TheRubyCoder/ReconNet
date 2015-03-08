@@ -60,8 +60,8 @@ import javax.swing.JTree;
 import javax.swing.UIManager;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-public class PetriTreeNodeRenderer
-  extends DefaultTreeCellRenderer {
+public class TreeNodeRenderer
+extends DefaultTreeCellRenderer {
 
   /**
    * serialVersionUID
@@ -86,7 +86,7 @@ public class PetriTreeNodeRenderer
   /**
    * Constructor.
    */
-  public PetriTreeNodeRenderer() {
+  public TreeNodeRenderer() {
 
     super();
     DefaultTreeCellRenderer r = new DefaultTreeCellRenderer();
@@ -102,32 +102,30 @@ public class PetriTreeNodeRenderer
 
     Component renderer;
 
-    if (value instanceof PetriTreeNode) {
-      PetriTreeNode node = (PetriTreeNode) value;
-      if (node.isNodeType(NodeType.RULE)) {
+    if (value instanceof RuleTreeNode) {
 
-        JCheckBox box = new JCheckBox(node.toString());
-        box.setSelected(node.isChecked());
+      RuleTreeNode node = (RuleTreeNode) value;
 
-        if (fontValue != null) {
-          box.setFont(fontValue);
-        }
-        if (node.isSelected()) {
-          box.setBackground(selectedBkgrnd);
-        } else {
-          box.setBackground(nonSelectedBkgrnd);
-        }
-        renderer = box;
+      JCheckBox box = new JCheckBox(node.toString());
+      box.setSelected(node.isChecked());
 
+      if (selected) {
+        box.setBackground(selectedBkgrnd);
       } else {
-        renderer =
-          (new DefaultTreeCellRenderer().getTreeCellRendererComponent(tree,
-            value, node.isSelected(), expanded, leaf, row, hasFocus));
+        box.setBackground(nonSelectedBkgrnd);
       }
+
+      if (fontValue != null) {
+        box.setFont(fontValue);
+      }
+
+      renderer = box;
+
     } else {
+
       renderer =
-        (new DefaultTreeCellRenderer().getTreeCellRendererComponent(tree,
-          value, selected, expanded, leaf, row, hasFocus));
+        new DefaultTreeCellRenderer().getTreeCellRendererComponent(tree,
+          value, selected, expanded, leaf, row, hasFocus);
     }
 
     return renderer;

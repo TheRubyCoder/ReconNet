@@ -72,7 +72,7 @@ import javax.swing.tree.DefaultTreeModel;
  * A panel to display the file tree. Extends {@link JPanel}
  */
 public final class FileTreePane
-extends JPanel {
+  extends JPanel {
 
   /**
    * Root node (not visible).
@@ -82,12 +82,12 @@ extends JPanel {
   /**
    * Net root node. Root of all nets.
    */
-  private DefaultMutableTreeNode netNode;
+  private DefaultMutableTreeNode netRootNode;
 
   /**
    * Rule root node. Root of all rules.
    */
-  private DefaultMutableTreeNode ruleNode;
+  private DefaultMutableTreeNode ruleRootNode;
 
   /**
    * Reference to the tree object.
@@ -170,7 +170,7 @@ extends JPanel {
     this.tree.setRootVisible(false);
     this.tree.setPreferredSize(FILE_TREE_PANE_PREFERRED_SIZE);
     this.tree.addMouseListener(new TreeMouseListener(this.tree));
-    this.tree.setCellRenderer(new PetriTreeNodeRenderer());
+    this.tree.setCellRenderer(new TreeNodeRenderer());
   }
 
   /**
@@ -188,11 +188,14 @@ extends JPanel {
    */
   private DefaultMutableTreeNode createRoot() {
 
-    this.rootNode = new PetriTreeNode(NodeType.ROOT, TREE_STRING_ROOT);
-    netNode = new PetriTreeNode(NodeType.NET_ROOT, TREE_STRING_NET);
-    ruleNode = new PetriTreeNode(NodeType.RULE_ROOT, TREE_STRING_RULE);
-    this.rootNode.add(netNode);
-    this.rootNode.add(ruleNode);
+    this.rootNode = new DefaultMutableTreeNode(TREE_STRING_ROOT);
+
+    netRootNode = new NetRootTreeNode(TREE_STRING_NET);
+    ruleRootNode = new RuleRootTreeNode(TREE_STRING_RULE);
+
+    this.rootNode.add(netRootNode);
+    this.rootNode.add(ruleRootNode);
+
     return this.rootNode;
   }
 
@@ -212,9 +215,9 @@ extends JPanel {
    *
    * @return The net root node {@link DefaultMutableTreeNode}.
    */
-  public DefaultMutableTreeNode getNetNode() {
+  public DefaultMutableTreeNode getNetRootNode() {
 
-    return netNode;
+    return netRootNode;
   }
 
   /**
@@ -222,9 +225,9 @@ extends JPanel {
    *
    * @return The rule root node {@link DefaultMutableTreeNode}.
    */
-  public DefaultMutableTreeNode getRuleNode() {
+  public DefaultMutableTreeNode getRuleRootNode() {
 
-    return ruleNode;
+    return ruleRootNode;
   }
 
   /**
@@ -285,7 +288,7 @@ extends JPanel {
    */
   public void setRuleNode(DefaultMutableTreeNode ruleNode) {
 
-    this.ruleNode = ruleNode;
+    this.ruleRootNode = ruleNode;
   }
 
   /**
@@ -295,17 +298,21 @@ extends JPanel {
    */
   public Collection<Integer> getSelectedRuleIds() {
 
-    List<Integer> l = new ArrayList<Integer>();
-    PetriTreeNode parent = (PetriTreeNode) this.ruleNode;
-    PetriTreeNode child;
-    int numberOfChilds = parent.getChildCount();
-    for (int i = 0; i < numberOfChilds; i++) {
-      child = (PetriTreeNode) parent.getChildAt(i);
-      if (child.isChecked()) {
-        l.add(PopupMenuListener.getInstance().getIdForNode(child));
+    List<Integer> list = new ArrayList<Integer>();
+
+    int numberOfRules = this.getRuleRootNode().getChildCount();
+
+    for (int i = 0; i < numberOfRules; i++) {
+
+      RuleTreeNode ruleNode = (RuleTreeNode) ruleRootNode.getChildAt(i);
+
+      if (ruleNode.isChecked()) {
+        list.add(ruleNode.getRuleId());
       }
+
     }
-    return l;
+
+    return list;
   }
 
   /**

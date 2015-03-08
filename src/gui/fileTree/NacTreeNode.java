@@ -51,20 +51,22 @@
 
 package gui.fileTree;
 
+import java.util.UUID;
+
 import javax.swing.tree.DefaultMutableTreeNode;
 
-public class PetriTreeNode
-extends DefaultMutableTreeNode {
+public class NacTreeNode
+  extends DefaultMutableTreeNode {
 
   private static final long serialVersionUID = 1L;
 
   private String displayText;
-  private int netId;
+  private UUID nacId;
 
-  public PetriTreeNode(String displayText, int netId) {
+  public NacTreeNode(String displayText, UUID nacId) {
 
     this.displayText = displayText;
-    this.netId = netId;
+    this.nacId = nacId;
   }
 
   @Override
@@ -73,8 +75,8 @@ extends DefaultMutableTreeNode {
     return this.displayText;
   }
 
-  public int getNetId() {
+  public UUID getNacId() {
 
-    return netId;
+    return nacId;
   }
 }

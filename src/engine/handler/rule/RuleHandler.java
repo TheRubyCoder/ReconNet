@@ -130,7 +130,7 @@ public final class RuleHandler {
    */
   public PreArc createPreArc(int id, RuleNet net, Place place,
     Transition transition)
-    throws EngineException {
+      throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -213,7 +213,7 @@ public final class RuleHandler {
    */
   public PostArc createPostArc(int id, RuleNet net, Transition transition,
     Place place)
-    throws EngineException {
+      throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -736,7 +736,7 @@ public final class RuleHandler {
    */
   public TransitionAttribute getTransitionAttribute(int id,
     Transition transition)
-    throws EngineException {
+      throws EngineException {
 
     String tlb = transition.getTlb();
     String name = transition.getName();
@@ -811,7 +811,7 @@ public final class RuleHandler {
 
   public void saveRuleWithNacs(int id, String path, String filename,
     String format)
-    throws EngineException {
+      throws EngineException {
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();
@@ -858,6 +858,15 @@ public final class RuleHandler {
     return Persistence.loadRule(path + "/" + filename,
       RulePersistence.getInstance());
 
+  }
+
+  /**
+   * @see IRuleManipulation#loadRuleWithNacs(String, String)
+   */
+  public int loadRuleWithNacs(String path, String filename) {
+
+    return Persistence.loadRuleWithNacs(path + "/" + filename,
+      RulePersistence.getInstance());
   }
 
   /**
@@ -1693,8 +1702,8 @@ public final class RuleHandler {
   }
 
   public void
-    setTname(int id, UUID nacId, Transition transition, String tname)
-    throws EngineException {
+  setTname(int id, UUID nacId, Transition transition, String tname)
+      throws EngineException {
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();

@@ -53,18 +53,20 @@ package gui.fileTree;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-public class PetriTreeNode
+public class RuleTreeNode
 extends DefaultMutableTreeNode {
 
   private static final long serialVersionUID = 1L;
 
   private String displayText;
-  private int netId;
+  private int ruleId;
+  private boolean checked;
 
-  public PetriTreeNode(String displayText, int netId) {
+  public RuleTreeNode(String displayText, int ruleId) {
 
     this.displayText = displayText;
-    this.netId = netId;
+    this.ruleId = ruleId;
+    this.checked = true;
   }
 
   @Override
@@ -73,8 +75,18 @@ extends DefaultMutableTreeNode {
     return this.displayText;
   }
 
-  public int getNetId() {
+  public int getRuleId() {
 
-    return netId;
+    return ruleId;
+  }
+
+  public boolean isChecked() {
+
+    return checked;
+  }
+
+  public void setChecked(boolean checked) {
+
+    this.checked = checked;
   }
 }

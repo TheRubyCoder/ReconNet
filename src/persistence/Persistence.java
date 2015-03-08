@@ -311,8 +311,7 @@ public final class Persistence {
 
       pnml = (Pnml) m.unmarshal(new File(pathAndFilename));
 
-      return Converter.convertPnmlToRuleWithNacs(pnml, handler);
-      // return Converter.convertPnmlToRule(pnml, handler);
+      return Converter.convertPnmlToRule(pnml, handler);
     } catch (JAXBException e) {
       e.printStackTrace();
       PopUp.popError(e);
@@ -322,7 +321,7 @@ public final class Persistence {
   }
 
   /**
-   * Loads a {@linkplain Rule} from a file
+   * Loads a {@linkplain Rule} with nacs from a file
    *
    * @param pathAndFilename
    *        String that identifies the file

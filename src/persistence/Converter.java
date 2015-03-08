@@ -59,6 +59,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 import petrinet.model.INode;
 import petrinet.model.Petrinet;
@@ -695,9 +696,11 @@ public final class Converter {
       // Regel aufbauen -> baut auch Teile von NACs auf
       // restlichen Elemente zu NACs hinzufügen
 
-      // initialize NACs
+      // initialize NACs - must be done before L, K, and R will be build
+      List<UUID> nacIds = new ArrayList<UUID>();
       for (int i = 0; i < nacNetList.size(); i++) {
-        handler.createNac(ruleId);
+        UUID nacId = handler.createNac(ruleId);
+        nacIds.add(nacId);
       }
 
       // maps used to create arcs between nodes by their id
@@ -895,6 +898,10 @@ public final class Converter {
       // >
       // add arcs
       // ################
+
+      for (UUID nacId : nacIds) {
+
+      }
 
     } catch (EngineException e) {
       PopUp.popError(e);

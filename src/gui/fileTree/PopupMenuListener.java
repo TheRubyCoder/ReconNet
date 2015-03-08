@@ -233,9 +233,13 @@ implements ActionListener {
    */
   private void uncheckNode() {
 
-    PetriTreeNode node =
-      (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
-    node.setChecked(false);
+    DefaultMutableTreeNode node =
+      FileTreePane.getInstance().getSelectedNode();
+
+    if (node instanceof RuleTreeNode) {
+      ((RuleTreeNode) node).setChecked(false);
+    }
+
     FileTreePane.getInstance().getTree().invalidate();
     FileTreePane.getInstance().getTree().validate();
     FileTreePane.getInstance().getTree().repaint();
@@ -246,9 +250,13 @@ implements ActionListener {
    */
   private void checkNode() {
 
-    PetriTreeNode node =
-      (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
-    node.setChecked(true);
+    DefaultMutableTreeNode node =
+      FileTreePane.getInstance().getSelectedNode();
+
+    if (node instanceof RuleTreeNode) {
+      ((RuleTreeNode) node).setChecked(true);
+    }
+
     FileTreePane.getInstance().getTree().invalidate();
     FileTreePane.getInstance().getTree().validate();
     FileTreePane.getInstance().getTree().repaint();
@@ -268,9 +276,10 @@ implements ActionListener {
       ? true : false;
     // CHECKSTYLE:ON
 
-    PetriTreeNode node =
-      (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
-    PetriTreeNode parentNode = null;
+    DefaultMutableTreeNode node =
+      FileTreePane.getInstance().getSelectedNode();
+    DefaultMutableTreeNode parentNode =
+      (DefaultMutableTreeNode) node.getParent();
     String name = node.toString();
 
     if (delete) {
@@ -280,12 +289,10 @@ implements ActionListener {
     nameToFilepath.remove(name);
     nameToPId.remove(name);
 
-    if (node.isNodeType(NodeType.NET)) {
+    if (node instanceof PetriTreeNode) {
       PetrinetPane.getInstance().displayEmpty();
-      parentNode = (PetriTreeNode) FileTreePane.getInstance().getNetNode();
-    } else if (node.isNodeType(NodeType.RULE)) {
+    } else if (node instanceof RuleTreeNode) {
       RulePane.getInstance().displayEmpty();
-      parentNode = (PetriTreeNode) FileTreePane.getInstance().getRuleNode();
     }
 
     FileTreePane.getInstance().getTreeModel().removeNodeFromParent(node);
@@ -302,15 +309,18 @@ implements ActionListener {
    */
   private void reload() {
 
-    PetriTreeNode node =
-      (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
+    DefaultMutableTreeNode node =
+      FileTreePane.getInstance().getSelectedNode();
     File file = this.nameToFilepath.get(node.toString());
+
     int netType = -1;
-    if (node.isNodeType(NodeType.NET)) {
+
+    if (node instanceof PetriTreeNode) {
       netType = PopupMenuListener.SELECTED_TYPE_IS_NET;
-    } else if (node.isNodeType(NodeType.RULE)) {
+    } else if (node instanceof RuleTreeNode) {
       netType = PopupMenuListener.SELECTED_TYPE_IS_RULE;
     }
+
     this.loadFromFile(file, netType);
 
   }
@@ -392,23 +402,23 @@ implements ActionListener {
     } else {
 
       id =
-        EngineAdapter.getRuleManipulation().load(file.getParent(),
-          file.getName());
+        EngineAdapter.getRuleManipulation().loadRuleWithNacs(
+          file.getParent(), file.getName());
       RulePane.getInstance().displayRule(id);
     }
 
     if (!nameToPId.containsKey(name)) {
 
       DefaultMutableTreeNode parentNode = null;
-      PetriTreeNode n = null;
+      DefaultMutableTreeNode n = null;
 
       if (netType == SELECTED_TYPE_IS_NET) {
-        parentNode = FileTreePane.getInstance().getNetNode();
-        n = new PetriTreeNode(NodeType.NET, name);
+        parentNode = FileTreePane.getInstance().getNetRootNode();
+        n = new PetriTreeNode(name, id);
+
       } else if (netType == SELECTED_TYPE_IS_RULE) {
-        parentNode = FileTreePane.getInstance().getRuleNode();
-        n = new PetriTreeNode(NodeType.RULE, name);
-        n.setChecked(true);
+        parentNode = FileTreePane.getInstance().getRuleRootNode();
+        n = new RuleTreeNode(name, id);
 
         // initialize sub nodes of nacs
         try {
@@ -418,8 +428,7 @@ implements ActionListener {
           for (UUID nacId : nacIds) {
 
             String displayText = "NAC " + nacId;
-            PetriTreeNode nacNode =
-              new PetriTreeNode(NodeType.NAC, displayText, nacId);
+            NacTreeNode nacNode = new NacTreeNode(displayText, nacId);
             n.add(nacNode);
           }
 
@@ -458,16 +467,16 @@ implements ActionListener {
   private void saveAll() {
 
     FileTreePane flTrPn = FileTreePane.getInstance();
-    int childCount = flTrPn.getNetNode().getChildCount();
+    int childCount = flTrPn.getNetRootNode().getChildCount();
 
     for (int i = childCount - 1; i >= 0; i--) {
-      saveNode((DefaultMutableTreeNode) flTrPn.getNetNode().getChildAt(i));
+      saveNode((DefaultMutableTreeNode) flTrPn.getNetRootNode().getChildAt(i));
     }
 
-    childCount = flTrPn.getRuleNode().getChildCount();
+    childCount = flTrPn.getRuleRootNode().getChildCount();
 
     for (int i = childCount - 1; i >= 0; i--) {
-      saveNode((DefaultMutableTreeNode) flTrPn.getRuleNode().getChildAt(i));
+      saveNode((DefaultMutableTreeNode) flTrPn.getRuleRootNode().getChildAt(i));
     }
   }
 
@@ -479,20 +488,33 @@ implements ActionListener {
    */
   private void saveNode(DefaultMutableTreeNode node) {
 
-    String name = node.getUserObject().toString();
-    int id = nameToPId.get(name);
-    File file = nameToFilepath.get(name);
     try {
-      if (((PetriTreeNode) node).isNodeType(NodeType.NET)) {
-        EngineAdapter.getPetrinetManipulation().save(id, file.getParent(),
+
+      if (node instanceof PetriTreeNode) {
+
+        String name = ((PetriTreeNode) node).toString();
+        File file = nameToFilepath.get(name);
+
+        PetriTreeNode netNode = (PetriTreeNode) node;
+        int netId = netNode.getNetId();
+
+        EngineAdapter.getPetrinetManipulation().save(netId, file.getParent(),
           name, FILE_EXTENSION_WITHOUT_DOT,
           PetrinetPane.getInstance().getCurrentNodeSize());
-      } else if (((PetriTreeNode) node).isNodeType(NodeType.RULE)) {
-        // EngineAdapter.getRuleManipulation().save(id, file.getParent(),
-        // name, FILE_EXTENSION_WITHOUT_DOT);
-        EngineAdapter.getRuleManipulation().saveRuleWithNacs(id,
+      }
+
+      else if (node instanceof RuleTreeNode) {
+
+        String name = ((RuleTreeNode) node).toString();
+        File file = nameToFilepath.get(name);
+
+        RuleTreeNode ruleNode = (RuleTreeNode) node;
+        int ruleId = ruleNode.getRuleId();
+
+        EngineAdapter.getRuleManipulation().saveRuleWithNacs(ruleId,
           file.getParent(), name, FILE_EXTENSION_WITHOUT_DOT);
       }
+
     } catch (EngineException e) {
       PopUp.popError(e);
       e.printStackTrace();
@@ -581,16 +603,15 @@ implements ActionListener {
       }
 
       DefaultMutableTreeNode parentNode = null;
-      PetriTreeNode n = null;
+      DefaultMutableTreeNode n = null;
       FileTreePane flTrPn = FileTreePane.getInstance();
 
       if (netType == SELECTED_TYPE_IS_NET) {
-        parentNode = flTrPn.getNetNode();
-        n = new PetriTreeNode(NodeType.NET, name);
+        parentNode = flTrPn.getNetRootNode();
+        n = new PetriTreeNode(name, id);
       } else if (netType == SELECTED_TYPE_IS_RULE) {
-        parentNode = flTrPn.getRuleNode();
-        n = new PetriTreeNode(NodeType.RULE, name);
-        n.setChecked(true);
+        parentNode = flTrPn.getRuleRootNode();
+        n = new RuleTreeNode(name, id);
       } else {
         // TODO: hier nac mit if else
       }
@@ -612,10 +633,9 @@ implements ActionListener {
 
     System.out.println(PopupMenuListener.class + " - createNac");
 
-    PetriTreeNode ruleNode =
-      (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
-    String ruleName = ruleNode.getUserObject().toString();
-    int ruleId = nameToPId.get(ruleName);
+    RuleTreeNode ruleNode =
+      (RuleTreeNode) FileTreePane.getInstance().getSelectedNode();
+    int ruleId = ruleNode.getRuleId();
 
     try {
 
@@ -643,12 +663,12 @@ implements ActionListener {
 
   private void createNacTreeItem(UUID nacId) {
 
-    PetriTreeNode ruleNode =
-      (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
+    RuleTreeNode ruleNode =
+      (RuleTreeNode) FileTreePane.getInstance().getSelectedNode();
 
     String displayText = "NAC " + nacId;
 
-    PetriTreeNode n = new PetriTreeNode(NodeType.NAC, displayText, nacId);
+    NacTreeNode n = new NacTreeNode(displayText, nacId);
     FileTreePane flTrPn = FileTreePane.getInstance();
 
     flTrPn.getTreeModel().insertNodeInto(n, ruleNode,
