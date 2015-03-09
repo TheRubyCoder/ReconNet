@@ -130,7 +130,7 @@ public final class RuleHandler {
    */
   public PreArc createPreArc(int id, RuleNet net, Place place,
     Transition transition)
-      throws EngineException {
+    throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -213,7 +213,7 @@ public final class RuleHandler {
    */
   public PostArc createPostArc(int id, RuleNet net, Transition transition,
     Place place)
-      throws EngineException {
+    throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -736,7 +736,7 @@ public final class RuleHandler {
    */
   public TransitionAttribute getTransitionAttribute(int id,
     Transition transition)
-      throws EngineException {
+    throws EngineException {
 
     String tlb = transition.getTlb();
     String name = transition.getName();
@@ -811,7 +811,7 @@ public final class RuleHandler {
 
   public void saveRuleWithNacs(int id, String path, String filename,
     String format)
-      throws EngineException {
+    throws EngineException {
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();
@@ -999,6 +999,22 @@ public final class RuleHandler {
     } else if (net.equals(RuleNet.R)) {
       rule.setTlbInR(transition, tlb);
     }
+  }
+
+  public void setTlb(int id, UUID nacId, Transition transition, String tlb)
+    throws EngineException {
+
+    RuleData ruleData = getRuleData(id);
+    Rule rule = ruleData.getRule();
+
+    NAC nac = rule.getNAC(nacId);
+
+    if (!nac.isTransitionSafeToChange(transition)) {
+      throw new EngineException(
+        "The specific transition is part of L. Therefore it should be modified in L.");
+    }
+
+    transition.setTlb(tlb);
   }
 
   /**
@@ -1528,7 +1544,7 @@ public final class RuleHandler {
 
     if (!nac.isPlaceSafeToChange(place)) {
       throw new EngineException(
-        "Stelle kann nicht gelöscht werden, weil diese in L vorhanden ist. Zum Löschen gewünschte Stelle in L löschen.");
+        "The specific place is part of L. Therefore it should be modified in L.");
     }
 
     System.out.println(".. deletePlace from NAC " + nac);
@@ -1578,7 +1594,7 @@ public final class RuleHandler {
 
     if (!nac.isTransitionSafeToChange(transition)) {
       throw new EngineException(
-        "Transition kann nicht gelöscht werden, weil diese in L vorhanden ist. Zum Löschen gewünschte Transition in L löschen.");
+        "The specific transition is part of L. Therefore it should be modified in L.");
     }
 
     System.out.println(".. deleteTransition from NAC " + nac);
@@ -1654,7 +1670,7 @@ public final class RuleHandler {
     NAC nac = rule.getNAC(nacId);
 
     exceptionIf((!nac.isArcSafeToChange(arc)),
-      "Arc cannot be deleted because it exists in L.");
+      "The specific arc is part of L. Therefore it should be modified in L.");
 
     if (arc instanceof PreArc) {
       rule.removePreArcFromNac((PreArc) arc, nac);
@@ -1695,15 +1711,15 @@ public final class RuleHandler {
 
     if (!nac.isPlaceSafeToChange(place)) {
       throw new EngineException(
-        "Stelle kann nicht umbenannt werden, weil diese in L vorhanden ist. Zum Umbenennen gewünschte Stelle in L umnennen.");
+        "The specific place is part of L. Therefore it should be modified in L.");
     }
 
     place.setName(pname);
   }
 
   public void
-  setTname(int id, UUID nacId, Transition transition, String tname)
-      throws EngineException {
+    setTname(int id, UUID nacId, Transition transition, String tname)
+    throws EngineException {
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();
@@ -1712,7 +1728,7 @@ public final class RuleHandler {
 
     if (!nac.isTransitionSafeToChange(transition)) {
       throw new EngineException(
-        "Transition kann nicht umbenannt werden, weil diese in L vorhanden ist. Zum Umbenennen gewünschte Transition in L umnennen.");
+        "The specific transition is part of L. Therefore it should be modified in L.");
     }
 
     transition.setName(tname);
@@ -1733,4 +1749,74 @@ public final class RuleHandler {
     return nacIds;
   }
 
+  public void setWeight(int id, UUID nacId, IArc arc, int weight)
+    throws EngineException {
+
+    RuleData ruleData = getRuleData(id);
+    Rule rule = ruleData.getRule();
+
+    NAC nac = rule.getNAC(nacId);
+
+    exceptionIf((!nac.isArcSafeToChange(arc)),
+      "The specific arc is part of L. Therefore it should be modified in L.");
+
+    if (arc instanceof PreArc) {
+
+      rule.setWeightInNac((PreArc) arc, weight, nac);
+
+    } else if (arc instanceof PostArc) {
+
+      rule.setWeightInNac((PostArc) arc, weight, nac);
+    }
+
+  }
+
+  public void
+    setRnw(int id, UUID nacId, Transition transition, IRenew renews)
+      throws EngineException {
+
+    RuleData ruleData = getRuleData(id);
+    Rule rule = ruleData.getRule();
+
+    NAC nac = rule.getNAC(nacId);
+
+    if (!nac.isTransitionSafeToChange(transition)) {
+      throw new EngineException(
+        "The specific transition is part of L. Therefore it should be modified in L.");
+    }
+
+    rule.setRnwInNac(transition, renews, nac);
+  }
+
+  public void setMarking(int id, UUID nacId, Place place, int marking)
+    throws EngineException {
+
+    RuleData ruleData = getRuleData(id);
+    Rule rule = ruleData.getRule();
+
+    NAC nac = rule.getNAC(nacId);
+
+    if (!nac.isPlaceSafeToChange(place)) {
+      throw new EngineException(
+        "The specific place is part of L. Therefore it should be modified in L.");
+    }
+
+    rule.setMarkInNac(place, marking, nac);
+  }
+
+  public void setCapacity(int id, UUID nacId, Place place, int capacity)
+    throws EngineException {
+
+    RuleData ruleData = getRuleData(id);
+    Rule rule = ruleData.getRule();
+
+    NAC nac = rule.getNAC(nacId);
+
+    if (!nac.isPlaceSafeToChange(place)) {
+      throw new EngineException(
+        "The specific place is part of L. Therefore it should be modified in L.");
+    }
+
+    rule.setCapacityInNac(place, capacity, nac);
+  }
 }

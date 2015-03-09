@@ -119,7 +119,7 @@ import gui.EditorPane.EditorMode;
  */
 @SuppressWarnings("serial")
 public class PetrinetViewer
-  extends VisualizationViewer<INode, IArc> {
+extends VisualizationViewer<INode, IArc> {
 
   /**
    * ID of currently displayed petrinet or rule. If RuleNet is set (L,K or R)
@@ -872,6 +872,9 @@ public class PetrinetViewer
       if (isN()) {
         EngineAdapter.getPetrinetManipulation().setMarking(getCurrentId(),
           place, marking);
+      } else if (isNAC()) {
+        EngineAdapter.getRuleManipulation().setMarking(getCurrentId(), nacId,
+          place, marking);
       } else {
         EngineAdapter.getRuleManipulation().setMarking(getCurrentId(), place,
           marking);
@@ -897,6 +900,9 @@ public class PetrinetViewer
       if (isN()) {
         EngineAdapter.getPetrinetManipulation().setCapacity(getCurrentId(),
           place, capacity);
+      } else if (isNAC()) {
+        EngineAdapter.getRuleManipulation().setCapacity(getCurrentId(),
+          nacId, place, capacity);
       } else {
         EngineAdapter.getRuleManipulation().setCapacity(getCurrentId(),
           place, capacity);
@@ -949,6 +955,9 @@ public class PetrinetViewer
       if (isN()) {
         EngineAdapter.getPetrinetManipulation().setTlb(getCurrentId(),
           transition, label);
+      } else if (isNAC()) {
+        EngineAdapter.getRuleManipulation().setTlb(getCurrentId(), nacId,
+          transition, label);
       } else {
         EngineAdapter.getRuleManipulation().setTlb(getCurrentId(),
           transition, label);
@@ -974,10 +983,14 @@ public class PetrinetViewer
       if (isN()) {
         EngineAdapter.getPetrinetManipulation().setRnw(getCurrentId(),
           transition, actualRenew);
+      } else if (isNAC()) {
+        EngineAdapter.getRuleManipulation().setRnw(getCurrentId(), nacId,
+          transition, actualRenew);
       } else {
         EngineAdapter.getRuleManipulation().setRnw(getCurrentId(),
           transition, actualRenew);
       }
+      smartRepaint();
     } catch (Exception e) {
       PopUp.popError(e);
       e.printStackTrace();
@@ -996,6 +1009,9 @@ public class PetrinetViewer
     try {
       if (isN()) {
         EngineAdapter.getPetrinetManipulation().setWeight(getCurrentId(),
+          arc, weight);
+      } else if (isNAC()) {
+        EngineAdapter.getRuleManipulation().setWeight(getCurrentId(), nacId,
           arc, weight);
       } else {
         EngineAdapter.getRuleManipulation().setWeight(getCurrentId(), arc,
@@ -1067,7 +1083,6 @@ public class PetrinetViewer
       } else {
         EngineAdapter.getRuleManipulation().moveGraphIntoVision(
           getCurrentId());
-
       }
       smartRepaint();
     } catch (Exception e) {
@@ -1081,7 +1096,7 @@ public class PetrinetViewer
    * item: "Ins Sichtfeld verschieben"
    */
   private static class PetrinetGraphPopUpMenu
-    extends JPopupMenu {
+  extends JPopupMenu {
 
     public PetrinetGraphPopUpMenu(PetrinetViewer petrinetViewer) {
 
@@ -1092,7 +1107,7 @@ public class PetrinetViewer
 
     /** Listener that is invoced when the menu item is clicked */
     private static class MoveListener
-      implements ActionListener {
+    implements ActionListener {
 
       private PetrinetViewer petrinetViewer;
 
@@ -1116,7 +1131,7 @@ public class PetrinetViewer
    * for deleting and settings colors
    */
   private static final class PetrinetNodePopUpMenu
-    extends JPopupMenu {
+  extends JPopupMenu {
 
     /**
      * Listener for clicking on menu items<br>
@@ -1127,7 +1142,7 @@ public class PetrinetViewer
      * Node(Place/Transition) and Arc
      */
     private static final class DeleteListener
-      implements ActionListener {
+    implements ActionListener {
 
       private DeleteListener() {
 
@@ -1188,7 +1203,7 @@ public class PetrinetViewer
 
     /** Listener for clicks on color fields in context menus of places */
     private static final class ChangeColorListener
-      implements ActionListener {
+    implements ActionListener {
 
       private PetrinetViewer petrinetViewer;
 
@@ -1279,8 +1294,8 @@ public class PetrinetViewer
 
   /** mouse click listener for the drawing panel */
   private static class PetrinetMouseListener
-    extends PickingGraphMousePlugin<INode, IArc>
-    implements MouseWheelListener, MouseMotionListener {
+  extends PickingGraphMousePlugin<INode, IArc>
+  implements MouseWheelListener, MouseMotionListener {
 
     private static enum DragMode {
       SCROLL, MOVENODE, ARC, NONE
@@ -1455,7 +1470,7 @@ public class PetrinetViewer
    * element
    */
   private static class PetrinetKeyboardListener
-    implements KeyListener {
+  implements KeyListener {
 
     private PetrinetViewer petrinetViewer;
 
@@ -1515,7 +1530,7 @@ public class PetrinetViewer
    * places circular
    */
   private static class PetrinetRenderer
-    implements Vertex<INode, IArc> {
+  implements Vertex<INode, IArc> {
 
     private PetrinetViewer petrinetViewer;
 
@@ -1689,7 +1704,7 @@ public class PetrinetViewer
    * an Arc
    */
   private static class PetrinetArcLabelTransformer
-    implements Transformer<IArc, String> {
+  implements Transformer<IArc, String> {
 
     private PetrinetViewer petrinetViewer;
 
@@ -1717,7 +1732,7 @@ public class PetrinetViewer
    * lines
    */
   private static class PetrinetArcShapeTransformer
-    extends AbstractEdgeShapeTransformer<INode, IArc> {
+  extends AbstractEdgeShapeTransformer<INode, IArc> {
 
     private QuadCurve<INode, IArc> curve =
       new EdgeShape.QuadCurve<INode, IArc>();
@@ -1740,7 +1755,7 @@ public class PetrinetViewer
    * them
    */
   private static class PetrinetNodeShapeTransformer
-    implements Transformer<INode, Shape> {
+  implements Transformer<INode, Shape> {
 
     private PetrinetViewer petrinetViewer;
 

@@ -295,6 +295,18 @@ public final class RuleManipulation
   }
 
   @Override
+  public void setTlb(int id, UUID nacId, INode transition, String tlb)
+    throws EngineException {
+
+    if (!(transition instanceof Transition)) {
+      warning("transition isn't a Transition");
+      return;
+    }
+
+    ruleManipulationBackend.setTlb(id, nacId, (Transition) transition, tlb);
+  }
+
+  @Override
   public void setTname(int id, INode transition, String tname)
     throws EngineException {
 
@@ -549,6 +561,49 @@ public final class RuleManipulation
     throws EngineException {
 
     return ruleManipulationBackend.getNacIds(ruleId);
+  }
+
+  @Override
+  public void setWeight(int id, UUID nacId, IArc arc, int weight)
+    throws EngineException {
+
+    ruleManipulationBackend.setWeight(id, nacId, arc, weight);
+  }
+
+  @Override
+  public void setRnw(int id, UUID nacId, INode transition, IRenew renews)
+    throws EngineException {
+
+    if (!(transition instanceof Transition)) {
+      warning("transition isn't a Transition");
+      return;
+    }
+
+    ruleManipulationBackend.setRnw(id, nacId, (Transition) transition, renews);
+  }
+
+  @Override
+  public void setMarking(int id, UUID nacId, INode place, int marking)
+    throws EngineException {
+
+    if (!(place instanceof Place)) {
+      warning("place isn't a Place");
+      return;
+    }
+
+    ruleManipulationBackend.setMarking(id, nacId, (Place) place, marking);
+  }
+
+  @Override
+  public void setCapacity(int id, UUID nacId, INode place, int capacity)
+    throws EngineException {
+
+    if (!(place instanceof Place)) {
+      warning("place isn't a Place");
+      return;
+    }
+
+    ruleManipulationBackend.setCapacity(id, nacId, (Place) place, capacity);
   }
 
 }

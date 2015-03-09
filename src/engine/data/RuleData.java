@@ -80,11 +80,10 @@ public final class RuleData
   private JungData jungDataL;
   private JungData jungDataK;
   private JungData jungDataR;
-  private JungData jungDataNac;
+  private HashMap<UUID, JungData> jungDataNACs;
+
   /** Used for adding places so all places in the rule have the same color. */
   private ColorGenerator colorGenerator;
-
-  private HashMap<UUID, JungData> jungDataNACs;
 
   @SuppressWarnings("unused")
   // no default constructor
@@ -151,17 +150,6 @@ public final class RuleData
   public JungData getRJungData() {
 
     return jungDataR;
-  }
-
-  /**
-   * Gets the JungData of NAC from a Rule
-   *
-   * @return JungData
-   */
-  @Deprecated
-  public JungData getNacJungData() {
-
-    return jungDataNac;
   }
 
   /**
@@ -264,10 +252,6 @@ public final class RuleData
    *         if nodes are in the way
    */
   public void moveNodeRelative(INode node, Point2D coordinate) {
-
-    // if (!getKJungData().isCreatePossibleAt(coordinate)) {
-    // throw new ShowAsInfoException("Ein Knoten ist im Weg");
-    // }
 
     List<INode> nodeMappings =
       TransformationComponent.getTransformation().getMappings(getRule(), node);

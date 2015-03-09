@@ -427,6 +427,23 @@ public interface IRuleManipulation {
       throws EngineException;
 
   /**
+   * Sets the marking of a NAC-explicit place
+   *
+   * @param id
+   *        ID of the rule
+   * @param nacId
+   *        ID of the NAC
+   * @param place
+   *        place which marking should be set
+   * @param marking
+   *        the marking
+   * @throws EngineException
+   */
+  void setMarking(@NotNull int id, @NotNull UUID nacId, @NotNull INode place,
+    @NotNull int marking)
+      throws EngineException;
+
+  /**
    * Sets the Capacity of a Place and its corresponding nodes in the other
    * parts of the rule
    *
@@ -440,6 +457,23 @@ public interface IRuleManipulation {
    */
   void setCapacity(@NotNull int id, @NotNull INode place,
     @NotNull int capacity)
+    throws EngineException;
+
+  /**
+   * Sets the capacity of a NAC-explicit place
+   *
+   * @param id
+   *        ID of the rule
+   * @param nacId
+   *        ID of the NAC
+   * @param place
+   *        place which capacity should be set
+   * @param capacity
+   *        the capacity
+   * @throws EngineException
+   */
+  void setCapacity(@NotNull int id, @NotNull UUID nacId,
+    @NotNull INode place, @NotNull int capacity)
     throws EngineException;
 
   /**
@@ -491,6 +525,23 @@ public interface IRuleManipulation {
       throws EngineException;
 
   /**
+   * Sets the Transition Label of a NAC-explicit transition
+   *
+   * @param id
+   *        ID of the rule
+   * @param nacId
+   *        ID of the NAC
+   * @param transition
+   *        the transition which tlb should be set
+   * @param tlb
+   *        the transition label
+   * @throws EngineException
+   */
+  void setTlb(@NotNull int id, @NotNull UUID nacId,
+    @NotNull INode transition, @NotNull String tlb)
+      throws EngineException;
+
+  /**
    * Sets the TName of a Transition and its corresponding nodes in the other
    * parts of the rule
    *
@@ -538,6 +589,23 @@ public interface IRuleManipulation {
     throws EngineException;
 
   /**
+   * Sets the arc weight of a NAC-explicit arc
+   *
+   * @param id
+   *        ID of the rule
+   * @param nac
+   *        Id ID of the nac
+   * @param arc
+   *        arc which weight should be set
+   * @param weight
+   *        weight of the arc
+   * @throws EngineException
+   */
+  void setWeight(@NotNull int id, @NotNull UUID nacId, @NotNull IArc arc,
+    @NotNull int weight)
+      throws EngineException;
+
+  /**
    * Sets a Strings as RNW and its corresponding nodes in the other parts of
    * the rule
    *
@@ -547,6 +615,22 @@ public interface IRuleManipulation {
    *        String as RNW
    */
   void setRnw(int id, INode transition, IRenew renews)
+    throws EngineException;
+
+  /**
+   * Sets the renew for a NAC-explicit transition
+   *
+   * @param id
+   *        ID of the rule
+   * @param nacId
+   *        ID of the NAC
+   * @param transition
+   *        transition which renew should be set
+   * @param renews
+   *        the renew
+   * @throws EngineException
+   */
+  void setRnw(int id, @NotNull UUID nacId, INode transition, IRenew renews)
     throws EngineException;
 
   /**

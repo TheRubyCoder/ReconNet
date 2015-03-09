@@ -91,7 +91,7 @@ import javax.swing.tree.TreePath;
  * Custom popup menu listener extending {@link ActionListener}.
  */
 public final class PopupMenuListener
-  implements ActionListener {
+implements ActionListener {
 
   /**
    * singleton: the instance
@@ -272,8 +272,8 @@ public final class PopupMenuListener
       JOptionPane.showOptionDialog(null,
         "Sollen die Dateien vom Dateisystem gelöscht werden?", "Löschen", 0,
         JOptionPane.QUESTION_MESSAGE, null, new String[]{"Dateien löschen",
-          "Nur aus Übersicht löschen"}, "Nur aus Übersicht löschen") == 0
-        ? true : false;
+      "Nur aus Übersicht löschen"}, "Nur aus Übersicht löschen") == 0
+      ? true : false;
     // CHECKSTYLE:ON
 
     DefaultMutableTreeNode node =
@@ -678,14 +678,14 @@ public final class PopupMenuListener
 
   private void removeNac() {
 
-    PetriTreeNode nacNode =
-      (PetriTreeNode) FileTreePane.getInstance().getSelectedNode();
+    NacTreeNode nacNode =
+      (NacTreeNode) FileTreePane.getInstance().getSelectedNode();
 
-    PetriTreeNode ruleNode = (PetriTreeNode) nacNode.getParent();
-    int ruleId =
-      PopupMenuListener.getInstance().getPidOf(ruleNode.toString());
+    RuleTreeNode ruleNode = (RuleTreeNode) nacNode.getParent();
 
-    UUID nacId = (UUID) nacNode.getUserObject();
+    int ruleId = ruleNode.getRuleId();
+
+    UUID nacId = nacNode.getNacId();
 
     System.out.println("removeNac:" + nacId + " ruleId: " + ruleId);
 
@@ -696,7 +696,6 @@ public final class PopupMenuListener
     } catch (Exception e) {
 
       PopUp.popError(e);
-
     }
 
     // remove node from filetree
