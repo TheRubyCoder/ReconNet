@@ -792,7 +792,6 @@ extends VisualizationViewer<INode, IArc> {
         EngineAdapter.getPetrinetManipulation().deleteTransition(
           getCurrentId(), transition);
       } else if (isNAC()) {
-        System.out.println("PetrinetViewer.deleteTransition");
         EngineAdapter.getRuleManipulation().deleteTransition(getCurrentId(),
           nacId, transition);
       } else {
@@ -1037,6 +1036,9 @@ extends VisualizationViewer<INode, IArc> {
       if (isN()) {
         EngineAdapter.getPetrinetManipulation().setPlaceColor(getCurrentId(),
           place, color);
+      } else if (isNAC()) {
+        EngineAdapter.getRuleManipulation().setPlaceColor(getCurrentId(),
+          nacId, place, color);
       } else {
         EngineAdapter.getRuleManipulation().setPlaceColor(getCurrentId(),
           place, color);

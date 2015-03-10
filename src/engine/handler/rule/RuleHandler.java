@@ -60,6 +60,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import persistence.Persistence;
@@ -130,7 +131,7 @@ public final class RuleHandler {
    */
   public PreArc createPreArc(int id, RuleNet net, Place place,
     Transition transition)
-    throws EngineException {
+      throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -213,7 +214,7 @@ public final class RuleHandler {
    */
   public PostArc createPostArc(int id, RuleNet net, Transition transition,
     Place place)
-    throws EngineException {
+      throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -736,7 +737,7 @@ public final class RuleHandler {
    */
   public TransitionAttribute getTransitionAttribute(int id,
     Transition transition)
-    throws EngineException {
+      throws EngineException {
 
     String tlb = transition.getTlb();
     String name = transition.getName();
@@ -811,7 +812,7 @@ public final class RuleHandler {
 
   public void saveRuleWithNacs(int id, String path, String filename,
     String format)
-    throws EngineException {
+      throws EngineException {
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();
@@ -958,9 +959,6 @@ public final class RuleHandler {
     ITransformation trans = TransformationComponent.getTransformation();
     List<INode> mappings = trans.getMappings(rule, place);
 
-    // List<INode> mappings =
-    // TransformationComponent.getTransformation().getMappings(rule, place);
-
     INode nodeInL = mappings.get(0);
     INode nodeInK = mappings.get(1);
     INode nodeInR = mappings.get(2);
@@ -976,6 +974,15 @@ public final class RuleHandler {
     if (nodeInR != null) {
       rJungData.setPlaceColor((Place) nodeInR, color);
     }
+
+    Map<UUID, INode> nacNodes =
+      trans.getCorrespondingNodesOfAllNacs(rule, place);
+
+    for (Entry<UUID, INode> nacNode : nacNodes.entrySet()) {
+      ruleData.getNacJungData(nacNode.getKey()).setPlaceColor(
+        (Place) nacNode.getValue(), color);
+    }
+
   }
 
   /**
@@ -1503,6 +1510,21 @@ public final class RuleHandler {
     return nac.getId();
   }
 
+  public List<UUID> getNacIds(int ruleId)
+    throws EngineException {
+
+    RuleData ruleData = getRuleData(ruleId);
+    Rule rule = ruleData.getRule();
+
+    ArrayList<UUID> nacIds = new ArrayList<UUID>();
+
+    for (NAC nac : rule.getNACs()) {
+      nacIds.add(nac.getId());
+    }
+
+    return nacIds;
+  }
+
   public void deleteNac(int ruleId, UUID nacId)
     throws EngineException {
 
@@ -1528,6 +1550,9 @@ public final class RuleHandler {
     // create the Place in the jungData
     JungData nacJungData = ruleData.getNacJungData(nacId);
     nacJungData.createPlace(newPlace, coordinate);
+
+    Color newPlaceColor = ruleData.getColorGenerator().next();
+    setPlaceColor(id, nacId, newPlace, newPlaceColor);
 
     return newPlace;
   }
@@ -1618,9 +1643,6 @@ public final class RuleHandler {
 
   public void createPreArc(int id, UUID nacId, Place from, Transition to)
     throws EngineException {
-
-    // check if target transition is in L
-    // if in L, creating an arc to the transition is not allowed
 
     checkIsPlace(from);
     checkIsTransition(to);
@@ -1718,8 +1740,8 @@ public final class RuleHandler {
   }
 
   public void
-    setTname(int id, UUID nacId, Transition transition, String tname)
-    throws EngineException {
+  setTname(int id, UUID nacId, Transition transition, String tname)
+      throws EngineException {
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();
@@ -1732,21 +1754,6 @@ public final class RuleHandler {
     }
 
     transition.setName(tname);
-  }
-
-  public List<UUID> getNacIds(int ruleId)
-    throws EngineException {
-
-    RuleData ruleData = getRuleData(ruleId);
-    Rule rule = ruleData.getRule();
-
-    ArrayList<UUID> nacIds = new ArrayList<UUID>();
-
-    for (NAC nac : rule.getNACs()) {
-      nacIds.add(nac.getId());
-    }
-
-    return nacIds;
   }
 
   public void setWeight(int id, UUID nacId, IArc arc, int weight)
@@ -1772,8 +1779,8 @@ public final class RuleHandler {
   }
 
   public void
-    setRnw(int id, UUID nacId, Transition transition, IRenew renews)
-      throws EngineException {
+  setRnw(int id, UUID nacId, Transition transition, IRenew renews)
+    throws EngineException {
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();
@@ -1818,5 +1825,22 @@ public final class RuleHandler {
     }
 
     rule.setCapacityInNac(place, capacity, nac);
+  }
+
+  public void setPlaceColor(int id, UUID nacId, Place place, Color color)
+    throws EngineException {
+
+    RuleData ruleData = getRuleData(id);
+    Rule rule = ruleData.getRule();
+
+    NAC nac = rule.getNAC(nacId);
+
+    if (!nac.isPlaceSafeToChange(place)) {
+      throw new EngineException(
+        "The specific place is part of L. Therefore it should be modified in L.");
+    }
+
+    JungData nacJungData = ruleData.getNacJungData(nacId);
+    nacJungData.setPlaceColor(place, color);
   }
 }
