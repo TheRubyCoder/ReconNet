@@ -551,81 +551,6 @@ public final class Converter {
    *        The engine handler to create and modify the rule.
    * @return id of petrinet Id of the created petrinet
    */
-  @Deprecated
-  public static int convertPnmlToRuleWithNac(Pnml pnml,
-    IRulePersistence handler) {
-
-    // In each XML file there is the type attribute for the pnml node to
-    // quick-check if its a rule or a petrinet
-    if (!pnml.getType().equals(RULE_IDENT)) {
-      throw new ShowAsWarningException(
-        "Die ausgewählte Datei enthält ein Petrinetz, keine Regel");
-    }
-    int id = handler.createRule();
-
-    try {
-      handler.setNodeSize(id, pnml.getNodeSize());
-
-      Net lNet = pnml.getNet().get(L_INDEX);
-      Net kNet = pnml.getNet().get(K_INDEX);
-      Net rNet = pnml.getNet().get(R_INDEX);
-      Net nacNet = pnml.getNet().get(NAC_INDEX);
-
-      // Elements of L
-      List<Place> lPlaces = lNet.getPage().getPlace();
-      List<Transition> lTransis = lNet.getPage().getTransition();
-      List<Arc> lArcs = lNet.getPage().getArc();
-
-      // Elements of K
-      List<Place> kPlaces = kNet.getPage().getPlace();
-      List<Transition> kTransis = kNet.getPage().getTransition();
-      List<Arc> kArcs = kNet.getPage().getArc();
-
-      // Elements of R
-      List<Place> rPlaces = rNet.getPage().getPlace();
-      List<Transition> rTransis = rNet.getPage().getTransition();
-      List<Arc> rArcs = rNet.getPage().getArc();
-
-      // Elements of NAC
-      List<Place> nacPlaces = nacNet.getPage().getPlace();
-      List<Transition> nacTransis = nacNet.getPage().getTransition();
-      List<Arc> nacArcs = nacNet.getPage().getArc();
-
-      /** Contains the created INode object for each XML-id */
-      Map<String, INode> idToINodeInL = new HashMap<String, INode>();
-      /** Contains the created INode object for each XML-id */
-      Map<String, INode> idToINodeInK = new HashMap<String, INode>();
-      /** Contains the created INode object for each XML-id */
-      Map<String, INode> idToINodeInR = new HashMap<String, INode>();
-      /** Contains the created INode object for each XML-id */
-      Map<String, INode> idToINodeInNAC = new HashMap<String, INode>();
-
-      addPlacesToRule(id, lPlaces, kPlaces, rPlaces, nacPlaces, handler,
-        idToINodeInL, idToINodeInK, idToINodeInR, idToINodeInNAC);
-      addTransitionsToRule(id, lTransis, kTransis, rTransis, nacTransis,
-        handler, idToINodeInL, idToINodeInK, idToINodeInR, idToINodeInNAC);
-      fillMapsWithMissingMappings(id, idToINodeInL, idToINodeInK,
-        idToINodeInR, idToINodeInNAC);
-      addArcsToTule(id, lArcs, kArcs, rArcs, nacArcs, handler, idToINodeInL,
-        idToINodeInK, idToINodeInR, idToINodeInNAC);
-    } catch (EngineException e) {
-      PopUp.popError(e);
-      e.printStackTrace();
-    }
-
-    return id;
-  }
-
-  /**
-   * Converts a {@link Pnml} object that was unmarshalled from an XMLFile into
-   * a {@link Rule}
-   *
-   * @param pnml
-   *        The object tree, representing the XML file
-   * @param handler
-   *        The engine handler to create and modify the rule.
-   * @return id of petrinet Id of the created petrinet
-   */
   public static int convertPnmlToRuleWithNacs(Pnml pnml,
     IRulePersistence handler) {
 
@@ -723,6 +648,8 @@ public final class Converter {
           handler.createPlace(ruleId, RuleNet.L,
             positionToPoint2D(place.getGraphics().getPosition()));
 
+        setPlaceAttributes(handler, ruleId, place, lPlace);
+
         List<INode> mappings = iTransformation.getMappings(ruleId, lPlace);
         addedNodesInL.put(place.getId(), lPlace);
         addedNodesInK.put(place.getId(), mappings.get(0));
@@ -738,6 +665,8 @@ public final class Converter {
           handler.createPlace(ruleId, RuleNet.K,
             positionToPoint2D(place.getGraphics().getPosition()));
 
+        setPlaceAttributes(handler, ruleId, place, kPlace);
+
         List<INode> mappings = iTransformation.getMappings(ruleId, kPlace);
         addedNodesInK.put(place.getId(), kPlace);
         addedNodesInL.put(place.getId(), mappings.get(0));
@@ -752,6 +681,8 @@ public final class Converter {
         petrinet.model.Place rPlace =
           handler.createPlace(ruleId, RuleNet.R,
             positionToPoint2D(place.getGraphics().getPosition()));
+
+        setPlaceAttributes(handler, ruleId, place, rPlace);
 
         List<INode> mappings = iTransformation.getMappings(ruleId, rPlace);
         addedNodesInR.put(place.getId(), rPlace);
@@ -776,6 +707,8 @@ public final class Converter {
           handler.createTransition(ruleId, RuleNet.L,
             positionToPoint2D(transition.getGraphics().getPosition()));
 
+        setTransitionAttributes(handler, ruleId, transition, lTransition);
+
         List<INode> mappings =
           iTransformation.getMappings(ruleId, lTransition);
         addedNodesInL.put(transition.getId(), lTransition);
@@ -793,6 +726,8 @@ public final class Converter {
           handler.createTransition(ruleId, RuleNet.K,
             positionToPoint2D(transition.getGraphics().getPosition()));
 
+        setTransitionAttributes(handler, ruleId, transition, kTransition);
+
         List<INode> mappings =
           iTransformation.getMappings(ruleId, kTransition);
         addedNodesInK.put(transition.getId(), kTransition);
@@ -809,6 +744,8 @@ public final class Converter {
         petrinet.model.Transition rTransition =
           handler.createTransition(ruleId, RuleNet.R,
             positionToPoint2D(transition.getGraphics().getPosition()));
+
+        setTransitionAttributes(handler, ruleId, transition, rTransition);
 
         List<INode> mappings =
           iTransformation.getMappings(ruleId, rTransition);
@@ -840,13 +777,18 @@ public final class Converter {
 
         if (source instanceof petrinet.model.Place) {
           // if source is a place -> PreArc
-          handler.createPreArc(ruleId, RuleNet.L,
-            (petrinet.model.Place) source, (petrinet.model.Transition) target);
+          petrinet.model.PreArc createdArc =
+            handler.createPreArc(ruleId, RuleNet.L,
+              (petrinet.model.Place) source,
+              (petrinet.model.Transition) target);
+          setPreArcAttributes(handler, ruleId, arc, createdArc);
         } else {
           // if source is a place -> PreArc
-
-          handler.createPostArc(ruleId, RuleNet.L,
-            (petrinet.model.Transition) source, (petrinet.model.Place) target);
+          petrinet.model.PostArc createdArc =
+            handler.createPostArc(ruleId, RuleNet.L,
+              (petrinet.model.Transition) source,
+              (petrinet.model.Place) target);
+          setPostArcAttributes(handler, ruleId, arc, createdArc);
         }
       }
       // arcs to add in L
@@ -862,13 +804,19 @@ public final class Converter {
 
         if (source instanceof petrinet.model.Place) {
           // if source is a place -> PreArc
-          handler.createPreArc(ruleId, RuleNet.K,
-            (petrinet.model.Place) source, (petrinet.model.Transition) target);
+          petrinet.model.PreArc createdArc =
+            handler.createPreArc(ruleId, RuleNet.K,
+              (petrinet.model.Place) source,
+              (petrinet.model.Transition) target);
+          setPreArcAttributes(handler, ruleId, arc, createdArc);
 
         } else {
           // if source is a transition -> PostArc
-          handler.createPostArc(ruleId, RuleNet.K,
-            (petrinet.model.Transition) source, (petrinet.model.Place) target);
+          petrinet.model.PostArc createdArc =
+            handler.createPostArc(ruleId, RuleNet.K,
+              (petrinet.model.Transition) source,
+              (petrinet.model.Place) target);
+          setPostArcAttributes(handler, ruleId, arc, createdArc);
         }
       }
       // arcs to add in K
@@ -884,13 +832,18 @@ public final class Converter {
 
         if (source instanceof petrinet.model.Place) {
           // if source is a place -> PreArc
-          handler.createPreArc(ruleId, RuleNet.R,
-            (petrinet.model.Place) source, (petrinet.model.Transition) target);
+          petrinet.model.PreArc createdArc =
+            handler.createPreArc(ruleId, RuleNet.R,
+              (petrinet.model.Place) source,
+              (petrinet.model.Transition) target);
+          setPreArcAttributes(handler, ruleId, arc, createdArc);
         } else {
           // if source is a place -> PreArc
-
-          handler.createPostArc(ruleId, RuleNet.R,
-            (petrinet.model.Transition) source, (petrinet.model.Place) target);
+          petrinet.model.PostArc createdArc =
+            handler.createPostArc(ruleId, RuleNet.R,
+              (petrinet.model.Transition) source,
+              (petrinet.model.Place) target);
+          setPostArcAttributes(handler, ruleId, arc, createdArc);
         }
       }
       // arcs to add in R
@@ -909,6 +862,62 @@ public final class Converter {
     }
 
     return ruleId;
+  }
+
+  private static void
+    setPlaceAttributes(IRulePersistence handler, int ruleId,
+      persistence.Place xmlPlace, petrinet.model.Place createdPlace)
+      throws EngineException {
+
+    handler.setPlaceColor(ruleId, createdPlace,
+      xmlPlace.getGraphics().getColor().toAWTColor());
+    handler.setPname(ruleId, createdPlace, xmlPlace.getPlaceName().getText());
+    handler.setMarking(ruleId, createdPlace,
+      Integer.valueOf(xmlPlace.getInitialMarking().getText()));
+    if (xmlPlace.getInitialCapacity() != null) {
+      handler.setCapacity(ruleId, createdPlace,
+        Integer.valueOf(xmlPlace.getInitialCapacity().getText()));
+    } else {
+      handler.setCapacity(ruleId, createdPlace, Integer.MAX_VALUE);
+    }
+
+  }
+
+  private static void setTransitionAttributes(IRulePersistence handler,
+    int ruleId, persistence.Transition xmlTransition,
+    petrinet.model.Transition createdTransition)
+      throws EngineException {
+
+    handler.setTlb(ruleId, createdTransition,
+      xmlTransition.getTransitionLabel().getText());
+    handler.setTname(ruleId, createdTransition,
+      xmlTransition.getTransitionName().getText());
+    handler.setRnw(ruleId, createdTransition,
+      Renews.fromString(xmlTransition.getTransitionRenew().getText()));
+  }
+
+  private static void setPostArcAttributes(IRulePersistence handler,
+    int ruleId, persistence.Arc xmlArc, petrinet.model.PostArc createdArc)
+    throws EngineException {
+
+    if (xmlArc.getToolspecific() != null) {
+
+      int weight =
+        Integer.valueOf(xmlArc.getToolspecific().getWeight().getText());
+      handler.setWeight(ruleId, createdArc, weight);
+    }
+  }
+
+  private static void setPreArcAttributes(IRulePersistence handler,
+    int ruleId, persistence.Arc xmlArc, petrinet.model.PreArc createdArc)
+    throws EngineException {
+
+    if (xmlArc.getToolspecific() != null) {
+
+      int weight =
+        Integer.valueOf(xmlArc.getToolspecific().getWeight().getText());
+      handler.setWeight(ruleId, createdArc, weight);
+    }
   }
 
   /**
