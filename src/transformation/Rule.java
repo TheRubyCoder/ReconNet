@@ -1049,6 +1049,10 @@ public class Rule {
     Place nacPlace = nac.getNac().addPlace(lPlace.getName());
     nac.getPlaceMappingLToNac().put(lPlace, nacPlace);
 
+    // additional attributes
+    nacPlace.setCapacity(lPlace.getCapacity());
+    nacPlace.setMark(lPlace.getMark());
+
     return nacPlace;
   }
 
@@ -1131,6 +1135,10 @@ public class Rule {
     Transition nacTransition =
       nac.getNac().addTransition(lTransition.getName());
     nac.getTransitionMappingLToNac().put(lTransition, nacTransition);
+
+    // additional attributes
+    nacTransition.setRnw(lTransition.getRnw());
+    nacTransition.setTlb(lTransition.getTlb());
 
     return nacTransition;
   }
@@ -1292,6 +1300,9 @@ public class Rule {
         nac.fromLtoNac(lPostArc.getPlace()));
     nac.getPostArcMappingLToNac().put(lPostArc, nacPostArc);
 
+    // additional attributes
+    nacPostArc.setWeight(lPostArc.getWeight());
+
     return nacPostArc;
   }
 
@@ -1306,6 +1317,9 @@ public class Rule {
         nac.fromLtoNac(lPreArc.getTransition()));
 
     nac.getPreArcMappingLToNac().put(lPreArc, nacPreArc);
+
+    // additional attributes
+    nacPreArc.setWeight(lPreArc.getWeight());
 
     return nacPreArc;
   }

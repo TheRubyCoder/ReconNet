@@ -51,18 +51,6 @@
 
 package gui.fileTree;
 
-import static gui.Style.TREE_MENU_ADD_NAC;
-import static gui.Style.TREE_MENU_ADD_NET;
-import static gui.Style.TREE_MENU_ADD_RULE;
-import static gui.Style.TREE_MENU_CHECK_RULE;
-import static gui.Style.TREE_MENU_LOAD_NET;
-import static gui.Style.TREE_MENU_LOAD_RULE;
-import static gui.Style.TREE_MENU_RELOAD_NET;
-import static gui.Style.TREE_MENU_REMOVE_NAC;
-import static gui.Style.TREE_MENU_REMOVE_NET;
-import static gui.Style.TREE_MENU_SAVE;
-import static gui.Style.TREE_MENU_SAVE_ALL;
-import static gui.Style.TREE_MENU_UNCHECK_RULE;
 import exceptions.EngineException;
 import exceptions.ShowAsInfoException;
 import exceptions.ShowAsWarningException;
@@ -70,6 +58,7 @@ import gui.EngineAdapter;
 import gui.PetrinetPane;
 import gui.PopUp;
 import gui.RulePane;
+import gui.Style;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -200,32 +189,59 @@ implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent e) {
 
-    // set up action for file choose dialog.
-    if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_ADD_NET)) {
-      this.addToTree(SELECTED_TYPE_IS_NET);
-    } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_ADD_RULE)) {
-      this.addToTree(SELECTED_TYPE_IS_RULE);
-    } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_ADD_NAC)) {
-      this.createNac();
-    } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_LOAD_NET)) {
-      this.loadNed();
-    } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_LOAD_RULE)) {
-      this.loadRule();
-    } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_SAVE)) {
-      this.save();
-    } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_SAVE_ALL)) {
+    String cmd = e.getActionCommand();
+
+    // net root menu
+    if (cmd.equals(Style.MENU_ROOT_NET_SAVEALL_CMD)) {
       this.saveAll();
-    } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_RELOAD_NET)) {
+    } else if (cmd.equals(Style.MENU_ROOT_NET_NEWNET_CMD)) {
+      this.addToTree(SELECTED_TYPE_IS_NET);
+    } else if (cmd.equals(Style.MENU_ROOT_NET_LOADNET_CMD)) {
+      this.loadNed();
+    }
+
+    // rule root menu
+    else if (cmd.equals(Style.MENU_ROOT_RULE_SAVEALL_CMD)) {
+      this.saveAll();
+    } else if (cmd.equals(Style.MENU_ROOT_RULE_NEWRULE_CMD)) {
+      this.addToTree(SELECTED_TYPE_IS_RULE);
+    } else if (cmd.equals(Style.MENU_ROOT_RULE_LOADRULE_CMD)) {
+      this.loadRule();
+    }
+
+    // net menu
+    else if (cmd.equals(Style.MENU_NET_SAVE_CMD)) {
+      this.save();
+    } else if (cmd.equals(Style.MENU_NET_RELOAD_CMD)) {
       this.reload();
-    } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_REMOVE_NET)) {
+    } else if (cmd.equals(Style.MENU_NET_REMOVE_CMD)) {
       this.remove();
-    } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_CHECK_RULE)) {
+    }
+
+    // rule menu
+    else if (cmd.equals(Style.MENU_RULE_ACTIVATE_CMD)) {
       this.checkNode();
-    } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_UNCHECK_RULE)) {
+    } else if (cmd.equals(Style.MENU_RULE_DEACTIVATE_CMD)) {
       this.uncheckNode();
-    } else if (e.getActionCommand().equalsIgnoreCase(TREE_MENU_REMOVE_NAC)) {
+    } else if (cmd.equals(Style.MENU_RULE_ADDNAC_CMD)) {
+      this.createNac();
+    } else if (cmd.equals(Style.MENU_RULE_SAVE_CMD)) {
+      this.save();
+    } else if (cmd.equals(Style.MENU_RULE_RELOAD_CMD)) {
+      this.reload();
+    } else if (cmd.equals(Style.MENU_RULE_REMOVE_CMD)) {
+      this.remove();
+    }
+
+    // nac menu
+    else if (cmd.equals(Style.MENU_NAC_REMOVE_CMD)) {
       this.removeNac();
     }
+
+    else {
+      System.out.println("PopupMenuListener::actionPerformed - unknown action");
+    }
+
   }
 
   /**

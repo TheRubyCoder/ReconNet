@@ -223,7 +223,7 @@ public final class Style {
 
   /**
    * Returns the distance that must be among nodes
-   * 
+   *
    * @return
    */
   public static double getNodeDistanceDefault() {
@@ -284,6 +284,26 @@ public final class Style {
   public static final ImageIcon DELETE_PETRINET_DISABLED_ICON =
     new ImageIcon("src/gui/icons/deletePertinetDisabled.png");
 
+  // monstr icons
+  public static final ImageIcon OPEN_24 = new ImageIcon(
+    "src/gui/icons/open_24.png");
+  public static final ImageIcon DELETE_24 = new ImageIcon(
+    "src/gui/icons/delete_24.png");
+  public static final ImageIcon SAVE_24 = new ImageIcon(
+    "src/gui/icons/save_24.png");
+  public static final ImageIcon PLAY_24 = new ImageIcon(
+    "src/gui/icons/play_24.png");
+  public static final ImageIcon STOP_24 = new ImageIcon(
+    "src/gui/icons/stop_24.png");
+  public static final ImageIcon REFRESH_24 = new ImageIcon(
+    "src/gui/icons/refresh_24.png");
+  public static final ImageIcon NET_24 = new ImageIcon(
+    "src/gui/icons/net_24.png");
+  public static final ImageIcon RULE_24 = new ImageIcon(
+    "src/gui/icons/rule_24.png");
+  public static final ImageIcon NAC_24 = new ImageIcon(
+    "src/gui/icons/nac_24.png");
+
   public static final int NEW_BUTTON_X = 0;
   public static final int NEW_BUTTON_Y = 0;
 
@@ -312,31 +332,55 @@ public final class Style {
   public static final String TREE_STRING_NET = "Netze";
   public static final String TREE_STRING_RULE = "Regeln";
 
-  // net root entry
-  public static final String TREE_MENU_ADD_NET = "Neues Netz";
-  public static final String TREE_MENU_LOAD_NET = "Netz laden";
+  // net root menu
+  public static final String MENU_ROOT_NET_SAVEALL_LBL = "Alle speichern";
+  public static final String MENU_ROOT_NET_NEWNET_LBL = "Neues Netz";
+  public static final String MENU_ROOT_NET_LOADNET_LBL = "Netz laden";
+  public static final String MENU_ROOT_NET_SAVEALL_CMD =
+    "MENU_ROOT_NET_SAVEALL_CMD";
+  public static final String MENU_ROOT_NET_NEWNET_CMD =
+    "MENU_ROOT_NET_NEWNET_CMD";
+  public static final String MENU_ROOT_NET_LOADNET_CMD =
+    "MENU_ROOT_NET_LOADNET_CMD";
 
-  // rule root entry
-  public static final String TREE_MENU_ADD_RULE = "Neue Regel";
-  public static final String TREE_MENU_LOAD_RULE = "Regel laden";
+  // rule root menu
+  public static final String MENU_ROOT_RULE_SAVEALL_LBL = "Alle speichern";
+  public static final String MENU_ROOT_RULE_NEWRULE_LBL = "Neue Regel";
+  public static final String MENU_ROOT_RULE_LOADRULE_LBL = "Regel laden";
+  public static final String MENU_ROOT_RULE_SAVEALL_CMD =
+    "MENU_ROOT_RULE_SAVEALL_CMD";
+  public static final String MENU_ROOT_RULE_NEWRULE_CMD =
+    "MENU_ROOT_RULE_NEWRULE_CMD";
+  public static final String MENU_ROOT_RULE_LOADRULE_CMD =
+    "MENU_ROOT_RULE_LOADRULE_CMD";
 
-  // net entry
-  public static final String TREE_MENU_REMOVE_NET = "Entfernen";
-  public static final String TREE_MENU_RELOAD_NET = "Erneut laden";
+  // net menu
+  public static final String MENU_NET_SAVE_LBL = "Speichern";
+  public static final String MENU_NET_RELOAD_LBL = "Erneut laden";
+  public static final String MENU_NET_REMOVE_LBL = "Entfernen";
+  public static final String MENU_NET_SAVE_CMD = "MENU_NET_SAVE_CMD";
+  public static final String MENU_NET_RELOAD_CMD = "MENU_NET_RELOAD_CMD";
+  public static final String MENU_NET_REMOVE_CMD = "MENU_NET_REMOVE_CMD";
 
-  // rule entry
-  public static final String TREE_MENU_REMOVE_RULE = TREE_MENU_REMOVE_NET;
-  public static final String TREE_MENU_RELOAD_RULE = TREE_MENU_RELOAD_NET;
-  public static final String TREE_MENU_ADD_NAC = "NAC hinzufügen";
-  public static final String TREE_MENU_CHECK_RULE = "Aktivieren";
-  public static final String TREE_MENU_UNCHECK_RULE = "Deaktivieren";
+  // rule menu
+  public static final String MENU_RULE_ACTIVATE_LBL = "Aktivieren";
+  public static final String MENU_RULE_DEACTIVATE_LBL = "Deaktivieren";
+  public static final String MENU_RULE_ADDNAC_LBL = "NAC hinzufügen";
+  public static final String MENU_RULE_SAVE_LBL = "Speichern";
+  public static final String MENU_RULE_RELOAD_LBL = "Erneut laden";
+  public static final String MENU_RULE_REMOVE_LBL = "Entfernen";
+  public static final String MENU_RULE_ACTIVATE_CMD =
+    "MENU_RULE_ACTIVATE_CMD";
+  public static final String MENU_RULE_DEACTIVATE_CMD =
+    "MENU_RULE_DEACTIVATE_CMD";
+  public static final String MENU_RULE_ADDNAC_CMD = "MENU_RULE_ADDNAC_CMD";
+  public static final String MENU_RULE_SAVE_CMD = "MENU_RULE_SAVE_CMD";
+  public static final String MENU_RULE_RELOAD_CMD = "MENU_RULE_RELOAD_CMD";
+  public static final String MENU_RULE_REMOVE_CMD = "MENU_RULE_REMOVE_CMD";
 
-  // all tree entries
-  public static final String TREE_MENU_SAVE_ALL = "Alle speichern";
-  public static final String TREE_MENU_SAVE = "Speichern";
-
-  // nac entry
-  public static final String TREE_MENU_REMOVE_NAC = "NAC entfernen";
+  // nac menu
+  public static final String MENU_NAC_REMOVE_LBL = "NAC entfernen";
+  public static final String MENU_NAC_REMOVE_CMD = "MENU_NAC_REMOVE_CMD";
 
   /* *************************************
    * rule pane ************************************

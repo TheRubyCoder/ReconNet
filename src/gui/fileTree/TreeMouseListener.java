@@ -51,22 +51,9 @@
 
 package gui.fileTree;
 
-import static gui.Style.TREE_MENU_LOAD_NET;
-import static gui.Style.TREE_MENU_LOAD_RULE;
-import static gui.Style.TREE_MENU_ADD_NAC;
-import static gui.Style.TREE_MENU_ADD_NET;
-import static gui.Style.TREE_MENU_ADD_RULE;
-import static gui.Style.TREE_MENU_CHECK_RULE;
-import static gui.Style.TREE_MENU_RELOAD_NET;
-import static gui.Style.TREE_MENU_RELOAD_RULE;
-import static gui.Style.TREE_MENU_REMOVE_NAC;
-import static gui.Style.TREE_MENU_REMOVE_NET;
-import static gui.Style.TREE_MENU_REMOVE_RULE;
-import static gui.Style.TREE_MENU_SAVE;
-import static gui.Style.TREE_MENU_SAVE_ALL;
-import static gui.Style.TREE_MENU_UNCHECK_RULE;
 import gui.PetrinetPane;
 import gui.RulePane;
+import gui.Style;
 
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -84,7 +71,7 @@ import javax.swing.tree.TreePath;
  * {@link MouseListener}.
  */
 public class TreeMouseListener
-  implements MouseListener {
+implements MouseListener {
 
   /**
    * reference to the {@link JTree} object.
@@ -147,35 +134,35 @@ public class TreeMouseListener
     JPopupMenu popup = new JPopupMenu();
     JMenuItem i;
 
-    i = new JMenuItem(TREE_MENU_SAVE_ALL);
-    popup.add(i);
-    i.addActionListener(this.menuListener);
-
-    popup.addSeparator();
-
     if (selectedNode.isChecked()) {
-      i = new JMenuItem(TREE_MENU_UNCHECK_RULE);
+      i = new JMenuItem(Style.MENU_RULE_DEACTIVATE_LBL, Style.STOP_24);
+      i.setActionCommand(Style.MENU_RULE_DEACTIVATE_CMD);
     } else {
-      i = new JMenuItem(TREE_MENU_CHECK_RULE);
+      i = new JMenuItem(Style.MENU_RULE_ACTIVATE_LBL, Style.PLAY_24);
+      i.setActionCommand(Style.MENU_RULE_ACTIVATE_CMD);
     }
-    popup.add(i);
     i.addActionListener(this.menuListener);
+    popup.add(i);
 
-    i = new JMenuItem(TREE_MENU_SAVE);
-    popup.add(i);
+    i = new JMenuItem(Style.MENU_RULE_ADDNAC_LBL, Style.NAC_24);
+    i.setActionCommand(Style.MENU_RULE_ADDNAC_CMD);
     i.addActionListener(this.menuListener);
+    popup.add(i);
 
-    i = new JMenuItem(TREE_MENU_ADD_NAC);
-    popup.add(i);
+    i = new JMenuItem(Style.MENU_RULE_SAVE_LBL, Style.SAVE_24);
+    i.setActionCommand(Style.MENU_RULE_SAVE_CMD);
     i.addActionListener(this.menuListener);
+    popup.add(i);
 
-    i = new JMenuItem(TREE_MENU_REMOVE_RULE);
-    popup.add(i);
+    i = new JMenuItem(Style.MENU_RULE_RELOAD_LBL, Style.REFRESH_24);
+    i.setActionCommand(Style.MENU_RULE_RELOAD_CMD);
     i.addActionListener(this.menuListener);
+    popup.add(i);
 
-    i = new JMenuItem(TREE_MENU_RELOAD_RULE);
-    popup.add(i);
+    i = new JMenuItem(Style.MENU_RULE_REMOVE_LBL, Style.DELETE_24);
+    i.setActionCommand(Style.MENU_RULE_REMOVE_CMD);
     i.addActionListener(this.menuListener);
+    popup.add(i);
 
     popup.show(tree, event.getX(), event.getY());
   }
@@ -191,17 +178,11 @@ public class TreeMouseListener
   private void showNacMenu(MouseEvent event, NacTreeNode selectedNode) {
 
     JPopupMenu popup = new JPopupMenu();
-    JMenuItem i;
 
-    i = new JMenuItem(TREE_MENU_SAVE_ALL);
-    popup.add(i);
+    JMenuItem i = new JMenuItem(Style.MENU_NAC_REMOVE_LBL, Style.DELETE_24);
+    i.setActionCommand(Style.MENU_NAC_REMOVE_CMD);
     i.addActionListener(this.menuListener);
-
-    popup.addSeparator();
-
-    i = new JMenuItem(TREE_MENU_REMOVE_NAC);
     popup.add(i);
-    i.addActionListener(this.menuListener);
 
     popup.show(tree, event.getX(), event.getY());
   }
@@ -219,23 +200,20 @@ public class TreeMouseListener
     JPopupMenu popup = new JPopupMenu();
     JMenuItem i;
 
-    i = new JMenuItem(TREE_MENU_SAVE_ALL);
-    popup.add(i);
+    i = new JMenuItem(Style.MENU_NET_SAVE_LBL, Style.SAVE_24);
+    i.setActionCommand(Style.MENU_NET_SAVE_CMD);
     i.addActionListener(this.menuListener);
-
-    popup.addSeparator();
-
-    i = new JMenuItem(TREE_MENU_SAVE);
     popup.add(i);
-    i.addActionListener(this.menuListener);
 
-    i = new JMenuItem(TREE_MENU_REMOVE_NET);
-    popup.add(i);
+    i = new JMenuItem(Style.MENU_NET_RELOAD_LBL, Style.REFRESH_24);
+    i.setActionCommand(Style.MENU_NET_RELOAD_CMD);
     i.addActionListener(this.menuListener);
+    popup.add(i);
 
-    i = new JMenuItem(TREE_MENU_RELOAD_NET);
-    popup.add(i);
+    i = new JMenuItem(Style.MENU_NET_REMOVE_LBL, Style.DELETE_24);
+    i.setActionCommand(Style.MENU_NET_REMOVE_CMD);
     i.addActionListener(this.menuListener);
+    popup.add(i);
 
     popup.show(tree, e.getX(), e.getY());
   }
@@ -254,19 +232,22 @@ public class TreeMouseListener
     JPopupMenu popup = new JPopupMenu();
     JMenuItem i;
 
-    i = new JMenuItem(TREE_MENU_SAVE_ALL);
-    popup.add(i);
+    i = new JMenuItem(Style.MENU_ROOT_RULE_SAVEALL_LBL, Style.SAVE_24);
+    i.setActionCommand(Style.MENU_ROOT_RULE_SAVEALL_CMD);
     i.addActionListener(this.menuListener);
+    popup.add(i);
 
     popup.addSeparator();
 
-    i = new JMenuItem(TREE_MENU_ADD_RULE);
-    popup.add(i);
+    i = new JMenuItem(Style.MENU_ROOT_RULE_NEWRULE_LBL, Style.RULE_24);
+    i.setActionCommand(Style.MENU_ROOT_RULE_NEWRULE_CMD);
     i.addActionListener(this.menuListener);
+    popup.add(i);
 
-    i = new JMenuItem(TREE_MENU_LOAD_RULE);
-    popup.add(i);
+    i = new JMenuItem(Style.MENU_ROOT_RULE_LOADRULE_LBL, Style.OPEN_24);
+    i.setActionCommand(Style.MENU_ROOT_RULE_LOADRULE_CMD);
     i.addActionListener(this.menuListener);
+    popup.add(i);
 
     popup.show(tree, e.getX(), e.getY());
   }
@@ -285,19 +266,22 @@ public class TreeMouseListener
     JPopupMenu popup = new JPopupMenu();
     JMenuItem i;
 
-    i = new JMenuItem(TREE_MENU_SAVE_ALL);
-    popup.add(i);
+    i = new JMenuItem(Style.MENU_ROOT_NET_SAVEALL_LBL, Style.SAVE_24);
+    i.setActionCommand(Style.MENU_ROOT_NET_SAVEALL_CMD);
     i.addActionListener(this.menuListener);
+    popup.add(i);
 
     popup.addSeparator();
 
-    i = new JMenuItem(TREE_MENU_ADD_NET);
-    popup.add(i);
+    i = new JMenuItem(Style.MENU_ROOT_NET_NEWNET_LBL, Style.NET_24);
+    i.setActionCommand(Style.MENU_ROOT_NET_NEWNET_CMD);
     i.addActionListener(this.menuListener);
+    popup.add(i);
 
-    i = new JMenuItem(TREE_MENU_LOAD_NET);
-    popup.add(i);
+    i = new JMenuItem(Style.MENU_ROOT_NET_LOADNET_LBL, Style.OPEN_24);
+    i.setActionCommand(Style.MENU_ROOT_NET_LOADNET_CMD);
     i.addActionListener(this.menuListener);
+    popup.add(i);
 
     popup.show(tree, e.getX(), e.getY());
   }

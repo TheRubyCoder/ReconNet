@@ -119,7 +119,7 @@ import gui.EditorPane.EditorMode;
  */
 @SuppressWarnings("serial")
 public class PetrinetViewer
-extends VisualizationViewer<INode, IArc> {
+  extends VisualizationViewer<INode, IArc> {
 
   /**
    * ID of currently displayed petrinet or rule. If RuleNet is set (L,K or R)
@@ -128,8 +128,9 @@ extends VisualizationViewer<INode, IArc> {
    */
   private int currentId = -1;
 
-  // UUID of the NAC to be shown
-  //
+  /**
+   * UUID of the NAC to be shown
+   */
   private UUID nacId;
 
   /**
@@ -1098,7 +1099,7 @@ extends VisualizationViewer<INode, IArc> {
    * item: "Ins Sichtfeld verschieben"
    */
   private static class PetrinetGraphPopUpMenu
-  extends JPopupMenu {
+    extends JPopupMenu {
 
     public PetrinetGraphPopUpMenu(PetrinetViewer petrinetViewer) {
 
@@ -1109,7 +1110,7 @@ extends VisualizationViewer<INode, IArc> {
 
     /** Listener that is invoced when the menu item is clicked */
     private static class MoveListener
-    implements ActionListener {
+      implements ActionListener {
 
       private PetrinetViewer petrinetViewer;
 
@@ -1133,7 +1134,7 @@ extends VisualizationViewer<INode, IArc> {
    * for deleting and settings colors
    */
   private static final class PetrinetNodePopUpMenu
-  extends JPopupMenu {
+    extends JPopupMenu {
 
     /**
      * Listener for clicking on menu items<br>
@@ -1144,7 +1145,7 @@ extends VisualizationViewer<INode, IArc> {
      * Node(Place/Transition) and Arc
      */
     private static final class DeleteListener
-    implements ActionListener {
+      implements ActionListener {
 
       private DeleteListener() {
 
@@ -1205,7 +1206,7 @@ extends VisualizationViewer<INode, IArc> {
 
     /** Listener for clicks on color fields in context menus of places */
     private static final class ChangeColorListener
-    implements ActionListener {
+      implements ActionListener {
 
       private PetrinetViewer petrinetViewer;
 
@@ -1296,8 +1297,8 @@ extends VisualizationViewer<INode, IArc> {
 
   /** mouse click listener for the drawing panel */
   private static class PetrinetMouseListener
-  extends PickingGraphMousePlugin<INode, IArc>
-  implements MouseWheelListener, MouseMotionListener {
+    extends PickingGraphMousePlugin<INode, IArc>
+    implements MouseWheelListener, MouseMotionListener {
 
     private static enum DragMode {
       SCROLL, MOVENODE, ARC, NONE
@@ -1472,7 +1473,7 @@ extends VisualizationViewer<INode, IArc> {
    * element
    */
   private static class PetrinetKeyboardListener
-  implements KeyListener {
+    implements KeyListener {
 
     private PetrinetViewer petrinetViewer;
 
@@ -1532,7 +1533,7 @@ extends VisualizationViewer<INode, IArc> {
    * places circular
    */
   private static class PetrinetRenderer
-  implements Vertex<INode, IArc> {
+    implements Vertex<INode, IArc> {
 
     private PetrinetViewer petrinetViewer;
 
@@ -1706,7 +1707,7 @@ extends VisualizationViewer<INode, IArc> {
    * an Arc
    */
   private static class PetrinetArcLabelTransformer
-  implements Transformer<IArc, String> {
+    implements Transformer<IArc, String> {
 
     private PetrinetViewer petrinetViewer;
 
@@ -1734,7 +1735,7 @@ extends VisualizationViewer<INode, IArc> {
    * lines
    */
   private static class PetrinetArcShapeTransformer
-  extends AbstractEdgeShapeTransformer<INode, IArc> {
+    extends AbstractEdgeShapeTransformer<INode, IArc> {
 
     private QuadCurve<INode, IArc> curve =
       new EdgeShape.QuadCurve<INode, IArc>();
@@ -1757,7 +1758,7 @@ extends VisualizationViewer<INode, IArc> {
    * them
    */
   private static class PetrinetNodeShapeTransformer
-  implements Transformer<INode, Shape> {
+    implements Transformer<INode, Shape> {
 
     private PetrinetViewer petrinetViewer;
 
