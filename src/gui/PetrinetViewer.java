@@ -647,6 +647,9 @@ public class PetrinetViewer
       if (isN()) {
         EngineAdapter.getPetrinetManipulation().moveNode(getCurrentId(),
           node, relativePosition);
+      } else if (isNAC()) {
+        EngineAdapter.getRuleManipulation().moveNode(getCurrentId(), nacId,
+          node, relativePosition);
       } else {
         EngineAdapter.getRuleManipulation().moveNode(getCurrentId(), node,
           relativePosition);

@@ -317,8 +317,8 @@ public final class RulePane {
    */
   public List<INode> getMappingsOfSelectedNode() {
 
-    return TransformationComponent.getTransformation().getMappings(currentId,
-      getCurrentSelectedNode());
+    return TransformationComponent.getTransformation().getAllNodeRepresentations(
+      currentId, getCurrentSelectedNode());
   }
 
   /**
@@ -335,7 +335,8 @@ public final class RulePane {
       return kViewer.getCurrentSelectedNode();
     } else if (rViewer.getCurrentSelectedNode() != null) {
       return rViewer.getCurrentSelectedNode();
-    } else if (rViewer.getCurrentSelectedNode() != null) {
+    } else if ((nacViewer != null)
+      && (nacViewer.getCurrentSelectedNode() != null)) {
       return nacViewer.getCurrentSelectedNode();
     } else {
       return null;

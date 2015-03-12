@@ -238,6 +238,166 @@ public final class TransformationComponent
   }
 
   @Override
+  public List<INode> getAllNodeRepresentations(int ruleId, INode node) {
+
+    List<INode> result = new ArrayList<INode>();
+
+    if (node instanceof Place) {
+
+      result.addAll(this.getAllPlaceRepresentations(ruleId, (Place) node));
+
+    } else if (node instanceof Transition) {
+
+      result.addAll(this.getAllTransitionRepresentations(ruleId,
+        (Transition) node));
+
+    }
+
+    return result;
+  }
+
+  private List<INode> getAllPlaceRepresentations(int ruleId, Place place) {
+
+    Rule rule = rules.get(ruleId);
+
+    List<INode> nodes = new ArrayList<INode>();
+
+    // add place itself
+    nodes.add(place);
+
+    if (rule.getL().containsPlace(place)) {
+      Place kPlace = rule.fromLtoK(place);
+      Place rPlace = rule.fromLtoR(place);
+      if (kPlace != null) {
+        nodes.add(kPlace);
+      }
+      if (rPlace != null) {
+        nodes.add(rPlace);
+      }
+      nodes.addAll(rule.fromLtoNAC(place));
+
+    } else if (rule.getK().containsPlace(place)) {
+      Place lPlace = rule.fromKtoL(place);
+      Place rPlace = rule.fromKtoR(place);
+      if (lPlace != null) {
+        nodes.add(lPlace);
+        nodes.addAll(rule.fromLtoNAC(lPlace));
+      }
+      if (rPlace != null) {
+        nodes.add(rPlace);
+      }
+
+    } else if (rule.getR().containsPlace(place)) {
+      Place lPlace = rule.fromRtoL(place);
+      Place kPlace = rule.fromRtoK(place);
+      if (lPlace != null) {
+        nodes.add(lPlace);
+        nodes.addAll(rule.fromLtoNAC(lPlace));
+      }
+      if (kPlace != null) {
+        nodes.add(kPlace);
+      }
+
+    } else {
+      // place has origin in NAC
+      for (NAC nac : rule.getNACs()) {
+
+        if (nac.getNac().containsPlace(place)) {
+          Place lPlace = nac.fromNacToL(place);
+          Place kPlace = rule.fromLtoK(lPlace);
+          Place rPlace = rule.fromKtoR(kPlace);
+
+          if (lPlace != null) {
+            nodes.add(lPlace);
+          }
+          if (kPlace != null) {
+            nodes.add(kPlace);
+          }
+          if (rPlace != null) {
+            nodes.add(rPlace);
+          }
+
+        }
+
+      }
+
+    }
+
+    return nodes;
+  }
+
+  private List<INode> getAllTransitionRepresentations(int ruleId,
+    Transition transition) {
+
+    Rule rule = rules.get(ruleId);
+
+    List<INode> nodes = new ArrayList<INode>();
+
+    // add place itself
+    nodes.add(transition);
+
+    if (rule.getL().containsTransition(transition)) {
+      Transition kTransition = rule.fromLtoK(transition);
+      Transition rTransition = rule.fromLtoR(transition);
+      if (kTransition != null) {
+        nodes.add(kTransition);
+      }
+      if (rTransition != null) {
+        nodes.add(rTransition);
+      }
+      nodes.addAll(rule.fromLtoNAC(transition));
+
+    } else if (rule.getK().containsTransition(transition)) {
+      Transition lTransition = rule.fromKtoL(transition);
+      Transition rTransition = rule.fromKtoR(transition);
+      if (lTransition != null) {
+        nodes.add(lTransition);
+        nodes.addAll(rule.fromLtoNAC(lTransition));
+      }
+      if (rTransition != null) {
+        nodes.add(rTransition);
+      }
+
+    } else if (rule.getR().containsTransition(transition)) {
+      Transition lTransition = rule.fromRtoL(transition);
+      Transition kTransition = rule.fromRtoK(transition);
+      if (lTransition != null) {
+        nodes.add(lTransition);
+        nodes.addAll(rule.fromLtoNAC(lTransition));
+      }
+      if (kTransition != null) {
+        nodes.add(kTransition);
+      }
+
+    } else {
+      // transition has origin in NAC
+      for (NAC nac : rule.getNACs()) {
+
+        if (nac.getNac().containsTransition(transition)) {
+          Transition lTransition = nac.fromNacToL(transition);
+          Transition kTransition = rule.fromLtoK(lTransition);
+          Transition rTransition = rule.fromKtoR(kTransition);
+
+          if (lTransition != null) {
+            nodes.add(lTransition);
+          }
+          if (kTransition != null) {
+            nodes.add(kTransition);
+          }
+          if (rTransition != null) {
+            nodes.add(rTransition);
+          }
+
+        }
+
+      }
+
+    }
+
+    return nodes;
+  }
+
+  @Override
   public Map<UUID, INode>
     getCorrespondingNodesOfAllNacs(Rule rule, INode node) {
 

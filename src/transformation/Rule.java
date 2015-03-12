@@ -53,9 +53,11 @@ package transformation;
 
 import static transformation.dependency.PetrinetAdapter.createPetrinet;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -1220,7 +1222,7 @@ public class Rule {
   }
 
   public PostArc
-    addPostArcToL(String name, Transition transition, Place place) {
+  addPostArcToL(String name, Transition transition, Place place) {
 
     PostArc leftPostArc = getL().addPostArc(name, transition, place);
 
@@ -1242,7 +1244,7 @@ public class Rule {
   }
 
   public PostArc
-    addPostArcToK(String name, Transition transition, Place place) {
+  addPostArcToK(String name, Transition transition, Place place) {
 
     PostArc postArc = getK().addPostArc(name, transition, place);
 
@@ -1269,7 +1271,7 @@ public class Rule {
   }
 
   public PostArc
-    addPostArcToR(String name, Transition transition, Place place) {
+  addPostArcToR(String name, Transition transition, Place place) {
 
     PostArc rightPostArc = getR().addPostArc(name, transition, place);
 
@@ -1760,6 +1762,53 @@ public class Rule {
   public Transition fromRtoL(Transition transition) {
 
     return fromKtoL(fromRtoK(transition));
+  }
+
+  /**
+   * Returns all corresponding places in the nacs for a specific L-place
+   *
+   * @param place
+   *        The place in L
+   * @return Corresponding places in nacs
+   */
+  public List<Place> fromLtoNAC(Place place) {
+
+    List<Place> result = new ArrayList<Place>();
+
+    for (NAC nac : this.getNACs()) {
+
+      Place nacPlace = nac.fromLtoNac(place);
+
+      if (nacPlace != null) {
+        result.add(nacPlace);
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Returns all corresponding transitions in the nacs for a specific
+   * L-transition
+   *
+   * @param place
+   *        The place in L
+   * @return Corresponding places in nacs
+   */
+  public List<Transition> fromLtoNAC(Transition transition) {
+
+    List<Transition> result = new ArrayList<Transition>();
+
+    for (NAC nac : this.getNACs()) {
+
+      Transition nacTransition = nac.fromLtoNac(transition);
+
+      if (nacTransition != null) {
+        result.add(nacTransition);
+      }
+    }
+
+    return result;
   }
 
   /**

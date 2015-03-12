@@ -127,7 +127,7 @@ public interface ITransformation {
    * @param rule
    *        The rule
    * @param node
-   *        The origin node
+   *        The origin node in L, K or R
    * @return
    */
   Map<UUID, INode> getCorrespondingNodesOfAllNacs(Rule rule, INode node);
@@ -160,4 +160,17 @@ public interface ITransformation {
   Net getNet(Rule rule, PreArc preArc);
 
   Net getNet(Rule rule, PostArc postArc);
+
+  /**
+   * Returns all representations of the given node in L, K, R and all NACs
+   * (including the origin node). Method was implemented to highlight selected
+   * nodes in the gui
+   *
+   * @param ruleId
+   *        ID of the rule
+   * @param node
+   *        The origin node
+   * @return All representations of this node found in L, K, R and NACs
+   */
+  List<INode> getAllNodeRepresentations(int ruleId, INode node);
 }

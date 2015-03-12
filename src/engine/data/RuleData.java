@@ -65,7 +65,6 @@ import transformation.Rule;
 import transformation.TransformationComponent;
 import engine.Positioning;
 import engine.attribute.ColorGenerator;
-import exceptions.ShowAsInfoException;
 
 /**
  * This Class is a data container for a Rule and all Petrinet in this Rule.

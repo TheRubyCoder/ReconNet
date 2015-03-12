@@ -77,6 +77,7 @@ import transformation.Rule;
 import transformation.Rule.Net;
 import transformation.TransformationComponent;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
+import engine.Positioning;
 import engine.attribute.ArcAttribute;
 import engine.attribute.NodeLayoutAttribute;
 import engine.attribute.PlaceAttribute;
@@ -1843,5 +1844,34 @@ public final class RuleHandler {
 
     JungData nacJungData = ruleData.getNacJungData(nacId);
     nacJungData.setPlaceColor(place, color);
+  }
+
+  public void moveNode(int id, UUID nacId, INode node,
+    Point2D relativePosition)
+      throws EngineException {
+
+    RuleData ruleData = getRuleData(id);
+    Rule rule = ruleData.getRule();
+
+    NAC nac = rule.getNAC(nacId);
+
+    if (node instanceof Place) {
+      if (!nac.isPlaceSafeToChange((Place) node)) {
+        throw new EngineException(
+          "The specific place is part of L. Therefore it should be modified in L.");
+      }
+    } else if (node instanceof Transition) {
+      if (!nac.isTransitionSafeToChange((Transition) node)) {
+        throw new EngineException(
+          "The specific transition is part of L. Therefore it should be modified in L.");
+      }
+    }
+
+    ruleData.getNacJungData(nacId).moveNodeWithPositionCheck(
+      node,
+      Positioning.addPoints(
+        ruleData.getNacJungData(nacId).getNodeLayoutAttributes().get(node).getCoordinate(),
+        relativePosition));
+
   }
 }
