@@ -168,8 +168,8 @@ public class PersistanceTest {
     IRulePersistence rulePersistence = RulePersistence.getInstance();
 
     int id =
-      Persistence.loadRule(pathString + "test/persistence/testRule.PNML",
-        rulePersistence);
+      Persistence.loadRuleWithNacs(pathString
+        + "test/persistence/testRule.PNML", rulePersistence);
 
     assert (id > -1);
 
@@ -210,7 +210,8 @@ public class PersistanceTest {
     handler.createPreArc(id, RuleNet.R, place1, trans2);
     handler.createPostArc(id, RuleNet.R, trans2, place3);
 
-    handlerSave.save(id, pathString + "test", "rule_save_test", "pnml");
+    handlerSave.saveRuleWithNacs(id, pathString + "test", "rule_save_test",
+      "pnml");
 
     /*
      * } catch (EngineException e) { e.printStackTrace(); }

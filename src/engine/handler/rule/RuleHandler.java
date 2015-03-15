@@ -780,37 +780,6 @@ public final class RuleHandler {
     }
   }
 
-  /**
-   * @see IRuleManipulation#save(int, String, String, String)
-   */
-  public void save(int id, String path, String filename, String format)
-    throws EngineException {
-
-    RuleData ruleData = getRuleData(id);
-    Rule rule = ruleData.getRule();
-
-    // Petrinet petrinet = ruleData.getPetrinet();
-    JungData jungDataL = ruleData.getLJungData();
-    JungData jungDataK = ruleData.getKJungData();
-    JungData jungDataR = ruleData.getRJungData();
-
-    Map<INode, NodeLayoutAttribute> nodeMapL =
-      jungDataL.getNodeLayoutAttributes();
-    Map<INode, NodeLayoutAttribute> nodeMapK =
-      jungDataK.getNodeLayoutAttributes();
-    Map<INode, NodeLayoutAttribute> nodeMapR =
-      jungDataR.getNodeLayoutAttributes();
-
-    checkNodeLayoutAttribute(nodeMapL == null, "save - nodeMapL == null");
-    checkNodeLayoutAttribute(nodeMapK == null, "save - nodeMapK == null");
-    checkNodeLayoutAttribute(nodeMapR == null, "save - nodeMapR == null");
-
-    double kNodeSize = ruleData.getKJungData().getNodeSize();
-
-    Persistence.saveRule(path + "/" + filename + "." + format, rule,
-      nodeMapL, nodeMapK, nodeMapR, kNodeSize);
-  }
-
   public void saveRuleWithNacs(int id, String path, String filename,
     String format)
       throws EngineException {
@@ -850,16 +819,6 @@ public final class RuleHandler {
 
     Persistence.saveRuleWithNacs(path + "/" + filename + "." + format, rule,
       nodeMapL, nodeMapK, nodeMapR, nodeMapNacs, kNodeSize);
-  }
-
-  /**
-   * @see IRuleManipulation#load(String, String)
-   */
-  public int load(String path, String filename) {
-
-    return Persistence.loadRule(path + "/" + filename,
-      RulePersistence.getInstance());
-
   }
 
   /**
