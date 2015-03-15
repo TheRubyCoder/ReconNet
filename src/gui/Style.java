@@ -171,14 +171,14 @@ public final class Style {
 
   public static final Point SIMULATION_PANE_SLIDER_LOCATION = new Point(
     INSET_LEFT + (BUTTON_WIDTH + SPACING_BUTTONS) * 2, 0 + INSET_TOP
-    + BUTTON_HEIGHT + SPACING_BUTTONS);
+      + BUTTON_HEIGHT + SPACING_BUTTONS);
 
   public static final Dimension SIMULATION_PANE_SLIDER_SIZE = new Dimension(
     BUTTON_WIDTH, BUTTON_HEIGHT * 2 + SPACING_BUTTONS);
 
   public static final Point SIMULATION_PANE_COMBOBOX_LOCATION = new Point(
     INSET_LEFT + BUTTON_WIDTH + SPACING_BUTTONS, 0 + INSET_TOP
-    + (BUTTON_HEIGHT + SPACING_BUTTONS) * 2);
+      + (BUTTON_HEIGHT + SPACING_BUTTONS) * 2);
 
   public static final Dimension SIMULATION_PANE_COMBOBOX_SIZE =
     new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT - 3);
@@ -286,23 +286,23 @@ public final class Style {
 
   // monstr icons
   public static final ImageIcon OPEN_24 = new ImageIcon(
-    "src/gui/icons/open_24.png");
+    Style.class.getResource("/gui/icons/open_24.png"));
   public static final ImageIcon DELETE_24 = new ImageIcon(
-    "src/gui/icons/delete_24.png");
+    Style.class.getResource("/gui/icons/delete_24.png"));
   public static final ImageIcon SAVE_24 = new ImageIcon(
-    "src/gui/icons/save_24.png");
+    Style.class.getResource("/gui/icons/save_24.png"));
   public static final ImageIcon PLAY_24 = new ImageIcon(
-    "src/gui/icons/play_24.png");
+    Style.class.getResource("/gui/icons/play_24.png"));
   public static final ImageIcon STOP_24 = new ImageIcon(
-    "src/gui/icons/stop_24.png");
+    Style.class.getResource("/gui/icons/stop_24.png"));
   public static final ImageIcon REFRESH_24 = new ImageIcon(
-    "src/gui/icons/refresh_24.png");
+    Style.class.getResource("/gui/icons/refresh_24.png"));
   public static final ImageIcon NET_24 = new ImageIcon(
-    "src/gui/icons/net_24.png");
+    Style.class.getResource("/gui/icons/net_24.png"));
   public static final ImageIcon RULE_24 = new ImageIcon(
-    "src/gui/icons/rule_24.png");
+    Style.class.getResource("/gui/icons/rule_24.png"));
   public static final ImageIcon NAC_24 = new ImageIcon(
-    "src/gui/icons/nac_24.png");
+    Style.class.getResource("/gui/icons/nac_24.png"));
 
   public static final int NEW_BUTTON_X = 0;
   public static final int NEW_BUTTON_Y = 0;
