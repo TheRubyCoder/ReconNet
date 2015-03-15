@@ -279,9 +279,6 @@ public final class RulePane {
 
   public void displayNAC(int ruleId, UUID nacId) {
 
-    System.out.println(RulePane.class + ": displayNAC(ruleId:" + ruleId
-      + ", nacId:" + nacId + ")");
-
     // preventive remove old NAC viewer before displaying the new
     if (nacViewer != null) {
       nacPanel.remove(nacViewer);
@@ -302,7 +299,8 @@ public final class RulePane {
       MainWindow.getInstance().repaint();
 
     } catch (Exception e) {
-
+      PopUp.popError(e);
+      e.printStackTrace();
     }
 
   }

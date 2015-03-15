@@ -55,6 +55,7 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.UUID;
 
+import petrinet.model.IArc;
 import petrinet.model.IRenew;
 import petrinet.model.Place;
 import petrinet.model.PostArc;
@@ -91,6 +92,23 @@ public interface IRulePersistence {
       throws EngineException;
 
   /**
+   * Creates a PreArc in a NAC
+   *
+   * @param id
+   *        ID of the rule
+   * @param nacId
+   *        ID of the NAC
+   * @param from
+   *        Source place
+   * @param to
+   *        Target transition
+   * @return The created PreArc
+   * @throws EngineException
+   */
+  PreArc createPreArc(int id, UUID nacId, Place from, Transition to)
+    throws EngineException;
+
+  /**
    * Creates an PostArc
    *
    * @param id
@@ -106,6 +124,23 @@ public interface IRulePersistence {
       throws EngineException;
 
   /**
+   * Creates a PostArc in a NAC
+   *
+   * @param id
+   *        ID of the rule
+   * @param nacId
+   *        ID of the NAC
+   * @param from
+   *        Source transition
+   * @param to
+   *        Target place
+   * @return The created PostArc
+   * @throws EngineException
+   */
+  PostArc createPostArc(int id, UUID nacId, Transition from, Place to)
+    throws EngineException;
+
+  /**
    * Creates a Place
    *
    * @param id
@@ -117,6 +152,21 @@ public interface IRulePersistence {
   Place createPlace(@NotNull int id, @NotNull RuleNet net,
     @NotNull Point2D coordinate)
       throws EngineException;
+
+  /**
+   * Creates a Place in a NAC
+   *
+   * @param id
+   *        ID of the rule
+   * @param nacId
+   *        ID of the NAC
+   * @param coordinate
+   *        Point where the place will be created
+   * @return The created place
+   * @throws EngineException
+   */
+  Place createPlace(int id, UUID nacId, Point2D coordinate)
+    throws EngineException;
 
   /**
    * Creates a Rule
@@ -138,6 +188,21 @@ public interface IRulePersistence {
   Transition createTransition(@NotNull int id, @NotNull RuleNet net,
     @NotNull Point2D coordinate)
       throws EngineException;
+
+  /**
+   * Creats a transition in a NAC
+   *
+   * @param id
+   *        ID of the rule
+   * @param nacId
+   *        ID of the NAC
+   * @param coordinate
+   *        Point where the transition will be created
+   * @return The created transition
+   * @throws EngineException
+   */
+  Transition createTransition(int id, UUID nacId, Point2D coordinate)
+    throws EngineException;
 
   /**
    * Sets the Marking of a Place.
@@ -242,6 +307,22 @@ public interface IRulePersistence {
   void setWeight(@NotNull int id, @NotNull PostArc postArc,
     @NotNull int weight)
       throws EngineException;
+
+  /**
+   * Sets the weight of an arc in a nac
+   *
+   * @param id
+   *        ID of the rule
+   * @param nacId
+   *        ID of the NAC
+   * @param arc
+   *        arc which weight should be set
+   * @param weight
+   *        Weight to set
+   * @throws EngineException
+   */
+  void setWeight(int id, UUID nacId, IArc arc, int weight)
+    throws EngineException;
 
   /**
    * Sets a Strings as RNW.

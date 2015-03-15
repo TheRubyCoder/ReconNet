@@ -237,6 +237,20 @@ public final class TransformationComponent
     return getMappings(rules.get(ruleId), node);
   }
 
+  public INode getNacNodeOfNodeInL(int ruleId, UUID nacId, INode node) {
+
+    Rule rule = rules.get(ruleId);
+
+    if (node instanceof Place) {
+      return rule.getNAC(nacId).fromLtoNac((Place) node);
+    } else if (node instanceof Transition) {
+      return rule.getNAC(nacId).fromLtoNac((Transition) node);
+    } else {
+      return null;
+    }
+
+  }
+
   @Override
   public List<INode> getAllNodeRepresentations(int ruleId, INode node) {
 

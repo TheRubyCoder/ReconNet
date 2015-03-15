@@ -58,6 +58,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
@@ -622,10 +623,11 @@ public final class Converter {
       // restlichen Elemente zu NACs hinzufügen
 
       // initialize NACs - must be done before L, K, and R will be build
-      List<UUID> nacIds = new ArrayList<UUID>();
+      // safe nacId -> Net mapping for further processing
+      Map<UUID, Net> nacNetMap = new HashMap<UUID, Net>();
       for (int i = 0; i < nacNetList.size(); i++) {
         UUID nacId = handler.createNac(ruleId);
-        nacIds.add(nacId);
+        nacNetMap.put(nacId, nacNetList.get(i));
       }
 
       // maps used to create arcs between nodes by their id
@@ -758,9 +760,9 @@ public final class Converter {
       // add transitions
       // ################
 
-      System.out.println("addedNodesInL " + addedNodesInL.size());
-      System.out.println("addedNodesInK " + addedNodesInK.size());
-      System.out.println("addedNodesInR " + addedNodesInR.size());
+      // System.out.println("addedNodesInL " + addedNodesInL.size());
+      // System.out.println("addedNodesInK " + addedNodesInK.size());
+      // System.out.println("addedNodesInR " + addedNodesInR.size());
 
       // ################
       // add arcs
@@ -852,7 +854,119 @@ public final class Converter {
       // add arcs
       // ################
 
-      for (UUID nacId : nacIds) {
+      HashMap<String, INode> addedNodesExplicitlyInNACs =
+        new HashMap<String, INode>();
+
+      for (Entry<UUID, Net> nac : nacNetMap.entrySet()) {
+
+        Set<Place> nacPlaceSet =
+          new HashSet<Place>(nac.getValue().getPage().getPlace());
+        Set<Transition> nacTransitionSet =
+          new HashSet<Transition>(nac.getValue().getPage().getTransition());
+        Set<Arc> nacArcSet =
+          new HashSet<Arc>(nac.getValue().getPage().getArc());
+
+        // ################
+        // add places
+        // >
+
+        // places to add in NAC
+        Set<Place> nacOl_Places = new HashSet<Place>(nacPlaceSet);
+        nacOl_Places.removeAll(lPlaceSet);
+        for (Place place : nacOl_Places) {
+
+          petrinet.model.Place nacPlace =
+            handler.createPlace(ruleId, nac.getKey(),
+              positionToPoint2D(place.getGraphics().getPosition()));
+
+          addedNodesExplicitlyInNACs.put(place.getId(), nacPlace);
+        }
+        // places to add in NAC
+
+        // >
+        // add places
+        // ################
+
+        // ################
+        // add transitions
+        // >
+
+        // transitions to add in NAC
+        Set<Transition> nacOl_Transitions =
+          new HashSet<Transition>(nacTransitionSet);
+        nacOl_Transitions.removeAll(lTransitionSet);
+        for (Transition transition : nacOl_Transitions) {
+
+          petrinet.model.Transition nacTransition =
+            handler.createTransition(ruleId, nac.getKey(),
+              positionToPoint2D(transition.getGraphics().getPosition()));
+
+          addedNodesExplicitlyInNACs.put(transition.getId(), nacTransition);
+        }
+        // transitions to add in NAC
+
+        // >
+        // add transitions
+        // ################
+
+        // ################
+        // add arcs
+        // >
+
+        // arcs to add in NAC
+        Set<Arc> nacOl_Arcs = new HashSet<Arc>(nacArcSet);
+        nacOl_Arcs.removeAll(lArcSet);
+
+        for (Arc arc : nacOl_Arcs) {
+
+          INode source = addedNodesExplicitlyInNACs.get(arc.getSource());
+          INode target = addedNodesExplicitlyInNACs.get(arc.getTarget());
+
+          // Note: if source or target is null, than it is not a NAC explicit
+          // node. Therefore it must be in L. So find nacNode via
+          // addedLNode(id) -> lNode -> nacNode
+
+          // System.out.println("load arc - BEFORE: " + source + " -> " +
+          // target);
+
+          if (source == null) {
+            source =
+              iTransformation.getNacNodeOfNodeInL(ruleId, nac.getKey(),
+                addedNodesInL.get(arc.getSource()));
+          }
+          if (target == null) {
+            target =
+              iTransformation.getNacNodeOfNodeInL(ruleId, nac.getKey(),
+                addedNodesInL.get(arc.getTarget()));
+          }
+
+          // System.out.println("load arc - AFTER: " + source + " -> " +
+          // target);
+
+          if (source instanceof petrinet.model.Place) {
+            // if source is a place -> PreArc
+            petrinet.model.PreArc createdArc =
+              handler.createPreArc(ruleId, nac.getKey(),
+                (petrinet.model.Place) source,
+                (petrinet.model.Transition) target);
+
+            setArcAttributes(handler, ruleId, nac.getKey(), arc, createdArc);
+
+          } else {
+            // if source is a place -> PreArc
+            petrinet.model.PostArc createdArc =
+              handler.createPostArc(ruleId, nac.getKey(),
+                (petrinet.model.Transition) source,
+                (petrinet.model.Place) target);
+
+            setArcAttributes(handler, ruleId, nac.getKey(), arc, createdArc);
+          }
+        }
+        // arcs to add in NAC
+
+        // >
+        // add arcs
+        // ################
 
       }
 
@@ -865,8 +979,8 @@ public final class Converter {
   }
 
   private static void
-    setPlaceAttributes(IRulePersistence handler, int ruleId,
-      persistence.Place xmlPlace, petrinet.model.Place createdPlace)
+  setPlaceAttributes(IRulePersistence handler, int ruleId,
+    persistence.Place xmlPlace, petrinet.model.Place createdPlace)
       throws EngineException {
 
     handler.setPlaceColor(ruleId, createdPlace,
@@ -886,7 +1000,7 @@ public final class Converter {
   private static void setTransitionAttributes(IRulePersistence handler,
     int ruleId, persistence.Transition xmlTransition,
     petrinet.model.Transition createdTransition)
-      throws EngineException {
+    throws EngineException {
 
     handler.setTlb(ruleId, createdTransition,
       xmlTransition.getTransitionLabel().getText());
@@ -898,7 +1012,7 @@ public final class Converter {
 
   private static void setPostArcAttributes(IRulePersistence handler,
     int ruleId, persistence.Arc xmlArc, petrinet.model.PostArc createdArc)
-    throws EngineException {
+      throws EngineException {
 
     if (xmlArc.getToolspecific() != null) {
 
@@ -908,9 +1022,21 @@ public final class Converter {
     }
   }
 
+  private static void setArcAttributes(IRulePersistence handler, int ruleId,
+    UUID nacId, persistence.Arc xmlArc, petrinet.model.IArc createdArc)
+    throws EngineException {
+
+    if (xmlArc.getToolspecific() != null) {
+
+      int weight =
+        Integer.valueOf(xmlArc.getToolspecific().getWeight().getText());
+      handler.setWeight(ruleId, nacId, createdArc, weight);
+    }
+  }
+
   private static void setPreArcAttributes(IRulePersistence handler,
     int ruleId, persistence.Arc xmlArc, petrinet.model.PreArc createdArc)
-    throws EngineException {
+      throws EngineException {
 
     if (xmlArc.getToolspecific() != null) {
 
@@ -1066,7 +1192,7 @@ public final class Converter {
     List<Arc> rArcs, IRulePersistence handler,
     Map<String, INode> idToINodeInL, Map<String, INode> idToINodeInK,
     Map<String, INode> idToINodeInR)
-      throws EngineException {
+    throws EngineException {
 
     /*
      * All arcs must be in K. To determine where the arcs must be added, we
@@ -1127,7 +1253,7 @@ public final class Converter {
     List<Arc> rArcs, List<Arc> nacArcs, IRulePersistence handler,
     Map<String, INode> idToINodeInL, Map<String, INode> idToINodeInK,
     Map<String, INode> idToINodeInR, Map<String, INode> idToINodeInNAC)
-      throws EngineException {
+    throws EngineException {
 
     /*
      * All arcs must be in K. To determine where the arcs must be added, we
@@ -1199,7 +1325,7 @@ public final class Converter {
     List<Place> lPlaces, List<Place> kPlaces, List<Place> rPlaces,
     IRulePersistence handler, Map<String, INode> idToINodeInL,
     Map<String, INode> idToINodeInK, Map<String, INode> idToINodeInR)
-      throws EngineException {
+    throws EngineException {
 
     Map<String, INode> result = new HashMap<String, INode>();
     /*
@@ -1265,7 +1391,7 @@ public final class Converter {
     List<Place> nacPlaces, IRulePersistence handler,
     Map<String, INode> idToINodeInL, Map<String, INode> idToINodeInK,
     Map<String, INode> idToINodeInR, Map<String, INode> idToINodeInNAC)
-      throws EngineException {
+    throws EngineException {
 
     Map<String, INode> result = new HashMap<String, INode>();
     /*
@@ -1335,7 +1461,7 @@ public final class Converter {
     List<Transition> rTransition, IRulePersistence handler,
     Map<String, INode> idToINodeInL, Map<String, INode> idToINodeInK,
     Map<String, INode> idToINodeInR)
-      throws EngineException {
+    throws EngineException {
 
     Map<String, INode> result = new HashMap<String, INode>();
     /*
@@ -1397,7 +1523,7 @@ public final class Converter {
     IRulePersistence handler, Map<String, INode> idToINodeInL,
     Map<String, INode> idToINodeInK, Map<String, INode> idToINodeInR,
     Map<String, INode> idToINodeInNAC)
-      throws EngineException {
+    throws EngineException {
 
     Map<String, INode> result = new HashMap<String, INode>();
     /*
@@ -2001,6 +2127,42 @@ public final class Converter {
         // Source and Target
         xmlArc.setSource(String.valueOf(arc.getSource().getId()));
         xmlArc.setTarget(String.valueOf(arc.getTarget().getId()));
+
+        // Override NodeIDs if nodes come from L/K (IDs taken from nodes in K)
+        if (arc instanceof petrinet.model.PreArc) {
+
+          petrinet.model.Place lSource =
+            nac.fromNacToL((petrinet.model.Place) arc.getSource());
+          petrinet.model.Place kSource = rule.fromLtoK(lSource);
+
+          petrinet.model.Transition lTarget =
+            nac.fromNacToL((petrinet.model.Transition) arc.getTarget());
+          petrinet.model.Transition kTarget = rule.fromLtoK(lTarget);
+
+          if (kSource != null) {
+            xmlArc.setSource(String.valueOf(kSource.getId()));
+          }
+          if (kTarget != null) {
+            xmlArc.setTarget(String.valueOf(kTarget.getId()));
+          }
+
+        } else if (arc instanceof petrinet.model.PostArc) {
+
+          petrinet.model.Transition lSource =
+            nac.fromNacToL((petrinet.model.Transition) arc.getSource());
+          petrinet.model.Transition kSource = rule.fromLtoK(lSource);
+
+          petrinet.model.Place lTarget =
+            nac.fromNacToL((petrinet.model.Place) arc.getTarget());
+          petrinet.model.Place kTarget = rule.fromLtoK(lTarget);
+
+          if (kSource != null) {
+            xmlArc.setSource(String.valueOf(kSource.getId()));
+          }
+          if (kTarget != null) {
+            xmlArc.setTarget(String.valueOf(kTarget.getId()));
+          }
+        }
 
         // Add to List
         listArcs.add(xmlArc);

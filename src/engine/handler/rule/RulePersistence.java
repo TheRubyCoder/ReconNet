@@ -55,6 +55,7 @@ import java.awt.Color;
 import java.awt.geom.Point2D;
 import java.util.UUID;
 
+import petrinet.model.IArc;
 import petrinet.model.IRenew;
 import petrinet.model.Place;
 import petrinet.model.PostArc;
@@ -207,5 +208,40 @@ implements IRulePersistence {
     throws EngineException {
 
     return ruleManipulationBackend.createNac(ruleId);
+  }
+
+  @Override
+  public Place createPlace(int id, UUID nacId, Point2D coordinate)
+    throws EngineException {
+
+    return ruleManipulationBackend.createPlace(id, nacId, coordinate);
+  }
+
+  @Override
+  public Transition createTransition(int id, UUID nacId, Point2D coordinate)
+    throws EngineException {
+
+    return ruleManipulationBackend.createTransition(id, nacId, coordinate);
+  }
+
+  @Override
+  public PreArc createPreArc(int id, UUID nacId, Place from, Transition to)
+    throws EngineException {
+
+    return ruleManipulationBackend.createPreArc(id, nacId, from, to);
+  }
+
+  @Override
+  public PostArc createPostArc(int id, UUID nacId, Transition from, Place to)
+    throws EngineException {
+
+    return ruleManipulationBackend.createPostArc(id, nacId, from, to);
+  }
+
+  @Override
+  public void setWeight(int id, UUID nacId, IArc arc, int weight)
+    throws EngineException {
+
+    ruleManipulationBackend.setWeight(id, nacId, arc, weight);
   }
 }

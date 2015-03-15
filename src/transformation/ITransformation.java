@@ -173,4 +173,17 @@ public interface ITransformation {
    * @return All representations of this node found in L, K, R and NACs
    */
   List<INode> getAllNodeRepresentations(int ruleId, INode node);
+
+  /**
+   * Returns the representation of a node in a NAC for a given node in L
+   *
+   * @param ruleId
+   *        ID of the rule
+   * @param nacId
+   *        ID of the nac
+   * @param node
+   *        Node in L
+   * @return Node representation in NAC for given node in L
+   */
+  INode getNacNodeOfNodeInL(int ruleId, UUID nacId, INode node);
 }

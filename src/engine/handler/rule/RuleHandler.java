@@ -132,7 +132,7 @@ public final class RuleHandler {
    */
   public PreArc createPreArc(int id, RuleNet net, Place place,
     Transition transition)
-    throws EngineException {
+      throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -215,7 +215,7 @@ public final class RuleHandler {
    */
   public PostArc createPostArc(int id, RuleNet net, Transition transition,
     Place place)
-    throws EngineException {
+      throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -738,7 +738,7 @@ public final class RuleHandler {
    */
   public TransitionAttribute getTransitionAttribute(int id,
     Transition transition)
-    throws EngineException {
+      throws EngineException {
 
     String tlb = transition.getTlb();
     String name = transition.getName();
@@ -813,7 +813,7 @@ public final class RuleHandler {
 
   public void saveRuleWithNacs(int id, String path, String filename,
     String format)
-    throws EngineException {
+      throws EngineException {
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();
@@ -1446,9 +1446,6 @@ public final class RuleHandler {
   public UUID createNac(int ruleId)
     throws EngineException {
 
-    System.out.println(RuleHandler.class + " - createNac(ruleId:" + ruleId
-      + ")");
-
     RuleData ruleData = getRuleData(ruleId);
     Rule rule = ruleData.getRule();
 
@@ -1545,8 +1542,6 @@ public final class RuleHandler {
 
     NAC nac = rule.getNAC(nacId);
 
-    System.out.println(".. createPlace in NAC " + nac);
-
     Place newPlace = rule.addPlaceToNac("undefined", nac);
 
     // create the Place in the jungData
@@ -1593,7 +1588,7 @@ public final class RuleHandler {
     nacJungData.delete(arcsToDelete, nodesToDelete);
   }
 
-  public void createTransition(int id, UUID nacId, Point2D coordinate)
+  public Transition createTransition(int id, UUID nacId, Point2D coordinate)
     throws EngineException {
 
     RuleData ruleData = getRuleData(id);
@@ -1601,12 +1596,12 @@ public final class RuleHandler {
 
     NAC nac = rule.getNAC(nacId);
 
-    System.out.println(".. createTransition in NAC " + nac);
-
     Transition newTransition = rule.addTransitionToNac("undefined", nac);
 
     JungData nacJungData = ruleData.getNacJungData(nacId);
     nacJungData.createTransition(newTransition, coordinate);
+
+    return newTransition;
   }
 
   public void deleteTransition(int id, UUID nacId, Transition transition)
@@ -1643,7 +1638,7 @@ public final class RuleHandler {
     nacJungData.delete(arcsToDelete, nodesToDelete);
   }
 
-  public void createPreArc(int id, UUID nacId, Place from, Transition to)
+  public PreArc createPreArc(int id, UUID nacId, Place from, Transition to)
     throws EngineException {
 
     checkIsPlace(from);
@@ -1656,15 +1651,15 @@ public final class RuleHandler {
 
     checkIfNewArcInNacIsAllowed(nac, to);
 
-    System.out.println(".. createPreArc in NAC " + nac);
-
     PreArc newPreArc = rule.addPreArcToNac("undefined", from, to, nac);
 
     JungData nacJungData = ruleData.getNacJungData(nacId);
     nacJungData.createArc(newPreArc, from, to);
+
+    return newPreArc;
   }
 
-  public void createPostArc(int id, UUID nacId, Transition from, Place to)
+  public PostArc createPostArc(int id, UUID nacId, Transition from, Place to)
     throws EngineException {
 
     checkIsTransition(from);
@@ -1677,12 +1672,12 @@ public final class RuleHandler {
 
     checkIfNewArcInNacIsAllowed(nac, from);
 
-    System.out.println(".. createPostArc in NAC " + nac);
-
     PostArc newPostArc = rule.addPostArcToNac("undefined", from, to, nac);
 
     JungData nacJungData = ruleData.getNacJungData(nacId);
     nacJungData.createArc(newPostArc, from, to);
+
+    return newPostArc;
   }
 
   public void deleteArc(int id, UUID nacId, IArc arc)
@@ -1742,8 +1737,8 @@ public final class RuleHandler {
   }
 
   public void
-    setTname(int id, UUID nacId, Transition transition, String tname)
-    throws EngineException {
+  setTname(int id, UUID nacId, Transition transition, String tname)
+      throws EngineException {
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();
@@ -1781,8 +1776,8 @@ public final class RuleHandler {
   }
 
   public void
-    setRnw(int id, UUID nacId, Transition transition, IRenew renews)
-      throws EngineException {
+  setRnw(int id, UUID nacId, Transition transition, IRenew renews)
+    throws EngineException {
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();
@@ -1848,7 +1843,7 @@ public final class RuleHandler {
 
   public void moveNode(int id, UUID nacId, INode node,
     Point2D relativePosition)
-      throws EngineException {
+    throws EngineException {
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();
