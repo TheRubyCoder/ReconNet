@@ -56,6 +56,7 @@ import java.awt.geom.Point2D;
 import java.util.UUID;
 
 import petrinet.model.IArc;
+import petrinet.model.INode;
 import petrinet.model.IRenew;
 import petrinet.model.Place;
 import petrinet.model.PostArc;
@@ -368,5 +369,119 @@ public interface IRulePersistence {
    * @return ID of the created NAC
    */
   UUID createNac(int ruleId)
+    throws EngineException;
+
+  /**
+   * Sets the Name of a NAC-explicit Place
+   *
+   * @param id
+   *        ID of the rule
+   * @param nacId
+   *        ID of the nac
+   * @param place
+   *        place to be named
+   * @param pname
+   *        name
+   * @throws EngineException
+   */
+  void setPname(@NotNull int id, @NotNull UUID nacId, @NotNull INode place,
+    @NotNull String pname)
+      throws EngineException;
+
+  /**
+   * Sets the capacity of a NAC-explicit place
+   *
+   * @param id
+   *        ID of the rule
+   * @param nacId
+   *        ID of the NAC
+   * @param place
+   *        place which capacity should be set
+   * @param capacity
+   *        the capacity
+   * @throws EngineException
+   */
+  void setCapacity(@NotNull int id, @NotNull UUID nacId,
+    @NotNull INode place, @NotNull int capacity)
+    throws EngineException;
+
+  /**
+   * Sets the marking of a NAC-explicit place
+   *
+   * @param id
+   *        ID of the rule
+   * @param nacId
+   *        ID of the NAC
+   * @param place
+   *        place which marking should be set
+   * @param marking
+   *        the marking
+   * @throws EngineException
+   */
+  void setMarking(@NotNull int id, @NotNull UUID nacId, @NotNull INode place,
+    @NotNull int marking)
+      throws EngineException;
+
+  /**
+   * Sets the color of a NAC-explicit place
+   *
+   * @param id
+   * @param nacId
+   * @param place
+   * @param color
+   * @throws EngineException
+   */
+  void setPlaceColor(int id, @NotNull UUID nacId, @NotNull INode place,
+    @NotNull Color color)
+    throws EngineException;
+
+  /**
+   * Sets the Transition Label of a NAC-explicit transition
+   *
+   * @param id
+   *        ID of the rule
+   * @param nacId
+   *        ID of the NAC
+   * @param transition
+   *        the transition which tlb should be set
+   * @param tlb
+   *        the transition label
+   * @throws EngineException
+   */
+  void setTlb(@NotNull int id, @NotNull UUID nacId,
+    @NotNull INode transition, @NotNull String tlb)
+    throws EngineException;
+
+  /**
+   * Sets the Name of a NAC-explicit transition
+   *
+   * @param id
+   *        ID of the rule
+   * @param nacId
+   *        ID of the NAC
+   * @param transition
+   *        transition to be named
+   * @param tname
+   *        name
+   * @throws EngineException
+   */
+  void setTname(@NotNull int id, @NotNull UUID nacId,
+    @NotNull INode transition, @NotNull String tname)
+      throws EngineException;
+
+  /**
+   * Sets the renew for a NAC-explicit transition
+   *
+   * @param id
+   *        ID of the rule
+   * @param nacId
+   *        ID of the NAC
+   * @param transition
+   *        transition which renew should be set
+   * @param renews
+   *        the renew
+   * @throws EngineException
+   */
+  void setRnw(int id, @NotNull UUID nacId, INode transition, IRenew renews)
     throws EngineException;
 }

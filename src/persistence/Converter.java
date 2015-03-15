@@ -879,6 +879,8 @@ public final class Converter {
             handler.createPlace(ruleId, nac.getKey(),
               positionToPoint2D(place.getGraphics().getPosition()));
 
+          setPlaceAttributes(handler, ruleId, nac.getKey(), place, nacPlace);
+
           addedNodesExplicitlyInNACs.put(place.getId(), nacPlace);
         }
         // places to add in NAC
@@ -900,6 +902,9 @@ public final class Converter {
           petrinet.model.Transition nacTransition =
             handler.createTransition(ruleId, nac.getKey(),
               positionToPoint2D(transition.getGraphics().getPosition()));
+
+          setTransitionAttributes(handler, ruleId, nac.getKey(), transition,
+            nacTransition);
 
           addedNodesExplicitlyInNACs.put(transition.getId(), nacTransition);
         }
@@ -932,12 +937,12 @@ public final class Converter {
           if (source == null) {
             source =
               iTransformation.getNacNodeOfNodeInL(ruleId, nac.getKey(),
-                addedNodesInL.get(arc.getSource()));
+              addedNodesInL.get(arc.getSource()));
           }
           if (target == null) {
             target =
               iTransformation.getNacNodeOfNodeInL(ruleId, nac.getKey(),
-                addedNodesInL.get(arc.getTarget()));
+              addedNodesInL.get(arc.getTarget()));
           }
 
           // System.out.println("load arc - AFTER: " + source + " -> " +
@@ -997,16 +1002,48 @@ public final class Converter {
 
   }
 
+  private static void setPlaceAttributes(IRulePersistence handler,
+    int ruleId, UUID nacId, persistence.Place xmlPlace,
+    petrinet.model.Place createdPlace)
+      throws EngineException {
+
+    handler.setPlaceColor(ruleId, nacId, createdPlace,
+      xmlPlace.getGraphics().getColor().toAWTColor());
+    handler.setPname(ruleId, nacId, createdPlace,
+      xmlPlace.getPlaceName().getText());
+    handler.setMarking(ruleId, nacId, createdPlace,
+      Integer.valueOf(xmlPlace.getInitialMarking().getText()));
+    if (xmlPlace.getInitialCapacity() != null) {
+      handler.setCapacity(ruleId, nacId, createdPlace,
+        Integer.valueOf(xmlPlace.getInitialCapacity().getText()));
+    } else {
+      handler.setCapacity(ruleId, nacId, createdPlace, Integer.MAX_VALUE);
+    }
+  }
+
   private static void setTransitionAttributes(IRulePersistence handler,
     int ruleId, persistence.Transition xmlTransition,
     petrinet.model.Transition createdTransition)
-    throws EngineException {
+      throws EngineException {
 
     handler.setTlb(ruleId, createdTransition,
       xmlTransition.getTransitionLabel().getText());
     handler.setTname(ruleId, createdTransition,
       xmlTransition.getTransitionName().getText());
     handler.setRnw(ruleId, createdTransition,
+      Renews.fromString(xmlTransition.getTransitionRenew().getText()));
+  }
+
+  private static void setTransitionAttributes(IRulePersistence handler,
+    int ruleId, UUID nacId, persistence.Transition xmlTransition,
+    petrinet.model.Transition createdTransition)
+      throws EngineException {
+
+    handler.setTlb(ruleId, nacId, createdTransition,
+      xmlTransition.getTransitionLabel().getText());
+    handler.setTname(ruleId, nacId, createdTransition,
+      xmlTransition.getTransitionName().getText());
+    handler.setRnw(ruleId, nacId, createdTransition,
       Renews.fromString(xmlTransition.getTransitionRenew().getText()));
   }
 
@@ -1024,7 +1061,7 @@ public final class Converter {
 
   private static void setArcAttributes(IRulePersistence handler, int ruleId,
     UUID nacId, persistence.Arc xmlArc, petrinet.model.IArc createdArc)
-    throws EngineException {
+      throws EngineException {
 
     if (xmlArc.getToolspecific() != null) {
 
@@ -1192,7 +1229,7 @@ public final class Converter {
     List<Arc> rArcs, IRulePersistence handler,
     Map<String, INode> idToINodeInL, Map<String, INode> idToINodeInK,
     Map<String, INode> idToINodeInR)
-    throws EngineException {
+      throws EngineException {
 
     /*
      * All arcs must be in K. To determine where the arcs must be added, we
@@ -1253,7 +1290,7 @@ public final class Converter {
     List<Arc> rArcs, List<Arc> nacArcs, IRulePersistence handler,
     Map<String, INode> idToINodeInL, Map<String, INode> idToINodeInK,
     Map<String, INode> idToINodeInR, Map<String, INode> idToINodeInNAC)
-    throws EngineException {
+      throws EngineException {
 
     /*
      * All arcs must be in K. To determine where the arcs must be added, we
@@ -1325,7 +1362,7 @@ public final class Converter {
     List<Place> lPlaces, List<Place> kPlaces, List<Place> rPlaces,
     IRulePersistence handler, Map<String, INode> idToINodeInL,
     Map<String, INode> idToINodeInK, Map<String, INode> idToINodeInR)
-    throws EngineException {
+      throws EngineException {
 
     Map<String, INode> result = new HashMap<String, INode>();
     /*
@@ -1391,7 +1428,7 @@ public final class Converter {
     List<Place> nacPlaces, IRulePersistence handler,
     Map<String, INode> idToINodeInL, Map<String, INode> idToINodeInK,
     Map<String, INode> idToINodeInR, Map<String, INode> idToINodeInNAC)
-    throws EngineException {
+      throws EngineException {
 
     Map<String, INode> result = new HashMap<String, INode>();
     /*
@@ -1461,7 +1498,7 @@ public final class Converter {
     List<Transition> rTransition, IRulePersistence handler,
     Map<String, INode> idToINodeInL, Map<String, INode> idToINodeInK,
     Map<String, INode> idToINodeInR)
-    throws EngineException {
+      throws EngineException {
 
     Map<String, INode> result = new HashMap<String, INode>();
     /*
@@ -1523,7 +1560,7 @@ public final class Converter {
     IRulePersistence handler, Map<String, INode> idToINodeInL,
     Map<String, INode> idToINodeInK, Map<String, INode> idToINodeInR,
     Map<String, INode> idToINodeInNAC)
-    throws EngineException {
+      throws EngineException {
 
     Map<String, INode> result = new HashMap<String, INode>();
     /*

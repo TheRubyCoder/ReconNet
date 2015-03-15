@@ -56,6 +56,7 @@ import java.awt.geom.Point2D;
 import java.util.UUID;
 
 import petrinet.model.IArc;
+import petrinet.model.INode;
 import petrinet.model.IRenew;
 import petrinet.model.Place;
 import petrinet.model.PostArc;
@@ -243,5 +244,55 @@ implements IRulePersistence {
     throws EngineException {
 
     ruleManipulationBackend.setWeight(id, nacId, arc, weight);
+  }
+
+  @Override
+  public void setPname(int id, UUID nacId, INode place, String pname)
+    throws EngineException {
+
+    ruleManipulationBackend.setPname(id, nacId, (Place) place, pname);
+  }
+
+  @Override
+  public void setCapacity(int id, UUID nacId, INode place, int capacity)
+    throws EngineException {
+
+    ruleManipulationBackend.setCapacity(id, nacId, (Place) place, capacity);
+  }
+
+  @Override
+  public void setMarking(int id, UUID nacId, INode place, int marking)
+    throws EngineException {
+
+    ruleManipulationBackend.setMarking(id, nacId, (Place) place, marking);
+  }
+
+  @Override
+  public void setPlaceColor(int id, UUID nacId, INode place, Color color)
+    throws EngineException {
+
+    ruleManipulationBackend.setPlaceColor(id, nacId, (Place) place, color);
+  }
+
+  @Override
+  public void setTlb(int id, UUID nacId, INode transition, String tlb)
+    throws EngineException {
+
+    ruleManipulationBackend.setTlb(id, nacId, (Transition) transition, tlb);
+  }
+
+  @Override
+  public void setTname(int id, UUID nacId, INode transition, String tname)
+    throws EngineException {
+
+    ruleManipulationBackend.setTname(id, nacId, (Transition) transition,
+      tname);
+  }
+
+  @Override
+  public void setRnw(int id, UUID nacId, INode transition, IRenew renews)
+    throws EngineException {
+
+    ruleManipulationBackend.setRnw(id, nacId, (Transition) transition, renews);
   }
 }
