@@ -49,18 +49,15 @@
  * WISSENSCHAFTEN HAMBURG / HAMBURG UNIVERSITY OF APPLIED SCIENCES
  */
 
-package harness;
+package exceptions;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+public class IllegalNacManipulationException
+  extends EngineException {
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({petrinetze.impl.PetrinetTest.class,
-  petrinetze.impl.PetrinetzTest.class, petrinetze.impl.DeleteTest.class,
-  transformation.TransformationSuite.class,
-  persistence.PersistanceTest.class, engine.data.JungDataTest.class,
-  engine.data.PetrinetDataTest.class, engine.data.RuleDataTest.class,
-  engine.session.SessionManagerTest.class,
-  engine.handler.PetrinetHandlerTest.class, nac.NacTest.class})
-public class AllTests {
+  private static final long serialVersionUID = -8379697238913832751L;
+
+  public IllegalNacManipulationException(String message) {
+
+    super(message);
+  }
 }

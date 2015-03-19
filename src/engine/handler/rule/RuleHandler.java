@@ -89,6 +89,7 @@ import engine.handler.NodeTypeEnum;
 import engine.handler.RuleNet;
 import engine.session.SessionManager;
 import exceptions.EngineException;
+import exceptions.IllegalNacManipulationException;
 
 /**
  * This is the implementation of all methods regarding rules by engine.
@@ -977,7 +978,7 @@ public final class RuleHandler {
     NAC nac = rule.getNAC(nacId);
 
     if (!nac.isTransitionSafeToChange(transition)) {
-      throw new EngineException(
+      throw new IllegalNacManipulationException(
         "The specific transition is part of L. Therefore it should be modified in L.");
     }
 
@@ -1524,7 +1525,7 @@ public final class RuleHandler {
     NAC nac = rule.getNAC(nacId);
 
     if (!nac.isPlaceSafeToChange(place)) {
-      throw new EngineException(
+      throw new IllegalNacManipulationException(
         "The specific place is part of L. Therefore it should be modified in L.");
     }
 
@@ -1574,7 +1575,7 @@ public final class RuleHandler {
     NAC nac = rule.getNAC(nacId);
 
     if (!nac.isTransitionSafeToChange(transition)) {
-      throw new EngineException(
+      throw new IllegalNacManipulationException(
         "The specific transition is part of L. Therefore it should be modified in L.");
     }
 
@@ -1647,8 +1648,10 @@ public final class RuleHandler {
 
     NAC nac = rule.getNAC(nacId);
 
-    exceptionIf((!nac.isArcSafeToChange(arc)),
-      "The specific arc is part of L. Therefore it should be modified in L.");
+    if (!nac.isArcSafeToChange(arc)) {
+      throw new IllegalNacManipulationException(
+        "The specific arc is part of L. Therefore it should be modified in L.");
+    }
 
     if (arc instanceof PreArc) {
       rule.removePreArcFromNac((PreArc) arc, nac);
@@ -1688,7 +1691,7 @@ public final class RuleHandler {
     NAC nac = rule.getNAC(nacId);
 
     if (!nac.isPlaceSafeToChange(place)) {
-      throw new EngineException(
+      throw new IllegalNacManipulationException(
         "The specific place is part of L. Therefore it should be modified in L.");
     }
 
@@ -1705,7 +1708,7 @@ public final class RuleHandler {
     NAC nac = rule.getNAC(nacId);
 
     if (!nac.isTransitionSafeToChange(transition)) {
-      throw new EngineException(
+      throw new IllegalNacManipulationException(
         "The specific transition is part of L. Therefore it should be modified in L.");
     }
 
@@ -1720,8 +1723,10 @@ public final class RuleHandler {
 
     NAC nac = rule.getNAC(nacId);
 
-    exceptionIf((!nac.isArcSafeToChange(arc)),
-      "The specific arc is part of L. Therefore it should be modified in L.");
+    if (!nac.isArcSafeToChange(arc)) {
+      throw new IllegalNacManipulationException(
+        "The specific arc is part of L. Therefore it should be modified in L.");
+    }
 
     if (arc instanceof PreArc) {
 
@@ -1744,7 +1749,7 @@ public final class RuleHandler {
     NAC nac = rule.getNAC(nacId);
 
     if (!nac.isTransitionSafeToChange(transition)) {
-      throw new EngineException(
+      throw new IllegalNacManipulationException(
         "The specific transition is part of L. Therefore it should be modified in L.");
     }
 
@@ -1760,7 +1765,7 @@ public final class RuleHandler {
     NAC nac = rule.getNAC(nacId);
 
     if (!nac.isPlaceSafeToChange(place)) {
-      throw new EngineException(
+      throw new IllegalNacManipulationException(
         "The specific place is part of L. Therefore it should be modified in L.");
     }
 
@@ -1776,7 +1781,7 @@ public final class RuleHandler {
     NAC nac = rule.getNAC(nacId);
 
     if (!nac.isPlaceSafeToChange(place)) {
-      throw new EngineException(
+      throw new IllegalNacManipulationException(
         "The specific place is part of L. Therefore it should be modified in L.");
     }
 
@@ -1792,7 +1797,7 @@ public final class RuleHandler {
     NAC nac = rule.getNAC(nacId);
 
     if (!nac.isPlaceSafeToChange(place)) {
-      throw new EngineException(
+      throw new IllegalNacManipulationException(
         "The specific place is part of L. Therefore it should be modified in L.");
     }
 
@@ -1811,12 +1816,12 @@ public final class RuleHandler {
 
     if (node instanceof Place) {
       if (!nac.isPlaceSafeToChange((Place) node)) {
-        throw new EngineException(
+        throw new IllegalNacManipulationException(
           "The specific place is part of L. Therefore it should be modified in L.");
       }
     } else if (node instanceof Transition) {
       if (!nac.isTransitionSafeToChange((Transition) node)) {
-        throw new EngineException(
+        throw new IllegalNacManipulationException(
           "The specific transition is part of L. Therefore it should be modified in L.");
       }
     }

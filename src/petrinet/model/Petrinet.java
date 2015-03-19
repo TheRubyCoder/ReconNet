@@ -114,7 +114,7 @@ public final class Petrinet {
 
   /**
    * Adds a new {@link PostArc} to the petrinet
-   * 
+   *
    * @param name
    *        Name of the {@link PostArc}
    * @param transition
@@ -158,7 +158,7 @@ public final class Petrinet {
 
   /**
    * Adds a new {@link PreArc} to the petrinet
-   * 
+   *
    * @param name
    *        Name of the {@link PreArc}
    * @param place
@@ -195,7 +195,7 @@ public final class Petrinet {
 
   /**
    * Adds a new {@link PreArc} to the petrinet
-   * 
+   *
    * @param name
    *        Name of the {@link PreArc}
    * @param place
@@ -259,7 +259,7 @@ public final class Petrinet {
 
   /**
    * Returns an {@link IArc} referenced by id
-   * 
+   *
    * @param id
    *        Id of the {@link IArc}
    * @return <code>null</code> if {@link IArc} is not in petrinet
@@ -295,7 +295,7 @@ public final class Petrinet {
 
   /**
    * removes an arc from the petrinet
-   * 
+   *
    * @param arc
    *        {@link PostArc} to be removed
    */
@@ -313,7 +313,7 @@ public final class Petrinet {
 
   /**
    * removes an arc from the petrinet
-   * 
+   *
    * @param arc
    *        {@link PreArc} to be removed
    */
@@ -350,7 +350,7 @@ public final class Petrinet {
 
   /**
    * Adds a new {@link Place} to the petrinet
-   * 
+   *
    * @param name
    *        Name of the place
    * @return The new {@link Place}
@@ -382,7 +382,7 @@ public final class Petrinet {
 
   /**
    * Returns the {@link Place} with <code>id</code>
-   * 
+   *
    * @param id
    *        Id of the {@link Place}
    * @return <code>null</code> if {@link Place} is not in this petrinet
@@ -399,7 +399,7 @@ public final class Petrinet {
 
   /**
    * removes an place
-   * 
+   *
    * @param place
    *        the place that will be removed
    */
@@ -410,7 +410,7 @@ public final class Petrinet {
 
   /**
    * removes an place referenced by id
-   * 
+   *
    * @param id
    *        id of the place that will be removed
    */
@@ -442,7 +442,7 @@ public final class Petrinet {
 
   /**
    * Adds a new {@link Transition} to this petrinet
-   * 
+   *
    * @param name
    *        Name of the {@link Transition}
    * @param rnw
@@ -469,7 +469,7 @@ public final class Petrinet {
 
   /**
    * Adds a new {@link Transition} to this petrinet
-   * 
+   *
    * @param name
    *        Name of the {@link Transition}
    * @param rnw
@@ -493,7 +493,7 @@ public final class Petrinet {
 
   /**
    * adds a Transition with {@link Identity id} as a renew
-   * 
+   *
    * @param name
    *        Name of the {@link Transition}
    * @return The new {@link Transition}
@@ -515,7 +515,7 @@ public final class Petrinet {
 
   /**
    * Returns all active {@link Transition transitions} of this petrinet
-   * 
+   *
    * @return Empty Set<Transition> if no transitions are active
    */
   public Set<Transition> getActivatedTransitions() {
@@ -538,7 +538,7 @@ public final class Petrinet {
 
   /**
    * Returns the {@link Transition} with <code>id</code>
-   * 
+   *
    * @param id
    *        Id of the {@link Transition}
    * @return <code>null</code> if {@link Transition} is not in this petrinet
@@ -555,7 +555,7 @@ public final class Petrinet {
 
   /**
    * removes a {@link Transition}
-   * 
+   *
    * @param transition
    *        the transition that will be removed
    */
@@ -566,7 +566,7 @@ public final class Petrinet {
 
   /**
    * removes a {@link Transition} referenced by id
-   * 
+   *
    * @param id
    *        The id of the {@link Transition} that will be removed
    */
@@ -596,7 +596,7 @@ public final class Petrinet {
 
   /**
    * Fires a random active {@link Transition}
-   * 
+   *
    * @return Changed nodes
    * @throws IllegalStateException
    *         if no {@link Transition} is active
@@ -620,7 +620,7 @@ public final class Petrinet {
 
   /**
    * Fires a {@link Transition} with the <code>id</code>
-   * 
+   *
    * @param id
    *        Id of the {@link Transition} that will be fired
    * @return Changed nodes
@@ -635,7 +635,7 @@ public final class Petrinet {
   /**
    * Returns <tt> true </tt> if there are no Transitions or Places in the
    * petrinet
-   * 
+   *
    * @return
    */
   public boolean isEmpty() {
@@ -646,7 +646,7 @@ public final class Petrinet {
   /**
    * Liefert das Pre-Objekt zu dem Netz zurueck PRE in der t-ten Spalte gibt
    * an, wieviele Token die Transition t von p wegnimmt
-   * 
+   *
    * @return {@link Pre}
    */
   public Pre getPre() {
@@ -696,7 +696,7 @@ public final class Petrinet {
 
   /**
    * Findet die Position der Id in der Id-Liste
-   * 
+   *
    * @param intValue
    *        = Id der Transition/Stelle
    * @param ids
@@ -715,7 +715,7 @@ public final class Petrinet {
 
   /**
    * Initialisiert ein zweidimensionales Array mit Nullen
-   * 
+   *
    * @param m
    *        Groesse der 1. Dimension
    * @param n
@@ -735,7 +735,7 @@ public final class Petrinet {
 
   /**
    * Liefert das Post-Objekt zu dem Netz zurueck
-   * 
+   *
    * @return {@link IPost}
    */
   public Post getPost() {

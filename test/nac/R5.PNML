@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<pnml nodeSize="32.964722426511635" type="rule" xmlns="http://www.pnml.org/version-2009/grammar/pnml">
+    <net id="2" nettype="L">
+        <page>
+            <arc id="45" source="7" target="41">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>3</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="49" source="41" target="7">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>4</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <place id="7">
+                <graphics>
+                    <color b="0" g="0" r="255"/>
+                    <position x="181.8195538894727" y="105.60457250283508"/>
+                </graphics>
+                <initialCapacity>
+                    <text>2147483647</text>
+                </initialCapacity>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <placeName>
+                    <text>a</text>
+                </placeName>
+            </place>
+            <transition id="41">
+                <graphics>
+                    <position x="178.0" y="190.0"/>
+                </graphics>
+                <transitionLabel>
+                    <text></text>
+                </transitionLabel>
+                <transitionName>
+                    <text>undefined</text>
+                </transitionName>
+                <transitionRenew>
+                    <text>id</text>
+                </transitionRenew>
+            </transition>
+        </page>
+    </net>
+    <net id="1" nettype="K">
+        <page>
+            <arc id="65" source="55" target="57">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>1</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="49" source="41" target="7">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>4</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="67" source="57" target="53">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>1</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="45" source="7" target="41">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>3</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="61" source="53" target="59">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>1</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="63" source="59" target="55">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>1</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <place id="53">
+                <graphics>
+                    <color b="0" g="255" r="255"/>
+                    <position x="156.0" y="249.0"/>
+                </graphics>
+                <initialCapacity>
+                    <text>2147483647</text>
+                </initialCapacity>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <placeName>
+                    <text>f</text>
+                </placeName>
+            </place>
+            <place id="7">
+                <graphics>
+                    <color b="0" g="0" r="255"/>
+                    <position x="181.8195538894727" y="105.60457250283508"/>
+                </graphics>
+                <initialCapacity>
+                    <text>2147483647</text>
+                </initialCapacity>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <placeName>
+                    <text>a</text>
+                </placeName>
+            </place>
+            <place id="55">
+                <graphics>
+                    <color b="0" g="0" r="124"/>
+                    <position x="156.0" y="334.0"/>
+                </graphics>
+                <initialCapacity>
+                    <text>2147483647</text>
+                </initialCapacity>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <placeName>
+                    <text>g</text>
+                </placeName>
+            </place>
+            <transition id="41">
+                <graphics>
+                    <position x="178.0" y="190.0"/>
+                </graphics>
+                <transitionLabel>
+                    <text></text>
+                </transitionLabel>
+                <transitionName>
+                    <text>undefined</text>
+                </transitionName>
+                <transitionRenew>
+                    <text>id</text>
+                </transitionRenew>
+            </transition>
+            <transition id="57">
+                <graphics>
+                    <position x="89.0" y="289.0"/>
+                </graphics>
+                <transitionLabel>
+                    <text></text>
+                </transitionLabel>
+                <transitionName>
+                    <text>undefined</text>
+                </transitionName>
+                <transitionRenew>
+                    <text>id</text>
+                </transitionRenew>
+            </transition>
+            <transition id="59">
+                <graphics>
+                    <position x="252.0" y="288.0"/>
+                </graphics>
+                <transitionLabel>
+                    <text></text>
+                </transitionLabel>
+                <transitionName>
+                    <text>undefined</text>
+                </transitionName>
+                <transitionRenew>
+                    <text>id</text>
+                </transitionRenew>
+            </transition>
+        </page>
+    </net>
+    <net id="3" nettype="R">
+        <page>
+            <arc id="67" source="57" target="53">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>1</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="61" source="53" target="59">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>1</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="63" source="59" target="55">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>1</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="65" source="55" target="57">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>1</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <place id="53">
+                <graphics>
+                    <color b="0" g="255" r="255"/>
+                    <position x="156.0" y="249.0"/>
+                </graphics>
+                <initialCapacity>
+                    <text>2147483647</text>
+                </initialCapacity>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <placeName>
+                    <text>f</text>
+                </placeName>
+            </place>
+            <place id="55">
+                <graphics>
+                    <color b="0" g="0" r="124"/>
+                    <position x="156.0" y="334.0"/>
+                </graphics>
+                <initialCapacity>
+                    <text>2147483647</text>
+                </initialCapacity>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <placeName>
+                    <text>g</text>
+                </placeName>
+            </place>
+            <transition id="57">
+                <graphics>
+                    <position x="89.0" y="289.0"/>
+                </graphics>
+                <transitionLabel>
+                    <text></text>
+                </transitionLabel>
+                <transitionName>
+                    <text>undefined</text>
+                </transitionName>
+                <transitionRenew>
+                    <text>id</text>
+                </transitionRenew>
+            </transition>
+            <transition id="59">
+                <graphics>
+                    <position x="252.0" y="288.0"/>
+                </graphics>
+                <transitionLabel>
+                    <text></text>
+                </transitionLabel>
+                <transitionName>
+                    <text>undefined</text>
+                </transitionName>
+                <transitionRenew>
+                    <text>id</text>
+                </transitionRenew>
+            </transition>
+        </page>
+    </net>
+    <net id="4" nettype="NAC">
+        <page>
+            <arc id="49" source="41" target="7">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>4</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="45" source="7" target="41">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>3</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <place id="37">
+                <graphics>
+                    <color b="0" g="255" r="0"/>
+                    <position x="38.0" y="60.0"/>
+                </graphics>
+                <initialCapacity>
+                    <text>2147483647</text>
+                </initialCapacity>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <placeName>
+                    <text>a</text>
+                </placeName>
+            </place>
+            <place id="38">
+                <graphics>
+                    <color b="255" g="0" r="255"/>
+                    <position x="35.0" y="118.0"/>
+                </graphics>
+                <initialCapacity>
+                    <text>2147483647</text>
+                </initialCapacity>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <placeName>
+                    <text>b</text>
+                </placeName>
+            </place>
+            <place id="39">
+                <graphics>
+                    <color b="0" g="200" r="255"/>
+                    <position x="33.0" y="182.0"/>
+                </graphics>
+                <initialCapacity>
+                    <text>2147483647</text>
+                </initialCapacity>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <placeName>
+                    <text>c</text>
+                </placeName>
+            </place>
+            <place id="7">
+                <graphics>
+                    <color b="0" g="0" r="255"/>
+                    <position x="181.8195538894727" y="105.60457250283508"/>
+                </graphics>
+                <initialCapacity>
+                    <text>2147483647</text>
+                </initialCapacity>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <placeName>
+                    <text>a</text>
+                </placeName>
+            </place>
+            <transition id="41">
+                <graphics>
+                    <position x="178.0" y="190.0"/>
+                </graphics>
+                <transitionLabel>
+                    <text></text>
+                </transitionLabel>
+                <transitionName>
+                    <text>undefined</text>
+                </transitionName>
+                <transitionRenew>
+                    <text>id</text>
+                </transitionRenew>
+            </transition>
+        </page>
+    </net>
+    <net id="5" nettype="NAC">
+        <page>
+            <arc id="33" source="7" target="31">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>4</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="34" source="30" target="29">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>6</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="35" source="30" target="7">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>13</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="49" source="41" target="7">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>4</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="36" source="31" target="7">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>2</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="45" source="7" target="41">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>3</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <arc id="32" source="7" target="30">
+                <graphics>
+                    <position/>
+                </graphics>
+                <inscription>
+                    <text>undefined</text>
+                </inscription>
+                <toolspecific tool="ReConNet" version="1.0">
+                    <weight>
+                        <text>4</text>
+                    </weight>
+                </toolspecific>
+            </arc>
+            <place id="7">
+                <graphics>
+                    <color b="0" g="0" r="255"/>
+                    <position x="181.8195538894727" y="105.60457250283508"/>
+                </graphics>
+                <initialCapacity>
+                    <text>2147483647</text>
+                </initialCapacity>
+                <initialMarking>
+                    <text>0</text>
+                </initialMarking>
+                <placeName>
+                    <text>a</text>
+                </placeName>
+            </place>
+            <place id="29">
+                <graphics>
+                    <color b="124" g="0" r="0"/>
+                    <position x="95.45198113201235" y="256.5830012162584"/>
+                </graphics>
+                <initialCapacity>
+                    <text>6</text>
+                </initialCapacity>
+                <initialMarking>
+                    <text>3</text>
+                </initialMarking>
+                <placeName>
+                    <text>xx</text>
+                </placeName>
+            </place>
+            <transition id="41">
+                <graphics>
+                    <position x="178.0" y="190.0"/>
+                </graphics>
+                <transitionLabel>
+                    <text></text>
+                </transitionLabel>
+                <transitionName>
+                    <text>undefined</text>
+                </transitionName>
+                <transitionRenew>
+                    <text>id</text>
+                </transitionRenew>
+            </transition>
+            <transition id="30">
+                <graphics>
+                    <position x="80.28820881581694" y="184.0606118779328"/>
+                </graphics>
+                <transitionLabel>
+                    <text>a</text>
+                </transitionLabel>
+                <transitionName>
+                    <text>yyy</text>
+                </transitionName>
+                <transitionRenew>
+                    <text>id</text>
+                </transitionRenew>
+            </transition>
+            <transition id="31">
+                <graphics>
+                    <position x="48.296599149719555" y="78.75980207802978"/>
+                </graphics>
+                <transitionLabel>
+                    <text>1</text>
+                </transitionLabel>
+                <transitionName>
+                    <text>xxx</text>
+                </transitionName>
+                <transitionRenew>
+                    <text>count</text>
+                </transitionRenew>
+            </transition>
+        </page>
+    </net>
+</pnml>
