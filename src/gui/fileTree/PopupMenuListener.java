@@ -80,7 +80,7 @@ import javax.swing.tree.TreePath;
  * Custom popup menu listener extending {@link ActionListener}.
  */
 public final class PopupMenuListener
-  implements ActionListener {
+implements ActionListener {
 
   /**
    * singleton: the instance
@@ -288,8 +288,8 @@ public final class PopupMenuListener
       JOptionPane.showOptionDialog(null,
         "Sollen die Dateien vom Dateisystem gelöscht werden?", "Löschen", 0,
         JOptionPane.QUESTION_MESSAGE, null, new String[]{"Dateien löschen",
-          "Nur aus Übersicht löschen"}, "Nur aus Übersicht löschen") == 0
-        ? true : false;
+      "Nur aus Übersicht löschen"}, "Nur aus Übersicht löschen") == 0
+      ? true : false;
     // CHECKSTYLE:ON
 
     DefaultMutableTreeNode node =
@@ -608,6 +608,7 @@ public final class PopupMenuListener
             PetrinetPane.getInstance().getCurrentNodeSize());
         } else if (netType == SELECTED_TYPE_IS_RULE) {
           RulePane.getInstance().displayRule(id);
+          RulePane.getInstance().displayEmptyNAC();
           EngineAdapter.getRuleManipulation().saveRuleWithNacs(id,
             file.getParent(), name, FILE_EXTENSION_WITHOUT_DOT);
         }
