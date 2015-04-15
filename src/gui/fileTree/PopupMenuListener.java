@@ -646,8 +646,6 @@ public final class PopupMenuListener
 
   private void createNac() {
 
-    System.out.println(PopupMenuListener.class + " - createNac");
-
     RuleTreeNode ruleNode =
       (RuleTreeNode) FileTreePane.getInstance().getSelectedNode();
     int ruleId = ruleNode.getRuleId();
@@ -670,8 +668,6 @@ public final class PopupMenuListener
     throws EngineException {
 
     UUID nacId = EngineAdapter.getRuleManipulation().createNac(ruleId);
-
-    System.out.println("createNacInBackend: " + nacId);
 
     return nacId;
   }
@@ -704,8 +700,6 @@ public final class PopupMenuListener
 
     UUID nacId = nacNode.getNacId();
 
-    System.out.println("removeNac:" + nacId + " ruleId: " + ruleId);
-
     try {
 
       EngineAdapter.getRuleManipulation().deleteNac(ruleId, nacId);
@@ -722,42 +716,6 @@ public final class PopupMenuListener
     RulePane.getInstance().displayEmptyNAC();
   }
 
-  /*
-   * private void addNacToTree() { System.out.println(PopupMenuListener.class
-   * + " - addNacToTree"); PetriTreeNode ruleNode = (PetriTreeNode)
-   * FileTreePane.getInstance().getSelectedNode(); String ruleName =
-   * ruleNode.getUserObject().toString(); int ruleId =
-   * nameToPId.get(ruleName); // TODO: multiple NACs hier um Namensgebung
-   * kümmern SimpleDateFormat dateFormatter = new SimpleDateFormat(); String
-   * dateString = dateFormatter.format(new Date()); String nacDisplayName =
-   * "NAC [" + dateString + "]"; String nacName = ruleName + "." +
-   * nacDisplayName; if (!nameToPId.containsKey(nacName)) { int nacId =
-   * EngineAdapter.getPetrinetManipulation().createNac();
-   * nameToPId.put(nacName, nacId); this.nacNameToDisplayName.put(nacName,
-   * nacDisplayName); Set<Integer> nacs = ruleToNacs.get(ruleId); if (nacs ==
-   * null) { nacs = new HashSet<Integer>(); ruleToNacs.put(ruleId, nacs); }
-   * nacs.add(nacId); RulePane.getInstance().displayRule(ruleId);
-   * EngineAdapter.getRuleManipulation().addNac(nacId, ruleId); PetriTreeNode
-   * n = new PetriTreeNode(NodeType.NAC, nacDisplayName); FileTreePane flTrPn
-   * = FileTreePane.getInstance(); flTrPn.getTreeModel().insertNodeInto(n,
-   * ruleNode, ruleNode.getChildCount());
-   * flTrPn.getTree().scrollPathToVisible(new TreePath(n.getPath()));
-   * flTrPn.getTree().setSelectionPath( new
-   * TreePath(flTrPn.getTreeModel().getPathToRoot(n))); } }
-   */
-
-  /*
-   * public void createNAC() { System.out.println(PopupMenuListener.class +
-   * " - createNAC"); PetriTreeNode ruleNode = (PetriTreeNode)
-   * FileTreePane.getInstance().getSelectedNode(); String ruleName =
-   * ruleNode.getUserObject().toString(); int ruleId =
-   * nameToPId.get(ruleName);
-   * System.out.println(".. adding NAC to rule with ruleId : " + ruleId);
-   * SimpleDateFormat dateFormatter = new SimpleDateFormat(); String
-   * dateString = dateFormatter.format(new Date()); String newNacName =
-   * "NAC [" + dateString + "]";
-   * EngineAdapter.getRuleManipulation().addNac(nacId, ruleId) }
-   */
   /**
    * shows the file choosing dialog.
    *
