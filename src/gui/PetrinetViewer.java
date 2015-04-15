@@ -806,6 +806,7 @@ public class PetrinetViewer
         EngineAdapter.getRuleManipulation().deleteTransition(getCurrentId(),
           getRuleNet(), transition);
       }
+
       smartRepaint();
     } catch (Exception e) {
       PopUp.popError(e);
@@ -831,6 +832,7 @@ public class PetrinetViewer
         EngineAdapter.getRuleManipulation().deleteArc(getCurrentId(),
           getRuleNet(), arc);
       }
+
       smartRepaint();
     } catch (Exception e) {
       PopUp.popError(e);

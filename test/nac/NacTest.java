@@ -60,6 +60,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import petrinet.model.IRenew;
@@ -501,6 +502,7 @@ public class NacTest {
   }
 
   @Test
+  @Ignore
   public void testDeleteLPlaceCascade()
     throws EngineException {
 
