@@ -133,7 +133,7 @@ public final class RuleHandler {
    */
   public PreArc createPreArc(int id, RuleNet net, Place place,
     Transition transition)
-      throws EngineException {
+    throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -216,7 +216,7 @@ public final class RuleHandler {
    */
   public PostArc createPostArc(int id, RuleNet net, Transition transition,
     Place place)
-      throws EngineException {
+    throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -739,7 +739,7 @@ public final class RuleHandler {
    */
   public TransitionAttribute getTransitionAttribute(int id,
     Transition transition)
-      throws EngineException {
+    throws EngineException {
 
     String tlb = transition.getTlb();
     String name = transition.getName();
@@ -783,7 +783,7 @@ public final class RuleHandler {
 
   public void saveRuleWithNacs(int id, String path, String filename,
     String format)
-      throws EngineException {
+    throws EngineException {
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();
@@ -1669,6 +1669,21 @@ public final class RuleHandler {
 
     RuleData ruleData = getRuleData(ruleId);
 
+    JungData nacJungData = ruleData.getNacJungData(nacId);
+    NAC nacModelData = ruleData.getRule().getNAC(nacId);
+
+    System.out.println("nacJungData:" + " Nodes("
+      + nacJungData.getJungGraph().getVertexCount() + ")" + " Edges("
+      + nacJungData.getJungGraph().getEdgeCount() + ")");
+
+    int nacNodes =
+      nacModelData.getNac().getPlaces().size()
+        + nacModelData.getNac().getTransitions().size();
+    int nacEdges = nacModelData.getNac().getArcs().size();
+
+    System.out.println("nacModelData:" + " Nodes(" + nacNodes + ")"
+      + " Edges(" + nacEdges + ")");
+
     return ruleData.getNacJungData(nacId).getJungLayout();
   }
 
@@ -1680,6 +1695,26 @@ public final class RuleHandler {
 
     return new PlaceAttribute(place.getMark(), place.getName(),
       nacJungData.getPlaceColor(place), place.getCapacity());
+  }
+
+  public TransitionAttribute getTransitionAttribute(int id, UUID nacId,
+    Transition transition)
+    throws EngineException {
+
+    String tlb = transition.getTlb();
+    String name = transition.getName();
+    IRenew rnw = transition.getRnw();
+    boolean activated = transition.isActivated();
+
+    return new TransitionAttribute(tlb, name, rnw, activated);
+  }
+
+  public ArcAttribute getArcAttribute(int id, UUID nacId, IArc arc)
+    throws EngineException {
+
+    checkIsIArc(arc);
+
+    return new ArcAttribute(arc.getWeight());
   }
 
   public void setPname(int id, UUID nacId, Place place, String pname)
@@ -1699,8 +1734,8 @@ public final class RuleHandler {
   }
 
   public void
-  setTname(int id, UUID nacId, Transition transition, String tname)
-      throws EngineException {
+    setTname(int id, UUID nacId, Transition transition, String tname)
+    throws EngineException {
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();
@@ -1740,8 +1775,8 @@ public final class RuleHandler {
   }
 
   public void
-  setRnw(int id, UUID nacId, Transition transition, IRenew renews)
-    throws EngineException {
+    setRnw(int id, UUID nacId, Transition transition, IRenew renews)
+      throws EngineException {
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();
@@ -1807,7 +1842,7 @@ public final class RuleHandler {
 
   public void moveNode(int id, UUID nacId, INode node,
     Point2D relativePosition)
-    throws EngineException {
+      throws EngineException {
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();

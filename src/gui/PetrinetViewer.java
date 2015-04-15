@@ -576,6 +576,10 @@ public class PetrinetViewer
         transitionAttribute =
           EngineAdapter.getPetrinetManipulation().getTransitionAttribute(
             getCurrentId(), transition);
+      } else if (isNAC()) {
+        transitionAttribute =
+          EngineAdapter.getRuleManipulation().getTransitionAttribute(
+            getCurrentId(), nacId, transition);
       } else {
         transitionAttribute =
           EngineAdapter.getRuleManipulation().getTransitionAttribute(
@@ -600,6 +604,10 @@ public class PetrinetViewer
         arcAttribute =
           EngineAdapter.getPetrinetManipulation().getArcAttribute(
             getCurrentId(), arc);
+      } else if (isNAC()) {
+        arcAttribute =
+          EngineAdapter.getRuleManipulation().getArcAttribute(getCurrentId(),
+            nacId, arc);
       } else {
         arcAttribute =
           EngineAdapter.getRuleManipulation().getArcAttribute(getCurrentId(),
@@ -717,10 +725,8 @@ public class PetrinetViewer
         EngineAdapter.getPetrinetManipulation().createTransition(
           getCurrentId(), position);
       } else if (isNAC()) {
-        System.out.println("PetrinetViewer.createTransition");
         EngineAdapter.getRuleManipulation().createTransition(getCurrentId(),
           nacId, position);
-
       } else {
         EngineAdapter.getRuleManipulation().createTransition(getCurrentId(),
           getRuleNet(), position);
@@ -743,7 +749,6 @@ public class PetrinetViewer
         EngineAdapter.getPetrinetManipulation().createPlace(getCurrentId(),
           point);
       } else if (isNAC()) {
-        System.out.println("PetrinetViewer.createPlace");
         EngineAdapter.getRuleManipulation().createPlace(getCurrentId(),
           nacId, point);
       } else {
@@ -769,7 +774,6 @@ public class PetrinetViewer
         EngineAdapter.getPetrinetManipulation().deletePlace(getCurrentId(),
           place);
       } else if (isNAC()) {
-        System.out.println("PetrinetViewer.deletePlace");
         EngineAdapter.getRuleManipulation().deletePlace(getCurrentId(),
           nacId, place);
       } else {

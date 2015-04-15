@@ -101,7 +101,7 @@ import exceptions.EngineException;
  * @author alex (aas772)
  */
 public final class RuleManipulation
-implements IRuleManipulation {
+  implements IRuleManipulation {
 
   /** Singleton instance of this class */
   private static RuleManipulation ruleManipulation;
@@ -259,7 +259,7 @@ implements IRuleManipulation {
   @Override
   public void setCapacity(@NotNull int id, @NotNull INode place,
     @NotNull int capacity)
-      throws EngineException {
+    throws EngineException {
 
     if (!(place instanceof Place)) {
       warning("place isn't a Place");
@@ -348,7 +348,7 @@ implements IRuleManipulation {
   @Override
   public void moveNode(int id, UUID nacId, INode node,
     Point2D relativePosition)
-    throws EngineException {
+      throws EngineException {
 
     ruleManipulationBackend.moveNode(id, nacId, node, relativePosition);
   }
@@ -356,7 +356,7 @@ implements IRuleManipulation {
   @Override
   public void saveRuleWithNacs(int id, String path, String filename,
     String format)
-    throws EngineException {
+      throws EngineException {
 
     ruleManipulationBackend.saveRuleWithNacs(id, path, filename, format);
 
@@ -505,6 +505,27 @@ implements IRuleManipulation {
     }
 
     return ruleManipulationBackend.getPlaceAttribute(id, nacId, (Place) place);
+  }
+
+  @Override
+  public TransitionAttribute getTransitionAttribute(int id, UUID nacId,
+    INode transition)
+      throws EngineException {
+
+    if (!(transition instanceof Transition)) {
+      warning("node isn't a transition");
+      return null;
+    }
+
+    return ruleManipulationBackend.getTransitionAttribute(id, nacId,
+      (Transition) transition);
+  }
+
+  @Override
+  public ArcAttribute getArcAttribute(int id, UUID nacId, IArc arc)
+    throws EngineException {
+
+    return ruleManipulationBackend.getArcAttribute(id, nacId, arc);
   }
 
   @Override

@@ -94,7 +94,7 @@ public interface IRuleManipulation {
    */
   void createArc(@NotNull int id, RuleNet net, @NotNull INode from,
     @NotNull INode to)
-      throws EngineException;
+    throws EngineException;
 
   /**
    * @param id
@@ -109,7 +109,7 @@ public interface IRuleManipulation {
    */
   void createArc(@NotNull int id, @NotNull UUID nacId, @NotNull INode from,
     @NotNull INode to)
-      throws EngineException;
+    throws EngineException;
 
   /**
    * Creates a Place
@@ -122,7 +122,7 @@ public interface IRuleManipulation {
    */
   void createPlace(@NotNull int id, @NotNull RuleNet net,
     @NotNull Point2D coordinate)
-      throws EngineException;
+    throws EngineException;
 
   /**
    * Creates a Place in a NAC of a rule
@@ -134,7 +134,7 @@ public interface IRuleManipulation {
    */
   void createPlace(@NotNull int id, @NotNull UUID nacId,
     @NotNull Point2D coordinate)
-      throws EngineException;
+    throws EngineException;
 
   /**
    * Creates a Rule
@@ -155,7 +155,7 @@ public interface IRuleManipulation {
    */
   void createTransition(@NotNull int id, @NotNull RuleNet net,
     @NotNull Point2D coordinate)
-      throws EngineException;
+    throws EngineException;
 
   /**
    * Creates a Transition in a NAC of a Rule
@@ -170,7 +170,7 @@ public interface IRuleManipulation {
    */
   void createTransition(@NotNull int id, @NotNull UUID nacId,
     @NotNull Point2D coordinate)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Deletes an Arc
@@ -206,8 +206,8 @@ public interface IRuleManipulation {
    *        which will be deleted
    */
   void
-  deletePlace(@NotNull int id, @NotNull RuleNet net, @NotNull INode place)
-    throws EngineException;
+    deletePlace(@NotNull int id, @NotNull RuleNet net, @NotNull INode place)
+      throws EngineException;
 
   /**
    * Deletes a Place from a NAC
@@ -221,8 +221,8 @@ public interface IRuleManipulation {
    * @throws EngineException
    */
   void
-  deletePlace(@NotNull int id, @NotNull UUID nacId, @NotNull INode place)
-    throws EngineException;
+    deletePlace(@NotNull int id, @NotNull UUID nacId, @NotNull INode place)
+      throws EngineException;
 
   /**
    * Deletes a Transition
@@ -234,7 +234,7 @@ public interface IRuleManipulation {
    */
   void deleteTransition(@NotNull int id, @NotNull RuleNet net,
     @NotNull INode transition)
-      throws EngineException;
+    throws EngineException;
 
   /**
    * Deletes a Transition from a NAC
@@ -249,7 +249,7 @@ public interface IRuleManipulation {
    */
   void deleteTransition(@NotNull int id, @NotNull UUID nacId,
     @NotNull INode transition)
-      throws EngineException;
+    throws EngineException;
 
   /**
    * Gets the Attributes from an Arc
@@ -264,6 +264,22 @@ public interface IRuleManipulation {
     throws EngineException;
 
   /**
+   * Gets the Attributes from an Arc of a NAC
+   *
+   * @param id
+   *        ID of the rule
+   * @param nacId
+   *        ID of the nac
+   * @param arc
+   *        which attributes are wanted
+   * @return ArcAttribute
+   * @throws EngineException
+   */
+  ArcAttribute getArcAttribute(@NotNull int id, @NotNull UUID nacId,
+    @NotNull IArc arc)
+    throws EngineException;
+
+  /**
    * Gets the JungLayout from the Rule
    *
    * @param id
@@ -272,7 +288,7 @@ public interface IRuleManipulation {
    */
   AbstractLayout<INode, IArc> getJungLayout(@NotNull int id,
     @NotNull RuleNet net)
-      throws EngineException;
+    throws EngineException;
 
   /**
    * Gets the JungLayout from the specified NAC of the given Rule
@@ -286,7 +302,7 @@ public interface IRuleManipulation {
    */
   AbstractLayout<INode, IArc> getJungLayout(@NotNull int ruleId,
     @NotNull UUID nacId)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Gets the Attributes from a Place
@@ -310,12 +326,12 @@ public interface IRuleManipulation {
    *        ID of the nac
    * @param place
    *        which attributes are wanted
-   * @return
+   * @return PlaceAttribute
    * @throws EngineException
    */
   PlaceAttribute getPlaceAttribute(@NotNull int id, @NotNull UUID nacId,
     @NotNull INode place)
-      throws EngineException;
+    throws EngineException;
 
   /**
    * Gets the Attributes from a Transition
@@ -329,7 +345,23 @@ public interface IRuleManipulation {
    */
   TransitionAttribute getTransitionAttribute(@NotNull int id,
     @NotNull INode transition)
-      throws EngineException;
+    throws EngineException;
+
+  /**
+   * Gets the Attribute from a Transition of a NAC
+   *
+   * @param id
+   *        ID of the rule
+   * @param nacId
+   *        ID of the nac
+   * @param transition
+   *        which attributes are wanted
+   * @return TransitionAttribute
+   * @throws EngineException
+   */
+  TransitionAttribute getTransitionAttribute(@NotNull int id,
+    @NotNull UUID nacId, @NotNull INode transition)
+    throws EngineException;
 
   /**
    * Gets the Attributes from a Rule
@@ -355,7 +387,7 @@ public interface IRuleManipulation {
    */
   void moveNode(@NotNull int id, @NotNull INode node,
     @NotNull Point2D relativePosition)
-      throws EngineException;
+    throws EngineException;
 
   /**
    * Moves a NAC-explicit node
@@ -372,7 +404,7 @@ public interface IRuleManipulation {
    */
   void moveNode(@NotNull int id, @NotNull UUID nacId, @NotNull INode node,
     @NotNull Point2D relativePosition)
-      throws EngineException;
+    throws EngineException;
 
   /**
    * @param id
@@ -387,7 +419,7 @@ public interface IRuleManipulation {
    */
   void saveRuleWithNacs(@NotNull int id, @NotNull String path,
     @NotNull String filename, @NotNull String format)
-      throws EngineException;
+    throws EngineException;
 
   /**
    * Load a rule
@@ -411,8 +443,8 @@ public interface IRuleManipulation {
    * @throws EngineException
    */
   void
-  setMarking(@NotNull int id, @NotNull INode place, @NotNull int marking)
-    throws EngineException;
+    setMarking(@NotNull int id, @NotNull INode place, @NotNull int marking)
+      throws EngineException;
 
   /**
    * Sets the marking of a NAC-explicit place
@@ -429,7 +461,7 @@ public interface IRuleManipulation {
    */
   void setMarking(@NotNull int id, @NotNull UUID nacId, @NotNull INode place,
     @NotNull int marking)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Sets the Capacity of a Place and its corresponding nodes in the other
@@ -445,7 +477,7 @@ public interface IRuleManipulation {
    */
   void setCapacity(@NotNull int id, @NotNull INode place,
     @NotNull int capacity)
-      throws EngineException;
+    throws EngineException;
 
   /**
    * Sets the capacity of a NAC-explicit place
@@ -462,7 +494,7 @@ public interface IRuleManipulation {
    */
   void setCapacity(@NotNull int id, @NotNull UUID nacId,
     @NotNull INode place, @NotNull int capacity)
-      throws EngineException;
+    throws EngineException;
 
   /**
    * Sets the PName of a Place and its corresponding nodes in the other parts
@@ -494,7 +526,7 @@ public interface IRuleManipulation {
    */
   void setPname(@NotNull int id, @NotNull UUID nacId, @NotNull INode place,
     @NotNull String pname)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Sets the Tlb of a Transition and its corresponding nodes in the other
@@ -509,8 +541,8 @@ public interface IRuleManipulation {
    * @throws EngineException
    */
   void
-  setTlb(@NotNull int id, @NotNull INode transition, @NotNull String tlb)
-    throws EngineException;
+    setTlb(@NotNull int id, @NotNull INode transition, @NotNull String tlb)
+      throws EngineException;
 
   /**
    * Sets the Transition Label of a NAC-explicit transition
@@ -527,7 +559,7 @@ public interface IRuleManipulation {
    */
   void setTlb(@NotNull int id, @NotNull UUID nacId,
     @NotNull INode transition, @NotNull String tlb)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Sets the TName of a Transition and its corresponding nodes in the other
@@ -543,7 +575,7 @@ public interface IRuleManipulation {
    */
   void setTname(@NotNull int id, @NotNull INode transition,
     @NotNull String tname)
-      throws EngineException;
+    throws EngineException;
 
   /**
    * Sets the Name of a NAC-explicit transition
@@ -560,7 +592,7 @@ public interface IRuleManipulation {
    */
   void setTname(@NotNull int id, @NotNull UUID nacId,
     @NotNull INode transition, @NotNull String tname)
-      throws EngineException;
+    throws EngineException;
 
   /**
    * Sets the Weight of an Arc.
@@ -591,7 +623,7 @@ public interface IRuleManipulation {
    */
   void setWeight(@NotNull int id, @NotNull UUID nacId, @NotNull IArc arc,
     @NotNull int weight)
-    throws EngineException;
+      throws EngineException;
 
   /**
    * Sets a Strings as RNW and its corresponding nodes in the other parts of
@@ -646,7 +678,7 @@ public interface IRuleManipulation {
    */
   void setPlaceColor(int id, @NotNull UUID nacId, @NotNull INode place,
     @NotNull Color color)
-      throws EngineException;
+    throws EngineException;
 
   /**
    * This methods clean the Tool from this Rule.
