@@ -171,14 +171,14 @@ public final class Style {
 
   public static final Point SIMULATION_PANE_SLIDER_LOCATION = new Point(
     INSET_LEFT + (BUTTON_WIDTH + SPACING_BUTTONS) * 2, 0 + INSET_TOP
-      + BUTTON_HEIGHT + SPACING_BUTTONS);
+    + BUTTON_HEIGHT + SPACING_BUTTONS);
 
   public static final Dimension SIMULATION_PANE_SLIDER_SIZE = new Dimension(
     BUTTON_WIDTH, BUTTON_HEIGHT * 2 + SPACING_BUTTONS);
 
   public static final Point SIMULATION_PANE_COMBOBOX_LOCATION = new Point(
     INSET_LEFT + BUTTON_WIDTH + SPACING_BUTTONS, 0 + INSET_TOP
-      + (BUTTON_HEIGHT + SPACING_BUTTONS) * 2);
+    + (BUTTON_HEIGHT + SPACING_BUTTONS) * 2);
 
   public static final Dimension SIMULATION_PANE_COMBOBOX_SIZE =
     new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT - 3);
@@ -284,7 +284,7 @@ public final class Style {
   public static final ImageIcon DELETE_PETRINET_DISABLED_ICON =
     new ImageIcon("src/gui/icons/deletePertinetDisabled.png");
 
-  // monstr icons
+  // popup menu icons - icons from www.iconmonstr.com
   public static final ImageIcon OPEN_24 = new ImageIcon(
     Style.class.getResource("/gui/icons/open_24.png"));
   public static final ImageIcon DELETE_24 = new ImageIcon(
