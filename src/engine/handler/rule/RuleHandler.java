@@ -61,6 +61,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.UUID;
 
 import persistence.Persistence;
@@ -99,12 +101,17 @@ import exceptions.IllegalNacManipulationException;
  */
 public final class RuleHandler {
 
+  private final static Logger LOGGER =
+    Logger.getLogger(RuleHandler.class.getName());
+
   /** Session manager of engine */
   private final SessionManager sessionManager;
   /** Singleton instance of this class */
   private static RuleHandler ruleManipulation;
 
   private RuleHandler() {
+
+    LOGGER.setLevel(Level.OFF);
 
     sessionManager = SessionManager.getInstance();
   }
@@ -133,7 +140,7 @@ public final class RuleHandler {
    */
   public PreArc createPreArc(int id, RuleNet net, Place place,
     Transition transition)
-    throws EngineException {
+      throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -216,7 +223,7 @@ public final class RuleHandler {
    */
   public PostArc createPostArc(int id, RuleNet net, Transition transition,
     Place place)
-    throws EngineException {
+      throws EngineException {
 
     checkIsPlace(place);
     checkIsTransition(transition);
@@ -739,7 +746,7 @@ public final class RuleHandler {
    */
   public TransitionAttribute getTransitionAttribute(int id,
     Transition transition)
-    throws EngineException {
+      throws EngineException {
 
     String tlb = transition.getTlb();
     String name = transition.getName();
@@ -783,7 +790,7 @@ public final class RuleHandler {
 
   public void saveRuleWithNacs(int id, String path, String filename,
     String format)
-    throws EngineException {
+      throws EngineException {
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();
@@ -1529,7 +1536,7 @@ public final class RuleHandler {
         "The specific place is part of L. Therefore it should be modified in L.");
     }
 
-    System.out.println(".. deletePlace from NAC " + nac);
+    LOGGER.info(".. deletePlace from NAC " + nac);
 
     JungData nacJungData = ruleData.getNacJungData(nacId);
 
@@ -1579,7 +1586,7 @@ public final class RuleHandler {
         "The specific transition is part of L. Therefore it should be modified in L.");
     }
 
-    System.out.println(".. deleteTransition from NAC " + nac);
+    LOGGER.info(".. deleteTransition from NAC " + nac);
 
     JungData nacJungData = ruleData.getNacJungData(nacId);
 
@@ -1672,17 +1679,17 @@ public final class RuleHandler {
     JungData nacJungData = ruleData.getNacJungData(nacId);
     NAC nacModelData = ruleData.getRule().getNAC(nacId);
 
-    System.out.println("nacJungData:" + " Nodes("
+    LOGGER.info("nacJungData:" + " Nodes("
       + nacJungData.getJungGraph().getVertexCount() + ")" + " Edges("
       + nacJungData.getJungGraph().getEdgeCount() + ")");
 
     int nacNodes =
       nacModelData.getNac().getPlaces().size()
-        + nacModelData.getNac().getTransitions().size();
+      + nacModelData.getNac().getTransitions().size();
     int nacEdges = nacModelData.getNac().getArcs().size();
 
-    System.out.println("nacModelData:" + " Nodes(" + nacNodes + ")"
-      + " Edges(" + nacEdges + ")");
+    LOGGER.info("nacModelData:" + " Nodes(" + nacNodes + ")" + " Edges("
+      + nacEdges + ")");
 
     return ruleData.getNacJungData(nacId).getJungLayout();
   }
@@ -1699,7 +1706,7 @@ public final class RuleHandler {
 
   public TransitionAttribute getTransitionAttribute(int id, UUID nacId,
     Transition transition)
-    throws EngineException {
+      throws EngineException {
 
     String tlb = transition.getTlb();
     String name = transition.getName();
@@ -1734,8 +1741,8 @@ public final class RuleHandler {
   }
 
   public void
-    setTname(int id, UUID nacId, Transition transition, String tname)
-    throws EngineException {
+  setTname(int id, UUID nacId, Transition transition, String tname)
+      throws EngineException {
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();
@@ -1775,8 +1782,8 @@ public final class RuleHandler {
   }
 
   public void
-    setRnw(int id, UUID nacId, Transition transition, IRenew renews)
-      throws EngineException {
+  setRnw(int id, UUID nacId, Transition transition, IRenew renews)
+    throws EngineException {
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();
@@ -1842,7 +1849,7 @@ public final class RuleHandler {
 
   public void moveNode(int id, UUID nacId, INode node,
     Point2D relativePosition)
-      throws EngineException {
+    throws EngineException {
 
     RuleData ruleData = getRuleData(id);
     Rule rule = ruleData.getRule();
