@@ -57,10 +57,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.collections15.BidiMap;
 import org.apache.commons.collections15.bidimap.DualHashBidiMap;
@@ -85,6 +89,8 @@ import petrinet.model.Transition;
  */
 
 public class Rule {
+
+  private final static Logger LOGGER = Logger.getLogger(Rule.class.getName());
 
   public enum Net {
     L, K, R, NAC
@@ -115,6 +121,8 @@ public class Rule {
    */
   public Rule() {
 
+    LOGGER.setLevel(Level.WARNING);
+
     k = createPetrinet();
     l = createPetrinet();
     r = createPetrinet();
@@ -139,7 +147,7 @@ public class Rule {
    */
   public NAC createNAC() {
 
-    System.out.println(Rule.class + " - createNAC");
+    LOGGER.info(Rule.class + " - createNAC");
 
     NAC newNAC = new NAC(l);
     nacs.put(newNAC.getId(), newNAC);
@@ -1326,9 +1334,6 @@ public class Rule {
     return nacPreArc;
   }
 
-  // TODO die Remover laufen alle ueber K, d.h. ein entferntes Element wird
-  // immer aus allen Teilen der Regel entfernt. das ist unintuitiv und doof
-
   public void removePlaceFromL(Place place) {
 
     removePlaceFromK(fromLtoK(place));
@@ -1338,7 +1343,45 @@ public class Rule {
 
     Place leftPlace = fromKtoL(place);
     if (leftPlace != null) {
+
+      // remove the place itself
       getL().removePlace(leftPlace);
+
+      // remove all mappings to arcs which are a removed
+
+      Iterator<Entry<PostArc, PostArc>> postArcMappingIterator =
+        postArcMappingKToL.entrySet().iterator();
+
+      while (postArcMappingIterator.hasNext()) {
+        Entry<PostArc, PostArc> mapping = postArcMappingIterator.next();
+        if (mapping.getValue().getTarget() == leftPlace) {
+          LOGGER.info("postArc mapping to L needs to be removed");
+          try {
+            postArcMappingIterator.remove();
+            LOGGER.info("postArc mapping to L was removed");
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
+      }
+
+      Iterator<Entry<PreArc, PreArc>> preArcMappingIterator =
+        preArcMappingKToL.entrySet().iterator();
+
+      while (preArcMappingIterator.hasNext()) {
+        Entry<PreArc, PreArc> mapping = preArcMappingIterator.next();
+        if (mapping.getValue().getSource() == leftPlace) {
+          LOGGER.info("preArc mapping to L needs to be removed");
+          try {
+            preArcMappingIterator.remove();
+            LOGGER.info("preArc mapping to L was removed");
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
+      }
+
+      // remove corresponding places in all nacs
       for (NAC nac : nacs.values()) {
         removePlaceFromNac(nac.fromLtoNac(leftPlace), nac);
       }
@@ -1346,8 +1389,46 @@ public class Rule {
 
     getK().removePlace(place);
 
-    if (fromKtoR(place) != null) {
-      getR().removePlace(fromKtoR(place));
+    Place rightPlace = fromKtoR(place);
+    if (rightPlace != null) {
+
+      // remove the place itself
+      getR().removePlace(rightPlace);
+
+      // remove all mappings to arcs which are a removed
+
+      Iterator<Entry<PostArc, PostArc>> postArcMappingIterator =
+        postArcMappingKToR.entrySet().iterator();
+
+      while (postArcMappingIterator.hasNext()) {
+        Entry<PostArc, PostArc> mapping = postArcMappingIterator.next();
+        if (mapping.getValue().getTarget() == rightPlace) {
+          LOGGER.info("postArc mapping to R needs to be removed");
+          try {
+            postArcMappingIterator.remove();
+            LOGGER.info("postArc mapping to R was removed");
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
+      }
+
+      Iterator<Entry<PreArc, PreArc>> preArcMappingIterator =
+        preArcMappingKToR.entrySet().iterator();
+
+      while (preArcMappingIterator.hasNext()) {
+        Entry<PreArc, PreArc> mapping = preArcMappingIterator.next();
+        if (mapping.getValue().getSource() == rightPlace) {
+          LOGGER.info("preArc mapping to R needs to be removed");
+          try {
+            preArcMappingIterator.remove();
+            LOGGER.info("preArc mapping to R was removed");
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
+      }
+
     }
 
     placeMappingKToL.remove(place);
@@ -1374,7 +1455,44 @@ public class Rule {
 
     Transition leftTransition = fromKtoL(transition);
     if (leftTransition != null) {
+
+      // remove the transition itself
       getL().removeTransition(leftTransition);
+
+      // remove all mappings to arcs which are a removed
+      Iterator<Entry<PostArc, PostArc>> postArcMappingIterator =
+        postArcMappingKToL.entrySet().iterator();
+
+      while (postArcMappingIterator.hasNext()) {
+        Entry<PostArc, PostArc> mapping = postArcMappingIterator.next();
+        if (mapping.getValue().getSource() == leftTransition) {
+          LOGGER.info("postArc mapping to L needs to be removed");
+          try {
+            postArcMappingIterator.remove();
+            LOGGER.info("postArc mapping to L was removed");
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
+      }
+
+      Iterator<Entry<PreArc, PreArc>> preArcMappingIterator =
+        preArcMappingKToL.entrySet().iterator();
+
+      while (preArcMappingIterator.hasNext()) {
+        Entry<PreArc, PreArc> mapping = preArcMappingIterator.next();
+        if (mapping.getValue().getTarget() == leftTransition) {
+          LOGGER.info("preArc mapping to L needs to be removed");
+          try {
+            preArcMappingIterator.remove();
+            LOGGER.info("preArc mapping to L was removed");
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
+      }
+
+      // remove corresponding transitions in all nacs
       for (NAC nac : nacs.values()) {
         removeTransitionFromNac(nac.fromLtoNac(leftTransition), nac);
       }
@@ -1382,8 +1500,44 @@ public class Rule {
 
     getK().removeTransition(transition);
 
-    if (fromKtoR(transition) != null) {
+    Transition rightTransition = fromKtoR(transition);
+    if (rightTransition != null) {
+
+      // remove the transition itself
       getR().removeTransition(fromKtoR(transition));
+
+      // remove all mappings to arcs which are a removed
+      Iterator<Entry<PostArc, PostArc>> postArcMappingIterator =
+        postArcMappingKToR.entrySet().iterator();
+
+      while (postArcMappingIterator.hasNext()) {
+        Entry<PostArc, PostArc> mapping = postArcMappingIterator.next();
+        if (mapping.getValue().getSource() == rightTransition) {
+          LOGGER.info("postArc mapping to R needs to be removed");
+          try {
+            postArcMappingIterator.remove();
+            LOGGER.info("postArc mapping to R was removed");
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
+      }
+
+      Iterator<Entry<PreArc, PreArc>> preArcMappingIterator =
+        preArcMappingKToR.entrySet().iterator();
+
+      while (preArcMappingIterator.hasNext()) {
+        Entry<PreArc, PreArc> mapping = preArcMappingIterator.next();
+        if (mapping.getValue().getTarget() == rightTransition) {
+          LOGGER.info("preArc mapping to R needs to be removed");
+          try {
+            preArcMappingIterator.remove();
+            LOGGER.info("preArc mapping to R was removed");
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
+      }
     }
 
     transitionMappingKToL.remove(transition);
