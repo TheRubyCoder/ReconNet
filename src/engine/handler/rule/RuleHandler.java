@@ -1806,11 +1806,6 @@ public final class RuleHandler {
 
     NAC nac = rule.getNAC(nacId);
 
-    if (!nac.isPlaceSafeToChange(place)) {
-      throw new IllegalNacManipulationException(
-        "The specific place is part of L. Therefore it should be modified in L.");
-    }
-
     rule.setMarkInNac(place, marking, nac);
   }
 

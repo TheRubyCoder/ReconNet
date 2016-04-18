@@ -227,7 +227,7 @@ final class SimulationPane {
 
   /**
    * Initaite and layouting the Combobox and set the modi
-   * 
+   *
    * @return Combobox with the holding modi
    */
   @SuppressWarnings("rawtypes")
@@ -235,7 +235,7 @@ final class SimulationPane {
   // with
   // parameters
   private JComboBox
-    initiateModePicker() {
+  initiateModePicker() {
 
     String[] modi = {"Nur Tokenspiel", "Nur Regeln", "Tokenspiel und Regeln"};
     @SuppressWarnings("unchecked")
@@ -309,7 +309,7 @@ final class SimulationPane {
 
   /**
    * Initiates k spinner and k button
-   * 
+   *
    * @return index 0: JSpinner<br/>
    *         index 1: JButton
    */
@@ -336,7 +336,7 @@ final class SimulationPane {
 
   /**
    * Initiate and layouting the Transformbutton
-   * 
+   *
    * @return the Transformbutton
    */
   private JButton initateTransformButton() {
@@ -351,7 +351,7 @@ final class SimulationPane {
 
   /**
    * Initiate and layouting the OneStepbutton
-   * 
+   *
    * @return the OneStepbutton
    */
   private JButton initiateOneStepButton() {
@@ -373,7 +373,7 @@ final class SimulationPane {
   /**
    * Initiates the SimulationPane with a certain width and default values for
    * Border, Backgroundcolor etc
-   * 
+   *
    * @return instace of Simulationpane
    */
   public static SimulationPane getInstance() {
@@ -383,7 +383,7 @@ final class SimulationPane {
 
   /**
    * Adds the SimulationPane to a frame
-   * 
+   *
    * @param frame
    */
   public void addTo(JPanel frame) {
@@ -489,7 +489,7 @@ final class SimulationPane {
 
   /** Listener for the "play" button */
   private class SimulateButtonListener
-    implements ActionListener {
+  implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -520,7 +520,7 @@ final class SimulationPane {
 
   /** Listener for the button "on step" */
   private class OneStepListener
-    implements ActionListener {
+  implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -542,7 +542,7 @@ final class SimulationPane {
 
   /** Listener for the button "k steps" */
   private class KStepsListener
-    implements ActionListener {
+  implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -586,7 +586,7 @@ final class SimulationPane {
    * perform a single simulation step
    */
   private class SimulationStepper
-    implements ActionListener {
+  implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -631,7 +631,7 @@ final class SimulationPane {
 
   /** Listener for the button "transform" */
   private class TransformButtonListener
-    implements ActionListener {
+  implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -650,7 +650,7 @@ final class SimulationPane {
 
   /** Listener sets the simulation timer speed when the slider is changed */
   private class SpeedSliderListener
-    implements ChangeListener {
+  implements ChangeListener {
 
     @Override
     public void stateChanged(ChangeEvent e) {

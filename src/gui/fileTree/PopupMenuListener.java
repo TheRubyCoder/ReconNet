@@ -80,7 +80,7 @@ import javax.swing.tree.TreePath;
  * Custom popup menu listener extending {@link ActionListener}.
  */
 public final class PopupMenuListener
-  implements ActionListener {
+implements ActionListener {
 
   /**
    * singleton: the instance
@@ -209,6 +209,11 @@ public final class PopupMenuListener
       this.loadRule();
     }
 
+    // transformation unit menu
+    else if (cmd.equals(Style.MENU_ROOT_TRANSFORMATION_UNIT_NEW_CMD)) {
+      this.createTransformationUnit();
+    }
+
     // net menu
     else if (cmd.equals(Style.MENU_NET_SAVE_CMD)) {
       this.save();
@@ -288,8 +293,8 @@ public final class PopupMenuListener
       JOptionPane.showOptionDialog(null,
         "Sollen die Dateien vom Dateisystem gelöscht werden?", "Löschen", 0,
         JOptionPane.QUESTION_MESSAGE, null, new String[]{"Dateien löschen",
-          "Nur aus Übersicht löschen"}, "Nur aus Übersicht löschen") == 0
-        ? true : false;
+      "Nur aus Übersicht löschen"}, "Nur aus Übersicht löschen") == 0
+      ? true : false;
     // CHECKSTYLE:ON
 
     DefaultMutableTreeNode node =
@@ -664,6 +669,14 @@ public final class PopupMenuListener
 
   }
 
+  private void createTransformationUnit() {
+
+    TransformationUnitRootTreeNode transformationUnitRootNode =
+      (TransformationUnitRootTreeNode) FileTreePane.getInstance().getSelectedNode();
+
+    this.createTransformationUnitTreeNode(transformationUnitRootNode);
+  }
+
   private UUID createNacInBackend(int ruleId)
     throws EngineException {
 
@@ -714,6 +727,21 @@ public final class PopupMenuListener
 
     // clear the nac panel
     RulePane.getInstance().displayEmptyNAC();
+  }
+
+  public void createTransformationUnitTreeNode(
+    TransformationUnitRootTreeNode parentNode) {
+
+    TransformationUnitTreeNode n =
+      new TransformationUnitTreeNode("Einheit A");
+
+    FileTreePane flTrPn = FileTreePane.getInstance();
+
+    flTrPn.getTreeModel().insertNodeInto(n, parentNode,
+      parentNode.getChildCount());
+    flTrPn.getTree().scrollPathToVisible(new TreePath(n.getPath()));
+    flTrPn.getTree().setSelectionPath(
+      new TreePath(flTrPn.getTreeModel().getPathToRoot(n)));
   }
 
   /**

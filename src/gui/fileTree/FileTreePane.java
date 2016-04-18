@@ -51,10 +51,7 @@
 
 package gui.fileTree;
 
-import static gui.Style.FILE_TREE_PANE_PREFERRED_SIZE;
-import static gui.Style.TREE_STRING_NET;
-import static gui.Style.TREE_STRING_ROOT;
-import static gui.Style.TREE_STRING_RULE;
+import static gui.Style.*;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
@@ -88,6 +85,11 @@ public final class FileTreePane
    * Rule root node. Root of all rules.
    */
   private DefaultMutableTreeNode ruleRootNode;
+
+  /**
+   * Transformation Unit root node. Root of all transformation units.
+   */
+  private DefaultMutableTreeNode transformationUnitRootNode;
 
   /**
    * Reference to the tree object.
@@ -192,9 +194,12 @@ public final class FileTreePane
 
     netRootNode = new NetRootTreeNode(TREE_STRING_NET);
     ruleRootNode = new RuleRootTreeNode(TREE_STRING_RULE);
+    transformationUnitRootNode =
+      new TransformationUnitRootTreeNode(TREE_STRING_TRANSFORMATION_UNIT);
 
     this.rootNode.add(netRootNode);
     this.rootNode.add(ruleRootNode);
+    this.rootNode.add(transformationUnitRootNode);
 
     return this.rootNode;
   }

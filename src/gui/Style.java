@@ -331,6 +331,8 @@ public final class Style {
   public static final String TREE_STRING_ROOT = "root";
   public static final String TREE_STRING_NET = "Netze";
   public static final String TREE_STRING_RULE = "Regeln";
+  public static final String TREE_STRING_TRANSFORMATION_UNIT =
+    "Transformationseinheiten";
 
   // _LBL is the label shown on the menu item
   // _CMD is the unique identifier to identify the action
@@ -356,6 +358,12 @@ public final class Style {
     "MENU_ROOT_RULE_NEWRULE_CMD";
   public static final String MENU_ROOT_RULE_LOADRULE_CMD =
     "MENU_ROOT_RULE_LOADRULE_CMD";
+
+  // transformation unit root menu
+  public static final String MENU_ROOT_TRANSFORMATION_UNIT_NEW_LBL =
+    "Neue Transformationseinheit";
+  public static final String MENU_ROOT_TRANSFORMATION_UNIT_NEW_CMD =
+    "MENU_ROOT_TRANSFORMATION_UNIT_NEW_LBL";
 
   // net menu
   public static final String MENU_NET_SAVE_LBL = "Speichern";

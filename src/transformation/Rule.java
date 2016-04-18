@@ -70,6 +70,7 @@ import org.apache.commons.collections15.BidiMap;
 import org.apache.commons.collections15.bidimap.DualHashBidiMap;
 
 import exceptions.AccessForbiddenException;
+import exceptions.IllegalNacManipulationException;
 import exceptions.ShowAsWarningException;
 import petrinet.model.IRenew;
 import petrinet.model.Petrinet;
@@ -423,13 +424,20 @@ public class Rule {
 
     checkIfcontained(nac);
 
-    if (nac.fromNacToL(place) != null) {
-      throw new ShowAsWarningException(new AccessForbiddenException(
-        "This operation is not allowed "
-          + "for Elements that have a representation in L"));
+    Place lPlace = nac.fromNacToL(place);
+
+    if (lPlace != null) {
+      if (mark >= lPlace.getMark()) {
+        place.setMark(mark);
+      } else {
+        throw new ShowAsWarningException(
+          new IllegalNacManipulationException(
+            "Marking cannot be less than the marking of its corresponding place in L"));
+      }
     } else {
       place.setMark(mark);
     }
+
   }
 
   /**
@@ -1230,7 +1238,7 @@ public class Rule {
   }
 
   public PostArc
-  addPostArcToL(String name, Transition transition, Place place) {
+    addPostArcToL(String name, Transition transition, Place place) {
 
     PostArc leftPostArc = getL().addPostArc(name, transition, place);
 
@@ -1252,7 +1260,7 @@ public class Rule {
   }
 
   public PostArc
-  addPostArcToK(String name, Transition transition, Place place) {
+    addPostArcToK(String name, Transition transition, Place place) {
 
     PostArc postArc = getK().addPostArc(name, transition, place);
 
@@ -1279,7 +1287,7 @@ public class Rule {
   }
 
   public PostArc
-  addPostArcToR(String name, Transition transition, Place place) {
+    addPostArcToR(String name, Transition transition, Place place) {
 
     PostArc rightPostArc = getR().addPostArc(name, transition, place);
 
