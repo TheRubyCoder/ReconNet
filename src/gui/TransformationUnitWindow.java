@@ -172,6 +172,7 @@ public final class TransformationUnitWindow {
     controlExpressionPanel.add(checkControlExpression, c);
 
     this.executeButton = new JButton("Transformationseinheit ausführen");
+    executeButton.setEnabled(false);
     this.executeButton.addActionListener(new ActionListener() {
 
       @Override
@@ -218,10 +219,7 @@ public final class TransformationUnitWindow {
     CommonTokenStream tokenStream = new CommonTokenStream(lexer);
 
     ExpressionGrammarParser parser = new ExpressionGrammarParser(tokenStream);
-
     parser.setErrorHandler(new BailErrorStrategy());
-
-    RuleExecutionVisitor visitor = new RuleExecutionVisitor();
 
     parseTreePanel.removeAll();
 
@@ -231,12 +229,14 @@ public final class TransformationUnitWindow {
         new TreeViewer(java.util.Arrays.asList(parser.getRuleNames()),
           parseTree);
       parseTreePanel.add(treeViewer);
+      executeButton.setEnabled(true);
 
       // check if all rules of Sequence are valid rule names
       // ...
 
     } catch (RuntimeException e) {
       parseTree = null;
+      executeButton.setEnabled(false);
       JOptionPane.showMessageDialog(
         this.transformationUnitWindow,
         "Der Kontrollausdruck konnte nicht geparsed werden. Bitte überprüfen Sie die Syntax");
@@ -246,10 +246,6 @@ public final class TransformationUnitWindow {
   }
 
   private void executeTransformationUnit() {
-
-    if (parseTree == null) {
-      return;
-    }
 
     RuleExecutionVisitor visitor = new RuleExecutionVisitor();
 
@@ -272,7 +268,7 @@ public final class TransformationUnitWindow {
   }
 
   private class RuleExecutionVisitor
-  extends ExpressionGrammarBaseVisitor<Void> {
+    extends ExpressionGrammarBaseVisitor<Void> {
 
     private Random dice = new Random();
 
@@ -375,7 +371,7 @@ public final class TransformationUnitWindow {
   }
 
   private class MyVisitor
-  extends ExpressionGrammarBaseVisitor<Void> {
+    extends ExpressionGrammarBaseVisitor<Void> {
 
     private List<String> ruleExecutionSequence = new ArrayList<String>();
     private Random dice = new Random();
