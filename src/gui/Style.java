@@ -303,6 +303,8 @@ public final class Style {
     Style.class.getResource("/gui/icons/rule_24.png"));
   public static final ImageIcon NAC_24 = new ImageIcon(
     Style.class.getResource("/gui/icons/nac_24.png"));
+  public static final ImageIcon TRANSFORMATION_UNIT_24 = new ImageIcon(
+    Style.class.getResource("/gui/icons/transformationunit_24.png"));
 
   public static final int NEW_BUTTON_X = 0;
   public static final int NEW_BUTTON_Y = 0;
@@ -360,10 +362,18 @@ public final class Style {
     "MENU_ROOT_RULE_LOADRULE_CMD";
 
   // transformation unit root menu
+  public static final String MENU_ROOT_TRANSFORMATION_UNIT_SAVEALL_LBL =
+    "Alle speichern";
   public static final String MENU_ROOT_TRANSFORMATION_UNIT_NEW_LBL =
     "Neue Transformationseinheit";
+  public static final String MENU_ROOT_TRANSFORMATION_UNIT_LOAD_LBL =
+    "Transformationseinheit Laden";
+  public static final String MENU_ROOT_TRANSFORMATION_UNIT_SAVEALL_CMD =
+    "MENU_ROOT_TRANSFORMATION_UNIT_SAVEALL_CMD";
   public static final String MENU_ROOT_TRANSFORMATION_UNIT_NEW_CMD =
     "MENU_ROOT_TRANSFORMATION_UNIT_NEW_LBL";
+  public static final String MENU_ROOT_TRANSFORMATION_UNIT_LOAD_CMD =
+    "MENU_ROOT_TRANSFORMATION_UNIT_LOAD_CMD";
 
   // net menu
   public static final String MENU_NET_SAVE_LBL = "Speichern";

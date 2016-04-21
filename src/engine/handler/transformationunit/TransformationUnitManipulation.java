@@ -48,38 +48,54 @@
  * POSSIBILITY OF SUCH DAMAGE. * bedeutet / means: HOCHSCHULE FÜR ANGEWANDTE
  * WISSENSCHAFTEN HAMBURG / HAMBURG UNIVERSITY OF APPLIED SCIENCES
  */
+package engine.handler.transformationunit;
 
-package gui.fileTree;
+import engine.ihandler.ITransformationUnitManipulation;
 
-import javax.swing.tree.DefaultMutableTreeNode;
+public class TransformationUnitManipulation
+implements ITransformationUnitManipulation {
 
-public class PetriTreeNode
-  extends DefaultMutableTreeNode {
+  private static TransformationUnitManipulation transformationUnitManipulation;
 
-  private static final long serialVersionUID = 1L;
+  private TransformationUnitHandler transformationUnitHandler;
 
-  private String displayText;
-  private int netId;
+  public static TransformationUnitManipulation getInstance() {
 
-  public PetriTreeNode(String displayText, int netId) {
+    if (transformationUnitManipulation == null) {
+      transformationUnitManipulation = new TransformationUnitManipulation();
+    }
 
-    this.displayText = displayText;
-    this.netId = netId;
+    return transformationUnitManipulation;
+  }
+
+  public TransformationUnitManipulation() {
+
+    this.transformationUnitHandler = TransformationUnitHandler.getInstance();
   }
 
   @Override
-  public String toString() {
+  public int createTransformationUnit(String fileName, String filePath) {
 
-    return this.displayText;
+    return this.transformationUnitHandler.createTransformationUnit(fileName,
+      filePath);
   }
 
-  public void setDisplayText(String displayText) {
+  @Override
+  public String getFileName(int id) {
 
-    this.displayText = displayText;
+    return this.transformationUnitHandler.getFileName(id);
   }
 
-  public int getNetId() {
+  @Override
+  public void setControlExpression(int id, String controlExpression) {
 
-    return netId;
+    this.transformationUnitHandler.setControlExpression(id, controlExpression);
   }
+
+  @Override
+  public String getControlExpression(int id) {
+
+    return this.transformationUnitHandler.getControlExpression(id);
+  }
+
 }

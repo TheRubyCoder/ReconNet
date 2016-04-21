@@ -56,10 +56,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -72,15 +71,14 @@ import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import transformation.units.utils.ExpressionGrammarBaseVisitor;
+import engine.handler.transformationunit.TransformationUnitManipulation;
 import transformation.units.utils.ExpressionGrammarLexer;
 import transformation.units.utils.ExpressionGrammarParser;
-import transformation.units.utils.ExpressionGrammarParser.ChoiceExpressionContext;
-import transformation.units.utils.ExpressionGrammarParser.CombinedExpressionContext;
-import transformation.units.utils.ExpressionGrammarParser.LoopExpressionContext;
-import transformation.units.utils.ExpressionGrammarParser.RuleNameExpressionContext;
+import transformation.units.utils.RuleExecutionVisitor;
+import transformation.units.utils.UnknownRuleInExpressionListener.UnknownRuleInExpressionException;
 
 public final class TransformationUnitWindow {
 
@@ -101,10 +99,128 @@ public final class TransformationUnitWindow {
 
   List<String> ruleExecutionSequence;
 
+  private final int transformationUnitId;
+
+  public TransformationUnitWindow(int transformationUnitId) {
+
+    this.transformationUnitId = transformationUnitId;
+
+    String transformationUnitName =
+      TransformationUnitManipulation.getInstance().getFileName(
+        transformationUnitId);
+
+    String transformationUnitControlExpression =
+      TransformationUnitManipulation.getInstance().getControlExpression(
+        transformationUnitId);
+
+    this.transformationUnitWindow = new JFrame(transformationUnitName);
+    this.transformationUnitWindow.setMinimumSize(new Dimension(640, 480));
+    this.transformationUnitWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+    GridBagConstraints c;
+
+    rootPanel = new JPanel();
+    rootPanel.setLayout(new GridBagLayout());
+    rootPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
+
+    controlExpressionPanel = new JPanel();
+    controlExpressionPanel.setBorder(BorderFactory.createTitledBorder(
+      BorderFactory.createEtchedBorder(), "Kontrollausdruck"));
+    controlExpressionPanel.setLayout(new GridBagLayout());
+
+    parseTreePanel = new JPanel();
+    parseTreePanel.setBorder(BorderFactory.createTitledBorder(
+      BorderFactory.createEtchedBorder(), "Parsebaum"));
+    parseTreePanel.setLayout(new GridBagLayout());
+
+    actionPanel = new JPanel();
+    actionPanel.setBorder(BorderFactory.createTitledBorder(
+      BorderFactory.createEtchedBorder(), "Aktionen"));
+    actionPanel.setLayout(new GridBagLayout());
+
+    c = new GridBagConstraints();
+    c.fill = GridBagConstraints.HORIZONTAL;
+    c.weightx = 1;
+    c.weighty = 0;
+    c.gridx = 0;
+    rootPanel.add(controlExpressionPanel, c);
+
+    c = new GridBagConstraints();
+    c.fill = GridBagConstraints.BOTH;
+    c.weightx = 1;
+    c.weighty = 1;
+    c.gridx = 0;
+    rootPanel.add(parseTreePanel, c);
+
+    c = new GridBagConstraints();
+    c.fill = GridBagConstraints.HORIZONTAL;
+    c.weightx = 1;
+    c.weighty = 0;
+    c.gridx = 0;
+    rootPanel.add(actionPanel, c);
+
+    this.controlExpression =
+      new JTextField(transformationUnitControlExpression);
+    c = new GridBagConstraints();
+    c.weightx = 0.8;
+    c.gridx = 0;
+    c.fill = GridBagConstraints.BOTH;
+    controlExpressionPanel.add(controlExpression, c);
+
+    JButton checkControlExpression = new JButton("Ausdruck überprüfen");
+    checkControlExpression.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+
+        String input = controlExpression.getText();
+        checkControlExpression(input);
+      }
+    });
+    c = new GridBagConstraints();
+    c.weightx = 0.2;
+    c.gridx = 1;
+    c.fill = GridBagConstraints.BOTH;
+    controlExpressionPanel.add(checkControlExpression, c);
+
+    this.executeButton = new JButton("Transformationseinheit ausführen");
+    executeButton.setEnabled(false);
+    this.executeButton.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+
+        executeTransformationUnit();
+      }
+    });
+    c = new GridBagConstraints();
+    c.weightx = 1;
+    c.fill = GridBagConstraints.HORIZONTAL;
+    actionPanel.add(executeButton, c);
+
+    JButton safeTransformationUnitButton = new JButton("Speichern");
+    safeTransformationUnitButton.addActionListener(new ActionListener() {
+
+      @Override
+      public void actionPerformed(ActionEvent e) {
+
+        TransformationUnitManipulation.getInstance().setControlExpression(
+          TransformationUnitWindow.this.transformationUnitId,
+          controlExpression.getText());
+      }
+    });
+    actionPanel.add(safeTransformationUnitButton);
+
+    this.transformationUnitWindow.add(rootPanel);
+  }
+
+  @Deprecated
   private TransformationUnitWindow() {
 
+    transformationUnitId = 0;
+
     this.transformationUnitWindow = new JFrame("Transformationseinheit");
-    this.transformationUnitWindow.setSize(new Dimension(640, 480));
+    this.transformationUnitWindow.setMinimumSize(new Dimension(640, 480));
 
     GridBagConstraints c;
 
@@ -186,13 +302,6 @@ public final class TransformationUnitWindow {
     c.fill = GridBagConstraints.HORIZONTAL;
     actionPanel.add(executeButton, c);
 
-    JButton calculateSequenceButton =
-      new JButton("Transformationsfolge berechnen");
-    c = new GridBagConstraints();
-    c.weightx = 1;
-    c.fill = GridBagConstraints.HORIZONTAL;
-    actionPanel.add(calculateSequenceButton, c);
-
     this.transformationUnitWindow.add(rootPanel);
   }
 
@@ -219,29 +328,56 @@ public final class TransformationUnitWindow {
     CommonTokenStream tokenStream = new CommonTokenStream(lexer);
 
     ExpressionGrammarParser parser = new ExpressionGrammarParser(tokenStream);
+
+    // BailErrorStrategy immediately stops the parse operation
+    // in case of syntax error
+    // throws ParseCancellationException
     parser.setErrorHandler(new BailErrorStrategy());
 
     parseTreePanel.removeAll();
 
+    Set<String> ruleNames = new HashSet<String>();
+    ruleNames.add("a");
+    ruleNames.add("b");
+    ruleNames.add("c");
+    ruleNames.add("d");
+    // parser.addParseListener(new
+    // UnknownRuleInExpressionListener(ruleNames));
+
     try {
-      parseTree = parser.start();
+      parseTree = parser.prog();
       treeViewer =
         new TreeViewer(java.util.Arrays.asList(parser.getRuleNames()),
           parseTree);
       parseTreePanel.add(treeViewer);
       executeButton.setEnabled(true);
 
-      // check if all rules of Sequence are valid rule names
-      // ...
+    } catch (ParseCancellationException pex) {
 
-    } catch (RuntimeException e) {
-      parseTree = null;
-      executeButton.setEnabled(false);
       JOptionPane.showMessageDialog(
         this.transformationUnitWindow,
-        "Der Kontrollausdruck konnte nicht geparsed werden. Bitte überprüfen Sie die Syntax");
+        "Der Kontrollausdruck konnte nicht geparsed werden. Bitte überprüfen Sie die Syntax.");
+    } catch (RuntimeException e) {
+
+      parseTree = null;
+      executeButton.setEnabled(false);
+
+      if (e.getCause() instanceof UnknownRuleInExpressionException) {
+
+        String unknownRule =
+          ((UnknownRuleInExpressionException) e.getCause()).getRuleName();
+
+        JOptionPane.showMessageDialog(this.transformationUnitWindow,
+          "Der Kontrollausdruck enthält eine unbekannte Regel '"
+            + unknownRule + "'.");
+      } else {
+        JOptionPane.showMessageDialog(this.transformationUnitWindow,
+          "Unbekannter Fehler. Bitte überprüfen Sie Ihre Eingabe");
+      }
     }
 
+    parseTreePanel.validate();
+    parseTreePanel.repaint();
     transformationUnitWindow.pack();
   }
 
@@ -259,190 +395,10 @@ public final class TransformationUnitWindow {
 
   }
 
-  public void showWindow() {
+  public void show() {
 
     if (!transformationUnitWindow.isVisible()) {
       transformationUnitWindow.setVisible(true);
-    }
-
-  }
-
-  private class RuleExecutionVisitor
-    extends ExpressionGrammarBaseVisitor<Void> {
-
-    private Random dice = new Random();
-
-    private ArrayList<String> rulesExecuted = new ArrayList<String>();
-
-    public void printRulesExecuted() {
-
-      System.out.println("rulesExecuted: " + rulesExecuted);
-    }
-
-    @Override
-    public Void visitRuleNameExpression(RuleNameExpressionContext ctx) {
-
-      String ruleName = ctx.ID().getText();
-
-      // rule mismatch percentage ~ 10%
-      boolean ruleDoesMatch = dice.nextInt(100) > 10;
-
-      if (ruleDoesMatch) {
-        System.out.println("match found for rule '" + ruleName
-          + "' .. transform");
-        rulesExecuted.add(ruleName);
-      } else {
-        System.out.println("no match found for rule '" + ruleName
-          + "' .. throw exception");
-        throw new RuntimeException("no match for rule '" + ruleName + "'");
-      }
-
-      return null;
-    }
-
-    @Override
-    public Void visitLoopExpression(LoopExpressionContext ctx) {
-
-      // '*' character is available -> visit children n times
-      if (ctx.getChildCount() == 2) {
-
-        // execute subtree asLongAsPossible
-        for (int i = 0; i < 100; i++) {
-
-          ArrayList<String> snapshot = new ArrayList<String>(rulesExecuted);
-
-          try {
-            // try to execute sub tree
-            visit(ctx.getChild(0));
-          } catch (RuntimeException e) {
-            // some rule in the subtree failed
-            // recover snapshot
-            rulesExecuted = snapshot;
-            break;
-          }
-        }
-
-      } else {
-        visit(ctx.getChild(0));
-      }
-
-      return null;
-    }
-
-    @Override
-    public Void visitCombinedExpression(CombinedExpressionContext ctx) {
-
-      for (ParseTree child : ctx.children) {
-
-        if (child instanceof ChoiceExpressionContext) {
-          visit(child);
-        }
-
-      }
-
-      return null;
-    }
-
-    @Override
-    public Void visitChoiceExpression(ChoiceExpressionContext ctx) {
-
-      Iterator<ParseTree> iterator = ctx.children.iterator();
-
-      // if childcount is > 1 then there must be a choice -> a ('|' b)
-      if (ctx.getChildCount() > 1) {
-
-        while (iterator.hasNext()) {
-          ParseTree child = iterator.next();
-          if (!(child instanceof LoopExpressionContext)) {
-            iterator.remove();
-          }
-        }
-
-        int index = dice.nextInt(ctx.children.size());
-        visit(ctx.getChild(index));
-
-      } else {
-        visit(ctx.getChild(0));
-      }
-
-      return null;
-    }
-
-  }
-
-  private class MyVisitor
-    extends ExpressionGrammarBaseVisitor<Void> {
-
-    private List<String> ruleExecutionSequence = new ArrayList<String>();
-    private Random dice = new Random();
-
-    public List<String> getRuleExecutionSequence() {
-
-      return ruleExecutionSequence;
-    }
-
-    @Override
-    public Void visitRuleNameExpression(RuleNameExpressionContext ctx) {
-
-      ruleExecutionSequence.add(ctx.ID().getText());
-      return null;
-    }
-
-    @Override
-    public Void visitLoopExpression(LoopExpressionContext ctx) {
-
-      // '*' character is available -> visit children n times
-      if (ctx.getChildCount() == 2) {
-
-        int n = dice.nextInt(5);
-
-        for (int i = 0; i < n; i++) {
-          visit(ctx.getChild(0));
-        }
-      } else {
-        visit(ctx.getChild(0));
-      }
-
-      return null;
-    }
-
-    @Override
-    public Void visitCombinedExpression(CombinedExpressionContext ctx) {
-
-      for (ParseTree child : ctx.children) {
-
-        if (child instanceof ChoiceExpressionContext) {
-          visit(child);
-        }
-
-      }
-
-      return null;
-    }
-
-    @Override
-    public Void visitChoiceExpression(ChoiceExpressionContext ctx) {
-
-      Iterator<ParseTree> iterator = ctx.children.iterator();
-
-      // if childcount is > 1 then there must be a choice -> a ('|' b)
-      if (ctx.getChildCount() > 1) {
-
-        while (iterator.hasNext()) {
-          ParseTree child = iterator.next();
-          if (!(child instanceof LoopExpressionContext)) {
-            iterator.remove();
-          }
-        }
-
-        int index = dice.nextInt(ctx.children.size());
-        visit(ctx.getChild(index));
-
-      } else {
-        visit(ctx.getChild(0));
-      }
-
-      return null;
     }
 
   }

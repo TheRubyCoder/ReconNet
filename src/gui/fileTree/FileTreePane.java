@@ -69,7 +69,7 @@ import javax.swing.tree.DefaultTreeModel;
  * A panel to display the file tree. Extends {@link JPanel}
  */
 public final class FileTreePane
-  extends JPanel {
+extends JPanel {
 
   /**
    * Root node (not visible).
@@ -318,6 +318,24 @@ public final class FileTreePane
     }
 
     return list;
+  }
+
+  public Integer getRuleIdByRuleName(String ruleName) {
+
+    DefaultMutableTreeNode ruleRootNode = this.getRuleRootNode();
+    int ruleCount = ruleRootNode.getChildCount();
+
+    for (int i = 0; i < ruleCount; i++) {
+
+      RuleTreeNode ruleNode = (RuleTreeNode) ruleRootNode.getChildAt(i);
+
+      if (ruleNode.toString().equals(ruleName)) {
+        return ruleNode.getRuleId();
+      }
+
+    }
+
+    return null;
   }
 
   /**

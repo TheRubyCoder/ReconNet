@@ -19,19 +19,18 @@ public class ExpressionGrammarParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, ID=6;
+		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, IDENTIFIER=6;
 	public static final int
-		RULE_start = 0, RULE_combinedExpression = 1, RULE_choiceExpression = 2, 
-		RULE_loopExpression = 3, RULE_atomExpression = 4;
+		RULE_prog = 0, RULE_expression = 1;
 	public static final String[] ruleNames = {
-		"start", "combinedExpression", "choiceExpression", "loopExpression", "atomExpression"
+		"prog", "expression"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, "';'", "'|'", "'*'", "'('", "')'"
+		null, "'('", "')'", "'*'", "'|'", "';'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
-		null, null, null, null, null, null, "ID"
+		null, null, null, null, null, null, "IDENTIFIER"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -82,39 +81,39 @@ public class ExpressionGrammarParser extends Parser {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
-	public static class StartContext extends ParserRuleContext {
-		public CombinedExpressionContext combinedExpression() {
-			return getRuleContext(CombinedExpressionContext.class,0);
+	public static class ProgContext extends ParserRuleContext {
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
 		}
 		public TerminalNode EOF() { return getToken(ExpressionGrammarParser.EOF, 0); }
-		public StartContext(ParserRuleContext parent, int invokingState) {
+		public ProgContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_start; }
+		@Override public int getRuleIndex() { return RULE_prog; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExpressionGrammarListener ) ((ExpressionGrammarListener)listener).enterStart(this);
+			if ( listener instanceof ExpressionGrammarListener ) ((ExpressionGrammarListener)listener).enterProg(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExpressionGrammarListener ) ((ExpressionGrammarListener)listener).exitStart(this);
+			if ( listener instanceof ExpressionGrammarListener ) ((ExpressionGrammarListener)listener).exitProg(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof ExpressionGrammarVisitor ) return ((ExpressionGrammarVisitor<? extends T>)visitor).visitStart(this);
+			if ( visitor instanceof ExpressionGrammarVisitor ) return ((ExpressionGrammarVisitor<? extends T>)visitor).visitProg(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final StartContext start() throws RecognitionException {
-		StartContext _localctx = new StartContext(_ctx, getState());
-		enterRule(_localctx, 0, RULE_start);
+	public final ProgContext prog() throws RecognitionException {
+		ProgContext _localctx = new ProgContext(_ctx, getState());
+		enterRule(_localctx, 0, RULE_prog);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(10);
-			combinedExpression();
-			setState(11);
+			setState(4);
+			expression(0);
+			setState(5);
 			match(EOF);
 			}
 		}
@@ -129,17 +128,46 @@ public class ExpressionGrammarParser extends Parser {
 		return _localctx;
 	}
 
-	public static class CombinedExpressionContext extends ParserRuleContext {
-		public List<ChoiceExpressionContext> choiceExpression() {
-			return getRuleContexts(ChoiceExpressionContext.class);
-		}
-		public ChoiceExpressionContext choiceExpression(int i) {
-			return getRuleContext(ChoiceExpressionContext.class,i);
-		}
-		public CombinedExpressionContext(ParserRuleContext parent, int invokingState) {
+	public static class ExpressionContext extends ParserRuleContext {
+		public ExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_combinedExpression; }
+		@Override public int getRuleIndex() { return RULE_expression; }
+	 
+		public ExpressionContext() { }
+		public void copyFrom(ExpressionContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class ParenthesesExpressionContext extends ExpressionContext {
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public ParenthesesExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ExpressionGrammarListener ) ((ExpressionGrammarListener)listener).enterParenthesesExpression(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ExpressionGrammarListener ) ((ExpressionGrammarListener)listener).exitParenthesesExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExpressionGrammarVisitor ) return ((ExpressionGrammarVisitor<? extends T>)visitor).visitParenthesesExpression(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class CombinedExpressionContext extends ExpressionContext {
+		public ExpressionContext left;
+		public ExpressionContext right;
+		public List<ExpressionContext> expression() {
+			return getRuleContexts(ExpressionContext.class);
+		}
+		public ExpressionContext expression(int i) {
+			return getRuleContext(ExpressionContext.class,i);
+		}
+		public CombinedExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof ExpressionGrammarListener ) ((ExpressionGrammarListener)listener).enterCombinedExpression(this);
@@ -154,56 +182,33 @@ public class ExpressionGrammarParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
-
-	public final CombinedExpressionContext combinedExpression() throws RecognitionException {
-		CombinedExpressionContext _localctx = new CombinedExpressionContext(_ctx, getState());
-		enterRule(_localctx, 2, RULE_combinedExpression);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(13);
-			choiceExpression();
-			setState(18);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			while (_la==T__0) {
-				{
-				{
-				setState(14);
-				match(T__0);
-				setState(15);
-				choiceExpression();
-				}
-				}
-				setState(20);
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-			}
-			}
+	public static class AtomExpressionContext extends ExpressionContext {
+		public TerminalNode IDENTIFIER() { return getToken(ExpressionGrammarParser.IDENTIFIER, 0); }
+		public AtomExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ExpressionGrammarListener ) ((ExpressionGrammarListener)listener).enterAtomExpression(this);
 		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ExpressionGrammarListener ) ((ExpressionGrammarListener)listener).exitAtomExpression(this);
 		}
-		finally {
-			exitRule();
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExpressionGrammarVisitor ) return ((ExpressionGrammarVisitor<? extends T>)visitor).visitAtomExpression(this);
+			else return visitor.visitChildren(this);
 		}
-		return _localctx;
 	}
-
-	public static class ChoiceExpressionContext extends ParserRuleContext {
-		public List<LoopExpressionContext> loopExpression() {
-			return getRuleContexts(LoopExpressionContext.class);
+	public static class ChoiceExpressionContext extends ExpressionContext {
+		public ExpressionContext left;
+		public ExpressionContext right;
+		public List<ExpressionContext> expression() {
+			return getRuleContexts(ExpressionContext.class);
 		}
-		public LoopExpressionContext loopExpression(int i) {
-			return getRuleContext(LoopExpressionContext.class,i);
+		public ExpressionContext expression(int i) {
+			return getRuleContext(ExpressionContext.class,i);
 		}
-		public ChoiceExpressionContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_choiceExpression; }
+		public ChoiceExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof ExpressionGrammarListener ) ((ExpressionGrammarListener)listener).enterChoiceExpression(this);
@@ -218,53 +223,12 @@ public class ExpressionGrammarParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
-
-	public final ChoiceExpressionContext choiceExpression() throws RecognitionException {
-		ChoiceExpressionContext _localctx = new ChoiceExpressionContext(_ctx, getState());
-		enterRule(_localctx, 4, RULE_choiceExpression);
-		int _la;
-		try {
-			enterOuterAlt(_localctx, 1);
-			{
-			setState(21);
-			loopExpression();
-			setState(26);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			while (_la==T__1) {
-				{
-				{
-				setState(22);
-				match(T__1);
-				setState(23);
-				loopExpression();
-				}
-				}
-				setState(28);
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-			}
-			}
+	public static class LoopExpressionContext extends ExpressionContext {
+		public ExpressionContext left;
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
 		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class LoopExpressionContext extends ParserRuleContext {
-		public AtomExpressionContext atomExpression() {
-			return getRuleContext(AtomExpressionContext.class,0);
-		}
-		public LoopExpressionContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_loopExpression; }
+		public LoopExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
 			if ( listener instanceof ExpressionGrammarListener ) ((ExpressionGrammarListener)listener).enterLoopExpression(this);
@@ -280,114 +244,106 @@ public class ExpressionGrammarParser extends Parser {
 		}
 	}
 
-	public final LoopExpressionContext loopExpression() throws RecognitionException {
-		LoopExpressionContext _localctx = new LoopExpressionContext(_ctx, getState());
-		enterRule(_localctx, 6, RULE_loopExpression);
-		int _la;
+	public final ExpressionContext expression() throws RecognitionException {
+		return expression(0);
+	}
+
+	private ExpressionContext expression(int _p) throws RecognitionException {
+		ParserRuleContext _parentctx = _ctx;
+		int _parentState = getState();
+		ExpressionContext _localctx = new ExpressionContext(_ctx, _parentState);
+		ExpressionContext _prevctx = _localctx;
+		int _startState = 2;
+		enterRecursionRule(_localctx, 2, RULE_expression, _p);
 		try {
+			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(29);
-			atomExpression();
-			setState(31);
-			_la = _input.LA(1);
-			if (_la==T__2) {
-				{
-				setState(30);
-				match(T__2);
-				}
-			}
-
-			}
-		}
-		catch (RecognitionException re) {
-			_localctx.exception = re;
-			_errHandler.reportError(this, re);
-			_errHandler.recover(this, re);
-		}
-		finally {
-			exitRule();
-		}
-		return _localctx;
-	}
-
-	public static class AtomExpressionContext extends ParserRuleContext {
-		public AtomExpressionContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_atomExpression; }
-	 
-		public AtomExpressionContext() { }
-		public void copyFrom(AtomExpressionContext ctx) {
-			super.copyFrom(ctx);
-		}
-	}
-	public static class RuleNameExpressionContext extends AtomExpressionContext {
-		public TerminalNode ID() { return getToken(ExpressionGrammarParser.ID, 0); }
-		public RuleNameExpressionContext(AtomExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExpressionGrammarListener ) ((ExpressionGrammarListener)listener).enterRuleNameExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExpressionGrammarListener ) ((ExpressionGrammarListener)listener).exitRuleNameExpression(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof ExpressionGrammarVisitor ) return ((ExpressionGrammarVisitor<? extends T>)visitor).visitRuleNameExpression(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class BracketExpressionContext extends AtomExpressionContext {
-		public CombinedExpressionContext combinedExpression() {
-			return getRuleContext(CombinedExpressionContext.class,0);
-		}
-		public BracketExpressionContext(AtomExpressionContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExpressionGrammarListener ) ((ExpressionGrammarListener)listener).enterBracketExpression(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExpressionGrammarListener ) ((ExpressionGrammarListener)listener).exitBracketExpression(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof ExpressionGrammarVisitor ) return ((ExpressionGrammarVisitor<? extends T>)visitor).visitBracketExpression(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-
-	public final AtomExpressionContext atomExpression() throws RecognitionException {
-		AtomExpressionContext _localctx = new AtomExpressionContext(_ctx, getState());
-		enterRule(_localctx, 8, RULE_atomExpression);
-		try {
-			setState(38);
+			setState(13);
 			switch (_input.LA(1)) {
-			case ID:
-				_localctx = new RuleNameExpressionContext(_localctx);
-				enterOuterAlt(_localctx, 1);
+			case T__0:
 				{
-				setState(33);
-				match(ID);
+				_localctx = new ParenthesesExpressionContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
+
+				setState(8);
+				match(T__0);
+				setState(9);
+				expression(0);
+				setState(10);
+				match(T__1);
 				}
 				break;
-			case T__3:
-				_localctx = new BracketExpressionContext(_localctx);
-				enterOuterAlt(_localctx, 2);
+			case IDENTIFIER:
 				{
-				setState(34);
-				match(T__3);
-				setState(35);
-				combinedExpression();
-				setState(36);
-				match(T__4);
+				_localctx = new AtomExpressionContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
+				setState(12);
+				match(IDENTIFIER);
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
 			}
+			_ctx.stop = _input.LT(-1);
+			setState(25);
+			_errHandler.sync(this);
+			_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
+			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+				if ( _alt==1 ) {
+					if ( _parseListeners!=null ) triggerExitRuleEvent();
+					_prevctx = _localctx;
+					{
+					setState(23);
+					_errHandler.sync(this);
+					switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
+					case 1:
+						{
+						_localctx = new ChoiceExpressionContext(new ExpressionContext(_parentctx, _parentState));
+						((ChoiceExpressionContext)_localctx).left = _prevctx;
+						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						setState(15);
+						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
+						setState(16);
+						match(T__3);
+						setState(17);
+						((ChoiceExpressionContext)_localctx).right = expression(4);
+						}
+						break;
+					case 2:
+						{
+						_localctx = new CombinedExpressionContext(new ExpressionContext(_parentctx, _parentState));
+						((CombinedExpressionContext)_localctx).left = _prevctx;
+						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						setState(18);
+						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
+						setState(19);
+						match(T__4);
+						setState(20);
+						((CombinedExpressionContext)_localctx).right = expression(3);
+						}
+						break;
+					case 3:
+						{
+						_localctx = new LoopExpressionContext(new ExpressionContext(_parentctx, _parentState));
+						((LoopExpressionContext)_localctx).left = _prevctx;
+						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						setState(21);
+						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
+						setState(22);
+						match(T__2);
+						}
+						break;
+					}
+					} 
+				}
+				setState(27);
+				_errHandler.sync(this);
+				_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
+			}
+			}
 		}
 		catch (RecognitionException re) {
 			_localctx.exception = re;
@@ -395,23 +351,40 @@ public class ExpressionGrammarParser extends Parser {
 			_errHandler.recover(this, re);
 		}
 		finally {
-			exitRule();
+			unrollRecursionContexts(_parentctx);
 		}
 		return _localctx;
 	}
 
+	public boolean sempred(RuleContext _localctx, int ruleIndex, int predIndex) {
+		switch (ruleIndex) {
+		case 1:
+			return expression_sempred((ExpressionContext)_localctx, predIndex);
+		}
+		return true;
+	}
+	private boolean expression_sempred(ExpressionContext _localctx, int predIndex) {
+		switch (predIndex) {
+		case 0:
+			return precpred(_ctx, 3);
+		case 1:
+			return precpred(_ctx, 2);
+		case 2:
+			return precpred(_ctx, 4);
+		}
+		return true;
+	}
+
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\b+\4\2\t\2\4\3\t"+
-		"\3\4\4\t\4\4\5\t\5\4\6\t\6\3\2\3\2\3\2\3\3\3\3\3\3\7\3\23\n\3\f\3\16\3"+
-		"\26\13\3\3\4\3\4\3\4\7\4\33\n\4\f\4\16\4\36\13\4\3\5\3\5\5\5\"\n\5\3\6"+
-		"\3\6\3\6\3\6\3\6\5\6)\n\6\3\6\2\2\7\2\4\6\b\n\2\2)\2\f\3\2\2\2\4\17\3"+
-		"\2\2\2\6\27\3\2\2\2\b\37\3\2\2\2\n(\3\2\2\2\f\r\5\4\3\2\r\16\7\2\2\3\16"+
-		"\3\3\2\2\2\17\24\5\6\4\2\20\21\7\3\2\2\21\23\5\6\4\2\22\20\3\2\2\2\23"+
-		"\26\3\2\2\2\24\22\3\2\2\2\24\25\3\2\2\2\25\5\3\2\2\2\26\24\3\2\2\2\27"+
-		"\34\5\b\5\2\30\31\7\4\2\2\31\33\5\b\5\2\32\30\3\2\2\2\33\36\3\2\2\2\34"+
-		"\32\3\2\2\2\34\35\3\2\2\2\35\7\3\2\2\2\36\34\3\2\2\2\37!\5\n\6\2 \"\7"+
-		"\5\2\2! \3\2\2\2!\"\3\2\2\2\"\t\3\2\2\2#)\7\b\2\2$%\7\6\2\2%&\5\4\3\2"+
-		"&\'\7\7\2\2\')\3\2\2\2(#\3\2\2\2($\3\2\2\2)\13\3\2\2\2\6\24\34!(";
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\b\37\4\2\t\2\4\3"+
+		"\t\3\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\5\3\20\n\3\3\3\3\3\3\3\3\3\3"+
+		"\3\3\3\3\3\3\3\7\3\32\n\3\f\3\16\3\35\13\3\3\3\2\3\4\4\2\4\2\2 \2\6\3"+
+		"\2\2\2\4\17\3\2\2\2\6\7\5\4\3\2\7\b\7\2\2\3\b\3\3\2\2\2\t\n\b\3\1\2\n"+
+		"\13\7\3\2\2\13\f\5\4\3\2\f\r\7\4\2\2\r\20\3\2\2\2\16\20\7\b\2\2\17\t\3"+
+		"\2\2\2\17\16\3\2\2\2\20\33\3\2\2\2\21\22\f\5\2\2\22\23\7\6\2\2\23\32\5"+
+		"\4\3\6\24\25\f\4\2\2\25\26\7\7\2\2\26\32\5\4\3\5\27\30\f\6\2\2\30\32\7"+
+		"\5\2\2\31\21\3\2\2\2\31\24\3\2\2\2\31\27\3\2\2\2\32\35\3\2\2\2\33\31\3"+
+		"\2\2\2\33\34\3\2\2\2\34\5\3\2\2\2\35\33\3\2\2\2\5\17\31\33";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

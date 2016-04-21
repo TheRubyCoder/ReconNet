@@ -48,38 +48,52 @@
  * POSSIBILITY OF SUCH DAMAGE. * bedeutet / means: HOCHSCHULE FÜR ANGEWANDTE
  * WISSENSCHAFTEN HAMBURG / HAMBURG UNIVERSITY OF APPLIED SCIENCES
  */
+package engine.handler.transformationunit;
 
-package gui.fileTree;
+import transformation.TransformationUnit;
+import engine.session.SessionManager;
 
-import javax.swing.tree.DefaultMutableTreeNode;
+public final class TransformationUnitHandler {
 
-public class PetriTreeNode
-  extends DefaultMutableTreeNode {
+  private static TransformationUnitHandler instance;
 
-  private static final long serialVersionUID = 1L;
+  private SessionManager sessionManager;
 
-  private String displayText;
-  private int netId;
+  public static TransformationUnitHandler getInstance() {
 
-  public PetriTreeNode(String displayText, int netId) {
+    if (instance == null) {
+      instance = new TransformationUnitHandler();
+    }
 
-    this.displayText = displayText;
-    this.netId = netId;
+    return instance;
   }
 
-  @Override
-  public String toString() {
+  private TransformationUnitHandler() {
 
-    return this.displayText;
+    this.sessionManager = SessionManager.getInstance();
   }
 
-  public void setDisplayText(String displayText) {
+  public int createTransformationUnit(String fileName, String filePath) {
 
-    this.displayText = displayText;
+    TransformationUnit transformationUnit = new TransformationUnit();
+
+    return this.sessionManager.createTransformationUnitData(
+      transformationUnit, fileName, filePath);
   }
 
-  public int getNetId() {
+  public String getFileName(int id) {
 
-    return netId;
+    return this.sessionManager.getTransformationUnitData(id).getFileName();
+  }
+
+  public void setControlExpression(int id, String controlExpression) {
+
+    this.sessionManager.getTransformationUnitData(id).getTransformationUnit().setControlExpression(
+      controlExpression);
+  }
+
+  public String getControlExpression(int id) {
+
+    return this.sessionManager.getTransformationUnitData(id).getTransformationUnit().getControlExpression();
   }
 }

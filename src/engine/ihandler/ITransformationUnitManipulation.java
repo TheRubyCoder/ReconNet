@@ -49,37 +49,42 @@
  * WISSENSCHAFTEN HAMBURG / HAMBURG UNIVERSITY OF APPLIED SCIENCES
  */
 
-package gui.fileTree;
+package engine.ihandler;
 
-import javax.swing.tree.DefaultMutableTreeNode;
+public interface ITransformationUnitManipulation {
 
-public class PetriTreeNode
-  extends DefaultMutableTreeNode {
+  /**
+   * Creates a TransformationUnit
+   *
+   * @return Session Id of the Transformation Unit
+   */
+  int createTransformationUnit(String fileName, String filePath);
 
-  private static final long serialVersionUID = 1L;
+  /**
+   * Gets the fileName of transformation unit for the given id
+   *
+   * @param id
+   *        Id of the transformation unit data
+   * @return FileName of the transformation unit
+   */
+  String getFileName(int id);
 
-  private String displayText;
-  private int netId;
+  /**
+   * Sets the control expression of a transformation unit for the given id
+   *
+   * @param id
+   *        Id of the transformation unit
+   * @param controlExpression
+   *        the control expression to set
+   */
+  void setControlExpression(int id, String controlExpression);
 
-  public PetriTreeNode(String displayText, int netId) {
-
-    this.displayText = displayText;
-    this.netId = netId;
-  }
-
-  @Override
-  public String toString() {
-
-    return this.displayText;
-  }
-
-  public void setDisplayText(String displayText) {
-
-    this.displayText = displayText;
-  }
-
-  public int getNetId() {
-
-    return netId;
-  }
+  /**
+   * Gets the control expression of a transformation unit for the given id
+   *
+   * @param id
+   *        Id of the transformation unit
+   * @return the control expression to get
+   */
+  String getControlExpression(int id);
 }

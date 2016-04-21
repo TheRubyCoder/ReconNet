@@ -51,6 +51,7 @@
 
 package gui.fileTree;
 
+import engine.handler.transformationunit.TransformationUnitManipulation;
 import exceptions.EngineException;
 import exceptions.ShowAsInfoException;
 import exceptions.ShowAsWarningException;
@@ -80,7 +81,7 @@ import javax.swing.tree.TreePath;
  * Custom popup menu listener extending {@link ActionListener}.
  */
 public final class PopupMenuListener
-implements ActionListener {
+  implements ActionListener {
 
   /**
    * singleton: the instance
@@ -293,8 +294,8 @@ implements ActionListener {
       JOptionPane.showOptionDialog(null,
         "Sollen die Dateien vom Dateisystem gelöscht werden?", "Löschen", 0,
         JOptionPane.QUESTION_MESSAGE, null, new String[]{"Dateien löschen",
-      "Nur aus Übersicht löschen"}, "Nur aus Übersicht löschen") == 0
-      ? true : false;
+          "Nur aus Übersicht löschen"}, "Nur aus Übersicht löschen") == 0
+        ? true : false;
     // CHECKSTYLE:ON
 
     DefaultMutableTreeNode node =
@@ -671,10 +672,32 @@ implements ActionListener {
 
   private void createTransformationUnit() {
 
-    TransformationUnitRootTreeNode transformationUnitRootNode =
-      (TransformationUnitRootTreeNode) FileTreePane.getInstance().getSelectedNode();
+    JFileChooser chooser = new JFileChooser();
+    FileNameExtensionFilter filter =
+      new FileNameExtensionFilter("ReConNet Transformation Unit File",
+        "rectu");
+    chooser.setFileFilter(filter);
 
-    this.createTransformationUnitTreeNode(transformationUnitRootNode);
+    int returnVal = chooser.showSaveDialog(null);
+
+    if (returnVal == JFileChooser.APPROVE_OPTION) {
+
+      String fileName = chooser.getSelectedFile().getName();
+      String filePath =
+        chooser.getSelectedFile().getAbsolutePath() + ".transformationunit";
+
+      int dataId =
+        TransformationUnitManipulation.getInstance().createTransformationUnit(
+          fileName, filePath);
+
+      TransformationUnitManipulation.getInstance().getFileName(dataId);
+
+      TransformationUnitRootTreeNode transformationUnitRootNode =
+        (TransformationUnitRootTreeNode) FileTreePane.getInstance().getSelectedNode();
+
+      this.createTransformationUnitTreeNode(transformationUnitRootNode,
+        dataId);
+    }
   }
 
   private UUID createNacInBackend(int ruleId)
@@ -730,10 +753,14 @@ implements ActionListener {
   }
 
   public void createTransformationUnitTreeNode(
-    TransformationUnitRootTreeNode parentNode) {
+    TransformationUnitRootTreeNode parentNode, int transformationUnitId) {
+
+    String displayName =
+      TransformationUnitManipulation.getInstance().getFileName(
+        transformationUnitId);
 
     TransformationUnitTreeNode n =
-      new TransformationUnitTreeNode("Einheit A");
+      new TransformationUnitTreeNode(transformationUnitId, displayName);
 
     FileTreePane flTrPn = FileTreePane.getInstance();
 

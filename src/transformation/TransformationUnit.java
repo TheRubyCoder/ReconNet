@@ -55,12 +55,40 @@ import java.util.UUID;
 
 public class TransformationUnit {
 
+  // unique ID of the transformation unit
   private final UUID id;
 
+  // display name of the transformation unit
+  private String name;
+
+  // control expression of the transformation unit
   private String controlExpression;
 
   public TransformationUnit() {
 
     this.id = UUID.randomUUID();
+    this.controlExpression = "";
   }
+
+  public UUID getId() {
+
+    return this.id;
+  }
+
+  public String getControlExpression() {
+
+    return this.controlExpression;
+  }
+
+  public void setControlExpression(String controlExpression) {
+
+    this.controlExpression = controlExpression;
+  }
+
+  @Override
+  public String toString() {
+
+    return this.name;
+  }
+
 }

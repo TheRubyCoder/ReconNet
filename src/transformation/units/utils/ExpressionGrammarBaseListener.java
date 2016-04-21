@@ -18,13 +18,25 @@ public class ExpressionGrammarBaseListener implements ExpressionGrammarListener 
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterStart(ExpressionGrammarParser.StartContext ctx) { }
+	@Override public void enterProg(ExpressionGrammarParser.ProgContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitStart(ExpressionGrammarParser.StartContext ctx) { }
+	@Override public void exitProg(ExpressionGrammarParser.ProgContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterParenthesesExpression(ExpressionGrammarParser.ParenthesesExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitParenthesesExpression(ExpressionGrammarParser.ParenthesesExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -37,6 +49,18 @@ public class ExpressionGrammarBaseListener implements ExpressionGrammarListener 
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitCombinedExpression(ExpressionGrammarParser.CombinedExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAtomExpression(ExpressionGrammarParser.AtomExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAtomExpression(ExpressionGrammarParser.AtomExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -61,30 +85,6 @@ public class ExpressionGrammarBaseListener implements ExpressionGrammarListener 
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitLoopExpression(ExpressionGrammarParser.LoopExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterRuleNameExpression(ExpressionGrammarParser.RuleNameExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitRuleNameExpression(ExpressionGrammarParser.RuleNameExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterBracketExpression(ExpressionGrammarParser.BracketExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitBracketExpression(ExpressionGrammarParser.BracketExpressionContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

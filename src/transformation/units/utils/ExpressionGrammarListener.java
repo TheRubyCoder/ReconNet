@@ -10,67 +10,73 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface ExpressionGrammarListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by {@link ExpressionGrammarParser#start}.
+	 * Enter a parse tree produced by {@link ExpressionGrammarParser#prog}.
 	 * @param ctx the parse tree
 	 */
-	void enterStart(ExpressionGrammarParser.StartContext ctx);
+	void enterProg(ExpressionGrammarParser.ProgContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link ExpressionGrammarParser#start}.
+	 * Exit a parse tree produced by {@link ExpressionGrammarParser#prog}.
 	 * @param ctx the parse tree
 	 */
-	void exitStart(ExpressionGrammarParser.StartContext ctx);
+	void exitProg(ExpressionGrammarParser.ProgContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ExpressionGrammarParser#combinedExpression}.
+	 * Enter a parse tree produced by the {@code parenthesesExpression}
+	 * labeled alternative in {@link ExpressionGrammarParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterParenthesesExpression(ExpressionGrammarParser.ParenthesesExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code parenthesesExpression}
+	 * labeled alternative in {@link ExpressionGrammarParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitParenthesesExpression(ExpressionGrammarParser.ParenthesesExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code combinedExpression}
+	 * labeled alternative in {@link ExpressionGrammarParser#expression}.
 	 * @param ctx the parse tree
 	 */
 	void enterCombinedExpression(ExpressionGrammarParser.CombinedExpressionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link ExpressionGrammarParser#combinedExpression}.
+	 * Exit a parse tree produced by the {@code combinedExpression}
+	 * labeled alternative in {@link ExpressionGrammarParser#expression}.
 	 * @param ctx the parse tree
 	 */
 	void exitCombinedExpression(ExpressionGrammarParser.CombinedExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ExpressionGrammarParser#choiceExpression}.
+	 * Enter a parse tree produced by the {@code atomExpression}
+	 * labeled alternative in {@link ExpressionGrammarParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterAtomExpression(ExpressionGrammarParser.AtomExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code atomExpression}
+	 * labeled alternative in {@link ExpressionGrammarParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitAtomExpression(ExpressionGrammarParser.AtomExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code choiceExpression}
+	 * labeled alternative in {@link ExpressionGrammarParser#expression}.
 	 * @param ctx the parse tree
 	 */
 	void enterChoiceExpression(ExpressionGrammarParser.ChoiceExpressionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link ExpressionGrammarParser#choiceExpression}.
+	 * Exit a parse tree produced by the {@code choiceExpression}
+	 * labeled alternative in {@link ExpressionGrammarParser#expression}.
 	 * @param ctx the parse tree
 	 */
 	void exitChoiceExpression(ExpressionGrammarParser.ChoiceExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ExpressionGrammarParser#loopExpression}.
+	 * Enter a parse tree produced by the {@code loopExpression}
+	 * labeled alternative in {@link ExpressionGrammarParser#expression}.
 	 * @param ctx the parse tree
 	 */
 	void enterLoopExpression(ExpressionGrammarParser.LoopExpressionContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link ExpressionGrammarParser#loopExpression}.
+	 * Exit a parse tree produced by the {@code loopExpression}
+	 * labeled alternative in {@link ExpressionGrammarParser#expression}.
 	 * @param ctx the parse tree
 	 */
 	void exitLoopExpression(ExpressionGrammarParser.LoopExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code ruleNameExpression}
-	 * labeled alternative in {@link ExpressionGrammarParser#atomExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterRuleNameExpression(ExpressionGrammarParser.RuleNameExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code ruleNameExpression}
-	 * labeled alternative in {@link ExpressionGrammarParser#atomExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitRuleNameExpression(ExpressionGrammarParser.RuleNameExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code bracketExpression}
-	 * labeled alternative in {@link ExpressionGrammarParser#atomExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterBracketExpression(ExpressionGrammarParser.BracketExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code bracketExpression}
-	 * labeled alternative in {@link ExpressionGrammarParser#atomExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitBracketExpression(ExpressionGrammarParser.BracketExpressionContext ctx);
 }

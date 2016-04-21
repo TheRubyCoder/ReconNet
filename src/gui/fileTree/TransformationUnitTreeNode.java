@@ -54,14 +54,20 @@ package gui.fileTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 public class TransformationUnitTreeNode
-  extends DefaultMutableTreeNode {
+extends DefaultMutableTreeNode {
 
   private static final long serialVersionUID = 1L;
 
+  // ID of the underlying transformation unit in the session
+  private int transformationUnitId;
+
+  // text to display in the gui
   private String displayText;
 
-  public TransformationUnitTreeNode(String displayText) {
+  public TransformationUnitTreeNode(int transformationUnitId,
+    String displayText) {
 
+    this.transformationUnitId = transformationUnitId;
     this.displayText = displayText;
   }
 
@@ -69,5 +75,10 @@ public class TransformationUnitTreeNode
   public String toString() {
 
     return this.displayText;
+  }
+
+  public int getTransformationUnitId() {
+
+    return this.transformationUnitId;
   }
 }

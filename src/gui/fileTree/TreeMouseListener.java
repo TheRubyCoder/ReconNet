@@ -72,7 +72,7 @@ import javax.swing.tree.TreePath;
  * {@link MouseListener}.
  */
 public class TreeMouseListener
-  implements MouseListener {
+implements MouseListener {
 
   /**
    * reference to the {@link JTree} object.
@@ -296,9 +296,25 @@ public class TreeMouseListener
     JMenuItem i;
 
     i =
-      new JMenuItem(Style.MENU_ROOT_TRANSFORMATION_UNIT_NEW_LBL,
+      new JMenuItem(Style.MENU_ROOT_TRANSFORMATION_UNIT_SAVEALL_LBL,
         Style.SAVE_24);
+    i.setActionCommand(Style.MENU_ROOT_TRANSFORMATION_UNIT_SAVEALL_CMD);
+    i.addActionListener(this.menuListener);
+    popup.add(i);
+
+    popup.addSeparator();
+
+    i =
+      new JMenuItem(Style.MENU_ROOT_TRANSFORMATION_UNIT_NEW_LBL,
+        Style.TRANSFORMATION_UNIT_24);
     i.setActionCommand(Style.MENU_ROOT_TRANSFORMATION_UNIT_NEW_CMD);
+    i.addActionListener(this.menuListener);
+    popup.add(i);
+
+    i =
+      new JMenuItem(Style.MENU_ROOT_TRANSFORMATION_UNIT_LOAD_LBL,
+        Style.OPEN_24);
+    i.setActionCommand(Style.MENU_ROOT_TRANSFORMATION_UNIT_LOAD_CMD);
     i.addActionListener(this.menuListener);
     popup.add(i);
 
@@ -341,7 +357,11 @@ public class TreeMouseListener
   private void handleTransformationUnitSelection(
     TransformationUnitTreeNode selectedNode) {
 
-    TransformationUnitWindow.getInstance().showWindow();
+    int transformationUnitId = selectedNode.getTransformationUnitId();
+    TransformationUnitWindow window =
+      new TransformationUnitWindow(transformationUnitId);
+    window.show();
+    // TransformationUnitWindow.getInstance().showWindow();
   }
 
   private void handleNetSelection(PetriTreeNode netNode) {
