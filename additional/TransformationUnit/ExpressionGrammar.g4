@@ -1,43 +1,21 @@
-grammar ExpressionGrammar;
+grammar ExpressionGrammar;		
 
 @header {
     package transformation.units.utils;
 }
 
-@lexer::members {
-
-	@Override
-	public void recover(LexerNoViableAltException e) {
-		throw new RuntimeException(e);
-	}
-
-}
-
-start	
-	:	combinedExpression EOF
+prog
+	: expression EOF
 	;
 
-combinedExpression
-	:	choiceExpression (';' choiceExpression)*
-	;
-
-choiceExpression
-	:	loopExpression ('|' loopExpression)*
-	;
-
-loopExpression
-	:	atomExpression '*'?
-	;
-
-atomExpression
-	:	ID												# ruleNameExpression
-	|	'(' combinedExpression ')'						# bracketExpression
-	;
-
-
-	
-ID
-	: ('a'..'z'|'A'..'Z') ('a'..'z'|'A'..'Z'|'0'..'9')*
+expression
+	: '(' expression ')'						# parenthesesExpression
+	| left=expression '*'						# loopExpression
+	| left=expression '|' right=expression		# choiceExpression
+	| left=expression ';' right=expression		# combinedExpression
+	| IDENTIFIER								# atomExpression
 	;
 	
-
+IDENTIFIER 
+	: [a-zA-Z_] [a-zA-Z_0-9]*
+	;
