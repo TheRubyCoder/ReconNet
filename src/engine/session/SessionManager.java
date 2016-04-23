@@ -169,6 +169,15 @@ public final class SessionManager {
     return data;
   }
 
+  public void replacePetrinetData(int petrinetId, Petrinet petrinet,
+    JungData petrinetJungData) {
+
+    PetrinetData data =
+      new PetrinetData(petrinetId, petrinet, petrinetJungData);
+
+    petrinetData.put(petrinetId, data);
+  }
+
   public int createTransformationUnitData(
     TransformationUnit transformationUnit, String fileName, String filePath) {
 

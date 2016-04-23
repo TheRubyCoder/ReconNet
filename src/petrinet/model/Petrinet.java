@@ -113,6 +113,23 @@ public final class Petrinet {
   }
 
   /**
+   * Copy constructor. Returns a copy of the given petrinet and initialized
+   * HashMaps for places, transitions, preArcs and postArcs with the same
+   * elements. The elements themselves are not copied. Just the references
+   *
+   * @param petrinetToClone
+   */
+  public Petrinet(Petrinet petrinetToClone) {
+
+    id = petrinetToClone.id;
+    places = new HashMap<Integer, Place>(petrinetToClone.places);
+    transitions =
+      new HashMap<Integer, Transition>(petrinetToClone.transitions);
+    preArcs = new HashMap<Integer, PreArc>(petrinetToClone.preArcs);
+    postArcs = new HashMap<Integer, PostArc>(petrinetToClone.postArcs);
+  }
+
+  /**
    * Adds a new {@link PostArc} to the petrinet
    *
    * @param name

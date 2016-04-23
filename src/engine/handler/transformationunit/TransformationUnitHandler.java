@@ -50,8 +50,19 @@
  */
 package engine.handler.transformationunit;
 
+import java.util.Map;
+
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
+
 import transformation.TransformationUnit;
+import transformation.units.utils.ExpressionGrammarLexer;
+import transformation.units.utils.ExpressionGrammarParser;
+import transformation.units.utils.TransformationUnitExecutionVisitor;
+import engine.data.TransformationUnitData;
 import engine.session.SessionManager;
+import exceptions.EngineException;
 
 public final class TransformationUnitHandler {
 
@@ -95,5 +106,38 @@ public final class TransformationUnitHandler {
   public String getControlExpression(int id) {
 
     return this.sessionManager.getTransformationUnitData(id).getTransformationUnit().getControlExpression();
+  }
+
+  public void executeTransformationUnit(int transformationUnitId,
+    int petrinetId, Map<String, Integer> ruleNameToId)
+    throws EngineException {
+
+    System.out.println(".. executeTransformationUnit");
+
+    TransformationUnitData transformationUnitData =
+      this.sessionManager.getTransformationUnitData(transformationUnitId);
+
+    String expression =
+      transformationUnitData.getTransformationUnit().getControlExpression();
+
+    ANTLRInputStream inputStream = new ANTLRInputStream(expression);
+    ExpressionGrammarLexer lexer = new ExpressionGrammarLexer(inputStream);
+    CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+
+    ExpressionGrammarParser parser = new ExpressionGrammarParser(tokenStream);
+
+    ParseTree parseTree = parser.prog();
+
+    TransformationUnitExecutionVisitor visitor =
+      new TransformationUnitExecutionVisitor(petrinetId, ruleNameToId);
+
+    try {
+      visitor.visit(parseTree);
+      System.out.println(visitor);
+    } catch (RuntimeException e) {
+      throw new EngineException(
+        "Die Transformationseinheit konnte nicht angewendet werden.");
+    }
+
   }
 }

@@ -165,7 +165,7 @@ public final class PetrinetPane {
   /**
    * Returns {@link PetrinetViewer#getNodeSize() current node size} of current
    * {@link PetrinetViewer}
-   * 
+   *
    * @return
    */
   public double getCurrentNodeSize() {

@@ -51,6 +51,10 @@
 
 package engine.ihandler;
 
+import java.util.Map;
+
+import exceptions.EngineException;
+
 public interface ITransformationUnitManipulation {
 
   /**
@@ -87,4 +91,27 @@ public interface ITransformationUnitManipulation {
    * @return the control expression to get
    */
   String getControlExpression(int id);
+
+  /**
+   * Executes the transformation unit
+   *
+   * @param transformationUnitId
+   *        Id of the transformation unit to execute
+   * @param petrinetId
+   *        Id of the petrinet on which it should be executed
+   */
+
+  /**
+   * Executes the transformation unit
+   *
+   * @param transformationUnitId
+   *        Id of the transformation unit to execute
+   * @param petrinetId
+   *        Id of the petrinet on which it should be executed
+   * @param ruleNameToId
+   *        A map which maps ruleNames to their Ids
+   */
+  void executeTransformationUnit(int transformationUnitId, int petrinetId,
+    Map<String, Integer> ruleNameToId)
+    throws EngineException;
 }

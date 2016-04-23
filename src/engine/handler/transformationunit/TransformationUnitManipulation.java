@@ -50,10 +50,13 @@
  */
 package engine.handler.transformationunit;
 
+import java.util.Map;
+
 import engine.ihandler.ITransformationUnitManipulation;
+import exceptions.EngineException;
 
 public class TransformationUnitManipulation
-implements ITransformationUnitManipulation {
+  implements ITransformationUnitManipulation {
 
   private static TransformationUnitManipulation transformationUnitManipulation;
 
@@ -96,6 +99,15 @@ implements ITransformationUnitManipulation {
   public String getControlExpression(int id) {
 
     return this.transformationUnitHandler.getControlExpression(id);
+  }
+
+  @Override
+  public void executeTransformationUnit(int transformationUnitId,
+    int petrinetId, Map<String, Integer> ruleNameToId)
+    throws EngineException {
+
+    this.transformationUnitHandler.executeTransformationUnit(
+      transformationUnitId, petrinetId, ruleNameToId);
   }
 
 }

@@ -55,8 +55,17 @@ import transformation.TransformationUnit;
 
 public class TransformationUnitData {
 
+  /**
+   * Additional data which is session-bound
+   */
   private String fileName;
   private String filePath;
+
+  /**
+   * defines how often an expression is maximally executed when the
+   * asLongAsPossible operator is used
+   */
+  private int asLongAsPossibleExecutionLimit;
 
   private TransformationUnit transformationUnit;
 
@@ -71,6 +80,11 @@ public class TransformationUnitData {
   public String getFileName() {
 
     return this.fileName;
+  }
+
+  public String getFilePath() {
+
+    return this.filePath;
   }
 
   public TransformationUnit getTransformationUnit() {

@@ -67,9 +67,13 @@ import petrinet.model.IArc;
 import petrinet.model.INode;
 import petrinet.model.Petrinet;
 import petrinet.model.Place;
+import petrinet.model.PostArc;
+import petrinet.model.PreArc;
 import petrinet.model.Transition;
 import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
+import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.graph.DirectedGraph;
+import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import engine.Positioning;
 import engine.attribute.NodeLayoutAttribute;
 import exceptions.Exceptions;
@@ -130,6 +134,34 @@ public final class JungData {
     this.graph = graph;
     this.layout = layout;
     this.placeColors = new HashMap<Place, Color>();
+  }
+
+  public JungData(JungData jungDataToClone, Petrinet petrinet) {
+
+    this.graph = new DirectedSparseGraph<INode, IArc>();
+    this.layout = new FRLayout<INode, IArc>(this.graph);
+    ((FRLayout<INode, IArc>) this.layout).setAttractionMultiplier(0.5);
+    ((FRLayout<INode, IArc>) this.layout).setRepulsionMultiplier(0.9);
+
+    this.placeColors = new HashMap<Place, Color>(jungDataToClone.placeColors);
+
+    for (Place place : petrinet.getPlaces()) {
+      createPlace(place, new Point2D.Double(
+        jungDataToClone.layout.getX(place),
+        jungDataToClone.layout.getY(place)));
+    }
+
+    for (Transition transition : petrinet.getTransitions()) {
+      this.graph.addVertex(transition);
+    }
+
+    for (PreArc preArc : petrinet.getPreArcs()) {
+      createArc(preArc, preArc.getSource(), preArc.getTarget());
+    }
+
+    for (PostArc postArc : petrinet.getPostArcs()) {
+      createArc(postArc, postArc.getSource(), postArc.getTarget());
+    }
   }
 
   public double getNodeSize() {
@@ -772,7 +804,7 @@ public final class JungData {
    *        dont't check to these nodes
    */
   private void
-  checkPoint2DLocation(Point2D point, Collection<INode> excludes) {
+    checkPoint2DLocation(Point2D point, Collection<INode> excludes) {
 
     for (INode node : graph.getVertices()) {
       if (!excludes.contains(node)) {

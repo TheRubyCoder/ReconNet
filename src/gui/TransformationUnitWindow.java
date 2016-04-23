@@ -56,8 +56,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
@@ -75,9 +75,12 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import engine.handler.transformationunit.TransformationUnitManipulation;
+import exceptions.EngineException;
+import exceptions.ShowAsInfoException;
+import gui.fileTree.FileTreePane;
 import transformation.units.utils.ExpressionGrammarLexer;
 import transformation.units.utils.ExpressionGrammarParser;
-import transformation.units.utils.RuleExecutionVisitor;
+import transformation.units.utils.UnknownRuleInExpressionListener;
 import transformation.units.utils.UnknownRuleInExpressionListener.UnknownRuleInExpressionException;
 
 public final class TransformationUnitWindow {
@@ -198,125 +201,7 @@ public final class TransformationUnitWindow {
     c.fill = GridBagConstraints.HORIZONTAL;
     actionPanel.add(executeButton, c);
 
-    JButton safeTransformationUnitButton = new JButton("Speichern");
-    safeTransformationUnitButton.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-
-        TransformationUnitManipulation.getInstance().setControlExpression(
-          TransformationUnitWindow.this.transformationUnitId,
-          controlExpression.getText());
-      }
-    });
-    actionPanel.add(safeTransformationUnitButton);
-
     this.transformationUnitWindow.add(rootPanel);
-  }
-
-  @Deprecated
-  private TransformationUnitWindow() {
-
-    transformationUnitId = 0;
-
-    this.transformationUnitWindow = new JFrame("Transformationseinheit");
-    this.transformationUnitWindow.setMinimumSize(new Dimension(640, 480));
-
-    GridBagConstraints c;
-
-    rootPanel = new JPanel();
-    rootPanel.setLayout(new GridBagLayout());
-    rootPanel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
-
-    controlExpressionPanel = new JPanel();
-    controlExpressionPanel.setBorder(BorderFactory.createTitledBorder(
-      BorderFactory.createEtchedBorder(), "Kontrollausdruck"));
-    controlExpressionPanel.setLayout(new GridBagLayout());
-
-    parseTreePanel = new JPanel();
-    parseTreePanel.setBorder(BorderFactory.createTitledBorder(
-      BorderFactory.createEtchedBorder(), "Parsebaum"));
-    parseTreePanel.setLayout(new GridBagLayout());
-
-    actionPanel = new JPanel();
-    actionPanel.setBorder(BorderFactory.createTitledBorder(
-      BorderFactory.createEtchedBorder(), "Aktionen"));
-    actionPanel.setLayout(new GridBagLayout());
-
-    c = new GridBagConstraints();
-    c.fill = GridBagConstraints.HORIZONTAL;
-    c.weightx = 1;
-    c.weighty = 0;
-    c.gridx = 0;
-    rootPanel.add(controlExpressionPanel, c);
-
-    c = new GridBagConstraints();
-    c.fill = GridBagConstraints.BOTH;
-    c.weightx = 1;
-    c.weighty = 1;
-    c.gridx = 0;
-    rootPanel.add(parseTreePanel, c);
-
-    c = new GridBagConstraints();
-    c.fill = GridBagConstraints.HORIZONTAL;
-    c.weightx = 1;
-    c.weighty = 0;
-    c.gridx = 0;
-    rootPanel.add(actionPanel, c);
-
-    this.controlExpression = new JTextField();
-    c = new GridBagConstraints();
-    c.weightx = 0.8;
-    c.gridx = 0;
-    c.fill = GridBagConstraints.BOTH;
-    controlExpressionPanel.add(controlExpression, c);
-
-    JButton checkControlExpression = new JButton("Ausdruck überprüfen");
-    checkControlExpression.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-
-        String input = controlExpression.getText();
-        checkControlExpression(input);
-      }
-    });
-    c = new GridBagConstraints();
-    c.weightx = 0.2;
-    c.gridx = 1;
-    c.fill = GridBagConstraints.BOTH;
-    controlExpressionPanel.add(checkControlExpression, c);
-
-    this.executeButton = new JButton("Transformationseinheit ausführen");
-    executeButton.setEnabled(false);
-    this.executeButton.addActionListener(new ActionListener() {
-
-      @Override
-      public void actionPerformed(ActionEvent e) {
-
-        executeTransformationUnit();
-      }
-    });
-    c = new GridBagConstraints();
-    c.weightx = 1;
-    c.fill = GridBagConstraints.HORIZONTAL;
-    actionPanel.add(executeButton, c);
-
-    this.transformationUnitWindow.add(rootPanel);
-  }
-
-  /**
-   * Returns the transformation unit window instance.
-   *
-   * @return The transformation unit window instance.
-   */
-  public static TransformationUnitWindow getInstance() {
-
-    if (instance == null) {
-      instance = new TransformationUnitWindow();
-    }
-
-    return instance;
   }
 
   private void checkControlExpression(String expression) {
@@ -336,13 +221,9 @@ public final class TransformationUnitWindow {
 
     parseTreePanel.removeAll();
 
-    Set<String> ruleNames = new HashSet<String>();
-    ruleNames.add("a");
-    ruleNames.add("b");
-    ruleNames.add("c");
-    ruleNames.add("d");
-    // parser.addParseListener(new
-    // UnknownRuleInExpressionListener(ruleNames));
+    Set<String> ruleNames =
+      FileTreePane.getInstance().getRuleNamesToIdsMapping().keySet();
+    parser.addParseListener(new UnknownRuleInExpressionListener(ruleNames));
 
     try {
       parseTree = parser.prog();
@@ -350,6 +231,8 @@ public final class TransformationUnitWindow {
         new TreeViewer(java.util.Arrays.asList(parser.getRuleNames()),
           parseTree);
       parseTreePanel.add(treeViewer);
+
+      saveTranformationUnit();
       executeButton.setEnabled(true);
 
     } catch (ParseCancellationException pex) {
@@ -383,16 +266,25 @@ public final class TransformationUnitWindow {
 
   private void executeTransformationUnit() {
 
-    RuleExecutionVisitor visitor = new RuleExecutionVisitor();
+    int petrinetId = PetrinetPane.getInstance().getCurrentPetrinetId();
+
+    Map<String, Integer> ruleNameToId =
+      FileTreePane.getInstance().getRuleNamesToIdsMapping();
 
     try {
-      visitor.visit(parseTree);
-      visitor.printRulesExecuted();
-    } catch (Exception e) {
-      JOptionPane.showMessageDialog(this.transformationUnitWindow,
-        "Die Transformationseinheit konnte nicht angewendet werden.");
+      TransformationUnitManipulation.getInstance().executeTransformationUnit(
+        transformationUnitId, petrinetId, ruleNameToId);
+    } catch (EngineException e) {
+      throw new ShowAsInfoException(e.getMessage());
     }
 
+    PetrinetPane.getInstance().displayPetrinet(petrinetId, "");
+  }
+
+  private void saveTranformationUnit() {
+
+    TransformationUnitManipulation.getInstance().setControlExpression(
+      this.transformationUnitId, this.controlExpression.getText());
   }
 
   public void show() {

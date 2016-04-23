@@ -58,9 +58,6 @@ public class TransformationUnit {
   // unique ID of the transformation unit
   private final UUID id;
 
-  // display name of the transformation unit
-  private String name;
-
   // control expression of the transformation unit
   private String controlExpression;
 
@@ -84,11 +81,4 @@ public class TransformationUnit {
 
     this.controlExpression = controlExpression;
   }
-
-  @Override
-  public String toString() {
-
-    return this.name;
-  }
-
 }

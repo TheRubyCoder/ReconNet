@@ -77,13 +77,14 @@ import transformation.TransformationComponent;
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import engine.data.JungData;
 import engine.data.PetrinetData;
+import engine.data.RuleData;
 import engine.ihandler.ISimulation;
 import engine.session.SessionManager;
 import exceptions.EngineException;
 import exceptions.ShowAsInfoException;
 
 public final class SimulationHandler
-  implements ISimulation {
+implements ISimulation {
 
   /** Session manager holding session data */
   private final SessionManager sessionManager;
@@ -266,10 +267,38 @@ public final class SimulationHandler
     }
   }
 
+  @Override
+  public void transform(int petrinetId, int ruleId)
+    throws EngineException {
+
+    PetrinetData petrinetData = sessionManager.getPetrinetData(petrinetId);
+    RuleData ruleData = sessionManager.getRuleData(ruleId);
+
+    Petrinet petrinet = petrinetData.getPetrinet();
+    JungData petrinetJungData = petrinetData.getJungData();
+    Rule rule = ruleData.getRule();
+
+    Transformation transformation =
+      transformationComponent.transform(petrinet, rule);
+
+    if (transformation != null) {
+      // Remove deleted elements from display
+      petrinetJungData.deleteDataOfMissingElements(petrinet);
+      // Add new elements to display
+      fillJungDataWithNewElements(petrinetJungData,
+        transformation.getAddedPlaces(),
+        transformation.getAddedTransitions(),
+        transformation.getAddedPreArcs(), transformation.getAddedPostArcs());
+    } else {
+      throw new EngineException("Transformation was not possible.");
+    }
+
+  }
+
   /**
    * After a rule has been applied on a petrinet, the added nodes are not part
    * of the display (<code>jungData</code>). They must be added.
-   * 
+   *
    * @param jungData
    * @param addedNodes
    * @param addedArcs
@@ -303,7 +332,7 @@ public final class SimulationHandler
   /**
    * Finds a rule out of <code>shuffledRules</code> that can be applied on
    * <code>petrinet</code>
-   * 
+   *
    * @param shuffledRules
    * @param petrinet
    * @return Transformation that was used for altering the petrinet

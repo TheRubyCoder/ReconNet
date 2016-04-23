@@ -57,7 +57,7 @@ import exceptions.EngineException;
 
 /**
  * This is a Interface for the GUI-Component for all Simulations.
- * 
+ *
  * @author alex (aas772)
  */
 
@@ -73,7 +73,7 @@ public interface ISimulation {
 
   /**
    * Fires a Petrinet with n times.
-   * 
+   *
    * @param id
    *        of the petrinet
    * @param n
@@ -85,7 +85,7 @@ public interface ISimulation {
   // @formatter:off
   /**
    * Saves a Petrinet.
-   * 
+   *
    * @param id
    *        of the petrinet
    * @param path
@@ -104,7 +104,7 @@ public interface ISimulation {
 
   /**
    * Applies Rules to a Petrinet
-   * 
+   *
    * @param id
    *        of the petrinet
    * @param ruleIDs
@@ -116,9 +116,21 @@ public interface ISimulation {
     throws EngineException;
 
   /**
+   * Applies a single rule to a Petrinet
+   *
+   * @param petrinetId
+   *        Id of the petrinet
+   * @param ruleId
+   *        Id of the rule
+   * @throws EngineException
+   */
+  void transform(int petrinetId, int ruleId)
+    throws EngineException;
+
+  /**
    * Fires or Applies Rules to a Petrinet. Non Deterministic choice which is
    * done.
-   * 
+   *
    * @param id
    *        of the petrinet
    * @param ruleIDs
