@@ -56,6 +56,7 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import persistence.Persistence;
 import transformation.TransformationUnit;
 import transformation.units.utils.ExpressionGrammarLexer;
 import transformation.units.utils.ExpressionGrammarParser;
@@ -119,6 +120,10 @@ public final class TransformationUnitHandler {
 
     String expression =
       transformationUnitData.getTransformationUnit().getControlExpression();
+    int asLongAsPossibleExecutionLimit =
+      transformationUnitData.getAsLongAsPossibleExecutionLimit();
+    int kleeneStarMin = transformationUnitData.getKleeneStarMin();
+    int kleeneStarMax = transformationUnitData.getKleeneStarMax();
 
     ANTLRInputStream inputStream = new ANTLRInputStream(expression);
     ExpressionGrammarLexer lexer = new ExpressionGrammarLexer(inputStream);
@@ -129,15 +134,65 @@ public final class TransformationUnitHandler {
     ParseTree parseTree = parser.prog();
 
     TransformationUnitExecutionVisitor visitor =
-      new TransformationUnitExecutionVisitor(petrinetId, ruleNameToId);
+      new TransformationUnitExecutionVisitor(petrinetId, ruleNameToId,
+        asLongAsPossibleExecutionLimit, kleeneStarMin, kleeneStarMax);
 
     try {
       visitor.visit(parseTree);
       System.out.println(visitor);
     } catch (RuntimeException e) {
+      e.printStackTrace();
       throw new EngineException(
         "Die Transformationseinheit konnte nicht angewendet werden.");
     }
 
+  }
+
+  public void setAsLongAsPossibleExecutionLimit(int transformationUnitId,
+    int executionLimit) {
+
+    this.sessionManager.getTransformationUnitData(transformationUnitId).setAsLongAsPossibleExecutionLimit(
+      executionLimit);
+  }
+
+  public void setKleeneStarMin(int transformationUnitId, int kleeneStarMin) {
+
+    this.sessionManager.getTransformationUnitData(transformationUnitId).setKleeneStarMin(
+      kleeneStarMin);
+  }
+
+  public void setKleeneStarMax(int transformationUnitId, int kleeneStarMax) {
+
+    this.sessionManager.getTransformationUnitData(transformationUnitId).setKleeneStarMax(
+      kleeneStarMax);
+  }
+
+  public void saveToFileSystem(int transformationUnitId)
+    throws EngineException {
+
+    TransformationUnitData data =
+      this.sessionManager.getTransformationUnitData(transformationUnitId);
+
+    TransformationUnit transformationUnit = data.getTransformationUnit();
+
+    try {
+      Persistence.saveTransformationUnit(transformationUnit,
+        data.getFilePath());
+    } catch (Exception e) {
+      throw new EngineException(e.getMessage());
+    }
+  }
+
+  public int loadFromFileSystem(String displayName, String filePath)
+    throws EngineException {
+
+    try {
+      TransformationUnit transformationUnit =
+        Persistence.loadTransformationUnit(filePath);
+      return this.sessionManager.createTransformationUnitData(
+        transformationUnit, displayName, filePath);
+    } catch (Exception e) {
+      throw new EngineException(e.getMessage());
+    }
   }
 }

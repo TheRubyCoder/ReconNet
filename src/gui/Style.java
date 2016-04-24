@@ -171,14 +171,14 @@ public final class Style {
 
   public static final Point SIMULATION_PANE_SLIDER_LOCATION = new Point(
     INSET_LEFT + (BUTTON_WIDTH + SPACING_BUTTONS) * 2, 0 + INSET_TOP
-    + BUTTON_HEIGHT + SPACING_BUTTONS);
+      + BUTTON_HEIGHT + SPACING_BUTTONS);
 
   public static final Dimension SIMULATION_PANE_SLIDER_SIZE = new Dimension(
     BUTTON_WIDTH, BUTTON_HEIGHT * 2 + SPACING_BUTTONS);
 
   public static final Point SIMULATION_PANE_COMBOBOX_LOCATION = new Point(
     INSET_LEFT + BUTTON_WIDTH + SPACING_BUTTONS, 0 + INSET_TOP
-    + (BUTTON_HEIGHT + SPACING_BUTTONS) * 2);
+      + (BUTTON_HEIGHT + SPACING_BUTTONS) * 2);
 
   public static final Dimension SIMULATION_PANE_COMBOBOX_SIZE =
     new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT - 3);
@@ -402,6 +402,19 @@ public final class Style {
   // nac menu
   public static final String MENU_NAC_REMOVE_LBL = "NAC entfernen";
   public static final String MENU_NAC_REMOVE_CMD = "MENU_NAC_REMOVE_CMD";
+
+  // transformation unit menu
+  public static final String MENU_TRANSFORMATION_UNIT_SAVE_LBL = "Speichern";
+  public static final String MENU_TRANSFORMATION_UNIT_RELOAD_LBL =
+    "Erneut laden";
+  public static final String MENU_TRANSFORMATION_UNIT_REMOVE_LBL =
+    "Entfernen";
+  public static final String MENU_TRANSFORMATION_UNIT_SAVE_CMD =
+    "MENU_TRANSFORMATION_UNIT_SAVE_CMD";
+  public static final String MENU_TRANSFORMATION_UNIT_RELOAD_CMD =
+    "MENU_TRANSFORMATION_UNIT_RELOAD_CMD";
+  public static final String MENU_TRANSFORMATION_UNIT_REMOVE_CMD =
+    "MENU_TRANSFORMATION_UNIT_REMOVE_CMD";
 
   /* *************************************
    * rule pane ************************************

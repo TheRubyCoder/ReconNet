@@ -17,19 +17,26 @@ import engine.session.SessionManager;
 import exceptions.EngineException;
 
 public class TransformationUnitExecutionVisitor
-  extends ExpressionGrammarBaseVisitor<Void> {
+extends ExpressionGrammarBaseVisitor<Void> {
 
   private Random dice = new Random();
   private List<String> executedRules = new ArrayList<String>();
 
   private int petrinetId;
   private Map<String, Integer> ruleNameToId;
+  private int asLongAsPossibleExecutionLimit;
+  private int kleeneStarMin;
+  private int kleeneStarMax;
 
   public TransformationUnitExecutionVisitor(int petrinetId,
-    Map<String, Integer> ruleNameToId) {
+    Map<String, Integer> ruleNameToId, int asLongAsPossibleExecutionLimit,
+    int kleeneStarMin, int kleeneStarMax) {
 
     this.petrinetId = petrinetId;
     this.ruleNameToId = ruleNameToId;
+    this.asLongAsPossibleExecutionLimit = asLongAsPossibleExecutionLimit;
+    this.kleeneStarMin = kleeneStarMin;
+    this.kleeneStarMax = kleeneStarMax;
   }
 
   /**
@@ -88,7 +95,7 @@ public class TransformationUnitExecutionVisitor
   @Override
   public Void visitLoopExpression(LoopExpressionContext ctx) {
 
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < asLongAsPossibleExecutionLimit; i++) {
 
       // make snapshot of current petri net
       // .. snapshot = petrinet.clone
@@ -129,7 +136,10 @@ public class TransformationUnitExecutionVisitor
       executedRules.add(ruleName);
     } catch (EngineException e) {
       // no Match was found. Throw Exception up the parseTree
+      e.printStackTrace();
       throw new RuntimeException(e);
+    } catch (Exception ex) {
+      ex.printStackTrace();
     }
 
     return null;

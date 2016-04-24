@@ -67,6 +67,13 @@ public class TransformationUnitData {
    */
   private int asLongAsPossibleExecutionLimit;
 
+  /**
+   * defines the possible range of the kleene star operator. the expression is
+   * then executed n times between min and max while n is randomly chosen
+   */
+  private int kleeneStarMin;
+  private int kleeneStarMax;
+
   private TransformationUnit transformationUnit;
 
   public TransformationUnitData(TransformationUnit transformationUnit,
@@ -91,4 +98,36 @@ public class TransformationUnitData {
 
     return transformationUnit;
   }
+
+  public void setAsLongAsPossibleExecutionLimit(
+    int asLongAsPossibleExecutionLimit) {
+
+    this.asLongAsPossibleExecutionLimit = asLongAsPossibleExecutionLimit;
+  }
+
+  public void setKleeneStarMin(int kleeneStarMin) {
+
+    this.kleeneStarMin = kleeneStarMin;
+  }
+
+  public void setKleeneStarMax(int kleeneStarMax) {
+
+    this.kleeneStarMax = kleeneStarMax;
+  }
+
+  public int getAsLongAsPossibleExecutionLimit() {
+
+    return this.asLongAsPossibleExecutionLimit;
+  }
+
+  public int getKleeneStarMin() {
+
+    return this.kleeneStarMin;
+  }
+
+  public int getKleeneStarMax() {
+
+    return this.kleeneStarMax;
+  }
+
 }

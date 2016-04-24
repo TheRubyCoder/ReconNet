@@ -113,5 +113,59 @@ public interface ITransformationUnitManipulation {
    */
   void executeTransformationUnit(int transformationUnitId, int petrinetId,
     Map<String, Integer> ruleNameToId)
+      throws EngineException;
+
+  /**
+   * Sets the maximum number of executions a controlexpression is executed
+   * when the asLongAsPossible operator is used
+   *
+   * @param transformationUnitId
+   *        Id of the transformation
+   * @param executionLimit
+   *        maximum number of executions
+   */
+  void setAsLongAsPossibleExecutionLimit(int transformationUnitId,
+    int executionLimit);
+
+  /**
+   * Sets the minimum number of executions of a control expression when the
+   * kleene star operator is used
+   *
+   * @param transformationUnitId
+   *        Id of the transformation
+   * @param kleeneStarMin
+   *        minimum number of executions
+   */
+  void setKleeneStarMin(int transformationUnitId, int kleeneStarMin);
+
+  /**
+   * Sets the maximum number of executions of a control expression when the
+   * kleene star operator is used
+   *
+   * @param transformationUnitId
+   *        Id of the transformation
+   * @param kleeneStarMax
+   *        maximum number of executions
+   */
+  void setKleeneStarMax(int transformationUnitId, int kleeneStarMax);
+
+  /**
+   * Saves the transformation unit to the file system
+   *
+   * @param transformationUnitId
+   *        Id of the transformation
+   */
+  void saveToFileSystem(int transformationUnitId)
+    throws EngineException;
+
+  /**
+   * Loads a transformation unit from the file system
+   *
+   * @param displayName
+   *        displayName under which the loaded transformation unit is created
+   * @param filePath
+   *        path to the file where the transformation unit is stored
+   */
+  int loadFromFileSystem(String displayName, String filePath)
     throws EngineException;
 }

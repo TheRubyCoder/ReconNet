@@ -56,13 +56,13 @@ import engine.ihandler.ITransformationUnitManipulation;
 import exceptions.EngineException;
 
 public class TransformationUnitManipulation
-  implements ITransformationUnitManipulation {
+implements ITransformationUnitManipulation {
 
   private static TransformationUnitManipulation transformationUnitManipulation;
 
   private TransformationUnitHandler transformationUnitHandler;
 
-  public static TransformationUnitManipulation getInstance() {
+  public static ITransformationUnitManipulation getInstance() {
 
     if (transformationUnitManipulation == null) {
       transformationUnitManipulation = new TransformationUnitManipulation();
@@ -104,10 +104,47 @@ public class TransformationUnitManipulation
   @Override
   public void executeTransformationUnit(int transformationUnitId,
     int petrinetId, Map<String, Integer> ruleNameToId)
-    throws EngineException {
+      throws EngineException {
 
     this.transformationUnitHandler.executeTransformationUnit(
       transformationUnitId, petrinetId, ruleNameToId);
+  }
+
+  @Override
+  public void setAsLongAsPossibleExecutionLimit(int transformationUnitId,
+    int executionLimit) {
+
+    this.transformationUnitHandler.setAsLongAsPossibleExecutionLimit(
+      transformationUnitId, executionLimit);
+  }
+
+  @Override
+  public void setKleeneStarMin(int transformationUnitId, int kleeneStarMin) {
+
+    this.transformationUnitHandler.setKleeneStarMin(transformationUnitId,
+      kleeneStarMin);
+  }
+
+  @Override
+  public void setKleeneStarMax(int transformationUnitId, int kleeneStarMax) {
+
+    this.transformationUnitHandler.setKleeneStarMax(transformationUnitId,
+      kleeneStarMax);
+  }
+
+  @Override
+  public void saveToFileSystem(int transformationUnitId)
+    throws EngineException {
+
+    this.transformationUnitHandler.saveToFileSystem(transformationUnitId);
+  }
+
+  @Override
+  public int loadFromFileSystem(String displayName, String filePath)
+    throws EngineException {
+
+    return this.transformationUnitHandler.loadFromFileSystem(displayName,
+      filePath);
   }
 
 }

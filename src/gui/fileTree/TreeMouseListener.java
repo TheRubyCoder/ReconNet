@@ -120,6 +120,8 @@ implements MouseListener {
       this.showNacMenu(event, (NacTreeNode) selectedNode);
     } else if (selectedNode instanceof TransformationUnitRootTreeNode) {
       this.showTransformationUnitRootMenu(event, selectedNode);
+    } else if (selectedNode instanceof TransformationUnitTreeNode) {
+      this.showTransformationUnitMenu(event, selectedNode);
     }
 
   }
@@ -321,6 +323,34 @@ implements MouseListener {
     popup.show(tree, e.getX(), e.getY());
   }
 
+  private void showTransformationUnitMenu(MouseEvent e,
+    DefaultMutableTreeNode selectedNode) {
+
+    JPopupMenu popup = new JPopupMenu();
+    JMenuItem i;
+
+    i = new JMenuItem(Style.MENU_TRANSFORMATION_UNIT_SAVE_LBL, Style.SAVE_24);
+    i.setActionCommand(Style.MENU_TRANSFORMATION_UNIT_SAVE_CMD);
+    i.addActionListener(this.menuListener);
+    popup.add(i);
+
+    i =
+      new JMenuItem(Style.MENU_TRANSFORMATION_UNIT_RELOAD_LBL,
+        Style.REFRESH_24);
+    i.setActionCommand(Style.MENU_TRANSFORMATION_UNIT_RELOAD_CMD);
+    i.addActionListener(this.menuListener);
+    popup.add(i);
+
+    i =
+      new JMenuItem(Style.MENU_TRANSFORMATION_UNIT_REMOVE_LBL,
+        Style.DELETE_24);
+    i.setActionCommand(Style.MENU_TRANSFORMATION_UNIT_REMOVE_CMD);
+    i.addActionListener(this.menuListener);
+    popup.add(i);
+
+    popup.show(tree, e.getX(), e.getY());
+  }
+
   @Override
   public void mouseClicked(MouseEvent e) {
 
@@ -361,7 +391,6 @@ implements MouseListener {
     TransformationUnitWindow window =
       new TransformationUnitWindow(transformationUnitId);
     window.show();
-    // TransformationUnitWindow.getInstance().showWindow();
   }
 
   private void handleNetSelection(PetriTreeNode netNode) {

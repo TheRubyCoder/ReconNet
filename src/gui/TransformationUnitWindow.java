@@ -56,16 +56,21 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Map;
 import java.util.Set;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 
 import org.antlr.v4.gui.TreeViewer;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -85,6 +90,8 @@ import transformation.units.utils.UnknownRuleInExpressionListener.UnknownRuleInE
 
 public final class TransformationUnitWindow {
 
+  private final int transformationUnitId;
+
   private JFrame transformationUnitWindow;
 
   private JPanel rootPanel;
@@ -93,18 +100,16 @@ public final class TransformationUnitWindow {
   private JPanel actionPanel;
 
   private JTextField controlExpression;
-  private JButton executeButton;
 
-  private static TransformationUnitWindow instance;
+  private JSpinner asLongAsPossibleLimitSpinner;
+  private JSpinner kleeneStarMinSpinner;
+  private JSpinner kleeneStarMaxSpinner;
+  private JButton executeButton;
 
   private TreeViewer treeViewer;
   private ParseTree parseTree;
 
-  List<String> ruleExecutionSequence;
-
-  private final int transformationUnitId;
-
-  public TransformationUnitWindow(int transformationUnitId) {
+  public TransformationUnitWindow(final int transformationUnitId) {
 
     this.transformationUnitId = transformationUnitId;
 
@@ -138,7 +143,7 @@ public final class TransformationUnitWindow {
 
     actionPanel = new JPanel();
     actionPanel.setBorder(BorderFactory.createTitledBorder(
-      BorderFactory.createEtchedBorder(), "Aktionen"));
+      BorderFactory.createEtchedBorder(), "Parameter und Simulation"));
     actionPanel.setLayout(new GridBagLayout());
 
     c = new GridBagConstraints();
@@ -186,6 +191,63 @@ public final class TransformationUnitWindow {
     c.fill = GridBagConstraints.BOTH;
     controlExpressionPanel.add(checkControlExpression, c);
 
+    c = new GridBagConstraints();
+    c.weightx = 1;
+    c.gridy = 0;
+    c.fill = GridBagConstraints.HORIZONTAL;
+    actionPanel.add(Box.createVerticalStrut(16), c);
+
+    JLabel asLongAsPossibleLimitLabel = new JLabel("asLongAsPossible Limit");
+    c = new GridBagConstraints();
+    c.weightx = 1;
+    c.gridy = 1;
+    c.fill = GridBagConstraints.HORIZONTAL;
+    actionPanel.add(asLongAsPossibleLimitLabel, c);
+
+    this.asLongAsPossibleLimitSpinner =
+      new JSpinner(new SpinnerNumberModel(100, 0, 9999, 1));
+    c = new GridBagConstraints();
+    c.weightx = 1;
+    c.gridy = 1;
+    c.fill = GridBagConstraints.HORIZONTAL;
+    actionPanel.add(this.asLongAsPossibleLimitSpinner, c);
+
+    JLabel kleeneStarMinSpinnerLabel = new JLabel("kleene Star Minimum");
+    c = new GridBagConstraints();
+    c.weightx = 1;
+    c.gridy = 2;
+    c.fill = GridBagConstraints.HORIZONTAL;
+    actionPanel.add(kleeneStarMinSpinnerLabel, c);
+
+    this.kleeneStarMinSpinner =
+      new JSpinner(new SpinnerNumberModel(100, 0, 9999, 1));
+    c = new GridBagConstraints();
+    c.weightx = 1;
+    c.gridy = 2;
+    c.fill = GridBagConstraints.HORIZONTAL;
+    actionPanel.add(this.kleeneStarMinSpinner, c);
+
+    JLabel kleeneStarMaxSpinnerLabel = new JLabel("kleene Star Maximum");
+    c = new GridBagConstraints();
+    c.weightx = 1;
+    c.gridy = 3;
+    c.fill = GridBagConstraints.HORIZONTAL;
+    actionPanel.add(kleeneStarMaxSpinnerLabel, c);
+
+    this.kleeneStarMaxSpinner =
+      new JSpinner(new SpinnerNumberModel(100, 0, 9999, 1));
+    c = new GridBagConstraints();
+    c.weightx = 1;
+    c.gridy = 3;
+    c.fill = GridBagConstraints.HORIZONTAL;
+    actionPanel.add(this.kleeneStarMaxSpinner, c);
+
+    c = new GridBagConstraints();
+    c.weightx = 1;
+    c.gridy = 4;
+    c.fill = GridBagConstraints.HORIZONTAL;
+    actionPanel.add(Box.createVerticalStrut(16), c);
+
     this.executeButton = new JButton("Transformationseinheit ausführen");
     executeButton.setEnabled(false);
     this.executeButton.addActionListener(new ActionListener() {
@@ -193,20 +255,31 @@ public final class TransformationUnitWindow {
       @Override
       public void actionPerformed(ActionEvent e) {
 
+        storeTransformationUnitData();
         executeTransformationUnit();
       }
     });
     c = new GridBagConstraints();
     c.weightx = 1;
+    c.gridy = 5;
+    c.gridwidth = 2;
     c.fill = GridBagConstraints.HORIZONTAL;
-    actionPanel.add(executeButton, c);
+    actionPanel.add(this.executeButton, c);
 
     this.transformationUnitWindow.add(rootPanel);
+
+    transformationUnitWindow.addWindowListener(new WindowAdapter() {
+
+      @Override
+      public void windowClosing(WindowEvent e) {
+
+        super.windowClosing(e);
+        storeTransformationUnitData();
+      }
+    });
   }
 
   private void checkControlExpression(String expression) {
-
-    ruleExecutionSequence = null;
 
     ANTLRInputStream inputStream = new ANTLRInputStream(expression);
     ExpressionGrammarLexer lexer = new ExpressionGrammarLexer(inputStream);
@@ -232,7 +305,6 @@ public final class TransformationUnitWindow {
           parseTree);
       parseTreePanel.add(treeViewer);
 
-      saveTranformationUnit();
       executeButton.setEnabled(true);
 
     } catch (ParseCancellationException pex) {
@@ -281,10 +353,22 @@ public final class TransformationUnitWindow {
     PetrinetPane.getInstance().displayPetrinet(petrinetId, "");
   }
 
-  private void saveTranformationUnit() {
+  private void storeTransformationUnitData() {
+
+    String expression = this.controlExpression.getText();
+    int asLongAsPossibleLimit =
+      (Integer) this.asLongAsPossibleLimitSpinner.getValue();
+    int kleeneStarMin = (Integer) this.kleeneStarMinSpinner.getValue();
+    int kleeneStarMax = (Integer) this.kleeneStarMaxSpinner.getValue();
 
     TransformationUnitManipulation.getInstance().setControlExpression(
-      this.transformationUnitId, this.controlExpression.getText());
+      this.transformationUnitId, expression);
+    TransformationUnitManipulation.getInstance().setAsLongAsPossibleExecutionLimit(
+      this.transformationUnitId, asLongAsPossibleLimit);
+    TransformationUnitManipulation.getInstance().setKleeneStarMin(
+      transformationUnitId, kleeneStarMin);
+    TransformationUnitManipulation.getInstance().setKleeneStarMax(
+      transformationUnitId, kleeneStarMax);
   }
 
   public void show() {
