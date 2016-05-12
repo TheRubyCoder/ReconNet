@@ -136,6 +136,12 @@ public final class JungData {
     this.placeColors = new HashMap<Place, Color>();
   }
 
+  /**
+   * Copy Constructor
+   *
+   * @param jungDataToClone
+   * @param petrinet
+   */
   public JungData(JungData jungDataToClone, Petrinet petrinet) {
 
     this.graph = new DirectedSparseGraph<INode, IArc>();

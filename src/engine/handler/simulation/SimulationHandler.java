@@ -292,7 +292,6 @@ implements ISimulation {
     } else {
       throw new EngineException("Transformation was not possible.");
     }
-
   }
 
   /**

@@ -51,7 +51,6 @@
 
 package gui.fileTree;
 
-import engine.handler.transformationunit.TransformationUnitManipulation;
 import exceptions.EngineException;
 import exceptions.ShowAsInfoException;
 import exceptions.ShowAsWarningException;
@@ -717,7 +716,7 @@ implements ActionListener {
       }
 
       int dataId =
-        TransformationUnitManipulation.getInstance().createTransformationUnit(
+        EngineAdapter.getTransformationUnitManipulation().createTransformationUnit(
           displayName, filePath);
 
       TransformationUnitRootTreeNode transformationUnitRootNode =
@@ -752,7 +751,7 @@ implements ActionListener {
       String filePath = chooser.getSelectedFile().getAbsolutePath();
 
       int dataId =
-        TransformationUnitManipulation.getInstance().loadFromFileSystem(
+        EngineAdapter.getTransformationUnitManipulation().loadFromFileSystem(
           displayName, filePath);
 
       TransformationUnitRootTreeNode transformationUnitRootNode =
@@ -782,7 +781,7 @@ implements ActionListener {
 
     int transformationUnitId = node.getTransformationUnitId();
 
-    TransformationUnitManipulation.getInstance().saveToFileSystem(
+    EngineAdapter.getTransformationUnitManipulation().saveToFileSystem(
       transformationUnitId);
   }
 
@@ -842,7 +841,7 @@ implements ActionListener {
     TransformationUnitRootTreeNode parentNode, int transformationUnitId) {
 
     String displayName =
-      TransformationUnitManipulation.getInstance().getFileName(
+      EngineAdapter.getTransformationUnitManipulation().getFileName(
         transformationUnitId);
 
     TransformationUnitTreeNode n =
