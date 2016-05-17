@@ -102,8 +102,6 @@ public final class TransformationUnitWindow {
   private JTextField controlExpression;
 
   private JSpinner asLongAsPossibleLimitSpinner;
-  private JSpinner kleeneStarMinSpinner;
-  private JSpinner kleeneStarMaxSpinner;
   private JButton executeButton;
 
   private TreeViewer treeViewer;
@@ -212,39 +210,9 @@ public final class TransformationUnitWindow {
     c.fill = GridBagConstraints.HORIZONTAL;
     actionPanel.add(this.asLongAsPossibleLimitSpinner, c);
 
-    JLabel kleeneStarMinSpinnerLabel = new JLabel("kleene Star Minimum");
     c = new GridBagConstraints();
     c.weightx = 1;
     c.gridy = 2;
-    c.fill = GridBagConstraints.HORIZONTAL;
-    actionPanel.add(kleeneStarMinSpinnerLabel, c);
-
-    this.kleeneStarMinSpinner =
-      new JSpinner(new SpinnerNumberModel(100, 0, 9999, 1));
-    c = new GridBagConstraints();
-    c.weightx = 1;
-    c.gridy = 2;
-    c.fill = GridBagConstraints.HORIZONTAL;
-    actionPanel.add(this.kleeneStarMinSpinner, c);
-
-    JLabel kleeneStarMaxSpinnerLabel = new JLabel("kleene Star Maximum");
-    c = new GridBagConstraints();
-    c.weightx = 1;
-    c.gridy = 3;
-    c.fill = GridBagConstraints.HORIZONTAL;
-    actionPanel.add(kleeneStarMaxSpinnerLabel, c);
-
-    this.kleeneStarMaxSpinner =
-      new JSpinner(new SpinnerNumberModel(100, 0, 9999, 1));
-    c = new GridBagConstraints();
-    c.weightx = 1;
-    c.gridy = 3;
-    c.fill = GridBagConstraints.HORIZONTAL;
-    actionPanel.add(this.kleeneStarMaxSpinner, c);
-
-    c = new GridBagConstraints();
-    c.weightx = 1;
-    c.gridy = 4;
     c.fill = GridBagConstraints.HORIZONTAL;
     actionPanel.add(Box.createVerticalStrut(16), c);
 
@@ -358,17 +326,11 @@ public final class TransformationUnitWindow {
     String expression = this.controlExpression.getText();
     int asLongAsPossibleLimit =
       (Integer) this.asLongAsPossibleLimitSpinner.getValue();
-    int kleeneStarMin = (Integer) this.kleeneStarMinSpinner.getValue();
-    int kleeneStarMax = (Integer) this.kleeneStarMaxSpinner.getValue();
 
     TransformationUnitManipulation.getInstance().setControlExpression(
       this.transformationUnitId, expression);
     TransformationUnitManipulation.getInstance().setAsLongAsPossibleExecutionLimit(
       this.transformationUnitId, asLongAsPossibleLimit);
-    TransformationUnitManipulation.getInstance().setKleeneStarMin(
-      transformationUnitId, kleeneStarMin);
-    TransformationUnitManipulation.getInstance().setKleeneStarMax(
-      transformationUnitId, kleeneStarMax);
   }
 
   public void show() {

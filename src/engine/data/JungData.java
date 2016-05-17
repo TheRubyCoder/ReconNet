@@ -152,13 +152,14 @@ public final class JungData {
     this.placeColors = new HashMap<Place, Color>(jungDataToClone.placeColors);
 
     for (Place place : petrinet.getPlaces()) {
-      createPlace(place, new Point2D.Double(
-        jungDataToClone.layout.getX(place),
-        jungDataToClone.layout.getY(place)));
+      createPlace(place);
+      // createPlace(place, new Point2D.Double(
+      // jungDataToClone.layout.getX(place),
+      // jungDataToClone.layout.getY(place)));
     }
 
     for (Transition transition : petrinet.getTransitions()) {
-      this.graph.addVertex(transition);
+      createTransition(transition);
     }
 
     for (PreArc preArc : petrinet.getPreArcs()) {
@@ -309,7 +310,11 @@ public final class JungData {
    */
   public void createPlace(Place place) {
 
-    createPlace(place, findPositionForNewNode());
+    // createPlace(place, findPositionForNewNode());
+
+    // since no location is specified, the layout of the graph will
+    // automatically chose the location for the new place
+    check(getJungGraph().addVertex(place), "place couldn't be added");
   }
 
   /**
@@ -319,7 +324,12 @@ public final class JungData {
    */
   public void createTransition(Transition transition) {
 
-    createTransition(transition, findPositionForNewNode());
+    // createTransition(transition, findPositionForNewNode());
+
+    // since no location is specified, the layout of the graph will
+    // automatically chose the location for the new transition
+    check(getJungGraph().addVertex(transition),
+      "transition couldn't be added");
   }
 
   /**

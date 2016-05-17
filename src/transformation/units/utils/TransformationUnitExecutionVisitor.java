@@ -17,7 +17,7 @@ import engine.session.SessionManager;
 import exceptions.EngineException;
 
 public class TransformationUnitExecutionVisitor
-extends ExpressionGrammarBaseVisitor<Void> {
+  extends ExpressionGrammarBaseVisitor<Void> {
 
   private Random dice = new Random();
   private List<String> executedRules = new ArrayList<String>();
@@ -25,8 +25,6 @@ extends ExpressionGrammarBaseVisitor<Void> {
   private int petrinetId;
   private Map<String, Integer> ruleNameToId;
   private int asLongAsPossibleExecutionLimit;
-  private int kleeneStarMin;
-  private int kleeneStarMax;
 
   public TransformationUnitExecutionVisitor(int petrinetId,
     Map<String, Integer> ruleNameToId, int asLongAsPossibleExecutionLimit,
@@ -35,8 +33,6 @@ extends ExpressionGrammarBaseVisitor<Void> {
     this.petrinetId = petrinetId;
     this.ruleNameToId = ruleNameToId;
     this.asLongAsPossibleExecutionLimit = asLongAsPossibleExecutionLimit;
-    this.kleeneStarMin = kleeneStarMin;
-    this.kleeneStarMax = kleeneStarMax;
   }
 
   /**
@@ -47,8 +43,6 @@ extends ExpressionGrammarBaseVisitor<Void> {
    */
   @Override
   public Void visitProg(ProgContext ctx) {
-
-    System.out.println("visitProg(ProgContext ctx)");
 
     Petrinet petrinet =
       SessionManager.getInstance().getPetrinetData(petrinetId).getPetrinet();
@@ -89,6 +83,7 @@ extends ExpressionGrammarBaseVisitor<Void> {
 
     visit(ctx.left);
     visit(ctx.right);
+
     return null;
   }
 
@@ -108,6 +103,9 @@ extends ExpressionGrammarBaseVisitor<Void> {
       Petrinet petrinetSnapshot = new Petrinet(petrinet);
       JungData jungDataSnapshot = new JungData(jungData, petrinetSnapshot);
 
+      List<String> executedRulesSnapshot =
+        new ArrayList<String>(executedRules);
+
       try {
         // try to execute the subtree
         visit(ctx.left);
@@ -117,6 +115,7 @@ extends ExpressionGrammarBaseVisitor<Void> {
         // .. petrinet = snapshot
         SessionManager.getInstance().replacePetrinetData(petrinetId,
           petrinetSnapshot, jungDataSnapshot);
+        this.executedRules = executedRulesSnapshot;
         break;
       }
 
@@ -136,10 +135,8 @@ extends ExpressionGrammarBaseVisitor<Void> {
       executedRules.add(ruleName);
     } catch (EngineException e) {
       // no Match was found. Throw Exception up the parseTree
-      e.printStackTrace();
+      // e.printStackTrace();
       throw new RuntimeException(e);
-    } catch (Exception ex) {
-      ex.printStackTrace();
     }
 
     return null;
