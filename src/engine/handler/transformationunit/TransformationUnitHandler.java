@@ -111,7 +111,7 @@ public final class TransformationUnitHandler {
 
   public void executeTransformationUnit(int transformationUnitId,
     int petrinetId, Map<String, Integer> ruleNameToId)
-    throws EngineException {
+      throws EngineException {
 
     System.out.println(".. executeTransformationUnit");
 
@@ -122,8 +122,8 @@ public final class TransformationUnitHandler {
       transformationUnitData.getTransformationUnit().getControlExpression();
     int asLongAsPossibleExecutionLimit =
       transformationUnitData.getAsLongAsPossibleExecutionLimit();
-    int kleeneStarMin = transformationUnitData.getKleeneStarMin();
-    int kleeneStarMax = transformationUnitData.getKleeneStarMax();
+    int randomNumberOfTimesUpperRange =
+      transformationUnitData.getRandomNumberOfTimesUpperRange();
 
     ANTLRInputStream inputStream = new ANTLRInputStream(expression);
     ExpressionGrammarLexer lexer = new ExpressionGrammarLexer(inputStream);
@@ -135,7 +135,7 @@ public final class TransformationUnitHandler {
 
     TransformationUnitExecutionVisitor visitor =
       new TransformationUnitExecutionVisitor(petrinetId, ruleNameToId,
-        asLongAsPossibleExecutionLimit, kleeneStarMin, kleeneStarMax);
+        asLongAsPossibleExecutionLimit, randomNumberOfTimesUpperRange);
 
     try {
       visitor.visit(parseTree);
@@ -155,16 +155,11 @@ public final class TransformationUnitHandler {
       executionLimit);
   }
 
-  public void setKleeneStarMin(int transformationUnitId, int kleeneStarMin) {
+  public void setRandomNumberOfTimesUpperRange(int transformationUnitId,
+    int randomNumberOfTimesUpperRange) {
 
-    this.sessionManager.getTransformationUnitData(transformationUnitId).setKleeneStarMin(
-      kleeneStarMin);
-  }
-
-  public void setKleeneStarMax(int transformationUnitId, int kleeneStarMax) {
-
-    this.sessionManager.getTransformationUnitData(transformationUnitId).setKleeneStarMax(
-      kleeneStarMax);
+    this.sessionManager.getTransformationUnitData(transformationUnitId).setRandomNumberOfTimesUpperRange(
+      randomNumberOfTimesUpperRange);
   }
 
   public void saveToFileSystem(int transformationUnitId)

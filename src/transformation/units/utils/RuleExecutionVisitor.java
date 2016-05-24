@@ -8,13 +8,13 @@ import gui.fileTree.FileTreePane;
 import java.util.ArrayList;
 import java.util.Random;
 
+import transformation.units.utils.ExpressionGrammarParser.AsLongAsPossibleExpressionContext;
 import transformation.units.utils.ExpressionGrammarParser.AtomExpressionContext;
 import transformation.units.utils.ExpressionGrammarParser.ChoiceExpressionContext;
 import transformation.units.utils.ExpressionGrammarParser.CombinedExpressionContext;
-import transformation.units.utils.ExpressionGrammarParser.LoopExpressionContext;
 
 public class RuleExecutionVisitor
-extends ExpressionGrammarBaseVisitor<Void> {
+  extends ExpressionGrammarBaseVisitor<Void> {
 
   private Random dice = new Random();
 
@@ -77,7 +77,8 @@ extends ExpressionGrammarBaseVisitor<Void> {
   }
 
   @Override
-  public Void visitLoopExpression(LoopExpressionContext ctx) {
+  public Void visitAsLongAsPossibleExpression(
+    AsLongAsPossibleExpressionContext ctx) {
 
     for (int i = 0; i < 100; i++) {
 

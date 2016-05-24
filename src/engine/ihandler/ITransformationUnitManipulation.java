@@ -128,26 +128,13 @@ public interface ITransformationUnitManipulation {
     int executionLimit);
 
   /**
-   * Sets the minimum number of executions of a control expression when the
-   * kleene star operator is used
+   * Sets the upper range of the randomNumberOfTimes operator
    *
    * @param transformationUnitId
-   *        Id of the transformation
-   * @param kleeneStarMin
-   *        minimum number of executions
+   * @param randomNumberOfTimesUpperRange
    */
-  void setKleeneStarMin(int transformationUnitId, int kleeneStarMin);
-
-  /**
-   * Sets the maximum number of executions of a control expression when the
-   * kleene star operator is used
-   *
-   * @param transformationUnitId
-   *        Id of the transformation
-   * @param kleeneStarMax
-   *        maximum number of executions
-   */
-  void setKleeneStarMax(int transformationUnitId, int kleeneStarMax);
+  void setRandomNumberOfTimesUpperRange(int transformationUnitId,
+    int randomNumberOfTimesUpperRange);
 
   /**
    * Saves the transformation unit to the file system

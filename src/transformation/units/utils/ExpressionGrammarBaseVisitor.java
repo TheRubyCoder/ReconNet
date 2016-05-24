@@ -54,5 +54,12 @@ public class ExpressionGrammarBaseVisitor<T> extends AbstractParseTreeVisitor<T>
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitLoopExpression(ExpressionGrammarParser.LoopExpressionContext ctx) { return visitChildren(ctx); }
+	@Override public T visitAsLongAsPossibleExpression(ExpressionGrammarParser.AsLongAsPossibleExpressionContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitRandomNumberOfTimesExpression(ExpressionGrammarParser.RandomNumberOfTimesExpressionContext ctx) { return visitChildren(ctx); }
 }

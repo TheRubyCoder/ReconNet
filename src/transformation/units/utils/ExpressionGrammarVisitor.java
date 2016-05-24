@@ -47,10 +47,17 @@ public interface ExpressionGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitChoiceExpression(ExpressionGrammarParser.ChoiceExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code loopExpression}
+	 * Visit a parse tree produced by the {@code asLongAsPossibleExpression}
 	 * labeled alternative in {@link ExpressionGrammarParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitLoopExpression(ExpressionGrammarParser.LoopExpressionContext ctx);
+	T visitAsLongAsPossibleExpression(ExpressionGrammarParser.AsLongAsPossibleExpressionContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code randomNumberOfTimesExpression}
+	 * labeled alternative in {@link ExpressionGrammarParser#expression}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRandomNumberOfTimesExpression(ExpressionGrammarParser.RandomNumberOfTimesExpressionContext ctx);
 }

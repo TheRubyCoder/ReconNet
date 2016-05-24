@@ -6,18 +6,19 @@ import java.util.Map;
 import java.util.Random;
 
 import petrinet.model.Petrinet;
+import transformation.units.utils.ExpressionGrammarParser.AsLongAsPossibleExpressionContext;
 import transformation.units.utils.ExpressionGrammarParser.AtomExpressionContext;
 import transformation.units.utils.ExpressionGrammarParser.ChoiceExpressionContext;
 import transformation.units.utils.ExpressionGrammarParser.CombinedExpressionContext;
-import transformation.units.utils.ExpressionGrammarParser.LoopExpressionContext;
 import transformation.units.utils.ExpressionGrammarParser.ProgContext;
+import transformation.units.utils.ExpressionGrammarParser.RandomNumberOfTimesExpressionContext;
 import engine.data.JungData;
 import engine.handler.simulation.SimulationHandler;
 import engine.session.SessionManager;
 import exceptions.EngineException;
 
 public class TransformationUnitExecutionVisitor
-  extends ExpressionGrammarBaseVisitor<Void> {
+extends ExpressionGrammarBaseVisitor<Void> {
 
   private Random dice = new Random();
   private List<String> executedRules = new ArrayList<String>();
@@ -25,14 +26,16 @@ public class TransformationUnitExecutionVisitor
   private int petrinetId;
   private Map<String, Integer> ruleNameToId;
   private int asLongAsPossibleExecutionLimit;
+  private int randomNumberOfTimesUpperRange;
 
   public TransformationUnitExecutionVisitor(int petrinetId,
     Map<String, Integer> ruleNameToId, int asLongAsPossibleExecutionLimit,
-    int kleeneStarMin, int kleeneStarMax) {
+    int randomNumberOfTimesUpperRange) {
 
     this.petrinetId = petrinetId;
     this.ruleNameToId = ruleNameToId;
     this.asLongAsPossibleExecutionLimit = asLongAsPossibleExecutionLimit;
+    this.randomNumberOfTimesUpperRange = randomNumberOfTimesUpperRange;
   }
 
   /**
@@ -88,9 +91,51 @@ public class TransformationUnitExecutionVisitor
   }
 
   @Override
-  public Void visitLoopExpression(LoopExpressionContext ctx) {
+  public Void visitAsLongAsPossibleExpression(
+    AsLongAsPossibleExpressionContext ctx) {
 
     for (int i = 0; i < asLongAsPossibleExecutionLimit; i++) {
+
+      // make snapshot of current petri net
+      // .. snapshot = petrinet.clone
+
+      Petrinet petrinet =
+        SessionManager.getInstance().getPetrinetData(petrinetId).getPetrinet();
+      JungData jungData =
+        SessionManager.getInstance().getPetrinetData(petrinetId).getJungData();
+
+      Petrinet petrinetSnapshot = new Petrinet(petrinet);
+      JungData jungDataSnapshot = new JungData(jungData, petrinetSnapshot);
+
+      List<String> executedRulesSnapshot =
+        new ArrayList<String>(executedRules);
+
+      try {
+        // try to execute the subtree
+        visit(ctx.left);
+      } catch (RuntimeException e) {
+        // some rule in the subtree failed
+        // recover snapshot
+        // .. petrinet = snapshot
+        SessionManager.getInstance().replacePetrinetData(petrinetId,
+          petrinetSnapshot, jungDataSnapshot);
+        this.executedRules = executedRulesSnapshot;
+        break;
+      }
+
+    }
+
+    return null;
+  }
+
+  @Override
+  public Void visitRandomNumberOfTimesExpression(
+    RandomNumberOfTimesExpressionContext ctx) {
+
+    // random number between 0 and upper range (inklusive)
+    int numberOfTimes = dice.nextInt(this.randomNumberOfTimesUpperRange + 1);
+
+    for (int i = 0; i < numberOfTimes; i++) {
 
       // make snapshot of current petri net
       // .. snapshot = petrinet.clone

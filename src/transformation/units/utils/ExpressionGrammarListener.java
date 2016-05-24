@@ -68,15 +68,27 @@ public interface ExpressionGrammarListener extends ParseTreeListener {
 	 */
 	void exitChoiceExpression(ExpressionGrammarParser.ChoiceExpressionContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code loopExpression}
+	 * Enter a parse tree produced by the {@code asLongAsPossibleExpression}
 	 * labeled alternative in {@link ExpressionGrammarParser#expression}.
 	 * @param ctx the parse tree
 	 */
-	void enterLoopExpression(ExpressionGrammarParser.LoopExpressionContext ctx);
+	void enterAsLongAsPossibleExpression(ExpressionGrammarParser.AsLongAsPossibleExpressionContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code loopExpression}
+	 * Exit a parse tree produced by the {@code asLongAsPossibleExpression}
 	 * labeled alternative in {@link ExpressionGrammarParser#expression}.
 	 * @param ctx the parse tree
 	 */
-	void exitLoopExpression(ExpressionGrammarParser.LoopExpressionContext ctx);
+	void exitAsLongAsPossibleExpression(ExpressionGrammarParser.AsLongAsPossibleExpressionContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code randomNumberOfTimesExpression}
+	 * labeled alternative in {@link ExpressionGrammarParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void enterRandomNumberOfTimesExpression(ExpressionGrammarParser.RandomNumberOfTimesExpressionContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code randomNumberOfTimesExpression}
+	 * labeled alternative in {@link ExpressionGrammarParser#expression}.
+	 * @param ctx the parse tree
+	 */
+	void exitRandomNumberOfTimesExpression(ExpressionGrammarParser.RandomNumberOfTimesExpressionContext ctx);
 }

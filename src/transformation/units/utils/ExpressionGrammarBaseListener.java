@@ -78,13 +78,25 @@ public class ExpressionGrammarBaseListener implements ExpressionGrammarListener 
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLoopExpression(ExpressionGrammarParser.LoopExpressionContext ctx) { }
+	@Override public void enterAsLongAsPossibleExpression(ExpressionGrammarParser.AsLongAsPossibleExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLoopExpression(ExpressionGrammarParser.LoopExpressionContext ctx) { }
+	@Override public void exitAsLongAsPossibleExpression(ExpressionGrammarParser.AsLongAsPossibleExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRandomNumberOfTimesExpression(ExpressionGrammarParser.RandomNumberOfTimesExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRandomNumberOfTimesExpression(ExpressionGrammarParser.RandomNumberOfTimesExpressionContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

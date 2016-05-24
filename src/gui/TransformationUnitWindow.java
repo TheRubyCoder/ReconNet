@@ -102,6 +102,7 @@ public final class TransformationUnitWindow {
   private JTextField controlExpression;
 
   private JSpinner asLongAsPossibleLimitSpinner;
+  private JSpinner randomNumberOfTimesUpperRangeSpinner;
   private JButton executeButton;
 
   private TreeViewer treeViewer;
@@ -195,7 +196,8 @@ public final class TransformationUnitWindow {
     c.fill = GridBagConstraints.HORIZONTAL;
     actionPanel.add(Box.createVerticalStrut(16), c);
 
-    JLabel asLongAsPossibleLimitLabel = new JLabel("asLongAsPossible Limit");
+    JLabel asLongAsPossibleLimitLabel =
+      new JLabel("Maximale Anzahl an Iterationen bei asLongAsPossible ( ! )");
     c = new GridBagConstraints();
     c.weightx = 1;
     c.gridy = 1;
@@ -210,9 +212,25 @@ public final class TransformationUnitWindow {
     c.fill = GridBagConstraints.HORIZONTAL;
     actionPanel.add(this.asLongAsPossibleLimitSpinner, c);
 
+    JLabel randomNumberOfTimesUpperRangeLabel =
+      new JLabel("Obere Grenze für randomNumberOfTimes ( * )");
     c = new GridBagConstraints();
     c.weightx = 1;
     c.gridy = 2;
+    c.fill = GridBagConstraints.HORIZONTAL;
+    actionPanel.add(randomNumberOfTimesUpperRangeLabel, c);
+
+    this.randomNumberOfTimesUpperRangeSpinner =
+      new JSpinner(new SpinnerNumberModel(10, 0, 9999, 1));
+    c = new GridBagConstraints();
+    c.weightx = 1;
+    c.gridy = 2;
+    c.fill = GridBagConstraints.HORIZONTAL;
+    actionPanel.add(this.randomNumberOfTimesUpperRangeSpinner, c);
+
+    c = new GridBagConstraints();
+    c.weightx = 1;
+    c.gridy = 3;
     c.fill = GridBagConstraints.HORIZONTAL;
     actionPanel.add(Box.createVerticalStrut(16), c);
 
@@ -326,11 +344,15 @@ public final class TransformationUnitWindow {
     String expression = this.controlExpression.getText();
     int asLongAsPossibleLimit =
       (Integer) this.asLongAsPossibleLimitSpinner.getValue();
+    int randomNumberOfTimesUpperRange =
+      (Integer) this.randomNumberOfTimesUpperRangeSpinner.getValue();
 
     TransformationUnitManipulation.getInstance().setControlExpression(
       this.transformationUnitId, expression);
     TransformationUnitManipulation.getInstance().setAsLongAsPossibleExecutionLimit(
       this.transformationUnitId, asLongAsPossibleLimit);
+    TransformationUnitManipulation.getInstance().setRandomNumberOfTimesUpperRange(
+      transformationUnitId, randomNumberOfTimesUpperRange);
   }
 
   public void show() {

@@ -119,17 +119,11 @@ implements ITransformationUnitManipulation {
   }
 
   @Override
-  public void setKleeneStarMin(int transformationUnitId, int kleeneStarMin) {
+  public void setRandomNumberOfTimesUpperRange(int transformationUnitId,
+    int randomNumberOfTimesUpperRange) {
 
-    this.transformationUnitHandler.setKleeneStarMin(transformationUnitId,
-      kleeneStarMin);
-  }
-
-  @Override
-  public void setKleeneStarMax(int transformationUnitId, int kleeneStarMax) {
-
-    this.transformationUnitHandler.setKleeneStarMax(transformationUnitId,
-      kleeneStarMax);
+    this.transformationUnitHandler.setRandomNumberOfTimesUpperRange(
+      transformationUnitId, randomNumberOfTimesUpperRange);
   }
 
   @Override

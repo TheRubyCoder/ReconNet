@@ -68,11 +68,11 @@ public class TransformationUnitData {
   private int asLongAsPossibleExecutionLimit;
 
   /**
-   * defines the possible range of the kleene star operator. the expression is
-   * then executed n times between min and max while n is randomly chosen
+   * defines the upper range of the randomNumberOfTimes operator. The
+   * expression is executed a maximum of n times, where n is a number between
+   * 0 and randomNumberOfTimesUpperRange
    */
-  private int kleeneStarMin;
-  private int kleeneStarMax;
+  private int randomNumberOfTimesUpperRange;
 
   private TransformationUnit transformationUnit;
 
@@ -105,29 +105,20 @@ public class TransformationUnitData {
     this.asLongAsPossibleExecutionLimit = asLongAsPossibleExecutionLimit;
   }
 
-  public void setKleeneStarMin(int kleeneStarMin) {
-
-    this.kleeneStarMin = kleeneStarMin;
-  }
-
-  public void setKleeneStarMax(int kleeneStarMax) {
-
-    this.kleeneStarMax = kleeneStarMax;
-  }
-
   public int getAsLongAsPossibleExecutionLimit() {
 
     return this.asLongAsPossibleExecutionLimit;
   }
 
-  public int getKleeneStarMin() {
+  public int getRandomNumberOfTimesUpperRange() {
 
-    return this.kleeneStarMin;
+    return this.randomNumberOfTimesUpperRange;
   }
 
-  public int getKleeneStarMax() {
+  public void setRandomNumberOfTimesUpperRange(
+    int randomNumberOfTimesUpperRange) {
 
-    return this.kleeneStarMax;
+    this.randomNumberOfTimesUpperRange = randomNumberOfTimesUpperRange;
   }
 
 }

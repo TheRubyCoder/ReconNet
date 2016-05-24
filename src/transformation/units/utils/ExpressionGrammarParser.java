@@ -19,7 +19,7 @@ public class ExpressionGrammarParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, IDENTIFIER=6;
+		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, IDENTIFIER=7;
 	public static final int
 		RULE_prog = 0, RULE_expression = 1;
 	public static final String[] ruleNames = {
@@ -27,10 +27,10 @@ public class ExpressionGrammarParser extends Parser {
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, "'('", "')'", "'*'", "'|'", "';'"
+		null, "'('", "')'", "'!'", "'*'", "'|'", "';'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
-		null, null, null, null, null, null, "IDENTIFIER"
+		null, null, null, null, null, null, null, "IDENTIFIER"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -223,23 +223,43 @@ public class ExpressionGrammarParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class LoopExpressionContext extends ExpressionContext {
+	public static class AsLongAsPossibleExpressionContext extends ExpressionContext {
 		public ExpressionContext left;
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
 		}
-		public LoopExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
+		public AsLongAsPossibleExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof ExpressionGrammarListener ) ((ExpressionGrammarListener)listener).enterLoopExpression(this);
+			if ( listener instanceof ExpressionGrammarListener ) ((ExpressionGrammarListener)listener).enterAsLongAsPossibleExpression(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof ExpressionGrammarListener ) ((ExpressionGrammarListener)listener).exitLoopExpression(this);
+			if ( listener instanceof ExpressionGrammarListener ) ((ExpressionGrammarListener)listener).exitAsLongAsPossibleExpression(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof ExpressionGrammarVisitor ) return ((ExpressionGrammarVisitor<? extends T>)visitor).visitLoopExpression(this);
+			if ( visitor instanceof ExpressionGrammarVisitor ) return ((ExpressionGrammarVisitor<? extends T>)visitor).visitAsLongAsPossibleExpression(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class RandomNumberOfTimesExpressionContext extends ExpressionContext {
+		public ExpressionContext left;
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
+		public RandomNumberOfTimesExpressionContext(ExpressionContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof ExpressionGrammarListener ) ((ExpressionGrammarListener)listener).enterRandomNumberOfTimesExpression(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof ExpressionGrammarListener ) ((ExpressionGrammarListener)listener).exitRandomNumberOfTimesExpression(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof ExpressionGrammarVisitor ) return ((ExpressionGrammarVisitor<? extends T>)visitor).visitRandomNumberOfTimesExpression(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -288,7 +308,7 @@ public class ExpressionGrammarParser extends Parser {
 				throw new NoViableAltException(this);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(25);
+			setState(27);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -296,7 +316,7 @@ public class ExpressionGrammarParser extends Parser {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(23);
+					setState(25);
 					_errHandler.sync(this);
 					switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
 					case 1:
@@ -307,7 +327,7 @@ public class ExpressionGrammarParser extends Parser {
 						setState(15);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
 						setState(16);
-						match(T__3);
+						match(T__4);
 						setState(17);
 						((ChoiceExpressionContext)_localctx).right = expression(4);
 						}
@@ -320,26 +340,37 @@ public class ExpressionGrammarParser extends Parser {
 						setState(18);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
 						setState(19);
-						match(T__4);
+						match(T__5);
 						setState(20);
 						((CombinedExpressionContext)_localctx).right = expression(3);
 						}
 						break;
 					case 3:
 						{
-						_localctx = new LoopExpressionContext(new ExpressionContext(_parentctx, _parentState));
-						((LoopExpressionContext)_localctx).left = _prevctx;
+						_localctx = new AsLongAsPossibleExpressionContext(new ExpressionContext(_parentctx, _parentState));
+						((AsLongAsPossibleExpressionContext)_localctx).left = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_expression);
 						setState(21);
-						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
+						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
 						setState(22);
 						match(T__2);
+						}
+						break;
+					case 4:
+						{
+						_localctx = new RandomNumberOfTimesExpressionContext(new ExpressionContext(_parentctx, _parentState));
+						((RandomNumberOfTimesExpressionContext)_localctx).left = _prevctx;
+						pushNewRecursionContext(_localctx, _startState, RULE_expression);
+						setState(23);
+						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
+						setState(24);
+						match(T__3);
 						}
 						break;
 					}
 					} 
 				}
-				setState(27);
+				setState(29);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
 			}
@@ -370,21 +401,24 @@ public class ExpressionGrammarParser extends Parser {
 		case 1:
 			return precpred(_ctx, 2);
 		case 2:
+			return precpred(_ctx, 5);
+		case 3:
 			return precpred(_ctx, 4);
 		}
 		return true;
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\b\37\4\2\t\2\4\3"+
-		"\t\3\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\5\3\20\n\3\3\3\3\3\3\3\3\3\3"+
-		"\3\3\3\3\3\3\3\7\3\32\n\3\f\3\16\3\35\13\3\3\3\2\3\4\4\2\4\2\2 \2\6\3"+
-		"\2\2\2\4\17\3\2\2\2\6\7\5\4\3\2\7\b\7\2\2\3\b\3\3\2\2\2\t\n\b\3\1\2\n"+
-		"\13\7\3\2\2\13\f\5\4\3\2\f\r\7\4\2\2\r\20\3\2\2\2\16\20\7\b\2\2\17\t\3"+
-		"\2\2\2\17\16\3\2\2\2\20\33\3\2\2\2\21\22\f\5\2\2\22\23\7\6\2\2\23\32\5"+
-		"\4\3\6\24\25\f\4\2\2\25\26\7\7\2\2\26\32\5\4\3\5\27\30\f\6\2\2\30\32\7"+
-		"\5\2\2\31\21\3\2\2\2\31\24\3\2\2\2\31\27\3\2\2\2\32\35\3\2\2\2\33\31\3"+
-		"\2\2\2\33\34\3\2\2\2\34\5\3\2\2\2\35\33\3\2\2\2\5\17\31\33";
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\t!\4\2\t\2\4\3\t"+
+		"\3\3\2\3\2\3\2\3\3\3\3\3\3\3\3\3\3\3\3\5\3\20\n\3\3\3\3\3\3\3\3\3\3\3"+
+		"\3\3\3\3\3\3\3\3\3\3\7\3\34\n\3\f\3\16\3\37\13\3\3\3\2\3\4\4\2\4\2\2#"+
+		"\2\6\3\2\2\2\4\17\3\2\2\2\6\7\5\4\3\2\7\b\7\2\2\3\b\3\3\2\2\2\t\n\b\3"+
+		"\1\2\n\13\7\3\2\2\13\f\5\4\3\2\f\r\7\4\2\2\r\20\3\2\2\2\16\20\7\t\2\2"+
+		"\17\t\3\2\2\2\17\16\3\2\2\2\20\35\3\2\2\2\21\22\f\5\2\2\22\23\7\7\2\2"+
+		"\23\34\5\4\3\6\24\25\f\4\2\2\25\26\7\b\2\2\26\34\5\4\3\5\27\30\f\7\2\2"+
+		"\30\34\7\5\2\2\31\32\f\6\2\2\32\34\7\6\2\2\33\21\3\2\2\2\33\24\3\2\2\2"+
+		"\33\27\3\2\2\2\33\31\3\2\2\2\34\37\3\2\2\2\35\33\3\2\2\2\35\36\3\2\2\2"+
+		"\36\5\3\2\2\2\37\35\3\2\2\2\5\17\33\35";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
