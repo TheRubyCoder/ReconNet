@@ -246,6 +246,13 @@ public final class SessionManager {
     return sessionData.remove(id) != null;
   }
 
+  public boolean removeTransformationUnitData(int transformationUnitDataId) {
+
+    boolean deleted =
+      this.transformationUnitData.remove(transformationUnitDataId) != null;
+    return deleted;
+  }
+
   /**
    * @return an empty graph with a Static-Layout
    */

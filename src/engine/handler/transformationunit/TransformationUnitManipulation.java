@@ -84,6 +84,12 @@ implements ITransformationUnitManipulation {
   }
 
   @Override
+  public void removeTransformationUnit(int transformationUnitId) {
+
+    this.transformationUnitHandler.removeTransformationUnit(transformationUnitId);
+  }
+
+  @Override
   public String getFileName(int id) {
 
     return this.transformationUnitHandler.getFileName(id);
@@ -139,6 +145,18 @@ implements ITransformationUnitManipulation {
 
     return this.transformationUnitHandler.loadFromFileSystem(displayName,
       filePath);
+  }
+
+  @Override
+  public int getAsLongAsPossibleExecutionLimit(int transformationUnitId) {
+
+    return this.transformationUnitHandler.getAsLongAsPossibleExecutionLimit(transformationUnitId);
+  }
+
+  @Override
+  public int getRandomNumberOfTimesUpperRange(int transformationUnitId) {
+
+    return this.transformationUnitHandler.getRandomNumberOfTimesUpperRange(transformationUnitId);
   }
 
 }

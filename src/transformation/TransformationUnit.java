@@ -55,10 +55,14 @@ import java.util.UUID;
 
 public class TransformationUnit {
 
-  // unique ID of the transformation unit
+  /**
+   * Unique identifier of the transformation unit
+   */
   private final UUID id;
 
-  // control expression of the transformation unit
+  /**
+   * Control expression of the transformation unit
+   */
   private String controlExpression;
 
   public TransformationUnit() {

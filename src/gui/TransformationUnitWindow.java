@@ -120,6 +120,14 @@ public final class TransformationUnitWindow {
       TransformationUnitManipulation.getInstance().getControlExpression(
         transformationUnitId);
 
+    int asLongAsPossibleExecutionLimit =
+      TransformationUnitManipulation.getInstance().getAsLongAsPossibleExecutionLimit(
+        transformationUnitId);
+
+    int randomNumberOfTimesUpperRange =
+      TransformationUnitManipulation.getInstance().getRandomNumberOfTimesUpperRange(
+        transformationUnitId);
+
     this.transformationUnitWindow = new JFrame(transformationUnitName);
     this.transformationUnitWindow.setMinimumSize(new Dimension(640, 480));
     this.transformationUnitWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -205,7 +213,8 @@ public final class TransformationUnitWindow {
     actionPanel.add(asLongAsPossibleLimitLabel, c);
 
     this.asLongAsPossibleLimitSpinner =
-      new JSpinner(new SpinnerNumberModel(100, 0, 9999, 1));
+      new JSpinner(new SpinnerNumberModel(asLongAsPossibleExecutionLimit, 0,
+        9999, 1));
     c = new GridBagConstraints();
     c.weightx = 1;
     c.gridy = 1;
@@ -221,7 +230,8 @@ public final class TransformationUnitWindow {
     actionPanel.add(randomNumberOfTimesUpperRangeLabel, c);
 
     this.randomNumberOfTimesUpperRangeSpinner =
-      new JSpinner(new SpinnerNumberModel(10, 0, 9999, 1));
+      new JSpinner(new SpinnerNumberModel(randomNumberOfTimesUpperRange, 0,
+        9999, 1));
     c = new GridBagConstraints();
     c.weightx = 1;
     c.gridy = 2;
@@ -325,7 +335,6 @@ public final class TransformationUnitWindow {
   private void executeTransformationUnit() {
 
     int petrinetId = PetrinetPane.getInstance().getCurrentPetrinetId();
-
     Map<String, Integer> ruleNameToId =
       FileTreePane.getInstance().getRuleNamesToIdsMapping();
 
@@ -336,7 +345,7 @@ public final class TransformationUnitWindow {
       throw new ShowAsInfoException(e.getMessage());
     }
 
-    PetrinetPane.getInstance().displayPetrinet(petrinetId, "");
+    PetrinetPane.getInstance().displayPetrinet(petrinetId, null);
   }
 
   private void storeTransformationUnitData() {

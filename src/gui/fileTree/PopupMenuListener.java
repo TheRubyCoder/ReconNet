@@ -258,12 +258,15 @@ implements ActionListener {
       this.removeNac();
     }
 
+    // transformation unit menu
     else if (cmd.equals(Style.MENU_TRANSFORMATION_UNIT_SAVE_CMD)) {
       try {
         this.saveTransformationUnit((TransformationUnitTreeNode) FileTreePane.getInstance().getSelectedNode());
       } catch (EngineException ex) {
         PopUp.popError(ex.getMessage());
       }
+    } else if (cmd.equals(Style.MENU_TRANSFORMATION_UNIT_REMOVE_CMD)) {
+      this.removeTransformationUnit((TransformationUnitTreeNode) FileTreePane.getInstance().getSelectedNode());
     }
 
     else {
@@ -783,6 +786,16 @@ implements ActionListener {
 
     EngineAdapter.getTransformationUnitManipulation().saveToFileSystem(
       transformationUnitId);
+  }
+
+  private void removeTransformationUnit(TransformationUnitTreeNode node) {
+
+    int transformationUnitId = node.getTransformationUnitId();
+
+    EngineAdapter.getTransformationUnitManipulation().removeTransformationUnit(
+      transformationUnitId);
+
+    FileTreePane.getInstance().getTreeModel().removeNodeFromParent(node);
   }
 
   private UUID createNacInBackend(int ruleId)

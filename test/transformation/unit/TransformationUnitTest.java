@@ -49,79 +49,103 @@
  * WISSENSCHAFTEN HAMBURG / HAMBURG UNIVERSITY OF APPLIED SCIENCES
  */
 
-package engine.data;
+package transformation.unit;
 
-import transformation.TransformationUnit;
+import java.awt.geom.Point2D;
+import java.util.HashMap;
 
-public class TransformationUnitData {
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
-  /**
-   * Additional data which is session-bound
-   */
-  private String fileName;
-  private String filePath;
+import petrinet.model.Place;
+import engine.handler.RuleNet;
+import engine.handler.rule.RulePersistence;
+import engine.ihandler.IPetrinetManipulation;
+import engine.ihandler.IRuleManipulation;
+import engine.ihandler.IRulePersistence;
+import engine.ihandler.ITransformationUnitManipulation;
+import exceptions.EngineException;
+import gui.EngineAdapter;
 
-  /**
-   * defines how often an expression is maximally executed when the
-   * asLongAsPossible operator is used
-   */
-  private int asLongAsPossibleExecutionLimit;
+public class TransformationUnitTest {
 
-  /**
-   * defines the upper range of the randomNumberOfTimes operator. The
-   * expression is executed a maximum of n times, where n is a number between
-   * 0 and randomNumberOfTimesUpperRange
-   */
-  private int randomNumberOfTimesUpperRange;
+  private IPetrinetManipulation petrinetManipulation;
+  private IRuleManipulation ruleManipulation;
+  private ITransformationUnitManipulation transformationUnitManipulation;
 
-  private TransformationUnit transformationUnit;
+  // IRulePersistence Interface used for test cases because it offers more
+  // internal data to work with (place, transition objects)
+  private IRulePersistence rulePersistence;
 
-  public TransformationUnitData(TransformationUnit transformationUnit,
-    String fileName, String filePath) {
+  // ID of the Petrinet created before each test
+  private int petrinetId;
 
-    this.fileName = fileName;
-    this.filePath = filePath;
+  private int r1;
+  private int r2;
+  private int r3;
+  private int r4;
 
-    this.transformationUnit = transformationUnit;
-    this.asLongAsPossibleExecutionLimit = 100;
-    this.randomNumberOfTimesUpperRange = 10;
+  private HashMap<String, Integer> ruleNameToIdMapping;
+
+  @Before
+  public void setUp() {
+
+    this.petrinetManipulation = EngineAdapter.getPetrinetManipulation();
+    this.ruleManipulation = EngineAdapter.getRuleManipulation();
+    this.rulePersistence = RulePersistence.getInstance();
+    this.transformationUnitManipulation =
+      EngineAdapter.getTransformationUnitManipulation();
+
+    this.petrinetId = this.petrinetManipulation.createPetrinet();
+
+    // Create four empty rules which can be used in the tests
+    this.r1 = this.ruleManipulation.createRule();
+    this.r2 = this.ruleManipulation.createRule();
+    this.r3 = this.ruleManipulation.createRule();
+    this.r4 = this.ruleManipulation.createRule();
+
+    // Names of rules to work with in the control conditions
+    this.ruleNameToIdMapping = new HashMap<String, Integer>();
+    ruleNameToIdMapping.put("r1", this.r1);
+    ruleNameToIdMapping.put("r2", this.r2);
+    ruleNameToIdMapping.put("r3", this.r3);
+    ruleNameToIdMapping.put("r4", this.r4);
   }
 
-  public String getFileName() {
+  @Test
+  public void testSequenceOperator()
+    throws EngineException {
 
-    return this.fileName;
-  }
+    // a Place 'p1' in (K+)R of rule 1 -> place will be created
+    Place p1a =
+      this.rulePersistence.createPlace(this.r1, RuleNet.R,
+        new Point2D.Double(0, 0));
+    this.ruleManipulation.setPname(this.r1, p1a, "p1");
 
-  public String getFilePath() {
+    // a Place 'p1' in L(+K) of rule 2 -> place will be removed
+    Place p1b =
+      this.rulePersistence.createPlace(this.r2, RuleNet.L,
+        new Point2D.Double(0, 0));
+    this.ruleManipulation.setPname(this.r2, p1b, "p1");
 
-    return this.filePath;
-  }
+    // Sequence R1;R2 must be possible
+    // R1 adds place p1
+    // R2 removes place p1
 
-  public TransformationUnit getTransformationUnit() {
+    // File location can be ignored
+    int transformationUnitId =
+      this.transformationUnitManipulation.createTransformationUnit("", "");
 
-    return transformationUnit;
-  }
+    this.transformationUnitManipulation.setControlExpression(
+      transformationUnitId, "r1;r2");
 
-  public void setAsLongAsPossibleExecutionLimit(
-    int asLongAsPossibleExecutionLimit) {
+    this.transformationUnitManipulation.executeTransformationUnit(
+      transformationUnitId, petrinetId, ruleNameToIdMapping);
 
-    this.asLongAsPossibleExecutionLimit = asLongAsPossibleExecutionLimit;
-  }
-
-  public int getAsLongAsPossibleExecutionLimit() {
-
-    return this.asLongAsPossibleExecutionLimit;
-  }
-
-  public int getRandomNumberOfTimesUpperRange() {
-
-    return this.randomNumberOfTimesUpperRange;
-  }
-
-  public void setRandomNumberOfTimesUpperRange(
-    int randomNumberOfTimesUpperRange) {
-
-    this.randomNumberOfTimesUpperRange = randomNumberOfTimesUpperRange;
+    Assert.assertEquals(
+      0,
+      this.petrinetManipulation.getJungLayout(petrinetId).getGraph().getVertexCount());
   }
 
 }

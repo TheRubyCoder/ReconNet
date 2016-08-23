@@ -93,27 +93,31 @@ public final class TransformationUnitHandler {
       transformationUnit, fileName, filePath);
   }
 
-  public String getFileName(int id) {
+  public void removeTransformationUnit(int transformationUnitId) {
 
-    return this.sessionManager.getTransformationUnitData(id).getFileName();
+    this.sessionManager.removeTransformationUnitData(transformationUnitId);
   }
 
-  public void setControlExpression(int id, String controlExpression) {
+  public String getFileName(int transformationUnitId) {
 
-    this.sessionManager.getTransformationUnitData(id).getTransformationUnit().setControlExpression(
+    return this.sessionManager.getTransformationUnitData(transformationUnitId).getFileName();
+  }
+
+  public void setControlExpression(int transformationUnitId,
+    String controlExpression) {
+
+    this.sessionManager.getTransformationUnitData(transformationUnitId).getTransformationUnit().setControlExpression(
       controlExpression);
   }
 
-  public String getControlExpression(int id) {
+  public String getControlExpression(int transformationUnitId) {
 
-    return this.sessionManager.getTransformationUnitData(id).getTransformationUnit().getControlExpression();
+    return this.sessionManager.getTransformationUnitData(transformationUnitId).getTransformationUnit().getControlExpression();
   }
 
   public void executeTransformationUnit(int transformationUnitId,
     int petrinetId, Map<String, Integer> ruleNameToId)
       throws EngineException {
-
-    System.out.println(".. executeTransformationUnit");
 
     TransformationUnitData transformationUnitData =
       this.sessionManager.getTransformationUnitData(transformationUnitId);
@@ -139,9 +143,8 @@ public final class TransformationUnitHandler {
 
     try {
       visitor.visit(parseTree);
-      System.out.println(visitor);
     } catch (RuntimeException e) {
-      e.printStackTrace();
+      // e.printStackTrace();
       throw new EngineException(
         "Die Transformationseinheit konnte nicht angewendet werden.");
     }
@@ -189,5 +192,15 @@ public final class TransformationUnitHandler {
     } catch (Exception e) {
       throw new EngineException(e.getMessage());
     }
+  }
+
+  public int getAsLongAsPossibleExecutionLimit(int transformationUnitId) {
+
+    return this.sessionManager.getTransformationUnitData(transformationUnitId).getAsLongAsPossibleExecutionLimit();
+  }
+
+  public int getRandomNumberOfTimesUpperRange(int transformationUnitId) {
+
+    return this.sessionManager.getTransformationUnitData(transformationUnitId).getRandomNumberOfTimesUpperRange();
   }
 }

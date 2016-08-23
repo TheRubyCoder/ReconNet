@@ -18,7 +18,7 @@ import engine.session.SessionManager;
 import exceptions.EngineException;
 
 public class TransformationUnitExecutionVisitor
-extends ExpressionGrammarBaseVisitor<Void> {
+  extends ExpressionGrammarBaseVisitor<Void> {
 
   private Random dice = new Random();
   private List<String> executedRules = new ArrayList<String>();
@@ -52,15 +52,27 @@ extends ExpressionGrammarBaseVisitor<Void> {
     JungData jungData =
       SessionManager.getInstance().getPetrinetData(petrinetId).getJungData();
 
+    System.out.println(".. execute transformation unit");
+
+    int snapshotId = Math.abs(dice.nextInt());
+    System.out.println("... create snapshot [" + snapshotId + "]");
+
     Petrinet petrinetSnapshot = new Petrinet(petrinet);
     JungData jungDataSnapshot = new JungData(jungData, petrinetSnapshot);
+
+    List<String> executedRulesSnapshot = new ArrayList<String>(executedRules);
 
     try {
       visit(ctx.expression());
       visit(ctx.EOF());
+      System.out.println(".. execution successful");
+      System.out.println(".. executed rules: " + this.toString());
     } catch (RuntimeException e) {
+      System.out.println("... recover snapshot [" + snapshotId + "]");
+      System.out.println(".. execution failed");
       SessionManager.getInstance().replacePetrinetData(petrinetId,
         petrinetSnapshot, jungDataSnapshot);
+      this.executedRules = executedRulesSnapshot;
       throw e;
     }
 
@@ -104,6 +116,9 @@ extends ExpressionGrammarBaseVisitor<Void> {
       JungData jungData =
         SessionManager.getInstance().getPetrinetData(petrinetId).getJungData();
 
+      int snapshotId = Math.abs(dice.nextInt());
+      System.out.println("... create snapshot [" + snapshotId + "]");
+
       Petrinet petrinetSnapshot = new Petrinet(petrinet);
       JungData jungDataSnapshot = new JungData(jungData, petrinetSnapshot);
 
@@ -117,6 +132,7 @@ extends ExpressionGrammarBaseVisitor<Void> {
         // some rule in the subtree failed
         // recover snapshot
         // .. petrinet = snapshot
+        System.out.println("... recover snapshot [" + snapshotId + "]");
         SessionManager.getInstance().replacePetrinetData(petrinetId,
           petrinetSnapshot, jungDataSnapshot);
         this.executedRules = executedRulesSnapshot;
@@ -145,6 +161,9 @@ extends ExpressionGrammarBaseVisitor<Void> {
       JungData jungData =
         SessionManager.getInstance().getPetrinetData(petrinetId).getJungData();
 
+      int snapshotId = Math.abs(dice.nextInt());
+      System.out.println("... create snapshot [" + snapshotId + "]");
+
       Petrinet petrinetSnapshot = new Petrinet(petrinet);
       JungData jungDataSnapshot = new JungData(jungData, petrinetSnapshot);
 
@@ -158,6 +177,7 @@ extends ExpressionGrammarBaseVisitor<Void> {
         // some rule in the subtree failed
         // recover snapshot
         // .. petrinet = snapshot
+        System.out.println("... recover snapshot [" + snapshotId + "]");
         SessionManager.getInstance().replacePetrinetData(petrinetId,
           petrinetSnapshot, jungDataSnapshot);
         this.executedRules = executedRulesSnapshot;
@@ -176,13 +196,18 @@ extends ExpressionGrammarBaseVisitor<Void> {
     int ruleId = this.ruleNameToId.get(ruleName);
 
     try {
+      System.out.print("... execute rule: " + ruleName);
+
       SimulationHandler.getInstance().transform(this.petrinetId, ruleId);
       executedRules.add(ruleName);
     } catch (EngineException e) {
       // no Match was found. Throw Exception up the parseTree
       // e.printStackTrace();
+      System.out.println(" .. failed");
       throw new RuntimeException(e);
     }
+
+    System.out.println(" .. success");
 
     return null;
   }

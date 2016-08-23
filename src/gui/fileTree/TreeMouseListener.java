@@ -72,7 +72,7 @@ import javax.swing.tree.TreePath;
  * {@link MouseListener}.
  */
 public class TreeMouseListener
-implements MouseListener {
+  implements MouseListener {
 
   /**
    * reference to the {@link JTree} object.
@@ -331,13 +331,6 @@ implements MouseListener {
 
     i = new JMenuItem(Style.MENU_TRANSFORMATION_UNIT_SAVE_LBL, Style.SAVE_24);
     i.setActionCommand(Style.MENU_TRANSFORMATION_UNIT_SAVE_CMD);
-    i.addActionListener(this.menuListener);
-    popup.add(i);
-
-    i =
-      new JMenuItem(Style.MENU_TRANSFORMATION_UNIT_RELOAD_LBL,
-        Style.REFRESH_24);
-    i.setActionCommand(Style.MENU_TRANSFORMATION_UNIT_RELOAD_CMD);
     i.addActionListener(this.menuListener);
     popup.add(i);
 

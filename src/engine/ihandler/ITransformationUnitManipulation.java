@@ -60,9 +60,17 @@ public interface ITransformationUnitManipulation {
   /**
    * Creates a TransformationUnit
    *
-   * @return Session Id of the Transformation Unit
+   * @return Session Id of the transformation unit
    */
   int createTransformationUnit(String fileName, String filePath);
+
+  /**
+   * Removes the transformation unit from the session data
+   *
+   * @param transformationUnitId
+   *        Id of the transformation unit
+   */
+  void removeTransformationUnit(int transformationUnitId);
 
   /**
    * Gets the fileName of transformation unit for the given id
@@ -71,7 +79,7 @@ public interface ITransformationUnitManipulation {
    *        Id of the transformation unit data
    * @return FileName of the transformation unit
    */
-  String getFileName(int id);
+  String getFileName(int transformationUnitId);
 
   /**
    * Sets the control expression of a transformation unit for the given id
@@ -81,7 +89,8 @@ public interface ITransformationUnitManipulation {
    * @param controlExpression
    *        the control expression to set
    */
-  void setControlExpression(int id, String controlExpression);
+  void
+  setControlExpression(int transformationUnitId, String controlExpression);
 
   /**
    * Gets the control expression of a transformation unit for the given id
@@ -90,16 +99,7 @@ public interface ITransformationUnitManipulation {
    *        Id of the transformation unit
    * @return the control expression to get
    */
-  String getControlExpression(int id);
-
-  /**
-   * Executes the transformation unit
-   *
-   * @param transformationUnitId
-   *        Id of the transformation unit to execute
-   * @param petrinetId
-   *        Id of the petrinet on which it should be executed
-   */
+  String getControlExpression(int transformationUnitId);
 
   /**
    * Executes the transformation unit
@@ -109,18 +109,18 @@ public interface ITransformationUnitManipulation {
    * @param petrinetId
    *        Id of the petrinet on which it should be executed
    * @param ruleNameToId
-   *        A map which maps ruleNames to their Ids
+   *        A map which maps ruleNames to their Session Ids
    */
   void executeTransformationUnit(int transformationUnitId, int petrinetId,
     Map<String, Integer> ruleNameToId)
-      throws EngineException;
+    throws EngineException;
 
   /**
    * Sets the maximum number of executions a controlexpression is executed
    * when the asLongAsPossible operator is used
    *
    * @param transformationUnitId
-   *        Id of the transformation
+   *        Id of the transformation unit
    * @param executionLimit
    *        maximum number of executions
    */
@@ -128,13 +128,33 @@ public interface ITransformationUnitManipulation {
     int executionLimit);
 
   /**
+   * Gets the execution limit for asLongAsPossible
+   *
+   * @param transformationUnitId
+   *        Id of the transformation unit
+   * @return execution limit for asLongAsPossible
+   */
+  int getAsLongAsPossibleExecutionLimit(int transformationUnitId);
+
+  /**
    * Sets the upper range of the randomNumberOfTimes operator
    *
    * @param transformationUnitId
+   *        Id of the transformation unit
    * @param randomNumberOfTimesUpperRange
+   *        upper range of the randomNumberOfTimes operator
    */
   void setRandomNumberOfTimesUpperRange(int transformationUnitId,
     int randomNumberOfTimesUpperRange);
+
+  /**
+   * Gets the upper range of the randomNumberOfTimes operator
+   *
+   * @param transformationUnitId
+   *        Id of the transformation unit
+   * @return upper range of the randomNumberOfTimes operator
+   */
+  int getRandomNumberOfTimesUpperRange(int transformationUnitId);
 
   /**
    * Saves the transformation unit to the file system
