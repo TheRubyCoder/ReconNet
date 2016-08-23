@@ -180,9 +180,12 @@
   </module>
   <module name="Header">
     <property name="severity" value="error"/>
-    <property name="headerFile" value="C:\Users\locke.d\git\wppetrinetze\BSD_Header"/>
+    <property name="headerFile" value="${samedir}/BSD_Header"/>
     <property name="ignoreLines" value="2, 3"/>
     <property name="fileExtensions" value=".java"/>
   </module>
   <module name="SuppressionCommentFilter"/>
+  <module name="SuppressionFilter">
+    <property name="file" value="${samedir}/checkstyleSuppressions.xml"/>
+  </module>
 </module>
