@@ -37,6 +37,17 @@
 	            <include name="**/*.jar"/>
 	            <include name="**/*.zip"/>
 	        </fileset>
+	    	
+	    	<!-- 
+	    		CHoff: unmanaged libraries
+	    		Hier referenzierte JARs befinden sich im git repository. Bei Zeiten
+	    		sollten diese JARs ebenfalls über Ivy Dependancy Management geladen werden	    		
+	    	-->
+	        <fileset dir="${basedir}/lib-unmanaged">
+	            <include name="**/*.jar"/>
+	            <include name="**/*.zip"/>
+	        </fileset>
+	    	
 	    </path> 
 
     <path id="JUnit 4.libraryclasspath">
