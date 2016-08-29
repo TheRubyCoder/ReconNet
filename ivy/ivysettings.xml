@@ -3,13 +3,17 @@
     <property name="org.repo.url" value="http://developer.timadorus.org/artifactory" />
     <property name="upload.repo.url" value="http://upload:secret@developer.timadorus.org/artifactory" />
     
-	<settings defaultResolver="ivy-and-maven" />
+	<settings defaultResolver="central-repo-maven" />
 	<caches defaultCacheDir="${ivy.cache.dir}" />
     <resolvers>
+        <ibiblio name="central-repo-maven" root="http://central.maven.org/maven2" m2compatible="true"    	
+	        pattern="[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"
+   		/>
+<!-- 
     <chain name="ivy-and-maven" returnFirst="true">
     
-    	<!--  set pattern to ensure that maven classifiers are handled, but only retrieved when 
-    		      explicitly asked for -->
+    	<!- -  set pattern to ensure that maven classifiers are handled, but only retrieved when 
+    		      explicitly asked for - ->
    		<ibiblio name="timadorus-repo-maven" root="${org.repo.url}/remote-repos" m2compatible="true"    	
 	   		     pattern="[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"
    		/>
@@ -22,5 +26,6 @@
 			<ivy pattern="${upload.repo.url}/libs-releases-local/[organisation]/[module]/[revision]/ivy.xml" />
 			<artifact pattern="${upload.repo.url}/libs-releases-local/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 		</url>
+-->
 	</resolvers>
 </ivysettings>
