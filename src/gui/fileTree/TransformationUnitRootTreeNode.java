@@ -53,18 +53,16 @@ package gui.fileTree;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-public class PetriTreeNode
-  extends DefaultMutableTreeNode {
+public class TransformationUnitRootTreeNode
+extends DefaultMutableTreeNode {
 
   private static final long serialVersionUID = 1L;
 
   private String displayText;
-  private int netId;
 
-  public PetriTreeNode(String displayText, int netId) {
+  public TransformationUnitRootTreeNode(String displayText) {
 
     this.displayText = displayText;
-    this.netId = netId;
   }
 
   @Override
@@ -73,13 +71,4 @@ public class PetriTreeNode
     return this.displayText;
   }
 
-  public void setDisplayText(String displayText) {
-
-    this.displayText = displayText;
-  }
-
-  public int getNetId() {
-
-    return netId;
-  }
 }

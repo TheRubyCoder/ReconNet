@@ -52,8 +52,12 @@
 package persistence;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -65,9 +69,14 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.helpers.DefaultValidationEventHandler;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
+
 import petrinet.model.INode;
 import petrinet.model.Petrinet;
 import transformation.Rule;
+import transformation.TransformationUnit;
 import engine.attribute.NodeLayoutAttribute;
 import engine.ihandler.IPetrinetPersistence;
 import engine.ihandler.IRulePersistence;
@@ -123,11 +132,11 @@ public final class Persistence {
 
     for (Entry<INode, NodeLayoutAttribute> e : nodeMap.entrySet()) {
       String[] coords =
-      {String.valueOf(e.getValue().getCoordinate().getX()),
-        String.valueOf(e.getValue().getCoordinate().getY()),
-        String.valueOf(e.getValue().getColor().getRed()),
-        String.valueOf(e.getValue().getColor().getGreen()),
-        String.valueOf(e.getValue().getColor().getBlue())};
+        {String.valueOf(e.getValue().getCoordinate().getX()),
+          String.valueOf(e.getValue().getCoordinate().getY()),
+          String.valueOf(e.getValue().getColor().getRed()),
+          String.valueOf(e.getValue().getColor().getGreen()),
+          String.valueOf(e.getValue().getColor().getBlue())};
       coordinates.put(String.valueOf(e.getKey().getId()), coords);
     }
 
@@ -262,6 +271,68 @@ public final class Persistence {
     }
 
     return 0;
+  }
+
+  public static void saveTransformationUnit(
+    TransformationUnit transformationUnit, String filePath)
+    throws Exception {
+
+    Gson gson = new Gson();
+    String jsonString = gson.toJson(transformationUnit);
+
+    FileOutputStream fos = null;
+
+    try {
+      fos = new FileOutputStream(filePath);
+      fos.write(jsonString.getBytes());
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+      throw new Exception("Die Datei konnte nicht geöffnet werden.");
+    } catch (IOException e) {
+      e.printStackTrace();
+      throw new Exception("Die Datei konnte nicht geöffnet werden.");
+    } finally {
+      try {
+        fos.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+        throw new Exception("Fehler beim Schließen der Datei.");
+      }
+    }
+
+  }
+
+  public static TransformationUnit loadTransformationUnit(String filePath)
+    throws Exception {
+
+    Gson gson = new Gson();
+
+    FileInputStream fis = null;
+
+    try {
+      fis = new FileInputStream(filePath);
+      TransformationUnit transformationUnit =
+        gson.fromJson(new InputStreamReader(fis), TransformationUnit.class);
+      return transformationUnit;
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+      throw new Exception("Die Datei konnte nicht geöffnet werden.");
+    } catch (JsonIOException e) {
+      e.printStackTrace();
+      throw new Exception(
+        "Die Transformationseinheit konnte nicht geladen werden.");
+    } catch (JsonSyntaxException e) {
+      e.printStackTrace();
+      throw new Exception(
+        "Die Transformationseinheit konnte nicht geladen werden.");
+    } finally {
+      try {
+        fis.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+        throw new Exception("Fehler beim Schließen der Datei.");
+      }
+    }
   }
 
 }

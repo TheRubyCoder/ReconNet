@@ -71,7 +71,7 @@ import exceptions.EngineException;
 public final class Transformation {
 
   protected static final class CheckContactConditionFulfilledMatchVisitor
-  implements PNVF2.MatchVisitor {
+    implements PNVF2.MatchVisitor {
 
     @SuppressWarnings("unused")
     private Petrinet petrinet;
@@ -178,8 +178,6 @@ public final class Transformation {
   // WLAD Aenderung 2 match mit nac methode
   public static Transformation createTransformationWithNAC(Petrinet petrinet,
     Rule rule) {
-
-    System.out.println(Transformation.class + ": createTransformationWithNAC");
 
     try {
       MatchVisitor nacVisitor = new NacVisitor(rule);

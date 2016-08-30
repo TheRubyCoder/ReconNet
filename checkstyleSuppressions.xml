@@ -5,25 +5,7 @@
     "http://www.puppycrawl.com/dtds/suppressions_1_0.dtd">
 
 <suppressions>
-    <!-- as the lines are one spell each and are not easily separeted w/o reducing the readability,
-         all spell lists are suppressed for the length-of-line check -->
-    <suppress checks="LineLength" files=".*SpellList.java$"/>
-    <!-- also the spell list hold magic numbers by definition -->
-    <suppress checks="MagicNumber" files=".*SpellList.java$"/>
-    <!--  <suppress checks="JavadocMethod" files=".*SpellList.java$"/> -->
-    
-    <!--  cleaning up this mess is not worthwhile -->
-    <suppress checks="MagicNumber" files=".*CharMaker.java$"/>
-    <suppress checks="MagicNumber" files=".*AcidGui.java$"/>
-    <suppress checks="MagicNumber" files=".*WeaponTable.java$"/>
-    <suppress checks="MagicNumber" files=".*TxtCriticalTable.java$"/>
 
-    <suppress checks="ExplicitInitialization" files=".*AcidGui.java$"/>
-
-	<!-- quickly make this work with comment supression -->
-    <suppress checks="MagicNumber" files=".*KeeperCharacterLoaderTest.java$"/>
-    <suppress checks="MagicNumber" files=".*SkillCostTest.java$"/>
-	    
-    <!-- the StatRecord structure needs a fully initializing CTOR -->
-    <suppress checks="ParameterNumber" files="StatsBean.java" lines="385-395" />
+	<suppress files="transformation[\\/]units[\\/]utils" checks=".*"/>
+	
 </suppressions>

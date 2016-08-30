@@ -54,6 +54,7 @@ package gui.fileTree;
 import gui.PetrinetPane;
 import gui.RulePane;
 import gui.Style;
+import gui.TransformationUnitWindow;
 
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -71,7 +72,7 @@ import javax.swing.tree.TreePath;
  * {@link MouseListener}.
  */
 public class TreeMouseListener
-implements MouseListener {
+  implements MouseListener {
 
   /**
    * reference to the {@link JTree} object.
@@ -117,6 +118,10 @@ implements MouseListener {
       this.showRuleMenu(event, (RuleTreeNode) selectedNode);
     } else if (selectedNode instanceof NacTreeNode) {
       this.showNacMenu(event, (NacTreeNode) selectedNode);
+    } else if (selectedNode instanceof TransformationUnitRootTreeNode) {
+      this.showTransformationUnitRootMenu(event, selectedNode);
+    } else if (selectedNode instanceof TransformationUnitTreeNode) {
+      this.showTransformationUnitMenu(event, selectedNode);
     }
 
   }
@@ -286,6 +291,59 @@ implements MouseListener {
     popup.show(tree, e.getX(), e.getY());
   }
 
+  private void showTransformationUnitRootMenu(MouseEvent e,
+    DefaultMutableTreeNode selectedNode) {
+
+    JPopupMenu popup = new JPopupMenu();
+    JMenuItem i;
+
+    i =
+      new JMenuItem(Style.MENU_ROOT_TRANSFORMATION_UNIT_SAVEALL_LBL,
+        Style.SAVE_24);
+    i.setActionCommand(Style.MENU_ROOT_TRANSFORMATION_UNIT_SAVEALL_CMD);
+    i.addActionListener(this.menuListener);
+    popup.add(i);
+
+    popup.addSeparator();
+
+    i =
+      new JMenuItem(Style.MENU_ROOT_TRANSFORMATION_UNIT_NEW_LBL,
+        Style.TRANSFORMATION_UNIT_24);
+    i.setActionCommand(Style.MENU_ROOT_TRANSFORMATION_UNIT_NEW_CMD);
+    i.addActionListener(this.menuListener);
+    popup.add(i);
+
+    i =
+      new JMenuItem(Style.MENU_ROOT_TRANSFORMATION_UNIT_LOAD_LBL,
+        Style.OPEN_24);
+    i.setActionCommand(Style.MENU_ROOT_TRANSFORMATION_UNIT_LOAD_CMD);
+    i.addActionListener(this.menuListener);
+    popup.add(i);
+
+    popup.show(tree, e.getX(), e.getY());
+  }
+
+  private void showTransformationUnitMenu(MouseEvent e,
+    DefaultMutableTreeNode selectedNode) {
+
+    JPopupMenu popup = new JPopupMenu();
+    JMenuItem i;
+
+    i = new JMenuItem(Style.MENU_TRANSFORMATION_UNIT_SAVE_LBL, Style.SAVE_24);
+    i.setActionCommand(Style.MENU_TRANSFORMATION_UNIT_SAVE_CMD);
+    i.addActionListener(this.menuListener);
+    popup.add(i);
+
+    i =
+      new JMenuItem(Style.MENU_TRANSFORMATION_UNIT_REMOVE_LBL,
+        Style.DELETE_24);
+    i.setActionCommand(Style.MENU_TRANSFORMATION_UNIT_REMOVE_CMD);
+    i.addActionListener(this.menuListener);
+    popup.add(i);
+
+    popup.show(tree, e.getX(), e.getY());
+  }
+
   @Override
   public void mouseClicked(MouseEvent e) {
 
@@ -307,6 +365,8 @@ implements MouseListener {
           this.handleRuleSelection((RuleTreeNode) selectedNode);
         } else if (selectedNode instanceof NacTreeNode) {
           this.handleNacSelection((NacTreeNode) selectedNode);
+        } else if (selectedNode instanceof TransformationUnitTreeNode) {
+          this.handleTransformationUnitSelection((TransformationUnitTreeNode) selectedNode);
         }
 
       } else if (e.getButton() == MouseEvent.BUTTON3) {
@@ -315,6 +375,15 @@ implements MouseListener {
       }
     }
 
+  }
+
+  private void handleTransformationUnitSelection(
+    TransformationUnitTreeNode selectedNode) {
+
+    int transformationUnitId = selectedNode.getTransformationUnitId();
+    TransformationUnitWindow window =
+      new TransformationUnitWindow(transformationUnitId);
+    window.show();
   }
 
   private void handleNetSelection(PetriTreeNode netNode) {

@@ -61,6 +61,7 @@ import petrinet.model.IArc;
 import petrinet.model.INode;
 import petrinet.model.Petrinet;
 import transformation.Rule;
+import transformation.TransformationUnit;
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
@@ -68,6 +69,7 @@ import engine.data.JungData;
 import engine.data.PetrinetData;
 import engine.data.RuleData;
 import engine.data.SessionData;
+import engine.data.TransformationUnitData;
 
 /**
  * The instance manager manages all the different types of data objects like
@@ -88,6 +90,9 @@ public final class SessionManager {
   /** Stores rule data by their ID */
   private Map<Integer, RuleData> ruleData;
 
+  /** Stores transformation unit data by their ID */
+  private Map<Integer, TransformationUnitData> transformationUnitData;
+
   private Map<Integer, SessionData> sessionData;
 
   private static final double ATTRACTION_MULTIPLIER = 0.5;
@@ -98,6 +103,7 @@ public final class SessionManager {
     sessionData = new HashMap<Integer, SessionData>();
     petrinetData = new HashMap<Integer, PetrinetData>();
     ruleData = new HashMap<Integer, RuleData>();
+    transformationUnitData = new HashMap<Integer, TransformationUnitData>();
   }
 
   /** Returns the singleton instace */
@@ -163,6 +169,33 @@ public final class SessionManager {
     return data;
   }
 
+  public void replacePetrinetData(int petrinetId, Petrinet petrinet,
+    JungData petrinetJungData) {
+
+    PetrinetData data =
+      new PetrinetData(petrinetId, petrinet, petrinetJungData);
+
+    petrinetData.put(petrinetId, data);
+  }
+
+  public int createTransformationUnitData(
+    TransformationUnit transformationUnit, String fileName, String filePath) {
+
+    TransformationUnitData data =
+      new TransformationUnitData(transformationUnit, fileName, filePath);
+
+    int dataId = getNextSessionDataId();
+
+    transformationUnitData.put(dataId, data);
+
+    return dataId;
+  }
+
+  public TransformationUnitData getTransformationUnitData(int id) {
+
+    return transformationUnitData.get(id);
+  }
+
   /**
    * Creates a new RuleData from all Petrinet (l, k, r).
    *
@@ -211,6 +244,13 @@ public final class SessionManager {
   public boolean closeSessionData(int id) {
 
     return sessionData.remove(id) != null;
+  }
+
+  public boolean removeTransformationUnitData(int transformationUnitDataId) {
+
+    boolean deleted =
+      this.transformationUnitData.remove(transformationUnitDataId) != null;
+    return deleted;
   }
 
   /**

@@ -1,0 +1,35 @@
+Damit Regeln im Kontrollausdruck von Transformationseinheiten referenziert werden können, 
+dürfen die Namen der Regeln nur in folgender Form vorliegen:
+
+	IDENTIFIER: [a-zA-Z_] [a-zA-Z_0-9]*
+	
+Sonderzeichen o.ä. sind daher nicht erlaubt.
+
+Die Form ist in der Grammatik für Kontrollausdrücke spezifiziert und kann ggf. angepasst werden.
+
+	additional/TransformationUnit/ExpressionGrammar.g4
+	
+	
+Wenn die Grammatik angepasst wurde, muss auch der Parser neu generiert werden. 
+Hierzu die Grammatik in einen Ordner kopieren und anschließend eine Kommandozeile in diesem Ordner öffnen.
+Die Klassen können dann über folgenden Befehl erzeugt werden (Befehl ggf. anpassen):
+
+	"<Java Installationspfad>\jdk1.8.0_20\bin\java.exe" -jar antlr-4.5.3-complete.jar ExpressionGrammar.g4 -visitor
+	
+	
+Usability Designentscheidungen
+
+	- Beim Schließen des Transformationseinheit-Editors wird der aktuelle Zustand in der Session gespeichert
+	- Der Zustand wird dabei noch nicht auf das Dateisystem persistiert
+	- Zum Persistieren muss der Benutzer Rechtsklick->Speichern wählen
+	
+	
+Sonstiges
+
+	- Es wurde manuell die antlr-4.5.3-complete.jar in das Projekt aufgenommen
+	- Es wird zur Zeit nicht automatisiert über das Dependancy Management eingebunden
+	
+	- Es wird nur TransformationUnit persistiert und nicht TransformationUnitData
+	- Simulations/Transformations-Parameter werden deshalb nicht persistiert
+	
+	

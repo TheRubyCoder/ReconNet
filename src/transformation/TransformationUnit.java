@@ -49,37 +49,40 @@
  * WISSENSCHAFTEN HAMBURG / HAMBURG UNIVERSITY OF APPLIED SCIENCES
  */
 
-package gui.fileTree;
+package transformation;
 
-import javax.swing.tree.DefaultMutableTreeNode;
+import java.util.UUID;
 
-public class PetriTreeNode
-  extends DefaultMutableTreeNode {
+public class TransformationUnit {
 
-  private static final long serialVersionUID = 1L;
+  /**
+   * Unique identifier of the transformation unit
+   */
+  private final UUID id;
 
-  private String displayText;
-  private int netId;
+  /**
+   * Control expression of the transformation unit
+   */
+  private String controlExpression;
 
-  public PetriTreeNode(String displayText, int netId) {
+  public TransformationUnit() {
 
-    this.displayText = displayText;
-    this.netId = netId;
+    this.id = UUID.randomUUID();
+    this.controlExpression = "";
   }
 
-  @Override
-  public String toString() {
+  public UUID getId() {
 
-    return this.displayText;
+    return this.id;
   }
 
-  public void setDisplayText(String displayText) {
+  public String getControlExpression() {
 
-    this.displayText = displayText;
+    return this.controlExpression;
   }
 
-  public int getNetId() {
+  public void setControlExpression(String controlExpression) {
 
-    return netId;
+    this.controlExpression = controlExpression;
   }
 }

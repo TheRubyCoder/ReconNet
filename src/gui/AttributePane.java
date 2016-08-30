@@ -148,7 +148,7 @@ public final class AttributePane {
   /**
    * Makes the attribute pane display the attributes of a <code>node</code>,
    * using its <code>petrinetViewer</code>
-   * 
+   *
    * @param node
    * @param petrinetViewer
    */
@@ -195,7 +195,7 @@ public final class AttributePane {
   /**
    * Makes the attribute pane display the attributes of an <code>edge</code>,
    * using its <code>petrinetViewer</code>
-   * 
+   *
    * @param edge
    * @param petrinetViewer
    */
@@ -224,7 +224,7 @@ public final class AttributePane {
 
   /**
    * Add this Panel to given frame
-   * 
+   *
    * @param frame
    *        wich the pane add to
    */
@@ -253,11 +253,11 @@ public final class AttributePane {
    * A TableModel is needed to tell Swing what cells are editable
    */
   private abstract static class AbstractPetriTableModel
-    extends AbstractTableModel {
+  extends AbstractTableModel {
 
     /**
-         * 
-         */
+     *
+     */
     private static final long serialVersionUID = 6737819176767454927L;
 
     protected abstract String[][] getData();
@@ -310,10 +310,10 @@ public final class AttributePane {
 
   /** Class for the Table with Place Attributes */
   private static class PlaceTableModel
-    extends AbstractPetriTableModel {
+  extends AbstractPetriTableModel {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -6357182574839407504L;
 
@@ -344,11 +344,11 @@ public final class AttributePane {
 
   /** Class for the Table with Transition Attributes */
   private static class TransitionTableModel
-    extends AbstractPetriTableModel {
+  extends AbstractPetriTableModel {
 
     /**
-         * 
-         */
+     *
+     */
     private static final long serialVersionUID = -3955002911201794539L;
     /**
      * The General Data for the Transitiontable
@@ -406,7 +406,7 @@ public final class AttributePane {
     /**
      * Checks whether the newly set tlb is valid to the assigned renew. Gives
      * the user the chance to select a new renew
-     * 
+     *
      * @return Returns new Renew as GUI String
      */
     private String tlbValid(String tlb, String renew) {
@@ -470,11 +470,11 @@ public final class AttributePane {
 
   /** Class for the Table with Arc Attributes */
   private static class ArcTableModel
-    extends AbstractPetriTableModel {
+  extends AbstractPetriTableModel {
 
     /**
-         * 
-         */
+     *
+     */
     private static final long serialVersionUID = -6770322595921463169L;
     /**
      * The General Data for the Arctable
@@ -503,7 +503,7 @@ public final class AttributePane {
 
   /** Class for Tablelistener to make changes by the user possible */
   private static class TableListener
-    implements TableModelListener {
+  implements TableModelListener {
 
     /** {@link PetrinetViewer} of currently displayed element */
     private PetrinetViewer petrinetViewer;
@@ -529,7 +529,7 @@ public final class AttributePane {
 
     /**
      * Creates a table listener for a table that displays an arc
-     * 
+     *
      * @param petrinetViewer
      * @param node
      */

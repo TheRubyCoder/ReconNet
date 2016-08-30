@@ -55,12 +55,15 @@ import static gui.Style.FILE_TREE_PANE_PREFERRED_SIZE;
 import static gui.Style.TREE_STRING_NET;
 import static gui.Style.TREE_STRING_ROOT;
 import static gui.Style.TREE_STRING_RULE;
+import static gui.Style.TREE_STRING_TRANSFORMATION_UNIT;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -88,6 +91,11 @@ public final class FileTreePane
    * Rule root node. Root of all rules.
    */
   private DefaultMutableTreeNode ruleRootNode;
+
+  /**
+   * Transformation Unit root node. Root of all transformation units.
+   */
+  private DefaultMutableTreeNode transformationUnitRootNode;
 
   /**
    * Reference to the tree object.
@@ -192,9 +200,12 @@ public final class FileTreePane
 
     netRootNode = new NetRootTreeNode(TREE_STRING_NET);
     ruleRootNode = new RuleRootTreeNode(TREE_STRING_RULE);
+    transformationUnitRootNode =
+      new TransformationUnitRootTreeNode(TREE_STRING_TRANSFORMATION_UNIT);
 
     this.rootNode.add(netRootNode);
     this.rootNode.add(ruleRootNode);
+    this.rootNode.add(transformationUnitRootNode);
 
     return this.rootNode;
   }
@@ -313,6 +324,38 @@ public final class FileTreePane
     }
 
     return list;
+  }
+
+  public Map<String, Integer> getRuleNamesToIdsMapping() {
+
+    Map<String, Integer> ruleNameToIdMapping = new HashMap<String, Integer>();
+
+    int numberOfRules = this.getRuleRootNode().getChildCount();
+
+    for (int i = 0; i < numberOfRules; i++) {
+      RuleTreeNode ruleNode = (RuleTreeNode) ruleRootNode.getChildAt(i);
+      ruleNameToIdMapping.put(ruleNode.toString(), ruleNode.getRuleId());
+    }
+
+    return ruleNameToIdMapping;
+  }
+
+  public Integer getRuleIdByRuleName(String ruleName) {
+
+    DefaultMutableTreeNode ruleRootNode = this.getRuleRootNode();
+    int ruleCount = ruleRootNode.getChildCount();
+
+    for (int i = 0; i < ruleCount; i++) {
+
+      RuleTreeNode ruleNode = (RuleTreeNode) ruleRootNode.getChildAt(i);
+
+      if (ruleNode.toString().equals(ruleName)) {
+        return ruleNode.getRuleId();
+      }
+
+    }
+
+    return null;
   }
 
   /**

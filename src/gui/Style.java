@@ -303,6 +303,8 @@ public final class Style {
     Style.class.getResource("/gui/icons/rule_24.png"));
   public static final ImageIcon NAC_24 = new ImageIcon(
     Style.class.getResource("/gui/icons/nac_24.png"));
+  public static final ImageIcon TRANSFORMATION_UNIT_24 = new ImageIcon(
+    Style.class.getResource("/gui/icons/transformationunit_24.png"));
 
   public static final int NEW_BUTTON_X = 0;
   public static final int NEW_BUTTON_Y = 0;
@@ -331,6 +333,8 @@ public final class Style {
   public static final String TREE_STRING_ROOT = "root";
   public static final String TREE_STRING_NET = "Netze";
   public static final String TREE_STRING_RULE = "Regeln";
+  public static final String TREE_STRING_TRANSFORMATION_UNIT =
+    "Transformationseinheiten";
 
   // _LBL is the label shown on the menu item
   // _CMD is the unique identifier to identify the action
@@ -356,6 +360,20 @@ public final class Style {
     "MENU_ROOT_RULE_NEWRULE_CMD";
   public static final String MENU_ROOT_RULE_LOADRULE_CMD =
     "MENU_ROOT_RULE_LOADRULE_CMD";
+
+  // transformation unit root menu
+  public static final String MENU_ROOT_TRANSFORMATION_UNIT_SAVEALL_LBL =
+    "Alle speichern";
+  public static final String MENU_ROOT_TRANSFORMATION_UNIT_NEW_LBL =
+    "Neue Transformationseinheit";
+  public static final String MENU_ROOT_TRANSFORMATION_UNIT_LOAD_LBL =
+    "Transformationseinheit laden";
+  public static final String MENU_ROOT_TRANSFORMATION_UNIT_SAVEALL_CMD =
+    "MENU_ROOT_TRANSFORMATION_UNIT_SAVEALL_CMD";
+  public static final String MENU_ROOT_TRANSFORMATION_UNIT_NEW_CMD =
+    "MENU_ROOT_TRANSFORMATION_UNIT_NEW_LBL";
+  public static final String MENU_ROOT_TRANSFORMATION_UNIT_LOAD_CMD =
+    "MENU_ROOT_TRANSFORMATION_UNIT_LOAD_CMD";
 
   // net menu
   public static final String MENU_NET_SAVE_LBL = "Speichern";
@@ -384,6 +402,19 @@ public final class Style {
   // nac menu
   public static final String MENU_NAC_REMOVE_LBL = "NAC entfernen";
   public static final String MENU_NAC_REMOVE_CMD = "MENU_NAC_REMOVE_CMD";
+
+  // transformation unit menu
+  public static final String MENU_TRANSFORMATION_UNIT_SAVE_LBL = "Speichern";
+  public static final String MENU_TRANSFORMATION_UNIT_RELOAD_LBL =
+    "Erneut laden";
+  public static final String MENU_TRANSFORMATION_UNIT_REMOVE_LBL =
+    "Entfernen";
+  public static final String MENU_TRANSFORMATION_UNIT_SAVE_CMD =
+    "MENU_TRANSFORMATION_UNIT_SAVE_CMD";
+  public static final String MENU_TRANSFORMATION_UNIT_RELOAD_CMD =
+    "MENU_TRANSFORMATION_UNIT_RELOAD_CMD";
+  public static final String MENU_TRANSFORMATION_UNIT_REMOVE_CMD =
+    "MENU_TRANSFORMATION_UNIT_REMOVE_CMD";
 
   /* *************************************
    * rule pane ************************************

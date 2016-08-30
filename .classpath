@@ -4,7 +4,6 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="lib/default/antlr-2.7.7.jar"/>
 	<classpathentry kind="lib" path="lib/default/checkstyle-5.3.jar"/>
 	<classpathentry kind="lib" path="lib/default/collections-generic-4.01.jar"/>
 	<classpathentry kind="lib" path="lib/default/colt-1.2.0.jar"/>
@@ -29,5 +28,7 @@
 	<classpathentry kind="lib" path="lib/default/jaxb-api-2.2.2-promoted-b99.jar"/>
 	<classpathentry kind="lib" path="lib/default/jaxb-impl-2.2.2-promoted-b99.jar"/>
 	<classpathentry kind="lib" path="lib/default/commons-math3-3.0.jar"/>
+	<classpathentry kind="lib" path="lib-unmanaged/antlr-4.5.3-complete.jar"/>
+	<classpathentry kind="lib" path="lib-unmanaged/gson-2.6.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

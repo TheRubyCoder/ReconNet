@@ -49,37 +49,79 @@
  * WISSENSCHAFTEN HAMBURG / HAMBURG UNIVERSITY OF APPLIED SCIENCES
  */
 
-package gui.fileTree;
+package engine.data;
 
-import javax.swing.tree.DefaultMutableTreeNode;
+import transformation.TransformationUnit;
 
-public class PetriTreeNode
-  extends DefaultMutableTreeNode {
+public class TransformationUnitData {
 
-  private static final long serialVersionUID = 1L;
+  /**
+   * Additional data which is session-bound
+   */
+  private String fileName;
+  private String filePath;
 
-  private String displayText;
-  private int netId;
+  /**
+   * defines how often an expression is maximally executed when the
+   * asLongAsPossible operator is used
+   */
+  private int asLongAsPossibleExecutionLimit;
 
-  public PetriTreeNode(String displayText, int netId) {
+  /**
+   * defines the upper range of the randomNumberOfTimes operator. The
+   * expression is executed a maximum of n times, where n is a number between
+   * 0 and randomNumberOfTimesUpperRange
+   */
+  private int randomNumberOfTimesUpperRange;
 
-    this.displayText = displayText;
-    this.netId = netId;
+  private TransformationUnit transformationUnit;
+
+  public TransformationUnitData(TransformationUnit transformationUnit,
+    String fileName, String filePath) {
+
+    this.fileName = fileName;
+    this.filePath = filePath;
+
+    this.transformationUnit = transformationUnit;
+    this.asLongAsPossibleExecutionLimit = 100;
+    this.randomNumberOfTimesUpperRange = 10;
   }
 
-  @Override
-  public String toString() {
+  public String getFileName() {
 
-    return this.displayText;
+    return this.fileName;
   }
 
-  public void setDisplayText(String displayText) {
+  public String getFilePath() {
 
-    this.displayText = displayText;
+    return this.filePath;
   }
 
-  public int getNetId() {
+  public TransformationUnit getTransformationUnit() {
 
-    return netId;
+    return transformationUnit;
   }
+
+  public void setAsLongAsPossibleExecutionLimit(
+    int asLongAsPossibleExecutionLimit) {
+
+    this.asLongAsPossibleExecutionLimit = asLongAsPossibleExecutionLimit;
+  }
+
+  public int getAsLongAsPossibleExecutionLimit() {
+
+    return this.asLongAsPossibleExecutionLimit;
+  }
+
+  public int getRandomNumberOfTimesUpperRange() {
+
+    return this.randomNumberOfTimesUpperRange;
+  }
+
+  public void setRandomNumberOfTimesUpperRange(
+    int randomNumberOfTimesUpperRange) {
+
+    this.randomNumberOfTimesUpperRange = randomNumberOfTimesUpperRange;
+  }
+
 }

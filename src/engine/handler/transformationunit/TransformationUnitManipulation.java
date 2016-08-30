@@ -48,38 +48,115 @@
  * POSSIBILITY OF SUCH DAMAGE. * bedeutet / means: HOCHSCHULE FÜR ANGEWANDTE
  * WISSENSCHAFTEN HAMBURG / HAMBURG UNIVERSITY OF APPLIED SCIENCES
  */
+package engine.handler.transformationunit;
 
-package gui.fileTree;
+import java.util.Map;
 
-import javax.swing.tree.DefaultMutableTreeNode;
+import engine.ihandler.ITransformationUnitManipulation;
+import exceptions.EngineException;
 
-public class PetriTreeNode
-  extends DefaultMutableTreeNode {
+public class TransformationUnitManipulation
+implements ITransformationUnitManipulation {
 
-  private static final long serialVersionUID = 1L;
+  private static TransformationUnitManipulation transformationUnitManipulation;
 
-  private String displayText;
-  private int netId;
+  private TransformationUnitHandler transformationUnitHandler;
 
-  public PetriTreeNode(String displayText, int netId) {
+  public static ITransformationUnitManipulation getInstance() {
 
-    this.displayText = displayText;
-    this.netId = netId;
+    if (transformationUnitManipulation == null) {
+      transformationUnitManipulation = new TransformationUnitManipulation();
+    }
+
+    return transformationUnitManipulation;
+  }
+
+  public TransformationUnitManipulation() {
+
+    this.transformationUnitHandler = TransformationUnitHandler.getInstance();
   }
 
   @Override
-  public String toString() {
+  public int createTransformationUnit(String fileName, String filePath) {
 
-    return this.displayText;
+    return this.transformationUnitHandler.createTransformationUnit(fileName,
+      filePath);
   }
 
-  public void setDisplayText(String displayText) {
+  @Override
+  public void removeTransformationUnit(int transformationUnitId) {
 
-    this.displayText = displayText;
+    this.transformationUnitHandler.removeTransformationUnit(transformationUnitId);
   }
 
-  public int getNetId() {
+  @Override
+  public String getFileName(int id) {
 
-    return netId;
+    return this.transformationUnitHandler.getFileName(id);
   }
+
+  @Override
+  public void setControlExpression(int id, String controlExpression) {
+
+    this.transformationUnitHandler.setControlExpression(id, controlExpression);
+  }
+
+  @Override
+  public String getControlExpression(int id) {
+
+    return this.transformationUnitHandler.getControlExpression(id);
+  }
+
+  @Override
+  public void executeTransformationUnit(int transformationUnitId,
+    int petrinetId, Map<String, Integer> ruleNameToId)
+      throws EngineException {
+
+    this.transformationUnitHandler.executeTransformationUnit(
+      transformationUnitId, petrinetId, ruleNameToId);
+  }
+
+  @Override
+  public void setAsLongAsPossibleExecutionLimit(int transformationUnitId,
+    int executionLimit) {
+
+    this.transformationUnitHandler.setAsLongAsPossibleExecutionLimit(
+      transformationUnitId, executionLimit);
+  }
+
+  @Override
+  public void setRandomNumberOfTimesUpperRange(int transformationUnitId,
+    int randomNumberOfTimesUpperRange) {
+
+    this.transformationUnitHandler.setRandomNumberOfTimesUpperRange(
+      transformationUnitId, randomNumberOfTimesUpperRange);
+  }
+
+  @Override
+  public void saveToFileSystem(int transformationUnitId)
+    throws EngineException {
+
+    this.transformationUnitHandler.saveToFileSystem(transformationUnitId);
+  }
+
+  @Override
+  public int loadFromFileSystem(String displayName, String filePath)
+    throws EngineException {
+
+    return this.transformationUnitHandler.loadFromFileSystem(displayName,
+      filePath);
+  }
+
+  @Override
+  public int getAsLongAsPossibleExecutionLimit(int transformationUnitId) {
+
+    return this.transformationUnitHandler.getAsLongAsPossibleExecutionLimit(transformationUnitId);
+  }
+
+  @Override
+  public int getRandomNumberOfTimesUpperRange(int transformationUnitId) {
+
+    return this.transformationUnitHandler.getRandomNumberOfTimesUpperRange(transformationUnitId);
+  }
+
 }

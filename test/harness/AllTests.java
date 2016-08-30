@@ -61,6 +61,7 @@ import org.junit.runners.Suite;
   persistence.PersistanceTest.class, engine.data.JungDataTest.class,
   engine.data.PetrinetDataTest.class, engine.data.RuleDataTest.class,
   engine.session.SessionManagerTest.class,
-  engine.handler.PetrinetHandlerTest.class, nac.NacTest.class})
+  engine.handler.PetrinetHandlerTest.class, nac.NacTest.class,
+  transformation.unit.TransformationUnitTest.class})
 public class AllTests {
 }

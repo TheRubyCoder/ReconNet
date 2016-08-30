@@ -238,21 +238,6 @@ public class NacTest {
   }
 
   @Test(expected = IllegalNacManipulationException.class)
-  public void failtestSetLPlaceMarkingInNac()
-    throws EngineException {
-
-    UUID nacId = ruleManipulation.createNac(ruleId);
-
-    Place lPlace =
-      rulePersistence.createPlace(ruleId, RuleNet.L, new Point2D.Double(0, 0));
-
-    NAC nac = rule.getNAC(nacId);
-    Place nacPlace = nac.fromLtoNac(lPlace);
-
-    ruleManipulation.setMarking(ruleId, nacId, nacPlace, 999);
-  }
-
-  @Test(expected = IllegalNacManipulationException.class)
   public void failtestSetLPlaceCapacityInNac()
     throws EngineException {
 

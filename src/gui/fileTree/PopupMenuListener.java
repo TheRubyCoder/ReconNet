@@ -80,7 +80,7 @@ import javax.swing.tree.TreePath;
  * Custom popup menu listener extending {@link ActionListener}.
  */
 public final class PopupMenuListener
-  implements ActionListener {
+implements ActionListener {
 
   /**
    * singleton: the instance
@@ -149,6 +149,9 @@ public final class PopupMenuListener
    */
   private static final String FILE_EXTENSION_LOWER_CASE = ".pnml";
 
+  private static final String TRANSFORMATION_UNIT_FILE_EXTENSION =
+    "transformationunit";
+
   private JFileChooser fileChooser;
 
   /**
@@ -209,6 +212,23 @@ public final class PopupMenuListener
       this.loadRule();
     }
 
+    // transformation unit root menu
+    else if (cmd.equals(Style.MENU_ROOT_TRANSFORMATION_UNIT_SAVEALL_CMD)) {
+      try {
+        this.saveAllTransformationUnits((TransformationUnitRootTreeNode) FileTreePane.getInstance().getSelectedNode());
+      } catch (EngineException ex) {
+        PopUp.popError(ex.getMessage());
+      }
+    } else if (cmd.equals(Style.MENU_ROOT_TRANSFORMATION_UNIT_NEW_CMD)) {
+      this.createTransformationUnit();
+    } else if (cmd.equals(Style.MENU_ROOT_TRANSFORMATION_UNIT_LOAD_CMD)) {
+      try {
+        this.loadTransformationUnit();
+      } catch (EngineException ex) {
+        PopUp.popError(ex.getMessage());
+      }
+    }
+
     // net menu
     else if (cmd.equals(Style.MENU_NET_SAVE_CMD)) {
       this.save();
@@ -236,6 +256,17 @@ public final class PopupMenuListener
     // nac menu
     else if (cmd.equals(Style.MENU_NAC_REMOVE_CMD)) {
       this.removeNac();
+    }
+
+    // transformation unit menu
+    else if (cmd.equals(Style.MENU_TRANSFORMATION_UNIT_SAVE_CMD)) {
+      try {
+        this.saveTransformationUnit((TransformationUnitTreeNode) FileTreePane.getInstance().getSelectedNode());
+      } catch (EngineException ex) {
+        PopUp.popError(ex.getMessage());
+      }
+    } else if (cmd.equals(Style.MENU_TRANSFORMATION_UNIT_REMOVE_CMD)) {
+      this.removeTransformationUnit((TransformationUnitTreeNode) FileTreePane.getInstance().getSelectedNode());
     }
 
     else {
@@ -288,8 +319,8 @@ public final class PopupMenuListener
       JOptionPane.showOptionDialog(null,
         "Sollen die Dateien vom Dateisystem gelöscht werden?", "Löschen", 0,
         JOptionPane.QUESTION_MESSAGE, null, new String[]{"Dateien löschen",
-          "Nur aus Übersicht löschen"}, "Nur aus Übersicht löschen") == 0
-        ? true : false;
+      "Nur aus Übersicht löschen"}, "Nur aus Übersicht löschen") == 0
+      ? true : false;
     // CHECKSTYLE:ON
 
     DefaultMutableTreeNode node =
@@ -664,6 +695,109 @@ public final class PopupMenuListener
 
   }
 
+  private void createTransformationUnit() {
+
+    JFileChooser chooser = new JFileChooser();
+    FileNameExtensionFilter filter =
+      new FileNameExtensionFilter("ReConNet Transformation Unit File",
+        TRANSFORMATION_UNIT_FILE_EXTENSION);
+    chooser.setFileFilter(filter);
+
+    int returnVal = chooser.showSaveDialog(null);
+
+    if (returnVal == JFileChooser.APPROVE_OPTION) {
+
+      String displayName = chooser.getSelectedFile().getName();
+      String filePath = chooser.getSelectedFile().getAbsolutePath();
+
+      if (displayName.endsWith("." + TRANSFORMATION_UNIT_FILE_EXTENSION)) {
+        displayName =
+          displayName.substring(0, displayName.lastIndexOf("."
+            + TRANSFORMATION_UNIT_FILE_EXTENSION));
+      } else {
+        filePath = filePath + "." + TRANSFORMATION_UNIT_FILE_EXTENSION;
+      }
+
+      int dataId =
+        EngineAdapter.getTransformationUnitManipulation().createTransformationUnit(
+          displayName, filePath);
+
+      TransformationUnitRootTreeNode transformationUnitRootNode =
+        (TransformationUnitRootTreeNode) FileTreePane.getInstance().getSelectedNode();
+
+      this.createTransformationUnitTreeNode(transformationUnitRootNode,
+        dataId);
+    }
+  }
+
+  private void loadTransformationUnit()
+    throws EngineException {
+
+    JFileChooser chooser = new JFileChooser();
+    FileNameExtensionFilter filter =
+      new FileNameExtensionFilter("ReConNet Transformation Unit File",
+        TRANSFORMATION_UNIT_FILE_EXTENSION);
+    chooser.setFileFilter(filter);
+
+    int returnVal = chooser.showOpenDialog(null);
+
+    if (returnVal == JFileChooser.APPROVE_OPTION) {
+
+      String displayName = chooser.getSelectedFile().getName();
+
+      if (displayName.endsWith("." + TRANSFORMATION_UNIT_FILE_EXTENSION)) {
+        displayName =
+          displayName.substring(0, displayName.lastIndexOf("."
+            + TRANSFORMATION_UNIT_FILE_EXTENSION));
+      }
+
+      String filePath = chooser.getSelectedFile().getAbsolutePath();
+
+      int dataId =
+        EngineAdapter.getTransformationUnitManipulation().loadFromFileSystem(
+          displayName, filePath);
+
+      TransformationUnitRootTreeNode transformationUnitRootNode =
+        (TransformationUnitRootTreeNode) FileTreePane.getInstance().getSelectedNode();
+
+      this.createTransformationUnitTreeNode(transformationUnitRootNode,
+        dataId);
+    }
+
+  }
+
+  private void saveAllTransformationUnits(
+    TransformationUnitRootTreeNode rootNode)
+    throws EngineException {
+
+    for (int i = 0; i < rootNode.getChildCount(); i++) {
+
+      TransformationUnitTreeNode child =
+        (TransformationUnitTreeNode) rootNode.getChildAt(i);
+      saveTransformationUnit(child);
+    }
+
+  }
+
+  private void saveTransformationUnit(TransformationUnitTreeNode node)
+    throws EngineException {
+
+    int transformationUnitId = node.getTransformationUnitId();
+
+    EngineAdapter.getTransformationUnitManipulation().saveToFileSystem(
+      transformationUnitId);
+  }
+
+  private void removeTransformationUnit(TransformationUnitTreeNode node) {
+
+    int transformationUnitId = node.getTransformationUnitId();
+
+    EngineAdapter.getTransformationUnitManipulation().removeTransformationUnit(
+      transformationUnitId);
+
+    FileTreePane.getInstance().getTreeModel().removeNodeFromParent(node);
+  }
+
   private UUID createNacInBackend(int ruleId)
     throws EngineException {
 
@@ -714,6 +848,25 @@ public final class PopupMenuListener
 
     // clear the nac panel
     RulePane.getInstance().displayEmptyNAC();
+  }
+
+  public void createTransformationUnitTreeNode(
+    TransformationUnitRootTreeNode parentNode, int transformationUnitId) {
+
+    String displayName =
+      EngineAdapter.getTransformationUnitManipulation().getFileName(
+        transformationUnitId);
+
+    TransformationUnitTreeNode n =
+      new TransformationUnitTreeNode(transformationUnitId, displayName);
+
+    FileTreePane flTrPn = FileTreePane.getInstance();
+
+    flTrPn.getTreeModel().insertNodeInto(n, parentNode,
+      parentNode.getChildCount());
+    flTrPn.getTree().scrollPathToVisible(new TreePath(n.getPath()));
+    flTrPn.getTree().setSelectionPath(
+      new TreePath(flTrPn.getTreeModel().getPathToRoot(n)));
   }
 
   /**

@@ -49,129 +49,130 @@
  * WISSENSCHAFTEN HAMBURG / HAMBURG UNIVERSITY OF APPLIED SCIENCES
  */
 
-package gui;
+package engine.ihandler;
 
-import static gui.Style.PETRINET_BORDER;
-import static gui.Style.PETRINET_PANE_LAYOUT;
+import java.util.Map;
 
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import petrinet.model.IArc;
-import petrinet.model.INode;
-import edu.uci.ics.jung.algorithms.layout.Layout;
 import exceptions.EngineException;
 
-/** Pane for displaying petrinets */
-public final class PetrinetPane {
-
-  /** Internal JPanel for gui-layouting the petrinet */
-  private JPanel petrinetPanel;
-
-  /** {@link PetrinetViewer} of currently displayed petrinet */
-  private PetrinetViewer petrinetViewer;
-
-  /** singleton instance of this pane */
-  private static PetrinetPane instance;
-
-  /** Returns the singleton instance for this pane */
-  public static PetrinetPane getInstance() {
-
-    return instance;
-  }
-
-  /* Static constructor that initiates the singleton */
-  static {
-    instance = new PetrinetPane();
-  }
-
-  /** Private default constructor */
-  private PetrinetPane() {
-
-    petrinetPanel = new JPanel();
-    petrinetPanel.setLayout(PETRINET_PANE_LAYOUT);
-    petrinetPanel.setBorder(PETRINET_BORDER);
-
-    // petrinetViewer = PetrinetViewer.getDefaultViewer(null);
-    // petrinetViewer.addTo(petrinetPanel);
-
-  }
-
-  /** Sets the title of the border to <code>title</code> */
-  private void setBorderTitle(String title) {
-
-    petrinetPanel.setBorder(BorderFactory.createTitledBorder(
-      BorderFactory.createEtchedBorder(), title));
-  }
-
-  /** Returns the singleton instance */
-  private JPanel getPetrinetPanel() {
-
-    return petrinetPanel;
-  }
-
-  /** Adds the petrinet pane to the given JPanel (frame) */
-  public void addTo(JPanel frame) {
-
-    frame.add(getPetrinetPanel());
-  }
-
-  /** repaints the panel */
-  public void repaint() {
-
-    petrinetViewer.repaint();
-  }
-
-  /** Returns the id of the currently displayed petrinet */
-  public int getCurrentPetrinetId() {
-
-    return petrinetViewer.getCurrentId();
-  }
+public interface ITransformationUnitManipulation {
 
   /**
-   * Replaces the current PetrinetViewer so the new Petrinet is displayed. All
-   * Listeners are attacked to the new Petrinet
-   */
-  public void displayPetrinet(int petrinetId, String title) {
-
-    if (title != null) {
-      setBorderTitle(title);
-    }
-
-    try {
-      Layout<INode, IArc> layout =
-        EngineAdapter.getPetrinetManipulation().getJungLayout(petrinetId);
-      if (petrinetViewer != null) {
-        petrinetViewer.removeFrom(petrinetPanel);
-      }
-      petrinetViewer = new PetrinetViewer(layout, petrinetId, null);
-      double nodeSize =
-        EngineAdapter.getPetrinetManipulation().getNodeSize(petrinetId);
-      petrinetViewer.setNodeSize(nodeSize);
-      petrinetViewer.addTo(petrinetPanel);
-      MainWindow.getInstance().repaint();
-      SimulationPane.getInstance().setSimulationPaneEnable();
-    } catch (EngineException e) {
-    }
-  }
-
-  /** Makes the pane display empty space (in case no petrinet is selected) */
-  public void displayEmpty() {
-
-    if (petrinetViewer != null) {
-      petrinetViewer.removeFrom(petrinetPanel);
-      SimulationPane.getInstance().setSimulationPaneDisable();
-    }
-    petrinetPanel.setBorder(PETRINET_BORDER);
-  }
-
-  /**
-   * Returns {@link PetrinetViewer#getNodeSize() current node size} of current
-   * {@link PetrinetViewer}
+   * Creates a TransformationUnit
    *
-   * @return
+   * @return Session Id of the transformation unit
    */
-  public double getCurrentNodeSize() {
+  int createTransformationUnit(String fileName, String filePath);
 
-    return petrinetViewer.getNodeSize();
-  }
+  /**
+   * Removes the transformation unit from the session data
+   *
+   * @param transformationUnitId
+   *        Id of the transformation unit
+   */
+  void removeTransformationUnit(int transformationUnitId);
+
+  /**
+   * Gets the fileName of transformation unit for the given id
+   *
+   * @param id
+   *        Id of the transformation unit data
+   * @return FileName of the transformation unit
+   */
+  String getFileName(int transformationUnitId);
+
+  /**
+   * Sets the control expression of a transformation unit for the given id
+   *
+   * @param id
+   *        Id of the transformation unit
+   * @param controlExpression
+   *        the control expression to set
+   */
+  void
+  setControlExpression(int transformationUnitId, String controlExpression);
+
+  /**
+   * Gets the control expression of a transformation unit for the given id
+   *
+   * @param id
+   *        Id of the transformation unit
+   * @return the control expression to get
+   */
+  String getControlExpression(int transformationUnitId);
+
+  /**
+   * Executes the transformation unit
+   *
+   * @param transformationUnitId
+   *        Id of the transformation unit to execute
+   * @param petrinetId
+   *        Id of the petrinet on which it should be executed
+   * @param ruleNameToId
+   *        A map which maps ruleNames to their Session Ids
+   */
+  void executeTransformationUnit(int transformationUnitId, int petrinetId,
+    Map<String, Integer> ruleNameToId)
+    throws EngineException;
+
+  /**
+   * Sets the maximum number of executions a controlexpression is executed
+   * when the asLongAsPossible operator is used
+   *
+   * @param transformationUnitId
+   *        Id of the transformation unit
+   * @param executionLimit
+   *        maximum number of executions
+   */
+  void setAsLongAsPossibleExecutionLimit(int transformationUnitId,
+    int executionLimit);
+
+  /**
+   * Gets the execution limit for asLongAsPossible
+   *
+   * @param transformationUnitId
+   *        Id of the transformation unit
+   * @return execution limit for asLongAsPossible
+   */
+  int getAsLongAsPossibleExecutionLimit(int transformationUnitId);
+
+  /**
+   * Sets the upper range of the randomNumberOfTimes operator
+   *
+   * @param transformationUnitId
+   *        Id of the transformation unit
+   * @param randomNumberOfTimesUpperRange
+   *        upper range of the randomNumberOfTimes operator
+   */
+  void setRandomNumberOfTimesUpperRange(int transformationUnitId,
+    int randomNumberOfTimesUpperRange);
+
+  /**
+   * Gets the upper range of the randomNumberOfTimes operator
+   *
+   * @param transformationUnitId
+   *        Id of the transformation unit
+   * @return upper range of the randomNumberOfTimes operator
+   */
+  int getRandomNumberOfTimesUpperRange(int transformationUnitId);
+
+  /**
+   * Saves the transformation unit to the file system
+   *
+   * @param transformationUnitId
+   *        Id of the transformation
+   */
+  void saveToFileSystem(int transformationUnitId)
+    throws EngineException;
+
+  /**
+   * Loads a transformation unit from the file system
+   *
+   * @param displayName
+   *        displayName under which the loaded transformation unit is created
+   * @param filePath
+   *        path to the file where the transformation unit is stored
+   */
+  int loadFromFileSystem(String displayName, String filePath)
+    throws EngineException;
 }
