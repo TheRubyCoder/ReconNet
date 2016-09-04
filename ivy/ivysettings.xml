@@ -5,10 +5,12 @@
     
 	<settings defaultResolver="central-repo-maven" />
 	<caches defaultCacheDir="${ivy.cache.dir}" />
+	
     <resolvers>
         <ibiblio name="central-repo-maven" root="http://central.maven.org/maven2" m2compatible="true"    	
 	        pattern="[organisation]/[module]/[revision]/[artifact]-[revision](-[classifier]).[ext]"
    		/>
+	</resolvers>
 <!-- 
     <chain name="ivy-and-maven" returnFirst="true">
     
@@ -27,5 +29,5 @@
 			<artifact pattern="${upload.repo.url}/libs-releases-local/[organisation]/[module]/[revision]/[artifact]-[revision].[ext]" />
 		</url>
 -->
-	</resolvers>
+	
 </ivysettings>

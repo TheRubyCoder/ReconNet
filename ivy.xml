@@ -31,6 +31,9 @@
 		<dependency org="emma" name="emma_ant" rev="2.1.5320" />
 		<dependency org="com.puppycrawl.tools" name="checkstyle" rev="5.3" conf="*->default" />
 		
+		<dependency org="com.google.code.gson" name="gson" rev="2.6.2" />
+		<dependency org="org.antlr" name="antlr4" rev="4.5.3" />
+		
     </dependencies>
     
 </ivy-module>
