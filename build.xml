@@ -65,6 +65,7 @@
 	     let ivy handle depencies to other projects                   
 	     ================================= -->
     <target name="resolve" depends="init" description="--> retrieve dependencies with ivy">
+    	<taskdef uri="antlib:org.apache.ivy.ant" resource="org/apache/ivy/ant/antlib.xml"  classpath="${user.home}/.p2/pool/plugins/org.apache.ivy_2.4.0.final_20141213170938.jar"/>
     	<ivy:settings file="${ivy.settings.file}" />
 	    <ivy:resolve />
         <ivy:retrieve pattern="${lib.dir}/[conf]/[artifact]-[revision](-[classifier]).[ext]" sync="true" />
