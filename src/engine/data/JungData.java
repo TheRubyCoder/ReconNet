@@ -78,6 +78,7 @@ import engine.Positioning;
 import engine.attribute.NodeLayoutAttribute;
 import exceptions.Exceptions;
 import gui.Style;
+import gui.graphLayout.AdvancedFRLayout;
 
 /**
  * This class adds JUNG relevant information to a petrinet. It holds
@@ -89,12 +90,12 @@ import gui.Style;
  * the <b>size of nodes</b>
  * <ul>
  * <li>{@link JungData#getNodeSize()}</li>
- * <li> {@link JungData#setNodeSize(double)}</li>
+ * <li>{@link JungData#setNodeSize(double)}</li>
  * </ul>
  * and <b>the color of places</b>:
  * <ul>
  * <li>{@link JungData#getPlaceColor(Place)}</li>
- * <li> {@link JungData#setPlaceColor(Place, Color)}</li>
+ * <li>{@link JungData#setPlaceColor(Place, Color)}</li>
  * </ul>
  * It also manages which nodes are known to JUNG, by <b>creating and deleting
  * graph elements</b>:
@@ -145,9 +146,9 @@ public final class JungData {
   public JungData(JungData jungDataToClone, Petrinet petrinet) {
 
     this.graph = new DirectedSparseGraph<INode, IArc>();
-    this.layout = new FRLayout<INode, IArc>(this.graph);
-    ((FRLayout<INode, IArc>) this.layout).setAttractionMultiplier(0.5);
-    ((FRLayout<INode, IArc>) this.layout).setRepulsionMultiplier(0.9);
+    this.layout = new AdvancedFRLayout<INode, IArc>(this.graph);
+    ((FRLayout<INode, IArc>) this.layout).setAttractionMultiplier(0.1);
+    ((FRLayout<INode, IArc>) this.layout).setRepulsionMultiplier(0.1);
 
     this.placeColors = new HashMap<Place, Color>(jungDataToClone.placeColors);
 
@@ -226,9 +227,8 @@ public final class JungData {
         color = getPlaceColor((Place) node);
       }
 
-      pt2D =
-        new Point2D.Double(getJungLayout().getX(node), getJungLayout().getY(
-          node));
+      pt2D = new Point2D.Double(getJungLayout().getX(node),
+        getJungLayout().getY(node));
 
       attributes.put(node, new NodeLayoutAttribute(pt2D, color));
     }
@@ -819,8 +819,8 @@ public final class JungData {
    * @param excludes
    *        dont't check to these nodes
    */
-  private void
-    checkPoint2DLocation(Point2D point, Collection<INode> excludes) {
+  private void checkPoint2DLocation(Point2D point,
+    Collection<INode> excludes) {
 
     for (INode node : graph.getVertices()) {
       if (!excludes.contains(node)) {
@@ -847,10 +847,10 @@ public final class JungData {
     double targetY = point.getY();
 
     for (INode node : graph.getVertices()) {
-      double nodeX =
-        getNodeLayoutAttributes().get(node).getCoordinate().getX();
-      double nodeY =
-        getNodeLayoutAttributes().get(node).getCoordinate().getY();
+      double nodeX = getNodeLayoutAttributes().get(
+        node).getCoordinate().getX();
+      double nodeY = getNodeLayoutAttributes().get(
+        node).getCoordinate().getY();
 
       double newX = nodeX - ((targetX - nodeX) * (factor - 1));
       double newY = nodeY - ((targetY - nodeY) * (factor - 1));

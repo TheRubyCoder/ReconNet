@@ -74,7 +74,6 @@ import transformation.ITransformation;
 import transformation.Rule;
 import transformation.Transformation;
 import transformation.TransformationComponent;
-import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import engine.data.JungData;
 import engine.data.PetrinetData;
 import engine.data.RuleData;
@@ -82,9 +81,11 @@ import engine.ihandler.ISimulation;
 import engine.session.SessionManager;
 import exceptions.EngineException;
 import exceptions.ShowAsInfoException;
+import gui.PetrinetPane;
+import gui.graphLayout.AdvancedFRLayout;
 
 public final class SimulationHandler
-implements ISimulation {
+  implements ISimulation {
 
   /** Session manager holding session data */
   private final SessionManager sessionManager;
@@ -192,16 +193,16 @@ implements ISimulation {
         Collections.shuffle(shuffledRules);
         // Find matching rule and apply it
         System.out.println("matchingrule start");
-        Transformation transformation =
-          findMatchingRule(shuffledRules, petrinet);
+        Transformation transformation = findMatchingRule(shuffledRules,
+          petrinet);
         System.out.println("matchingrule end");
         // Remove deleted elements from display
         jungData.deleteDataOfMissingElements(petrinet);
         // Add new elements to display
-        fillJungDataWithNewElements(jungData,
-          transformation.getAddedPlaces(),
+        fillJungDataWithNewElements(jungData, transformation.getAddedPlaces(),
           transformation.getAddedTransitions(),
-          transformation.getAddedPreArcs(), transformation.getAddedPostArcs());
+          transformation.getAddedPreArcs(),
+          transformation.getAddedPostArcs());
       }
 
     }
@@ -227,16 +228,16 @@ implements ISimulation {
       List<Rule> shuffledRules = new ArrayList<Rule>(sortedRules);
       Collections.shuffle(shuffledRules);
       // Find matching rule and apply it
-      Transformation transformation =
-        findMatchingRule(shuffledRules, petrinet);
+      Transformation transformation = findMatchingRule(shuffledRules,
+        petrinet);
       if (!(transformation == null)) { // p2 nach präsentation
         // Remove deleted elements from display
         jungData.deleteDataOfMissingElements(petrinet);
         // Add new elements to display
-        fillJungDataWithNewElements(jungData,
-          transformation.getAddedPlaces(),
+        fillJungDataWithNewElements(jungData, transformation.getAddedPlaces(),
           transformation.getAddedTransitions(),
-          transformation.getAddedPreArcs(), transformation.getAddedPostArcs());
+          transformation.getAddedPreArcs(),
+          transformation.getAddedPostArcs());
       } else { // p2 nach präsentation
         info("Keine der Regeln passt auf das Petrinetz");
       } // p2 nach präsentation
@@ -258,13 +259,17 @@ implements ISimulation {
 
     // Restart the layouting process
     // this gets done here because we know no better place to do it in
-    FRLayout<INode, IArc> frLayout =
-      (FRLayout<INode, IArc>) jungData.getJungLayout();
+    AdvancedFRLayout<INode, IArc> frLayout =
+      (AdvancedFRLayout<INode, IArc>) jungData.getJungLayout();
 
     frLayout.initialize();
     for (int i = 0; i < ITERATIONS; i++) {
       frLayout.step();
     }
+
+    PetrinetPane.getInstance().displayPetrinet(
+      PetrinetPane.getInstance().getCurrentPetrinetId(), null);
+
   }
 
   @Override
@@ -278,16 +283,15 @@ implements ISimulation {
     JungData petrinetJungData = petrinetData.getJungData();
     Rule rule = ruleData.getRule();
 
-    Transformation transformation =
-      transformationComponent.transform(petrinet, rule);
+    Transformation transformation = transformationComponent.transform(
+      petrinet, rule);
 
     if (transformation != null) {
       // Remove deleted elements from display
       petrinetJungData.deleteDataOfMissingElements(petrinet);
       // Add new elements to display
       fillJungDataWithNewElements(petrinetJungData,
-        transformation.getAddedPlaces(),
-        transformation.getAddedTransitions(),
+        transformation.getAddedPlaces(), transformation.getAddedTransitions(),
         transformation.getAddedPreArcs(), transformation.getAddedPostArcs());
     } else {
       throw new EngineException("Transformation was not possible.");
@@ -345,8 +349,8 @@ implements ISimulation {
     Iterator<Rule> ruleIterator = shuffledRules.iterator();
     while (ruleIterator.hasNext()) {
       Rule rule = ruleIterator.next();
-      Transformation transformation =
-        transformationComponent.transform(petrinet, rule);
+      Transformation transformation = transformationComponent.transform(
+        petrinet, rule);
       if (transformation == null) {
         // go on with iteration
       } else {

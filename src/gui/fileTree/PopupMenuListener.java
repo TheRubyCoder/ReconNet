@@ -80,7 +80,7 @@ import javax.swing.tree.TreePath;
  * Custom popup menu listener extending {@link ActionListener}.
  */
 public final class PopupMenuListener
-implements ActionListener {
+  implements ActionListener {
 
   /**
    * singleton: the instance
@@ -179,9 +179,8 @@ implements ActionListener {
    */
   private void initializeFileChooser() {
 
-    FileFilter filter =
-      new FileNameExtensionFilter("PetriNetModellingLanguage (*.PNML)",
-        "PNML");
+    FileFilter filter = new FileNameExtensionFilter(
+      "PetriNetModellingLanguage (*.PNML)", "PNML");
     this.fileChooser = new JFileChooser();
     this.fileChooser.addChoosableFileFilter(filter);
     this.fileChooser.setFileFilter(filter);
@@ -215,7 +214,8 @@ implements ActionListener {
     // transformation unit root menu
     else if (cmd.equals(Style.MENU_ROOT_TRANSFORMATION_UNIT_SAVEALL_CMD)) {
       try {
-        this.saveAllTransformationUnits((TransformationUnitRootTreeNode) FileTreePane.getInstance().getSelectedNode());
+        this.saveAllTransformationUnits(
+          (TransformationUnitRootTreeNode) FileTreePane.getInstance().getSelectedNode());
       } catch (EngineException ex) {
         PopUp.popError(ex.getMessage());
       }
@@ -261,16 +261,19 @@ implements ActionListener {
     // transformation unit menu
     else if (cmd.equals(Style.MENU_TRANSFORMATION_UNIT_SAVE_CMD)) {
       try {
-        this.saveTransformationUnit((TransformationUnitTreeNode) FileTreePane.getInstance().getSelectedNode());
+        this.saveTransformationUnit(
+          (TransformationUnitTreeNode) FileTreePane.getInstance().getSelectedNode());
       } catch (EngineException ex) {
         PopUp.popError(ex.getMessage());
       }
     } else if (cmd.equals(Style.MENU_TRANSFORMATION_UNIT_REMOVE_CMD)) {
-      this.removeTransformationUnit((TransformationUnitTreeNode) FileTreePane.getInstance().getSelectedNode());
+      this.removeTransformationUnit(
+        (TransformationUnitTreeNode) FileTreePane.getInstance().getSelectedNode());
     }
 
     else {
-      System.out.println("PopupMenuListener::actionPerformed - unknown action");
+      System.out.println(
+        "PopupMenuListener::actionPerformed - unknown action");
     }
 
   }
@@ -315,13 +318,21 @@ implements ActionListener {
   private void remove() {
 
     // CHECKSTYLE:OFF - Ternary operator is fine here
-    boolean delete =
-      JOptionPane.showOptionDialog(null,
-        "Sollen die Dateien vom Dateisystem gelöscht werden?", "Löschen", 0,
-        JOptionPane.QUESTION_MESSAGE, null, new String[]{"Dateien löschen",
-      "Nur aus Übersicht löschen"}, "Nur aus Übersicht löschen") == 0
-      ? true : false;
+    boolean delete = JOptionPane.showOptionDialog(null,
+      "Sollen die Dateien vom Dateisystem gelöscht werden?", "Löschen", 0,
+      JOptionPane.QUESTION_MESSAGE, null, new String[]{"Dateien löschen",
+        "Nur aus Übersicht löschen"}, "Nur aus Übersicht löschen") == 0 ? true
+          : false;
     // CHECKSTYLE:ON
+
+    remove(delete);
+  }
+
+  /**
+   * removes the selected node from tree. if true the net's file will be
+   * deleted
+   */
+  private void remove(boolean deletefile) {
 
     DefaultMutableTreeNode node =
       FileTreePane.getInstance().getSelectedNode();
@@ -329,7 +340,7 @@ implements ActionListener {
       (DefaultMutableTreeNode) node.getParent();
     String name = node.toString();
 
-    if (delete) {
+    if (deletefile) {
       nameToFilepath.get(name).delete();
     }
 
@@ -343,11 +354,10 @@ implements ActionListener {
     }
 
     FileTreePane.getInstance().getTreeModel().removeNodeFromParent(node);
-    FileTreePane.getInstance().getTree().scrollPathToVisible(
-      new TreePath(parentNode.getPath()));
-    FileTreePane.getInstance().getTree().setSelectionPath(
-      new TreePath(FileTreePane.getInstance().getTreeModel().getPathToRoot(
-        parentNode)));
+    FileTreePane.getInstance().getTree().scrollPathToVisible(new TreePath(
+      parentNode.getPath()));
+    FileTreePane.getInstance().getTree().setSelectionPath(new TreePath(
+      FileTreePane.getInstance().getTreeModel().getPathToRoot(parentNode)));
   }
 
   /**
@@ -368,6 +378,7 @@ implements ActionListener {
       netType = PopupMenuListener.SELECTED_TYPE_IS_RULE;
     }
 
+    this.remove(false);
     this.loadFromFile(file, netType);
 
   }
@@ -442,15 +453,13 @@ implements ActionListener {
     String name = this.getFilenameWithoutExtension(file);
     if (netType == PopupMenuListener.SELECTED_TYPE_IS_NET) {
 
-      id =
-        EngineAdapter.getPetrinetManipulation().load(file.getParent(),
-          file.getName());
+      id = EngineAdapter.getPetrinetManipulation().load(file.getParent(),
+        file.getName());
       PetrinetPane.getInstance().displayPetrinet(id, name);
     } else {
 
-      id =
-        EngineAdapter.getRuleManipulation().loadRuleWithNacs(
-          file.getParent(), file.getName());
+      id = EngineAdapter.getRuleManipulation().loadRuleWithNacs(
+        file.getParent(), file.getName());
       RulePane.getInstance().displayRule(id);
     }
 
@@ -469,8 +478,8 @@ implements ActionListener {
 
         // initialize sub nodes of nacs
         try {
-          List<UUID> nacIds =
-            EngineAdapter.getRuleManipulation().getNacIds(id);
+          List<UUID> nacIds = EngineAdapter.getRuleManipulation().getNacIds(
+            id);
 
           for (UUID nacId : nacIds) {
 
@@ -517,13 +526,15 @@ implements ActionListener {
     int childCount = flTrPn.getNetRootNode().getChildCount();
 
     for (int i = childCount - 1; i >= 0; i--) {
-      saveNode((DefaultMutableTreeNode) flTrPn.getNetRootNode().getChildAt(i));
+      saveNode((DefaultMutableTreeNode) flTrPn.getNetRootNode().getChildAt(
+        i));
     }
 
     childCount = flTrPn.getRuleRootNode().getChildCount();
 
     for (int i = childCount - 1; i >= 0; i--) {
-      saveNode((DefaultMutableTreeNode) flTrPn.getRuleRootNode().getChildAt(i));
+      saveNode((DefaultMutableTreeNode) flTrPn.getRuleRootNode().getChildAt(
+        i));
     }
   }
 
@@ -667,8 +678,8 @@ implements ActionListener {
       flTrPn.getTreeModel().insertNodeInto(n, parentNode,
         parentNode.getChildCount());
       flTrPn.getTree().scrollPathToVisible(new TreePath(n.getPath()));
-      flTrPn.getTree().setSelectionPath(
-        new TreePath(flTrPn.getTreeModel().getPathToRoot(n)));
+      flTrPn.getTree().setSelectionPath(new TreePath(
+        flTrPn.getTreeModel().getPathToRoot(n)));
 
     } catch (IOException ex) {
       throw new ShowAsWarningException(ex);
@@ -698,9 +709,9 @@ implements ActionListener {
   private void createTransformationUnit() {
 
     JFileChooser chooser = new JFileChooser();
-    FileNameExtensionFilter filter =
-      new FileNameExtensionFilter("ReConNet Transformation Unit File",
-        TRANSFORMATION_UNIT_FILE_EXTENSION);
+    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+      "ReConNet Transformation Unit File",
+      TRANSFORMATION_UNIT_FILE_EXTENSION);
     chooser.setFileFilter(filter);
 
     int returnVal = chooser.showSaveDialog(null);
@@ -711,9 +722,8 @@ implements ActionListener {
       String filePath = chooser.getSelectedFile().getAbsolutePath();
 
       if (displayName.endsWith("." + TRANSFORMATION_UNIT_FILE_EXTENSION)) {
-        displayName =
-          displayName.substring(0, displayName.lastIndexOf("."
-            + TRANSFORMATION_UNIT_FILE_EXTENSION));
+        displayName = displayName.substring(0, displayName.lastIndexOf("."
+          + TRANSFORMATION_UNIT_FILE_EXTENSION));
       } else {
         filePath = filePath + "." + TRANSFORMATION_UNIT_FILE_EXTENSION;
       }
@@ -734,9 +744,9 @@ implements ActionListener {
     throws EngineException {
 
     JFileChooser chooser = new JFileChooser();
-    FileNameExtensionFilter filter =
-      new FileNameExtensionFilter("ReConNet Transformation Unit File",
-        TRANSFORMATION_UNIT_FILE_EXTENSION);
+    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+      "ReConNet Transformation Unit File",
+      TRANSFORMATION_UNIT_FILE_EXTENSION);
     chooser.setFileFilter(filter);
 
     int returnVal = chooser.showOpenDialog(null);
@@ -746,9 +756,8 @@ implements ActionListener {
       String displayName = chooser.getSelectedFile().getName();
 
       if (displayName.endsWith("." + TRANSFORMATION_UNIT_FILE_EXTENSION)) {
-        displayName =
-          displayName.substring(0, displayName.lastIndexOf("."
-            + TRANSFORMATION_UNIT_FILE_EXTENSION));
+        displayName = displayName.substring(0, displayName.lastIndexOf("."
+          + TRANSFORMATION_UNIT_FILE_EXTENSION));
       }
 
       String filePath = chooser.getSelectedFile().getAbsolutePath();
@@ -819,8 +828,8 @@ implements ActionListener {
     flTrPn.getTreeModel().insertNodeInto(n, ruleNode,
       ruleNode.getChildCount());
     flTrPn.getTree().scrollPathToVisible(new TreePath(n.getPath()));
-    flTrPn.getTree().setSelectionPath(
-      new TreePath(flTrPn.getTreeModel().getPathToRoot(n)));
+    flTrPn.getTree().setSelectionPath(new TreePath(
+      flTrPn.getTreeModel().getPathToRoot(n)));
   }
 
   private void removeNac() {
@@ -857,16 +866,16 @@ implements ActionListener {
       EngineAdapter.getTransformationUnitManipulation().getFileName(
         transformationUnitId);
 
-    TransformationUnitTreeNode n =
-      new TransformationUnitTreeNode(transformationUnitId, displayName);
+    TransformationUnitTreeNode n = new TransformationUnitTreeNode(
+      transformationUnitId, displayName);
 
     FileTreePane flTrPn = FileTreePane.getInstance();
 
     flTrPn.getTreeModel().insertNodeInto(n, parentNode,
       parentNode.getChildCount());
     flTrPn.getTree().scrollPathToVisible(new TreePath(n.getPath()));
-    flTrPn.getTree().setSelectionPath(
-      new TreePath(flTrPn.getTreeModel().getPathToRoot(n)));
+    flTrPn.getTree().setSelectionPath(new TreePath(
+      flTrPn.getTreeModel().getPathToRoot(n)));
   }
 
   /**
@@ -940,8 +949,8 @@ implements ActionListener {
   private String getFilenameWithoutExtension(File f) {
 
     // Assuming file is a .PNML file cut last 5 characters off.
-    return f.getName().substring(0,
-      f.getName().length() - FILE_EXTENSION.length());
+    return f.getName().substring(0, f.getName().length()
+      - FILE_EXTENSION.length());
   }
 
   /**
