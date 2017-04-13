@@ -200,7 +200,8 @@ public class TreeMouseListener
    * @param selectedNode
    *        the node clicked.
    */
-  private void showNetMenu(MouseEvent e, DefaultMutableTreeNode selectedNode) {
+  private void showNetMenu(MouseEvent e,
+    DefaultMutableTreeNode selectedNode) {
 
     JPopupMenu popup = new JPopupMenu();
     JMenuItem i;
@@ -297,25 +298,22 @@ public class TreeMouseListener
     JPopupMenu popup = new JPopupMenu();
     JMenuItem i;
 
-    i =
-      new JMenuItem(Style.MENU_ROOT_TRANSFORMATION_UNIT_SAVEALL_LBL,
-        Style.SAVE_24);
+    i = new JMenuItem(Style.MENU_ROOT_TRANSFORMATION_UNIT_SAVEALL_LBL,
+      Style.SAVE_24);
     i.setActionCommand(Style.MENU_ROOT_TRANSFORMATION_UNIT_SAVEALL_CMD);
     i.addActionListener(this.menuListener);
     popup.add(i);
 
     popup.addSeparator();
 
-    i =
-      new JMenuItem(Style.MENU_ROOT_TRANSFORMATION_UNIT_NEW_LBL,
-        Style.TRANSFORMATION_UNIT_24);
+    i = new JMenuItem(Style.MENU_ROOT_TRANSFORMATION_UNIT_NEW_LBL,
+      Style.TRANSFORMATION_UNIT_24);
     i.setActionCommand(Style.MENU_ROOT_TRANSFORMATION_UNIT_NEW_CMD);
     i.addActionListener(this.menuListener);
     popup.add(i);
 
-    i =
-      new JMenuItem(Style.MENU_ROOT_TRANSFORMATION_UNIT_LOAD_LBL,
-        Style.OPEN_24);
+    i = new JMenuItem(Style.MENU_ROOT_TRANSFORMATION_UNIT_LOAD_LBL,
+      Style.OPEN_24);
     i.setActionCommand(Style.MENU_ROOT_TRANSFORMATION_UNIT_LOAD_CMD);
     i.addActionListener(this.menuListener);
     popup.add(i);
@@ -334,9 +332,8 @@ public class TreeMouseListener
     i.addActionListener(this.menuListener);
     popup.add(i);
 
-    i =
-      new JMenuItem(Style.MENU_TRANSFORMATION_UNIT_REMOVE_LBL,
-        Style.DELETE_24);
+    i = new JMenuItem(Style.MENU_TRANSFORMATION_UNIT_REMOVE_LBL,
+      Style.DELETE_24);
     i.setActionCommand(Style.MENU_TRANSFORMATION_UNIT_REMOVE_CMD);
     i.addActionListener(this.menuListener);
     popup.add(i);
@@ -366,7 +363,8 @@ public class TreeMouseListener
         } else if (selectedNode instanceof NacTreeNode) {
           this.handleNacSelection((NacTreeNode) selectedNode);
         } else if (selectedNode instanceof TransformationUnitTreeNode) {
-          this.handleTransformationUnitSelection((TransformationUnitTreeNode) selectedNode);
+          this.handleTransformationUnitSelection(
+            (TransformationUnitTreeNode) selectedNode);
         }
 
       } else if (e.getButton() == MouseEvent.BUTTON3) {
@@ -381,8 +379,8 @@ public class TreeMouseListener
     TransformationUnitTreeNode selectedNode) {
 
     int transformationUnitId = selectedNode.getTransformationUnitId();
-    TransformationUnitWindow window =
-      new TransformationUnitWindow(transformationUnitId);
+    TransformationUnitWindow window = new TransformationUnitWindow(
+      transformationUnitId);
     window.show();
   }
 
@@ -391,7 +389,7 @@ public class TreeMouseListener
     int netId = netNode.getNetId();
     String netName = netNode.toString();
 
-    PetrinetPane.getInstance().displayPetrinet(netId, netName);
+    PetrinetPane.getInstance().displayPetrinet(netId, netName, true);
   }
 
   private void handleRuleSelection(RuleTreeNode ruleNode) {

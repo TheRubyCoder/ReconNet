@@ -62,7 +62,6 @@ import petrinet.model.INode;
 import petrinet.model.Petrinet;
 import transformation.Rule;
 import transformation.TransformationUnit;
-import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.graph.DirectedSparseGraph;
 import engine.data.JungData;
@@ -70,6 +69,7 @@ import engine.data.PetrinetData;
 import engine.data.RuleData;
 import engine.data.SessionData;
 import engine.data.TransformationUnitData;
+import gui.graphLayout.AdvancedFRLayout;
 
 /**
  * The instance manager manages all the different types of data objects like
@@ -160,9 +160,8 @@ public final class SessionManager {
 
     checkEmptyPetrinet(petrinet);
 
-    PetrinetData data =
-      new PetrinetData(getNextSessionDataId(), petrinet,
-        getNewFRLayoutJungData());
+    PetrinetData data = new PetrinetData(getNextSessionDataId(), petrinet,
+      getNewFRLayoutJungData());
 
     petrinetData.put(data.getId(), data);
 
@@ -172,8 +171,8 @@ public final class SessionManager {
   public void replacePetrinetData(int petrinetId, Petrinet petrinet,
     JungData petrinetJungData) {
 
-    PetrinetData data =
-      new PetrinetData(petrinetId, petrinet, petrinetJungData);
+    PetrinetData data = new PetrinetData(petrinetId, petrinet,
+      petrinetJungData);
 
     petrinetData.put(petrinetId, data);
   }
@@ -181,8 +180,8 @@ public final class SessionManager {
   public int createTransformationUnitData(
     TransformationUnit transformationUnit, String fileName, String filePath) {
 
-    TransformationUnitData data =
-      new TransformationUnitData(transformationUnit, fileName, filePath);
+    TransformationUnitData data = new TransformationUnitData(
+      transformationUnit, fileName, filePath);
 
     int dataId = getNextSessionDataId();
 
@@ -211,10 +210,9 @@ public final class SessionManager {
 
     checkEmptyRule(rule);
 
-    RuleData data =
-      new RuleData(getNextSessionDataId(), rule,
-        getNewStaticLayoutJungData(), getNewStaticLayoutJungData(),
-        getNewStaticLayoutJungData());
+    RuleData data = new RuleData(getNextSessionDataId(), rule,
+      getNewStaticLayoutJungData(), getNewStaticLayoutJungData(),
+      getNewStaticLayoutJungData());
 
     ruleData.put(data.getId(), data);
 
@@ -248,8 +246,8 @@ public final class SessionManager {
 
   public boolean removeTransformationUnitData(int transformationUnitDataId) {
 
-    boolean deleted =
-      this.transformationUnitData.remove(transformationUnitDataId) != null;
+    boolean deleted = this.transformationUnitData.remove(
+      transformationUnitDataId) != null;
     return deleted;
   }
 
@@ -272,12 +270,14 @@ public final class SessionManager {
     DirectedSparseGraph<INode, IArc> graph =
       new DirectedSparseGraph<INode, IArc>();
 
-    FRLayout<INode, IArc> frLayout = new FRLayout<INode, IArc>(graph);
+    AdvancedFRLayout<INode, IArc> frLayout =
+      new AdvancedFRLayout<INode, IArc>(graph);
 
     // Staerke der Federn: Abstossung und Anziehung ueber diese Werte
     // beeinflussbar
     frLayout.setAttractionMultiplier(ATTRACTION_MULTIPLIER);
     frLayout.setRepulsionMultiplier(REPULSION_MULTIPLIER);
+    /* aax291 */
 
     return new JungData(graph, frLayout);
   }

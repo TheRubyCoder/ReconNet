@@ -54,12 +54,18 @@ package gui;
 import static gui.Style.PETRINET_BORDER;
 import static gui.Style.PETRINET_PANE_LAYOUT;
 
+import java.awt.Dimension;
+import java.awt.geom.Point2D;
+import java.util.Collection;
+import java.util.HashMap;
+
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import petrinet.model.IArc;
 import petrinet.model.INode;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import exceptions.EngineException;
+import gui.graphLayout.AdvancedFRLayout;
 
 /** Pane for displaying petrinets */
 public final class PetrinetPane {
@@ -119,6 +125,8 @@ public final class PetrinetPane {
   public void repaint() {
 
     petrinetViewer.repaint();
+    // displayPetrinet(getCurrentPetrinetId(), null);
+
   }
 
   /** Returns the id of the currently displayed petrinet */
@@ -133,6 +141,12 @@ public final class PetrinetPane {
    */
   public void displayPetrinet(int petrinetId, String title) {
 
+    displayPetrinet(petrinetId, title, false);
+  }
+
+  public void displayPetrinet(int petrinetId, String title,
+    boolean layoutFrozen) {
+
     if (title != null) {
       setBorderTitle(title);
     }
@@ -143,13 +157,31 @@ public final class PetrinetPane {
       if (petrinetViewer != null) {
         petrinetViewer.removeFrom(petrinetPanel);
       }
-      petrinetViewer = new PetrinetViewer(layout, petrinetId, null);
-      double nodeSize =
-        EngineAdapter.getPetrinetManipulation().getNodeSize(petrinetId);
+
+      HashMap<INode, Point2D> locationMap = new HashMap<INode, Point2D>();
+      Collection<INode> vertices = layout.getGraph().getVertices();
+      for (INode v : vertices) {
+        Point2D vp = layout.transform(v);
+        locationMap.put(v, vp);
+      }
+
+      if (layoutFrozen && AdvancedFRLayout.class.isInstance(layout)) {
+        ((AdvancedFRLayout<INode, IArc>) layout).freez();
+      }
+
+      petrinetViewer = new PetrinetViewer(layout, petrinetId, null,
+        locationMap, new Dimension(640, 480));
+      double nodeSize = EngineAdapter.getPetrinetManipulation().getNodeSize(
+        petrinetId);
       petrinetViewer.setNodeSize(nodeSize);
       petrinetViewer.addTo(petrinetPanel);
       MainWindow.getInstance().repaint();
       SimulationPane.getInstance().setSimulationPaneEnable();
+
+      if (layoutFrozen && AdvancedFRLayout.class.isInstance(layout)) {
+        ((AdvancedFRLayout<INode, IArc>) layout).unfreez();
+      }
+
     } catch (EngineException e) {
     }
   }

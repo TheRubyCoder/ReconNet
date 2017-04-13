@@ -212,8 +212,8 @@ final class SimulationPane {
   /** Initializes the timer (not running) */
   private Timer initiateSimulationTimer() {
 
-    Timer timer =
-      new Timer(getCurrentDelayInMillis(), new SimulationStepper());
+    Timer timer = new Timer(getCurrentDelayInMillis(),
+      new SimulationStepper());
     timer.setRepeats(true);
     timer.stop();
     return timer;
@@ -234,8 +234,7 @@ final class SimulationPane {
   // You have to use raw types for JList as Jenkins will not compile these
   // with
   // parameters
-  private JComboBox
-  initiateModePicker() {
+  private JComboBox initiateModePicker() {
 
     String[] modi = {"Nur Tokenspiel", "Nur Regeln", "Tokenspiel und Regeln"};
     @SuppressWarnings("unchecked")
@@ -269,8 +268,8 @@ final class SimulationPane {
     JSlider slider = new JSlider(1, SLIDER_MAX_VALUE, 1);
     slider.setLocation(SIMULATION_PANE_SLIDER_LOCATION);
     slider.setSize(SIMULATION_PANE_SLIDER_SIZE);
-    Border oBorder =
-      BorderFactory.createTitledBorder(SIMULATION_PANE_SPEED_SLIDER_BORDER);
+    Border oBorder = BorderFactory.createTitledBorder(
+      SIMULATION_PANE_SPEED_SLIDER_BORDER);
     slider.setBorder(oBorder);
     slider.setMajorTickSpacing(1);
     slider.setPaintTicks(true);
@@ -317,8 +316,8 @@ final class SimulationPane {
 
     JComponent[] result = new JComponent[2];
 
-    JSpinner spinner =
-      new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
+    JSpinner spinner = new JSpinner(new SpinnerNumberModel(0, 0,
+      Integer.MAX_VALUE, 1));
     spinner.setLocation(SIMULATION_PANE_SPINNER_LOCATION);
     spinner.setSize(SIMULATION_PANE_SPINNER_SIZE);
     getSimulationPane().add(spinner);
@@ -489,7 +488,7 @@ final class SimulationPane {
 
   /** Listener for the "play" button */
   private class SimulateButtonListener
-  implements ActionListener {
+    implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -520,7 +519,7 @@ final class SimulationPane {
 
   /** Listener for the button "on step" */
   private class OneStepListener
-  implements ActionListener {
+    implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -542,7 +541,7 @@ final class SimulationPane {
 
   /** Listener for the button "k steps" */
   private class KStepsListener
-  implements ActionListener {
+    implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -586,7 +585,7 @@ final class SimulationPane {
    * perform a single simulation step
    */
   private class SimulationStepper
-  implements ActionListener {
+    implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -631,7 +630,7 @@ final class SimulationPane {
 
   /** Listener for the button "transform" */
   private class TransformButtonListener
-  implements ActionListener {
+    implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -640,7 +639,10 @@ final class SimulationPane {
         EngineAdapter.getSimulation().transform(
           PetrinetPane.getInstance().getCurrentPetrinetId(),
           FileTreePane.getInstance().getSelectedRuleIds(), 1);
-        PetrinetPane.getInstance().repaint();
+        /* PetrinetPane.getInstance().repaint(); */
+        PetrinetPane.getInstance().displayPetrinet(
+          PetrinetPane.getInstance().getCurrentPetrinetId(), null);
+
       } catch (EngineException e1) {
         throw new ShowAsInfoException(CANNOT_TRANSFORM_MESSAGE);
       }
@@ -650,7 +652,7 @@ final class SimulationPane {
 
   /** Listener sets the simulation timer speed when the slider is changed */
   private class SpeedSliderListener
-  implements ChangeListener {
+    implements ChangeListener {
 
     @Override
     public void stateChanged(ChangeEvent e) {

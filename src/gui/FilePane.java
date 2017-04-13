@@ -152,8 +152,10 @@ final class FilePane {
           (String) ((JList) e.getSource()).getSelectedValue();
         if (selectedValue != null) {
           int pId = FilePane.getPetrinetFilePane().getIdFromSelectedItem();
-          PetrinetPane.getInstance().displayPetrinet(pId,
-            "Petrinetz: " + selectedValue);
+          /*
+           * PetrinetPane.getInstance().displayPetrinet(pId, "Petrinetz: " +
+           * selectedValue);
+           */
         } else {
           PetrinetPane.getInstance().displayEmpty();
         }
@@ -298,17 +300,15 @@ final class FilePane {
    * differences are the descriptions and the listeners (look at constructors)
    */
   static {
-    petrinetFilePane =
-      new FilePane("Petrinetz", "Petrinetze", new NewPetrinetListener(),
-        new LoadPetrinetListener(), new SavePetrinetListener(),
-        new SaveAsPetrinetListener(), new DeletePetrinetListener(),
-        new PetrinetListSelectionListener());
+    petrinetFilePane = new FilePane("Petrinetz", "Petrinetze",
+      new NewPetrinetListener(), new LoadPetrinetListener(),
+      new SavePetrinetListener(), new SaveAsPetrinetListener(),
+      new DeletePetrinetListener(), new PetrinetListSelectionListener());
 
-    ruleFilePane =
-      new FilePane("Regel", "Regeln", new NewRuleListener(),
-        new LoadRuleListener(), new SaveRuleListener(),
-        new SaveAsRuleListener(), new DeleteRuleListener(),
-        new RuleListSelectionListener());
+    ruleFilePane = new FilePane("Regel", "Regeln", new NewRuleListener(),
+      new LoadRuleListener(), new SaveRuleListener(),
+      new SaveAsRuleListener(), new DeleteRuleListener(),
+      new RuleListSelectionListener());
   }
 
   /** Returns the only instance of a petrinet file panel */
@@ -392,10 +392,10 @@ final class FilePane {
    * @param deleteListener
    *        Listener for delete button
    */
-  private FilePane(String type, String typePlural,
-    ActionListener newListener, ActionListener loadListener,
-    ActionListener saveListener, ActionListener saveAsListener,
-    ActionListener deleteListener, ListSelectionListener selectionListener) {
+  private FilePane(String type, String typePlural, ActionListener newListener,
+    ActionListener loadListener, ActionListener saveListener,
+    ActionListener saveAsListener, ActionListener deleteListener,
+    ListSelectionListener selectionListener) {
 
     nameToPId = initiateListItemToPid();
     nameToFilepath = iniateListItemToFilepath();
@@ -405,9 +405,8 @@ final class FilePane {
     loadButton = initiateLoadButton(type, loadListener);
     saveAsButton = initiateSaveAsButton(type, saveAsListener);
     deleteButton = initiateDeleteButton(type, deleteListener);
-    buttonContainer =
-      initiateButtonContainer(newButton, saveButton, loadButton,
-        saveAsButton, deleteButton);
+    buttonContainer = initiateButtonContainer(newButton, saveButton,
+      loadButton, saveAsButton, deleteButton);
     list = initiateList(selectionListener);
     treeAndButtonContainerWithBorder =
       initiateTreeAndButtonContainerWithBorder(list, buttonContainer,
@@ -436,8 +435,7 @@ final class FilePane {
   // You have to use raw types for JList as Jenkins will not compile these
   // with
   // parameters
-  private JList
-    initiateList(ListSelectionListener listener) {
+  private JList initiateList(ListSelectionListener listener) {
 
     listModel = new DefaultListModel();
     JList listRtrn = new JList(listModel);
@@ -558,12 +556,12 @@ final class FilePane {
    *        Listener for button
    * @return
    */
-  private JButton
-    initiateLoadButton(String type, ActionListener loadListener) {
+  private JButton initiateLoadButton(String type,
+    ActionListener loadListener) {
 
     JButton button = new JButton(LOAD_PETRINET_ICON);
-    button.setBounds(LOAD_BUTTON_X, LOAD_BUTTON_Y,
-      FILE_PANE_ICON_BUTTON_SIZE, FILE_PANE_ICON_BUTTON_SIZE);
+    button.setBounds(LOAD_BUTTON_X, LOAD_BUTTON_Y, FILE_PANE_ICON_BUTTON_SIZE,
+      FILE_PANE_ICON_BUTTON_SIZE);
     button.setPressedIcon(LOAD_PETRINET_PRESSED_ICON);
     button.setDisabledIcon(LOAD_PETRINET_DISABLED_ICON);
 
@@ -584,12 +582,12 @@ final class FilePane {
    *        Listener for button
    * @return
    */
-  private JButton
-    initiateSaveButton(String type, ActionListener saveListener) {
+  private JButton initiateSaveButton(String type,
+    ActionListener saveListener) {
 
     JButton button = new JButton(SAVE_PETRINET_ICON);
-    button.setBounds(SAVE_BUTTON_X, SAVE_BUTTON_Y,
-      FILE_PANE_ICON_BUTTON_SIZE, FILE_PANE_ICON_BUTTON_SIZE);
+    button.setBounds(SAVE_BUTTON_X, SAVE_BUTTON_Y, FILE_PANE_ICON_BUTTON_SIZE,
+      FILE_PANE_ICON_BUTTON_SIZE);
 
     button.setPressedIcon(SAVE_PETRINET_PRESSED_ICON);
     button.setDisabledIcon(SAVE_PETRINET_DISABLED_ICON);
@@ -695,9 +693,8 @@ final class FilePane {
     String result = file.getName();
 
     if (file.getName().endsWith(FILE_EXTENSION)) {
-      result =
-        file.getName().substring(0,
-          file.getName().length() - FILE_EXTENSION.length());
+      result = file.getName().substring(0, file.getName().length()
+        - FILE_EXTENSION.length());
     }
 
     return result;
@@ -712,9 +709,9 @@ final class FilePane {
   private boolean userWantsToOverwrite(File file) {
 
     if (file.exists()) {
-      int confirm =
-        JOptionPane.showConfirmDialog(treeAndButtonContainerWithBorder,
-          "Die Datei existiert bereits. " + "Möchten Sie sie überspeichern?");
+      int confirm = JOptionPane.showConfirmDialog(
+        treeAndButtonContainerWithBorder, "Die Datei existiert bereits. "
+          + "Möchten Sie sie überspeichern?");
       return confirm == JOptionPane.YES_OPTION;
     } else {
       return true;
@@ -732,15 +729,13 @@ final class FilePane {
   // You have to use raw types for JList as Jenkins will not compile these
   // with
   // parameters
-  String
-    create(String type) {
+  String create(String type) {
 
     JFileChooser fileChooser = new JFileChooser();
     fileChooser.setDialogTitle("Bitte Speicherort für neue(s) " + type
       + " aussuchen");
-    int ret =
-      fileChooser.showDialog(treeAndButtonContainerWithBorder,
-        "Dort erstellen");
+    int ret = fileChooser.showDialog(treeAndButtonContainerWithBorder,
+      "Dort erstellen");
     if (ret == JFileChooser.APPROVE_OPTION) {
       File file = ensurePNMLEnding(fileChooser.getSelectedFile());
       String name = fileToListEntry(file);
@@ -796,7 +791,8 @@ final class FilePane {
         // EngineAdapter.getRuleManipulation().save(id, file.getParent(),
         // fileToListEntry(file), FILE_EXTENSION_WITHOUT_DOT);
         EngineAdapter.getRuleManipulation().saveRuleWithNacs(id,
-          file.getParent(), fileToListEntry(file), FILE_EXTENSION_WITHOUT_DOT);
+          file.getParent(), fileToListEntry(file),
+          FILE_EXTENSION_WITHOUT_DOT);
       }
     } catch (EngineException e) {
       PopUp.popError(e);
@@ -814,9 +810,8 @@ final class FilePane {
     JFileChooser fileChooser = new JFileChooser();
     fileChooser.setDialogTitle("Bitte Speicherort für neue(s) " + type
       + " aussuchen");
-    int ret =
-      fileChooser.showDialog(treeAndButtonContainerWithBorder,
-        "Dort speichern");
+    int ret = fileChooser.showDialog(treeAndButtonContainerWithBorder,
+      "Dort speichern");
     if (ret == JFileChooser.APPROVE_OPTION) {
       File file = ensurePNMLEnding(fileChooser.getSelectedFile());
       // String name = fileToListEntry(file);
@@ -825,9 +820,8 @@ final class FilePane {
         try {
           int id = getIdFromSelectedItem();
           if (this == FilePane.getPetrinetFilePane()) {
-            EngineAdapter.getPetrinetManipulation().save(id,
-              file.getParent(), fileToListEntry(file),
-              FILE_EXTENSION_WITHOUT_DOT,
+            EngineAdapter.getPetrinetManipulation().save(id, file.getParent(),
+              fileToListEntry(file), FILE_EXTENSION_WITHOUT_DOT,
               PetrinetPane.getInstance().getCurrentNodeSize());
           } else {
             // EngineAdapter.getRuleManipulation().save(id, file.getParent(),
@@ -855,19 +849,16 @@ final class FilePane {
   // You have to use raw types for JList as Jenkins will not compile these
   // with
   // parameters
-  private void
-    loadFromFile(File file) {
+  private void loadFromFile(File file) {
 
     int id;
     String name = fileToListEntry(file);
     if (this == FilePane.getPetrinetFilePane()) {
-      id =
-        EngineAdapter.getPetrinetManipulation().load(file.getParent(),
-          file.getName());
+      id = EngineAdapter.getPetrinetManipulation().load(file.getParent(),
+        file.getName());
     } else {
-      id =
-        EngineAdapter.getRuleManipulation().loadRuleWithNacs(
-          file.getParent(), file.getName());
+      id = EngineAdapter.getRuleManipulation().loadRuleWithNacs(
+        file.getParent(), file.getName());
     }
     nameToPId.put(name, id);
     nameToFilepath.put(name, file);
@@ -922,12 +913,11 @@ final class FilePane {
     if (selectedIndices.length < 1) {
       throw new ShowAsInfoException("Es sind keine Dateien ausgewählt");
     } else {
-      int loeschen =
-        JOptionPane.showOptionDialog(treeAndButtonContainerWithBorder,
-          "Sollen die Dateien vom Dateisystem gelöscht werden?", "Löschen",
-          0, JOptionPane.QUESTION_MESSAGE, null, new String[]{
-            "Dateien löschen", "Nur aus Übersicht löschen"},
-          "Nur aus Übersicht löschen");
+      int loeschen = JOptionPane.showOptionDialog(
+        treeAndButtonContainerWithBorder,
+        "Sollen die Dateien vom Dateisystem gelöscht werden?", "Löschen", 0,
+        JOptionPane.QUESTION_MESSAGE, null, new String[]{"Dateien löschen",
+          "Nur aus Übersicht löschen"}, "Nur aus Übersicht löschen");
 
       // When manipulating the list, the listener must be removed as
       // otherwise selection events would be triggered
@@ -972,8 +962,7 @@ final class FilePane {
 
   @SuppressWarnings("deprecation")
   // deprecated in 1.7 but recon is developet on 1.6
-  public Collection<Integer>
-    getIdsFromSelectedListItems() {
+  public Collection<Integer> getIdsFromSelectedListItems() {
 
     Collection<Integer> result = new HashSet<Integer>();
     for (Object value : list.getSelectedValues()) {
