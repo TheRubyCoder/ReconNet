@@ -23,7 +23,7 @@ import java.util.Map;
 
 /**
  * Implements the Fruchterman-Reingold force-directed algorithm for node
- * layout.
+ * layout. Extented with aging extension.
  * <p>
  * Behavior is determined by the following settable parameters:
  * <ul>
@@ -32,6 +32,9 @@ import java.util.Map;
  * <li/>repulsion multiplier: how much vertices try to push each other apart
  * <li/>maximum iterations: how many iterations this algorithm will use before
  * stopping
+ * <li/>maximum age: how many graphs a node has been in until minimum age
+ * factor is reached
+ * <li/>minimum age factor: minimum value for the age dependent coefficient
  * </ul>
  * Each of the first two defaults to 0.75; the maximum number of iterations
  * defaults to 700.
@@ -50,12 +53,15 @@ public class AdvancedFRLayout<V, E>
 
   private int currentIteration;
 
-  private int mMaxIterations = 1000;
+  private int mMaxIterations = 700;
 
   private int maxAge = 10;
 
-  private double minAgeFactor = 0.3; // minAgeFactor = 1 results in Aging
-  // being disabled
+  /*
+   * minAgeFactor = 1 results in Aging being disabled
+   */
+  private double minAgeFactor = 0.3;
+
   private boolean frozen = false;
 
   private Map<V, FRVertexData> frVertexData = LazyMap.decorate(
