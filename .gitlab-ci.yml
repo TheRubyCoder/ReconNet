@@ -1,6 +1,9 @@
-#image: java:openjdk-7-jdk
 
-image: java:oracle-java8
+image: ubuntu
+
+before_script:
+  - apt-get update
+  - apt-get install ivy
 
 build:
   script:
