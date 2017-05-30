@@ -4,6 +4,7 @@ image: ubuntu
 before_script:
   - apt-get update
   - apt-get install -y --no-install-recommends ivy
+  - apt-get install -y --no-install-recommends ant
 
 build:
   script:
