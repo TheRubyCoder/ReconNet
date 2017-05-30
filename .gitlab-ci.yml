@@ -1,3 +1,7 @@
+#image: java:openjdk-7-jdk
+
+image: java:oracle-java8
+
 build:
   script:
     - ant
