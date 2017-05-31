@@ -10,4 +10,4 @@ before_script:
 
 build:
   script:
-    - ant
+    - export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8 ; ant
