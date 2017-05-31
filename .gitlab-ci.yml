@@ -10,4 +10,4 @@ before_script:
 
 build:
   script:
-    - export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8 ; ant -lib ./lib/default
+    - export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8 ; ant -lib ./lib/default/junit-4.8.2.jar
