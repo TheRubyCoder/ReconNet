@@ -1,5 +1,5 @@
 /*
- * BSD-Lizenz Copyright © Teams of 'WPP Petrinetze' of HAW Hamburg 2010 -
+ * BSD-Lizenz Copyright (c) Teams of 'WPP Petrinetze' of HAW Hamburg 2010 -
  * 2013; various authors of Bachelor and/or Masterthesises --> see file
  * 'authors' for detailed information Weiterverbreitung und Verwendung in
  * nichtkompilierter oder kompilierter Form, mit oder ohne Veränderung, sind
