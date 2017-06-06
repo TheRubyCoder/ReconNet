@@ -6,9 +6,7 @@
  */
 package gui.graphLayout;
 
-import edu.uci.ics.jung.algorithms.layout.AbstractLayout;
 import edu.uci.ics.jung.algorithms.layout.util.RandomLocationTransformer;
-import edu.uci.ics.jung.algorithms.util.IterativeContext;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.util.Pair;
 
@@ -44,8 +42,7 @@ import java.util.Map;
  * @author Scott White, Yan-Biao Boey, Danyel Fisher
  */
 public class AdvancedFRLayout<V, E>
-  extends AbstractLayout<V, E>
-  implements IterativeContext {
+  extends edu.uci.ics.jung.algorithms.layout.FRLayout<V, E> {
 
   private double forceConstant;
 
@@ -103,7 +100,7 @@ public class AdvancedFRLayout<V, E>
    * Creates an instance of size {@code d} for the specified graph.
    */
   public AdvancedFRLayout(Graph<V, E> g, Dimension d) {
-    super(g, new RandomLocationTransformer<V>(d), d);
+    super(g, d);
     initialize();
     max_dimension = Math.max(d.height, d.width);
   }
@@ -413,7 +410,7 @@ public class AdvancedFRLayout<V, E>
   }
 
   protected static class FRVertexData
-    extends Point2D.Double {
+    extends edu.uci.ics.jung.algorithms.layout.FRLayout.FRVertexData {
 
     protected void offset(double x, double y) {
 

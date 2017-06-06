@@ -4,3 +4,4 @@
 /instrumented.bin
 /coverage
 TEST-harness.AllTests.xml
+/coverage.ec

@@ -1,31 +1,31 @@
 /*
- * BSD-Lizenz Copyright © Teams of 'WPP Petrinetze' of HAW Hamburg 2010 -
+ * BSD-Lizenz Copyright (c) Teams of 'WPP Petrinetze' of HAW Hamburg 2010 -
  * 2013; various authors of Bachelor and/or Masterthesises --> see file
  * 'authors' for detailed information Weiterverbreitung und Verwendung in
- * nichtkompilierter oder kompilierter Form, mit oder ohne Veränderung, sind
- * unter den folgenden Bedingungen zulässig: 1. Weiterverbreitete
- * nichtkompilierte Exemplare müssen das obige Copyright, diese Liste der
+ * nichtkompilierter oder kompilierter Form, mit oder ohne Veraenderung, sind
+ * unter den folgenden Bedingungen zulaessig: 1. Weiterverbreitete
+ * nichtkompilierte Exemplare muessen das obige Copyright, diese Liste der
  * Bedingungen und den folgenden Haftungsausschluss im Quelltext enthalten. 2.
- * Weiterverbreitete kompilierte Exemplare müssen das obige Copyright, diese
+ * Weiterverbreitete kompilierte Exemplare muessen das obige Copyright, diese
  * Liste der Bedingungen und den folgenden Haftungsausschluss in der
  * Dokumentation und/oder anderen Materialien, die mit dem Exemplar verbreitet
  * werden, enthalten. 3. Weder der Name der Hochschule noch die Namen der
- * Beitragsleistenden dürfen zum Kennzeichnen oder Bewerben von Produkten, die
- * von dieser Software abgeleitet wurden, ohne spezielle vorherige
+ * Beitragsleistenden duerfen zum Kennzeichnen oder Bewerben von Produkten,
+ * die von dieser Software abgeleitet wurden, ohne spezielle vorherige
  * schriftliche Genehmigung verwendet werden. DIESE SOFTWARE WIRD VON DER
  * HOCHSCHULE* UND DEN BEITRAGSLEISTENDEN OHNE JEGLICHE SPEZIELLE ODER
- * IMPLIZIERTE GARANTIEN ZUR VERFÜGUNG GESTELLT, DIE UNTER ANDEREM
- * EINSCHLIESSEN: DIE IMPLIZIERTE GARANTIE DER VERWENDBARKEIT DER SOFTWARE FÜR
+ * IMPLIZIERTE GARANTIEN ZUR VERFUEGUNG GESTELLT, DIE UNTER ANDEREM
+ * EINSCHLIESSEN: DIE IMPLIZIERTE GARANTIE DER VERWENDBARKEIT DER SOFTWARE FUER
  * EINEN BESTIMMTEN ZWECK. AUF KEINEN FALL SIND DIE HOCHSCHULE* ODER DIE
- * BEITRAGSLEISTENDEN FÜR IRGENDWELCHE DIREKTEN, INDIREKTEN, ZUFÄLLIGEN,
- * SPEZIELLEN, BEISPIELHAFTEN ODER FOLGESCHÄDEN (UNTER ANDEREM VERSCHAFFEN VON
- * ERSATZGÜTERN ODER -DIENSTLEISTUNGEN; EINSCHRÄNKUNG DER NUTZUNGSFÄHIGKEIT;
- * VERLUST VON NUTZUNGSFÄHIGKEIT; DATEN; PROFIT ODER GESCHÄFTSUNTERBRECHUNG),
+ * BEITRAGSLEISTENDEN FUER IRGENDWELCHE DIREKTEN, INDIREKTEN, ZUFAELLIGEN,
+ * SPEZIELLEN, BEISPIELHAFTEN ODER FOLGESCHAEDEN (UNTER ANDEREM VERSCHAFFEN VON
+ * ERSATZGUETERN ODER -DIENSTLEISTUNGEN; EINSCHRAENKUNG DER NUTZUNGSFAEHIGKEIT;
+ * VERLUST VON NUTZUNGSFAEHIGKEIT; DATEN; PROFIT ODER GESCHAEFTSUNTERBRECHUNG),
  * WIE AUCH IMMER VERURSACHT UND UNTER WELCHER VERPFLICHTUNG AUCH IMMER, OB IN
  * VERTRAG, STRIKTER VERPFLICHTUNG ODER UNERLAUBTER HANDLUNG (INKLUSIVE
- * FAHRLÄSSIGKEIT) VERANTWORTLICH, AUF WELCHEM WEG SIE AUCH IMMER DURCH DIE
+ * FAHRLAESSIGKEIT) VERANTWORTLICH, AUF WELCHEM WEG SIE AUCH IMMER DURCH DIE
  * BENUTZUNG DIESER SOFTWARE ENTSTANDEN SIND, SOGAR, WENN SIE AUF DIE
- * MÖGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WORDEN SIND. Redistribution
+ * MOEGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WORDEN SIND. Redistribution
  * and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met: 1.
  * Redistributions of source code must retain the above copyright notice, this
@@ -36,7 +36,7 @@
  * University nor the names of its contributors may be used to endorse or
  * promote products derived from this software without specific prior written
  * permission. THIS SOFTWARE IS PROVIDED BY THE UNIVERSITY* AND CONTRIBUTORS
- * “AS IS” AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE UNIVERSITY* OR CONTRIBUTORS
  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
@@ -45,7 +45,7 @@
  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE. * bedeutet / means: HOCHSCHULE FÜR ANGEWANDTE
+ * POSSIBILITY OF SUCH DAMAGE. * bedeutet / means: HOCHSCHULE FUER ANGEWANDTE
  * WISSENSCHAFTEN HAMBURG / HAMBURG UNIVERSITY OF APPLIED SCIENCES
  */
 
@@ -68,8 +68,9 @@ public final class Style {
 
   }
 
-  /* *************************************
-   * Main Window ************************************
+  /*
+   * ************************************* Main Window
+   * ************************************
    */
 
   /** Total width of main window */
@@ -82,11 +83,12 @@ public final class Style {
   public static final Dimension HEADER_DIMENSION = new Dimension(1000, 125);
 
   /** Dimension of left Panel */
-  public static final Dimension LEFT_PANEL_DIMENSION =
-    new Dimension(200, 575);
+  public static final Dimension LEFT_PANEL_DIMENSION = new Dimension(200,
+    575);
 
-  /* *************************************
-   * Commons ************************************
+  /*
+   * ************************************* Commons
+   * ************************************
    */
 
   /** Height of Panels with buttons at top of gui */
@@ -104,8 +106,9 @@ public final class Style {
 
   public static final BorderLayout FILE_PANE_LAYOUT = new BorderLayout();
 
-  /* *************************************
-   * Editor Pane ************************************
+  /*
+   * ************************************* Editor Pane
+   * ************************************
    */
   private static final int EDITOR_PANE_WIDTH = 137;
 
@@ -119,11 +122,12 @@ public final class Style {
       "Editieren");
 
   /** Layout of editor pane */
-  public static final GridLayout EDITOR_PANE_LAYOUT = new GridLayout(4, 1,
-    10, 10);
+  public static final GridLayout EDITOR_PANE_LAYOUT = new GridLayout(4, 1, 10,
+    10);
 
-  /* *************************************
-   * Attribute pane ************************************
+  /*
+   * ************************************* Attribute pane
+   * ************************************
    */
 
   public static final Dimension ATTRIBUTE_PANE_DIMENSION = new Dimension(225,
@@ -133,8 +137,9 @@ public final class Style {
     BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
       "Knoten-Attribute");
 
-  /* *************************************
-   * SimulationHandler pane ************************************
+  /*
+   * ************************************* SimulationHandler pane
+   * ************************************
    */
   // CHECKSTYLE:OFF - No need to check for magic numbers
   public static final Dimension SIMULATION_PANE_DIMENSION = new Dimension(
@@ -171,17 +176,17 @@ public final class Style {
 
   public static final Point SIMULATION_PANE_SLIDER_LOCATION = new Point(
     INSET_LEFT + (BUTTON_WIDTH + SPACING_BUTTONS) * 2, 0 + INSET_TOP
-    + BUTTON_HEIGHT + SPACING_BUTTONS);
+      + BUTTON_HEIGHT + SPACING_BUTTONS);
 
   public static final Dimension SIMULATION_PANE_SLIDER_SIZE = new Dimension(
     BUTTON_WIDTH, BUTTON_HEIGHT * 2 + SPACING_BUTTONS);
 
   public static final Point SIMULATION_PANE_COMBOBOX_LOCATION = new Point(
     INSET_LEFT + BUTTON_WIDTH + SPACING_BUTTONS, 0 + INSET_TOP
-    + (BUTTON_HEIGHT + SPACING_BUTTONS) * 2);
+      + (BUTTON_HEIGHT + SPACING_BUTTONS) * 2);
 
-  public static final Dimension SIMULATION_PANE_COMBOBOX_SIZE =
-    new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT - 3);
+  public static final Dimension SIMULATION_PANE_COMBOBOX_SIZE = new Dimension(
+    BUTTON_WIDTH, BUTTON_HEIGHT - 3);
   // CHECKSTYLE:OFF
 
   public static final Border SIMULATION_PANE_BORDER =
@@ -194,17 +199,18 @@ public final class Style {
 
   public static final ImageIcon SIMULATION_START_ICON = new ImageIcon(
     "src/gui/icons/simulationPlay.png");
-  public static final ImageIcon SIMULATION_START_ICON_DISABLE =
-    new ImageIcon("src/gui/icons/simulationPlayDisable.png");
-  public static final ImageIcon SIMULATION_START_ICON_PRESSED =
-    new ImageIcon("src/gui/icons/simulationPlayPressed.png");
+  public static final ImageIcon SIMULATION_START_ICON_DISABLE = new ImageIcon(
+    "src/gui/icons/simulationPlayDisable.png");
+  public static final ImageIcon SIMULATION_START_ICON_PRESSED = new ImageIcon(
+    "src/gui/icons/simulationPlayPressed.png");
   public static final ImageIcon SIMULATION_PAUSE_ICON = new ImageIcon(
     "src/gui/icons/simulationPause.png");
-  public static final ImageIcon SIMULATION_PAUSE_ICON_PRESSED =
-    new ImageIcon("src/gui/icons/simulationPausePressed.png");
+  public static final ImageIcon SIMULATION_PAUSE_ICON_PRESSED = new ImageIcon(
+    "src/gui/icons/simulationPausePressed.png");
 
-  /* *************************************
-   * Petrinet pane ************************************
+  /*
+   * ************************************* Petrinet pane
+   * ************************************
    */
 
   public static final Border PETRINET_BORDER =
@@ -236,8 +242,9 @@ public final class Style {
    */
   public static final double FACTOR_SELECTED_NODE = 1.2;
 
-  /* *************************************
-   * petrinet file pane ************************************
+  /*
+   * ************************************* petrinet file pane
+   * ************************************
    */
 
   public static final Border PETRINET_FILE_PANE_BORDER =
@@ -272,8 +279,8 @@ public final class Style {
 
   public static final ImageIcon SAVE_AS_PETRINET_ICON = new ImageIcon(
     "src/gui/icons/saveAsPertinet.png");
-  public static final ImageIcon SAVE_AS_PETRINET_PRESSED_ICON =
-    new ImageIcon("src/gui/icons/saveAsPertinetPressed.png");
+  public static final ImageIcon SAVE_AS_PETRINET_PRESSED_ICON = new ImageIcon(
+    "src/gui/icons/saveAsPertinetPressed.png");
   public static final ImageIcon SAVE_AS_PETRINET_DISABLED_ICON =
     new ImageIcon("src/gui/icons/saveAsPertinetDisabled.png");
 
@@ -281,8 +288,8 @@ public final class Style {
     "src/gui/icons/deletePertinet.png");
   public static final ImageIcon DELETE_PETRINET_PRESSED_ICON = new ImageIcon(
     "src/gui/icons/deletePetrinetPressed.png");
-  public static final ImageIcon DELETE_PETRINET_DISABLED_ICON =
-    new ImageIcon("src/gui/icons/deletePertinetDisabled.png");
+  public static final ImageIcon DELETE_PETRINET_DISABLED_ICON = new ImageIcon(
+    "src/gui/icons/deletePertinetDisabled.png");
 
   // popup menu icons - icons from www.iconmonstr.com
   public static final ImageIcon OPEN_24 = new ImageIcon(
@@ -325,11 +332,12 @@ public final class Style {
     + FILE_PANE_ICON_BUTTON_SIZE + FILE_PANE_ICON_SPACING_SIZE;
   public static final int DELETE_BUTTON_Y = 0;
 
-  /* *************************************
-   * petrinet file tree pane ************************************
+  /*
+   * ************************************* petrinet file tree pane
+   * ************************************
    */
-  public static final Dimension FILE_TREE_PANE_PREFERRED_SIZE =
-    new Dimension(200, 200);
+  public static final Dimension FILE_TREE_PANE_PREFERRED_SIZE = new Dimension(
+    200, 200);
   public static final String TREE_STRING_ROOT = "root";
   public static final String TREE_STRING_NET = "Netze";
   public static final String TREE_STRING_RULE = "Regeln";
@@ -416,8 +424,9 @@ public final class Style {
   public static final String MENU_TRANSFORMATION_UNIT_REMOVE_CMD =
     "MENU_TRANSFORMATION_UNIT_REMOVE_CMD";
 
-  /* *************************************
-   * rule pane ************************************
+  /*
+   * ************************************* rule pane
+   * ************************************
    */
 
   public static final GridLayout RULE_PANEL_LAYOUT = new GridLayout(1, 3);

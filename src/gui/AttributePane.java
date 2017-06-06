@@ -1,31 +1,31 @@
 /*
- * BSD-Lizenz Copyright © Teams of 'WPP Petrinetze' of HAW Hamburg 2010 -
+ * BSD-Lizenz Copyright (c) Teams of 'WPP Petrinetze' of HAW Hamburg 2010 -
  * 2013; various authors of Bachelor and/or Masterthesises --> see file
  * 'authors' for detailed information Weiterverbreitung und Verwendung in
- * nichtkompilierter oder kompilierter Form, mit oder ohne Veränderung, sind
- * unter den folgenden Bedingungen zulässig: 1. Weiterverbreitete
- * nichtkompilierte Exemplare müssen das obige Copyright, diese Liste der
+ * nichtkompilierter oder kompilierter Form, mit oder ohne Veraenderung, sind
+ * unter den folgenden Bedingungen zulaessig: 1. Weiterverbreitete
+ * nichtkompilierte Exemplare muessen das obige Copyright, diese Liste der
  * Bedingungen und den folgenden Haftungsausschluss im Quelltext enthalten. 2.
- * Weiterverbreitete kompilierte Exemplare müssen das obige Copyright, diese
+ * Weiterverbreitete kompilierte Exemplare muessen das obige Copyright, diese
  * Liste der Bedingungen und den folgenden Haftungsausschluss in der
  * Dokumentation und/oder anderen Materialien, die mit dem Exemplar verbreitet
  * werden, enthalten. 3. Weder der Name der Hochschule noch die Namen der
- * Beitragsleistenden dürfen zum Kennzeichnen oder Bewerben von Produkten, die
- * von dieser Software abgeleitet wurden, ohne spezielle vorherige
+ * Beitragsleistenden duerfen zum Kennzeichnen oder Bewerben von Produkten,
+ * die von dieser Software abgeleitet wurden, ohne spezielle vorherige
  * schriftliche Genehmigung verwendet werden. DIESE SOFTWARE WIRD VON DER
  * HOCHSCHULE* UND DEN BEITRAGSLEISTENDEN OHNE JEGLICHE SPEZIELLE ODER
- * IMPLIZIERTE GARANTIEN ZUR VERFÜGUNG GESTELLT, DIE UNTER ANDEREM
- * EINSCHLIESSEN: DIE IMPLIZIERTE GARANTIE DER VERWENDBARKEIT DER SOFTWARE FÜR
+ * IMPLIZIERTE GARANTIEN ZUR VERFUEGUNG GESTELLT, DIE UNTER ANDEREM
+ * EINSCHLIESSEN: DIE IMPLIZIERTE GARANTIE DER VERWENDBARKEIT DER SOFTWARE FUER
  * EINEN BESTIMMTEN ZWECK. AUF KEINEN FALL SIND DIE HOCHSCHULE* ODER DIE
- * BEITRAGSLEISTENDEN FÜR IRGENDWELCHE DIREKTEN, INDIREKTEN, ZUFÄLLIGEN,
- * SPEZIELLEN, BEISPIELHAFTEN ODER FOLGESCHÄDEN (UNTER ANDEREM VERSCHAFFEN VON
- * ERSATZGÜTERN ODER -DIENSTLEISTUNGEN; EINSCHRÄNKUNG DER NUTZUNGSFÄHIGKEIT;
- * VERLUST VON NUTZUNGSFÄHIGKEIT; DATEN; PROFIT ODER GESCHÄFTSUNTERBRECHUNG),
+ * BEITRAGSLEISTENDEN FUER IRGENDWELCHE DIREKTEN, INDIREKTEN, ZUFAELLIGEN,
+ * SPEZIELLEN, BEISPIELHAFTEN ODER FOLGESCHAEDEN (UNTER ANDEREM VERSCHAFFEN VON
+ * ERSATZGUETERN ODER -DIENSTLEISTUNGEN; EINSCHRAENKUNG DER NUTZUNGSFAEHIGKEIT;
+ * VERLUST VON NUTZUNGSFAEHIGKEIT; DATEN; PROFIT ODER GESCHAEFTSUNTERBRECHUNG),
  * WIE AUCH IMMER VERURSACHT UND UNTER WELCHER VERPFLICHTUNG AUCH IMMER, OB IN
  * VERTRAG, STRIKTER VERPFLICHTUNG ODER UNERLAUBTER HANDLUNG (INKLUSIVE
- * FAHRLÄSSIGKEIT) VERANTWORTLICH, AUF WELCHEM WEG SIE AUCH IMMER DURCH DIE
+ * FAHRLAESSIGKEIT) VERANTWORTLICH, AUF WELCHEM WEG SIE AUCH IMMER DURCH DIE
  * BENUTZUNG DIESER SOFTWARE ENTSTANDEN SIND, SOGAR, WENN SIE AUF DIE
- * MÖGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WORDEN SIND. Redistribution
+ * MOEGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WORDEN SIND. Redistribution
  * and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met: 1.
  * Redistributions of source code must retain the above copyright notice, this
@@ -36,7 +36,7 @@
  * University nor the names of its contributors may be used to endorse or
  * promote products derived from this software without specific prior written
  * permission. THIS SOFTWARE IS PROVIDED BY THE UNIVERSITY* AND CONTRIBUTORS
- * “AS IS” AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * AS IS AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
  * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE UNIVERSITY* OR CONTRIBUTORS
  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
@@ -45,7 +45,7 @@
  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE. * bedeutet / means: HOCHSCHULE FÜR ANGEWANDTE
+ * POSSIBILITY OF SUCH DAMAGE. * bedeutet / means: HOCHSCHULE FUER ANGEWANDTE
  * WISSENSCHAFTEN HAMBURG / HAMBURG UNIVERSITY OF APPLIED SCIENCES
  */
 
@@ -156,14 +156,14 @@ public final class AttributePane {
 
     try {
       // get type and id
-      NodeTypeEnum type =
-        EngineAdapter.getPetrinetManipulation().getNodeType(node);
+      NodeTypeEnum type = EngineAdapter.getPetrinetManipulation().getNodeType(
+        node);
       String id = String.valueOf(node.getId());
       AbstractPetriTableModel tableModel = null;
       // display place
       if (type == NodeTypeEnum.Place) {
-        PlaceAttribute placeAttribute =
-          petrinetViewer.getPlaceAttribute((Place) node);
+        PlaceAttribute placeAttribute = petrinetViewer.getPlaceAttribute(
+          (Place) node);
         String name = placeAttribute.getPname();
         String mark = String.valueOf(placeAttribute.getMarking());
         String capacity = String.valueOf(placeAttribute.getCapacity());
@@ -180,11 +180,12 @@ public final class AttributePane {
         String tlb = transitionAttribute.getTLB();
         IRenew renew = transitionAttribute.getRNW();
         String renewString = renew.toGUIString();
-        tableModel =
-          new TransitionTableModel(id, name, tlb, renewString, table);
+        tableModel = new TransitionTableModel(id, name, tlb, renewString,
+          table);
       }
       // add listener
-      tableModel.addTableModelListener(new TableListener(petrinetViewer, node));
+      tableModel.addTableModelListener(new TableListener(petrinetViewer,
+        node));
       // make changes account
       table.setModel(tableModel);
     } catch (EngineException e) {
@@ -201,8 +202,8 @@ public final class AttributePane {
    */
   void displayEdge(IArc edge, PetrinetViewer petrinetViewer) {
 
-    String weight =
-      String.valueOf(petrinetViewer.getArcAttribute(edge).getWeight());
+    String weight = String.valueOf(petrinetViewer.getArcAttribute(
+      edge).getWeight());
     String id = String.valueOf(edge.getId());
 
     ArcTableModel arcTableModel = new ArcTableModel(id, weight);
@@ -253,7 +254,7 @@ public final class AttributePane {
    * A TableModel is needed to tell Swing what cells are editable
    */
   private abstract static class AbstractPetriTableModel
-  extends AbstractTableModel {
+    extends AbstractTableModel {
 
     /**
      *
@@ -310,7 +311,7 @@ public final class AttributePane {
 
   /** Class for the Table with Place Attributes */
   private static class PlaceTableModel
-  extends AbstractPetriTableModel {
+    extends AbstractPetriTableModel {
 
     /**
      *
@@ -320,8 +321,8 @@ public final class AttributePane {
     /**
      * The General Data for the Placetable
      */
-    private String[][] data = {{"Id", ""}, {"Name", ""}, {"Markierung", ""},
-      {"Kapazität", ""}};
+    private String[][] data = {{"Id", ""}, {"Name", ""}, {"Markierung", ""}, {
+      "Kapazitaet", ""}};
 
     /** Initiates the table with actual data for id, name, and mark */
     public PlaceTableModel(String id, String name, String mark,
@@ -344,7 +345,7 @@ public final class AttributePane {
 
   /** Class for the Table with Transition Attributes */
   private static class TransitionTableModel
-  extends AbstractPetriTableModel {
+    extends AbstractPetriTableModel {
 
     /**
      *
@@ -353,8 +354,8 @@ public final class AttributePane {
     /**
      * The General Data for the Transitiontable
      */
-    private String[][] data = {{"Id", ""}, {"Name", ""}, {"Label", ""},
-      {"Renew", ""}};
+    private String[][] data = {{"Id", ""}, {"Name", ""}, {"Label", ""}, {
+      "Renew", ""}};
 
     /**
      * Initiates the table with actual data for id, name, laben and renew
@@ -380,16 +381,16 @@ public final class AttributePane {
 
       // renew changed
       if (rowIndex == INDEX_RENEW && columnIndex == INDEX_VALUE) {
-        String newTlb =
-          renewValid(data[INDEX_LABEL][INDEX_VALUE], (String) aValue);
+        String newTlb = renewValid(data[INDEX_LABEL][INDEX_VALUE],
+          (String) aValue);
         if (newTlb != null) {
           super.setValueAt(aValue, rowIndex, columnIndex);
           super.setValueAt(newTlb, INDEX_LABEL, INDEX_VALUE);
         }
         // tlb changed
       } else if (rowIndex == INDEX_LABEL && columnIndex == INDEX_VALUE) {
-        String newRenew =
-          tlbValid((String) aValue, data[INDEX_RENEW][INDEX_VALUE]);
+        String newRenew = tlbValid((String) aValue,
+          data[INDEX_RENEW][INDEX_VALUE]);
         System.out.println("tlbValid = " + newRenew);
 
         if (newRenew != null) {
@@ -418,17 +419,18 @@ public final class AttributePane {
       } else {
         IRenew newRenew = actualRenew;
         while (!newRenew.isTlbValid(tlb)) {
-          String[] options =
-            new String[]{"id", "toggle", "count", "abbrechen"};
-          int pickedIndex =
-            JOptionPane.showOptionDialog(null, "Das gewählte label \"" + tlb
+          String[] options = new String[]{"id", "toggle", "count",
+            "abbrechen"};
+          int pickedIndex = JOptionPane.showOptionDialog(null,
+            "Das gewaehlte label \"" + tlb
               + "\" passt nicht zum aktuellen Renew \""
               + newRenew.toGUIString()
               + "\". Wenn sie das Label behalten möchten,"
-              + " wählen sie ein passendes Renew:", "Neues Renew wählen",
-              JOptionPane.INFORMATION_MESSAGE,
-              JOptionPane.INFORMATION_MESSAGE, null, options, "id");
-          System.out.println("options[pickedIndex] = " + options[pickedIndex]);
+              + " waehlen sie ein passendes Renew:", "Neues Renew waehlen",
+            JOptionPane.INFORMATION_MESSAGE, JOptionPane.INFORMATION_MESSAGE,
+            null, options, "id");
+          System.out.println("options[pickedIndex] = "
+            + options[pickedIndex]);
           if (0 <= pickedIndex && pickedIndex <= 2) {
             newRenew = Renews.fromString(options[pickedIndex]);
           } else {
@@ -452,11 +454,10 @@ public final class AttributePane {
       } else {
         String newTlb = tlb;
         while (!actualRenew.isTlbValid(newTlb)) {
-          String inputDialog =
-            JOptionPane.showInputDialog("\"" + newTlb
-              + "\" passt nicht zum Renew \"" + renew
-              + "\". Bitte geben sie ein neues Label ein"
-              + ", das zum neuen Renew passt:");
+          String inputDialog = JOptionPane.showInputDialog("\"" + newTlb
+            + "\" passt nicht zum Renew \"" + renew
+            + "\". Bitte geben sie ein neues Label ein"
+            + ", das zum neuen Renew passt:");
           if (inputDialog != null) {
             newTlb = inputDialog;
           } else {
@@ -470,7 +471,7 @@ public final class AttributePane {
 
   /** Class for the Table with Arc Attributes */
   private static class ArcTableModel
-  extends AbstractPetriTableModel {
+    extends AbstractPetriTableModel {
 
     /**
      *
@@ -503,7 +504,7 @@ public final class AttributePane {
 
   /** Class for Tablelistener to make changes by the user possible */
   private static class TableListener
-  implements TableModelListener {
+    implements TableModelListener {
 
     /** {@link PetrinetViewer} of currently displayed element */
     private PetrinetViewer petrinetViewer;
@@ -556,7 +557,8 @@ public final class AttributePane {
             // MainWindow.getPetrinetManipulation().setWeight(
             // petrinetId, arc, Integer.parseInt(data));
           } catch (NumberFormatException e1) {
-            PopUp.popError("Das Gewicht muss " + "eine natürliche Zahl sein.");
+            PopUp.popError("Das Gewicht muss "
+              + "eine natürliche Zahl sein.");
             e1.printStackTrace();
           }
         }
@@ -570,9 +572,10 @@ public final class AttributePane {
             try {
               int marking = Integer.parseInt(data);
               if (marking > place.getCapacity()) {
-                AttributePane.getInstance().displayNode(place, petrinetViewer);
+                AttributePane.getInstance().displayNode(place,
+                  petrinetViewer);
                 PopUp.popError("Die Markierung darf "
-                  + "die Kapazität nicht übersteigen.");
+                  + "die Kapazitaet nicht übersteigen.");
               } else {
                 petrinetViewer.setMarking(place, marking);
               }
@@ -584,11 +587,12 @@ public final class AttributePane {
           } else if (attribute.equals("Kapazität")) {
             try {
               if (data.length() == 0) { // wenn Eingabefeld leer
-                // Kapazität auf Max Value setzen
+                // Kapazitaet auf Max Value setzen
                 petrinetViewer.setCapacity(place, Integer.MAX_VALUE);
                 // Anzeige sofort aktualisieren, damit
                 // "unbegrenzt" reingeschrieben wird
-                AttributePane.getInstance().displayNode(place, petrinetViewer);
+                AttributePane.getInstance().displayNode(place,
+                  petrinetViewer);
               } else {
                 int capacity = Integer.parseInt(data);
                 if (capacity < place.getMark()) {
@@ -602,7 +606,7 @@ public final class AttributePane {
               }
 
             } catch (NumberFormatException nfe) {
-              // Anzeige sofort aktualisieren, falls ungültiges
+              // Anzeige sofort aktualisieren, falls ungueltiges
               // reingeschrieben wurde
               AttributePane.getInstance().displayNode(place, petrinetViewer);
               PopUp.popError("Die Kapazität muss eine "
